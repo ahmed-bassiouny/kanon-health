@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
 import com.google.firebase.messaging.RemoteMessage;
@@ -26,7 +27,10 @@ import com.germanitlab.kanonhealth.helpers.Constants;
  * Created by Geram IT Lab on 20/04/2017.
  */
 
+// Edit by ahmed bassiouny on 24/05/2017
+
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
+    String TAG="*a*a*a*a**a";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d("545", "575");
@@ -41,6 +45,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            Log.i(TAG, "remoteMessage.getData().get(\"from_id\") = "+remoteMessage.getData().get("from_id"));
+            Log.i(TAG, "String.valueOf(ChatActivity.user_id )="+String.valueOf(ChatActivity.user_id ));
+            Log.i(TAG, ChatActivity.appStatus+"");
             if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id ) && ChatActivity.appStatus != true)
                 showNotification(remoteMessage.getData().get("msg"), 1, id);
 /*            if (MainActivity.appStatus != true) {
@@ -70,6 +77,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         }
 
+
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra("message", message);
         notificationIntent.putExtra("type", type);
@@ -78,7 +86,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 2, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT |PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(contentIntent);
 
         // Add as notification

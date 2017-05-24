@@ -1379,4 +1379,16 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        appStatus=true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        appStatus=false;
+    }
 }
