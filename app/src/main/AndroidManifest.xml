@@ -48,7 +48,7 @@
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".doctors.DoctorMapActivity"
             android:screenOrientation="portrait"
@@ -78,7 +78,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".chat.ChatActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name=".initialProfile.initialProfileDetails"
             android:screenOrientation="portrait" />
