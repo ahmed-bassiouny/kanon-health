@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signup_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mobile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".1"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_toolbar_mobile_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/sign_up"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_17sp" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:gravity="top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/under_verificauion_header"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_17sp" />
+
+
+        <TextView
+            android:id="@+id/select_country"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_50dp"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:background="@drawable/custom_edittext_without_border"
+            android:gravity="center"
+            android:hint="@string/select_your_country"
+            android:spinnerMode="dropdown" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_20dp"
+            android:background="@drawable/custom_edittext_without_border">
+
+            <EditText
+                android:id="@+id/et_sigup_country_code"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_50dp"
+                android:layout_weight="3"
+                android:background="@null"
+                android:gravity="center"
+                android:inputType="phone"
+                android:text="+966" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
+
+            <EditText
+                android:id="@+id/et_signup_mobile_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textCursorDrawable="@color/blue"
+                android:layout_weight="1"
+                android:background="@null"
+                android:inputType="phone"
+                android:paddingLeft="5dp"
+                android:singleLine="true" />
+
+        </TableRow>
+        <Button
+            android:id="@+id/btn_signup_mobile_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/round"
+            android:layout_marginTop="20dp"
+            android:text="@string/signup"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_17sp" />
+
+    </LinearLayout>
+</LinearLayout>

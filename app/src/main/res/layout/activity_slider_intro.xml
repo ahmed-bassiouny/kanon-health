@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/layoutDots"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/size_20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/size_5dp"
+        android:paddingRight="@dimen/size_5dp">
+
+        <Button
+            android:id="@+id/btn_extra_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_35dp"
+            android:layout_marginBottom="@dimen/size_5dp"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:layout_marginRight="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/skip"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+
+        <Button
+            android:id="@+id/btn_extra_next"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_35dp"
+            android:layout_marginBottom="@dimen/size_5dp"
+            android:layout_marginLeft="@dimen/size_5dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/next"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

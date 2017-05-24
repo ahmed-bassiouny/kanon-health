@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/verifiction_layout"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".verficiation.VerificationActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mobile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_toolbar_mobile_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/verifcation"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_17sp" />
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_verification_mobile_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/enter_verification_code"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_17sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@id/verifiction_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/verification_Code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:duplicateParentState="true"
+                    android:background="@color/white"
+                    android:textCursorDrawable="@color/blue"
+                    android:hint="_ _ _  _ _ _"
+                    android:inputType="phone"
+                    android:nextFocusRight="@+id/two"
+                    android:textSize="@dimen/size_40dp" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_verification_verify_code"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/size_20dp"
+                android:background="@drawable/round"
+                android:paddingLeft="@dimen/size_40dp"
+                android:paddingRight="@dimen/size_40dp"
+                android:text="@string/verify_code"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_17sp" />
+
+            <TextView
+                android:id="@+id/tv_verfication_resend_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/size_25dp"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/size_3dp"
+                android:padding="@dimen/size_5dp"
+                android:text="@string/resend_message"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btn_verification_resend"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_20dp"
+                android:background="@drawable/round"
+                android:paddingLeft="@dimen/size_30dp"
+                android:paddingRight="@dimen/size_30dp"
+                android:text="@string/resend"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_17sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

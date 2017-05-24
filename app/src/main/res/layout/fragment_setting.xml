@@ -1,0 +1,371 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/setting"
+            android:textColor="@color/black" />
+
+
+
+        <ImageButton
+            android:id="@+id/scan"
+            android:layout_width="@dimen/size_40dp"
+            android:layout_height="@dimen/size_35dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/size_25dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/scan"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <ImageButton
+            android:id="@+id/myQr"
+            android:layout_width="@dimen/size_40dp"
+            android:layout_height="@dimen/size_35dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/size_25dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/qr"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+    </android.support.v7.widget.Toolbar>
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TableRow
+                android:id="@+id/my_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_5dp"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/profile"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+            <TableRow
+                android:id="@+id/dr_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_5dp"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="Requset Dr. status"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:id="@+id/tr_change_pass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_5dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/change_passcode"
+                    android:id="@+id/tv_setting"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:id="@+id/tr_mobile_number"
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/change_phone"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:id="@+id/tr_sound"
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/sound_notification"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:id="@+id/tr_terms"
+                android:layout_width="match_parent"
+                android:padding="@dimen/size_5dp"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/terms_conditions"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:id="@+id/tr_faq"
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/faq"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:id="@+id/tr_support"
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/contact_support"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+            <TableRow
+                android:id="@+id/tr_help"
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/zxing_menu_help"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/next" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/version"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+
+            </TableRow>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

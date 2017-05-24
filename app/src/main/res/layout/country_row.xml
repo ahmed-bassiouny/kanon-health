@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:paddingTop="@dimen/size_10dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="1dp"
+        android:textColor="@android:color/background_dark"
+        android:gravity="left"
+        android:textSize="18sp"
+        android:id="@+id/sdd"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/size_10dp"
+        android:text="Germany"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:id="@+id/code"
+        android:textSize="18sp"
+        android:paddingTop="@dimen/size_10dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="1dp"
+        android:textColor="@android:color/background_dark"
+        android:layout_gravity="center"
+        android:paddingRight="20dp"
+        android:gravity="right"
+        android:text="+49"/>
+</LinearLayout>

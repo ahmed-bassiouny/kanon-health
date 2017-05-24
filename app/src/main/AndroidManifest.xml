@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.germanitlab.kanonhealth"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:name=".application.AppController"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/MyMaterialTheme"
+        tools:replace="android:icon,android:theme">
+        <meta-data
+            android:name="DATABASE"
+            android:value="kannon.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.germanitlab.kanonhealth" />
+
+        <activity
+            android:name=".splash.SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".main.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".doctors.DoctorMapActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c5ac2db0554539947583fb65cf5561052c164498" />
+
+        <activity
+            android:name=".settings.TermsConditonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".settings.FaqActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".intro.QrActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".inquiry.InquiryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".profile.EditProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".chat.ChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".initialProfile.initialProfileDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".intro.Information"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".settings.CustomerSupportActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".payment.PreRequest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".payment.PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Specialities"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".chat.MapsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".intro.StartQrScan"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".profile.EditDoctorProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".documents.Document_Update"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".intro.SignupActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".initialProfile.CountryActivty" />
+        <activity
+            android:name=".intro.VerificationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Specilaities"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RateActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".Firebase.FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".Firebase.FirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".Help"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".initialProfile.ProfileDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".forward.ForwardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PlayVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PasscodeActivty"
+            android:screenOrientation="portrait" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".DoctorProfileActivity" />
+        <activity android:name=".TimeTable"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,125 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doctor_list_continer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/doctor_list_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/my_doctors"
+                android:textColor="@color/black" />
+
+            <ImageButton
+                android:id="@+id/scan"
+                android:layout_width="@dimen/size_40dp"
+                android:layout_height="@dimen/size_40dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/size_15dp"
+                android:background="@null"
+                android:contentDescription=""
+                android:scaleType="fitXY"
+                android:src="@drawable/scan"
+                tools:ignore="ContentDescription,RtlHardcoded" />
+
+            <ImageButton
+                android:id="@+id/my_Qr"
+                android:layout_width="@dimen/size_40dp"
+                android:layout_height="@dimen/size_35dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/size_25dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                tools:ignore="ContentDescription,RtlHardcoded" />
+        </android.support.v7.widget.Toolbar>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/linear_layout_content">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Doctor / clients"
+                        android:id="@+id/doctor_list"
+                        android:layout_height="match_parent" />
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Praxis"
+                        android:id="@+id/praxis_list"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/size_10dp"
+                    android:id="@+id/img_filter"
+                    android:background="@drawable/custom_edittext_without_border_style"
+                    android:drawableLeft="@drawable/search"
+                    android:gravity="center"
+                    android:hint="@string/search"
+                    android:textCursorDrawable="@color/blue"
+                    android:paddingBottom="@dimen/size_5dp"
+                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingRight="@dimen/size_5dp"
+                    android:paddingTop="@dimen/size_5dp"
+                    android:textColor="@color/gray_black" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_doctor_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/size_5dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_chats_doctor_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/error_message"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>
