@@ -51,6 +51,7 @@
             android:layout_marginTop="@dimen/size_10dp"
             android:background="@drawable/custom_edittext_without_border"
             android:gravity="center"
+            android:textSize="@dimen/size_17sp"
             android:hint="@string/select_your_country"
             android:spinnerMode="dropdown" />
 

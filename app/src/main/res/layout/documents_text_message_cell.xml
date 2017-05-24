@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/size_5dp"
                     android:text="17:10"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/black" />
 
             </LinearLayout>
         </LinearLayout>

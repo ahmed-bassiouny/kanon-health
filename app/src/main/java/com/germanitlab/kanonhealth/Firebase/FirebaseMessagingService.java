@@ -67,7 +67,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         } else {
             builder.setSmallIcon(R.drawable.stethoscope)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo64));
-
         }
 
         Intent notificationIntent = new Intent(this, ChatActivity.class);

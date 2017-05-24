@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     ViewPagerAdapter adapter;
 
     private int[] tabIcons = {
-            R.drawable.doctor,
+            R.drawable.doctorr,
             R.drawable.my_document,
             R.drawable.chat,
             R.drawable.settings

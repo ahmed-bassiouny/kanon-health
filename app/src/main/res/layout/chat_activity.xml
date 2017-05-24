@@ -88,8 +88,6 @@
                 android:background="@drawable/ic_forward_white_24dp"
                 android:duplicateParentState="true" />
         </LinearLayout>
-
-
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout

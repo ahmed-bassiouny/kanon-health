@@ -150,7 +150,7 @@ public class DoctorProfile extends AppCompatActivity {
             Log.e("returned image :", doctor.getAvatar());
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + doctor.getAvatar())
-                    .resize(80, 80).into(imgAvatar);
+                    .resize(500,500).centerInside().into(imgAvatar);
         }
         if (doctor.getDocuments() != null)
             createAdapter();

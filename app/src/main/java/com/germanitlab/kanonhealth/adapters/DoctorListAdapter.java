@@ -57,7 +57,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
         Picasso.with(activity).load(Constants.CHAT_SERVER_URL
                 + "/" + doctor.getAvatar()).placeholder(R.drawable.placeholder)
-                .resize(90, 90).into(holder.imgAvatar);
+                .resize(500,500).centerInside().into(holder.imgAvatar);
     }
 
     @Override

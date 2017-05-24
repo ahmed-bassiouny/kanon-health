@@ -210,9 +210,9 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         recyclerView.setNestedScrollingEnabled(false);
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getApplicationContext());
 
-        mAdapter2 = new DoctorDocumentAdapter(images, getApplicationContext(), this , scrollView , video_layout);
+/*        mAdapter2 = new DoctorDocumentAdapter(images, getApplicationContext(), this , scrollView , video_layout);
         recyclerView2.setLayoutManager(mLayoutManager2);
-        recyclerView2.setAdapter(mAdapter2);
+        recyclerView2.setAdapter(mAdapter2);*/
     }
 
     @OnClick(R.id.tv_profile_edit)

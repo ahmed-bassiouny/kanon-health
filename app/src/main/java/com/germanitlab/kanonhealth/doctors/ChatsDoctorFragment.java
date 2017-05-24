@@ -254,7 +254,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         praxis_list = (Button)view.findViewById(R.id.praxis_list);
         doctors_list = (Button) view.findViewById(R.id.doctor_list);
         doctors_list.setBackgroundResource(R.color.blue);
+        doctors_list.setTextColor(getResources().getColor(R.color.white));
         praxis_list.setBackgroundResource(R.color.gray);
+        praxis_list.setTextColor(getResources().getColor(R.color.black));
         toolbar = (Toolbar) view.findViewById(R.id.doctor_list_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
@@ -279,7 +281,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             @Override
             public void onClick(View view) {
                 doctors_list.setBackgroundResource(R.color.gray);
+                doctors_list.setTextColor(getResources().getColor(R.color.black));
                 praxis_list.setBackgroundResource(R.color.blue);
+                praxis_list.setTextColor(getResources().getColor(R.color.white));
                 new HttpCall(new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
@@ -303,7 +307,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             @Override
             public void onClick(View view) {
                 doctors_list.setBackgroundResource(R.color.blue);
+                doctors_list.setTextColor(getResources().getColor(R.color.white));
                 praxis_list.setBackgroundResource(R.color.gray);
+                praxis_list.setTextColor(getResources().getColor(R.color.black));
                 new HttpCall(new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {

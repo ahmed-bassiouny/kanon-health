@@ -40,7 +40,7 @@
             android:layout_marginRight="@dimen/size_25dp"
             android:background="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/qr"
+            android:src="@drawable/qrcode"
             tools:ignore="ContentDescription,RtlHardcoded" />
     </android.support.v7.widget.Toolbar>
 
@@ -157,6 +157,7 @@
                 android:padding="@dimen/size_5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:gravity="center">
 
                 <TextView
@@ -180,6 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/size_10dp"
+                android:visibility="gone"
                 android:layout_marginRight="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
@@ -187,6 +189,7 @@
             <TableRow
                 android:id="@+id/tr_sound"
                 android:padding="@dimen/size_5dp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -211,6 +214,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:layout_marginRight="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
@@ -220,6 +224,7 @@
                 android:id="@+id/tr_terms"
                 android:layout_width="match_parent"
                 android:padding="@dimen/size_5dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
@@ -243,6 +248,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:layout_marginRight="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
@@ -251,6 +257,7 @@
             <TableRow
                 android:id="@+id/tr_faq"
                 android:padding="@dimen/size_5dp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -275,6 +282,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:layout_marginRight="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
@@ -313,6 +321,7 @@
             <TableRow
                 android:id="@+id/tr_help"
                 android:padding="@dimen/size_5dp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -337,6 +346,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:layout_marginRight="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"

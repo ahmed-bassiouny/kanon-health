@@ -238,6 +238,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                             uploadImageResponse = (UploadImageResponse) response;
                             user.setAvatar(uploadImageResponse.getFile_url());
                             Log.e("After Casting", uploadImageResponse.getFile_url());
+                            prefManager.put(PrefManager.Image_data , uploadImageResponse.getFile_url());
                         }
 
                         @Override

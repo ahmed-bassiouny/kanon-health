@@ -63,6 +63,8 @@
                     android:background="@color/white"
                     android:textCursorDrawable="@color/blue"
                     android:hint="_ _ _  _ _ _"
+                    android:layout_gravity="center"
+                    android:maxLength="6"
                     android:inputType="phone"
                     android:nextFocusRight="@+id/two"
                     android:textSize="@dimen/size_40dp" />

@@ -96,20 +96,13 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         if (Helper.isNetworkAvailable(getContext())) {
             getBySpeciality(speciality_id, type);
         } else {
-            getFromDB();
             setAdapter(doctorList);
             dismissProgressDialog();
         }
         return view;
     }
 
-    private void getFromDB() {
-        doctorList = mDoctorRepository.getAll();
-        for (User doc :
-                doctorList) {
-            Toast.makeText(getActivity(), "name " + doc.getJsonDocument(), Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     private void handelEvent() {
 
@@ -119,8 +112,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 startActivity(new Intent(getActivity(), StartQrScan.class));
             }
         });
-
-
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new MyClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -193,11 +184,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
         if (type == 2) {
             doctor_list.setBackgroundResource(R.color.blue);
+            doctor_list.setTextColor(getResources().getColor(R.color.white));
             praxis_list.setBackgroundResource(R.color.gray);
+            praxis_list.setTextColor(getResources().getColor(R.color.black));
         }
         if (type == 3) {
             doctor_list.setBackgroundResource(R.color.gray);
+            doctor_list.setTextColor(getResources().getColor(R.color.black));
             praxis_list.setBackgroundResource(R.color.blue);
+            praxis_list.setTextColor(getResources().getColor(R.color.white));
         }
 /*
         filter_to_list = (TextView) view.findViewById(R.id.filter_to_list);
@@ -254,7 +249,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             @Override
             public void onClick(View view) {
                 praxis_list.setBackgroundResource(R.color.blue);
+                praxis_list.setTextColor(getResources().getColor(R.color.white));
                 doctor_list.setBackgroundResource(R.color.gray);
+                doctor_list.setTextColor(getResources().getColor(R.color.black));
                 if (type != 3) {
                     type = 3;
                     showProgressDialog();
@@ -267,7 +264,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             @Override
             public void onClick(View view) {
                 praxis_list.setBackgroundResource(R.color.gray);
+                praxis_list.setTextColor(getResources().getColor(R.color.black));
                 doctor_list.setBackgroundResource(R.color.blue);
+                doctor_list.setTextColor(getResources().getColor(R.color.white));
                 if (type != 2) {
                     type = 2;
                     showProgressDialog();
@@ -284,7 +283,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             public void onSuccess(Object response) {
                 if (type == 2) {
                     doctor_list.setBackgroundResource(R.color.blue);
+                    doctor_list.setTextColor(getResources().getColor(R.color.white));
                     praxis_list.setBackgroundResource(R.color.gray);
+                    praxis_list.setTextColor(getResources().getColor(R.color.black));
                 }
                 Log.e("Update user response :", "no response found");
                 jsonString = gson.toJson(response);

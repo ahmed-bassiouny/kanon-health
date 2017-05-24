@@ -35,7 +35,6 @@ public class PrefManager {
 
     // Shared preferences file name
     private static final String PREF_NAME = Constants.PREF_NAME;
-    private static final String HISTROY = "history" ;
     private static final String IS_FIRST_TIME_LAUNCH = Constants.IS_FIRST_LAUNCH;
 
     public PrefManager(Activity context) {
