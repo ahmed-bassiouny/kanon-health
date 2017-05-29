@@ -113,11 +113,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     private void handelEvent() {
 
         imgScan.setOnClickListener(new View.OnClickListener() {
