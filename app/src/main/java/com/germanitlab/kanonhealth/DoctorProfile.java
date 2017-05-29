@@ -22,24 +22,22 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.doctors.User;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.Info;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
+import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import com.germanitlab.kanonhealth.payment.PreRequest;
-import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.stmt.query.In;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class DoctorProfile extends AppCompatActivity {
     @BindView(R.id.contact)
@@ -77,11 +75,14 @@ public class DoctorProfile extends AppCompatActivity {
     CircleImageView imgAvatar;
     ProgressDialog progressDialog;
     private DoctorDocumentAdapter doctorDocumentAdapter;
-    @BindView(R.id.video_layout)
-    LinearLayout video_layout;
+    /*    @BindView(R.id.video_layout)
+        LinearLayout video_layout;*/
     @BindView(R.id.profile_layout)
     ScrollView profile_layout;
     private UserRepository mDoctorRepository;
+
+    @BindView(R.id.add_to_my_doctor)
+    Button add_to_my_doctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,7 @@ public class DoctorProfile extends AppCompatActivity {
                 doctor.setDocuments(dos);
             bindData();
             dismissProgressDialog();
+            checkDoctor();
         }
 
     }
@@ -121,6 +123,7 @@ public class DoctorProfile extends AppCompatActivity {
                 dismissProgressDialog();
                 mDoctorRepository.insertDocument(doctor);
                 bindData();
+                checkDoctor();
             }
 
             @Override
@@ -150,7 +153,7 @@ public class DoctorProfile extends AppCompatActivity {
             Log.e("returned image :", doctor.getAvatar());
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + doctor.getAvatar())
-                    .resize(500,500).centerInside().into(imgAvatar);
+                    .resize(500, 500).centerInside().into(imgAvatar);
         }
         if (doctor.getDocuments() != null)
             createAdapter();
@@ -183,7 +186,7 @@ public class DoctorProfile extends AppCompatActivity {
     private void createAdapter() {
         Gson gson = new Gson();
         ArrayList<Message> messages = doctor.getDocuments();
-        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this, profile_layout, video_layout);
+        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this, profile_layout);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -197,5 +200,50 @@ public class DoctorProfile extends AppCompatActivity {
 
     public void showProgressDialog() {
         progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
+    }
+
+    @OnClick(R.id.add_to_my_doctor)
+    public void addToMyDoctor() {
+        if (doctor.getIs_my_doctor().equals("0")) {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    Log.i("Answers ", response.toString());
+                    doctor.setIs_my_doctor("1");
+                    checkDoctor();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.i("Error ", " " + error);
+                }
+            }).addToMyDoctor(doctor.get_Id() + "");
+        } else if (doctor.getIs_my_doctor().equals("1")) {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    Log.i("Answers ", response.toString());
+                    doctor.setIs_my_doctor("0");
+                    checkDoctor();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.i("Error ", " " + error);
+                }
+            }).removeFromMyDoctor(doctor.get_Id() + "");
+        } else {
+            Toast.makeText(this, "Something Wrong Happpened", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checkDoctor() {
+        try {
+            if (doctor.getIs_my_doctor().equals("0"))
+                add_to_my_doctor.setText(getString(R.string.add_to));
+            else if (doctor.getIs_my_doctor().equals("1"))
+                add_to_my_doctor.setText(getString(R.string.remove_from));
+        }catch (Exception e){}
+
     }
 }

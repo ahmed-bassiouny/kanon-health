@@ -3,7 +3,7 @@ package com.germanitlab.kanonhealth.ormLite;
 import android.content.Context;
 import android.util.Log;
 
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.google.gson.Gson;
 import com.j256.ormlite.dao.Dao;

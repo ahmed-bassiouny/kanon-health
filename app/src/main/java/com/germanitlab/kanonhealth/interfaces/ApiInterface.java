@@ -17,7 +17,7 @@ import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
 import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
@@ -25,7 +25,6 @@ import com.germanitlab.kanonhealth.models.user.BasicRequest;
 import com.germanitlab.kanonhealth.models.user.LocationRequest;
 import com.germanitlab.kanonhealth.models.user.UpdateDocumentPrivacyRequest;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.User1;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
@@ -116,6 +115,13 @@ public interface ApiInterface {
     @Multipart
     @POST("/upload")
     Call<UploadImageResponse> uploadProfileImage(@Part("user_id") RequestBody id, @Part("password") RequestBody password, @Part MultipartBody.Part image);
+
+    // Edit by Ahmed 29-5-2017
+    @POST("/doctors/add_to_my_doctors")
+    Call <JsonObject> addToMyDoctor(@Body DoctorRequest request);
+
+    @POST("/doctors/remove_from_my_doctors")
+    Call <JsonObject> removeFromMyDoctor(@Body DoctorRequest request);
 
 
 }

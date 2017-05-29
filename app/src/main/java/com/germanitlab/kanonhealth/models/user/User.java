@@ -1,4 +1,4 @@
-package com.germanitlab.kanonhealth.models.doctors;
+package com.germanitlab.kanonhealth.models.user;
 
 import android.support.annotation.IdRes;
 
@@ -84,6 +84,9 @@ public class User implements Serializable {
     @DatabaseField
     @SerializedName("last_name")
     private String last_name;
+    @DatabaseField
+    @SerializedName("is_my_doctor")
+    private String is_my_doctor;
     @DatabaseField
     @SerializedName("avatar")
     private String avatar;
@@ -471,6 +474,13 @@ public class User implements Serializable {
         this.qr_url = qr_url;
     }
 
+    public String getIs_my_doctor() {
+        return is_my_doctor;
+    }
+
+    public void setIs_my_doctor(String is_my_doctor) {
+        this.is_my_doctor = is_my_doctor;
+    }
 }
 
 

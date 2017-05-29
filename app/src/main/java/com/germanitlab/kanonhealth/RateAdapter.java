@@ -9,7 +9,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
