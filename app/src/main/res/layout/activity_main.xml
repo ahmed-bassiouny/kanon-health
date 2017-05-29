@@ -7,30 +7,43 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.eslam.health.health.activites.MainActivity">
-
+    android:weightSum="1.5"
+    tools:context=".main.MainActivity">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+        android:id="@+id/myviewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-
     <android.support.design.widget.TabLayout
-        android:id="@+id/home_tabs"
-        style="@style/MyCustomTabLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_60dp"
-        android:layout_gravity="right|bottom"
-        android:background="@color/white"
-        android:textAlignment="center"
-        app:tabBackground="@drawable/tab_selector"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@android:color/transparent"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/colorPrimary" />
-
+        android:layout_height="wrap_content"
+        android:id="@+id/mytablayout"
+        android:layout_weight=".5"
+        app:tabTextAppearance="@style/TabStyle"
+        app:tabSelectedTextColor="@color/colorPrimaryDark"
+        android:layout_gravity="bottom">
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/doctor_tab"
+            android:text="@string/docor_list" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/document_tab"
+            android:text="@string/my_decument" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/chat_tab"
+            android:text="@string/chats" />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/setting_tab"
+            android:text="@string/setting" />
+    </android.support.design.widget.TabLayout>
 
 </LinearLayout>

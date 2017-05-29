@@ -68,6 +68,13 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private EditText edtFilter;
     private Button doctors_list, praxis_list;
+    private static ChatsDoctorFragment chatsDoctorFragment;
+
+    public static ChatsDoctorFragment newInstance(){
+        if(chatsDoctorFragment==null)
+            chatsDoctorFragment=new ChatsDoctorFragment();
+        return chatsDoctorFragment;
+    }
 
     public ChatsDoctorFragment() {
     }

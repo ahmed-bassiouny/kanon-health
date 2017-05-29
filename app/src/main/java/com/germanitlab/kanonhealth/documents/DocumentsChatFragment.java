@@ -123,8 +123,14 @@ public class DocumentsChatFragment extends Fragment
 
     private int mUserId = AppController.getInstance().getClientInfo().getUser_id();
 
+    private static DocumentsChatFragment documentsChatFragment;
 
 
+    public static DocumentsChatFragment newInstance(MainActivity activity){
+        if(documentsChatFragment==null)
+            documentsChatFragment=new DocumentsChatFragment(activity);
+        return documentsChatFragment;
+    }
 
 
     @SuppressLint("ValidFragment")

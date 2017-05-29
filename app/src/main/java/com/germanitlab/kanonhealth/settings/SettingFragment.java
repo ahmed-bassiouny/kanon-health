@@ -55,10 +55,16 @@ public class SettingFragment extends Fragment {
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
 
+    static private SettingFragment settingFragment;
     public SettingFragment() {
         // Required empty public constructor
     }
 
+    public static SettingFragment newInstance(){
+        if(settingFragment==null)
+            settingFragment=new SettingFragment();
+        return settingFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

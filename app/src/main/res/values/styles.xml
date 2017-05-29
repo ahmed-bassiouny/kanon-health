@@ -78,4 +78,10 @@
 
     <style name="MyMaterialTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--Edit by Ahmed  27 - 5 - 2017 -->
+    <style name="TabStyle" parent="Widget.Design.TabLayout">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

@@ -70,7 +70,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private UserRepository mDoctorRepository;
     private EditText edtDoctorListFilter;
     private FilterCallBackClickListener filterCallBackClickListener;
-
+    private static DoctorListFragment doctorListFragment;
     public DoctorListFragment() {
     }
 
@@ -78,6 +78,11 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         this.speciality_id = speciality_id;
         this.type = type;
 
+    }
+    public static DoctorListFragment newInstance(int speciality_id, int type){
+        if(doctorListFragment==null)
+            doctorListFragment=new DoctorListFragment(speciality_id,type);
+        return doctorListFragment;
     }
 
     @Override
