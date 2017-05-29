@@ -21,6 +21,7 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.Info;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+// Edit By Ahmed 29-5-2017
 public class DoctorProfile extends AppCompatActivity {
     @BindView(R.id.contact)
     Button contact;
@@ -83,14 +85,15 @@ public class DoctorProfile extends AppCompatActivity {
 
     @BindView(R.id.add_to_my_doctor)
     Button add_to_my_doctor;
-
+    private Util util ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile);
         mPrefManager = new PrefManager(this);
         ButterKnife.bind(this);
-        showProgressDialog();
+        util = Util.getInstance(this);
+        util.showProgressDialog();
         Intent intent = getIntent();
         Gson gson = new Gson();
         mDoctorRepository = new UserRepository(getApplicationContext());
@@ -106,7 +109,7 @@ public class DoctorProfile extends AppCompatActivity {
             if (dos != null)
                 doctor.setDocuments(dos);
             bindData();
-            dismissProgressDialog();
+            util.dismissProgressDialog();
             checkDoctor();
         }
 
@@ -120,7 +123,7 @@ public class DoctorProfile extends AppCompatActivity {
                 doctorJson = gson.toJson(response);
                 UserInfoResponse userInfoResponse = (UserInfoResponse) response;
                 doctor = userInfoResponse.getUser();
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 mDoctorRepository.insertDocument(doctor);
                 bindData();
                 checkDoctor();
@@ -128,7 +131,7 @@ public class DoctorProfile extends AppCompatActivity {
 
             @Override
             public void onFailed(String error) {
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
 
             }
@@ -191,15 +194,6 @@ public class DoctorProfile extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(doctorDocumentAdapter);
-    }
-
-    public void dismissProgressDialog() {
-
-        progressDialog.dismiss();
-    }
-
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
     }
 
     @OnClick(R.id.add_to_my_doctor)

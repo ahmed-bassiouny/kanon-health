@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -46,6 +50,8 @@ import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+// Edit By Ahmed 29-5-2017
 @SuppressLint("ValidFragment")
 public class DoctorListFragment extends Fragment implements ApiResponse {
 
@@ -54,7 +60,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private Toolbar toolbar;
     private ImageButton imgScan;
     private ImageView filter, map;
-    ProgressDialog progressDialog;
 
     /*
     private TextView filter_to_list;
@@ -70,6 +75,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private EditText edtDoctorListFilter;
     private FilterCallBackClickListener filterCallBackClickListener;
     private static DoctorListFragment doctorListFragment;
+    private Util util ;
     public DoctorListFragment() {
     }
 
@@ -90,10 +96,11 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_doctor_list, container, false);
         prefManager = new PrefManager(getActivity());
+        util= Util.getInstance(getActivity());
         initView();
         handelEvent();
         gson = new Gson();
-        showProgressDialog();
+        util.showProgressDialog();
         if (type == 0)
             type = 2;
         mDoctorRepository = new UserRepository(getContext());
@@ -101,12 +108,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             getBySpeciality(speciality_id, type);
         } else {
             setAdapter(doctorList);
-            dismissProgressDialog();
+            util.dismissProgressDialog();
         }
         return view;
     }
 
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
     private void handelEvent() {
 
@@ -174,13 +184,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     }
 
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.waiting_text), true);
-    }
 
 
     private void initView() {
@@ -258,7 +262,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 doctor_list.setTextColor(getResources().getColor(R.color.black));
                 if (type != 3) {
                     type = 3;
-                    showProgressDialog();
+                    util.showProgressDialog();
                     getBySpeciality(speciality_id, type);
                 }
 
@@ -273,7 +277,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 doctor_list.setTextColor(getResources().getColor(R.color.white));
                 if (type != 2) {
                     type = 2;
-                    showProgressDialog();
+                    util.showProgressDialog();
                     getBySpeciality(speciality_id, type);
                 }
             }
@@ -297,7 +301,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 doctorList = (List<User>) response;
                 saveInDB(doctorList);
                 setAdapter(doctorList);
-                dismissProgressDialog();
+                util.dismissProgressDialog();
 
             }
 

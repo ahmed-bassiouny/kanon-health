@@ -41,9 +41,10 @@
     <string name="all_doctors">All Doctors</string>
     <string name="only_my_self">Only Myself</string>
     <string name="contact">Contact</string>
-
+    <!-- Edit by Ahmed-->
     <string name="add_to">Add to My Doctor\'s</string>
     <string name="remove_from">Remove From My Doctor\'s</string>
+    <string name="error_connection">Please Check Your Internet Connection</string>
 
     <string name="hot_line">Hotline</string>
     <string name="fax">Fax</string>
