@@ -928,14 +928,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, MediaRecorder.OutputFormat.MPEG_4);
                         startActivityForResult(intent, 200);
 
                     } else
                         askForPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
                 } else {
                     Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, MediaRecorder.OutputFormat.MPEG_4);
                     startActivityForResult(intent, 200);
                 }
 

@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             }
         });
 
+
+        //myviewpager.setOffscreenPageLimit(4);
 //        setupViewPager(viewPager, speciality_id , type);
 
 //        tabLayout.setupWithViewPager(viewPager);
@@ -166,13 +168,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
 
     @Override
     protected void onResume() {

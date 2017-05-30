@@ -80,11 +80,11 @@
 
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="84dp"
+            android:layout_height="69dp"
             android:paddingRight="@dimen/size_10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/qr" />
+            android:src="@drawable/qrcode" />
 
 
     </LinearLayout>

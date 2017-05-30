@@ -27,7 +27,6 @@ public class PlayVideoActivity extends Activity {
         doctor_data = getIntent().getStringExtra("doctor_id");
         videoView = (VideoView) findViewById(R.id.video_view);
         // Execute StreamVideo AsyncTask
-
         // Create a progressbar
         pDialog = new ProgressDialog(PlayVideoActivity.this);
         // Set progressbar title
