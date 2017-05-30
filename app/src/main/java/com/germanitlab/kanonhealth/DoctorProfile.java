@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -86,10 +87,16 @@ public class DoctorProfile extends AppCompatActivity {
     @BindView(R.id.add_to_my_doctor)
     Button add_to_my_doctor;
     private Util util ;
+
+    public static Activity profileActivity;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile);
+        profileActivity=this;
+
         mPrefManager = new PrefManager(this);
         ButterKnife.bind(this);
         util = Util.getInstance(this);

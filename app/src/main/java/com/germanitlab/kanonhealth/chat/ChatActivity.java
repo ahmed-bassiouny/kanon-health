@@ -149,6 +149,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Uri selectedImageUri = null;
     private ContentValues contentValues;
 
+
+    public static int indexFromIntent=0;
+
     @Inject
     DataManger mDataManger;
     private ChatComponent mChatComponent;
@@ -1347,11 +1350,20 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onBackPressed() {
 
         Intent intent = new Intent(this, MainActivity.class);
-        if (doctor.get_Id() == 1)
-            intent.putExtra("index", 3);
-        else
-            intent.putExtra("index", 2);
-        startActivity(intent);
+//        if (doctor.get_Id() == 1)
+//            intent.putExtra("index", 3);
+//        else
+//            intent.putExtra("index", 2);
+        //startActivity(intent);
+
+                if (doctor.get_Id() == 1) {
+                    indexFromIntent = 3;
+                }
+        else {
+                    indexFromIntent = 2;
+                }
+
+        finish();
     }
 
     @Override

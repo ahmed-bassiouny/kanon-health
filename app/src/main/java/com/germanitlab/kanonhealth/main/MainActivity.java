@@ -48,6 +48,8 @@ import org.json.JSONObject;
 
 import io.socket.emitter.Emitter;
 
+import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
+
 public class MainActivity extends AppCompatActivity implements OnImgDoctorListMapClick {
 
 
@@ -70,10 +72,11 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //    private FilterCallBackClickListener filterCallBackClickListener;
 
 
-    private int tabIndex;
+//    private int tabIndex;
     private boolean temp;
-    private int type ;
+    private int type;
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +87,54 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //        tabLayout = (TabLayout) findViewById(R.id.home_tabs);
 //        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        mytablayout= (TabLayout) findViewById(R.id.mytablayout);
-        myviewpager= (ViewPager) findViewById(R.id.myviewpager);
-        //myviewpager.setOffscreenPageLimit(4);
+        mytablayout = (TabLayout) findViewById(R.id.mytablayout);
+        myviewpager = (ViewPager) findViewById(R.id.myviewpager);
+        myviewpager.setOffscreenPageLimit(4);
+        intent = getIntent();
+//        tabIndex = intent.getIntExtra("index", 0);
+        if (indexFromIntent == -1) {
+            indexFromIntent = 0;
+            temp = true;
+        }
+        myviewpager.setCurrentItem(indexFromIntent);
+
+        speciality_id = intent.getIntExtra("speciality_id", 0);
+        type = intent.getIntExtra("type", 2);
+
+        myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+
+        myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mytablayout.getTabAt(position).select();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                myviewpager.setCurrentItem(tab.getPosition(), false);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 //        setupViewPager(viewPager, speciality_id , type);
 
@@ -122,49 +170,19 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     @Override
     protected void onStart() {
         super.onStart();
-         intent = getIntent();
-        tabIndex = intent.getIntExtra("index", 0);
-        if (tabIndex == -1) {
-            tabIndex = 0;
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (indexFromIntent == -1) {
+            indexFromIntent = 0;
             temp = true;
         }
-        speciality_id = intent.getIntExtra("speciality_id", 0);
-        type = intent.getIntExtra("type", 2);
+        myviewpager.setCurrentItem(indexFromIntent);
 
-        myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-
-        myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mytablayout.getTabAt(position).select();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                myviewpager.setCurrentItem(tab.getPosition(),false);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
@@ -201,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     }
 
 */
+
     /**************************************************/
     /*private void setupViewPager(ViewPager viewPager, int speciality_id , int type) {
 
@@ -536,15 +555,20 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         @Override
         public Fragment getItem(int pos) {
-            switch(pos) {
+            switch (pos) {
 
-                case 0: return DoctorListFragment.newInstance(speciality_id , type);
-                case 1: return DocumentsChatFragment.newInstance();
-                case 2: return ChatsDoctorFragment.newInstance();
-                case 3:return SettingFragment.newInstance();
+                case 0:
+                    return DoctorListFragment.newInstance(speciality_id, type);
+                case 1:
+                    return DocumentsChatFragment.newInstance();
+                case 2:
+                    return ChatsDoctorFragment.newInstance();
+                case 3:
+                    return SettingFragment.newInstance();
             }
             return null;
         }
+
         @Override
         public int getCount() {
             return 4;
