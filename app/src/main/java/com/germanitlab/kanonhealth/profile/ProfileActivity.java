@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.profile;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -90,10 +91,12 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     Dialog dialog;
     boolean is_doctor ;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
+
 
         ButterKnife.bind(this);
         mPrefManager = new PrefManager(this);

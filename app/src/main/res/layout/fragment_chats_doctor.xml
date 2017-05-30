@@ -44,6 +44,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="@dimen/size_25dp"
                 android:background="@null"
+                android:src="@drawable/qrcode"
                 android:scaleType="fitXY"
                 tools:ignore="ContentDescription,RtlHardcoded" />
         </android.support.v7.widget.Toolbar>

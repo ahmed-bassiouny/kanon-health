@@ -65,11 +65,11 @@ public class Helper {
     public static void ImportQr(final PrefManager mPrefManager , final Activity activity , ImageView myQr)
     {
 
-        if (mPrefManager.getData(PrefManager.Image_data) != "" &&mPrefManager.getData(PrefManager.Image_data) != null) {
+/*        if (mPrefManager.getData(PrefManager.Image_data) != "" &&mPrefManager.getData(PrefManager.Image_data) != null) {
             Picasso.with(activity).load(Constants.CHAT_SERVER_URL
                     + "/" + mPrefManager.getData(PrefManager.Image_data))
                     .resize(80, 80).into(myQr);
-        }
+        }*/
         myQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

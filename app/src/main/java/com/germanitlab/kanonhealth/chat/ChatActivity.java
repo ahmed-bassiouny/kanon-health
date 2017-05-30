@@ -149,6 +149,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Uri selectedImageUri = null;
     private ContentValues contentValues;
 
+
+    public static int indexFromIntent=0;
+
     @Inject
     DataManger mDataManger;
     private ChatComponent mChatComponent;
@@ -925,14 +928,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, MediaRecorder.OutputFormat.MPEG_4);
                         startActivityForResult(intent, 200);
 
                     } else
                         askForPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
                 } else {
                     Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, MediaRecorder.OutputFormat.MPEG_4);
                     startActivityForResult(intent, 200);
                 }
 
@@ -1347,11 +1350,20 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onBackPressed() {
 
         Intent intent = new Intent(this, MainActivity.class);
-        if (doctor.get_Id() == 1)
-            intent.putExtra("index", 3);
-        else
-            intent.putExtra("index", 2);
-        startActivity(intent);
+//        if (doctor.get_Id() == 1)
+//            intent.putExtra("index", 3);
+//        else
+//            intent.putExtra("index", 2);
+        //startActivity(intent);
+
+                if (doctor.get_Id() == 1) {
+                    indexFromIntent = 3;
+                }
+        else {
+                    indexFromIntent = 2;
+                }
+
+        finish();
     }
 
     @Override
