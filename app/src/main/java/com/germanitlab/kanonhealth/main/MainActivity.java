@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -72,17 +73,11 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     private int tabIndex;
     private boolean temp;
     private int type ;
-
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
-        tabIndex = intent.getIntExtra("index", 0);
-        if (tabIndex == -1) {
-            tabIndex = 0;
-            temp = true;
-        }
         //-- set status open when open activity
         AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
 //
@@ -91,10 +86,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         mytablayout= (TabLayout) findViewById(R.id.mytablayout);
         myviewpager= (ViewPager) findViewById(R.id.myviewpager);
-        myviewpager.setOffscreenPageLimit(4);
+        //myviewpager.setOffscreenPageLimit(4);
 
-        speciality_id = intent.getIntExtra("speciality_id", 0);
-        type = intent.getIntExtra("type", 2);
 //        setupViewPager(viewPager, speciality_id , type);
 
 //        tabLayout.setupWithViewPager(viewPager);
@@ -123,8 +116,24 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //            }
 //        });
 //
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+         intent = getIntent();
+        tabIndex = intent.getIntExtra("index", 0);
+        if (tabIndex == -1) {
+            tabIndex = 0;
+            temp = true;
+        }
+        speciality_id = intent.getIntExtra("speciality_id", 0);
+        type = intent.getIntExtra("type", 2);
+
         myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        myviewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+        myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -519,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //
 //    }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -530,8 +539,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             switch(pos) {
 
                 case 0: return DoctorListFragment.newInstance(speciality_id , type);
-                case 1: return DocumentsChatFragment.newInstance(MainActivity.this);
-                case 2: return  ChatsDoctorFragment.newInstance();
+                case 1: return DocumentsChatFragment.newInstance();
+                case 2: return ChatsDoctorFragment.newInstance();
                 case 3:return SettingFragment.newInstance();
             }
             return null;

@@ -51,7 +51,7 @@ import com.germanitlab.kanonhealth.payment.PreRequest;
 /**
  * A simple {@link Fragment} subclass.
  */
-@SuppressLint("ValidFragment")
+
 public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private View view;

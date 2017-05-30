@@ -89,7 +89,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
-@SuppressLint("ValidFragment")
+
 public class DocumentsChatFragment extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -132,13 +132,14 @@ public class DocumentsChatFragment extends Fragment
             documentsChatFragment=new DocumentsChatFragment();
         return documentsChatFragment;
     }
-
-
+    public DocumentsChatFragment(){
+        
+    }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mAdapter = new DocumentsAdapter(mMessages, activity, this);
+    public void onStart() {
+        super.onStart();
+        mAdapter = new DocumentsAdapter(mMessages, getActivity(), this);
     }
 
     @Override

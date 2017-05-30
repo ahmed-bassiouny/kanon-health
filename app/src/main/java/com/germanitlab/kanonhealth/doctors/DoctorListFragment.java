@@ -52,7 +52,7 @@ import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
  */
 
 // Edit By Ahmed 29-5-2017
-@SuppressLint("ValidFragment")
+
 public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private View view;
