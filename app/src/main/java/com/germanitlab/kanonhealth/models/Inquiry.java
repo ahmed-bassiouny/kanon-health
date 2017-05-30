@@ -1,4 +1,4 @@
-package com.germanitlab.kanonhealth.inquiry;
+package com.germanitlab.kanonhealth.models;
 
 /**
  * Created by Mo on 3/6/17.

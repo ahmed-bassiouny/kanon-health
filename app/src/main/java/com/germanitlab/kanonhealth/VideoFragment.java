@@ -1,6 +1,7 @@
-package com.videostream;
+package com.germanitlab.kanonhealth;
 
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -16,17 +17,22 @@ import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressLint("ValidFragment")
 public class VideoFragment extends DialogFragment  implements EasyVideoCallback{
 
 
     private EasyVideoPlayer player;
-    private String video="http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4";
+    private String video;
+
+    public VideoFragment(String video) {
+        this.video = video;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_blank, container, false);
+        View view= inflater.inflate(R.layout.video_fragment, container, false);
         player = (EasyVideoPlayer) view.findViewById(R.id.player);
         getDialog().setTitle("Videos");
         return view;

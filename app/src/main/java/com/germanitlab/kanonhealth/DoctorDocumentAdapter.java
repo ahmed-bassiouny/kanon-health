@@ -13,6 +13,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -59,7 +61,6 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
     Activity activity;
     ProgressDialog progressDialog;
     ScrollView profile_layout;
-    LinearLayout video_layout;
     private MediaUtilities utils;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -90,14 +91,13 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
     }
 
 
-    public DoctorDocumentAdapter(List<Message> messageList, Context context, Activity activity, ScrollView profile_layout, LinearLayout video_layout) {
+    public DoctorDocumentAdapter(List<Message> messageList, Context context, Activity activity, ScrollView profile_layout) {
         this.messageList = messageList;
         this.context = context;
         pDialog = new ProgressDialog(context);
         mp = new MediaPlayer();
         this.activity = activity;
         this.profile_layout = profile_layout;
-        this.video_layout = video_layout;
     }
 
     @Override
@@ -231,51 +231,10 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
         holder.videoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                video_layout.setVisibility(View.VISIBLE);
-                profile_layout.setVisibility(View.GONE);
-                final Dialog dialog = new Dialog(activity);// add here your class name
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-
-                dialog.setContentView(R.layout.activity_play_video);
-                final VideoView mVideoView = (VideoView) dialog.findViewById(R.id.video_view);
-                final ProgressBar progressBar = (ProgressBar) dialog.findViewById(R.id.progress_view);
-                DisplayMetrics metrics = new DisplayMetrics();
-                activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                dialog.setCancelable(true);
-//add your own xml with defied with and height of videoview
-                String VideoURL = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
-                mVideoView.setVideoURI(Uri.parse(VideoURL));
-                mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        progressBar.setVisibility(View.GONE);
-                        DisplayMetrics metrics = new DisplayMetrics();
-                        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                        mVideoView.start();
-                    }
-                });
-                dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-                    @Override
-                    public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                        if (i == KeyEvent.KEYCODE_BACK) {
-                            video_layout.setVisibility(View.GONE);
-                            profile_layout.setVisibility(View.VISIBLE);
-                            dialog.dismiss();
-                        }
-                        return true;
-                    }
-                });
-                mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        dialog.dismiss();
-                        video_layout.setVisibility(View.GONE);
-                        profile_layout.setVisibility(View.VISIBLE);
-                    }
-                });
-                dialog.show();
-
+                VideoFragment dialogFragment = new VideoFragment(Constants.CHAT_SERVER_URL + "/" + message.getMsg());
+                FragmentTransaction ft = ((AppCompatActivity) activity).getSupportFragmentManager()
+                        .beginTransaction();
+                dialogFragment.show(ft, "mytag");
             }
 
         });

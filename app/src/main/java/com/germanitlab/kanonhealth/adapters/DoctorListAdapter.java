@@ -24,10 +24,12 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ItemView>{
     private List<User> doctorContactsList;
     Activity activity;
+    int visibility ;
 
-    public DoctorListAdapter(List<User> doctorContactsList, Activity activity) {
+    public DoctorListAdapter(List<User> doctorContactsList, Activity activity , int visibility) {
         this.doctorContactsList = doctorContactsList;
         this.activity = activity;
+        this.visibility = visibility ;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     public void onBindViewHolder(ItemView holder, int position) {
 
         User doctor = doctorContactsList.get(position);
-
+        holder.imgStatus.setVisibility(View.GONE);
         holder.tvDoctorName.setText(doctor.getName());
         holder.tvAbout.setText(doctor.getAbout());
         if(doctor.isChosen())
@@ -66,7 +68,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     }
 
     public class ItemView extends RecyclerView.ViewHolder {
-        CircleImageView imgAvatar, imgPage;
+        CircleImageView imgAvatar, imgPage , imgStatus;
         TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage;
         LinearLayout background ;
 
@@ -81,6 +83,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             tvSubtitle = (TextView) itemView.findViewById(R.id.tv_sub_title_cell);
             tvAbout = (TextView) itemView.findViewById(R.id.tv_about_doctor_cell);
             tvUnreadMessage = (TextView) itemView.findViewById(R.id.tv_unread_message_cell);
+            imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
         }
     }
 }

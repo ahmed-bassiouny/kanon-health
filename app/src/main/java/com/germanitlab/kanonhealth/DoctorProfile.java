@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -183,7 +184,7 @@ public class DoctorProfile extends AppCompatActivity {
     private void createAdapter() {
         Gson gson = new Gson();
         ArrayList<Message> messages = doctor.getDocuments();
-        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this, profile_layout, video_layout);
+        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this, profile_layout);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

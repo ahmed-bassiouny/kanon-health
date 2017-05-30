@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     private int tabIndex;
     private boolean temp;
-    private int type ;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //        tabLayout = (TabLayout) findViewById(R.id.home_tabs);
 //        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        mytablayout= (TabLayout) findViewById(R.id.mytablayout);
-        myviewpager= (ViewPager) findViewById(R.id.myviewpager);
+        mytablayout = (TabLayout) findViewById(R.id.mytablayout);
+        myviewpager = (ViewPager) findViewById(R.id.myviewpager);
         myviewpager.setOffscreenPageLimit(4);
 
         speciality_id = intent.getIntExtra("speciality_id", 0);
@@ -151,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Toast.makeText(MainActivity.this, tab.getPosition()+"", Toast.LENGTH_SHORT).show();
-                myviewpager.setCurrentItem(tab.getPosition(),false);
+                Toast.makeText(MainActivity.this, tab.getPosition() + "", Toast.LENGTH_SHORT).show();
+                myviewpager.setCurrentItem(tab.getPosition(), false);
             }
 
             @Override
@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     }
 
 */
+
     /**************************************************/
     /*private void setupViewPager(ViewPager viewPager, int speciality_id , int type) {
 
@@ -536,15 +537,20 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         @Override
         public Fragment getItem(int pos) {
-            switch(pos) {
+            switch (pos) {
 
-                case 0: return DoctorListFragment.newInstance(speciality_id , type);
-                case 1: return DocumentsChatFragment.newInstance(MainActivity.this);
-                case 2: return  ChatsDoctorFragment.newInstance();
-                case 3:return SettingFragment.newInstance();
+                case 0:
+                    return DoctorListFragment.newInstance(speciality_id, type);
+                case 1:
+                    return DocumentsChatFragment.newInstance(MainActivity.this);
+                case 2:
+                    return ChatsDoctorFragment.newInstance();
+                case 3:
+                    return SettingFragment.newInstance();
             }
             return null;
         }
+
         @Override
         public int getCount() {
             return 4;

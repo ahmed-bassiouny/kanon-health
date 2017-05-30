@@ -9,13 +9,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:id="@+id/background">
+<FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_avatar_cell"
+        android:layout_width="@dimen/size_70dp"
+        android:layout_height="@dimen/size_70dp"
+        android:src="@drawable/profile_place_holder" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="15dp"
+        android:id="@+id/status"
+        android:layout_height="15dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="5dp"
+        android:src="@color/black"/>
+</FrameLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_avatar_cell"
-            android:layout_width="@dimen/size_70dp"
-            android:layout_height="@dimen/size_70dp"
-            android:src="@drawable/profile_place_holder" />
 
 
         <LinearLayout
