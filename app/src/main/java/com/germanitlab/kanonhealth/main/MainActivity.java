@@ -86,43 +86,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         mytablayout= (TabLayout) findViewById(R.id.mytablayout);
         myviewpager= (ViewPager) findViewById(R.id.myviewpager);
-        //myviewpager.setOffscreenPageLimit(4);
-
-//        setupViewPager(viewPager, speciality_id , type);
-
-//        tabLayout.setupWithViewPager(viewPager);
-
-//        setupCustomTab();
-
-//        viewPager.setCurrentItem(tabIndex);
-
-//        tab0.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new Helper(MainActivity.this).replaceFragments(new DoctorListFragment(),
-//
-//                        R.id.doctor_list_continer, "doctorList");
-//                viewPager.setCurrentItem(0);
-//
-//            }
-//        });
-//
-//        tab2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new Helper(MainActivity.this).replaceFragments(new ChatsDoctorFragment(),
-//                        R.id.doctor_list_continer, "chats");
-//                viewPager.setCurrentItem(2);
-//            }
-//        });
-//
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-         intent = getIntent();
+        myviewpager.setOffscreenPageLimit(4);
+        intent = getIntent();
         tabIndex = intent.getIntExtra("index", 0);
         if (tabIndex == -1) {
             tabIndex = 0;
@@ -165,6 +130,41 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
             }
         });
+
+//        setupViewPager(viewPager, speciality_id , type);
+
+//        tabLayout.setupWithViewPager(viewPager);
+
+//        setupCustomTab();
+
+//        viewPager.setCurrentItem(tabIndex);
+
+//        tab0.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new Helper(MainActivity.this).replaceFragments(new DoctorListFragment(),
+//
+//                        R.id.doctor_list_continer, "doctorList");
+//                viewPager.setCurrentItem(0);
+//
+//            }
+//        });
+//
+//        tab2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new Helper(MainActivity.this).replaceFragments(new ChatsDoctorFragment(),
+//                        R.id.doctor_list_continer, "chats");
+//                viewPager.setCurrentItem(2);
+//            }
+//        });
+//
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
@@ -384,6 +384,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //        }
     }
 
+/*
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -400,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         }
     }
+*/
 
 
     private void showDialog(final String qr) {
