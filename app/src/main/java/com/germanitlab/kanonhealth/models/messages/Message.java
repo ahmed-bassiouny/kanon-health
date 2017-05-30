@@ -3,7 +3,6 @@ package com.germanitlab.kanonhealth.models.messages;
 import android.graphics.Bitmap;
 
 
-import com.germanitlab.kanonhealth.models.doctors.User;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

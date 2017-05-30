@@ -19,7 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;

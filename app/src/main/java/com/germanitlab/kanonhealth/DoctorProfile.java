@@ -22,26 +22,26 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.doctors.User;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.Info;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
+import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import com.germanitlab.kanonhealth.payment.PreRequest;
-import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.stmt.query.In;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-
+// Edit By Ahmed 29-5-2017
 public class DoctorProfile extends AppCompatActivity {
     @BindView(R.id.contact)
     Button contact;
@@ -78,19 +78,23 @@ public class DoctorProfile extends AppCompatActivity {
     CircleImageView imgAvatar;
     ProgressDialog progressDialog;
     private DoctorDocumentAdapter doctorDocumentAdapter;
-    @BindView(R.id.video_layout)
-    LinearLayout video_layout;
+    /*    @BindView(R.id.video_layout)
+        LinearLayout video_layout;*/
     @BindView(R.id.profile_layout)
     ScrollView profile_layout;
     private UserRepository mDoctorRepository;
 
+    @BindView(R.id.add_to_my_doctor)
+    Button add_to_my_doctor;
+    private Util util ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile);
         mPrefManager = new PrefManager(this);
         ButterKnife.bind(this);
-        showProgressDialog();
+        util = Util.getInstance(this);
+        util.showProgressDialog();
         Intent intent = getIntent();
         Gson gson = new Gson();
         mDoctorRepository = new UserRepository(getApplicationContext());
@@ -106,7 +110,8 @@ public class DoctorProfile extends AppCompatActivity {
             if (dos != null)
                 doctor.setDocuments(dos);
             bindData();
-            dismissProgressDialog();
+            util.dismissProgressDialog();
+            checkDoctor();
         }
 
     }
@@ -119,14 +124,15 @@ public class DoctorProfile extends AppCompatActivity {
                 doctorJson = gson.toJson(response);
                 UserInfoResponse userInfoResponse = (UserInfoResponse) response;
                 doctor = userInfoResponse.getUser();
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 mDoctorRepository.insertDocument(doctor);
                 bindData();
+                checkDoctor();
             }
 
             @Override
             public void onFailed(String error) {
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
 
             }
@@ -151,7 +157,7 @@ public class DoctorProfile extends AppCompatActivity {
             Log.e("returned image :", doctor.getAvatar());
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + doctor.getAvatar())
-                    .resize(500,500).centerInside().into(imgAvatar);
+                    .resize(500, 500).centerInside().into(imgAvatar);
         }
         if (doctor.getDocuments() != null)
             createAdapter();
@@ -191,12 +197,48 @@ public class DoctorProfile extends AppCompatActivity {
         recyclerView.setAdapter(doctorDocumentAdapter);
     }
 
-    public void dismissProgressDialog() {
+    @OnClick(R.id.add_to_my_doctor)
+    public void addToMyDoctor() {
+        if (doctor.getIs_my_doctor().equals("0")) {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    Log.i("Answers ", response.toString());
+                    doctor.setIs_my_doctor("1");
+                    checkDoctor();
+                }
 
-        progressDialog.dismiss();
+                @Override
+                public void onFailed(String error) {
+                    Log.i("Error ", " " + error);
+                }
+            }).addToMyDoctor(doctor.get_Id() + "");
+        } else if (doctor.getIs_my_doctor().equals("1")) {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    Log.i("Answers ", response.toString());
+                    doctor.setIs_my_doctor("0");
+                    checkDoctor();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.i("Error ", " " + error);
+                }
+            }).removeFromMyDoctor(doctor.get_Id() + "");
+        } else {
+            Toast.makeText(this, "Something Wrong Happpened", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
+    private void checkDoctor() {
+        try {
+            if (doctor.getIs_my_doctor().equals("0"))
+                add_to_my_doctor.setText(getString(R.string.add_to));
+            else if (doctor.getIs_my_doctor().equals("1"))
+                add_to_my_doctor.setText(getString(R.string.remove_from));
+        }catch (Exception e){}
+
     }
 }

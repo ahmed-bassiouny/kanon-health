@@ -41,15 +41,10 @@ import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;

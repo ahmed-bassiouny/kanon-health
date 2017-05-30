@@ -4,6 +4,8 @@ package com.germanitlab.kanonhealth.documents;
  * Created by Mo on 3/19/17.
  */
 
+// Edit by Ahmed 29-5-2017
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -87,7 +89,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
-@SuppressLint("ValidFragment")
+
 public class DocumentsChatFragment extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -114,7 +116,6 @@ public class DocumentsChatFragment extends Fragment
     private SimpleLocation simpleLocation;
     private long startTimeForRecording = 0, endTimeForRecording = 0;
 
-    public MainActivity activity;
 
     PrefManager prefManager;
 
@@ -126,29 +127,25 @@ public class DocumentsChatFragment extends Fragment
     private static DocumentsChatFragment documentsChatFragment;
 
 
-    public static DocumentsChatFragment newInstance(MainActivity activity){
+    public static DocumentsChatFragment newInstance(){
         if(documentsChatFragment==null)
-            documentsChatFragment=new DocumentsChatFragment(activity);
+            documentsChatFragment=new DocumentsChatFragment();
         return documentsChatFragment;
     }
-
-
-    @SuppressLint("ValidFragment")
-    public DocumentsChatFragment(MainActivity activity) {
-        this.activity = activity;
+    public DocumentsChatFragment(){
+        
     }
 
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mAdapter = new DocumentsAdapter(mMessages, activity, this);
+    public void onStart() {
+        super.onStart();
+        mAdapter = new DocumentsAdapter(mMessages, getActivity(), this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        prefManager = new PrefManager(activity);
+        prefManager = new PrefManager(getActivity());
         if (view != null) {
 
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -189,7 +186,7 @@ public class DocumentsChatFragment extends Fragment
         etMessage = (EditText) view.findViewById(R.id.et_chat_message);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_chat_messages);
         recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(activity);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
@@ -265,7 +262,7 @@ public class DocumentsChatFragment extends Fragment
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        activity.runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mAdapter.notifyDataSetChanged();
@@ -317,7 +314,7 @@ public class DocumentsChatFragment extends Fragment
         }
 
         mMessages.add(message);
-        mAdapter = new DocumentsAdapter(mMessages, activity, this);
+        mAdapter = new DocumentsAdapter(mMessages, getActivity(), this);
         mAdapter.notifyItemInserted(0);
         scrollToBottom();
 
@@ -351,7 +348,7 @@ public class DocumentsChatFragment extends Fragment
     //------  get chat history
     private void fetchHistory() {
 
-        new SocketCall(activity, new ApiResponse() {
+        new SocketCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
 
@@ -426,7 +423,7 @@ public class DocumentsChatFragment extends Fragment
         if (mAdapter != null) {
             mAdapter.setList(mMessages);
 
-            activity.runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mAdapter.notifyDataSetChanged();
@@ -722,7 +719,7 @@ public class DocumentsChatFragment extends Fragment
                 } else {
 
                     if (simpleLocation == null || simpleLocation.getLatitude() == 0) {
-                        Toast.makeText(activity, "Can't get your location", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Can't get your location", Toast.LENGTH_LONG).show();
                         mGoogleApiClient.reconnect();
                         return;
                     }
@@ -756,7 +753,7 @@ public class DocumentsChatFragment extends Fragment
 
 
     private void askForPermission(String[] permission, Integer requestCode) {
-       ActivityCompat.requestPermissions(activity, permission, requestCode);
+       ActivityCompat.requestPermissions(getActivity(), permission, requestCode);
     }
 
     @Override
@@ -775,25 +772,25 @@ public class DocumentsChatFragment extends Fragment
                             if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
                                 sendMessage(getPathFromURI(selectedUri), Constants.IMAGE);
                             } else {
-                                sendMessage(getPath(activity, selectedUri), Constants.VIDEO);
+                                sendMessage(getPath(getActivity(), selectedUri), Constants.VIDEO);
                             }
 
                         } else {
                             if (isImageFile(selectedUri)) {
-                                filePath = getPath(activity, selectedUri);
+                                filePath = getPath(getActivity(), selectedUri);
                                 sendMessage(filePath, Constants.IMAGE);
                             } else {
-                                sendMessage(getPath(activity, selectedUri), Constants.VIDEO);
+                                sendMessage(getPath(getActivity(), selectedUri), Constants.VIDEO);
                             }
                         }
                         break;
                     case 200://for video
                         Uri uriVideo = data.getData();
-                        sendMessage(getPath(activity, uriVideo), Constants.VIDEO);
+                        sendMessage(getPath(getActivity(), uriVideo), Constants.VIDEO);
                         break;
                     case 300:
                         Uri savedUri = data.getData();
-                        sendMessage(getPath(activity, savedUri), Constants.AUDIO);
+                        sendMessage(getPath(getActivity(), savedUri), Constants.AUDIO);
                         break;
                 }
             } else {
@@ -852,7 +849,7 @@ public class DocumentsChatFragment extends Fragment
     }
 
     public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);
@@ -879,7 +876,7 @@ public class DocumentsChatFragment extends Fragment
     }
 
     public boolean isImageFile(Uri uri) {
-        ContentResolver cR = activity.getContentResolver();
+        ContentResolver cR = getActivity().getContentResolver();
         return cR != null && cR.getType(uri).startsWith("image");
     }
 

@@ -35,7 +35,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;

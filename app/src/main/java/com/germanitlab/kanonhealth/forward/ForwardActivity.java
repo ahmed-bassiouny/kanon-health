@@ -30,7 +30,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.User1;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;

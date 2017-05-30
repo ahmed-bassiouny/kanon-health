@@ -14,31 +14,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.socket.emitter.Emitter;
 
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -50,10 +36,17 @@ import com.germanitlab.kanonhealth.documents.DocumentsChatFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.interfaces.OnImgDoctorListMapClick;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.settings.SettingFragment;
+import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity implements OnImgDoctorListMapClick {
 
@@ -79,30 +72,24 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     private int tabIndex;
     private boolean temp;
+
     private int type;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
-        tabIndex = intent.getIntExtra("index", 0);
-        if (tabIndex == -1) {
-            tabIndex = 0;
-            temp = true;
-        }
         //-- set status open when open activity
         AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
 //
 //        tabLayout = (TabLayout) findViewById(R.id.home_tabs);
 //        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
+
         mytablayout = (TabLayout) findViewById(R.id.mytablayout);
         myviewpager = (ViewPager) findViewById(R.id.myviewpager);
-        myviewpager.setOffscreenPageLimit(4);
-
-        speciality_id = intent.getIntExtra("speciality_id", 0);
-        type = intent.getIntExtra("type", 2);
+        //myviewpager.setOffscreenPageLimit(4);
 //        setupViewPager(viewPager, speciality_id , type);
 
 //        tabLayout.setupWithViewPager(viewPager);
@@ -131,8 +118,24 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //            }
 //        });
 //
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        intent = getIntent();
+        tabIndex = intent.getIntExtra("index", 0);
+        if (tabIndex == -1) {
+            tabIndex = 0;
+            temp = true;
+        }
+        speciality_id = intent.getIntExtra("speciality_id", 0);
+        type = intent.getIntExtra("type", 2);
+
         myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        myviewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+        myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Toast.makeText(MainActivity.this, tab.getPosition() + "", Toast.LENGTH_SHORT).show();
+
                 myviewpager.setCurrentItem(tab.getPosition(), false);
             }
 
@@ -529,7 +532,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //
 //    }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -542,7 +545,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 case 0:
                     return DoctorListFragment.newInstance(speciality_id, type);
                 case 1:
-                    return DocumentsChatFragment.newInstance(MainActivity.this);
+                    return DocumentsChatFragment.newInstance();
                 case 2:
                     return ChatsDoctorFragment.newInstance();
                 case 3:

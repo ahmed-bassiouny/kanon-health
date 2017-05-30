@@ -1,9 +1,15 @@
 package com.germanitlab.kanonhealth.helpers;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.germanitlab.kanonhealth.R;
 
 /**
  * Created by mohammed on 8/29/15.
@@ -11,6 +17,7 @@ import android.util.Log;
 public class Util {
     private static Util util;
     private Context context;
+    private static ProgressDialog progressDialog;
     public static Util getInstance(Context context) {
         if(util!=null)
             return util;
@@ -47,5 +54,24 @@ public class Util {
         Uri uri = Uri.parse(uriString);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
+    }
+    public void showProgressDialog() {
+        progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
+        Runnable progressRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                if(progressDialog.isShowing()) {
+                    progressDialog.cancel();
+                    Toast.makeText(context, context.getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        Handler handler = new Handler();
+        handler.postDelayed(progressRunnable, 5000);
+    }
+    public void dismissProgressDialog() {
+        progressDialog.dismiss();
     }
 }

@@ -1,6 +1,5 @@
 package com.germanitlab.kanonhealth.models.user;
 
-import com.germanitlab.kanonhealth.models.doctors.User;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

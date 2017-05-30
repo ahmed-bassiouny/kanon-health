@@ -3,10 +3,11 @@ package com.germanitlab.kanonhealth.async;
 import android.app.Activity;
 import android.util.Log;
 
+import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.models.Forward;
 import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -29,7 +30,6 @@ import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
 import com.germanitlab.kanonhealth.models.user.BasicRequest;
 import com.germanitlab.kanonhealth.models.user.LocationRequest;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.User1;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
@@ -602,6 +602,38 @@ public class HttpCall {
             public void onFailure(Call<JsonObject> call, Throwable t) {
 
                 Log.e("Answers ", " " + t.getLocalizedMessage());
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void addToMyDoctor(String doc_id){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        DoctorRequest mDoctorRequest =new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),AppController.getInstance().getClientInfo().getPassword(),"",doc_id);
+        Call<JsonObject> connection=service.addToMyDoctor(mDoctorRequest);
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void removeFromMyDoctor(String doc_id){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        DoctorRequest mDoctorRequest =new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),AppController.getInstance().getClientInfo().getPassword(),"",doc_id);
+        Call<JsonObject> connection=service.removeFromMyDoctor(mDoctorRequest);
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 apiResponse.onFailed(t.getLocalizedMessage());
             }
         });

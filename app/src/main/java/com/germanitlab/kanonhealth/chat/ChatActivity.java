@@ -51,8 +51,7 @@ import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.models.doctors.User;
-import com.germanitlab.kanonhealth.models.user.User1;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.google.android.gms.common.ConnectionResult;

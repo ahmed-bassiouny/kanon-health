@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.chat.ChatActivity;
-import com.germanitlab.kanonhealth.models.doctors.User;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -51,7 +51,7 @@ import com.germanitlab.kanonhealth.payment.PreRequest;
 /**
  * A simple {@link Fragment} subclass.
  */
-@SuppressLint("ValidFragment")
+
 public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private View view;
