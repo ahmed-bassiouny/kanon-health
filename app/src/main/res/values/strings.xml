@@ -45,7 +45,7 @@
     <string name="add_to">Add to My Doctor\'s</string>
     <string name="remove_from">Remove From My Doctor\'s</string>
     <string name="error_connection">Please Check Your Internet Connection</string>
-
+    <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
     <string name="hot_line">Hotline</string>
     <string name="fax">Fax</string>
     <string name="website">Wensite</string>
