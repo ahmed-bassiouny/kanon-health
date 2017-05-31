@@ -40,7 +40,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
         {
             Picasso.with(mContext).load(Constants.CHAT_SERVER_URL
                     + "/" + images[position])
-                    .resize(80, 80).into(holder.image);
+                    .resize(500, 500).into(holder.image);
         }
     }
 

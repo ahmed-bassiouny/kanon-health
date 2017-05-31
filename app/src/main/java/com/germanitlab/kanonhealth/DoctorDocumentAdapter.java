@@ -125,7 +125,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
     private void createImage(MyViewHolder holder, int position, Message message) {
         holder.imageLayout.setVisibility(View.VISIBLE);
-        Picasso.with(context).load(Constants.CHAT_SERVER_URL + "/" + message.getMsg()).resize(150, 200).into(holder.imageView);
+        Picasso.with(context).load(Constants.CHAT_SERVER_URL + "/" + message.getMsg()).resize(500, 500).into(holder.imageView);
     }
 
     private void createAudio(final MyViewHolder holder, int position, Message message) {

@@ -566,7 +566,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + doctor.getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imageUser);
+                    .resize(500, 500).into(imageUser);
         }
     }
 

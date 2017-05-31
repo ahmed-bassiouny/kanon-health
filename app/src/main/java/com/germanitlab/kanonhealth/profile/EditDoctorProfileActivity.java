@@ -145,7 +145,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         } else {
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
+                    .resize(500, 500).into(imgAvatar);
         }
 /*        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -194,7 +194,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
         Picasso.with(this).load(Constants.CHAT_SERVER_URL
                 + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+                .resize(500, 500).into(imgAvatar);
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
@@ -521,7 +521,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         user.setAvatar("");
         Picasso.with(this).load(Constants.CHAT_SERVER_URL
                 + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+                .resize(500, 500).into(imgAvatar);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
 

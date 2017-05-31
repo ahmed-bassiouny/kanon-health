@@ -145,7 +145,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         } else {
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
+                    .resize(500, 500).into(imgAvatar);
         }
     }
 
@@ -175,7 +175,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
         Picasso.with(this).load(Constants.CHAT_SERVER_URL
                 + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+                .resize(500, 500).into(imgAvatar);
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
@@ -503,7 +503,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         user.setAvatar("");
         Picasso.with(this).load(Constants.CHAT_SERVER_URL
                 + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+                .resize(500, 500).into(imgAvatar);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
 

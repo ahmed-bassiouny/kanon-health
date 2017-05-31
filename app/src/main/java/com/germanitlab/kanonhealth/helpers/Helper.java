@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
@@ -99,7 +100,7 @@ public class Helper {
                 else
                     Picasso.with(activity).load(Constants.CHAT_SERVER_URL
                             + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                            .resize(80, 80).into(circleImageView);
+                            .resize(500, 500).into(circleImageView);
                 first_name.setText(userInfoResponse.getUser().getFirst_name().toString());
                 last_name.setText(userInfoResponse.getUser().getLast_name().toString());
                 try {

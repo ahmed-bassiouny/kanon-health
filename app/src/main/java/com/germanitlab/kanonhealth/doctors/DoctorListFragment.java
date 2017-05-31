@@ -107,6 +107,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         if (Helper.isNetworkAvailable(getContext())) {
             getBySpeciality(speciality_id, type);
         } else {
+            doctorList = mDoctorRepository.getAll();
             setAdapter(doctorList);
             util.dismissProgressDialog();
         }

@@ -43,7 +43,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.MyVi
         {
             Picasso.with(mContext).load(Constants.CHAT_SERVER_URL
                     + "/" + documnents.get(position))
-                    .resize(80, 80).into(holder.image);
+                    .resize(500, 500).into(holder.image);
         }
     }
 
@@ -60,6 +60,4 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.MyVi
             image = (ImageView) view.findViewById(R.id.image);
         }
     }
-
-
 }

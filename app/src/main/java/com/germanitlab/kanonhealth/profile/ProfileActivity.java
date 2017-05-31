@@ -153,7 +153,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         } else {
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
+                    .resize(500, 500).into(imgAvatar);
         }
 
         if(userInfoResponse.getUser().getIsDoc() == 1)
@@ -166,7 +166,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         } else {
             Picasso.with(this).load(Constants.CHAT_SERVER_URL
                     + "/" + userInfoResponse.getUser().getQr_url()).placeholder(R.drawable.qr)
-                    .resize(80, 80).into(qr);
+                    .resize(500, 500).into(qr);
         }
 
         tvName.setText(userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
