@@ -462,18 +462,23 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         dialog.show();
 
     }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onBackPressed();
-            return true;
-        }
-        return super.onKeyUp(keyCode, objEvent);
-    }
+//
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            onBackPressed();
+//            return true;
+//        }
+//        return super.onKeyUp(keyCode, objEvent);
+//    }
 
     @Override
     public void onBackPressed() {
+        if(myviewpager.getCurrentItem()!=0)
+        {
+            myviewpager.setCurrentItem(0);
+            return;
+        }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setMessage("Möchtest du aussteigen ?");
         builder1.setCancelable(true);
