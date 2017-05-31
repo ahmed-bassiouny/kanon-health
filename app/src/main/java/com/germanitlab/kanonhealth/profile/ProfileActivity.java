@@ -39,8 +39,8 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
+import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
 
 public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
@@ -87,6 +87,9 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     private DoctorDocumentAdapter mAdapter2;
     LinkedHashMap<String, String> questionAnswer;
 
+//    public static int indexFromIntent=0;
+
+
     ArrayList<Message> images;
     Dialog dialog;
     boolean is_doctor ;
@@ -97,13 +100,11 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
 
-
         ButterKnife.bind(this);
         mPrefManager = new PrefManager(this);
         Intent intent = getIntent();
         Boolean from = intent.getBooleanExtra("from", false);
         Log.e("Where  coming ", from.toString());
-
         if (!from) {
 
             userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
@@ -264,8 +265,10 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("index" , 3);
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        intent.putExtra("index" , 3);
+//        startActivity(intent);
+        indexFromIntent = 3;
+        finish();
     }
 }
