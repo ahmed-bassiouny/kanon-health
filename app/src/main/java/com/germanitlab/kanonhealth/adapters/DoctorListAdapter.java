@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -58,9 +57,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         holder.tvSubtitle.setText(doctor.getSubTitle());
         holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
-        Picasso.with(activity).load(Constants.CHAT_SERVER_URL
-                + "/" + doctor.getAvatar()).placeholder(R.drawable.placeholder)
-                .resize(500,500).centerInside().into(holder.imgAvatar);
+        Helper.setImage(activity ,Constants.CHAT_SERVER_URL
+                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.placeholder );
     }
 
     @Override

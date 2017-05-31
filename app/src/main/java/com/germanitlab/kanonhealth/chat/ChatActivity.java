@@ -59,7 +59,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -557,17 +556,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private void assignViews() {
 
         tvUserName.setText(doctor.getName());
-
-        if (doctor.getAvatar() != null) {
             Log.e("returned image :", doctor.getAvatar());
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar())
-                    .resize(500,500).centerInside().into(imageUser);
-        } else {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(500, 500).into(imageUser);
-        }
+            Helper.setImage(this , Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
+
+
     }
 
 

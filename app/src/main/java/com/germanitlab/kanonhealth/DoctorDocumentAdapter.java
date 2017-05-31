@@ -39,10 +39,10 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -125,7 +125,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
     private void createImage(MyViewHolder holder, int position, Message message) {
         holder.imageLayout.setVisibility(View.VISIBLE);
-        Picasso.with(context).load(Constants.CHAT_SERVER_URL + "/" + message.getMsg()).resize(500, 500).into(holder.imageView);
+        Helper.setImage(context ,Constants.CHAT_SERVER_URL + "/" + message.getMsg() , holder.imageView , 0 );
     }
 
     private void createAudio(final MyViewHolder holder, int position, Message message) {

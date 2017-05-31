@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.germanitlab.kanonhealth.R;
-import com.squareup.picasso.Picasso;
+import com.germanitlab.kanonhealth.helpers.Helper;
 
 import java.util.ArrayList;
 
@@ -41,9 +41,8 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.MyVi
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if(documnents.get(position) !=null)
         {
-            Picasso.with(mContext).load(Constants.CHAT_SERVER_URL
-                    + "/" + documnents.get(position))
-                    .resize(500, 500).into(holder.image);
+            Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
+                    + "/" + documnents.get(position) , holder.image , 0 );
         }
     }
 

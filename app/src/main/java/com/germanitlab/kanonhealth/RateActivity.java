@@ -16,9 +16,9 @@ import java.util.List;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,13 +42,10 @@ public class RateActivity extends AppCompatActivity {
         doctor_name = (TextView) findViewById(R.id.doctor_name);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         if(avatar_path != null && avatar_path!= "" ) {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + avatar_path).into(avatar);
+            Helper.setImage(this ,Constants.CHAT_SERVER_URL
+                    + "/" + avatar_path , avatar , 0 );
         }
-        else
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + avatar_path).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(avatar);
+
         doctor_name.setText(name);
         errorText = (TextView) findViewById(R.id.error);
         showProgressDialog();
