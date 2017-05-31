@@ -474,6 +474,11 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     @Override
     public void onBackPressed() {
+        if(myviewpager.getCurrentItem()!=0)
+        {
+            myviewpager.setCurrentItem(0);
+            return;
+        }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setMessage("Möchtest du aussteigen ?");
         builder1.setCancelable(true);
