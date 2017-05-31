@@ -66,9 +66,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 */
     List<User> doctorList;
     private Button doctor_list, praxis_list;
-    int speciality_id = 0;
+    static int speciality_id = 0;
     String jsonString;
-    int type;
+    static int type;
     PrefManager prefManager;
     Gson gson;
     private UserRepository mDoctorRepository;
@@ -79,14 +79,11 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     public DoctorListFragment() {
     }
 
-    public DoctorListFragment(int speciality_id, int type) {
-        this.speciality_id = speciality_id;
-        this.type = type;
-
-    }
-    public static DoctorListFragment newInstance(int speciality_id, int type){
+    public static DoctorListFragment newInstance(int mspeciality_id, int mtype){
+        speciality_id=mspeciality_id;
+        type = mtype;
         if(doctorListFragment==null)
-            doctorListFragment=new DoctorListFragment(speciality_id,type);
+            doctorListFragment=new DoctorListFragment();
         return doctorListFragment;
     }
 

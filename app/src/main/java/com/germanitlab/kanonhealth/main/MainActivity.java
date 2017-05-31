@@ -462,15 +462,15 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         dialog.show();
 
     }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onBackPressed();
-            return true;
-        }
-        return super.onKeyUp(keyCode, objEvent);
-    }
+//
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            onBackPressed();
+//            return true;
+//        }
+//        return super.onKeyUp(keyCode, objEvent);
+//    }
 
     @Override
     public void onBackPressed() {
