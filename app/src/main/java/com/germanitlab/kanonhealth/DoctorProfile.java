@@ -122,6 +122,13 @@ public class DoctorProfile extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+                finish();
+
+    }
+
     private void getDoctorData() {
         new HttpCall(this, new ApiResponse() {
             @Override

@@ -172,6 +172,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:layout_marginLeft="8dp"
+                            android:inputType="date"
                             android:gravity="bottom"
                             android:hint="@string/birthday"
                             android:textSize="16dp" />
@@ -226,6 +227,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/house_number"
+                        android:inputType="number"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -248,6 +250,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/zip_code"
+                        android:inputType="number"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
