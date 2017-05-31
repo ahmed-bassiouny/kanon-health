@@ -1,12 +1,8 @@
 package com.germanitlab.kanonhealth.doctors;
 
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,30 +18,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.DoctorProfile;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
+import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.chat.MapsActivity;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
+import com.germanitlab.kanonhealth.interfaces.MyClickListener;
+import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.germanitlab.kanonhealth.DoctorProfile;
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.chat.MapsActivity;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
-import com.germanitlab.kanonhealth.interfaces.MyClickListener;
-import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 
 /**
  * A simple {@link Fragment} subclass.

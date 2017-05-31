@@ -19,6 +19,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.LocationServicesTurn;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,15 +43,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.helpers.LocationServicesTurn;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
 
 
 public class DoctorListMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, ApiResponse {

@@ -50,7 +50,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.DoctorProfile;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.async.SocketCall;
+import com.germanitlab.kanonhealth.db.DataManger;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PopupHelper;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
@@ -84,19 +96,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import im.delight.android.location.SimpleLocation;
 import io.socket.emitter.Emitter;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.SocketCall;
-import com.germanitlab.kanonhealth.db.DataManger;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.helpers.PopupHelper;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 /**
  * Created by Mo on 3/16/17.

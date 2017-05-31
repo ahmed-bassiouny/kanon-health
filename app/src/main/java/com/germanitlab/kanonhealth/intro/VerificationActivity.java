@@ -16,15 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -39,6 +30,15 @@ import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User1;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class VerificationActivity extends AppCompatActivity {

@@ -7,10 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.germanitlab.kanonhealth.helpers.Helper;
-
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 
 /**
  * Created by Geram IT Lab on 02/03/2017.
@@ -39,7 +38,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
         if(images[position] !=null)
         {
             Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
-                    + "/" + images[position] , holder.image , 0 );
+                    + "/" + images[position] , holder.image , R.drawable.profile_place_holder );
         }
     }
 

@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.models.messages.Message;
 
 import java.util.ArrayList;
-
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 /**
  * Created by Geram IT Lab on 19/03/2017.
@@ -42,7 +41,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.MyVi
         if(documnents.get(position) !=null)
         {
             Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
-                    + "/" + documnents.get(position) , holder.image , 0 );
+                    + "/" + documnents.get(position) , holder.image , R.drawable.profile_place_holder );
         }
     }
 

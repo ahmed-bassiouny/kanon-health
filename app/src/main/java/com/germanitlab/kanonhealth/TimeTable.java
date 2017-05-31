@@ -1,7 +1,7 @@
 package com.germanitlab.kanonhealth;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -14,9 +14,7 @@ import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.models.Table;
 import com.google.gson.Gson;
-import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.stmt.query.In;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package com.germanitlab.kanonhealth.interfaces;
 
-import java.util.ArrayList;
-
 import com.germanitlab.kanonhealth.models.user.User1;
+
+import java.util.ArrayList;
 
 /**
  * Created by Geram IT Lab on 21/03/2017.

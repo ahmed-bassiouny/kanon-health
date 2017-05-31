@@ -31,6 +31,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.callback.UploadListener;
+import com.germanitlab.kanonhealth.chat.MapsActivity;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
+import com.germanitlab.kanonhealth.helpers.MediaUtilities;
+import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.messages.Message;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -51,20 +64,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.callback.UploadListener;
-import com.germanitlab.kanonhealth.chat.MapsActivity;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
-import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
-import com.germanitlab.kanonhealth.helpers.MediaUtilities;
-import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 import static com.germanitlab.kanonhealth.R.id.progress_view_download;
 import static com.germanitlab.kanonhealth.helpers.Constants.folder;

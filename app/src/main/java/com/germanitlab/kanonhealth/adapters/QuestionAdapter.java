@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.germanitlab.kanonhealth.R;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import com.germanitlab.kanonhealth.R;
 
 /**
  * Created by Geram IT Lab on 26/02/2017.

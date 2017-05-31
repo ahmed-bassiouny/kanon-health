@@ -11,17 +11,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.chat.ChatActivity;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.chat.ChatActivity;
-import com.germanitlab.kanonhealth.helpers.Constants;
 
 /**
  * Created by Geram IT Lab on 20/04/2017.

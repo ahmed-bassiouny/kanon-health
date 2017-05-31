@@ -1,50 +1,32 @@
 package com.germanitlab.kanonhealth;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -125,7 +107,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
     private void createImage(MyViewHolder holder, int position, Message message) {
         holder.imageLayout.setVisibility(View.VISIBLE);
-        Helper.setImage(context ,Constants.CHAT_SERVER_URL + "/" + message.getMsg() , holder.imageView , 0 );
+        Helper.setImage(context ,Constants.CHAT_SERVER_URL + "/" + message.getMsg() , holder.imageView , R.drawable.profile_place_holder );
     }
 
     private void createAudio(final MyViewHolder holder, int position, Message message) {

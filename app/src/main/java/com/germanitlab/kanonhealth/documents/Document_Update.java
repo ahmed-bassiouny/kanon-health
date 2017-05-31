@@ -12,16 +12,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.models.messages.Message;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 public class Document_Update extends AppCompatActivity {
     @BindView(R.id.image_layout)

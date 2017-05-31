@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.germanitlab.kanonhealth.R;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.germanitlab.kanonhealth.R;
 
 public class PreRequest extends AppCompatActivity {
     String doctorJson;

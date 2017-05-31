@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 

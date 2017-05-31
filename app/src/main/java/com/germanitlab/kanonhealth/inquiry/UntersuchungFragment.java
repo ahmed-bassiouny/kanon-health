@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.germanitlab.kanonhealth.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.germanitlab.kanonhealth.R;
 
 /**
  * Created by Mo on 3/6/17.

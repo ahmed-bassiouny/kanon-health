@@ -11,14 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -43,7 +43,7 @@ public class RateActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         if(avatar_path != null && avatar_path!= "" ) {
             Helper.setImage(this ,Constants.CHAT_SERVER_URL
-                    + "/" + avatar_path , avatar , 0 );
+                    + "/" + avatar_path , avatar , R.drawable.profile_place_holder );
         }
 
         doctor_name.setText(name);

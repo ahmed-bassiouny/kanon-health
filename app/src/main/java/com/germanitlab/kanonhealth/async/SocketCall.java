@@ -3,13 +3,14 @@ package com.germanitlab.kanonhealth.async;
 import android.content.Context;
 import android.util.Log;
 
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 
 
 /**

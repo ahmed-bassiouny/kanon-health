@@ -30,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.germanitlab.kanonhealth.Help;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -43,9 +42,9 @@ import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 
 import java.io.Serializable;

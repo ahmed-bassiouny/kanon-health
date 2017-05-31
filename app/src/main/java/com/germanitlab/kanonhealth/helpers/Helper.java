@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
@@ -19,17 +18,16 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.germanitlab.kanonhealth.Help;
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.Date;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -58,7 +56,7 @@ public class Helper {
                 .commit();
     }
     public static void setImage(Context context , String url ,ImageView imageView ,int placeholder ){
-        Picasso.with(context).load(url)
+        Picasso.with(context).load(url).placeholder(placeholder)
                 .resize(500, 500).into(imageView);
     }
 

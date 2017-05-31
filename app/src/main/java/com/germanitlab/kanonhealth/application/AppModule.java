@@ -3,9 +3,10 @@ package com.germanitlab.kanonhealth.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.germanitlab.kanonhealth.db.customAnotations;
+
 import dagger.Module;
 import dagger.Provides;
-import com.germanitlab.kanonhealth.db.customAnotations;
 
 /**
  * Created by Mo on 3/17/17.

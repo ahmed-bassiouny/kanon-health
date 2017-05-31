@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.helpers.Constants;
 
 /**
  * Created by eslam on 12/29/16.
@@ -58,7 +58,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
         Helper.setImage(activity ,Constants.CHAT_SERVER_URL
-                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.placeholder );
+                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.profile_place_holder );
     }
 
     @Override

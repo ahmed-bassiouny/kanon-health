@@ -30,14 +30,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.germanitlab.kanonhealth.Help;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
+import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.user.Info;
+import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,15 +60,6 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.Info;
-import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 
 /**
  * Created by Geram IT Lab on 21/02/2017.

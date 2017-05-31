@@ -1,14 +1,13 @@
 package com.germanitlab.kanonhealth.models.user;
 
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import com.germanitlab.kanonhealth.models.messages.Message;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by eslam on 1/28/17.

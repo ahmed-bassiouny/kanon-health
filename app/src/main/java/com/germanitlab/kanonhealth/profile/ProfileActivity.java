@@ -16,8 +16,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
@@ -30,15 +38,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 

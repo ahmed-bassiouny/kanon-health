@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth.doctors;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -26,26 +25,25 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.interfaces.MyClickListener;
+import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.interfaces.MyClickListener;
-import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
-import com.germanitlab.kanonhealth.payment.PreRequest;
 
 
 /**
