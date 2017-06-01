@@ -25,7 +25,6 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
@@ -106,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         if (!from) {
 
             userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
-
+            mPrefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
             bindData();
 
             progressBar.setVisibility(View.GONE);
@@ -116,22 +115,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             new HttpCall(this, this).getProfile(AppController.getInstance().getClientInfo());
         }
 
-        qr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog = new Dialog(ProfileActivity.this);
-                dialog.setContentView(R.layout.custom_dialoge);
-                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.MATCH_PARENT);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-                if (userInfoResponse.getUser().getQr_url() != null) {
-                    Log.e("Qr image = :", userInfoResponse.getUser().getQr_url());
-                    Helper.setImage(getApplicationContext() , Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getQr_url() , imageView , R.drawable.qr);
-                }
-                dialog.show();
-            }
-        });
     }
 
     private void bindData() {

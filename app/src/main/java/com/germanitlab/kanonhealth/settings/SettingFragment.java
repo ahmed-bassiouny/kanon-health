@@ -71,11 +71,18 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
-        getSetting();
         initView();
         handelEvent();
       //  assignViews();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(getView()!=null && isVisibleToUser){
+            getSetting();
+        }
     }
 
     private void assignViews() {
