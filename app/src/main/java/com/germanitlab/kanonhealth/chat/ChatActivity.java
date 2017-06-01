@@ -169,14 +169,13 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.chat_activity);
-
         ButterKnife.bind(this);
+
+        /* data base
+         */
         mMessageRepositry = new MessageRepositry(getApplicationContext());
         getmChatComponent().inject(this);
-
-        // Inflate the layout for this fragment
 
 
         Gson gson = new Gson();
