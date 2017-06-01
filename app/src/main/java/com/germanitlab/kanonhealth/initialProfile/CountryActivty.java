@@ -10,12 +10,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.helpers.Constants;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.helpers.Constants;
 
 public class CountryActivty extends AppCompatActivity {
     private RecyclerView recyclerView;

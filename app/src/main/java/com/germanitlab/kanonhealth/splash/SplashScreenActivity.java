@@ -9,14 +9,13 @@ import android.util.Log;
 
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.intro.SignupActivity;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.intro.SignupActivity;
 
 
 public class SplashScreenActivity extends AppCompatActivity {

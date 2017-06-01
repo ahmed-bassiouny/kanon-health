@@ -3,10 +3,10 @@ package com.germanitlab.kanonhealth.db;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.germanitlab.kanonhealth.models.messages.Message;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 /**
  * Created by Mo on 3/17/17.

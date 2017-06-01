@@ -9,7 +9,6 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -20,6 +19,9 @@ import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.google.gson.Gson;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PaymentActivity extends AppCompatActivity {
     String doctorJson;

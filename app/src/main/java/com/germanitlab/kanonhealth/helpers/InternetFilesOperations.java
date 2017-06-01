@@ -9,6 +9,10 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.callback.DownloadListener;
+import com.germanitlab.kanonhealth.callback.UploadListener;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,10 +33,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.callback.UploadListener;
 
 import static com.germanitlab.kanonhealth.helpers.Constants.folder;
 

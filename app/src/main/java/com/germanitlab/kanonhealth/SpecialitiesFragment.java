@@ -13,20 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.germanitlab.kanonhealth.adapters.FilterAdapter;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.Speciality;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.germanitlab.kanonhealth.adapters.FilterAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.Speciality;
 
 
 /**

@@ -30,7 +30,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.callback.DownloadListener;
+import com.germanitlab.kanonhealth.callback.UploadListener;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
+import com.germanitlab.kanonhealth.helpers.MediaUtilities;
+import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.google.gson.Gson;
@@ -54,17 +64,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.callback.UploadListener;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
-import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
-import com.germanitlab.kanonhealth.helpers.MediaUtilities;
-import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 import static com.germanitlab.kanonhealth.R.id.progress_view_download;
 import static com.germanitlab.kanonhealth.helpers.Constants.folder;
@@ -111,10 +110,10 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 
     }
 
-
-    public void setHistory(List<Message> historyMessage) {
-        mMessages.addAll(0, historyMessage);
-    }
+//
+//    public void setHistory(List<Message> historyMessage) {
+//        mMessages.addAll(0, historyMessage);
+//    }
 
     public void setList(List<Message> mMessages) {
 

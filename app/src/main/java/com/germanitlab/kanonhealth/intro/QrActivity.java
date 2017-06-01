@@ -19,8 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.user.User1;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -29,18 +35,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-
 public class QrActivity extends AppCompatActivity {
     PrefManager prefManager;
     @BindView(R.id.button_qr_scanning)
     ImageButton buttonQrScanning;
-    User1 doctor;
+    User doctor;
     @BindView(R.id.layout)
     LinearLayout linearLayout;
     @BindView(R.id.error)
@@ -116,7 +115,7 @@ public class QrActivity extends AppCompatActivity {
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                doctor = (User1) response;
+                doctor = (User) response;
                 Gson gson = new Gson();
                 String json = gson.toJson(doctor);
                 prefManager.put(prefManager.DOCTOR_KEY, json);

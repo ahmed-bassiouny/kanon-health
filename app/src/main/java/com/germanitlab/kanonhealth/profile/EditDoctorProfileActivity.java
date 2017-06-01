@@ -37,15 +37,15 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -140,12 +140,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
 
             String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-            Picasso.with(this).load(path).into(imgAvatar);
-
-        } else {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
+            Helper.setImage(this , path , imgAvatar , R.drawable.profile_place_holder);
         }
 /*        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -192,9 +187,8 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     private void bindData() {
 
 
-        Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+        Helper.setImage(this ,Constants.CHAT_SERVER_URL
+                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar ,R.drawable.profile_place_holder );
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
@@ -519,9 +513,8 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+        Helper.setImage(this , Constants.CHAT_SERVER_URL
+                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar, R.drawable.profile_place_holder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
 

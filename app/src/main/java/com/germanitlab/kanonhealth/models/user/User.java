@@ -1,12 +1,8 @@
 package com.germanitlab.kanonhealth.models.user;
 
-import android.support.annotation.IdRes;
-
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.user.Info;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;

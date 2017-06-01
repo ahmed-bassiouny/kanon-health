@@ -2,22 +2,14 @@ package com.germanitlab.kanonhealth.interfaces;
 
 
 import com.germanitlab.kanonhealth.models.Forward;
-import com.germanitlab.kanonhealth.models.Payment;
-import com.germanitlab.kanonhealth.models.UpdatePrivacy;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.germanitlab.kanonhealth.models.Login;
+import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.models.Questions.InqueryRequest;
 import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
-import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
 import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
@@ -25,9 +17,17 @@ import com.germanitlab.kanonhealth.models.user.BasicRequest;
 import com.germanitlab.kanonhealth.models.user.LocationRequest;
 import com.germanitlab.kanonhealth.models.user.UpdateDocumentPrivacyRequest;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;

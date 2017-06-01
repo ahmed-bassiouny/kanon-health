@@ -18,16 +18,16 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.Date;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -55,6 +55,10 @@ public class Helper {
         fragmentManager.beginTransaction().replace(continer, fragment).addToBackStack(tag)
                 .commit();
     }
+    public static void setImage(Context context , String url ,ImageView imageView ,int placeholder ){
+        Picasso.with(context).load(url).placeholder(placeholder)
+                .resize(500, 500).into(imageView);
+    }
 
     public void replaceFragments(Fragment fragment, int continer , String tag) {
         FragmentManager fragmentManager = ((FragmentActivity) activity).getSupportFragmentManager();
@@ -81,9 +85,8 @@ public class Helper {
                         WindowManager.LayoutParams.MATCH_PARENT );
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
                 if (mPrefManager.getData(PrefManager.Image_data)!= null){
-                    Picasso.with(activity).load(Constants.CHAT_SERVER_URL
-                            + "/" + mPrefManager.getData(PrefManager.Image_data))
-                            .into(imageView);
+                    Helper.setImage(activity , Constants.CHAT_SERVER_URL
+                            + "/" + mPrefManager.getData(PrefManager.Image_data) , imageView , 0);
                 }
                 Gson gson = new Gson();
                 Log.d("user data" , mPrefManager.getData(PrefManager.USER_KEY));
@@ -93,13 +96,9 @@ public class Helper {
                 TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
                 CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
                 if(userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "" ) {
-                    Picasso.with(activity).load(Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getAvatar()).into(circleImageView);
+                    Helper.setImage(activity , Constants.CHAT_SERVER_URL
+                            + "/" + userInfoResponse.getUser().getAvatar() , circleImageView , 0);
                 }
-                else
-                    Picasso.with(activity).load(Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                            .resize(80, 80).into(circleImageView);
                 first_name.setText(userInfoResponse.getUser().getFirst_name().toString());
                 last_name.setText(userInfoResponse.getUser().getLast_name().toString());
                 try {

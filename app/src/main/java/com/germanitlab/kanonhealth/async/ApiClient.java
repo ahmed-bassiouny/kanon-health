@@ -1,9 +1,10 @@
 package com.germanitlab.kanonhealth.async;
 
 
+import com.germanitlab.kanonhealth.helpers.Constants;
+
 import java.util.concurrent.TimeUnit;
 
-import com.germanitlab.kanonhealth.helpers.Constants;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

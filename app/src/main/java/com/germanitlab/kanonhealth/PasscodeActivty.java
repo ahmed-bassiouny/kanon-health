@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.settings.SettingFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

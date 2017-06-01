@@ -4,6 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.germanitlab.kanonhealth.async.SocketCall;
+import com.germanitlab.kanonhealth.helpers.CacheJson;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -11,10 +16,6 @@ import java.net.URISyntaxException;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import com.germanitlab.kanonhealth.async.SocketCall;
-import com.germanitlab.kanonhealth.helpers.CacheJson;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 
 /**
  * Created by eslam on 1/10/17.

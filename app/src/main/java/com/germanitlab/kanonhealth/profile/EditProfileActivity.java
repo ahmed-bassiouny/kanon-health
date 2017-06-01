@@ -30,13 +30,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
+import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.user.Info;
+import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.squareup.picasso.Picasso;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -51,15 +60,6 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.Info;
-import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 
 /**
  * Created by Geram IT Lab on 21/02/2017.
@@ -138,15 +138,10 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         createAdapter();
 
         if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
-
             String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-            Picasso.with(this).load(path).into(imgAvatar);
-
-        } else {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
+            Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
         }
+
     }
 
     public void createAdapter() {
@@ -173,9 +168,8 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     private void bindData() {
 
 
-        Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+        Helper.setImage(this,Constants.CHAT_SERVER_URL
+                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar , R.drawable.profile_place_holder );
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
@@ -501,9 +495,8 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                .resize(80, 80).into(imgAvatar);
+        Helper.setImage(this ,Constants.CHAT_SERVER_URL
+                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar , R.drawable.profile_place_holder );
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
 

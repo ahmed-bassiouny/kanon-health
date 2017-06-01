@@ -50,7 +50,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.DoctorProfile;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.async.SocketCall;
+import com.germanitlab.kanonhealth.db.DataManger;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PopupHelper;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
@@ -59,7 +71,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,19 +96,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import im.delight.android.location.SimpleLocation;
 import io.socket.emitter.Emitter;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.SocketCall;
-import com.germanitlab.kanonhealth.db.DataManger;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.helpers.PopupHelper;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 /**
  * Created by Mo on 3/16/17.
@@ -519,7 +517,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
             mAdapter.notifyDataSetChanged();
             recyclerView.setAdapter(mAdapter);
-            scrollToBottom();
+//            scrollToBottom();
+
+
 
         }
     }
@@ -559,17 +559,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private void assignViews() {
 
         tvUserName.setText(doctor.getName());
-
-        if (doctor.getAvatar() != null) {
             Log.e("returned image :", doctor.getAvatar());
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar())
-                    .resize(500,500).centerInside().into(imageUser);
-        } else {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imageUser);
-        }
+            Helper.setImage(this , Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
+
+
     }
 
 
@@ -654,6 +648,16 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
+                    for (int i=0;i<mMessages.size();i++){
+                            if (mMessages.get(i).getSeen()==0) {
+                                if(recyclerView!=null) {
+                                    recyclerView.scrollToPosition(i);
+                                    break;
+                                }
+                        }
+
+                    }
                     mAdapter.notifyDataSetChanged();
 
                 }

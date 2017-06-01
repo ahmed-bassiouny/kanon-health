@@ -16,8 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.initialProfile.CountriesCodes;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,11 +31,6 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 
 
 public class SignupActivity extends AppCompatActivity implements ApiResponse {

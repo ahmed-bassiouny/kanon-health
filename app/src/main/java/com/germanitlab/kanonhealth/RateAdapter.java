@@ -9,8 +9,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -46,13 +46,10 @@ public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>
         holder.comment.setText(user.getComment());
         holder.rate.setRating(Float.valueOf(user.getRate()));
         if(user.getAvatar() != null && user.getAvatar() != "" ) {
-            Picasso.with(activity).load(Constants.CHAT_SERVER_URL
-                    + "/" + user.getAvatar()).into(holder.avatar);
+            Helper.setImage(activity , Constants.CHAT_SERVER_URL
+                    + "/" + user.getAvatar() , holder.avatar ,R.drawable.profile_place_holder );
         }
-        else
-            Picasso.with(activity).load(Constants.CHAT_SERVER_URL
-                    + "/" + user.getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(holder.avatar);
+
     }
 
     @Override

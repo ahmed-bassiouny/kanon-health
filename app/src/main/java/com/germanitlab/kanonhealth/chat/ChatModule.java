@@ -3,9 +3,10 @@ package com.germanitlab.kanonhealth.chat;
 import android.app.Activity;
 import android.content.Context;
 
+import com.germanitlab.kanonhealth.db.customAnotations;
+
 import dagger.Module;
 import dagger.Provides;
-import com.germanitlab.kanonhealth.db.customAnotations;
 
 /**
  * Created by Mo on 3/18/17.

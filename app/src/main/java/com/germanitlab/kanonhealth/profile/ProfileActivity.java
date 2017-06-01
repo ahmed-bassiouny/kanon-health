@@ -17,11 +17,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -32,16 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.messages.Message;
 import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
-
 public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @BindView(R.id.tv_profile_edit)
@@ -128,13 +126,8 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
                 if (userInfoResponse.getUser().getQr_url() != null) {
                     Log.e("Qr image = :", userInfoResponse.getUser().getQr_url());
-                    Picasso.with(getApplicationContext()).load(Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getQr_url())
-                            .into(imageView);
-                } else {
-                    Picasso.with(getApplicationContext()).load(Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getQr_url()).placeholder(R.drawable.qr)
-                            .into(imageView);
+                    Helper.setImage(getApplicationContext() , Constants.CHAT_SERVER_URL
+                            + "/" + userInfoResponse.getUser().getQr_url() , imageView , R.drawable.qr);
                 }
                 dialog.show();
             }
@@ -148,16 +141,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
             String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
 
-            Picasso.with(this).load(path).into(imgAvatar);
-
-//            Log.e("profile image = :", userInfoResponse.getDoctor().getAvatar());
-//            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-//                    + "/" + userInfoResponse.getDoctor().getAvatar())
-//                    .into(imgAvatar);
-        } else {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + userInfoResponse.getUser().getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
+            Helper.setImage(this, path , imgAvatar, R.drawable.profile_place_holder);
         }
 
         if(userInfoResponse.getUser().getIsDoc() == 1)
@@ -168,9 +152,8 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         if (userInfoResponse.getUser().getQr_url() != null) {
             Helper.ImportQr(mPrefManager, this, qr);
         } else {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + userInfoResponse.getUser().getQr_url()).placeholder(R.drawable.qr)
-                    .resize(80, 80).into(qr);
+            Helper.setImage(this,Constants.CHAT_SERVER_URL
+                    + "/" + userInfoResponse.getUser().getQr_url() , imgAvatar, R.drawable.qr);
         }
 
         tvName.setText(userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());

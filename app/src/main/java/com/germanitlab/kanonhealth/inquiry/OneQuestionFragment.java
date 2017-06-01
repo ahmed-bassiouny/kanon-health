@@ -12,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.R;
+
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.germanitlab.kanonhealth.R;
 
 /**
  * Created by Mo on 3/8/17.

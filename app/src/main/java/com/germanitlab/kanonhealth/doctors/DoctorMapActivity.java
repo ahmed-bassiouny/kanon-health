@@ -3,11 +3,10 @@ package com.germanitlab.kanonhealth.doctors;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.germanitlab.kanonhealth.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-
-import com.germanitlab.kanonhealth.R;
 
 
 public class DoctorMapActivity extends AppCompatActivity {

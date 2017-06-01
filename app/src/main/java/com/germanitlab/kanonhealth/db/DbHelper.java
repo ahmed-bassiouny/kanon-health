@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.germanitlab.kanonhealth.models.messages.Message;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import com.germanitlab.kanonhealth.models.messages.Message;
 
 /**
  * Created by Mo on 3/17/17.

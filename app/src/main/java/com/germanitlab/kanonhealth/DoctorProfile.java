@@ -32,7 +32,6 @@ import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -86,10 +85,10 @@ public class DoctorProfile extends AppCompatActivity {
 
     @BindView(R.id.add_to_my_doctor)
     Button add_to_my_doctor;
+
     private Util util ;
 
     public static Activity profileActivity;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,17 +160,9 @@ public class DoctorProfile extends AppCompatActivity {
         zip.setText(doctor.getInfo().getZipCode());
         provinz.setText(doctor.getInfo().getProvinz());
         country.setText(doctor.getInfo().getCountry());
-        if (doctor.getAvatar() == null || doctor.getAvatar() == "") {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
-
-        } else {
-            Log.e("returned image :", doctor.getAvatar());
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar())
-                    .resize(500, 500).centerInside().into(imgAvatar);
-        }
+        Log.e("returned image :", doctor.getAvatar());
+        Helper.setImage(this, Constants.CHAT_SERVER_URL
+                + "/" + doctor.getAvatar(), imgAvatar, R.drawable.profile_place_holder);
         if (doctor.getDocuments() != null)
             createAdapter();
     }
@@ -251,7 +242,8 @@ public class DoctorProfile extends AppCompatActivity {
                 add_to_my_doctor.setText(getString(R.string.add_to));
             else if (doctor.getIs_my_doctor().equals("1"))
                 add_to_my_doctor.setText(getString(R.string.remove_from));
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 }
