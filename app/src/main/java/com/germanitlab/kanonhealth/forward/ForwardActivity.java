@@ -31,7 +31,6 @@ import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.User1;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -53,7 +52,7 @@ public class ForwardActivity extends AppCompatActivity {
     ArrayList<Integer> doctorsForward, messagesForward;
     @BindView(R.id.btn_forward_document)
     Button foward_document;
-    private User1 user;
+    private User user;
     Boolean search;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private int entity_type;
@@ -65,9 +64,9 @@ public class ForwardActivity extends AppCompatActivity {
         doctorsForward = new ArrayList<>();
         messagesForward = new ArrayList<>();
         ButterKnife.bind(this);
-        user = new User1();
+        user = new User();
         search = false;
-        user = (User1) getIntent().getSerializableExtra("chat_doctor");
+        user = (User) getIntent().getSerializableExtra("chat_doctor");
         messagesForward = getIntent().getIntegerArrayListExtra("list");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ListDoctors = new ArrayList<>();
@@ -312,9 +311,9 @@ public class ForwardActivity extends AppCompatActivity {
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                User1 user1 = (User1) response;
+                User user = (User) response;
                 doctorsForward.clear();
-                doctorsForward.add(user1.get_Id());
+                doctorsForward.add(user.get_Id());
                 sendForward();
 
 

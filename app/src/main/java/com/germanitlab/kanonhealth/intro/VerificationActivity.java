@@ -27,7 +27,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.user.User1;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -110,7 +110,7 @@ public class VerificationActivity extends AppCompatActivity {
                                 joinUser();
                                 dismissProgressDialog();
                                 if(oldUser) {
-                                    User1 user = new User1();
+                                    User user = new User();
                                     user.setId(AppController.getInstance().getClientInfo().getUser_id());
                                     user.setPassword(AppController.getInstance().getClientInfo().getPassword());
                                     new HttpCall(VerificationActivity.this, new ApiResponse() {

@@ -34,7 +34,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.User1;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
@@ -122,7 +122,7 @@ public class initialProfileDetails extends AppCompatActivity {
 
         if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")){
             showProgressDialog();
-            final User1 user = new User1();
+            final User user = new User();
             user.setId(AppController.getInstance().getClientInfo().getUser_id());
             user.setPassword(AppController.getInstance().getClientInfo().getPassword());
             user.setName(firstName + " " +lastName);
