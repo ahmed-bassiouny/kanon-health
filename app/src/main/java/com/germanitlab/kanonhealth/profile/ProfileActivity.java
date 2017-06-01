@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.profile;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
+import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
 public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @BindView(R.id.tv_profile_edit)
@@ -84,9 +85,13 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     private DoctorDocumentAdapter mAdapter2;
     LinkedHashMap<String, String> questionAnswer;
 
+//    public static int indexFromIntent=0;
+
+
     ArrayList<Message> images;
     Dialog dialog;
     boolean is_doctor ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         Intent intent = getIntent();
         Boolean from = intent.getBooleanExtra("from", false);
         Log.e("Where  coming ", from.toString());
-
         if (!from) {
 
             userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
@@ -244,8 +248,10 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("index" , 3);
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        intent.putExtra("index" , 3);
+//        startActivity(intent);
+        indexFromIntent = 3;
+        finish();
     }
 }

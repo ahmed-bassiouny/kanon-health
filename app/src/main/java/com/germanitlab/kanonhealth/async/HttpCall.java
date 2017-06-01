@@ -401,7 +401,6 @@ public class HttpCall {
         connection.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
                 Log.d("QR ", response.body().toString());
                 apiResponse.onSuccess(response.body());
             }

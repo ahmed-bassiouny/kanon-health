@@ -1,11 +1,15 @@
 package com.germanitlab.kanonhealth.payment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -13,6 +17,7 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.google.gson.Gson;
 
 import butterknife.ButterKnife;
@@ -20,7 +25,6 @@ import butterknife.OnClick;
 
 public class PaymentActivity extends AppCompatActivity {
     String doctorJson;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,10 @@ public class PaymentActivity extends AppCompatActivity {
         intent.putExtra("doctor_data" , doctorJson);
         intent.putExtra("from" , true);
         startActivity(intent);
+        finish();
+        DoctorProfile.profileActivity.finish();
+        PreRequest.preRequest.finish();
+
     }
 
     @OnClick(R.id.cancel)

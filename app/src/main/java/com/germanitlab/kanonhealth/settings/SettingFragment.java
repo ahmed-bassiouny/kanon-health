@@ -175,7 +175,7 @@ public class SettingFragment extends Fragment {
                 Intent intent = new Intent(getActivity() , ProfileActivity.class);
                 intent.putExtra("from", true);
                 startActivity(intent);
-                getContext().startActivity(intent);
+//                getContext().startActivity(intent);
             }
         });
         trSupport.setOnClickListener(new View.OnClickListener() {

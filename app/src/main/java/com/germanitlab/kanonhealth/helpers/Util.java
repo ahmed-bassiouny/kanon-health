@@ -56,19 +56,6 @@ public class Util {
     }
     public void showProgressDialog() {
         progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
-        Runnable progressRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                if(progressDialog.isShowing()) {
-                    progressDialog.cancel();
-                    Toast.makeText(context, context.getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        Handler handler = new Handler();
-        handler.postDelayed(progressRunnable, 5000);
     }
     public void dismissProgressDialog() {
         progressDialog.dismiss();

@@ -270,7 +270,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage("Write your message here.");
+                builder1.setMessage(R.string.change_privacy_msg);
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -434,7 +434,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage("Write your message here.");
+                builder1.setMessage(R.string.change_privacy_msg);
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -508,7 +508,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage("Möchten Sie die Privatsphäre ändern?");
+                builder1.setMessage(R.string.change_privacy_msg);
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -667,7 +667,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage("Möchten Sie die Privatsphäre ändern?");
+                builder1.setMessage(R.string.change_privacy_msg);
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -948,7 +948,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                    builder1.setMessage("Möchten Sie die Privatsphäre ändern?");
+                    builder1.setMessage(R.string.change_privacy_msg);
                     builder1.setCancelable(true);
 
                     builder1.setPositiveButton(
@@ -1578,7 +1578,7 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
 
     public void updatePrivacy(final int position){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-        builder1.setMessage("Möchten Sie die Privatsphäre ändern?");
+        builder1.setMessage(R.string.change_privacy_msg);
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
