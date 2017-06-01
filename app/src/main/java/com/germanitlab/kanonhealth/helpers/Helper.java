@@ -22,6 +22,8 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -55,15 +57,42 @@ public class Helper {
         fragmentManager.beginTransaction().replace(continer, fragment).addToBackStack(tag)
                 .commit();
     }
-    public static void setImage(Context context , String url ,ImageView imageView ,int placeholder ){
-        Picasso.with(context).load(url).placeholder(placeholder).skipMemoryCache()
-                .resize(500, 500).into(imageView);
-    }
+
 
     public void replaceFragments(Fragment fragment, int continer , String tag) {
         FragmentManager fragmentManager = ((FragmentActivity) activity).getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(continer, fragment).addToBackStack(tag)
                 .commit();
+    }
+    public static void setImage(final Context context , final String url , final ImageView imageView , final int placeholder ){
+        Picasso.with(context)
+                .load(url)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .placeholder(placeholder).resize(500,500)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+                    @Override
+                    public void onError() {
+                        //Try again online if cache failed
+                        Picasso.with(context)
+                                .load(url)
+                                .resize(500,500).placeholder(placeholder)
+                                .into(imageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                    }
+                                });
+                    }
+                });
+
     }
 
     public static void ImportQr(final PrefManager mPrefManager , final Activity activity , ImageView myQr)

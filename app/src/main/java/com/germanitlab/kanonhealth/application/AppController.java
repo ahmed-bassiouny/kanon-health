@@ -8,6 +8,8 @@ import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -105,6 +107,14 @@ public class AppController extends Application {
                 }
             }
         }
+
+        //Picasso configration
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
 
 
     }
