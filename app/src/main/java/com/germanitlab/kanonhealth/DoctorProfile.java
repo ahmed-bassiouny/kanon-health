@@ -212,7 +212,6 @@ public class DoctorProfile extends AppCompatActivity {
 
     @OnClick(R.id.add_to_my_doctor)
     public void addToMyDoctor() {
-        Toast.makeText(DoctorProfile.this, doctor.getIs_my_doctor(), Toast.LENGTH_SHORT).show();
         if (doctor.getIs_my_doctor()==null) {
             new HttpCall(this, new ApiResponse() {
                 @Override
@@ -228,12 +227,10 @@ public class DoctorProfile extends AppCompatActivity {
                 }
             }).addToMyDoctor(doctor.get_Id() + "");
         } else {
-            Log.i("a*a*a*a", "addToMyDoctor: ");
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-                    Log.i("Answers ", response.toString());
-                    doctor.setIs_my_doctor("0");
+                    doctor.setIs_my_doctor(null);
                     checkDoctor();
                 }
 
