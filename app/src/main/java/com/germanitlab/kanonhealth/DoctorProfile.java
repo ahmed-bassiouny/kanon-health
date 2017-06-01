@@ -32,6 +32,7 @@ import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -145,10 +146,10 @@ public class DoctorProfile extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 util.dismissProgressDialog();
-                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
 
             }
-        }).getDoctorId("2", AppController.getInstance().getClientInfo().getPassword(), String.valueOf(doctor.get_Id()));
+        }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), String.valueOf(doctor.get_Id()));
     }
 
 
@@ -160,9 +161,17 @@ public class DoctorProfile extends AppCompatActivity {
         zip.setText(doctor.getInfo().getZipCode());
         provinz.setText(doctor.getInfo().getProvinz());
         country.setText(doctor.getInfo().getCountry());
-        Log.e("returned image :", doctor.getAvatar());
-        Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + doctor.getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+        if (doctor.getAvatar() == null || doctor.getAvatar() == "") {
+            Picasso.with(this).load(Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar()).placeholder(R.drawable.profile_place_holder)
+                    .resize(80, 80).into(imgAvatar);
+
+        } else {
+            Log.e("returned image :", doctor.getAvatar());
+            Picasso.with(this).load(Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar())
+                    .resize(500, 500).centerInside().into(imgAvatar);
+        }
         if (doctor.getDocuments() != null)
             createAdapter();
     }
@@ -203,7 +212,8 @@ public class DoctorProfile extends AppCompatActivity {
 
     @OnClick(R.id.add_to_my_doctor)
     public void addToMyDoctor() {
-        if (doctor.getIs_my_doctor().equals("0")) {
+        Toast.makeText(DoctorProfile.this, doctor.getIs_my_doctor(), Toast.LENGTH_SHORT).show();
+        if (doctor.getIs_my_doctor()==null) {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -217,7 +227,8 @@ public class DoctorProfile extends AppCompatActivity {
                     Log.i("Error ", " " + error);
                 }
             }).addToMyDoctor(doctor.get_Id() + "");
-        } else if (doctor.getIs_my_doctor().equals("1")) {
+        } else {
+            Log.i("a*a*a*a", "addToMyDoctor: ");
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -231,19 +242,16 @@ public class DoctorProfile extends AppCompatActivity {
                     Log.i("Error ", " " + error);
                 }
             }).removeFromMyDoctor(doctor.get_Id() + "");
-        } else {
-            Toast.makeText(this, "Something Wrong Happpened", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void checkDoctor() {
         try {
-            if (doctor.getIs_my_doctor().equals("0"))
+            if (doctor.getIs_my_doctor()==null)
                 add_to_my_doctor.setText(getString(R.string.add_to));
-            else if (doctor.getIs_my_doctor().equals("1"))
+            else
                 add_to_my_doctor.setText(getString(R.string.remove_from));
-        } catch (Exception e) {
-        }
+        }catch (Exception e){}
 
     }
 }
