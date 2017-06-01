@@ -122,6 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/first_name"
+                        android:inputType="textPersonName"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -144,6 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/last_name"
+                        android:inputType="textPersonName"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -228,6 +230,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/house_number"
+                        android:inputType="number"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -249,6 +252,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:inputType="number"
                         android:hint="@string/zip_code"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />

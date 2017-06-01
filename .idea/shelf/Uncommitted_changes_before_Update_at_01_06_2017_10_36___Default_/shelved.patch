@@ -1,0 +1,576 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/interfaces/MyClickListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/interfaces/MyClickListener.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/interfaces/MyClickListener.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable-xxhdpi/ic_camera_alt_white_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable-xxhdpi/ic_camera_alt_white_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable-xxhdpi/ic_camera_alt_white_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/activity_choose_payment.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_choose_payment.xml	(date 1496305847000)
++++ app/src/main/res/layout/activity_choose_payment.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/values-w820dp/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values-w820dp/dimens.xml	(date 1496305847000)
++++ app/src/main/res/values-w820dp/dimens.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/interfaces/RecyclerTouchListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/interfaces/RecyclerTouchListener.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/interfaces/RecyclerTouchListener.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/shape_progress_circle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/shape_progress_circle.xml	(date 1496305847000)
++++ app/src/main/res/drawable/shape_progress_circle.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/Speciality.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/Speciality.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/Speciality.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/strings.xml	(date 1496305847000)
++++ app/src/main/res/values/strings.xml	(revision )
+@@ -45,7 +45,7 @@
+     <string name="add_to">Add to My Doctor\'s</string>
+     <string name="remove_from">Remove From My Doctor\'s</string>
+     <string name="error_connection">Please Check Your Internet Connection</string>
+-
++    <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
+     <string name="hot_line">Hotline</string>
+     <string name="fax">Fax</string>
+     <string name="website">Wensite</string>
+Index: app/src/main/res/anim/grow_from_top.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/anim/grow_from_top.xml	(date 1496305847000)
++++ app/src/main/res/anim/grow_from_top.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/callback/UploadListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/callback/UploadListener.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/callback/UploadListener.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/fragment_doctor_list.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_doctor_list.xml	(date 1496305847000)
++++ app/src/main/res/layout/fragment_doctor_list.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/interfaces/ApiResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/interfaces/ApiResponse.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/interfaces/ApiResponse.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/tab_text.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/tab_text.xml	(date 1496305847000)
++++ app/src/main/res/layout/tab_text.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/Data.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/Data.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/Data.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable-hdpi/ic_arrow_back_black_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable-hdpi/ic_arrow_back_black_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable-hdpi/ic_arrow_back_black_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/custom_dialog.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/custom_dialog.xml	(date 1496305847000)
++++ app/src/main/res/layout/custom_dialog.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/item_payment_choose.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/item_payment_choose.xml	(date 1496305847000)
++++ app/src/main/res/layout/item_payment_choose.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/values-v21/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values-v21/styles.xml	(date 1496305847000)
++++ app/src/main/res/values-v21/styles.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/helpers/PopupHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/helpers/PopupHelper.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/helpers/PopupHelper.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable-hdpi/ic_remove_black_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable-hdpi/ic_remove_black_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable-hdpi/ic_remove_black_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/fragment_my_decument.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_my_decument.xml	(date 1496305847000)
++++ app/src/main/res/layout/fragment_my_decument.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/Login.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/Login.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/Login.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/chat_image_message_cell.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/chat_image_message_cell.xml	(date 1496305847000)
++++ app/src/main/res/layout/chat_image_message_cell.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/Questions/SubmitQuestionRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/Questions/SubmitQuestionRequest.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/Questions/SubmitQuestionRequest.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/fragment_setting.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_setting.xml	(date 1496305847000)
++++ app/src/main/res/layout/fragment_setting.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/helpers/ImageUtility.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/helpers/ImageUtility.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/helpers/ImageUtility.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/Info.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/Info.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/Info.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/confirm_dialog_style.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/confirm_dialog_style.xml	(date 1496305847000)
++++ app/src/main/res/drawable/confirm_dialog_style.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: gradlew
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gradlew	(date 1496305847000)
++++ gradlew	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/BasicRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/BasicRequest.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/BasicRequest.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/custom_edittext_without_border.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/custom_edittext_without_border.xml	(date 1496305847000)
++++ app/src/main/res/drawable/custom_edittext_without_border.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/custom_navigation_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/custom_navigation_menu.xml	(date 1496305847000)
++++ app/src/main/res/layout/custom_navigation_menu.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/button_press.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/button_press.xml	(date 1496305847000)
++++ app/src/main/res/drawable/button_press.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/UpdateProfile.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/UpdateProfile.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/UpdateProfile.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/fragment_chats_doctor.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_chats_doctor.xml	(date 1496305847000)
++++ app/src/main/res/layout/fragment_chats_doctor.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable-xxhdpi/drawable/ic_camera_alt_white_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable-xxhdpi/drawable/ic_camera_alt_white_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable-xxhdpi/drawable/ic_camera_alt_white_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/helpers/Constants.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/helpers/Constants.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/helpers/Constants.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/ActivateAccountRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/ActivateAccountRequest.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/ActivateAccountRequest.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/LocationRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/LocationRequest.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/LocationRequest.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/tab_selector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/tab_selector.xml	(date 1496305847000)
++++ app/src/main/res/drawable/tab_selector.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/shrink_from_bottom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/shrink_from_bottom.xml	(date 1496305847000)
++++ app/src/main/res/drawable/shrink_from_bottom.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/listitem.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/listitem.xml	(date 1496305847000)
++++ app/src/main/res/layout/listitem.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/helpers/LocationServicesTurn.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/helpers/LocationServicesTurn.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/helpers/LocationServicesTurn.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/custom_edittext_without_border_style.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/custom_edittext_without_border_style.xml	(date 1496305847000)
++++ app/src/main/res/drawable/custom_edittext_without_border_style.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/helpers/DateUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/helpers/DateUtil.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/helpers/DateUtil.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/fragment_edit_profile.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_edit_profile.xml	(date 1496305847000)
++++ app/src/main/res/layout/fragment_edit_profile.xml	(revision )
+@@ -122,6 +122,7 @@
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="8dp"
+                         android:hint="@string/first_name"
++                        android:inputType="textPersonName"
+                         android:textCursorDrawable="@color/blue"
+                         android:textSize="16dp" />
+                 </LinearLayout>
+@@ -144,6 +145,7 @@
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="8dp"
+                         android:hint="@string/last_name"
++                        android:inputType="textPersonName"
+                         android:textCursorDrawable="@color/blue"
+                         android:textSize="16dp" />
+                 </LinearLayout>
+@@ -228,6 +230,7 @@
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="8dp"
+                         android:hint="@string/house_number"
++                        android:inputType="number"
+                         android:textCursorDrawable="@color/blue"
+                         android:textSize="16dp" />
+                 </LinearLayout>
+@@ -249,6 +252,7 @@
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="8dp"
++                        android:inputType="number"
+                         android:hint="@string/zip_code"
+                         android:textCursorDrawable="@color/blue"
+                         android:textSize="16dp" />
+\ No newline at end of file
+Index: app/src/main/res/drawable/gray_button_style.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/gray_button_style.xml	(date 1496305847000)
++++ app/src/main/res/drawable/gray_button_style.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/messages/DeleteMessage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/messages/DeleteMessage.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/messages/DeleteMessage.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/interfaces/OnImgDoctorListMapClick.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/interfaces/OnImgDoctorListMapClick.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/interfaces/OnImgDoctorListMapClick.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/UserRegisterResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/UserRegisterResponse.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/UserRegisterResponse.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/chat_text_message_cell.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/chat_text_message_cell.xml	(date 1496305847000)
++++ app/src/main/res/layout/chat_text_message_cell.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/layout_message.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/layout_message.xml	(date 1496305847000)
++++ app/src/main/res/layout/layout_message.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/SettingResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/SettingResponse.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/SettingResponse.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable-hdpi/ic_add_black_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable-hdpi/ic_add_black_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable-hdpi/ic_add_black_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/ic_android_black_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_android_black_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable/ic_android_black_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/doctor_cell.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/doctor_cell.xml	(date 1496305847000)
++++ app/src/main/res/layout/doctor_cell.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/button_background.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/button_background.xml	(date 1496305847000)
++++ app/src/main/res/drawable/button_background.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/spinner_layout.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/spinner_layout.xml	(date 1496305847000)
++++ app/src/main/res/layout/spinner_layout.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(date 1496305847000)
++++ .idea/misc.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/ic_forward_white_24dp.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_forward_white_24dp.xml	(date 1496305847000)
++++ app/src/main/res/drawable/ic_forward_white_24dp.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/drawable/unread_message_bg.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/unread_message_bg.xml	(date 1496305847000)
++++ app/src/main/res/drawable/unread_message_bg.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/chat_location_message_cell.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/chat_location_message_cell.xml	(date 1496305847000)
++++ app/src/main/res/layout/chat_location_message_cell.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/helpers/AndroidMultiPartEntity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/helpers/AndroidMultiPartEntity.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/helpers/AndroidMultiPartEntity.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/callback/DownloadListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/callback/DownloadListener.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/callback/DownloadListener.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/user/UserRegisterRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/user/UserRegisterRequest.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/user/UserRegisterRequest.java	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/anim/shrink_from_bottom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/anim/shrink_from_bottom.xml	(date 1496305847000)
++++ app/src/main/res/anim/shrink_from_bottom.xml	(revision )
+@@ -1,0 +1,0 @@
+Index: app/src/main/java/com/germanitlab/kanonhealth/models/Questions/Answers.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/germanitlab/kanonhealth/models/Questions/Answers.java	(date 1496305847000)
++++ app/src/main/java/com/germanitlab/kanonhealth/models/Questions/Answers.java	(revision )
+@@ -1,0 +1,0 @@
