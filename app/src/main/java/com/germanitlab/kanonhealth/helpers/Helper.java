@@ -56,7 +56,7 @@ public class Helper {
                 .commit();
     }
     public static void setImage(Context context , String url ,ImageView imageView ,int placeholder ){
-        Picasso.with(context).load(url).placeholder(placeholder)
+        Picasso.with(context).load(url).placeholder(placeholder).skipMemoryCache()
                 .resize(500, 500).into(imageView);
     }
 
@@ -84,9 +84,9 @@ public class Helper {
                 dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT ,
                         WindowManager.LayoutParams.MATCH_PARENT );
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-                if (mPrefManager.getData(PrefManager.Image_data)!= null){
+                if (mPrefManager.getData(PrefManager.PROFILE_QR)!= null){
                     Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                            + "/" + mPrefManager.getData(PrefManager.Image_data) , imageView , 0);
+                            + "/" + mPrefManager.getData(PrefManager.PROFILE_QR) , imageView , R.drawable.qr);
                 }
                 Gson gson = new Gson();
                 Log.d("user data" , mPrefManager.getData(PrefManager.USER_KEY));
@@ -97,7 +97,7 @@ public class Helper {
                 CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
                 if(userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "" ) {
                     Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getAvatar() , circleImageView , 0);
+                            + "/" + userInfoResponse.getUser().getAvatar() , circleImageView , R.drawable.profile_place_holder);
                 }
                 first_name.setText(userInfoResponse.getUser().getFirst_name().toString());
                 last_name.setText(userInfoResponse.getUser().getLast_name().toString());

@@ -20,6 +20,7 @@ public class PrefManager {
     public static final String DOCUMENT_HISTORY ="document_history" ;
     public static final String HISTORY = "history";
     public static String PROFILE_IMAGE = "profileImage";
+    public static String PROFILE_QR = "profileQr";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Activity _context;
@@ -27,7 +28,9 @@ public class PrefManager {
     //Keys
     public static String DOCTOR_KEY = "doctor";
     public static String USER_KEY = "user";
+/*
     public static String Image_data = "imagedata";
+*/
 
 
     // shared pref mode

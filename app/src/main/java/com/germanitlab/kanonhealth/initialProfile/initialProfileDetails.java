@@ -143,7 +143,7 @@ public class initialProfileDetails extends AppCompatActivity {
                     Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
                     mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
 
-                    mPrefManager.put(mPrefManager.Image_data , userInfoResponse.getUser().getQr_url());
+                    mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
                     dismissProgressDialog();
                     Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
                     intent.putExtra("status", 1);

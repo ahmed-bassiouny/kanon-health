@@ -232,7 +232,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                             uploadImageResponse = (UploadImageResponse) response;
                             user.setAvatar(uploadImageResponse.getFile_url());
                             Log.e("After Casting", uploadImageResponse.getFile_url());
-                            prefManager.put(PrefManager.Image_data , uploadImageResponse.getFile_url());
+                            prefManager.put(PrefManager.PROFILE_IMAGE , uploadImageResponse.getFile_url());
                         }
 
                         @Override
@@ -417,6 +417,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         new HttpCall(this, this).editProfile(user);
 
         Intent i = new Intent(this, ProfileActivity.class);
+        userInfoResponse.setUser(user);
         i.putExtra("userInfoResponse", userInfoResponse);
         i.putExtra("from", false);
         startActivity(i);
