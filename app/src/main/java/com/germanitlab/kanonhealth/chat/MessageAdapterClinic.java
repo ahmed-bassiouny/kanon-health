@@ -110,10 +110,10 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 
     }
 
-
-    public void setHistory(List<Message> historyMessage) {
-        mMessages.addAll(0, historyMessage);
-    }
+//
+//    public void setHistory(List<Message> historyMessage) {
+//        mMessages.addAll(0, historyMessage);
+//    }
 
     public void setList(List<Message> mMessages) {
 
