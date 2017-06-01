@@ -226,6 +226,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 Intent intent = new Intent(getActivity(), Specilaities.class);
                 intent.putExtra("from", false);
                 intent.putExtra("type", type);
+                intent.putExtra("tab","");
                 startActivity(intent);
 
             }
