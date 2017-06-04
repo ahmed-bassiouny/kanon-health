@@ -29,6 +29,7 @@ import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -193,9 +194,10 @@ public class DoctorProfile extends AppCompatActivity {
             intent.putExtra("from", true);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(this, PreRequest.class);
-            intent.putExtra("doctor_data", doctorJson);
+            Intent intent = new Intent(this , PaymentActivity.class);
+            intent.putExtra("doctor_data" , doctorJson);
             startActivity(intent);
+
         }
 
     }

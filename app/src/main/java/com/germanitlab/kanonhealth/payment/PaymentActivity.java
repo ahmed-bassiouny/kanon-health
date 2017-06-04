@@ -17,6 +17,7 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.google.gson.Gson;
 
@@ -28,11 +29,15 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
-
+        setContentView(R.layout.new_activity_payment);
         ButterKnife.bind(this);
+
         Intent intent = getIntent();
         doctorJson = intent.getStringExtra("doctor_data");
+
+        /*
+        handel data in ui
+         */
     }
 
     @OnClick(R.id.next)
@@ -57,12 +62,12 @@ public class PaymentActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
         DoctorProfile.profileActivity.finish();
-        PreRequest.preRequest.finish();
+//        PreRequest.preRequest.finish();
 
     }
 
-    @OnClick(R.id.cancel)
-    public void cancelClicked(View view){
-        startActivity(new Intent(this , MainActivity.class));
-    }
+//    @OnClick(R.id.cancel)
+//    public void cancelClicked(View view){
+//        startActivity(new Intent(this , MainActivity.class));
+//    }
 }
