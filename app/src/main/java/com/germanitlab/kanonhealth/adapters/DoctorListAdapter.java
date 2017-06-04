@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.adapters;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,10 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.user.User;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,9 +44,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     }
 
     @Override
-    public void onBindViewHolder(ItemView holder, int position) {
+    public void onBindViewHolder(final ItemView holder, final int position) {
 
-        User doctor = doctorContactsList.get(position);
+        final User doctor = doctorContactsList.get(position);
         holder.imgStatus.setVisibility(View.GONE);
         holder.tvDoctorName.setText(doctor.getName());
         holder.tvAbout.setText(doctor.getAbout());

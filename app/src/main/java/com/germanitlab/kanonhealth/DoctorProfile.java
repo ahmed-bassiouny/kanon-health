@@ -41,6 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
+
 // Edit By Ahmed 29-5-2017
 public class DoctorProfile extends AppCompatActivity {
     @BindView(R.id.contact)
@@ -125,8 +127,15 @@ public class DoctorProfile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-                finish();
 
+        if(getIntent().getExtras().containsKey("tab")){
+            indexFromIntent = 0;
+
+        }else {
+            indexFromIntent = 3;
+
+        }
+        finish();
     }
 
     private void getDoctorData() {

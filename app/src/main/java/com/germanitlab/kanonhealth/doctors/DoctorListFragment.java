@@ -121,6 +121,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 Intent intent = new Intent(getActivity(), DoctorProfile.class);
                 Gson gson = new Gson();
                 intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
+                intent.putExtra("tab","");
                 startActivity(intent);
             }
 

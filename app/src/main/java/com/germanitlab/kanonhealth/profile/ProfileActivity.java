@@ -234,7 +234,15 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 //        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //        intent.putExtra("index" , 3);
 //        startActivity(intent);
-        indexFromIntent = 3;
+
+        if(getIntent().getExtras().containsKey("tab")){
+            indexFromIntent = 1;
+
+        }else {
+            indexFromIntent = 3;
+
+        }
+
         finish();
     }
 }
