@@ -257,7 +257,7 @@
             <TableRow
                 android:id="@+id/tr_faq"
                 android:padding="@dimen/size_5dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
