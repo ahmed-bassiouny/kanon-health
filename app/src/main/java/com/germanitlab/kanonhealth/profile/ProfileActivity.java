@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -86,7 +87,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
 //    public static int indexFromIntent=0;
 
-
     ArrayList<Message> images;
     Dialog dialog;
     boolean is_doctor ;
@@ -96,8 +96,14 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
-
         ButterKnife.bind(this);
+
+        if (Helper.isNetworkAvailable(getApplicationContext())) {
+            tvEdit.setVisibility(View.VISIBLE);
+        }else {
+            tvEdit.setVisibility(View.GONE);
+        }
+
         mPrefManager = new PrefManager(this);
         Intent intent = getIntent();
         Boolean from = intent.getBooleanExtra("from", false);

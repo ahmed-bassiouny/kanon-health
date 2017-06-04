@@ -24,10 +24,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.germanitlab.kanonhealth.R;
@@ -118,6 +120,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_edit_profile);
+
         prefManager = new PrefManager(this);
         pickerDialog = new PickerDialog(true);
         ButterKnife.bind(this);
@@ -431,9 +434,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @OnClick(R.id.btn_edit_save)
     public void submit(View v) {
         setUserObject();
-
         new HttpCall(this, this).editProfile(user);
-
         Intent i = new Intent(this, ProfileActivity.class);
         i.putExtra("userInfoResponse", userInfoResponse);
         i.putExtra("from", false);
