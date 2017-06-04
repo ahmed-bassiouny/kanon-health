@@ -231,5 +231,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="select_from_gallery">Select From Gallery</string>
     <string name="delete_image">Delete Image</string>
     <string name="title_activity_maps">Map</string>
+    <string name="payment">Payment</string>
+    <string name="payment_details">Payment details</string>
 
 </resources>
