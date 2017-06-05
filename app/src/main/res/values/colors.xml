@@ -40,6 +40,8 @@
     <color name="text_msg_input">#626262</color>
     <color name="lblFromName">#777777</color>
     <color name="black_obacity">#5cffffff</color>
+    <color name="medium_grey">#9E9E9E</color>
+
 
     //Privacy Colors
     <color name="red">#f44336</color>
