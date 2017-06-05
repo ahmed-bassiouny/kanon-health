@@ -186,6 +186,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.d("data from json ", prefManager.getData("doctor"));
             Boolean from = intent.getBooleanExtra("from", false);
             int from_notification = intent.getIntExtra("from_notification", 0);
+
             if (from_notification == 1) {
                 int from_id = intent.getIntExtra("from_id", 0);
                 showProgressDialog();

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 
@@ -84,4 +84,7 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="ToolbarColoredBackArrow" parent="MyMaterialTheme">
+        <item name="android:colorControlNormal" tools:targetApi="lollipop">@color/white</item>
+    </style>
 </resources>
