@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.doctors;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,24 +61,26 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 */
     List<User> doctorList;
     private Button doctor_list, praxis_list;
-    static int speciality_id = 0;
+    int speciality_id;
     String jsonString;
-    static int type;
+    int type;
     PrefManager prefManager;
     Gson gson;
     private UserRepository mDoctorRepository;
     private EditText edtDoctorListFilter;
     private FilterCallBackClickListener filterCallBackClickListener;
-    private static DoctorListFragment doctorListFragment;
+    static DoctorListFragment doctorListFragment;
     private Util util ;
     public DoctorListFragment() {
     }
 
     public static DoctorListFragment newInstance(int mspeciality_id, int mtype){
-        speciality_id=mspeciality_id;
-        type = mtype;
+        Bundle bundle = new Bundle();
+        bundle.putInt("speciality_id",mspeciality_id);
+        bundle.putInt("type",mtype);
         if(doctorListFragment==null)
             doctorListFragment=new DoctorListFragment();
+        doctorListFragment.setArguments(bundle);
         return doctorListFragment;
     }
 
@@ -95,14 +98,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         if (type == 0)
             type = 2;
         mDoctorRepository = new UserRepository(getContext());
-        if (Helper.isNetworkAvailable(getContext())) {
-            getBySpeciality(speciality_id, type);
-        } else {
-            doctorList = mDoctorRepository.getAll();
-            setAdapter(doctorList);
-            util.dismissProgressDialog();
-        }
+        loadData();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        speciality_id=getArguments().getInt("speciality_id");
+        type=getArguments().getInt("type");
     }
 
     private void handelEvent() {
@@ -251,7 +255,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 if (type != 3) {
                     type = 3;
                     util.showProgressDialog();
-                    getBySpeciality(speciality_id, type);
+                    loadData();
+                    getBySpeciality();
                 }
 
             }
@@ -266,14 +271,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 if (type != 2) {
                     type = 2;
                     util.showProgressDialog();
-                    getBySpeciality(speciality_id, type);
+                    loadData();
+                    getBySpeciality();
                 }
             }
         });
     }
 
 
-    private void getBySpeciality(final int id, final int type) {
+    private void getBySpeciality() {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -297,7 +303,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             public void onFailed(String error) {
                 Log.e("Error", error);
             }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), id, type);
+        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), speciality_id, type);
     }
     private void saveInDB(List<User> doctorList) {
         double count = mDoctorRepository.count();
@@ -332,6 +338,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onFailed(String error) {
         Log.e("error", error);
+    }
+    private void loadData(){
+        if (Helper.isNetworkAvailable(getContext())) {
+            getBySpeciality();
+        } else {
+            //clinic 3 doctor 2
+            doctorList = mDoctorRepository.getAll(type);
+            setAdapter(doctorList);
+            util.dismissProgressDialog();
+        }
     }
 
 
