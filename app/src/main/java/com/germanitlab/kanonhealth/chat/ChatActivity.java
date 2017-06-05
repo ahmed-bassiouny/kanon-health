@@ -53,6 +53,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -230,7 +231,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-    private void initDialogImgTextSend(final Uri imgFilePath) {
+    private void initDialogImgTextSend(final Uri imgFilePath, String filePath) {
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_chat_img_text);
@@ -239,10 +240,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         // set the custom dialog components - text, image and button
         final EditText etText = (EditText) dialog.findViewById(R.id.text);
         ImageView image = (ImageView) dialog.findViewById(R.id.image);
-//        image.setImageResource(R.drawable.);
-        Bitmap myBitmap = BitmapFactory.decodeFile(imgFilePath.getPath());
+        Toast.makeText(this, "file:/"+filePath, Toast.LENGTH_SHORT).show();
+        Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
 
-        image.setImageBitmap(myBitmap);
+
+        image.postInvalidate();
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         // if button is clicked, close the custom dialog
@@ -250,9 +252,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                filePath = getPath(getApplicationContext(), selectedUri);
+                ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
 
-                sendMessage(filePath, Constants.IMAGE,etText.getText().toString());
+                sendMessage(ChatActivity.this.filePath, Constants.IMAGE,etText.getText().toString());
 
             }
         });
@@ -1424,10 +1426,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
         if(selectetImage){
 
+//            Toast.makeText(this, ""+selectedUri, Toast.LENGTH_SHORT).show();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    initDialogImgTextSend(selectedUri);
+                    initDialogImgTextSend(selectedUri,filePath);
 
                 }
             });
