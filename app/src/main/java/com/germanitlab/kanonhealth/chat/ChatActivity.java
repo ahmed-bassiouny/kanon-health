@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.chat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -40,8 +42,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -153,6 +157,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Inject
     DataManger mDataManger;
     private ChatComponent mChatComponent;
+    private Uri selectedUri;
+    private boolean selectetImage=false;
 
     public ChatComponent getmChatComponent() {
         if (mChatComponent == null) {
@@ -222,6 +228,36 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
 
+    }
+
+    private void initDialogImgTextSend(final Uri imgFilePath) {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_chat_img_text);
+        dialog.setTitle("Image Description");
+
+        // set the custom dialog components - text, image and button
+        final EditText etText = (EditText) dialog.findViewById(R.id.text);
+        ImageView image = (ImageView) dialog.findViewById(R.id.image);
+//        image.setImageResource(R.drawable.);
+        Bitmap myBitmap = BitmapFactory.decodeFile(imgFilePath.getPath());
+
+        image.setImageBitmap(myBitmap);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                filePath = getPath(getApplicationContext(), selectedUri);
+
+                sendMessage(filePath, Constants.IMAGE,etText.getText().toString());
+
+            }
+        });
+
+        dialog.show();
     }
 
     public void dismissProgressDialog() {
@@ -703,7 +739,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 Log.e("Difference", String.valueOf(diff));
                                 if (diff > 1000) {
                                     Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                    sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                    sendMessage(mOutputFile.getPath(), Constants.AUDIO,"");
                                 }
                                 setButtonToTextMsg(true);
                             }
@@ -771,7 +807,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                         Log.e("Difference", String.valueOf(diff));
                                         if (diff > 1000) {
                                             Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                            sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                            sendMessage(mOutputFile.getPath(), Constants.AUDIO,"");
                                         }
                                         setButtonToTextMsg(true);
                                     }
@@ -837,6 +873,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
                         "Select Picture"), 100);
+
             } else if (requestCode == Constants.AUDIO_PERMISSION_CODE) {
                 Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
                 startActivityForResult(intent, 300);
@@ -884,7 +921,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         LayoutInflater inflater = (LayoutInflater) ChatActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.custom_navigation_menu, null);
 
-
         popupView.findViewById(R.id.img_view_take_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -900,6 +936,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 showPopup.dismiss();
             }
         });
+
         popupView.findViewById(R.id.img_view_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -953,7 +990,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 showPopup.dismiss();
                 if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
-                    sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
+                    sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION,"");
                 } else {
 
                     if (simpleLocation == null || simpleLocation.getLatitude() == 0) {
@@ -964,7 +1001,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                     mLastLocation = new Location("");
                     mLastLocation.setLatitude(simpleLocation.getLatitude());
                     mLastLocation.setLongitude(simpleLocation.getLongitude());
-                    sendMessage("long: " + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
+                    sendMessage("long: " + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION,"");
                 }
             }
         });
@@ -1002,40 +1039,46 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             if (data != null) {
                 switch (requestCode) {
                     case 100:
-                        final Uri selectedUri = data.getData();
+                        selectedUri = data.getData();
                         String mimeType = getMimeType(data.getData().getPath());
 
                         if (mimeType != null) {
 
+
+
                             if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
-                                sendMessage(getPathFromURI(selectedUri), Constants.IMAGE);
+                                sendMessage(getPathFromURI(selectedUri), Constants.IMAGE,"");
                             } else {
-                                sendMessage(getPath(this, selectedUri), Constants.VIDEO);
+                                sendMessage(getPath(this, selectedUri), Constants.VIDEO,"");
                             }
 
                         } else {
                             if (isImageFile(selectedUri)) {
+
                                 filePath = getPath(this, selectedUri);
-                                sendMessage(filePath, Constants.IMAGE);
-                            } else {
-                                sendMessage(getPath(this, selectedUri), Constants.VIDEO);
+
+                                selectetImage=true;
+
+
+                                    } else {
+                                sendMessage(getPath(this, selectedUri), Constants.VIDEO,"");
                             }
                         }
                         break;
                     case 200://for video
                         Uri uriVideo = data.getData();
-                        sendMessage(getPath(this, uriVideo), Constants.VIDEO);
+                        sendMessage(getPath(this, uriVideo), Constants.VIDEO,"");
                         break;
                     case 300:
                         Uri savedUri = data.getData();
-                        sendMessage(getPath(this, savedUri), Constants.AUDIO);
+                        sendMessage(getPath(this, savedUri), Constants.AUDIO,"");
                         break;
                 }
             } else {
                 if (requestCode == TAKE_PICTURE) {
                     try {
                         File finalFile = new File(getRealPathFromURI(selectedImageUri));
-                        sendMessage(finalFile.getPath(), Constants.IMAGE);
+                        sendMessage(finalFile.getPath(), Constants.IMAGE,"");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1094,11 +1137,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         return cursor.getString(idx);
     }
 
-    private void sendMessage(String path, String type) {
+    private void sendMessage(String path, String type,String textWithImage) {
         Message message = new Message();
         message.setType(type);
         message.setMsg(path);
-
+        message.setImageText(textWithImage);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         String str = sdf.format(new Date());
         message.setSent_at(str);
@@ -1377,6 +1420,19 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             sendIsSeen();
         } catch (Exception e) {
 
+        }
+
+        if(selectetImage){
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initDialogImgTextSend(selectedUri);
+
+                }
+            });
+
+            selectetImage=false;
         }
 
 //        new SocketCall(activity).chatWithStatus("OpenChatWith", doctor.getDoctor().get_Id());

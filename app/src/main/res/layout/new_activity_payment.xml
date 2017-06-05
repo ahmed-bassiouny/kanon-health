@@ -133,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/size_5dp"
                         android:textSize="20sp"
-                        android:text="150$"
+                        android:text="9.90 $"
                         android:textColor="@android:color/background_dark" />
 
 

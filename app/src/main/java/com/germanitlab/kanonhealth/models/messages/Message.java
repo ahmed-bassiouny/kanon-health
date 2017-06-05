@@ -53,10 +53,25 @@ public class Message implements Serializable {
     @DatabaseField
     private String date;
 
+    @DatabaseField
+    private String imageText;
+
+
 
     public Message() {
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getImageText() {
+        return imageText;
+    }
+
+    public void setImageText(String imageText) {
+        this.imageText = imageText;
+    }
 
     public Bitmap getLocationBitmap() {
         return locationBitmap;
