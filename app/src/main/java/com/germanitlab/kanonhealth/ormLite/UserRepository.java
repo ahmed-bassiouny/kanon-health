@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.ormLite;
 import android.content.Context;
 import android.util.Log;
 
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
@@ -14,7 +15,9 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Geram IT Lab on 15/05/2017.
@@ -114,9 +117,19 @@ public class UserRepository {
         return 0;
     }
 
-    public List<User> getAll(){
+    public List<User> getAll(int type){
         try {
-            return doctorsDao.queryForAll();
+            switch (type){
+                case 2:
+                    return doctorsDao.queryForEq("isDoc",1);
+                case 3:
+                    return doctorsDao.queryForEq("isClinic",1);
+                default:
+                    Map<String,Object> whereCondition=new HashMap<>();
+                    whereCondition.put("isDoc",0);
+                    whereCondition.put("is_clinic",0);
+                    return doctorsDao.queryForFieldValues(whereCondition);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -138,7 +151,7 @@ public class UserRepository {
                 return accountList.get(0);
         }
         catch (Exception e){
-            Log.d("Exceptoion", e.toString());
+            Log.d("Exception", e.toString());
         }
         return null ;
     }
