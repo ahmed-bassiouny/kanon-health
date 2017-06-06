@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.germanitlab.kanonhealth.DoctorProfile;
+import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
@@ -118,9 +119,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             public void onClick(View view, int position) {
 
                 PrefManager prefManager = new PrefManager(getActivity());
-                Intent intent = new Intent(getActivity(), DoctorProfile.class);
+                Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                 Gson gson = new Gson();
-                intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
+                intent.putExtra("doctor_data", doctorList.get(position));
                 intent.putExtra("tab","");
                 startActivity(intent);
             }

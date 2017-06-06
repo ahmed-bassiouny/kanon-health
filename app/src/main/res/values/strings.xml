@@ -233,5 +233,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="title_activity_maps">Map</string>
     <string name="payment">Payment</string>
     <string name="payment_details">Payment details</string>
+    <string name="open_session_again">Start New Request</string>
 
 </resources>

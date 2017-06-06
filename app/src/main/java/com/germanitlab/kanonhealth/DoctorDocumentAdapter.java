@@ -73,13 +73,12 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
     }
 
 
-    public DoctorDocumentAdapter(List<Message> messageList, Context context, Activity activity, ScrollView profile_layout) {
+    public DoctorDocumentAdapter(List<Message> messageList, Context context, Activity activity) {
         this.messageList = messageList;
         this.context = context;
         pDialog = new ProgressDialog(context);
         mp = new MediaPlayer();
         this.activity = activity;
-        this.profile_layout = profile_layout;
     }
 
     @Override

@@ -128,6 +128,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView tvRecordTimer;
     public static int user_id;
     ProgressDialog progressDialog;
+    @BindView(R.id.chat_bar)
+    LinearLayout chat_bar;
+    @BindView(R.id.open_chat_session)
+    LinearLayout open_chat_session;
 
     private List<Message> mMessages = new ArrayList<>();
     private MessageAdapterClinic mAdapter;
@@ -236,6 +240,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void handleMyData() {
         user_id = doctor.get_Id();
 
+        if(doctor.getIsOpen() == 0)
+        {
+            chat_bar.setVisibility(View.GONE);
+            open_chat_session.setVisibility(View.VISIBLE);
+        }
+        else{
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
+        }
 
         mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 

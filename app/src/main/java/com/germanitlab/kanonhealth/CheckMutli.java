@@ -16,7 +16,7 @@ public class CheckMutli extends AppCompatActivity {
     ProgressBar progressBar ;
     RecyclerView recyclerView ;
     List<User> userList ;
-    MutliSelectAdapter mAdapter ;
+    MultiSelectAdapter mAdapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +25,7 @@ public class CheckMutli extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         userList = new ArrayList<>();
         setData();
-        mAdapter = new MutliSelectAdapter(userList , getApplicationContext());
+        mAdapter = new MultiSelectAdapter(userList, userList , getApplicationContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
