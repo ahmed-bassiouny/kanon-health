@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:listDivider">@color/medium_grey</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="android:itemBackground">@color/colorAccent</item>
+        <item name="android:itemBackground">@color/white</item>
     </style>
 
 
