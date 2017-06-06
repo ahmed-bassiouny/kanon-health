@@ -27,12 +27,17 @@ public class Comment extends AppCompatActivity {
     @BindView(R.id.rb_doctor_rate) RatingBar rb_doctor_rate;
     @BindView(R.id.edt_comment) EditText edt_comment;
 
-    String doc_id="14";
+    String doc_id="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
+        try {
+            doc_id = getIntent().getStringExtra("doc_id");
+        }catch (Exception e){
+            doc_id="";
+        }
     }
 
     private boolean validationInput(){
@@ -45,6 +50,7 @@ public class Comment extends AppCompatActivity {
 
     @OnClick(R.id.submit)
     public void submit(){
+        Toast.makeText(this, doc_id, Toast.LENGTH_SHORT).show();
         if(validationInput()){
             new HttpCall(this, new ApiResponse() {
                 @Override

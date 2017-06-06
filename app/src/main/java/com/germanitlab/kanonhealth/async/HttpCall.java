@@ -654,4 +654,20 @@ public class HttpCall {
             }
         });
     }
+    public void closeSession(String doc_id){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        DoctorRequest mDoctorRequest =new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),AppController.getInstance().getClientInfo().getPassword(),"",doc_id);
+        Call<JsonObject> connection=service.closeSession(mDoctorRequest);
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
 }
