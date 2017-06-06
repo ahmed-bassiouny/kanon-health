@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth;
 
 import android.os.Bundle;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,10 @@ public class MultiChoiseListFragment extends DialogFragment {
     MultiSelectAdapter mAdapter ;
     Button save ;
 
+    public MultiChoiseListFragment() {
+        super();
+        setStyle(STYLE_NO_TITLE, 0);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

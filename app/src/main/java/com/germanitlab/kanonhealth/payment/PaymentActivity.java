@@ -39,7 +39,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
-
+    User doctor ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +50,11 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         doctorJson = intent.getStringExtra("doctor_data");
-        User doctorObj = (User) intent.getSerializableExtra("doctor_obj");
+        doctor = (User) intent.getSerializableExtra("doctor_obj");
         /*
         handel data in ui
          */
-        handelUI(doctorObj);
+        handelUI(doctor);
     }
 
     private void handelUI(User doctorObj) {
@@ -94,26 +94,30 @@ public class PaymentActivity extends AppCompatActivity {
 
     @OnClick(R.id.next)
     public void nextClicked (){
-        Gson gson = new Gson();
-        User doctor = gson.fromJson(doctorJson , User.class);
+        final Gson gson = new Gson();
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
                 Log.e("Update user response :", "no response found");
-
+                Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
+                doctor.setIsOpen(1);
+                intent.putExtra("doctor_data" , gson.toJson(doctor));
+                intent.putExtra("from" , true);
+                startActivity(intent);
+                finish();
             }
 
             @Override
             public void onFailed(String error) {
                 Log.e("Error", error);
             }
-        }).sendPayment(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),String.valueOf(doctor.get_Id()) , "free");
-        Intent intent = new Intent(this , ChatActivity.class);
-        intent.putExtra("doctor_data" , doctorJson);
-        intent.putExtra("from" , true);
-        startActivity(intent);
-        finish();
-        DoctorProfile.profileActivity.finish();
+        }).sendSessionRequest(
+                String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),
+                String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+                String.valueOf(doctor.get_Id())
+                , "free");
+
+//        DoctorProfile.profileActivity.finish();
 //        PreRequest.preRequest.finish();
 
     }

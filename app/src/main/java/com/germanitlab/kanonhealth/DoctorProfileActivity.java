@@ -14,10 +14,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
+import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -110,6 +112,22 @@ public class DoctorProfileActivity extends AppCompatActivity {
         bindData();
 */
         setAdapters();
+
+    }
+
+    @OnClick(R.id.tv_contact)
+    public void contactClick(View v) {
+        Gson gson = new Gson();
+        if (user.getIsDoc()==1 && user.getIsOpen() == 1) {
+            Intent intent = new Intent(this, ChatActivity.class);
+            intent.putExtra("doctor_data", gson.toJson(user));
+            intent.putExtra("from", true);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this , PaymentActivity.class);
+            intent.putExtra("doctor_obj" , user);
+            startActivity(intent);
+        }
 
     }
 
