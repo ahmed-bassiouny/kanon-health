@@ -127,5 +127,8 @@ public interface ApiInterface {
     //Edit by ahmed 6-6-2017
     @POST("/rate/update")
     Call<JsonObject> rateDoctor (@Body Comment comment);
+    @POST("request/close_session")
+    Call <JsonObject> closeSession(@Body DoctorRequest request);
+
 }
 

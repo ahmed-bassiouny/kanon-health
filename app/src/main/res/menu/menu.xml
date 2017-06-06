@@ -3,5 +3,7 @@
     <item
         android:id="@+id/start_session"
         android:title="@string/start_session" />
-
+    <item
+        android:id="@+id/end_session"
+        android:title="@string/end_session" />
 </menu>

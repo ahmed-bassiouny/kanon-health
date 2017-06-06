@@ -1,26 +1,14 @@
 package com.germanitlab.kanonhealth;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.ContentLoadingProgressBar;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 
@@ -29,11 +17,11 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class RateActivity extends AppCompatActivity {
 
-    // doctor name , rate , rreviews number
+    // doctor name , rate , reviews number
     @BindView(R.id.txt_doctor_name) TextView txt_doctor_name;
     @BindView(R.id.rb_doctor_rate) RatingBar rb_doctor_rate;
     @BindView(R.id.txt_reviews) TextView txt_reviews;
@@ -56,7 +44,6 @@ public class RateActivity extends AppCompatActivity {
     // recycle view
     @BindView(R.id.recycler_view) RecyclerView recycler_view;
 
-    int widthBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +52,7 @@ public class RateActivity extends AppCompatActivity {
         txt_one_star.post(new TimerTask() {
             @Override
             public void run() {
+                /*
                 int height,width,result;
                 height=temp.getHeight();
                 width=temp.getWidth();
@@ -74,6 +62,7 @@ public class RateActivity extends AppCompatActivity {
                 result = (50*width)/100;
                 lp1 = new FrameLayout.LayoutParams(result, height);
                 btn_three_stars.setLayoutParams(lp1);
+                */
             }
         });
 

@@ -22,19 +22,19 @@
             android:layout_height="20dp"
             android:id="@+id/img_country_image"
             android:src="@drawable/check"
-            android:layout_gravity="bottom|right"/>
+            android:layout_gravity="bottom|end"/>
     </FrameLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".5"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_person_name"
-            android:text="ahahahahahahkjfnsjnvsmd, "
+            android:text="@string/temp"
             android:textColor="@android:color/background_dark" />
             <RatingBar
                 android:id="@+id/rb_person_rate"
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txt_comment"
-        android:text="udusaifhbnjdskvns.vnfkbm/dfmbkd/bd"
+        android:text="@string/temp"
         android:layout_margin="5dp"
         android:textColor="@color/black"/>
 <!--
