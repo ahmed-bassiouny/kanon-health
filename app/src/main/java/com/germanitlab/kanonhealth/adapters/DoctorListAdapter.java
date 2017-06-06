@@ -1,11 +1,13 @@
 package com.germanitlab.kanonhealth.adapters;
 
 import android.app.Activity;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,11 +32,24 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     private List<User> doctorContactsList;
     Activity activity;
     int visibility ;
+    private boolean settedAdapter=false;
+    private boolean onBind;
 
     public DoctorListAdapter(List<User> doctorContactsList, Activity activity , int visibility) {
+//        setHasStableIds(true);
         this.doctorContactsList = doctorContactsList;
         this.activity = activity;
         this.visibility = visibility ;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
@@ -43,11 +58,23 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         return new ItemView(view);
     }
 
+
     @Override
     public void onBindViewHolder(final ItemView holder, final int position) {
+        onBind = true;
+
+        holder.setIsRecyclable(false);
 
         final User doctor = doctorContactsList.get(position);
-        holder.imgStatus.setVisibility(View.GONE);
+        if(doctor.getIs_available()!=null) {
+            if (doctor.getIs_available().equals("0")) {
+                final int newColor = activity.getResources().getColor(R.color.medium_grey);
+                holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+            } else {
+                final int newColor = activity.getResources().getColor(R.color.green);
+                holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
         holder.tvDoctorName.setText(doctor.getName());
         holder.tvAbout.setText(doctor.getAbout());
         if(doctor.isChosen())
@@ -60,10 +87,24 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             holder.tvUnreadMessage.setVisibility(View.INVISIBLE);
         }
         holder.tvSubtitle.setText(doctor.getSubTitle());
-        holder.imgPage.setImageResource(R.drawable.doctor_icon);
+//        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
         Helper.setImage(activity ,Constants.CHAT_SERVER_URL
                 + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.profile_place_holder );
+
+        if(onBind) {
+            for (int x = 0; x < 2; x++) {
+                ImageView image = new ImageView(activity);
+                image.setBackgroundResource(R.drawable.doctor_icon);
+                int width = 60;
+                int height = 60;
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
+                image.setLayoutParams(parms);
+                holder.linearLayoutSpecialist.addView(image);
+            }
+        }
+        onBind = false;
+
     }
 
     @Override
@@ -74,7 +115,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgPage , imgStatus;
         TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage;
-        LinearLayout background ;
+        LinearLayout background ,linearLayoutSpecialist;
+
 
         public ItemView(View itemView) {
             super(itemView);
@@ -88,6 +130,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             tvAbout = (TextView) itemView.findViewById(R.id.tv_about_doctor_cell);
             tvUnreadMessage = (TextView) itemView.findViewById(R.id.tv_unread_message_cell);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
+            linearLayoutSpecialist= (LinearLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
         }
     }
 }

@@ -158,9 +158,27 @@ public class User implements Serializable {
     private LinkedHashMap<String, String> questions;
     @SerializedName("info")
     private Info info;
+    private  String is_available;
 /*
     @ForeignCollectionField(eager = true , foreignColumnName = "document")
 */
+
+    public int getId() {
+        return id;
+    }
+
+    public int getIsClinic() {
+        return isClinic;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public String getIs_available() {
+        return is_available;
+    }
+
     private ArrayList<Message> documents;
 
     public int get_Id() {

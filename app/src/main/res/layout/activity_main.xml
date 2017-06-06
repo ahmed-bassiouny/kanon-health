@@ -44,13 +44,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/doctor_tab"
-            android:text="Doctors" />
+            android:text="Contacts" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/document_tab"
-            android:text="My docs" />
+            android:text="Documents" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"

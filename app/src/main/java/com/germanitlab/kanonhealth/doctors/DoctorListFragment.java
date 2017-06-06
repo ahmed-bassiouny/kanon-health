@@ -54,7 +54,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private ImageButton imgScan;
-    private ImageView filter, map;
+    private ImageView filter, map,ImgBtnSearch;
 
     /*
     private TextView filter_to_list;
@@ -172,16 +172,14 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             }
         });
-
-
     }
-
-
 
 
     private void initView() {
         doctor_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
+        ImgBtnSearch = (ImageView) view.findViewById(R.id.img_btn_search);
+
         if (type == 2) {
             doctor_list.setBackgroundResource(R.color.blue);
             doctor_list.setTextColor(getResources().getColor(R.color.white));
@@ -224,6 +222,21 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                         R.id.doctor_list_continer, "Specialty");
             }
         });*/
+
+        edtDoctorListFilter.setVisibility(View.GONE);
+        ImgBtnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(edtDoctorListFilter.getVisibility()==View.GONE)
+                    edtDoctorListFilter.setVisibility(View.VISIBLE);
+                else if(edtDoctorListFilter.getVisibility()==View.VISIBLE)
+                    edtDoctorListFilter.setVisibility(View.GONE);
+
+            }
+        });
+
+
 
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,7 +334,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-
             DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE);
             recyclerView.setAdapter(doctorListAdapter);
         }

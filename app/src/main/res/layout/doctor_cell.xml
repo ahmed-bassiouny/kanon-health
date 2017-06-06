@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="horizontal"
-    android:padding="@dimen/size_5dp">
+    android:padding="@dimen/size_2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,12 +12,14 @@
         android:orientation="horizontal"
         android:id="@+id/background">
 <FrameLayout
+    android:layout_gravity="center"
+    android:foregroundGravity="center"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_avatar_cell"
-        android:layout_width="@dimen/size_70dp"
-        android:layout_height="@dimen/size_70dp"
+        android:layout_width="@dimen/size_80dp"
+        android:layout_height="@dimen/size_80dp"
         android:src="@drawable/profile_place_holder" />
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="15dp"
@@ -25,7 +27,7 @@
         android:layout_height="15dp"
         android:layout_gravity="bottom|right"
         android:layout_margin="5dp"
-        android:src="@color/black"/>
+        android:src="@color/medium_grey"/>
 </FrameLayout>
 
 
@@ -38,7 +40,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/size_5dp">
+                android:padding="@dimen/size_2dp">
 
                 <TextView
                     android:id="@+id/tv_doctor_name_cell"
@@ -62,14 +64,45 @@
 
             <TableRow
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_2dp">
+
+                <TextView
+                    android:id="@+id/tv_specialities"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Specialities"
+                    android:textColor="@color/medium_grey"
+                    android:textSize="@dimen/size_15sp" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_lable_cell"
-                    android:layout_width="@dimen/size_40dp"
-                    android:layout_height="@dimen/size_40dp"
-                    android:padding="@dimen/size_4dp"
-                    android:src="@drawable/doctor_icon" />
+                <ScrollView
+                    android:id="@+id/scrollView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/ll_dynamic_specialist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/size_3dp">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_lable_cell"
+                        android:layout_width="20dp"
+                        android:visibility="gone"
+                        android:layout_height="20dp"
+                        android:padding="@dimen/size_3dp"
+                        android:src="@drawable/doctor_icon" />
+                </LinearLayout>
+                </ScrollView>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

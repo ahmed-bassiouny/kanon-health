@@ -598,10 +598,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private void assignViews() {
 
         tvUserName.setText(doctor.getName());
-            Log.e("returned image :", doctor.getAvatar());
-            Helper.setImage(this , Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
-
+//            Log.e("returned image :", doctor.getAvatar());
+//            Helper.setImage(this , Constants.CHAT_SERVER_URL
+//                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
+//
 
     }
 
