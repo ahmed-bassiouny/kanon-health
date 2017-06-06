@@ -43,10 +43,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
+                
                 if (isLogin && !storedUser.equals("")) {
-
                     joinUser();
                     Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                     intent.putExtra("status" , 1);

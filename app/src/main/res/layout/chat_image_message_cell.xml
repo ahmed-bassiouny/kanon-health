@@ -42,6 +42,18 @@
                     android:layout_centerInParent="true"
                     android:layout_margin="1dp" />
 
+                <TextView
+                    android:id="@+id/tv_text_with_image_my"
+                    style="@style/chat_timings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"
+                    android:textColor="@color/black" />
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,6 +141,19 @@
                     android:scaleType="fitXY"
                     android:layout_centerInParent="true"
                     android:layout_margin="1dp" />
+
+
+                <TextView
+                    android:id="@+id/tv_text_with_image_his"
+                    style="@style/chat_timings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="texxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxt"
+                    android:textColor="@color/black" />
+
 
                 <TextView
                     android:id="@+id/tv_date"

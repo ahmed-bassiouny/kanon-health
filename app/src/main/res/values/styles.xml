@@ -1,5 +1,37 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@color/medium_grey</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:itemBackground">@color/white</item>
+    </style>
+
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- Customize your theme here -->
+    </style>
+
+    <!-- Customized theme for splash screen -->
+    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    ///////////////
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 
     </style>
@@ -58,12 +90,12 @@
         <item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
+    <!--<style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">-->
+        <!--<item name="windowNoTitle">true</item>-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+    <!--</style>-->
 
     <style name="PickerTextViewStyle">
         <item name="android:layout_marginLeft">16dp</item>
@@ -80,8 +112,11 @@
 
     <!--Edit by Ahmed  27 - 5 - 2017 -->
     <style name="TabStyle" parent="Widget.Design.TabLayout">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/medium_grey</item>
     </style>
 
+    <style name="ToolbarColoredBackArrow" parent="MyMaterialTheme">
+        <item name="android:colorControlNormal" tools:targetApi="lollipop">@color/white</item>
+    </style>
 </resources>

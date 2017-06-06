@@ -20,8 +20,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme"
-        tools:replace="android:icon,android:theme">
+        android:theme="@style/AppTheme">
+
+        <!-- tools:replace="android:icon,android:theme" -->
         <meta-data
             android:name="DATABASE"
             android:value="kannon.db" />
@@ -57,6 +58,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c5ac2db0554539947583fb65cf5561052c164498" />
+
         <activity
             android:name=".settings.TermsConditonActivity"
             android:screenOrientation="portrait" />
@@ -169,7 +171,9 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".DoctorProfileActivity" />
         <activity android:name=".TimeTable" />
-        <activity android:name=".CheckMutli"></activity>
+        <activity android:name=".CheckMutli" />
+        <activity android:name=".Comment"
+            android:windowSoftInputMode="stateHidden"></activity>
     </application>
 
 </manifest>

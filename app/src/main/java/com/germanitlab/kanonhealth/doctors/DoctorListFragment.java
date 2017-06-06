@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.doctors;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,31 +55,33 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private ImageButton imgScan;
-    private ImageView filter, map;
+    private ImageView filter, map,ImgBtnSearch;
 
     /*
     private TextView filter_to_list;
 */
     List<User> doctorList;
     private Button doctor_list, praxis_list;
-    static int speciality_id = 0;
+    int speciality_id;
     String jsonString;
-    static int type;
+    int type;
     PrefManager prefManager;
     Gson gson;
     private UserRepository mDoctorRepository;
     private EditText edtDoctorListFilter;
     private FilterCallBackClickListener filterCallBackClickListener;
-    private static DoctorListFragment doctorListFragment;
+    static DoctorListFragment doctorListFragment;
     private Util util ;
     public DoctorListFragment() {
     }
 
     public static DoctorListFragment newInstance(int mspeciality_id, int mtype){
-        speciality_id=mspeciality_id;
-        type = mtype;
+        Bundle bundle = new Bundle();
+        bundle.putInt("speciality_id",mspeciality_id);
+        bundle.putInt("type",mtype);
         if(doctorListFragment==null)
             doctorListFragment=new DoctorListFragment();
+        doctorListFragment.setArguments(bundle);
         return doctorListFragment;
     }
 
@@ -96,14 +99,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         if (type == 0)
             type = 2;
         mDoctorRepository = new UserRepository(getContext());
-        if (Helper.isNetworkAvailable(getContext())) {
-            getBySpeciality(speciality_id, type);
-        } else {
-            doctorList = mDoctorRepository.getAll();
-            setAdapter(doctorList);
-            util.dismissProgressDialog();
-        }
+        loadData();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        speciality_id=getArguments().getInt("speciality_id");
+        type=getArguments().getInt("type");
     }
 
     private void handelEvent() {
@@ -169,16 +173,14 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             }
         });
-
-
     }
-
-
 
 
     private void initView() {
         doctor_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
+        ImgBtnSearch = (ImageView) view.findViewById(R.id.img_btn_search);
+
         if (type == 2) {
             doctor_list.setBackgroundResource(R.color.blue);
             doctor_list.setTextColor(getResources().getColor(R.color.white));
@@ -222,6 +224,21 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             }
         });*/
 
+        edtDoctorListFilter.setVisibility(View.GONE);
+        ImgBtnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(edtDoctorListFilter.getVisibility()==View.GONE)
+                    edtDoctorListFilter.setVisibility(View.VISIBLE);
+                else if(edtDoctorListFilter.getVisibility()==View.VISIBLE)
+                    edtDoctorListFilter.setVisibility(View.GONE);
+
+            }
+        });
+
+
+
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -252,7 +269,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 if (type != 3) {
                     type = 3;
                     util.showProgressDialog();
-                    getBySpeciality(speciality_id, type);
+                    loadData();
+                    getBySpeciality();
                 }
 
             }
@@ -267,14 +285,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 if (type != 2) {
                     type = 2;
                     util.showProgressDialog();
-                    getBySpeciality(speciality_id, type);
+                    loadData();
+                    getBySpeciality();
                 }
             }
         });
     }
 
 
-    private void getBySpeciality(final int id, final int type) {
+    private void getBySpeciality() {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -298,7 +317,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             public void onFailed(String error) {
                 Log.e("Error", error);
             }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), id, type);
+        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), speciality_id, type);
     }
     private void saveInDB(List<User> doctorList) {
         double count = mDoctorRepository.count();
@@ -316,7 +335,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-
             DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE);
             recyclerView.setAdapter(doctorListAdapter);
         }
@@ -333,6 +351,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onFailed(String error) {
         Log.e("error", error);
+    }
+    private void loadData(){
+        if (Helper.isNetworkAvailable(getContext())) {
+            getBySpeciality();
+        } else {
+            //clinic 3 doctor 2
+            doctorList = mDoctorRepository.getAll(type);
+            setAdapter(doctorList);
+            util.dismissProgressDialog();
+        }
     }
 
 

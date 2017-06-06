@@ -41,14 +41,14 @@ public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>
 
     @Override
     public void onBindViewHolder(RateAdapter.MyViewHolder holder, int position) {
-        User user = rateList.get(position);
+        /*User user = rateList.get(position);
         holder.name.setText(user.getName());
         holder.comment.setText(user.getComment());
         holder.rate.setRating(Float.valueOf(user.getRate()));
         if(user.getAvatar() != null && user.getAvatar() != "" ) {
             Helper.setImage(activity , Constants.CHAT_SERVER_URL
                     + "/" + user.getAvatar() , holder.avatar ,R.drawable.profile_place_holder );
-        }
+        }*/
 
     }
 
@@ -57,16 +57,17 @@ public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>
         return rateList.size();
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView avatar ;
-        public TextView name , comment;
-        RatingBar rate;
+        public CircleImageView img_person_image ,img_country_image;
+        public TextView txt_person_name,txt_comment;
+        RatingBar rb_person_rate;
 
         public MyViewHolder(View view) {
             super(view);
-            avatar = (CircleImageView) view.findViewById(R.id.avatar);
-            name = (TextView) view.findViewById(R.id.name);
-            comment = (TextView) view.findViewById(R.id.comment);
-            rate = (RatingBar) view.findViewById(R.id.rate);
+            img_person_image = (CircleImageView) view.findViewById(R.id.img_person_image);
+            img_country_image = (CircleImageView) view.findViewById(R.id.img_country_image);
+            txt_person_name = (TextView) view.findViewById(R.id.txt_person_name);
+            txt_comment = (TextView) view.findViewById(R.id.txt_comment);
+            rb_person_rate = (RatingBar) view.findViewById(R.id.rb_person_rate);
         }
     }
 }

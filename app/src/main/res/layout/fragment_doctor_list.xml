@@ -20,12 +20,14 @@
 
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/img_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:src="@drawable/filter" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/map"
                 android:layout_width="50dp"
                 android:layout_height="31dp"
@@ -36,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/docor_list"
+                android:text="Contacts"
                 android:textColor="@color/black" />
 
             <ImageButton
@@ -49,6 +51,19 @@
                 android:contentDescription=""
                 android:scaleType="fitXY"
                 android:src="@drawable/scan"
+                tools:ignore="ContentDescription,RtlHardcoded" />
+
+            <ImageButton
+                android:id="@+id/img_btn_search"
+                android:layout_width="@dimen/size_40dp"
+                android:layout_height="36dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/size_15dp"
+                android:background="@null"
+                android:contentDescription=""
+                android:scaleType="fitXY"
+                android:src="@drawable/search"
+                android:tint="@color/black"
                 tools:ignore="ContentDescription,RtlHardcoded" />
 
 
@@ -79,14 +94,16 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Doctor / clients" />
+                android:textAllCaps="false"
+                android:text="Doctors" />
 
             <Button
                 android:id="@+id/praxis_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Praxis" />
+                android:textAllCaps="false"
+                android:text="Practice" />
         </LinearLayout>
 
         <EditText

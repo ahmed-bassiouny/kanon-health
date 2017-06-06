@@ -28,6 +28,7 @@ public class Constants {
     public static final String AUDIO = "audio";
     public static final String VIDEO = "video";
     public static final String IMAGE = "image";
+    public static final String IMAGE_TEXT = "imagePlusText";
     public static final String LOCATION = "location";
     public static final int IMAGE_REQUEST = 150;
     public static final int GALLERY_PERMISSION_CODE=6;
@@ -38,6 +39,7 @@ public class Constants {
 
     public static final int TEXT_MESSAGE = 1;
     public static final int IMAGE_MESSAGE = 4;
+    public static final int IMAGE_Text_MESSAGE = 9;
     public static final int AUDIO_MESSAGE = 2;
     public static final int VIDEO_MESSAGE = 3;
     public static final int LOCATION_MESSAGE = 5;

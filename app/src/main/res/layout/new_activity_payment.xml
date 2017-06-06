@@ -6,20 +6,12 @@
     android:orientation="vertical">
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:id="@+id/profile_layout"
-        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="vertical">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ToolbarColoredBackArrow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:titleTextColor="@color/white"
@@ -35,8 +27,20 @@
                     android:textSize="18sp"
                     android:textColor="@color/white"/>
 
+
+
             </android.support.v7.widget.Toolbar>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/profile_layout"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,10 +79,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
-                            android:text="surgery"
-                            android:textColor="@android:color/background_dark" />
+                            android:text="Specialists .. "
+                            android:textColor="@color/gray_black" />
 
                         <RatingBar
+                            android:id="@+id/ratingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/size_5dp"
@@ -128,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/size_5dp"
                         android:textSize="20sp"
-                        android:text="150$"
+                        android:text="9.90 $"
                         android:textColor="@android:color/background_dark" />
 
 
@@ -228,13 +233,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:drawableRight="@drawable/paypal_logo"
+                    android:drawableRight="@drawable/paypal_new"
                     android:enabled="false" />
 
                 <RadioButton
                     android:layout_weight="1"
 
-                    android:drawableRight="@drawable/sofo"
+                    android:drawableRight="@drawable/mastercard"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:enabled="false"
@@ -242,7 +247,7 @@
                 <RadioButton
                     android:layout_weight="1"
 
-                    android:drawableRight="@drawable/credit"
+                    android:drawableRight="@drawable/visa"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:enabled="false"

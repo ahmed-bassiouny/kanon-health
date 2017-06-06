@@ -82,7 +82,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         super.setUserVisibleHint(isVisibleToUser);
         if(getView()!=null &&isVisibleToUser ){
             if(Helper.isNetworkAvailable(getContext())) {
-                showProgressDialog();
+//                showProgressDialog();
                 new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                         , AppController.getInstance().getClientInfo().getPassword());
             }

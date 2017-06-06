@@ -156,7 +156,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
         switch (type) {
             case Constants.IMAGE:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
-                setImageMessage(imageViewHolder, position);
+                setImageMessage(imageViewHolder, position,false);
                 break;
             case Constants.AUDIO:
                 AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
@@ -316,7 +316,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
     //-----------------------------------------------------------------------------------------------------
 
 
-    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position) {
+    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position,boolean isImgPlusText) {
         Log.d("date form Image ", mMessages.get(position).getSent_at().toString());
         final Message message = mMessages.get(position);
 
@@ -325,16 +325,19 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             imageViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
             imageViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
             imageViewHolder.tvDateMy.setText(message.getSent_at());
+            imageViewHolder.tvMyTextImg.setText(message.getImageText());
 
 
-            if (!new File(message.getMsg()).exists()) {
-                String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
-                File file = new File(folder, fileName);
-                if (file.exists()) {
-                    message.setMsg(file.getPath());
-                    message.setLoaded(true);
-                    message.setLoading(false);
+            if(message.getMsg()!=null) {
+                if (!new File(message.getMsg()).exists()) {
+                    String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
+                    File file = new File(folder, fileName);
+                    if (file.exists()) {
+                        message.setMsg(file.getPath());
+                        message.setLoaded(true);
+                        message.setLoading(false);
 
+                    }
                 }
             }
 
@@ -430,6 +433,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 
             imageViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
             imageViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+            imageViewHolder.tvHisTextImg.setText(message.getImageText());
 
 
             imageViewHolder.tvDate.setText(message.getSent_at());
@@ -1755,7 +1759,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
         public ImageView myMessage, hisMessage;
         public ProgressBar progressBar, progressViewDownload;
         public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy;
+        public TextView tvDate, tvDateMy,tvMyTextImg,tvHisTextImg;
         public ImageView imgMessageStatus;
 
 
@@ -1767,10 +1771,13 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             hisMessage = (ImageView) itemView.findViewById(R.id.his_image_message);
             progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
+            tvMyTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_my);
+            tvHisTextImg= (TextView) itemView.findViewById(R.id.tv_text_with_image_his);
             imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);
             messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
+
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
