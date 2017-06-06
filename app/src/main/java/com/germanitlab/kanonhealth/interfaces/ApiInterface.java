@@ -107,8 +107,8 @@ public interface ApiInterface {
     @POST("/messages/update_privacy")
     Call<JsonObject> updatePrivacy(@Body UpdatePrivacy locationRequest);
 
-    @POST("/request/payment")
-    Call<JsonObject> sendPayment(@Body Payment payment);
+    @POST("/request/session")
+    Call<JsonObject> sendSessionRequest(@Body Payment payment);
 
     @POST("/messages/forward")
     Call<JsonObject> forward(@Body Forward forward);

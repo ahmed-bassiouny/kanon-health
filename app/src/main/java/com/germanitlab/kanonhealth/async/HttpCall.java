@@ -517,11 +517,11 @@ public class HttpCall {
         });
     }
 
-    public void sendPayment(String userID , String password , String id , String type)
+    public void sendSessionRequest(String userID , String password , String id , String type)
     {
         Payment payment = new Payment(userID , password  , id , type );
         ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-        Call<JsonObject> connection = service.sendPayment(payment);
+        Call<JsonObject> connection = service.sendSessionRequest(payment);
         connection.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
