@@ -29,6 +29,7 @@ import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
+import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,8 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
 
 // Edit By Ahmed 29-5-2017
 public class DoctorProfile extends AppCompatActivity {
@@ -127,15 +126,8 @@ public class DoctorProfile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+                finish();
 
-        if(getIntent().getExtras().containsKey("tab")){
-            indexFromIntent = 0;
-
-        }else {
-            indexFromIntent = 3;
-
-        }
-        finish();
     }
 
     private void getDoctorData() {
@@ -197,7 +189,6 @@ public class DoctorProfile extends AppCompatActivity {
             intent.putExtra("doctor_data" , doctorJson);
             intent.putExtra("doctor_obj" , doctor);
             startActivity(intent);
-
         }
 
     }
@@ -214,7 +205,7 @@ public class DoctorProfile extends AppCompatActivity {
     private void createAdapter() {
         Gson gson = new Gson();
         ArrayList<Message> messages = doctor.getDocuments();
-        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this, profile_layout);
+        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

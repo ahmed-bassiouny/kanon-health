@@ -16,6 +16,7 @@ import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
+import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
 import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
@@ -524,7 +525,7 @@ public class HttpCall {
         connection.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("Answers ", response.body().toString());
+//                Log.d("Answers ", response.body().toString());
                 apiResponse.onSuccess(response.body());
             }
 
@@ -625,6 +626,22 @@ public class HttpCall {
         ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
         DoctorRequest mDoctorRequest =new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),AppController.getInstance().getClientInfo().getPassword(),"",doc_id);
         Call<JsonObject> connection=service.removeFromMyDoctor(mDoctorRequest);
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void rateDoctor(String doc_id,String txtcomment , String rate){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Comment comment = new Comment(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),AppController.getInstance().getClientInfo().getPassword(),"0",doc_id,txtcomment,rate);
+        Call<JsonObject> connection=service.rateDoctor(comment);
         connection.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

@@ -46,6 +46,14 @@
     <string name="remove_from">Remove From My Doctor\'s</string>
     <string name="error_connection">Please Check Your Internet Connection</string>
     <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
+    <string name="end_session">Close Current Request</string>
+    <string name="start_session">Start New Conversation</string>
+    <string name="please_rate">Please Rate</string>
+    <string name="reviews">Reviews</string>
+    <string name="write_review_hint">Write a review ...</string>
+    <string name="temp"> Temp Value to Test</string>
+    <string name="invalid_input"> Your input is invalid</string>
+    <string name="thanksforcomment">Thanks for Comment</string>
     <string name="hot_line">Hotline</string>
     <string name="fax">Fax</string>
     <string name="website">Wensite</string>
@@ -233,5 +241,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="title_activity_maps">Map</string>
     <string name="payment">Payment</string>
     <string name="payment_details">Payment details</string>
+    <string name="open_session_again">Start New Request</string>
 
 </resources>

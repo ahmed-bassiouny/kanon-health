@@ -106,7 +106,7 @@ public class User implements Serializable {
     private int isDoc;
     @DatabaseField
     @SerializedName("is_clinic")
-    private int isClinic;
+    public int isClinic;
     @DatabaseField
     @SerializedName("is_open")
     private int isOpen;

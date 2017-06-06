@@ -10,6 +10,7 @@ import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
+import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
 import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
@@ -123,6 +124,8 @@ public interface ApiInterface {
     @POST("/doctors/remove_from_my_doctors")
     Call <JsonObject> removeFromMyDoctor(@Body DoctorRequest request);
 
-
+    //Edit by ahmed 6-6-2017
+    @POST("/rate/update")
+    Call<JsonObject> rateDoctor (@Body Comment comment);
 }
 

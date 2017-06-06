@@ -17,10 +17,12 @@ import java.util.List;
  */
 
 public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapter.MyViewHolder> {
-    private List<SpecilaitiesModels> specilaitiesList ;
+    private List<SpecilaitiesModels> specilaitiesList;
+    private int visiblity;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title ;
-        public ImageView image ;
+        public TextView title;
+        public ImageView image;
 
         public MyViewHolder(View view) {
             super(view);
@@ -29,8 +31,9 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         }
     }
 
-    public SpecilaitiesAdapter(List<SpecilaitiesModels> specilaitiesList) {
+    public SpecilaitiesAdapter(List<SpecilaitiesModels> specilaitiesList, int visiblity) {
         this.specilaitiesList = specilaitiesList;
+        this.visiblity = visiblity;
     }
 
     @Override
@@ -45,6 +48,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
 /*        SpecilaitiesModels specilaities = specilaitiesList.get(position);
         holder.title.setText(specilaities.getName());*/
+        holder.title.setVisibility(visiblity);
     }
 
     @Override
