@@ -37,7 +37,7 @@ import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.payment.PreRequest;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -148,7 +148,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     intent.putExtra("from", true);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(getActivity(), PreRequest.class);
+                    Intent intent = new Intent(getActivity(), PaymentActivity.class);
                     intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
                     startActivity(intent);
                 }

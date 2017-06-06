@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ToolbarColoredBackArrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@color/white"
+        app:subtitleTextColor="@color/white"
+        android:titleTextColor="@color/white"
+        android:background="@color/colorPrimaryDark">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Opening Hours"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
+
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/profile_layout"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="@dimen/size_5dp"
+                android:layout_marginStart="@dimen/size_5dp"
+                android:background="@color/dark_gray"
+                />
+
+            <LinearLayout
+                android:background="@drawable/custom_edittext_without_border_style"
+                android:padding="@dimen/size_10dp"
+                android:layout_margin="10dp"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="3.58"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/size_17sp"
+                    android:textColor="@color/black"
+                    android:text="Use Timetable"/>
+                <RadioButton
+                    android:checked="true"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:id="@+id/radio0"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/custom_edittext_without_border_style"
+                android:padding="@dimen/size_10dp"
+                android:layout_margin="10dp"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="3.58"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/size_17sp"
+                    android:textColor="@color/black"
+                    android:text="Always open"/>
+                <RadioButton
+                    android:gravity="start"
+                    android:layout_weight="1"
+                    android:id="@+id/rb_always_open"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/custom_edittext_without_border_style"
+                android:padding="@dimen/size_10dp"
+                android:layout_margin="10dp"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="3.58"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/size_17sp"
+                    android:textColor="@color/black"
+                    android:text="No Opening Hours Available"/>
+                <RadioButton
+                    android:gravity="start"
+                    android:layout_weight="1"
+                    android:id="@+id/rb_no_opening_hours"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/custom_edittext_without_border_style"
+                android:padding="@dimen/size_10dp"
+                android:layout_margin="10dp"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="3.58"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/size_17sp"
+                    android:textColor="@color/black"
+                    android:text="Payment Closed"/>
+                <RadioButton
+                    android:gravity="start"
+                    android:layout_weight="1"
+                    android:id="@+id/rb_payment_closed"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
+
+
+
+
+
+
+            <Button
+                android:id="@+id/save"
+                android:layout_margin="@dimen/size_15dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

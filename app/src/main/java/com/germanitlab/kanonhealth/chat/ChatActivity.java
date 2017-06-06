@@ -253,7 +253,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 dialog.dismiss();
                 ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
-
                 sendMessage(ChatActivity.this.filePath, Constants.IMAGE,etText.getText().toString());
 
             }
@@ -382,6 +381,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             sendText.put("to_id", doctor.get_Id());
             sendText.put("type", Constants.TEXT);
             sendText.put("msg", message);
+            sendText.put("text_image", message);
             sendText.put("position", position);
             sendText.put("from_id", AppController.getInstance().getClientInfo().getUser_id());
 

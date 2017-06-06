@@ -22,9 +22,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/my_profile"
+                android:text="My Profile"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                 />
 
 
             <TextView
@@ -34,10 +34,10 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="@dimen/size_20dp"
                 android:padding="@dimen/size_5dp"
-                android:text="@string/edit"
+                android:text="edit"
                 android:textColor="@color/white"
                 android:textSize="@dimen/size_15sp"
-                android:textStyle="bold" />
+                 />
         </android.support.v7.widget.Toolbar>
 
 
@@ -51,13 +51,9 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/video_layout"
-                    android:visibility="visible"></LinearLayout>
 
                 <LinearLayout
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -84,8 +80,7 @@
                     android:id="@+id/linear_profile_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
 
                     <LinearLayout
@@ -98,15 +93,38 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="0.1"
-                            android:gravity="center"
                             android:orientation="vertical">
 
 
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/img_profile_avatar"
-                                android:layout_width="@dimen/size_80dp"
-                                android:layout_height="@dimen/size_80dp"
+                                android:layout_width="@dimen/size_100dp"
+                                android:layout_height="@dimen/size_100dp"
                                 android:src="@drawable/profile_place_holder" />
+                            <TextView
+                                android:id="@+id/tv_profile_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Eslam A.Gwad"
+                                android:textColor="@android:color/background_dark"
+                                android:textSize="@dimen/size_17sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="First name"
+                                android:textColor="@android:color/background_dark"
+                                android:textSize="@dimen/size_17sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="last name"
+                                android:textColor="@android:color/background_dark"
+                                android:textSize="@dimen/size_17sp"/>
 
                         </LinearLayout>
 
@@ -119,24 +137,8 @@
                             android:paddingLeft="@dimen/size_5dp">
 
 
-                            <TextView
-                                android:id="@+id/tv_profile_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Eslam \n A.Gwad"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="@dimen/size_17sp"
-                                android:textStyle="bold" />
 
                         </LinearLayout>
-
-
-                        <ImageView
-                            android:id="@+id/img_profile_qr"
-                            android:layout_width="@dimen/size_90dp"
-                            android:layout_height="@dimen/size_90dp"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/qr" />
 
 
                     </LinearLayout>
@@ -148,6 +150,7 @@
 
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_profile_mobile_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -155,7 +158,7 @@
                             android:padding="@dimen/size_5dp"
                             android:text="+02 01066253101"
                             android:textColor="@color/colorAccent"
-                            android:textStyle="bold" />
+                             />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -166,25 +169,24 @@
                             android:text="xxxxxxxxxxx"
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/size_17sp"
-                            android:textStyle="bold"
+
                             android:visibility="invisible" />
                     </LinearLayout>
 
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/line" />
+                        android:layout_height="2dp"
+                        android:background="@color/medium_grey" />
 
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:text="@string/personal_info"
                         android:textColor="@android:color/background_dark"
                         android:textSize="@dimen/size_15sp"
-                        android:textStyle="bold" />
+                        android:layout_margin="@dimen/size_5dp"/>
 
 
                     <TableRow
@@ -200,7 +202,7 @@
                             android:ems="7"
                             android:text="@string/birthday"
                             android:textColor="@android:color/background_dark"
-                            android:textStyle="bold" />
+                             />
 
 
                         <TextView
@@ -225,7 +227,7 @@
                             android:ems="7"
                             android:text="@string/streat"
                             android:textColor="@android:color/background_dark"
-                            android:textStyle="bold" />
+                             />
 
 
                         <TextView
@@ -250,7 +252,7 @@
                             android:ems="7"
                             android:text="@string/house_number"
                             android:textColor="@android:color/background_dark"
-                            android:textStyle="bold" />
+                             />
 
 
                         <TextView
@@ -275,7 +277,7 @@
                             android:ems="7"
                             android:text="@string/zip_code"
                             android:textColor="@android:color/background_dark"
-                            android:textStyle="bold" />
+                             />
 
 
                         <TextView
@@ -300,7 +302,7 @@
                             android:ems="7"
                             android:text="@string/provinz"
                             android:textColor="@android:color/background_dark"
-                            android:textStyle="bold" />
+                             />
 
 
                         <TextView
@@ -326,7 +328,7 @@
                             android:ems="7"
                             android:text="@string/country"
                             android:textColor="@android:color/background_dark"
-                            android:textStyle="bold" />
+                             />
 
 
                         <TextView
@@ -341,18 +343,16 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/line"
-                        android:paddingTop="@dimen/size_5dp" />
+                        android:layout_height="2dp"
+                        android:background="@color/medium_grey" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:text="@string/voluntary_info"
+                        android:layout_margin="@dimen/size_5dp"
                         android:textColor="@android:color/background_dark"
-                        android:textSize="@dimen/size_15sp"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/size_15sp"/>
 
 
                     <LinearLayout

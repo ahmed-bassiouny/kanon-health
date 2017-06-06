@@ -72,8 +72,8 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     RecyclerView recyclerView;
     @BindView(R.id.recycler_view2)
     RecyclerView recyclerView2;
-    @BindView(R.id.img_profile_qr)
-    ImageView qr;
+//    @BindView(R.id.img_profile_qr)
+//    ImageView qr;
     @BindView(R.id.scrollView)
     ScrollView scrollView ;
     @BindView(R.id.video_layout)
@@ -138,12 +138,12 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         else
             is_doctor = false;
 
-        if (userInfoResponse.getUser().getQr_url() != null) {
-            Helper.ImportQr(mPrefManager, this, qr);
-        } else {
-            Helper.setImage(this,Constants.CHAT_SERVER_URL
-                    + "/" + userInfoResponse.getUser().getQr_url() , imgAvatar, R.drawable.qr);
-        }
+//        if (userInfoResponse.getUser().getQr_url() != null) {
+//            Helper.ImportQr(mPrefManager, this, qr);
+//        } else {
+//            Helper.setImage(this,Constants.CHAT_SERVER_URL
+//                    + "/" + userInfoResponse.getUser().getQr_url() , imgAvatar, R.drawable.qr);
+//        }
 
         tvName.setText(userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
         tvPhone.setText(userInfoResponse.getUser().getCountryCOde() + userInfoResponse.getUser().getPhone());

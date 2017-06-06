@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.doctors;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,10 +16,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
@@ -35,9 +38,12 @@ import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
+import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +114,70 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         speciality_id=getArguments().getInt("speciality_id");
         type=getArguments().getInt("type");
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        if (scanResult != null) {
+
+            showDialog(scanResult.getContents());
+        } else {
+
+            Toast.makeText(getActivity(), "Invalid Qr please try again", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public void showDialog(final String qr) {
+
+        // custom dialog
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+        dialog.setContentView(R.layout.custom_dialog);
+
+        Button btnLogin = (Button) dialog.findViewById(R.id.btn_login);
+
+        Button btnShowProfile = (Button) dialog.findViewById(R.id.btn_show_profile);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new HttpCall(getActivity(), new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+
+                        Log.d("Response", response.toString());
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailed(String error) {
+
+                        Log.d("Response", error);
+                        dialog.dismiss();
+                    }
+                }).login(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                        , AppController.getInstance().getClientInfo().getPassword(), qr);
+            }
+        });
+
+
+        btnShowProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
 
     private void handelEvent() {
 
