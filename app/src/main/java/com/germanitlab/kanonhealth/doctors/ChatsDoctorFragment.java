@@ -83,8 +83,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         if(getView()!=null &&isVisibleToUser ){
             if(Helper.isNetworkAvailable(getContext())) {
 //                showProgressDialog();
-//                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-//                        , AppController.getInstance().getClientInfo().getPassword());
+                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                        , AppController.getInstance().getClientInfo().getPassword());
             }
             else {
                 TypeToken<List<User>> token = new TypeToken<List<User>>(){};
@@ -358,7 +358,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onSuccess(Object response) {
-        dismissProgressDialog();
+//        dismissProgressDialog();
         doctorList = (List<User>) response;
         Gson gson = new Gson();
         String jsonData = gson.toJson(response);
@@ -370,7 +370,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
-        dismissProgressDialog();
+//        dismissProgressDialog();
         tvLoadingError.setVisibility(View.VISIBLE);
         if (error != null && error.length() > 0)
             tvLoadingError.setText(error);

@@ -76,6 +76,7 @@ import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -198,6 +199,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 //        List<Message> list = mMessageRepositry.getAll(user_id);
 
 
+        open_chat_session.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         Gson gson = new Gson();
         prefManager = new PrefManager(this);
         Log.e("Docot in chat data", prefManager.getData("doctor"));
@@ -371,6 +378,18 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         startActivity(intent);
     }
 
+
+
+    @OnClick(R.id.button2)
+    public void openPayment() {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        Gson gson = new Gson();
+        String doctor_data = gson.toJson(doctor);
+        intent.putExtra("doctor_data", doctor_data);
+        intent.putExtra("doctor_obj" , doctor);
+
+        startActivity(intent);
+    }
 
     private void sendMessage() {
 

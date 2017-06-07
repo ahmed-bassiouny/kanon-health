@@ -19,7 +19,8 @@ public class MessageRepositry {
 
     private DatabaseHelper db;
     Dao<Message, Integer> messagesDao;
-    public MessageRepositry(Context context){
+
+    public MessageRepositry(Context context) {
         DatabaseManager databaseManager = new DatabaseManager();
         db = databaseManager.getHelper(context);
         try {
@@ -29,10 +30,10 @@ public class MessageRepositry {
         }
     }
 
-    public int create(Message message){
+    public int create(Message message) {
         try {
-            if(!messagesDao.idExists(message.get_Id()))
-            return messagesDao.create(message);
+            if (!messagesDao.idExists(message.get_Id()))
+                return messagesDao.create(message);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -40,7 +41,7 @@ public class MessageRepositry {
     }
 
 
-    public double count(){
+    public double count() {
         try {
             return messagesDao.countOf();
         } catch (SQLException e) {
@@ -55,16 +56,15 @@ public class MessageRepositry {
             QueryBuilder<Message, Integer> queryBuilder =
                     messagesDao.queryBuilder();
 // the 'password' field must be equal to "qwerty"
-            queryBuilder.where().eq("to_id",id ).or().eq("from_id", id);
+            queryBuilder.where().eq("to_id", id).or().eq("from_id", id);
 // prepare our sql statement
             PreparedQuery<Message> preparedQuery = queryBuilder.orderBy("id", true).prepare();
 // query for all accounts that have "qwerty" as a password
             List<Message> messageList = messagesDao.query(preparedQuery);
-                return messageList;
-        }
-        catch (Exception e){
+            return messageList;
+        } catch (Exception e) {
             Log.d("Exceptoion", e.toString());
         }
-        return null ;
+        return null;
     }
 }
