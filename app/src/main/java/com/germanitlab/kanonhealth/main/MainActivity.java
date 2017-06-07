@@ -91,10 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         myviewpager.setOffscreenPageLimit(4);
         intent = getIntent();
 //        tabIndex = intent.getIntExtra("index", 0);
-        if (indexFromIntent == -1) {
-            indexFromIntent = 0;
-            temp = true;
-        }
+
         myviewpager.setCurrentItem(indexFromIntent);
 
         speciality_id = intent.getIntExtra("speciality_id", 0);
@@ -165,17 +162,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //            }
 //        });
 //
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (indexFromIntent == -1) {
-            indexFromIntent = 0;
-            temp = true;
-        }
-        myviewpager.setCurrentItem(indexFromIntent);
 
     }
 
@@ -511,4 +497,11 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==13){
+            Toast.makeText(this, "TASO fra", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

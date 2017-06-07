@@ -99,17 +99,23 @@ public class PasscodeActivty extends AppCompatActivity {
         if (passcode.length() != 6)
             Toast.makeText(this, "wrong passcode", Toast.LENGTH_SHORT).show();
         else {
+
+            //reset password
             if (status == 0) {
+                //second time password entered
                 if(save)
                     save();
+                //first time password entered
                 else if(reEnter)
                     reEnter();
                 else
+                    //nothing entered yet
                     newPass();
             }
+            //for check  password
             if (status == 1) {
                 checkPasscode();
-
+                //update passcode
             } else if (status == 2) {
                 if(save)
                     save();
@@ -154,10 +160,8 @@ public class PasscodeActivty extends AppCompatActivity {
     private void save(){
         if(temp.equals(passcode)) {
             prefManager.put(PrefManager.PASSCODE, passcode);
-            Intent intent  = new Intent(this , MainActivity.class);
-            if (status == 2)
-                intent.putExtra("index" , 3);
-            startActivity(intent);
+            Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
+            finish();
         }
         else
         {

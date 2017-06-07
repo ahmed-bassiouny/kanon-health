@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.germanitlab.kanonhealth.CheckMutli;
@@ -160,7 +161,7 @@ public class SettingFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PasscodeActivty.class);
                 intent.putExtra("status" , 2);
-                startActivity(intent);
+                startActivityForResult(intent,13);
             }
         });
         trSound.setOnClickListener(new View.OnClickListener() {
