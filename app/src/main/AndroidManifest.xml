@@ -66,6 +66,9 @@
             android:name=".settings.FaqActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".OpeningHoursActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".intro.QrActivity"
             android:screenOrientation="portrait" />
         <activity

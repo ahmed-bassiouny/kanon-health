@@ -8,11 +8,11 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -29,15 +29,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Base64OutputStream;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +58,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -82,7 +87,10 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -99,6 +107,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import gun0912.tedbottompicker.TedBottomPicker;
 import im.delight.android.location.SimpleLocation;
 import io.socket.emitter.Emitter;
 
@@ -109,6 +118,7 @@ import io.socket.emitter.Emitter;
 public class ChatActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int PICK_IMAGE = 0;
     @BindView(R.id.imgbtn_chat_attach)
     ImageButton imageButtonAttach;
     @BindView(R.id.img_chat_user_avatar)
@@ -174,17 +184,18 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         return mChatComponent;
     }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
         ButterKnife.bind(this);
-
+        ttoolbar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(ttoolbar);
         /* data base
          */
         mMessageRepositry = new MessageRepositry(getApplicationContext());
         getmChatComponent().inject(this);
+//        List<Message> list = mMessageRepositry.getAll(user_id);
 
 
         Gson gson = new Gson();
@@ -235,7 +246,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-    private void initDialogImgTextSend(final Uri imgFilePath, String filePath) {
+
+
+    private void initDialogImgTextSend(final Uri imgFilePath, String filePath, String imgPath) {
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_chat_img_text);
@@ -247,6 +260,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         Toast.makeText(this, "file:/"+filePath, Toast.LENGTH_SHORT).show();
         Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
 
+        image.setImageURI(Uri.parse(imgPath));
 
         image.postInvalidate();
 
@@ -257,7 +271,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 dialog.dismiss();
                 ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
-
                 sendMessage(ChatActivity.this.filePath, Constants.IMAGE,etText.getText().toString());
 
             }
@@ -278,17 +291,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void handleMyData() {
         user_id = doctor.get_Id();
-
-        if(doctor.getIsOpen() == 0)
-        {
-            chat_bar.setVisibility(View.GONE);
-            open_chat_session.setVisibility(View.VISIBLE);
-        }
-        else{
-            chat_bar.setVisibility(View.VISIBLE);
-            open_chat_session.setVisibility(View.GONE);
-        }
-
+        checkSessionOpen();
         mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
         if (Helper.isNetworkAvailable(this)) {
@@ -395,6 +398,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             sendText.put("to_id", doctor.get_Id());
             sendText.put("type", Constants.TEXT);
             sendText.put("msg", message);
+            sendText.put("text_image", message);
             sendText.put("position", position);
             sendText.put("from_id", AppController.getInstance().getClientInfo().getUser_id());
 
@@ -895,6 +899,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             } else if (requestCode == Constants.GET_LAST_LOCATION_PERMISSION_CODE) {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
+            }else if ( requestCode== PICK_IMAGE) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickImage();
+                }
             }
         }
     }
@@ -957,11 +965,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        Intent intent = new Intent();
-                        intent.setType("image/* video/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,
-                                "Select Picture"), 100);
+//                        Intent intent = new Intent();
+//                        intent.setType("image/* video/*");
+//                        intent.setAction(Intent.ACTION_GET_CONTENT);
+//                        startActivityForResult(Intent.createChooser(intent,
+//                                "Select Picture"), 100);
+
+                         pickImage();
+
                     } else
                         askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
                 } else {
@@ -1038,6 +1049,65 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         showPopup.setFocusable(true);
         // Removes default background.
         showPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+    }
+
+    private void pickImage() {
+        if (ActivityCompat.checkSelfPermission(ChatActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(ChatActivity.this)
+                    .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                        @Override
+                        public void onImageSelected(Uri uri) {
+                            final String imgPath = decodeFile(uri.getPath());
+//                            encodedImage = getBase64(imgPath);
+
+
+                            selectedUri = uri;
+                            String mimeType = getMimeType(uri.getPath());
+
+                            if (mimeType != null) {
+
+
+
+                                if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
+//                                    sendMessage(getPathFromURI(selectedUri), Constants.IMAGE,"");
+//                                    if(selectetImage){
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                initDialogImgTextSend(selectedUri,filePath,imgPath);
+
+                                            }
+                                        });
+
+                                        selectetImage=false;
+//                                    }
+                                } else {
+                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO,"");
+                                }
+
+                            } else {
+                                if (isImageFile(selectedUri)) {
+
+                                    filePath = getPath(ChatActivity.this, selectedUri);
+
+                                    selectetImage=true;
+
+                                } else {
+                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO,"");
+                                }
+                            }
+
+                        }
+                    }).setTitle("Pick Photo").create();
+            tedBottomPicker.show(getSupportFragmentManager());
+        } else {
+            ActivityCompat.requestPermissions(ChatActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PICK_IMAGE);
+        }
 
     }
 
@@ -1436,21 +1506,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         } catch (Exception e) {
 
         }
-
-        if(selectetImage){
-
-//            Toast.makeText(this, ""+selectedUri, Toast.LENGTH_SHORT).show();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initDialogImgTextSend(selectedUri,filePath);
-
-                }
-            });
-
-            selectetImage=false;
-        }
-
 //        new SocketCall(activity).chatWithStatus("OpenChatWith", doctor.getDoctor().get_Id());
 //        askForPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.LAST_LOCATION_PERMISSION_CODE);
 //        simpleLocation.beginUpdates();
@@ -1478,4 +1533,178 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onStop();
         appStatus=false;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        MenuItem endSession = menu.findItem(R.id.end_session);
+        if(doctor.getIsDoc()!=1)
+            endSession.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.start_session:
+                //startActivity(new Intent(this, Comment.class));
+                AlertDialog.Builder adb_start = new AlertDialog.Builder(this);
+                adb_start.setTitle(R.string.close_conversation);
+                adb_start.setCancelable(false);
+                adb_start.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        new HttpCall(ChatActivity.this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                doctor.setIsOpen(0);
+                                checkSessionOpen();
+                                Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
+                                adb.setTitle(R.string.rate_conversation);
+                                adb.setCancelable(true);
+                                adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        new HttpCall(ChatActivity.this, new ApiResponse() {
+                                            @Override
+                                            public void onSuccess(Object response) {
+                                                Intent intent = new Intent(ChatActivity.this, Comment.class);
+                                                intent.putExtra("doc_id",String.valueOf(doctor.get_Id()));
+                                                startActivity(intent);
+                                            }
+
+                                            @Override
+                                            public void onFailed(String error) {
+
+                                            }
+                                        }).closeSession(String.valueOf(doctor.getId()));
+                                    }
+                                });
+                                adb.show();
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                            }
+                        }).closeSession(String.valueOf(doctor.getId()));
+                    }
+                });
+                adb_start.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                adb_start.show();
+                break;
+            case R.id.end_session:
+                AlertDialog.Builder adb_end = new AlertDialog.Builder(this);
+                adb_end.setTitle(R.string.close_conversation);
+                adb_end.setCancelable(false);
+                adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        new HttpCall(ChatActivity.this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                doctor.setIsOpen(0);
+                                checkSessionOpen();
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                            }
+                        }).closeSession(String.valueOf(doctor.getId()));
+                    }
+                });
+                adb_end.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                adb_end.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    private void checkSessionOpen(){
+
+        if(doctor.getIsOpen() == 0)
+        {
+            chat_bar.setVisibility(View.GONE);
+            open_chat_session.setVisibility(View.VISIBLE);
+        }
+        else{
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
+        }
+    }
+
+    public static String decodeFile(String path) {
+        String strMyImagePath = null;
+        Bitmap scaledBitmap;
+        try {
+            // Part 1: Decode image
+            Bitmap unscaledBitmap = ScalingUtils.decodeFile(path, 1280, 720, ScalingUtils.ScalingLogic.FIT);
+            if (!(unscaledBitmap.getWidth() <= 800 && unscaledBitmap.getHeight() <= 800)) {
+                // Part 2: Scale image
+                scaledBitmap = ScalingUtils.createScaledBitmap(unscaledBitmap, 1280, 720, ScalingUtils.ScalingLogic.FIT);
+            } else {
+                unscaledBitmap.recycle();
+                return path;
+            }
+            // Store to tmp file
+            String ext = Environment.getExternalStorageDirectory().toString();
+            File mFolder = new File(ext + "/Salonatcom");
+            if (!mFolder.exists()) {
+                mFolder.mkdir();
+            }
+
+            String s = "tmp.png";
+            File f = new File(mFolder.getAbsolutePath(), s);
+
+            strMyImagePath = f.getAbsolutePath();
+            FileOutputStream fos;
+            try {
+                fos = new FileOutputStream(f);
+                scaledBitmap.compress(Bitmap.CompressFormat.PNG, 70, fos);
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            scaledBitmap.recycle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (strMyImagePath == null) {
+            return path;
+        }
+        return strMyImagePath;
+    }
+
+    public static String getBase64(String filePath) {
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(filePath);
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            Base64OutputStream output64 = new Base64OutputStream(output, Base64.DEFAULT);
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                output64.write(buffer, 0, bytesRead);
+            }
+            output64.close();
+            return output.toString();
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+
+
 }

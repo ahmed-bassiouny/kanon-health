@@ -22,6 +22,7 @@
 
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/scan"
             android:layout_width="@dimen/size_40dp"
             android:layout_height="@dimen/size_35dp"
@@ -60,7 +61,7 @@
                 android:id="@+id/my_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:gravity="center">
 
 
@@ -68,48 +69,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
-                    android:text="@string/profile"
+                    android:paddingLeft="@dimen/size_20dp"
+                    android:text="My Profile"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
-            </TableRow>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
-                android:layout_marginTop="@dimen/size_3dp"
-                android:background="@color/gray_black" />
-            <TableRow
-                android:id="@+id/dr_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/size_5dp"
-                android:gravity="center">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
-                    android:text="Requset Dr. status"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
             <View
                 android:layout_width="match_parent"
@@ -123,25 +87,19 @@
                 android:id="@+id/tr_change_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/change_passcode"
                     android:id="@+id/tv_setting"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
 
             <View
@@ -152,9 +110,91 @@
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
+
+            <TableRow
+                android:id="@+id/dr_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_10sp"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_20dp"
+                    android:text="Requset Dr. status"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_10sp"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_20dp"
+                    android:text="Add Practice"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_10sp"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_20dp"
+                    android:text="Recommend This app to your friends"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <View
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+
+
             <TableRow
                 android:id="@+id/tr_mobile_number"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
@@ -164,17 +204,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/change_phone"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
 
             <View
@@ -188,7 +222,7 @@
 
             <TableRow
                 android:id="@+id/tr_sound"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -198,17 +232,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/sound_notification"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
 
             <View
@@ -223,7 +251,7 @@
             <TableRow
                 android:id="@+id/tr_terms"
                 android:layout_width="match_parent"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -232,17 +260,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/terms_conditions"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
 
             <View
@@ -256,8 +278,8 @@
 
             <TableRow
                 android:id="@+id/tr_faq"
-                android:padding="@dimen/size_5dp"
-                android:visibility="visible"
+                android:padding="@dimen/size_10sp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -266,17 +288,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/faq"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
 
             <View
@@ -289,8 +305,9 @@
                 android:background="@color/gray_black" />
 
             <TableRow
+                android:visibility="gone"
                 android:id="@+id/tr_support"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -299,17 +316,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/contact_support"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
             <View
                 android:layout_width="match_parent"
@@ -320,8 +331,8 @@
                 android:background="@color/gray_black" />
             <TableRow
                 android:id="@+id/tr_help"
-                android:padding="@dimen/size_5dp"
-                android:visibility="visible"
+                android:padding="@dimen/size_10sp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -330,17 +341,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/zxing_menu_help"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:layout_width="@dimen/size_30dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:background="@null"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next" />
             </TableRow>
 
             <View
@@ -353,7 +358,7 @@
                 android:background="@color/gray_black" />
 
             <TableRow
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_10sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -363,7 +368,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingLeft="@dimen/size_20dp"
                     android:text="@string/version"
                     android:textColor="@color/black"
                     android:textStyle="bold" />

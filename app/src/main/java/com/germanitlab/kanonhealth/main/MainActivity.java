@@ -398,69 +398,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-
-        if (scanResult != null) {
-
-            showDialog(scanResult.getContents());
-        } else {
-
-            Toast.makeText(MainActivity.this, "Invalid Qr please try again", Toast.LENGTH_LONG).show();
-
-        }
-    }
-
-
-    private void showDialog(final String qr) {
-
-        // custom dialog
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
-        dialog.setContentView(R.layout.custom_dialog);
-
-        Button btnLogin = (Button) dialog.findViewById(R.id.btn_login);
-
-        Button btnShowProfile = (Button) dialog.findViewById(R.id.btn_show_profile);
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                new HttpCall(MainActivity.this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-
-                        Log.d("Response", response.toString());
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-
-                        Log.d("Response", error);
-                        dialog.dismiss();
-                    }
-                }).login(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword(), qr);
-            }
-        });
-
-
-        btnShowProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
-    }
 //
 //    @Override
 //    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {

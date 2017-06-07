@@ -86,5 +86,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     provided 'javax.annotation:jsr250-api:1.0'
+    compile 'gun0912.ted:tedbottompicker:1.0.3'
+
 }
 apply plugin: 'com.google.gms.google-services'

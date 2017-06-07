@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -72,6 +73,8 @@ public class TimeTable extends AppCompatActivity {
     LinearLayout saturday_from_to ;
     @BindView(R.id.monday_from_to)
     LinearLayout monday_from_to ;
+    @BindView(R.id.ll_schedule)
+    LinearLayout linearLayoutSchedule ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -369,7 +372,14 @@ public class TimeTable extends AppCompatActivity {
         return (int) (dps * scale + 0.5f);
     }
 
-    @OnClick(R.id.save)
+    @OnClick(R.id.ll_schedule)
+    public void schedule(View view) {
+        Intent openingHoursIntent=new Intent(getApplicationContext(),OpeningHoursActivity.class);
+        startActivity(openingHoursIntent);
+    }
+
+
+        @OnClick(R.id.save)
     public void save(View view) {
         int key = 1;
         List<Table> list = new ArrayList<>();

@@ -38,7 +38,7 @@ import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.payment.PreRequest;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -85,8 +85,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         if(getView()!=null &&isVisibleToUser ){
             if(Helper.isNetworkAvailable(getContext())) {
 //                showProgressDialog();
-                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword());
+//                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+//                        , AppController.getInstance().getClientInfo().getPassword());
             }
             else {
                 TypeToken<List<User>> token = new TypeToken<List<User>>(){};
@@ -152,7 +152,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     intent.putExtra("from", true);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(getActivity(), PreRequest.class);
+                    Intent intent = new Intent(getActivity(), PaymentActivity.class);
                     intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
                     startActivity(intent);
                 }
@@ -348,7 +348,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() , view.VISIBLE);
+            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() , view.VISIBLE,3);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }
