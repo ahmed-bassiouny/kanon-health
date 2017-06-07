@@ -32,6 +32,7 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
@@ -67,6 +68,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     private EditText edtFilter;
     private Button doctors_list, praxis_list;
     private static ChatsDoctorFragment chatsDoctorFragment;
+    Util util ;
 
     public static ChatsDoctorFragment newInstance(){
         if(chatsDoctorFragment==null)
@@ -109,7 +111,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             return view;
 
         }
+        util = Util.getInstance(getActivity());
         gson = new Gson();
+        util.showProgressDialog();
         mPrefManager = new PrefManager(getActivity());
 
 
@@ -213,13 +217,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     }
 
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.waiting_text), true);
-    }
 
     public void scanQrCode() {
 
@@ -358,7 +356,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onSuccess(Object response) {
-        dismissProgressDialog();
+        util.dismissProgressDialog();
         doctorList = (List<User>) response;
         Gson gson = new Gson();
         String jsonData = gson.toJson(response);
@@ -370,7 +368,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
-        dismissProgressDialog();
+        util.dismissProgressDialog();
         tvLoadingError.setVisibility(View.VISIBLE);
         if (error != null && error.length() > 0)
             tvLoadingError.setText(error);
