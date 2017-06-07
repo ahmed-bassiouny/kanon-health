@@ -556,7 +556,105 @@ public class User implements Serializable {
         this.is_available = is_available;
     }
 
+    public String getPasscode() {
+        return passcode;
+    }
 
+    public String getCode() {
+        return code;
+    }
+
+    public String getRequest_type() {
+        return request_type;
+    }
+
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public int getRate_count() {
+        return rate_count;
+    }
+
+    public List<openTime> getOpen_time() {
+        return open_time;
+    }
+
+    public List<SupportedLanguage> getSupported_lang() {
+        return supported_lang;
+    }
+
+    public List<Specialities> getSpecialities() {
+        return specialities;
+    }
+
+    public List<MembersAt> getMembers_at() {
+        return members_at;
+    }
+
+    public String getSpeciality_id() {
+        return speciality_id;
+    }
+
+    public String getSpeciality_title() {
+        return speciality_title;
+    }
+
+    public String getSpeciality_icon() {
+        return speciality_icon;
+    }
+
+    public void setIsClinic(int isClinic) {
+        this.isClinic = isClinic;
+    }
+
+    public void setPasscode(String passcode) {
+        this.passcode = passcode;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setRequest_type(String request_type) {
+        this.request_type = request_type;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
+    }
+
+    public void setRate_count(int rate_count) {
+        this.rate_count = rate_count;
+    }
+
+    public void setOpen_time(List<openTime> open_time) {
+        this.open_time = open_time;
+    }
+
+    public void setSupported_lang(List<SupportedLanguage> supported_lang) {
+        this.supported_lang = supported_lang;
+    }
+
+    public void setSpecialities(List<Specialities> specialities) {
+        this.specialities = specialities;
+    }
+
+    public void setMembers_at(List<MembersAt> members_at) {
+        this.members_at = members_at;
+    }
+
+    public void setSpeciality_id(String speciality_id) {
+        this.speciality_id = speciality_id;
+    }
+
+    public void setSpeciality_title(String speciality_title) {
+        this.speciality_title = speciality_title;
+    }
+
+    public void setSpeciality_icon(String speciality_icon) {
+        this.speciality_icon = speciality_icon;
+    }
 }
 
 
