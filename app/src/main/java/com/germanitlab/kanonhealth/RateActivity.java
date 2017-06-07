@@ -2,14 +2,17 @@ package com.germanitlab.kanonhealth;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.List;
@@ -44,11 +47,19 @@ public class RateActivity extends AppCompatActivity {
     // recycle view
     @BindView(R.id.recycler_view) RecyclerView recycler_view;
 
+    String doc_id="14";
+    RateAdapter rateAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
+        recycler_view.setLayoutManager( new LinearLayoutManager(getApplicationContext()));
+
+        //doc_id=getIntent().getStringExtra("doc_id");
+        if(doc_id.isEmpty())
+            finish();
+        loadData();
         txt_one_star.post(new TimerTask() {
             @Override
             public void run() {
@@ -66,5 +77,21 @@ public class RateActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadData(){
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                List<Comment> comments=(List<Comment>) response;
+                rateAdapter=new RateAdapter(comments,RateActivity.this);
+                recycler_view.setAdapter(rateAdapter);
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Log.i("error", error);
+            }
+        }).getrating(doc_id);
     }
 }
