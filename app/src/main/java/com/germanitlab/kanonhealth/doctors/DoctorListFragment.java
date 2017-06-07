@@ -387,6 +387,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             }
         }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), speciality_id, type);
     }
+
     private void saveInDB(List<User> doctorList) {
         double count = mDoctorRepository.count();
         for (User user : doctorList
