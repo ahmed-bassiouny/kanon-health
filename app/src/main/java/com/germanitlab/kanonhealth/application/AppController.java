@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.germanitlab.kanonhealth.async.SocketCall;
@@ -45,6 +46,9 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(sbuilder.build());
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
