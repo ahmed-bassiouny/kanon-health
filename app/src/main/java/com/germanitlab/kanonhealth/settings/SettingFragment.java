@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -55,6 +57,10 @@ public class SettingFragment extends Fragment {
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
 
+    //status doctor
+    private TextView txt_status;
+    private Button btn_change_status;
+
     static private SettingFragment settingFragment;
     public SettingFragment() {
         // Required empty public constructor
@@ -84,6 +90,12 @@ public class SettingFragment extends Fragment {
         if(getView()!=null && isVisibleToUser){
             getSetting();
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        checkStatus();
     }
 
     private void assignViews() {
@@ -199,6 +211,17 @@ public class SettingFragment extends Fragment {
                 startActivity(new Intent(getContext() , CheckMutli.class));
             }
         });
+
+        //status doctor
+        txt_status=(TextView)view.findViewById(R.id.txt_status);
+        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+        btn_change_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // call rest to change data
+                ChangeStatus();
+            }
+        });
     }
 
     private void handelEvent() {
@@ -247,5 +270,19 @@ public class SettingFragment extends Fragment {
 
     }
 
+    private void ChangeStatus(){
+        int doc_status=1; //online
+        if(doc_status==1){
+            txt_status.setText(R.string.youareonline);
+            btn_change_status.setText(R.string.go_offline);
+        }else{
+            txt_status.setText(R.string.youareoffline);
+            btn_change_status.setText(R.string.go_online);
+        }
+    }
+    private void checkStatus(){
+        // call rest to get data
+        ChangeStatus();
+    }
 
 }
