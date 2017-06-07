@@ -375,7 +375,49 @@
 
 
             </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
 
+            <TableRow
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/txt_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:text="@string/youareoffline"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+            </TableRow>
+            <TableRow
+                android:padding="@dimen/size_5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_change_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/go_online"
+                    android:textStyle="bold" />
+            </TableRow>
 
         </LinearLayout>
 

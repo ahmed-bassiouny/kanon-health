@@ -40,11 +40,11 @@ public class StartQrScan extends AppCompatActivity {
         if (result != null) {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-                if (prefManager.getData(Constants.USER_ID) != null) {
-
-                    Intent i = new Intent(this, MainActivity.class);
-                    startActivity(i);
-                }
+//                if (prefManager.getData(Constants.USER_ID) != null) {
+//
+//                    Intent i = new Intent(this, MainActivity.class);
+//                    startActivity(i);
+//                }
                 finish();
 
             } else {
