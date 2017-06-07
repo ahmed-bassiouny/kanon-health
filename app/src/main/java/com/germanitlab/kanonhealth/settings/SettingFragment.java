@@ -26,7 +26,6 @@ import android.widget.VideoView;
 
 import com.germanitlab.kanonhealth.CheckMutli;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
-import com.germanitlab.kanonhealth.Help;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
@@ -220,23 +219,18 @@ public class SettingFragment extends Fragment {
         //status doctor
         txt_status=(TextView)view.findViewById(R.id.txt_status);
         btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // call rest to change data
 //                ChangeStatus();
-
-                if(btn_change_status.getText().equals("Go Online")){
-                    changStatusService("0");
-                    txt_status.setText(R.string.youareoffline);
-                    btn_change_status.setText(R.string.go_online);
-
-
-                }else {
+                if(btn_change_status.getText().toString().equals("Go Online")){
                     changStatusService("1");
-                    txt_status.setText(R.string.youareonline);
-                    btn_change_status.setText(R.string.go_offline);
+                }else {
 
+                    changStatusService("0");
+//
                 }
 
             }
@@ -249,7 +243,17 @@ public class SettingFragment extends Fragment {
             @Override
             public void onSuccess(Object response) {
                 statusResponse = (StatusResponse) response;
-                Toast.makeText(getActivity(), ""+statusResponse.getStatus(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
+                if(statusResponse.getIs_available().equals("0")){
+
+                    txt_status.setText(R.string.youareoffline);
+                    btn_change_status.setText(R.string.go_online);
+
+                }else {
+                    txt_status.setText(R.string.youareonline);
+                    btn_change_status.setText(R.string.go_offline);
+
+                }
             }
 
             @Override

@@ -1,7 +1,5 @@
 package com.germanitlab.kanonhealth.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
@@ -13,7 +11,7 @@ public class StatusResponse implements Serializable {
     private int status;
     private String is_available;
 
-    public int getStatus() {
-        return status;
+    public String getIs_available() {
+        return is_available;
     }
 }

@@ -16,14 +16,11 @@ public class StatusRequestModel  {
     private String is_available;
 
 
-    public StatusRequestModel(String id, String userID, String password) {
-        this.userID = userID;
-        this.password = password;
-    }
 
-    public StatusRequestModel(String userID, String password, int isArray) {
+    public StatusRequestModel(String userID, String password, String is_available) {
         this.userID = userID;
         this.password = password;
+        this.is_available=is_available;
     }
 
     public String getUserID() {
