@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,13 @@ import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.models.doctors.*;
 import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import com.germanitlab.kanonhealth.models.doctors.Comment;
 
 /**
  * Created by Geram IT Lab on 22/04/2017.
@@ -22,12 +25,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>  {
 
-    private List<User> rateList;
+    private List<Comment> commentList;
     private Activity activity;
 
-    public RateAdapter(List<User> rateList , Activity activity)
+    public RateAdapter(List<Comment> rateList , Activity activity)
     {
-        this.rateList = rateList ;
+        this.commentList = rateList ;
         this.activity = activity;
     }
 
@@ -41,20 +44,24 @@ public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>
 
     @Override
     public void onBindViewHolder(RateAdapter.MyViewHolder holder, int position) {
-        /*User user = rateList.get(position);
-        holder.name.setText(user.getName());
-        holder.comment.setText(user.getComment());
-        holder.rate.setRating(Float.valueOf(user.getRate()));
-        if(user.getAvatar() != null && user.getAvatar() != "" ) {
+        Comment comment = commentList.get(position);
+        holder.txt_person_name.setText(comment.getFirst_name()+" "+comment.getLast_name());
+        holder.txt_comment.setText(comment.getComment());
+        holder.rb_person_rate.setRating(Float.valueOf(comment.getRate()));
+        if(comment.getAvatar() != null && comment.getAvatar() != "" ) {
             Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                    + "/" + user.getAvatar() , holder.avatar ,R.drawable.profile_place_holder );
-        }*/
+                    + "/" + comment.getAvatar() , holder.img_person_image ,R.drawable.profile_place_holder );
+        }
+        if(comment.getCountry_flag() != null && comment.getCountry_flag() != "" ) {
+            Helper.setImage(activity , Constants.CHAT_SERVER_URL
+                    + "/" + comment.getCountry_flag() , holder.img_country_image ,R.drawable.profile_place_holder );
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return rateList.size();
+        return commentList.size();
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView img_person_image ,img_country_image;

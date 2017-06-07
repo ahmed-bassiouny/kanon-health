@@ -332,20 +332,20 @@ public class HttpCall {
         });
     }
 
-    public void getrating(String userID, String password, String doctorID){
+    public void getrating(String doctorID){
 
-        DoctorRequest doctorRequest = new DoctorRequest(userID, password, "0", doctorID);
+        Comment comment = new Comment(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "0", doctorID);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<User>> call = apiInterface.getrating(doctorRequest);
-        call.enqueue(new Callback<List<User>>() {
+        Call<List<Comment>> call = apiInterface.getrating(comment);
+        call.enqueue(new Callback<List<Comment>>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
                 Log.d("DoctorResponse ", response.body().toString());
                 apiResponse.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
                 Log.e("DoctorResponse ", " " + t.getLocalizedMessage());
                 apiResponse.onFailed(t.getLocalizedMessage());
             }

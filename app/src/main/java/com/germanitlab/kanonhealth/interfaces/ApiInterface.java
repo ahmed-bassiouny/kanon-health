@@ -99,7 +99,7 @@ public interface ApiInterface {
     Call<List<User>> getMyClinics(@Body BasicRequest request);
 
     @POST("/rate/list")
-    Call<List<User>> getrating(@Body DoctorRequest doctorRequest);
+    Call<List<Comment>> getrating(@Body Comment comment);
 
     @POST("/users/update")
     Call<JsonObject> updateToken(@Body RequsetToken request);
