@@ -15,6 +15,8 @@ import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
+import com.germanitlab.kanonhealth.models.StatusRequestModel;
+import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
@@ -351,6 +353,33 @@ public class HttpCall {
             }
         });
     }
+
+
+
+    public void goOnline(String userID, String password,String isAvailable) {
+
+        StatusRequestModel request = new StatusRequestModel(userID, password,isAvailable);
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<StatusResponse> connection = service.goOnline(request);
+
+        connection.enqueue(new Callback<StatusResponse>() {
+            @Override
+            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
+
+                Log.d("Setting ", response.body().toString());
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<StatusResponse> call, Throwable t) {
+
+                Log.e("Setting ", " " + t.getLocalizedMessage());
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+
+    }
+
 
     public void uploadImage(String userID, String password, String imagePath) {
 

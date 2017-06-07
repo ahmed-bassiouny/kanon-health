@@ -30,6 +30,7 @@ import com.germanitlab.kanonhealth.Help;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
+import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -38,6 +39,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.SettingResponse;
+import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 
 
@@ -63,6 +65,8 @@ public class SettingFragment extends Fragment {
     private Button btn_change_status;
 
     static private SettingFragment settingFragment;
+    private StatusResponse statusResponse;
+
     public SettingFragment() {
         // Required empty public constructor
     }
@@ -220,11 +224,44 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // call rest to change data
-                ChangeStatus();
+//                ChangeStatus();
+
+                if(btn_change_status.getText().equals("Go Online")){
+                    changStatusService("0");
+                    txt_status.setText(R.string.youareoffline);
+                    btn_change_status.setText(R.string.go_online);
+
+
+                }else {
+                    changStatusService("1");
+                    txt_status.setText(R.string.youareonline);
+                    btn_change_status.setText(R.string.go_offline);
+
+                }
+
             }
         });
     }
 
+    private void changStatusService(String isAvailable) {
+
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                statusResponse = (StatusResponse) response;
+                Toast.makeText(getActivity(), ""+statusResponse.getStatus(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailed(String error) {
+
+                Log.e("Error", error + "++");
+
+            }
+        }).goOnline(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                , AppController.getInstance().getClientInfo().getPassword(),isAvailable);
+
+    }
     private void handelEvent() {
         trTerms.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,6 +9,8 @@ import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
+import com.germanitlab.kanonhealth.models.StatusRequestModel;
+import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
@@ -100,6 +102,9 @@ public interface ApiInterface {
 
     @POST("/rate/list")
     Call<List<Comment>> getrating(@Body Comment comment);
+
+    @POST("/doctors/change_status")
+    Call<StatusResponse> goOnline(@Body StatusRequestModel request);
 
     @POST("/users/update")
     Call<JsonObject> updateToken(@Body RequsetToken request);
