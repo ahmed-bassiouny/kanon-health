@@ -201,7 +201,7 @@ public class ForwardActivity extends AppCompatActivity {
 
     private void setAdapter(List<User> DoctorList) {
         if (DoctorList != null) {
-            mAdapter = new DoctorListAdapter(DoctorList, this , View.GONE);
+            mAdapter = new DoctorListAdapter(DoctorList, this , View.GONE, 3);
             recyclerView.setAdapter(mAdapter);
         }
     }

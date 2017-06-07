@@ -36,6 +36,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Base64OutputStream;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -85,7 +87,10 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -102,6 +107,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import gun0912.tedbottompicker.TedBottomPicker;
 import im.delight.android.location.SimpleLocation;
 import io.socket.emitter.Emitter;
 
@@ -112,6 +118,7 @@ import io.socket.emitter.Emitter;
 public class ChatActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int PICK_IMAGE = 0;
     @BindView(R.id.imgbtn_chat_attach)
     ImageButton imageButtonAttach;
     @BindView(R.id.img_chat_user_avatar)
@@ -177,7 +184,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         return mChatComponent;
     }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,6 +195,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
          */
         mMessageRepositry = new MessageRepositry(getApplicationContext());
         getmChatComponent().inject(this);
+//        List<Message> list = mMessageRepositry.getAll(user_id);
 
 
         Gson gson = new Gson();
@@ -239,7 +246,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-    private void initDialogImgTextSend(final Uri imgFilePath, String filePath) {
+
+
+    private void initDialogImgTextSend(final Uri imgFilePath, String filePath, String imgPath) {
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_chat_img_text);
@@ -251,6 +260,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         Toast.makeText(this, "file:/"+filePath, Toast.LENGTH_SHORT).show();
         Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
 
+        image.setImageURI(Uri.parse(imgPath));
 
         image.postInvalidate();
 
@@ -889,6 +899,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             } else if (requestCode == Constants.GET_LAST_LOCATION_PERMISSION_CODE) {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
+            }else if ( requestCode== PICK_IMAGE) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickImage();
+                }
             }
         }
     }
@@ -951,11 +965,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        Intent intent = new Intent();
-                        intent.setType("image/* video/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,
-                                "Select Picture"), 100);
+//                        Intent intent = new Intent();
+//                        intent.setType("image/* video/*");
+//                        intent.setAction(Intent.ACTION_GET_CONTENT);
+//                        startActivityForResult(Intent.createChooser(intent,
+//                                "Select Picture"), 100);
+
+                         pickImage();
+
                     } else
                         askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
                 } else {
@@ -1032,6 +1049,65 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         showPopup.setFocusable(true);
         // Removes default background.
         showPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+    }
+
+    private void pickImage() {
+        if (ActivityCompat.checkSelfPermission(ChatActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(ChatActivity.this)
+                    .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                        @Override
+                        public void onImageSelected(Uri uri) {
+                            final String imgPath = decodeFile(uri.getPath());
+//                            encodedImage = getBase64(imgPath);
+
+
+                            selectedUri = uri;
+                            String mimeType = getMimeType(uri.getPath());
+
+                            if (mimeType != null) {
+
+
+
+                                if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
+//                                    sendMessage(getPathFromURI(selectedUri), Constants.IMAGE,"");
+//                                    if(selectetImage){
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                initDialogImgTextSend(selectedUri,filePath,imgPath);
+
+                                            }
+                                        });
+
+                                        selectetImage=false;
+//                                    }
+                                } else {
+                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO,"");
+                                }
+
+                            } else {
+                                if (isImageFile(selectedUri)) {
+
+                                    filePath = getPath(ChatActivity.this, selectedUri);
+
+                                    selectetImage=true;
+
+                                } else {
+                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO,"");
+                                }
+                            }
+
+                        }
+                    }).setTitle("Pick Photo").create();
+            tedBottomPicker.show(getSupportFragmentManager());
+        } else {
+            ActivityCompat.requestPermissions(ChatActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PICK_IMAGE);
+        }
 
     }
 
@@ -1430,20 +1506,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         } catch (Exception e) {
 
         }
-
-        if(selectetImage){
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initDialogImgTextSend(selectedUri,filePath);
-
-                }
-            });
-
-            selectetImage=false;
-        }
-
 //        new SocketCall(activity).chatWithStatus("OpenChatWith", doctor.getDoctor().get_Id());
 //        askForPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.LAST_LOCATION_PERMISSION_CODE);
 //        simpleLocation.beginUpdates();
@@ -1580,4 +1642,69 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             open_chat_session.setVisibility(View.GONE);
         }
     }
+
+    public static String decodeFile(String path) {
+        String strMyImagePath = null;
+        Bitmap scaledBitmap;
+        try {
+            // Part 1: Decode image
+            Bitmap unscaledBitmap = ScalingUtils.decodeFile(path, 1280, 720, ScalingUtils.ScalingLogic.FIT);
+            if (!(unscaledBitmap.getWidth() <= 800 && unscaledBitmap.getHeight() <= 800)) {
+                // Part 2: Scale image
+                scaledBitmap = ScalingUtils.createScaledBitmap(unscaledBitmap, 1280, 720, ScalingUtils.ScalingLogic.FIT);
+            } else {
+                unscaledBitmap.recycle();
+                return path;
+            }
+            // Store to tmp file
+            String ext = Environment.getExternalStorageDirectory().toString();
+            File mFolder = new File(ext + "/Salonatcom");
+            if (!mFolder.exists()) {
+                mFolder.mkdir();
+            }
+
+            String s = "tmp.png";
+            File f = new File(mFolder.getAbsolutePath(), s);
+
+            strMyImagePath = f.getAbsolutePath();
+            FileOutputStream fos;
+            try {
+                fos = new FileOutputStream(f);
+                scaledBitmap.compress(Bitmap.CompressFormat.PNG, 70, fos);
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            scaledBitmap.recycle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (strMyImagePath == null) {
+            return path;
+        }
+        return strMyImagePath;
+    }
+
+    public static String getBase64(String filePath) {
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(filePath);
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            Base64OutputStream output64 = new Base64OutputStream(output, Base64.DEFAULT);
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                output64.write(buffer, 0, bytesRead);
+            }
+            output64.close();
+            return output.toString();
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+
+
 }

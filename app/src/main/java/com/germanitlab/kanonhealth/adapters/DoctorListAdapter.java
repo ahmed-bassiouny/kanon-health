@@ -3,22 +3,20 @@ package com.germanitlab.kanonhealth.adapters;
 import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
-
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 
 import java.util.List;
 
@@ -29,18 +27,27 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ItemView>{
+    private final MessageRepositry mMessageRepositry;
     private List<User> doctorContactsList;
     Activity activity;
     int visibility ;
     private boolean settedAdapter=false;
     private boolean onBind;
+    List<Message> list;
+    int tabPosition;
 
-    public DoctorListAdapter(List<User> doctorContactsList, Activity activity , int visibility) {
+
+    public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
 //        setHasStableIds(true);
         this.doctorContactsList = doctorContactsList;
         this.activity = activity;
         this.visibility = visibility ;
+        tabPosition=i;
+
+        mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
     }
+
+
 
     @Override
     public long getItemId(int position) {
@@ -64,6 +71,19 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         onBind = true;
 
         holder.setIsRecyclable(false);
+        
+                /* data base
+         */
+
+                if(tabPosition==3) {
+                    list = mMessageRepositry.getAll(doctorContactsList.get(position).get_Id());
+
+                    if (list.size() > 0) {
+                        Toast.makeText(activity, "" + list.get(list.size() - 1).getMsg(), Toast.LENGTH_SHORT).show();
+                        holder.tvSpecialist.setText(list.get(list.size() - 1).getMsg()+"");
+                    }
+                }
+
 
         final User doctor = doctorContactsList.get(position);
         if(doctor.getIs_available()!=null) {
@@ -92,7 +112,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         Helper.setImage(activity ,Constants.CHAT_SERVER_URL
                 + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.profile_place_holder );
 
-        if(onBind) {
+
+        if(tabPosition!=3) {
             for (int x = 0; x < 2; x++) {
                 ImageView image = new ImageView(activity);
                 image.setBackgroundResource(R.drawable.doctor_icon);
@@ -102,6 +123,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 image.setLayoutParams(parms);
                 holder.linearLayoutSpecialist.addView(image);
             }
+        }else {
+
         }
         onBind = false;
 
@@ -114,7 +137,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgPage , imgStatus;
-        TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage;
+        TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage,tvSpecialist;
         LinearLayout background ,linearLayoutSpecialist;
 
 
@@ -129,6 +152,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             tvSubtitle = (TextView) itemView.findViewById(R.id.tv_sub_title_cell);
             tvAbout = (TextView) itemView.findViewById(R.id.tv_about_doctor_cell);
             tvUnreadMessage = (TextView) itemView.findViewById(R.id.tv_unread_message_cell);
+            tvSpecialist = (TextView) itemView.findViewById(R.id.tv_specialities);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
             linearLayoutSpecialist= (LinearLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
         }

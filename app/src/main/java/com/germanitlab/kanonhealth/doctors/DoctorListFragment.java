@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
@@ -39,7 +38,6 @@ import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -405,7 +403,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE);
+            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE, 1);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }

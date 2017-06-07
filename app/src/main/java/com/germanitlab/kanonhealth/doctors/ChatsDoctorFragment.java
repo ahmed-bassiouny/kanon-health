@@ -83,8 +83,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         if(getView()!=null &&isVisibleToUser ){
             if(Helper.isNetworkAvailable(getContext())) {
 //                showProgressDialog();
-                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword());
+//                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+//                        , AppController.getInstance().getClientInfo().getPassword());
             }
             else {
                 TypeToken<List<User>> token = new TypeToken<List<User>>(){};
@@ -350,7 +350,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() , view.VISIBLE);
+            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() , view.VISIBLE,3);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }
