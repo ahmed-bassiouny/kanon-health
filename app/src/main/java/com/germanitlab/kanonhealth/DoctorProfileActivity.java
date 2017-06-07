@@ -164,7 +164,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
 //        getTimaTableData(user.getTable());
         tv_name.setText(user.getLast_name() + ", " + user.getFirst_name());
         tv_telephone.setText(user.getPhone());
-//        ratingBar.setRating(user.getRating());
+        ratingBar.setRating(user.getRate_avr());
+        tv_location.setText(user.getAddress());
 //        tv_rating.setText(tv_rating + user.getRatingNumber() + " ("+ user.getnumberOfReviews + " Reviews)" );
 //        for (String lang: user.getlanguages()
 //             ) {

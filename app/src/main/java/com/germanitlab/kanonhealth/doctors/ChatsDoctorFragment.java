@@ -62,6 +62,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private TextView tvLoadingError;
     private LinearLayout linearLayoutContent;
+    private LinearLayout chat_layout ;
     private PrefManager mPrefManager;
     Gson gson ;
 
@@ -84,9 +85,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         super.setUserVisibleHint(isVisibleToUser);
         if(getView()!=null &&isVisibleToUser ){
             if(Helper.isNetworkAvailable(getContext())) {
-//                showProgressDialog();
-//                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-//                        , AppController.getInstance().getClientInfo().getPassword());
+                util.showProgressDialog();
+                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                        , AppController.getInstance().getClientInfo().getPassword());
             }
             else {
                 TypeToken<List<User>> token = new TypeToken<List<User>>(){};
@@ -113,7 +114,6 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         }
         util = Util.getInstance(getActivity());
         gson = new Gson();
-        util.showProgressDialog();
         mPrefManager = new PrefManager(getActivity());
 
 
@@ -262,6 +262,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private void initView() {
         praxis_list = (Button)view.findViewById(R.id.praxis_list);
+        chat_layout = (LinearLayout) view.findViewById(R.id.chat_layout);
         doctors_list = (Button) view.findViewById(R.id.doctor_list);
         doctors_list.setBackgroundResource(R.color.blue);
         doctors_list.setTextColor(getResources().getColor(R.color.white));
@@ -290,6 +291,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         praxis_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                util.showProgressDialog();
                 doctors_list.setBackgroundResource(R.color.gray);
                 doctors_list.setTextColor(getResources().getColor(R.color.black));
                 praxis_list.setBackgroundResource(R.color.blue);
@@ -297,17 +299,21 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 new HttpCall(new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
+                        util.dismissProgressDialog();
                         doctorList = (List<User>) response;
                         setAdapter(doctorList);
-                        linearLayoutContent.setVisibility(View.VISIBLE);
+                        chat_layout.setVisibility(View.VISIBLE);
+                        tvLoadingError.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onFailed(String error) {
                         tvLoadingError.setVisibility(View.VISIBLE);
+                        util.dismissProgressDialog();
                         if (error != null && error.length() > 0)
                             tvLoadingError.setText(error);
                         else tvLoadingError.setText("Some thing went wrong");
+                        chat_layout.setVisibility(View.GONE);
                     }
                 }).getChatClinics(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                         , AppController.getInstance().getClientInfo().getPassword());
@@ -316,6 +322,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         doctors_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                util.showProgressDialog();
                 doctors_list.setBackgroundResource(R.color.blue);
                 doctors_list.setTextColor(getResources().getColor(R.color.white));
                 praxis_list.setBackgroundResource(R.color.gray);
@@ -323,6 +330,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 new HttpCall(new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
+                        util.dismissProgressDialog();
                         doctorList = (List<User>) response;
                         Gson gson = new Gson();
                         String chat_list = gson.toJson(doctorList);
@@ -332,6 +340,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
                     @Override
                     public void onFailed(String error) {
+                        util.dismissProgressDialog();
                         tvLoadingError.setVisibility(View.VISIBLE);
                         if (error != null && error.length() > 0)
                             tvLoadingError.setText(error);

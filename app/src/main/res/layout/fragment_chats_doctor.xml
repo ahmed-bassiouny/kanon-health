@@ -77,27 +77,34 @@
                         android:id="@+id/praxis_list"
                         android:layout_height="match_parent" />
                 </LinearLayout>
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/size_10dp"
-                    android:id="@+id/img_filter"
-                    android:background="@drawable/custom_edittext_without_border_style"
-                    android:drawableLeft="@drawable/search"
-                    android:gravity="center"
-                    android:hint="@string/search"
-                    android:textCursorDrawable="@color/blue"
-                    android:paddingBottom="@dimen/size_5dp"
-                    android:paddingLeft="@dimen/size_20dp"
-                    android:paddingRight="@dimen/size_5dp"
-                    android:paddingTop="@dimen/size_5dp"
-                    android:textColor="@color/gray_black" />
+                    android:orientation="vertical"
+                    android:id="@+id/chat_layout"
+                    android:layout_height="match_parent">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/size_10dp"
+                        android:id="@+id/img_filter"
+                        android:background="@drawable/custom_edittext_without_border_style"
+                        android:drawableLeft="@drawable/search"
+                        android:gravity="center"
+                        android:hint="@string/search"
+                        android:textCursorDrawable="@color/blue"
+                        android:paddingBottom="@dimen/size_5dp"
+                        android:paddingLeft="@dimen/size_20dp"
+                        android:paddingRight="@dimen/size_5dp"
+                        android:paddingTop="@dimen/size_5dp"
+                        android:textColor="@color/gray_black" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_doctor_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="@dimen/size_5dp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_doctor_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/size_5dp" />
+                </LinearLayout>
+
 
             </LinearLayout>
 

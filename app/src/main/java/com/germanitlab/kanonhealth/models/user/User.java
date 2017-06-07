@@ -7,6 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -158,6 +159,9 @@ public class User implements Serializable {
     private LinkedHashMap<String, String> questions;
     @SerializedName("info")
     private Info info;
+    private HashMap<String , String> rate_percentages;
+    private float rate_avr;
+    private String country_flag ;
     private  String is_available;
 /*
     @ForeignCollectionField(eager = true , foreignColumnName = "document")
@@ -497,6 +501,34 @@ public class User implements Serializable {
 
     public void setIs_my_doctor(String is_my_doctor) {
         this.is_my_doctor = is_my_doctor;
+    }
+
+    public HashMap<String, String> getRate_percentages() {
+        return rate_percentages;
+    }
+
+    public void setRate_percentages(HashMap<String, String> rate_percentages) {
+        this.rate_percentages = rate_percentages;
+    }
+
+    public float getRate_avr() {
+        return rate_avr;
+    }
+
+    public void setRate_avr(float rate_avr) {
+        this.rate_avr = rate_avr;
+    }
+
+    public String getCountry_flag() {
+        return country_flag;
+    }
+
+    public void setCountry_flag(String country_flag) {
+        this.country_flag = country_flag;
+    }
+
+    public void setIs_available(String is_available) {
+        this.is_available = is_available;
     }
 }
 
