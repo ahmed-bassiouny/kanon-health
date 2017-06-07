@@ -54,6 +54,11 @@
     <string name="temp"> Temp Value to Test</string>
     <string name="invalid_input"> Your input is invalid</string>
     <string name="thanksforcomment">Thanks for Comment</string>
+    <string name="youareoffline">You are now : Offline</string>
+    <string name="youareonline">You are now : Online</string>
+    <string name="go_online">Go Online</string>
+    <string name="go_offline">Go Offline</string>
+
     <string name="hot_line">Hotline</string>
     <string name="fax">Fax</string>
     <string name="website">Wensite</string>
