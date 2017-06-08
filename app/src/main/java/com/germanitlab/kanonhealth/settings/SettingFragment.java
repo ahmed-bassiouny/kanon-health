@@ -21,14 +21,15 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.germanitlab.kanonhealth.CheckMutli;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
-import com.germanitlab.kanonhealth.Help;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
+import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -37,6 +38,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.SettingResponse;
+import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 
 
@@ -62,6 +64,8 @@ public class SettingFragment extends Fragment {
     private Button btn_change_status;
 
     static private SettingFragment settingFragment;
+    private StatusResponse statusResponse;
+
     public SettingFragment() {
         // Required empty public constructor
     }
@@ -160,7 +164,7 @@ public class SettingFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PasscodeActivty.class);
                 intent.putExtra("status" , 2);
-                startActivity(intent);
+                startActivityForResult(intent,13);
             }
         });
         trSound.setOnClickListener(new View.OnClickListener() {
@@ -215,15 +219,53 @@ public class SettingFragment extends Fragment {
         //status doctor
         txt_status=(TextView)view.findViewById(R.id.txt_status);
         btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // call rest to change data
-                ChangeStatus();
+//                ChangeStatus();
+                if(btn_change_status.getText().toString().equals("Go Online")){
+                    changStatusService("1");
+                }else {
+
+                    changStatusService("0");
+//
+                }
+
             }
         });
     }
 
+    private void changStatusService(String isAvailable) {
+
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                statusResponse = (StatusResponse) response;
+                Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
+                if(statusResponse.getIs_available().equals("0")){
+
+                    txt_status.setText(R.string.youareoffline);
+                    btn_change_status.setText(R.string.go_online);
+
+                }else {
+                    txt_status.setText(R.string.youareonline);
+                    btn_change_status.setText(R.string.go_offline);
+
+                }
+            }
+
+            @Override
+            public void onFailed(String error) {
+
+                Log.e("Error", error + "++");
+
+            }
+        }).goOnline(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                , AppController.getInstance().getClientInfo().getPassword(),isAvailable);
+
+    }
     private void handelEvent() {
         trTerms.setOnClickListener(new View.OnClickListener() {
             @Override

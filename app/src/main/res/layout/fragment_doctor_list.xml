@@ -90,6 +90,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:background="@color/gray"
                 android:id="@+id/doctor_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -98,6 +99,7 @@
                 android:text="Doctors" />
 
             <Button
+                android:background="@color/gray"
                 android:id="@+id/praxis_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

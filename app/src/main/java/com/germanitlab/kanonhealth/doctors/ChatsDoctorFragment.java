@@ -85,7 +85,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         super.setUserVisibleHint(isVisibleToUser);
         if(getView()!=null &&isVisibleToUser ){
             if(Helper.isNetworkAvailable(getContext())) {
-                util.showProgressDialog();
+//                util.showProgressDialog();
                 new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                         , AppController.getInstance().getClientInfo().getPassword());
             }
@@ -365,7 +365,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onSuccess(Object response) {
-        util.dismissProgressDialog();
+//        util.dismissProgressDialog();
         doctorList = (List<User>) response;
         Gson gson = new Gson();
         String jsonData = gson.toJson(response);
@@ -377,7 +377,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
-        util.dismissProgressDialog();
+//        util.dismissProgressDialog();
         tvLoadingError.setVisibility(View.VISIBLE);
         if (error != null && error.length() > 0)
             tvLoadingError.setText(error);

@@ -1,6 +1,10 @@
 package com.germanitlab.kanonhealth.models.user;
 
+import com.germanitlab.kanonhealth.models.MembersAt;
+import com.germanitlab.kanonhealth.models.Specialities;
+import com.germanitlab.kanonhealth.models.SupportedLanguage;
 import com.germanitlab.kanonhealth.models.messages.Message;
+import com.germanitlab.kanonhealth.models.openTime;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -9,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by Geram IT Lab on 18/03/2017.
@@ -17,45 +22,49 @@ import java.util.LinkedHashMap;
 
 public class User implements Serializable {
 
-     /*
-   * {
-"id": 4,
-    "email": null,
-    "password": "78052a040e70547a0df844744bcfa1ee",
-    "last_login": "2017-05-14 10:46:56",
-    "name": ", Amr",
-    "first_name": "Amr",
-    "last_name": "",
-    "avatar": "",
-    "subtitle": " ",
-    "phone": "4668426666655",
-    "country_code": "+49",
-    "active": null,
-    "is_doc": 1,
-    "platform": 3,
-    "token": "fESlX7VwypA:APA91bG78yfSbjyayM8ObfRf88UUPUzPoG2ua0nOpTAQjlyK8CRpSoHh_Wqtpr13YE-z3XYEhr8c1sd4IhvlV9wSUvhM-zPW9XsqXnp_jk_OeBT2LB_ggKAYJM2GTzjiwoobz9_Ihq0w",
-    "info": "{\"Birthday\":\"\",\"Country\":\"\",\"House number\":\"\",\"Provinz\":\"\",\"Streetname\":\"\",\"Zip Code\":\"\"}",
-    "location_lat": null,
-    "location_long": null,
-    "payment": null,
-    "settings": null,
-    "questions": null,
-    "address": null,
-    "birth_date": "Invalid date",
-    "speciality": null,
-    "about": null,
-    "last_online": null,
-    "unreaded_count": null,
-    "passcode": null,
-    "code": "616401",
-    "request_type": null,
-    "is_open": null,
-    "is_clinic": null,
-    "parent_id": null,
-    "speciality_id": null,
-    "speciality_title": null,
-    "speciality_icon": null*/
+    /*
 
+"open_time":[{"id": "0", "to": "01:15", "from": "17:12", "type": "no",…],
+"is_available": 1,
+"supported_lang":[
+{
+"lang_id": 1,
+"lang_icon": "spcs_icons/spc-icon.png",
+"lang_title": "Arabic"
+},
+{
+"lang_id": 1,
+"lang_icon": "spcs_icons/spc-icon.png",
+"lang_title": "Arabic"
+}
+],
+"rate_avr": 3.63,
+"specialities":[
+{
+"speciality_id": 1,
+"speciality_icon": "spcs_icons/spc-icon.png",
+"speciality_title": "Dentist"
+},
+{
+"speciality_id": 2,
+"speciality_icon": "spcs_icons/spc-icon.png",
+"speciality_title": "Dentist2"
+}
+],
+"rate_percentage":{"1": 22, "2": 33, "3": 44, "4": 2, "5": 18…},
+"country_flag": "spcs_icons/spc-icon.png",
+"rate_count": 22,
+"MembersAt":[
+{"id": "2", "avatar": "spcs_icons/spc-icon.png", "last_name": "sayed", "first_name": "omar"…},
+{"id": "2", "avatar": "spcs_icons/spc-icon.png", "last_name": "sayed", "first_name": "omar"…}
+],
+"speciality_id": null,
+"speciality_title": null,
+"speciality_icon": null,
+"documents":[]
+}
+
+     */
     @DatabaseField(id = true)
     @SerializedName("id")
     private int id;
@@ -159,10 +168,26 @@ public class User implements Serializable {
     private LinkedHashMap<String, String> questions;
     @SerializedName("info")
     private Info info;
-    private HashMap<String , String> rate_percentages;
+    private HashMap<String , String> rate_percentage;
     private float rate_avr;
     private String country_flag ;
     private  String is_available;
+
+
+    private String passcode;
+    private String code;
+    private String request_type;
+    private String parent_id;
+
+    private int rate_count;
+    private List<openTime> open_time=new ArrayList<>();
+    private List<SupportedLanguage> supported_lang=new ArrayList<>();
+    private List<Specialities> specialities=new ArrayList<>();
+    private List<MembersAt> members_at=new ArrayList<>();
+    private String speciality_id;
+    private String speciality_title;
+    private String speciality_icon;
+//
 /*
     @ForeignCollectionField(eager = true , foreignColumnName = "document")
 */
@@ -503,12 +528,12 @@ public class User implements Serializable {
         this.is_my_doctor = is_my_doctor;
     }
 
-    public HashMap<String, String> getRate_percentages() {
-        return rate_percentages;
+    public HashMap<String, String> getRate_percentage() {
+        return rate_percentage;
     }
 
-    public void setRate_percentages(HashMap<String, String> rate_percentages) {
-        this.rate_percentages = rate_percentages;
+    public void setRate_percentage(HashMap<String, String> rate_percentage) {
+        this.rate_percentage = rate_percentage;
     }
 
     public float getRate_avr() {
@@ -529,6 +554,106 @@ public class User implements Serializable {
 
     public void setIs_available(String is_available) {
         this.is_available = is_available;
+    }
+
+    public String getPasscode() {
+        return passcode;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getRequest_type() {
+        return request_type;
+    }
+
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public int getRate_count() {
+        return rate_count;
+    }
+
+    public List<openTime> getOpen_time() {
+        return open_time;
+    }
+
+    public List<SupportedLanguage> getSupported_lang() {
+        return supported_lang;
+    }
+
+    public List<Specialities> getSpecialities() {
+        return specialities;
+    }
+
+    public List<MembersAt> getMembers_at() {
+        return members_at;
+    }
+
+    public String getSpeciality_id() {
+        return speciality_id;
+    }
+
+    public String getSpeciality_title() {
+        return speciality_title;
+    }
+
+    public String getSpeciality_icon() {
+        return speciality_icon;
+    }
+
+    public void setIsClinic(int isClinic) {
+        this.isClinic = isClinic;
+    }
+
+    public void setPasscode(String passcode) {
+        this.passcode = passcode;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setRequest_type(String request_type) {
+        this.request_type = request_type;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
+    }
+
+    public void setRate_count(int rate_count) {
+        this.rate_count = rate_count;
+    }
+
+    public void setOpen_time(List<openTime> open_time) {
+        this.open_time = open_time;
+    }
+
+    public void setSupported_lang(List<SupportedLanguage> supported_lang) {
+        this.supported_lang = supported_lang;
+    }
+
+    public void setSpecialities(List<Specialities> specialities) {
+        this.specialities = specialities;
+    }
+
+    public void setMembers_at(List<MembersAt> members_at) {
+        this.members_at = members_at;
+    }
+
+    public void setSpeciality_id(String speciality_id) {
+        this.speciality_id = speciality_id;
+    }
+
+    public void setSpeciality_title(String speciality_title) {
+        this.speciality_title = speciality_title;
+    }
+
+    public void setSpeciality_icon(String speciality_icon) {
+        this.speciality_icon = speciality_icon;
     }
 }
 

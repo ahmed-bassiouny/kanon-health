@@ -6,14 +6,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -32,7 +35,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
     SpecilaitiesAdapter adapter;
-    List<SpecilaitiesModels> specilaitiesList, languageList , memberList;
+    List<Object> list;
+    List<SpecilaitiesModels> languageList;
+    List<SpecilaitiesModels> memberList;
     @BindView(R.id.tv_monday)
     TextView monday;
     @BindView(R.id.tv_tuesday)
@@ -135,9 +140,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        set(adapter, specilaitiesList , View.GONE , recyclerView ,R.id.speciality_recycleview , LinearLayoutManager.HORIZONTAL);
-        set(adapter, specilaitiesList , View.GONE , recyclerView ,R.id.language_recycleview , LinearLayoutManager.HORIZONTAL);
-        set(adapter, specilaitiesList , View.VISIBLE , recyclerView ,R.id.member_recycleview, LinearLayoutManager.VERTICAL);
+        set(adapter, user.getSpecialities(), View.GONE , recyclerView ,R.id.speciality_recycleview , LinearLayoutManager.HORIZONTAL);
+        set(adapter, user.getSupported_lang(), View.GONE , recyclerView ,R.id.language_recycleview , LinearLayoutManager.HORIZONTAL);
+        set(adapter, user.getMembers_at(), View.VISIBLE , recyclerView ,R.id.member_recycleview, LinearLayoutManager.VERTICAL);
 
 /*        doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
         document_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -145,15 +150,16 @@ public class DoctorProfileActivity extends AppCompatActivity {
         document_recycler_view.setAdapter(doctorDocumentAdapter);*/
     }
 
-    public void set(RecyclerView.Adapter adapter , List<SpecilaitiesModels> list , int visibilty , RecyclerView recyclerView  , int id,  int linearLayoutManager)
+    public void set(RecyclerView.Adapter adapter , List<?> list , int visibilty , RecyclerView recyclerVie  , int id,  int linearLayoutManager)
     {
-        adapter = new SpecilaitiesAdapter(list ,visibilty);
-        recyclerView = (RecyclerView) findViewById(id);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setAdapter(adapter);
+        adapter = new SpecilaitiesAdapter(list ,visibilty , getApplicationContext());
+        recyclerVie = (RecyclerView) findViewById(id);
+        recyclerVie.setHasFixedSize(true);
+        recyclerVie.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
+        recyclerVie.setNestedScrollingEnabled(false);
+        recyclerVie.setAdapter(adapter);
     }
+
 
     private void bindData() {
 //        getTimaTableData(user.getTable());
@@ -229,6 +235,54 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private void setViewText(TextView textView, Table table) {
         textView.setText(textView.getText() + table.getFrom() + " - " + table.getTo());
         textView.setText(textView.getText() + System.getProperty("line.separator"));
+    }
+
+    @OnClick(R.id.image_star)
+    public void image_star(){
+        Intent intent =new Intent(this,RateActivity.class);
+        intent.putExtra("doc_id",String.valueOf(user.get_Id()));
+        startActivity(intent);
+    }
+    @OnClick(R.id.tv_add_to_favourite)
+    public void addToMyDoctor() {
+        if (user.getIs_my_doctor()==null) {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    Log.i("Answers ", response.toString());
+                    user.setIs_my_doctor("1");
+                    checkDoctor();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.i("Error ", " " + error);
+                }
+            }).addToMyDoctor(user.get_Id() + "");
+        } else {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    user.setIs_my_doctor(null);
+                    checkDoctor();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.i("Error ", " " + error);
+                }
+            }).removeFromMyDoctor(user.get_Id() + "");
+        }
+    }
+
+    private void checkDoctor() {
+        try {
+            if (user.getIs_my_doctor()==null)
+                tv_add_to_favourite.setText(getString(R.string.add_to));
+            else
+                tv_add_to_favourite.setText(getString(R.string.remove_from));
+        }catch (Exception e){}
+
     }
 
 

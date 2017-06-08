@@ -227,6 +227,9 @@
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
 
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
                 <RadioButton
                     android:layout_weight="1"
                     android:id="@+id/radio0"
@@ -258,8 +261,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:checked="true"
                     android:text="Free Beta"/>
+                <RadioButton
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Consult a colleague \n (lets keep it free to consult colleagues)"/>
+
+                </RadioGroup>
             </LinearLayout>
 
             <Button

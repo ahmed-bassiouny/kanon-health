@@ -338,7 +338,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     type = 3;
                     util.showProgressDialog();
                     loadData();
-                    getBySpeciality();
+//                    getBySpeciality();
                 }
 
             }
@@ -385,8 +385,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             public void onFailed(String error) {
                 Log.e("Error", error);
             }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), speciality_id, type);
+        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()), speciality_id, type);
     }
+
     private void saveInDB(List<User> doctorList) {
         double count = mDoctorRepository.count();
         for (User user : doctorList

@@ -114,11 +114,15 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
 
         if(tabPosition!=3) {
-            for (int x = 0; x < 2; x++) {
+            for (int x = 0; x < doctor.getSpecialities().size(); x++) {
                 ImageView image = new ImageView(activity);
-                image.setBackgroundResource(R.drawable.doctor_icon);
+//                image.setBackgroundResource(R.drawable.doctor_icon);
                 int width = 60;
                 int height = 60;
+
+                Helper.setImage(activity ,Constants.CHAT_SERVER_URL
+                        + "/" + doctor.getSpecialities().get(x).getAvatar() , image , R.drawable.doctor_icon );
+
                 LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
                 image.setLayoutParams(parms);
                 holder.linearLayoutSpecialist.addView(image);

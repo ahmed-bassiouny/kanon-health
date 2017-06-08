@@ -409,7 +409,10 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                         File file = new File(mMessages.get(position).getMsg());
 
                         if (file.exists())
+
                             Util.getInstance(context).showPhoto(Uri.fromFile(file));
+
+
                     }
                 }
             });
