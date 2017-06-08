@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -8,18 +9,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
+import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -109,10 +116,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
         user = new User();
         user =(User) getIntent().getSerializableExtra("doctor_data");
         String Json = "[{\"dayOfWeek\":\"1\",\"from\":\"10:00\",\"to\":\"2.24\"},{\"dayOfWeek\":\"1\",\"from\":\"11:05\",\"to\":\"15:44\"},{\"dayOfWeek\":\"2\",\"from\":\"10:44\",\"to\":\"17.50\"}]";
-/*
         bindData();
-*/
-        setAdapters();
+
     }
 
     @OnClick(R.id.tv_contact)
@@ -163,10 +168,18 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
     private void bindData() {
 //        getTimaTableData(user.getTable());
+        checkDoctor();
         tv_name.setText(user.getLast_name() + ", " + user.getFirst_name());
         tv_telephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tv_location.setText(user.getAddress());
+        if(!user.getIs_available().equals("1"))
+        tv_online.setText("Offline");
+        loadQRCode(tv_qr_code);
+
+        setAdapters();
+
+
 //        tv_rating.setText(tv_rating + user.getRatingNumber() + " ("+ user.getnumberOfReviews + " Reviews)" );
 //        for (String lang: user.getlanguages()
 //             ) {
@@ -284,6 +297,24 @@ public class DoctorProfileActivity extends AppCompatActivity {
         }catch (Exception e){}
 
     }
-
+    private void loadQRCode(TextView textView){
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog dialog   ;
+                dialog = new Dialog(DoctorProfileActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.custom_dialoge);
+                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT ,
+                        WindowManager.LayoutParams.MATCH_PARENT );
+                ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
+                imageView.setImageResource(R.drawable.qr);
+                if (user.getQr_url() != null && user.getQr_url() != ""){
+                    Helper.setImage(DoctorProfileActivity.this , Constants.CHAT_SERVER_URL + "/" + user.getQr_url() , imageView , R.drawable.qr);
+                }
+                dialog.show();
+            }
+        });
+    }
 
 }
