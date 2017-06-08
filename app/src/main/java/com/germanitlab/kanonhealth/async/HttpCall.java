@@ -15,6 +15,7 @@ import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
+import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
@@ -695,6 +696,21 @@ public class HttpCall {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void getAllSpecilaities(){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<SpecilaitiesModels>> connection=service.getAllSpecilaities();
+        connection.enqueue(new Callback<List<SpecilaitiesModels>>() {
+            @Override
+            public void onResponse(Call<List<SpecilaitiesModels>> call, Response<List<SpecilaitiesModels>> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<SpecilaitiesModels>> call, Throwable t) {
                 apiResponse.onFailed(t.getLocalizedMessage());
             }
         });

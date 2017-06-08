@@ -39,9 +39,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
     }
 
     public SpecilaitiesAdapter(List<?> list, int visiblity , Context context) {
-        if(list.getClass().isInstance(SpecilaitiesModels.class)) {
-            this.list = (List<SpecilaitiesModels>) list;
-        }
+        this.list = list;
         this.context = context ;
         this.visiblity = visiblity;
     }

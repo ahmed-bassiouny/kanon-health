@@ -9,8 +9,10 @@ import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
+import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
+import com.germanitlab.kanonhealth.models.SupportedLanguage;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
@@ -134,5 +136,10 @@ public interface ApiInterface {
     @POST("request/close_session")
     Call <JsonObject> closeSession(@Body DoctorRequest request);
 
+    //Edit by ahmed 8-6-2017
+    @POST("/specialties/all")
+    Call<List<SpecilaitiesModels>> getAllSpecilaities();
+    @POST("/langs/all")
+    Call<List<SupportedLanguage>> getAllLanguage();
 }
 
