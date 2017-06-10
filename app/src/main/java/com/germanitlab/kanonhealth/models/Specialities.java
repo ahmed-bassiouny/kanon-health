@@ -18,7 +18,15 @@ public class Specialities implements Serializable{
     private int speciality_id;
     private String speciality_icon;
     private String speciality_title;
+    private boolean is_my_specialities=false;
 
+    public void setIs_my_specialities(boolean is_my_specialities) {
+        this.is_my_specialities = is_my_specialities;
+    }
+
+    public boolean is_my_specialities() {
+        return is_my_specialities;
+    }
 
     public int getId() {
         return speciality_id;
