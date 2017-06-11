@@ -174,7 +174,6 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".DoctorProfileActivity" />
         <activity android:name=".TimeTable" />
-        <activity android:name=".CheckMutli" />
         <activity android:name=".Comment"
             android:windowSoftInputMode="stateHidden"></activity>
     </application>
