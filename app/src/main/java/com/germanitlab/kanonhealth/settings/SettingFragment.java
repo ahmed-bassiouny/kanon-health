@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +44,11 @@ import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.germanitlab.kanonhealth.profile.QuestionAdapter;
+import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 
 /**
@@ -61,6 +67,7 @@ public class SettingFragment extends Fragment {
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
     private User user ;
+    private RecyclerView rvPracticies;
 
     //status doctor
     private TextView txt_status;
@@ -69,6 +76,7 @@ public class SettingFragment extends Fragment {
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
     private String UserStatus;
+    private PrcticiesSAdapter mAdapter;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -91,7 +99,24 @@ public class SettingFragment extends Fragment {
         initView();
         handelEvent();
       //  assignViews();
+
+
+        setAdapter();
         return view;
+    }
+
+    private void setAdapter() {
+
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+
+        List<User> clinicsList = userInfoResponse.getUser().getMembers_at();
+
+
+        mAdapter = new PrcticiesSAdapter(getContext(),clinicsList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvPracticies.setLayoutManager(mLayoutManager);
+        rvPracticies.setAdapter(mAdapter);
+        rvPracticies.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -117,7 +142,7 @@ public class SettingFragment extends Fragment {
         videoView.setMediaController(mc);
 
         videoView.requestFocus();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new                                                                                                 MediaPlayer.OnPreparedListener() {
             // Close the progress bar and play the video
             public void onPrepared(MediaPlayer mp) {
                 videoView.start();
@@ -126,6 +151,7 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
+        rvPracticies= (RecyclerView) view.findViewById(R.id.recycler_view);
         trSupport = (TableRow) view.findViewById(R.id.tr_support) ;
         profile =(TableRow) view.findViewById(R.id.my_profile);
         trDrStatus =(TableRow) view.findViewById(R.id.dr_status);

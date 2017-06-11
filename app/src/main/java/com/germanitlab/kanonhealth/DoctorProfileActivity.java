@@ -236,8 +236,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         et_telephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tv_location.setText(user.getAddress());
+        if(user.getIs_available() != null){
         if (!user.getIs_available().equals("1"))
             tv_online.setText("Offline");
+        }
         loadQRCode(tv_qr_code);
         tv_telephone.setText(user.getPhone());
         et_location.setText(user.getAddress());

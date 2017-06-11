@@ -88,6 +88,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
         internetFilesOperations = InternetFilesOperations.getInstance(context.getApplicationContext());
         this.mDoctor = doctor;
         forward = (ImageView) context.findViewById(R.id.imgbtn_forward);
+
         forward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1896,13 +1897,13 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
             myFrameVideo = (FrameLayout) itemView.findViewById(R.id.my_frame_video);
             hisFrameVideo = (FrameLayout) itemView.findViewById(R.id.his_frame_video);
-
         }
     }
 
     public void selectItem(RelativeLayout messageContainer, Message message) {
         messageContainer.setBackgroundResource(R.color.gray_black);
         list.add(message.get_Id());
+        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
     }
 
     public void changeToolbar(Boolean select) {
