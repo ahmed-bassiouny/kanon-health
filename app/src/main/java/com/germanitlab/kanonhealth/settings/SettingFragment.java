@@ -66,6 +66,7 @@ public class SettingFragment extends Fragment {
 
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
+    private String UserStatus;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -100,7 +101,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkStatus();
     }
 
     private void assignViews() {
@@ -152,6 +152,10 @@ public class SettingFragment extends Fragment {
         trTerms = (TableRow) view.findViewById(R.id.tr_terms);
         trHelp = (TableRow) view.findViewById(R.id.tr_help);
         trVersion = (TextView) view.findViewById(R.id.tv_version);
+
+        //status doctor
+        txt_status=(TextView)view.findViewById(R.id.txt_status);
+        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
         PackageInfo pInfo = null;
         try {
             pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -217,25 +221,28 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        //status doctor
-        txt_status=(TextView)view.findViewById(R.id.txt_status);
-        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+        UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+
+        if(UserStatus!=null) {
+        checkStatus(UserStatus);
+        }else {
+            txt_status.setText(R.string.youareoffline);
+            btn_change_status.setText(R.string.go_online);
+        }
+
+
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // call rest to change data
 //                ChangeStatus();
 
-                if(btn_change_status.getText().equals("Go Online")){
+                if(UserStatus.equals("1")){
                     changStatusService("0");
-                    txt_status.setText(R.string.youareoffline);
-                    btn_change_status.setText(R.string.go_online);
-
 
                 }else {
+
                     changStatusService("1");
-                    txt_status.setText(R.string.youareonline);
-                    btn_change_status.setText(R.string.go_offline);
 
                 }
 
@@ -249,7 +256,17 @@ public class SettingFragment extends Fragment {
             @Override
             public void onSuccess(Object response) {
                 statusResponse = (StatusResponse) response;
-                Toast.makeText(getActivity(), ""+statusResponse.getStatus(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
+                new PrefManager(getActivity()).put(PrefManager.USER_STATUS,statusResponse.getIs_available());
+
+                if(statusResponse.getIs_available()=="1"){
+                    txt_status.setText(R.string.youareonline);
+                    btn_change_status.setText(R.string.go_offline);
+
+                }else{
+                    txt_status.setText(R.string.youareoffline);
+                    btn_change_status.setText(R.string.go_online);
+                }
             }
 
             @Override
@@ -308,19 +325,27 @@ public class SettingFragment extends Fragment {
 
     }
 
-    private void ChangeStatus(){
-        int doc_status=1; //online
-        if(doc_status==1){
+//    private void ChangeStatus(){
+//        int doc_status=1; //online
+//        if(doc_status==1){
+//            txt_status.setText(R.string.youareonline);
+//            btn_change_status.setText(R.string.go_offline);
+//        }else{
+//            txt_status.setText(R.string.youareoffline);
+//            btn_change_status.setText(R.string.go_online);
+//        }
+//    }
+    private void checkStatus(String userStatus){
+        // call rest to get data
+
+        if(userStatus=="1"){
             txt_status.setText(R.string.youareonline);
             btn_change_status.setText(R.string.go_offline);
+
         }else{
             txt_status.setText(R.string.youareoffline);
             btn_change_status.setText(R.string.go_online);
         }
-    }
-    private void checkStatus(){
-        // call rest to get data
-        ChangeStatus();
     }
 
 }
