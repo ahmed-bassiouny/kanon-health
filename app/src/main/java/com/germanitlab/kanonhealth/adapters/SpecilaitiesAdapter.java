@@ -39,7 +39,8 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
     }
 
     public SpecilaitiesAdapter(List<?> list, int visiblity , Context context) {
-        this.list =  list;
+
+        this.list = list;
         this.context = context ;
         this.visiblity = visiblity;
     }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -42,7 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends AppCompatActivity {
+public class DoctorProfileActivity extends AppCompatActivity implements Message<Specialities> {
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
     SpecilaitiesAdapter adapter;
@@ -274,7 +275,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) MockDataforChosen());
+        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
         dialogFragment.setArguments(bundle);
         dialogFragment.show(ft, "list");
     }
@@ -390,4 +391,15 @@ public class DoctorProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void Response(ArrayList<Specialities> specialitiesArrayList) {
+
+        user.getSpecialities().clear();
+        ArrayList<Specialities> templist=new ArrayList<>();
+        for(Specialities item:specialitiesArrayList) {
+            if (item.is_my_specialities())
+                templist.add(item);
+        }
+        user.setSpecialities(templist);
+    }
 }
