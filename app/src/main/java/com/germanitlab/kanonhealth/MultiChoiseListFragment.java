@@ -84,8 +84,8 @@ public class MultiChoiseListFragment extends DialogFragment {
 //                    allspecialist.get(position).setIs_my_specialities(true);
 //                else
 //                    allspecialist.get(position).setIs_my_specialities(false);
-            }
 
+            }
             @Override
             public void onClick(Object object) {
 
@@ -111,7 +111,7 @@ public class MultiChoiseListFragment extends DialogFragment {
             public void onSuccess(Object response) {
                 allspecialist=(ArrayList<Specialities>)  response ;
                 // iteration on data to compare and fill data
-                for(Specialities choseditem :chosedspecialist){
+/*                for(Specialities choseditem :chosedspecialist){
                     for(Specialities item :allspecialist){
 //                        if(item.getId()==choseditem.getId()){
 //                            int index = allspecialist.indexOf(item);
@@ -119,7 +119,7 @@ public class MultiChoiseListFragment extends DialogFragment {
 //                            allspecialist.set(index,item);
 //                        }
                     }
-                }
+                }*/
                 mAdapter = new MultiSelectAdapter(getContext(),allspecialist);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setItemAnimator(new DefaultItemAnimator());

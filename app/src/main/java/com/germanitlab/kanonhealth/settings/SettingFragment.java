@@ -70,7 +70,7 @@ public class SettingFragment extends Fragment {
     private RecyclerView rvPracticies;
 
     //status doctor
-    private TextView txt_status;
+    private TextView txt_status,tvAddPractice;
     private Button btn_change_status;
 
     static private SettingFragment settingFragment;
@@ -151,6 +151,7 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
+        tvAddPractice= (TextView) view.findViewById(R.id.tv_add_practice);
         rvPracticies= (RecyclerView) view.findViewById(R.id.recycler_view);
         trSupport = (TableRow) view.findViewById(R.id.tr_support) ;
         profile =(TableRow) view.findViewById(R.id.my_profile);
@@ -215,6 +216,14 @@ public class SettingFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("from_notification" , 1);
                 intent.putExtra("from_id" , 1);
+                startActivity(intent);
+            }
+        });
+        tvAddPractice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),DoctorProfileActivity.class);
+                intent.putExtra("CLINIC","CLINIC");
                 startActivity(intent);
             }
         });

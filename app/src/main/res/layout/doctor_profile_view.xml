@@ -95,56 +95,18 @@
                             android:layout_alignEnd="@+id/img_edit_avatar"
                             android:layout_alignParentTop="true"
                             android:visibility="gone"
+                            android:id="@+id/edit_image"
                             android:layout_alignRight="@+id/img_edit_avatar"
                             android:src="@drawable/camera" />
 
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_edit_avatar"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="18dp" />
 
-                        <LinearLayout
-                            android:id="@+id/edit_name_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/img_edit_avatar"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
 
-                            <EditText
-                                android:id="@+id/et_last_name"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_alignBottom="@+id/img_edit_avatar"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="18dp"
-                                android:visibility="visible" />
-
-                            <EditText
-                                android:id="@+id/et_first_name"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_alignBottom="@+id/img_edit_avatar"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="18dp"
-                                android:visibility="visible" />
-                        </LinearLayout>
 
 
                     </RelativeLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_doctor_data"
                         android:layout_width="@dimen/size_10dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -187,22 +149,69 @@
                             android:textAlignment="center"
                             android:textColor="@android:color/background_dark" />
 
-                        <TextView
-                            android:id="@+id/tv_add_to_favourite"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/custom_edittext_without_border_style"
-                            android:gravity="center"
-                            android:text="Add to Favourite"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/background_dark" />
 
 
                     </LinearLayout>
-                </LinearLayout>
 
+                </LinearLayout>
+                <TableRow android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/edit_name_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_edit_avatar"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/et_last_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/img_edit_avatar"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="18dp"
+                            android:visibility="visible" />
+
+                        <EditText
+                            android:id="@+id/et_first_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/img_edit_avatar"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="18dp"
+                            android:visibility="visible" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/img_edit_avatar"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:id="@+id/tv_add_to_favourite"
+                        android:layout_width="0dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_edittext_without_border_style"
+                        android:gravity="center"
+                        android:text="Add to Favourite"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/background_dark" />
+
+                </TableRow>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

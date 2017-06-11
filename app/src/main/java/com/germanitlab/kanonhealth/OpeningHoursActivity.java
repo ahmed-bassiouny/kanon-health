@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -20,11 +22,22 @@ import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OpeningHoursActivity extends AppCompatActivity {
-
+    @BindView(R.id.first)
+    RadioButton first;
+    @BindView(R.id.second)
+    RadioButton second;
+    @BindView(R.id.third)
+    RadioButton third;
+    @BindView(R.id.fourth)
+    RadioButton fourth;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    public static TimeTable instance = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +48,6 @@ public class OpeningHoursActivity extends AppCompatActivity {
     }
 
     void initTB() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.payment));
         assert getSupportActionBar() != null;
@@ -44,6 +56,26 @@ public class OpeningHoursActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.save)
+    public void save(View view) {
+        if (first.isChecked()) {
+            Intent intent = new Intent();
+            intent.putExtra("type", 0);
+            setResult(Constants.HOURS_CODE, intent);
+            finish();
+        } else {
+            Intent intent = new Intent();
+            if (second.isChecked())
+                intent.putExtra("type", 1);
+            else if(third.isChecked())
+                intent.putExtra("type", 2);
+            else if(fourth.isChecked())
+                intent.putExtra("type", 3);
+            setResult(RESULT_OK, intent);
+            instance.finish();
+            finish();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
