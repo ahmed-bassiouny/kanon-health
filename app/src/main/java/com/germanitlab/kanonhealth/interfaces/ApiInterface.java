@@ -77,6 +77,9 @@ public interface ApiInterface {
     @POST("/users/update")
     Call<JsonObject> editProfile(@Body User request);
 
+    @POST("/users/update")
+    Call<JsonObject> addPractice(@Body User request);
+
     @POST("/messages/update_privacy")
     Call<JSONObject> updateDocuments(@Body UpdateDocumentPrivacyRequest updateDocumentPrivacyRequest);
 

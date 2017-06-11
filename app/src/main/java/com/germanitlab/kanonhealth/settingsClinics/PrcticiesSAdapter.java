@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.ArrayList;
@@ -22,11 +23,11 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
 
 {
     private Context mContext ;
-    private List<User> clinicsList;
+    private List<ChooseModel> clinicsList;
 
 //    LinkedHashMap<String , String> questionAnswer ;
 
-    public PrcticiesSAdapter(Context mContext, List<User> clinicsList)
+    public PrcticiesSAdapter(Context mContext, List<ChooseModel> clinicsList)
     {
 //        this.questionAnswer = questionAnswer ;
         this.mContext = mContext  ;
@@ -45,7 +46,7 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
     @Override
     public void onBindViewHolder(PrcticiesSAdapter.MyViewHolder holder, int position)
     {
-        holder.tvPracticeName.setText(clinicsList.get(position).getFirst_name()+"");
+        holder.tvPracticeName.setText(clinicsList.get(position).getFirst_nameMember()+"");
     }
 
     @Override

@@ -446,6 +446,30 @@ public class HttpCall {
 
     }
 
+
+    public void addPractice(User request) {
+
+        // UserInfoResponse request = new UserInfoResponse();
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<JsonObject> connection = service.addPractice(request);
+
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("QR ", response.body().toString());
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                Log.e("QR ", " " + t.getLocalizedMessage());
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+
+    }
+
     //--- getQuestions
     public void getDocQuestions(String userID, String password) {
 

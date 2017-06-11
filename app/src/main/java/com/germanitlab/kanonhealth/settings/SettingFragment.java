@@ -38,6 +38,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -108,7 +109,7 @@ public class SettingFragment extends Fragment {
 
         UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
 
-        List<User> clinicsList = userInfoResponse.getUser().getMembers_at();
+        List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
 
 
         mAdapter = new PrcticiesSAdapter(getContext(),clinicsList);
