@@ -167,6 +167,8 @@ public class User implements Serializable {
     private LinkedHashMap<String, String> questions;
     @SerializedName("info")
     private Info info;
+    @SerializedName("time_type")
+    private int time_type;
     private HashMap<String , String> rate_percentage;
     private float rate_avr;
     private String country_flag ;
@@ -653,6 +655,14 @@ public class User implements Serializable {
 
     public void setSpeciality_icon(String speciality_icon) {
         this.speciality_icon = speciality_icon;
+    }
+
+    public int getTime_type() {
+        return time_type;
+    }
+
+    public void setTime_type(int time_type) {
+        this.time_type = time_type;
     }
 }
 

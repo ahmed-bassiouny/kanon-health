@@ -56,6 +56,8 @@ public class Constants {
     public static final int AUDIO_PERMISSION_CODE = 5;
     public static final int GET_LAST_LOCATION_PERMISSION_CODE = 5;
     public static final String DATA = "data";
+    public static final int HOURS_CODE = 11;
+    public static final int HOURS_TYPE_CODE = 22 ;
 
 
     public static File folder = new File(Environment.getExternalStorageDirectory().toString() + "/Health");

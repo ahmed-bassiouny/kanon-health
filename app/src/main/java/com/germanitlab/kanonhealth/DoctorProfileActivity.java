@@ -1,10 +1,20 @@
 package com.germanitlab.kanonhealth;
 
+
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.SyncStateContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +26,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -25,11 +37,14 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
+import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.*;
 import com.germanitlab.kanonhealth.models.Specialities;
+import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,7 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends AppCompatActivity implements Message<Specialities> {
+public class DoctorProfileActivity extends AppCompatActivity implements Message<Specialities>  , Serializable, ApiResponse, DialogPickerCallBacks {
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
     SpecilaitiesAdapter adapter;
@@ -111,6 +126,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.edit_time_table)
     ImageView edit_time_table ;
     User user;
+    UploadImageResponse uploadImageResponse;
+    Util util ;
 
     // data of edit
     @BindView(R.id.edit)
@@ -134,18 +151,26 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     LinearLayout edit_name_layout;
     @BindView(R.id.save)
     ImageView save ;
+    @BindView(R.id.edit_image)
+    CircleImageView edit_image ;
     private DoctorDocumentAdapter doctorDocumentAdapter;
-
+    PrefManager prefManager;
+    PickerDialog pickerDialog;
+    private Uri selectedImageUri;
+    private static final int TAKE_PICTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile_view);
         ButterKnife.bind(this);
+        util = Util.getInstance(this);
         user = new User();
         user = (User) getIntent().getSerializableExtra("doctor_data");
         chechEditPermission();
         bindData();
+        prefManager = new PrefManager(this);
+        pickerDialog = new PickerDialog(true);
 
     }
 
@@ -178,7 +203,24 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
     @OnClick(R.id.save)
     public void save(View view){
-        setVisiblitiy(View.VISIBLE);
+        handleNewData();
+    }
+
+    private void handleNewData() {
+        tv_name.setText(et_last_name.getText().toString() + "," + et_first_name.getText().toString());
+        user.setLast_name(et_last_name.getText().toString());
+        user.setFirst_name(et_first_name.getText().toString());
+        tv_location.setText(et_location.getText().toString());
+        user.setAddress(et_location.getText().toString());
+        tv_telephone.setText(et_telephone.getText().toString());
+        user.setPhone(et_telephone.getText().toString());
+        sendDataToserver();
+    }
+
+    private void sendDataToserver() {
+        util.showProgressDialog();
+        new HttpCall(this, this).editProfile(user);
+
     }
 
     private void setVisiblitiy(int visiblitiy) {
@@ -195,13 +237,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         edit_time_table.setVisibility(notvisibility);
         edit.setVisibility(visiblitiy);
         save.setVisibility(notvisibility);
+        edit_image.setVisibility(notvisibility);
     }
 
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
+        if(user.getTime_type() == 0){
         Intent intent = new Intent(this, TimeTable.class);
         intent.putExtra(Constants.DATA , (Serializable) user.getOpen_time());
-        startActivity(intent);
+        startActivityForResult(intent ,Constants.HOURS_CODE );}
+        else {
+            startActivityForResult(new Intent(this ,OpeningHoursActivity.class ),Constants.HOURS_TYPE_CODE);
+        }
     }
 
     private void setAdapters() {
@@ -210,10 +257,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         set(adapter, user.getSupported_lang(), View.GONE, recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL);
         set(adapter, user.getMembers_at(), View.VISIBLE, recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL);
 
-/*        doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
+        doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
         document_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         document_recycler_view.setItemAnimator(new DefaultItemAnimator());
-        document_recycler_view.setAdapter(doctorDocumentAdapter);*/
+        document_recycler_view.setAdapter(doctorDocumentAdapter);
     }
 
     public void set(RecyclerView.Adapter adapter, List<?> list, int visibilty, RecyclerView recyclerVie, int id, int linearLayoutManager) {
@@ -225,6 +272,83 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         recyclerVie.setAdapter(adapter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        pickerDialog.dismiss();
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Constants.IMAGE_REQUEST:
+                    selectedImageUri = data.getData();
+                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                    util.showProgressDialog();
+                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+                    Glide.with(this).load(selectedImageUri).into(imageAvatar);
+
+                    new HttpCall(this, new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            util.dismissProgressDialog();
+                            uploadImageResponse = (UploadImageResponse) response;
+                            user.setAvatar(uploadImageResponse.getFile_url());
+                            Log.e("After Casting", uploadImageResponse.getFile_url());
+                            prefManager.put(PrefManager.PROFILE_IMAGE , uploadImageResponse.getFile_url());
+                        }
+
+                        @Override
+                        public void onFailed(String error) {
+                            Log.e("upload image failed :", error);
+                        }
+                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+
+                    break;
+                case TAKE_PICTURE:
+                    util.showProgressDialog();
+                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+/*
+                    decodeFile(selectedImageUri.toString());
+*/
+                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                    Glide.with(this).load(selectedImageUri).into(imageAvatar);
+                    new HttpCall(this, new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            util.dismissProgressDialog();
+                            uploadImageResponse = (UploadImageResponse) response;
+                            user.setAvatar(uploadImageResponse.getFile_url());
+                            Log.e("After Casting", uploadImageResponse.getFile_url());
+                        }
+
+                        @Override
+                        public void onFailed(String error) {
+                            Log.e("upload image failed :", error);
+                        }
+                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+
+                    break;
+                case Constants.HOURS_CODE :
+                    user.setOpen_time((List<Table>) data.getSerializableExtra(SyncStateContract.Constants.DATA));
+            }
+        }
+    }
+
+    /* Get the real path from the URI */
+    public String getPathFromURI(Uri contentUri) {
+        String path;
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            path = contentUri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            path = cursor.getString(idx);
+            cursor.close();
+        }
+        return path;
+    }
 
     private void bindData() {
 //        getTimaTableData(user.getTable());
@@ -390,6 +514,41 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             }
         });
     }
+    public void takeImageWithCamera() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+        startActivityForResult(intent, TAKE_PICTURE);
+    }
+
+
+    @OnClick(R.id.img_edit_avatar)
+    public void onEditProfileImageClicked() {
+        if(is_me) {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    ) {
+
+
+                pickerDialog.show(getFragmentManager(), "imagePickerDialog");
+            } else {
+                askForPermission(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                android.Manifest.permission.CAMERA},
+                        Constants.GALLERY_PERMISSION_CODE);
+            }
+        }
+    }
+    private void askForPermission(String[] permission, Integer requestCode) {
+        ActivityCompat.requestPermissions(this, permission, requestCode);
+    }
 
     @Override
     public void Response(ArrayList<Specialities> specialitiesArrayList) {
@@ -401,5 +560,40 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 templist.add(item);
         }
         user.setSpecialities(templist);
+    }
+
+    @Override
+    public void onSuccess(Object response) {
+        Toast.makeText(this, "Data saved Successfully", Toast.LENGTH_SHORT).show();
+        util.dismissProgressDialog();
+        setVisiblitiy(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onFailed(String error) {
+        Toast.makeText(this, "Error in saving data", Toast.LENGTH_SHORT).show();
+        util.dismissProgressDialog();
+
+    }
+
+    @Override
+    public void onGalleryClicked(Intent intent) {
+        startActivityForResult(intent, Constants.IMAGE_REQUEST);
+
+    }
+
+    @Override
+    public void onCameraClicked() {
+        takeImageWithCamera();
+    }
+
+    @Override
+    public void deleteMyImage() {
+        user.setAvatar("");
+        Helper.setImage(this ,Constants.CHAT_SERVER_URL
+                + "/" + user.getAvatar() , imageAvatar , R.drawable.profile_place_holder );
+        prefManager.put(PrefManager.PROFILE_IMAGE, "");
+        pickerDialog.dismiss();
     }
 }
