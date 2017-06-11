@@ -1,10 +1,9 @@
 package com.germanitlab.kanonhealth.models.user;
 
-import com.germanitlab.kanonhealth.models.MembersAt;
 import com.germanitlab.kanonhealth.models.Specialities;
 import com.germanitlab.kanonhealth.models.SupportedLanguage;
+import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.openTime;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -180,10 +179,10 @@ public class User implements Serializable {
     private String parent_id;
 
     private int rate_count;
-    private List<openTime> open_time=new ArrayList<>();
+    private List<Table> open_time=new ArrayList<>();
     private List<SupportedLanguage> supported_lang=new ArrayList<>();
     private List<Specialities> specialities=new ArrayList<>();
-    private List<MembersAt> members_at=new ArrayList<>();
+    private List<User> members_at=new ArrayList<>();
     private String speciality_id;
     private String speciality_title;
     private String speciality_icon;
@@ -576,7 +575,7 @@ public class User implements Serializable {
         return rate_count;
     }
 
-    public List<openTime> getOpen_time() {
+    public List<Table> getOpen_time() {
         return open_time;
     }
 
@@ -588,7 +587,7 @@ public class User implements Serializable {
         return specialities;
     }
 
-    public List<MembersAt> getMembers_at() {
+    public List<User> getMembers_at() {
         return members_at;
     }
 
@@ -628,7 +627,7 @@ public class User implements Serializable {
         this.rate_count = rate_count;
     }
 
-    public void setOpen_time(List<openTime> open_time) {
+    public void setOpen_time(List<Table> open_time) {
         this.open_time = open_time;
     }
 
@@ -640,7 +639,7 @@ public class User implements Serializable {
         this.specialities = specialities;
     }
 
-    public void setMembers_at(List<MembersAt> members_at) {
+    public void setMembers_at(List<User> members_at) {
         this.members_at = members_at;
     }
 

@@ -39,7 +39,10 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.google.gson.Gson;
 
 
 /**
@@ -52,12 +55,12 @@ public class SettingFragment extends Fragment {
     private Toolbar toolbar ;
     private TextView tvBack, tvSetting , trVersion;
     private ImageView imgQr;
-    private TableRow profile ;
     private ImageButton imgScan ;
     private VideoView videoView;
-    private TableRow trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
+    private TableRow profile,  trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
+    private User user ;
 
     //status doctor
     private TextView txt_status;
@@ -82,6 +85,8 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+        user = userInfoResponse.getUser();
         initView();
         handelEvent();
       //  assignViews();
@@ -196,9 +201,16 @@ public class SettingFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity() , ProfileActivity.class);
-                intent.putExtra("from", true);
-                startActivity(intent);
+                if(user.getIsDoc() == 1){
+                    Intent intent = new Intent(getActivity() , DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data" ,user);
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.putExtra("from", true);
+                    startActivity(intent);
+                }
 //                getContext().startActivity(intent);
             }
         });
