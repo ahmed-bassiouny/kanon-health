@@ -22,7 +22,6 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
-import com.germanitlab.kanonhealth.models.Specialities;
 import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.ArrayList;
@@ -80,11 +79,11 @@ public class MultiChoiseListFragment extends DialogFragment {
             @Override
             public void onClick(View view, int position) {
                 CircleImageView check=(CircleImageView)view.findViewById(R.id.check);
-                setDataChecked(check,!allspecialist.get(position).is_my_specialities());
+/*                setDataChecked(check,!allspecialist.get(position).is_my_specialities());
                 if(check.getVisibility()==View.VISIBLE)
                     allspecialist.get(position).setIs_my_specialities(true);
                 else
-                    allspecialist.get(position).setIs_my_specialities(false);
+                    allspecialist.get(position).setIs_my_specialities(false);*/
             }
 
             @Override
@@ -112,7 +111,7 @@ public class MultiChoiseListFragment extends DialogFragment {
             public void onSuccess(Object response) {
                 allspecialist=(ArrayList<Specialities>)  response ;
                 // iteration on data to compare and fill data
-                for(Specialities choseditem :chosedspecialist){
+/*                for(Specialities choseditem :chosedspecialist){
                     for(Specialities item :allspecialist){
                         if(item.getId()==choseditem.getId()){
                             int index = allspecialist.indexOf(item);
@@ -120,7 +119,7 @@ public class MultiChoiseListFragment extends DialogFragment {
                             allspecialist.set(index,item);
                         }
                     }
-                }
+                }*/
                 mAdapter = new MultiSelectAdapter(getContext(),allspecialist);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -33,6 +33,10 @@ public class Constants {
     public static final int IMAGE_REQUEST = 150;
     public static final int GALLERY_PERMISSION_CODE=6;
 
+    // Edit ahmed 11-6-2017
+    public static final int SPECIALITIES=8;
+    public static final int LANGUAUGE=9;
+    public static final int MEMBERAT=10;
 
 
     public static final int OPEN_CHAT = 1;

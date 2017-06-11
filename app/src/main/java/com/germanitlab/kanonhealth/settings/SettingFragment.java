@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.germanitlab.kanonhealth.CheckMutli;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
@@ -68,6 +67,7 @@ public class SettingFragment extends Fragment {
 
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
+    private String UserStatus;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -104,7 +104,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkStatus();
     }
 
     private void assignViews() {
@@ -156,6 +155,10 @@ public class SettingFragment extends Fragment {
         trTerms = (TableRow) view.findViewById(R.id.tr_terms);
         trHelp = (TableRow) view.findViewById(R.id.tr_help);
         trVersion = (TextView) view.findViewById(R.id.tv_version);
+
+        //status doctor
+        txt_status=(TextView)view.findViewById(R.id.txt_status);
+        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
         PackageInfo pInfo = null;
         try {
             pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -224,25 +227,25 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(getContext() , Help.class));
-                startActivity(new Intent(getContext() , CheckMutli.class));
             }
         });
 
-        //status doctor
-        txt_status=(TextView)view.findViewById(R.id.txt_status);
-        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+        UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+
+        if(UserStatus!=null) {
+        checkStatus(UserStatus);
+        }
 
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // call rest to change data
-//                ChangeStatus();
-                if(btn_change_status.getText().toString().equals("Go Online")){
-                    changStatusService("1");
+                UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+                if(UserStatus.equals("1")){
+                    changStatusService("0");
+
                 }else {
 
-                    changStatusService("0");
-//
+                    changStatusService("1");
                 }
 
             }
@@ -256,15 +259,15 @@ public class SettingFragment extends Fragment {
             public void onSuccess(Object response) {
                 statusResponse = (StatusResponse) response;
                 Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
-                if(statusResponse.getIs_available().equals("0")){
+                new PrefManager(getActivity()).put(PrefManager.USER_STATUS,statusResponse.getIs_available());
 
-                    txt_status.setText(R.string.youareoffline);
-                    btn_change_status.setText(R.string.go_online);
-
-                }else {
+                if(statusResponse.getIs_available().equals("1")){
                     txt_status.setText(R.string.youareonline);
                     btn_change_status.setText(R.string.go_offline);
 
+                }else{
+                    txt_status.setText (R.string.youareoffline);
+                    btn_change_status.setText(R.string.go_online);
                 }
             }
 
@@ -291,18 +294,6 @@ public class SettingFragment extends Fragment {
         });
 
 
-/*        trFaq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (settingResponse != null) {
-
-                    Intent intent = new Intent(getActivity(), FaqActivity.class);
-                    intent.putExtra(Constants.FAQ, settingResponse.getFaq());
-                    getActivity().startActivity(intent);
-                }
-            }
-        });*/
 
     }
 
@@ -323,20 +314,17 @@ public class SettingFragment extends Fragment {
         }).getSetting();
 
     }
+    private void checkStatus(String userStatus){
+        // call rest to get data
 
-    private void ChangeStatus(){
-        int doc_status=1; //online
-        if(doc_status==1){
+        if(userStatus.equals("1")){
             txt_status.setText(R.string.youareonline);
             btn_change_status.setText(R.string.go_offline);
+
         }else{
             txt_status.setText(R.string.youareoffline);
             btn_change_status.setText(R.string.go_online);
         }
-    }
-    private void checkStatus(){
-        // call rest to get data
-        ChangeStatus();
     }
 
 }

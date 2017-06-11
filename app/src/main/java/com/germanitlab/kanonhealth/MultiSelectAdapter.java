@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
-import com.germanitlab.kanonhealth.models.Specialities;
 import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.ArrayList;
@@ -72,8 +71,8 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
         if(1==1){
              model= (Specialities)allspecialist.get(position);
             holder.name.setText(model.getTitle());
-            Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getAvatar(), holder.avatar, R.drawable.profile_place_holder);
-            setDataChecked( holder.checked,model.is_my_specialities());
+            //Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getAvatar(), holder.avatar, R.drawable.profile_place_holder);
+            //setDataChecked( holder.checked,model.is_my_specialities());
 
 
         }

@@ -8,9 +8,8 @@ import com.germanitlab.kanonhealth.models.Questions.InqueryRequest;
 import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
-import com.germanitlab.kanonhealth.models.Specialities;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Speciality;
-import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.SupportedLanguage;
@@ -139,8 +138,8 @@ public interface ApiInterface {
 
     //Edit by ahmed 8-6-2017
     @POST("/specialties/all")
-    Call<List<Specialities>> getAllSpecilaities();
+    Call<List<ChooseModel>> getAllSpecilaities();
     @POST("/langs/all")
-    Call<List<SupportedLanguage>> getAllLanguage();
+    Call<List<ChooseModel>> getAllLanguage();
 }
 

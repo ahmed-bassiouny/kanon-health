@@ -42,8 +42,8 @@ import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.*;
-import com.germanitlab.kanonhealth.models.Specialities;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
@@ -58,7 +58,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends AppCompatActivity implements Message<Specialities>  , Serializable, ApiResponse, DialogPickerCallBacks {
+public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>  , Serializable, ApiResponse, DialogPickerCallBacks {
+
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
     SpecilaitiesAdapter adapter;
@@ -253,9 +254,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        set(adapter, user.getSpecialities(), View.GONE, recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL);
-        set(adapter, user.getSupported_lang(), View.GONE, recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL);
-        set(adapter, user.getMembers_at(), View.VISIBLE, recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL);
+        set(adapter, user.getSpecialities(), View.GONE, recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL,Constants.SPECIALITIES);
+        set(adapter, user.getSupported_lang(), View.GONE, recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL,Constants.LANGUAUGE);
+        set(adapter, user.getMembers_at(), View.VISIBLE, recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL,Constants.MEMBERAT);
 
         doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
         document_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -263,8 +264,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         document_recycler_view.setAdapter(doctorDocumentAdapter);
     }
 
-    public void set(RecyclerView.Adapter adapter, List<?> list, int visibilty, RecyclerView recyclerVie, int id, int linearLayoutManager) {
-        adapter = new SpecilaitiesAdapter(list, visibilty, getApplicationContext());
+    public void set(RecyclerView.Adapter adapter, List<ChooseModel> list, int visibilty, RecyclerView recyclerVie, int id, int linearLayoutManager,int type) {
+
+        adapter = new SpecilaitiesAdapter(list, visibilty, getApplicationContext(),type);
         recyclerVie = (RecyclerView) findViewById(id);
         recyclerVie.setHasFixedSize(true);
         recyclerVie.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
@@ -372,13 +374,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
         setAdapters();
         tv_rating.append(" " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
-        for (SupportedLanguage lang : user.getSupported_lang()
+        for (ChooseModel lang : user.getSupported_lang()
                 ) {
-            tv_languages.append(lang.getName() + " ");
+            tv_languages.append(lang.getLang_title() + " ");
         }
-        for (Specialities speciality : user.getSpecialities()
+        for (ChooseModel speciality : user.getSpecialities()
                 ) {
-            tv_specilities.append(speciality.getTitle() + " ");
+            tv_specilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
     }
@@ -395,13 +397,17 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @OnClick(R.id.edit_speciality_list)
     public void editSpecialityList(View view) {
-        MultiChoiseListFragment dialogFragment = new MultiChoiseListFragment();
-        FragmentTransaction ft = getSupportFragmentManager()
-                .beginTransaction();
         Bundle bundle = new Bundle();
+        bundle.putInt("Constants",Constants.SPECIALITIES);
         bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
-        dialogFragment.setArguments(bundle);
-        dialogFragment.show(ft, "list");
+        showDialogFragment(bundle);
+    }
+    @OnClick(R.id.edit_languages_list)
+    public void edit_languages_list(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("Constants",Constants.LANGUAUGE);
+        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
+        showDialogFragment(bundle);
     }
 
     private void getTimaTableData(List<Table> list) {
@@ -551,12 +557,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     @Override
-    public void Response(ArrayList<Specialities> specialitiesArrayList) {
+    public void Response(ArrayList<ChooseModel> specialitiesArrayList) {
 
         user.getSpecialities().clear();
-        ArrayList<Specialities> templist=new ArrayList<>();
-        for(Specialities item:specialitiesArrayList) {
-            if (item.is_my_specialities())
+        ArrayList<ChooseModel> templist=new ArrayList<>();
+        for(ChooseModel item:specialitiesArrayList) {
+            if (item.getIsMyChoise())
                 templist.add(item);
         }
         user.setSpecialities(templist);
@@ -591,9 +597,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        Helper.setImage(this ,Constants.CHAT_SERVER_URL
-                + "/" + user.getAvatar() , imageAvatar , R.drawable.profile_place_holder );
+        Helper.setImage(this, Constants.CHAT_SERVER_URL
+                + "/" + user.getAvatar(), imageAvatar, R.drawable.profile_place_holder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
+    }
+    public void showDialogFragment(Bundle bundle){
+        MultiChoiseListFragment dialogFragment = new MultiChoiseListFragment();
+        FragmentTransaction ft = getSupportFragmentManager()
+                .beginTransaction();
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(ft, "list");
     }
 }

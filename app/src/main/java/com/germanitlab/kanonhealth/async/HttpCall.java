@@ -14,9 +14,8 @@ import com.germanitlab.kanonhealth.models.Questions.InqueryRequest;
 import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
-import com.germanitlab.kanonhealth.models.Specialities;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Speciality;
-import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
@@ -703,15 +702,30 @@ public class HttpCall {
     }
     public void getAllSpecilaities(){
         ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Specialities>> connection=service.getAllSpecilaities();
-        connection.enqueue(new Callback<List<Specialities>>() {
+        Call<List<ChooseModel>> connection=service.getAllSpecilaities();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
             @Override
-            public void onResponse(Call<List<Specialities>> call, Response<List<Specialities>> response) {
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
                 apiResponse.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Specialities>> call, Throwable t) {
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void getAllLanguage(){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<ChooseModel>> connection=service.getAllLanguage();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
+            @Override
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
                 apiResponse.onFailed(t.getLocalizedMessage());
             }
         });
