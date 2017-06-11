@@ -1,6 +1,6 @@
 package com.germanitlab.kanonhealth.models.user;
 
-import com.germanitlab.kanonhealth.models.Specialities;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SupportedLanguage;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -180,9 +180,9 @@ public class User implements Serializable {
 
     private int rate_count;
     private List<Table> open_time=new ArrayList<>();
-    private List<SupportedLanguage> supported_lang=new ArrayList<>();
-    private List<Specialities> specialities=new ArrayList<>();
-    private List<User> members_at=new ArrayList<>();
+    private List<ChooseModel> supported_lang=new ArrayList<>();
+    private List<ChooseModel> specialities=new ArrayList<>();
+    private List<ChooseModel> members_at=new ArrayList<>();
     private String speciality_id;
     private String speciality_title;
     private String speciality_icon;
@@ -579,15 +579,15 @@ public class User implements Serializable {
         return open_time;
     }
 
-    public List<SupportedLanguage> getSupported_lang() {
+    public List<ChooseModel> getSupported_lang() {
         return supported_lang;
     }
 
-    public List<Specialities> getSpecialities() {
+    public List<ChooseModel> getSpecialities() {
         return specialities;
     }
 
-    public List<User> getMembers_at() {
+    public List<ChooseModel> getMembers_at() {
         return members_at;
     }
 
@@ -631,15 +631,15 @@ public class User implements Serializable {
         this.open_time = open_time;
     }
 
-    public void setSupported_lang(List<SupportedLanguage> supported_lang) {
+    public void setSupported_lang(List<ChooseModel> supported_lang) {
         this.supported_lang = supported_lang;
     }
 
-    public void setSpecialities(List<Specialities> specialities) {
+    public void setSpecialities(List<ChooseModel> specialities) {
         this.specialities = specialities;
     }
 
-    public void setMembers_at(List<User> members_at) {
+    public void setMembers_at(List<ChooseModel> members_at) {
         this.members_at = members_at;
     }
 

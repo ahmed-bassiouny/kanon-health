@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.germanitlab.kanonhealth.CheckMutli;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
@@ -254,7 +253,6 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(getContext() , Help.class));
-                startActivity(new Intent(getContext() , CheckMutli.class));
             }
         });
 
