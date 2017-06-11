@@ -58,7 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks {
+public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>  , Serializable, ApiResponse, DialogPickerCallBacks {
 
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
@@ -433,7 +433,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
         showDialogFragment(bundle);
     }
-
+    @OnClick(R.id.edit_member_list)
+    public void edit_member_list(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("Constants",Constants.MEMBERAT);
+        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
+        showDialogFragment(bundle);
+    }
     private void getTimaTableData(List<Table> list) {
         if (list.size() > 0)
             ll_no.setVisibility(View.GONE);
@@ -583,15 +589,34 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     @Override
-    public void Response(ArrayList<ChooseModel> specialitiesArrayList) {
-
-        user.getSpecialities().clear();
-        ArrayList<ChooseModel> templist = new ArrayList<>();
-        for (ChooseModel item : specialitiesArrayList) {
-            if (item.getIsMyChoise())
-                templist.add(item);
+    public void Response(ArrayList<ChooseModel> specialitiesArrayList,int type) {
+        ArrayList<ChooseModel> templist=new ArrayList<>();
+        switch (type){
+            case Constants.SPECIALITIES:
+                user.getSpecialities().clear();
+                for(ChooseModel item:specialitiesArrayList) {
+                    if (item.getIsMyChoise())
+                        templist.add(item);
+                }
+                user.setSpecialities(templist);
+                break;
+            case Constants.LANGUAUGE:
+                user.getSupported_lang().clear();
+                for(ChooseModel item:specialitiesArrayList) {
+                    if (item.getIsMyChoise())
+                        templist.add(item);
+                }
+                user.setSupported_lang(templist);
+                break;
+            case Constants.MEMBERAT:
+                user.getMembers_at().clear();
+                for(ChooseModel item:specialitiesArrayList) {
+                    if (item.getIsMyChoise())
+                        templist.add(item);
+                }
+                user.setMembers_at(templist);
+                break;
         }
-        user.setSpecialities(templist);
     }
 
     @Override

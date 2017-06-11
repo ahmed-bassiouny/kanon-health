@@ -32,13 +32,12 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title , name;
+        public TextView title ;
         public ImageView image;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
-            name = (TextView) view.findViewById(R.id.name);
             image = (ImageView) view.findViewById(R.id.image);
         }
     }
@@ -63,22 +62,17 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         ChooseModel chooseModel=list.get(position);
         switch (type){
             case Constants.SPECIALITIES:
-                holder.title.setText(chooseModel.getSpeciality_title());
                 Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getSpeciality_icon() , holder.image , R.drawable.profile_place_holder);
-                holder.name.setVisibility(View.GONE);
-                holder.title.setVisibility(View.VISIBLE);
+                holder.title.setVisibility(View.GONE);
                 break;
             case Constants.LANGUAUGE:
-                holder.title.setText(chooseModel.getLang_title());
                 Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getLang_icon() , holder.image , R.drawable.profile_place_holder);
-                holder.name.setVisibility(View.GONE);
-                holder.title.setVisibility(View.VISIBLE);
+                holder.title.setVisibility(View.GONE);
                 break;
             case Constants.MEMBERAT:
-                holder.name.setText(chooseModel.getLast_nameMember()+" " +list.get(position).getFirst_nameMember());
+                holder.title.setText(chooseModel.getLast_nameMember()+" " +list.get(position).getFirst_nameMember());
                 Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getAvatarMember() , holder.image , R.drawable.profile_place_holder);
-                holder.name.setVisibility(View.VISIBLE);
-                holder.title.setVisibility(View.GONE);
+                holder.title.setVisibility(View.VISIBLE);
                 break;
         }
         /*holder.title.setVisibility(visiblity);
