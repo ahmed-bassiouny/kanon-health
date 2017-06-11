@@ -18,17 +18,25 @@ public class Specialities implements Serializable{
     private int speciality_id;
     private String speciality_icon;
     private String speciality_title;
+    private boolean is_my_specialities=false;
 
+    public void setIs_my_specialities(boolean is_my_specialities) {
+        this.is_my_specialities = is_my_specialities;
+    }
 
-    public int getSpeciality_id() {
+    public boolean is_my_specialities() {
+        return is_my_specialities;
+    }
+
+    public int getId() {
         return speciality_id;
     }
 
-    public String getSpeciality_icon() {
+    public String getAvatar() {
         return speciality_icon;
     }
 
-    public String getSpeciality_title() {
+    public String getTitle() {
         return speciality_title;
     }
 }

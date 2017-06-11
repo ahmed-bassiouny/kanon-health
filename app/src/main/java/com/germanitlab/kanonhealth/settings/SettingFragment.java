@@ -26,7 +26,6 @@ import android.widget.VideoView;
 
 import com.germanitlab.kanonhealth.CheckMutli;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
-import com.germanitlab.kanonhealth.Help;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
@@ -40,7 +39,10 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.google.gson.Gson;
 
 
 /**
@@ -53,12 +55,12 @@ public class SettingFragment extends Fragment {
     private Toolbar toolbar ;
     private TextView tvBack, tvSetting , trVersion;
     private ImageView imgQr;
-    private TableRow profile ;
     private ImageButton imgScan ;
     private VideoView videoView;
-    private TableRow trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
+    private TableRow profile,  trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
+    private User user ;
 
     //status doctor
     private TextView txt_status;
@@ -84,6 +86,8 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+        user = userInfoResponse.getUser();
         initView();
         handelEvent();
       //  assignViews();
@@ -201,9 +205,16 @@ public class SettingFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity() , ProfileActivity.class);
-                intent.putExtra("from", true);
-                startActivity(intent);
+                if(user.getIsDoc() == 1){
+                    Intent intent = new Intent(getActivity() , DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data" ,user);
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.putExtra("from", true);
+                    startActivity(intent);
+                }
 //                getContext().startActivity(intent);
             }
         });
@@ -225,25 +236,18 @@ public class SettingFragment extends Fragment {
 
         if(UserStatus!=null) {
         checkStatus(UserStatus);
-        }else {
-            txt_status.setText(R.string.youareoffline);
-            btn_change_status.setText(R.string.go_online);
         }
-
 
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // call rest to change data
-//                ChangeStatus();
-
+                UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
                 if(UserStatus.equals("1")){
                     changStatusService("0");
 
                 }else {
 
                     changStatusService("1");
-
                 }
 
             }
@@ -259,12 +263,12 @@ public class SettingFragment extends Fragment {
                 Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
                 new PrefManager(getActivity()).put(PrefManager.USER_STATUS,statusResponse.getIs_available());
 
-                if(statusResponse.getIs_available()=="1"){
+                if(statusResponse.getIs_available().equals("1")){
                     txt_status.setText(R.string.youareonline);
                     btn_change_status.setText(R.string.go_offline);
 
                 }else{
-                    txt_status.setText(R.string.youareoffline);
+                    txt_status.setText (R.string.youareoffline);
                     btn_change_status.setText(R.string.go_online);
                 }
             }
@@ -292,18 +296,6 @@ public class SettingFragment extends Fragment {
         });
 
 
-/*        trFaq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (settingResponse != null) {
-
-                    Intent intent = new Intent(getActivity(), FaqActivity.class);
-                    intent.putExtra(Constants.FAQ, settingResponse.getFaq());
-                    getActivity().startActivity(intent);
-                }
-            }
-        });*/
 
     }
 
@@ -324,21 +316,10 @@ public class SettingFragment extends Fragment {
         }).getSetting();
 
     }
-
-//    private void ChangeStatus(){
-//        int doc_status=1; //online
-//        if(doc_status==1){
-//            txt_status.setText(R.string.youareonline);
-//            btn_change_status.setText(R.string.go_offline);
-//        }else{
-//            txt_status.setText(R.string.youareoffline);
-//            btn_change_status.setText(R.string.go_online);
-//        }
-//    }
     private void checkStatus(String userStatus){
         // call rest to get data
 
-        if(userStatus=="1"){
+        if(userStatus.equals("1")){
             txt_status.setText(R.string.youareonline);
             btn_change_status.setText(R.string.go_offline);
 

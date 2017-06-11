@@ -121,7 +121,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 int height = 60;
 
                 Helper.setImage(activity ,Constants.CHAT_SERVER_URL
-                        + "/" + doctor.getSpecialities().get(x).getSpeciality_icon() , image , R.drawable.doctor_icon );
+                        + "/" + doctor.getSpecialities().get(x).getAvatar() , image , R.drawable.doctor_icon );
 
                 LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
                 image.setLayoutParams(parms);

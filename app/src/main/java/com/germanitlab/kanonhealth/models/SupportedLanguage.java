@@ -17,15 +17,15 @@ public class SupportedLanguage implements Serializable {
     String lang_title;
 
 
-    public int getLang_id() {
+    public int getId() {
         return lang_id;
     }
 
-    public String getLang_icon() {
+    public String getAvatar() {
         return lang_icon;
     }
 
-    public String getLang_title() {
+    public String getName() {
         return lang_title;
     }
 }

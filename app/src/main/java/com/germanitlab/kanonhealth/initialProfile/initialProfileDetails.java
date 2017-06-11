@@ -2,7 +2,6 @@ package com.germanitlab.kanonhealth.initialProfile;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -105,7 +104,6 @@ public class initialProfileDetails extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         Calendar calender = Calendar.getInstance();
-
 
 //        Dialog mDialog = new DatePickerDialog(initialProfileDetails.this,
 //                android.R.style.Theme_Holo,

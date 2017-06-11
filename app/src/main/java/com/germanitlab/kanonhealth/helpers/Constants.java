@@ -55,6 +55,7 @@ public class Constants {
     public static final int READ_EXTERNAL_STORARE_PERMISSION_CODE = 4;
     public static final int AUDIO_PERMISSION_CODE = 5;
     public static final int GET_LAST_LOCATION_PERMISSION_CODE = 5;
+    public static final String DATA = "data";
 
 
     public static File folder = new File(Environment.getExternalStorageDirectory().toString() + "/Health");

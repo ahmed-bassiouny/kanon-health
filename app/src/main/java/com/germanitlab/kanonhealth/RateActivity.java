@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.util.Log;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -15,6 +16,8 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.user.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -49,12 +52,21 @@ public class RateActivity extends AppCompatActivity {
 
     String doc_id="14";
     RateAdapter rateAdapter;
+    private HashMap<String , Integer> rate_percentages;
+    int height,width,sum_rate_number;
+    float sum_rate_result,rate_result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
         recycler_view.setLayoutManager( new LinearLayoutManager(getApplicationContext()));
+        rate_percentages=new HashMap<>();
+        rate_percentages.put("r1", 22);
+        rate_percentages.put("r2", 33);
+        rate_percentages.put("r3", 44);
+        rate_percentages.put("r4", 2);
+        rate_percentages.put("r5", 18);
 
         //doc_id=getIntent().getStringExtra("doc_id");
         if(doc_id.isEmpty())
@@ -63,17 +75,15 @@ public class RateActivity extends AppCompatActivity {
         txt_one_star.post(new TimerTask() {
             @Override
             public void run() {
-                /*
-                int height,width,result;
+
                 height=temp.getHeight();
                 width=temp.getWidth();
-                result = (85*width)/100;
-                FrameLayout.LayoutParams lp1 = new FrameLayout.LayoutParams(result, height);
-                btn_four_stars.setLayoutParams(lp1);
-                result = (50*width)/100;
-                lp1 = new FrameLayout.LayoutParams(result, height);
-                btn_three_stars.setLayoutParams(lp1);
-                */
+                for(String key:rate_percentages.keySet())
+                    setRate(key,rate_percentages.get(key));
+                rate_result=(sum_rate_result/sum_rate_number);
+                txt_reviews.setText(String.format("%.02f",rate_result)+" Of 5 Stars - "+sum_rate_number+" Reviews");
+                rb_doctor_rate.setRating(rate_result);
+
             }
         });
 
@@ -93,5 +103,33 @@ public class RateActivity extends AppCompatActivity {
                 Log.i("error", error);
             }
         }).getrating(doc_id);
+    }
+    private void setRate(String position,int rate){
+        int result;
+        result = (rate*width)/100;
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(result, height);
+        switch (position){
+            case "r5" :btn_five_stars.setLayoutParams(lp);
+                txt_five_stars.setText(rate+"");
+                sum_rate_result+=rate*5;
+                break;
+            case "r4" :btn_four_stars.setLayoutParams(lp);
+                txt_four_stars.setText(rate+"");
+                sum_rate_result+=rate*4;
+                break;
+            case "r3" :btn_three_stars.setLayoutParams(lp);
+                txt_three_stars.setText(rate+"");
+                sum_rate_result+=rate*3;
+                break;
+            case "r2" :btn_two_stars.setLayoutParams(lp);
+                txt_two_stars.setText(rate+"");
+                sum_rate_result+=rate*2;
+                break;
+            case "r1" :btn_one_star.setLayoutParams(lp);
+                txt_one_star.setText(rate+"");
+                sum_rate_result+=rate*1;
+                break;
+        }
+        sum_rate_number+=rate;
     }
 }
