@@ -95,7 +95,7 @@ public class Helper {
 
     }
 
-    public static void ImportQr(final PrefManager mPrefManager , final Activity activity , ImageView myQr)
+    public static void ImportQr(final PrefManager mPrefManager , final Activity activity )
     {
 
 /*        if (mPrefManager.getData(PrefManager.Image_data) != "" &&mPrefManager.getData(PrefManager.Image_data) != null) {
@@ -103,9 +103,6 @@ public class Helper {
                     + "/" + mPrefManager.getData(PrefManager.Image_data))
                     .resize(80, 80).into(myQr);
         }*/
-        myQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 Dialog dialog   ;
                 dialog = new Dialog(activity);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -139,8 +136,7 @@ public class Helper {
                     e.printStackTrace();
                 }
                 dialog.show();
-            }
-        });
+
     }
 
     public static void dismissProgressDialog(ProgressDialog progressDialog) {

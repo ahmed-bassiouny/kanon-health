@@ -19,6 +19,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -38,6 +39,7 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
@@ -135,6 +137,23 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mi_search:
+                if(edtFilter.getVisibility()==View.GONE)
+                    edtFilter.setVisibility(View.VISIBLE);
+                else if(edtFilter.getVisibility()==View.VISIBLE)
+                    edtFilter.setVisibility(View.GONE);
+                break;
+            case R.id.mi_scan:
+                Helper.ImportQr(mPrefManager, getActivity());
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
 
 
 
@@ -300,6 +319,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
 
         edtFilter = (EditText) view.findViewById(R.id.img_filter);
+        edtFilter.setVisibility(View.GONE);
         praxis_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,11 +1,15 @@
 package com.germanitlab.kanonhealth.doctors;
 
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,6 +42,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -75,6 +81,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private FilterCallBackClickListener filterCallBackClickListener;
     static DoctorListFragment doctorListFragment;
     private Util util ;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
+
     public DoctorListFragment() {
     }
 
@@ -111,6 +119,48 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mi_search:
+                if(edtDoctorListFilter.getVisibility()==View.GONE)
+                    edtDoctorListFilter.setVisibility(View.VISIBLE);
+                else if(edtDoctorListFilter.getVisibility()==View.VISIBLE)
+                    edtDoctorListFilter.setVisibility(View.GONE);
+                break;
+            case R.id.mi_scan:
+
+                if (!checkPermissionForCamera()) {
+                    requestPermissionForCamera();
+                }else {
+                    startActivity(new Intent(getActivity(), StartQrScan.class));
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    public void requestPermissionForCamera(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)){
+            Toast.makeText(getContext().getApplicationContext(), "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_REQUEST_CODE);
+            startActivity(new Intent(getActivity(), StartQrScan.class));
+        }
+    }
+
+
+    public boolean checkPermissionForCamera(){
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
+        if (result == PackageManager.PERMISSION_GRANTED){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -142,7 +142,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     private void intViews(View view) {
         mapView = (MapView) view.findViewById(R.id.map);
         myQr = (ImageView) view.findViewById(R.id.myQr);
-        Helper.ImportQr(mPrefManager , getActivity() , myQr);
+//        Helper.ImportQr(mPrefManager , getActivity() , myQr);
         imgBtnBack = (ImageButton) view.findViewById(R.id.img_btn_back);
 
     }

@@ -166,8 +166,9 @@ public class PasscodeActivty extends AppCompatActivity {
                 if (status == 2)
                     intent.putExtra("index" , 3);
                 startActivity(intent);
+            }else {
+                finish();
             }
-            finish();
         }
         else
         {
