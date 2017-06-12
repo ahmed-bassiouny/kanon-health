@@ -45,7 +45,9 @@ import com.germanitlab.kanonhealth.models.*;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
+import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -125,10 +127,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.image_star)
     ImageView image_star;
     @BindView(R.id.edit_time_table)
-    ImageView edit_time_table ;
+    ImageView edit_time_table;
     User user;
     UploadImageResponse uploadImageResponse;
-    Util util ;
+    Util util;
+    @BindView(R.id.linear_practice_profile)
+    LinearLayout linear_practice_profile;
+
+
 
     // data of edit
     @BindView(R.id.edit)
@@ -150,10 +156,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     ImageView edit_member_list;
     @BindView(R.id.edit_name_layout)
     LinearLayout edit_name_layout;
+    @BindView(R.id.permenant_closed)
+    LinearLayout permenant_closed ;
+    @BindView(R.id.always_open)
+    LinearLayout always_open;
     @BindView(R.id.save)
-    ImageView save ;
+    ImageView save;
+    @BindView(R.id.ll_doctor_data)
+    LinearLayout llDoctorData;
     @BindView(R.id.edit_image)
-    CircleImageView edit_image ;
+    CircleImageView edit_image;
     private DoctorDocumentAdapter doctorDocumentAdapter;
     PrefManager prefManager;
     PickerDialog pickerDialog;
@@ -161,17 +173,38 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private static final int TAKE_PICTURE = 1;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        bindData();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile_view);
         ButterKnife.bind(this);
-        util = Util.getInstance(this);
-        user = new User();
-        user = (User) getIntent().getSerializableExtra("doctor_data");
-        chechEditPermission();
-        bindData();
-        prefManager = new PrefManager(this);
-        pickerDialog = new PickerDialog(true);
+
+        // check if doctor or clinic
+//
+        if(getIntent().getExtras().containsKey("CLINIC")){
+            llDoctorData.setVisibility(View.GONE);
+            tv_add_to_favourite.setVisibility(View.GONE);
+            setVisiblitiy(View.GONE);
+
+        }else {
+            llDoctorData.setVisibility(View.VISIBLE);
+            tv_add_to_favourite.setVisibility(View.VISIBLE);
+
+            util = Util.getInstance(this);
+            user = new User();
+            user = (User) getIntent().getSerializableExtra("doctor_data");
+            chechEditPermission();
+            prefManager = new PrefManager(this);
+            pickerDialog = new PickerDialog(true);
+
+        }
+
+
 
     }
 
@@ -181,6 +214,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         else
             is_me = false;
     }
+
 
     @OnClick(R.id.tv_contact)
     public void contactClick(View v) {
@@ -202,9 +236,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void edit(View view) {
         setVisiblitiy(View.GONE);
     }
+
     @OnClick(R.id.save)
-    public void save(View view){
+    public void save(View view) {
         handleNewData();
+        bindData();
     }
 
     private void handleNewData() {
@@ -225,7 +261,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void setVisiblitiy(int visiblitiy) {
-        int notvisibility = (visiblitiy == View.VISIBLE ) ? View.GONE :View.VISIBLE ;
+        int notvisibility = (visiblitiy == View.VISIBLE) ? View.GONE : View.VISIBLE;
         tv_name.setVisibility(visiblitiy);
         et_location.setVisibility(notvisibility);
         tv_location.setVisibility(visiblitiy);
@@ -243,32 +279,34 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
-        if(user.getOpen_Type() == 0){
-        Intent intent = new Intent(this, TimeTable.class);
-        intent.putExtra(Constants.DATA , (Serializable) user.getOpen_time());
-            intent.putExtra("type" ,user.getOpen_Type());
-        startActivityForResult(intent ,Constants.HOURS_CODE );}
-        else {
-            startActivityForResult(new Intent(this ,OpeningHoursActivity.class ),Constants.HOURS_TYPE_CODE);
-
+        if (user.getOpen_Type() == 0) {
+            Intent intent = new Intent(this, TimeTable.class);
+            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
+            startActivityForResult(intent, Constants.HOURS_CODE);
+        } else {
+            Intent intent = new Intent(this, OpeningHoursActivity.class);
+            intent.putExtra("type" , user.getOpen_Type());
+            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
+            startActivityForResult(intent, Constants.HOURS_TYPE_CODE);
         }
     }
 
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        set(adapter, user.getSpecialities(), View.GONE, recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL,Constants.SPECIALITIES);
-        set(adapter, user.getSupported_lang(), View.GONE, recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL,Constants.LANGUAUGE);
-        set(adapter, user.getMembers_at(), View.VISIBLE, recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL,Constants.MEMBERAT);
-
-        doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
-        document_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        document_recycler_view.setItemAnimator(new DefaultItemAnimator());
-        document_recycler_view.setAdapter(doctorDocumentAdapter);
+        set(adapter, user.getSpecialities(), View.GONE, recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+        set(adapter, user.getSupported_lang(), View.GONE, recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+        set(adapter, user.getMembers_at(), View.VISIBLE, recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+        if (user.getDocuments() != null) {
+            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
+            document_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            document_recycler_view.setItemAnimator(new DefaultItemAnimator());
+            document_recycler_view.setAdapter(doctorDocumentAdapter);
+        }
     }
 
-    public void set(RecyclerView.Adapter adapter, List<ChooseModel> list, int visibilty, RecyclerView recyclerVie, int id, int linearLayoutManager,int type) {
+    public void set(RecyclerView.Adapter adapter, List<ChooseModel> list, int visibilty, RecyclerView recyclerVie, int id, int linearLayoutManager, int type) {
 
-        adapter = new SpecilaitiesAdapter(list, visibilty, getApplicationContext(),type);
+        adapter = new SpecilaitiesAdapter(list, visibilty, getApplicationContext(), type);
         recyclerVie = (RecyclerView) findViewById(id);
         recyclerVie.setHasFixedSize(true);
         recyclerVie.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
@@ -279,8 +317,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        pickerDialog.dismiss();
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case Constants.IMAGE_REQUEST:
@@ -297,7 +333,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             uploadImageResponse = (UploadImageResponse) response;
                             user.setAvatar(uploadImageResponse.getFile_url());
                             Log.e("After Casting", uploadImageResponse.getFile_url());
-                            prefManager.put(PrefManager.PROFILE_IMAGE , uploadImageResponse.getFile_url());
+                            prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
                         }
 
                         @Override
@@ -333,9 +369,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
 
                     break;
-                case Constants.HOURS_CODE :
-                    user.setOpen_time((List<Table>) data.getSerializableExtra(SyncStateContract.Constants.DATA));
+                case Constants.HOURS_CODE:
+                    user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
+                    user.setOpen_Type(data.getIntExtra("type" , 0));
+                    break;
+                case Constants.HOURS_TYPE_CODE :
+                    user.setOpen_Type(data.getIntExtra("type" ,0));
             }
+            bindData();
         }
     }
 
@@ -364,8 +405,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         et_telephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tv_location.setText(user.getAddress());
-        if (!user.getIs_available().equals("1"))
-            tv_online.setText("Offline");
+        if (user.getIs_available() != null) {
+            if (!user.getIs_available().equals("1"))
+                tv_online.setText("Offline");
+        }
         loadQRCode(tv_qr_code);
         tv_telephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
@@ -375,16 +418,22 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             tv_contact.setVisibility(View.INVISIBLE);
         }
         setAdapters();
-        tv_rating.append(" " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
+        tv_rating.setText( "Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
+        tv_languages.setText("");
         for (ChooseModel lang : user.getSupported_lang()
                 ) {
             tv_languages.append(lang.getLang_title() + " ");
         }
+        tv_specilities.setText("");
         for (ChooseModel speciality : user.getSpecialities()
                 ) {
             tv_specilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
+        if(user.isClinic!=1)
+            linear_practice_profile.setVisibility(View.VISIBLE);
+        else
+            linear_practice_profile.setVisibility(View.GONE);
     }
 
     public List<User> MockDataforChosen() {
@@ -400,27 +449,47 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit_speciality_list)
     public void editSpecialityList(View view) {
         Bundle bundle = new Bundle();
-        bundle.putInt("Constants",Constants.SPECIALITIES);
+        bundle.putInt("Constants", Constants.SPECIALITIES);
         bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
         showDialogFragment(bundle);
     }
+
     @OnClick(R.id.edit_languages_list)
-    public void edit_languages_list(){
+    public void edit_languages_list() {
         Bundle bundle = new Bundle();
-        bundle.putInt("Constants",Constants.LANGUAUGE);
+        bundle.putInt("Constants", Constants.LANGUAUGE);
         bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
         showDialogFragment(bundle);
     }
-
+    @OnClick(R.id.edit_member_list)
+    public void edit_member_list(){
+        Bundle bundle = new Bundle();
+        bundle.putInt("Constants",Constants.MEMBERAT);
+        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
+        showDialogFragment(bundle);
+    }
     private void getTimaTableData(List<Table> list) {
+        if(user.getOpen_Type() == 1)
+            always_open.setVisibility(View.VISIBLE);
+        else if(user.getOpen_Type() == 2)
+            ll_no.setVisibility(View.VISIBLE);
+        else if(user.getOpen_Type() == 3)
+            permenant_closed.setVisibility(View.VISIBLE);
+
         if (list.size() > 0)
             ll_no.setVisibility(View.GONE);
+
+
         passData(list);
     }
 
     private void passData(List<Table> list) {
+        clearTexts();
+        int size = 0 ;
         for (Table table : list) {
-            if(table.getDayweek() != null) {
+            if(size >= list.size())
+                return;
+            if (table.getDayweek() != null) {
                 if (table.getDayweek().equals("1")) {
                     setViewText(monday, table);
                     ll_monday.setVisibility(View.VISIBLE);
@@ -443,14 +512,31 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     setViewText(sunday, table);
                     ll_sunday.setVisibility(View.VISIBLE);
                 }
+                size ++ ;
             }
         }
     }
 
+    private void clearTexts() {
+        monday.setText("");
+        tuesday.setText("");
+        wednesday.setText("");
+        thursday.setText("");
+        friday.setText("");
+        saturday.setText("");
+        sunday.setText("");
+        ll_monday.setVisibility(View.GONE);
+        ll_thursday.setVisibility(View.GONE);
+        ll_friday.setVisibility(View.GONE);
+        ll_saturday.setVisibility(View.GONE);
+        ll_wednesday.setVisibility(View.GONE);
+        ll_sunday.setVisibility(View.GONE);
+        ll_tuesday.setVisibility(View.GONE);
+    }
+
     private void setViewText(TextView textView, Table table) {
         textView.append(textView.getText() + table.getFrom() + " - " + table.getTo());
-        textView.append(" \n " +System.getProperty("line.separator"));
-        textView.append("ilzhdoiflhioflserfrd");
+        textView.append(" \n " + System.getProperty("line.separator"));
     }
 
     @OnClick(R.id.image_star)
@@ -522,6 +608,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             }
         });
     }
+
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
@@ -535,7 +622,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @OnClick(R.id.img_edit_avatar)
     public void onEditProfileImageClicked() {
-        if(is_me) {
+        if (is_me) {
             if (ContextCompat.checkSelfPermission(this,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(this,
@@ -554,20 +641,40 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             }
         }
     }
+
     private void askForPermission(String[] permission, Integer requestCode) {
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
 
     @Override
-    public void Response(ArrayList<ChooseModel> specialitiesArrayList) {
-
-        user.getSpecialities().clear();
+    public void Response(ArrayList<ChooseModel> specialitiesArrayList,int type) {
         ArrayList<ChooseModel> templist=new ArrayList<>();
-        for(ChooseModel item:specialitiesArrayList) {
-            if (item.getIsMyChoise())
-                templist.add(item);
+        switch (type){
+            case Constants.SPECIALITIES:
+                user.getSpecialities().clear();
+                for(ChooseModel item:specialitiesArrayList) {
+                    if (item.getIsMyChoise())
+                        templist.add(item);
+                }
+                user.setSpecialities(templist);
+                break;
+            case Constants.LANGUAUGE:
+                user.getSupported_lang().clear();
+                for(ChooseModel item:specialitiesArrayList) {
+                    if (item.getIsMyChoise())
+                        templist.add(item);
+                }
+                user.setSupported_lang(templist);
+                break;
+            case Constants.MEMBERAT:
+                user.getMembers_at().clear();
+                for(ChooseModel item:specialitiesArrayList) {
+                    if (item.getIsMyChoise())
+                        templist.add(item);
+                }
+                user.setMembers_at(templist);
+                break;
         }
-        user.setSpecialities(templist);
     }
 
     @Override
@@ -575,6 +682,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         Toast.makeText(this, "Data saved Successfully", Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
         setVisiblitiy(View.VISIBLE);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        userInfoResponse.setUser(user);
+        prefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
+
 
     }
 
@@ -604,7 +715,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }
-    public void showDialogFragment(Bundle bundle){
+
+    public void showDialogFragment(Bundle bundle) {
         MultiChoiseListFragment dialogFragment = new MultiChoiseListFragment();
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction();

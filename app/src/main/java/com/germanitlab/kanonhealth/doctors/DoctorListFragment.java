@@ -1,12 +1,15 @@
 package com.germanitlab.kanonhealth.doctors;
 
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,12 +17,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -58,7 +63,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private View view;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
-    private ImageButton imgScan;
+//    private ImageButton imgScan;
     private ImageView filter, map,ImgBtnSearch;
 
     /*
@@ -76,6 +81,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private FilterCallBackClickListener filterCallBackClickListener;
     static DoctorListFragment doctorListFragment;
     private Util util ;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
+
     public DoctorListFragment() {
     }
 
@@ -94,6 +101,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_doctor_list, container, false);
+        setHasOptionsMenu(true);
         prefManager = new PrefManager(getActivity());
         util= Util.getInstance(getActivity());
         initView();
@@ -105,6 +113,54 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         mDoctorRepository = new UserRepository(getContext());
         loadData();
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mi_search:
+                if(edtDoctorListFilter.getVisibility()==View.GONE)
+                    edtDoctorListFilter.setVisibility(View.VISIBLE);
+                else if(edtDoctorListFilter.getVisibility()==View.VISIBLE)
+                    edtDoctorListFilter.setVisibility(View.GONE);
+                break;
+            case R.id.mi_scan:
+
+                if (!checkPermissionForCamera()) {
+                    requestPermissionForCamera();
+                }else {
+                    startActivity(new Intent(getActivity(), StartQrScan.class));
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    public void requestPermissionForCamera(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)){
+            Toast.makeText(getContext().getApplicationContext(), "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_REQUEST_CODE);
+            startActivity(new Intent(getActivity(), StartQrScan.class));
+        }
+    }
+
+
+    public boolean checkPermissionForCamera(){
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
+        if (result == PackageManager.PERMISSION_GRANTED){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -180,12 +236,12 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void handelEvent() {
 
-        imgScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), StartQrScan.class));
-            }
-        });
+//        imgScan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getActivity(), StartQrScan.class));
+//            }
+//        });
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new MyClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -266,18 +322,19 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 */
         map = (ImageView) view.findViewById(R.id.map);
         filter = (ImageView) view.findViewById(R.id.img_filter);
-        toolbar = (Toolbar) view.findViewById(R.id.doctor_chat_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+//        toolbar = (Toolbar) view.findViewById(R.id.doctor_chat_toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         doctor_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
-        imgScan = (ImageButton) toolbar.findViewById(R.id.scan);
+//        imgScan = (ImageButton) toolbar.findViewById(R.id.scan);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_chat);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         edtDoctorListFilter = (EditText) view.findViewById(R.id.edt_doctor_list_filter);
 /*         filter_to_list.setOnClickListener(new View.OnClickListener() {

@@ -110,7 +110,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
         Helper.setImage(activity ,Constants.CHAT_SERVER_URL
-                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.profile_place_holder );
+                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.placeholder );
 
 
         if(tabPosition!=3) {

@@ -9,18 +9,12 @@
     android:orientation="vertical"
     android:layout_height="wrap_content">
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:id="@+id/image"
         android:src="@drawable/profile_place_holder"
         android:layout_gravity="center"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="jfhydjkd"
-        android:textColor="@android:color/background_dark"
-        android:textSize="15dp"
-        android:id="@+id/name"/>
+
 </LinearLayout>
 
     <TextView

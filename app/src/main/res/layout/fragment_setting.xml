@@ -5,14 +5,15 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/colorPrimary">-->
 
 
         <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -21,29 +22,29 @@
 
 
 
-        <ImageButton
-            android:visibility="gone"
-            android:id="@+id/scan"
-            android:layout_width="@dimen/size_40dp"
-            android:layout_height="@dimen/size_35dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/size_25dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/scan"
-            tools:ignore="ContentDescription,RtlHardcoded" />
+        <!--<ImageButton-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/scan"-->
+            <!--android:layout_width="@dimen/size_40dp"-->
+            <!--android:layout_height="@dimen/size_35dp"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:layout_marginRight="@dimen/size_25dp"-->
+            <!--android:background="@null"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/scan"-->
+            <!--tools:ignore="ContentDescription,RtlHardcoded" />-->
 
-        <ImageButton
-            android:id="@+id/myQr"
-            android:layout_width="@dimen/size_40dp"
-            android:layout_height="@dimen/size_35dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/size_25dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/qrcode"
-            tools:ignore="ContentDescription,RtlHardcoded" />
-    </android.support.v7.widget.Toolbar>
+        <!--<ImageButton-->
+            <!--android:id="@+id/myQr"-->
+            <!--android:layout_width="@dimen/size_40dp"-->
+            <!--android:layout_height="@dimen/size_35dp"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:layout_marginRight="@dimen/size_25dp"-->
+            <!--android:background="@null"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/qrcode"-->
+            <!--tools:ignore="ContentDescription,RtlHardcoded" />-->
+    <!--</android.support.v7.widget.Toolbar>-->
 
 
 
@@ -146,6 +147,7 @@
 
 
                 <TextView
+                    android:id="@+id/tv_add_practice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -155,6 +157,24 @@
                     android:textStyle="bold" />
 
             </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/size_5dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

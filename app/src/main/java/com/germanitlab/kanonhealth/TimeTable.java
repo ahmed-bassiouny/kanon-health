@@ -1,7 +1,9 @@
 package com.germanitlab.kanonhealth;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -78,18 +80,24 @@ public class TimeTable extends AppCompatActivity {
     @BindView(R.id.ll_schedule)
     LinearLayout linearLayoutSchedule;
     List<Table> list;
+    int type ;
     public static Boolean active;
-    public static OpeningHoursActivity instance;
 
+    public static OpeningHoursActivity instance;
+    public static Activity TimetableInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table_activity);
+        TimetableInstance = this;
+
         ButterKnife.bind(this);
         instance = new OpeningHoursActivity();
         map = new HashMap<>();
         list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
+        type = getIntent().getIntExtra("type",0);
         handleData(list);
+
 
     }
 
@@ -100,11 +108,10 @@ public class TimeTable extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         active = false;
     }
-
 
     @OnCheckedChanged({R.id.monday_switch, R.id.tuesday_switch, R.id.wednesday_switch, R.id.thursday_switch, R.id.friday_switch, R.id.saturday_switch, R.id.sunday_switch})
     public void checkboxToggled(CompoundButton buttonView, boolean isChecked) {
@@ -364,7 +371,10 @@ public class TimeTable extends AppCompatActivity {
     @OnClick(R.id.ll_schedule)
     public void schedule(View view) {
         Intent openingHoursIntent = new Intent(getApplicationContext(), OpeningHoursActivity.class);
-        startActivity(openingHoursIntent);
+        openingHoursIntent.putExtra(Constants.DATA , (Serializable) list);
+        openingHoursIntent.putExtra("type",type);
+        openingHoursIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        startActivity(openingHoursIntent );
     }
 
 
@@ -391,11 +401,23 @@ public class TimeTable extends AppCompatActivity {
             }
             key++;
         }
-        intent.putExtra("list" , (Serializable) list);
-        if (OpeningHoursActivity.active)
-            instance.finish();
-        ;
+        intent.putExtra(Constants.DATA , (Serializable) list);
+        try {
+            if (OpeningHoursActivity.active )
+                instance.finish();
+        }catch (Exception e){}
+
+        setResult(RESULT_OK , intent);
+        finish();
         Toast.makeText(this, new Gson().toJson(list), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESULT_OK) {
+
+        }
     }
 
     public void handleData(List<Table> list) {

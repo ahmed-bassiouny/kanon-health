@@ -171,6 +171,7 @@ public class initialProfileDetails extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
+                    Toast.makeText(initialProfileDetails.this, "Error", Toast.LENGTH_SHORT).show();
 
                 }
             }).editProfile(user);

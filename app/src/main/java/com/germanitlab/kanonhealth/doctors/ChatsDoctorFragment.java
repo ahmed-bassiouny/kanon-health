@@ -17,6 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -122,8 +125,36 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         initView();
         handelEvent();
 
+        setHasOptionsMenu(true);
         return view;
     }
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mi_search:
+                if(edtFilter.getVisibility()==View.GONE)
+                    edtFilter.setVisibility(View.VISIBLE);
+                else if(edtFilter.getVisibility()==View.VISIBLE)
+                    edtFilter.setVisibility(View.GONE);
+                break;
+            case R.id.mi_scan:
+                Helper.ImportQr(mPrefManager, getActivity());
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
 
 
     private void handelEvent() {
@@ -171,12 +202,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
 
         //---------- Camera
-        imgbtnScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), StartQrScan.class));
-            }
-        });
+//        imgbtnScan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getActivity(), StartQrScan.class));
+//            }
+//        });
 
         edtFilter.addTextChangedListener(new TextWatcher() {
             @Override
@@ -268,14 +299,14 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         doctors_list.setTextColor(getResources().getColor(R.color.white));
         praxis_list.setBackgroundResource(R.color.gray);
         praxis_list.setTextColor(getResources().getColor(R.color.black));
-        toolbar = (Toolbar) view.findViewById(R.id.doctor_list_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        toolbar = (Toolbar) view.findViewById(R.id.doctor_list_toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         doctors_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
-        myQr = (ImageButton) toolbar.findViewById(R.id.my_Qr);
-        imgbtnScan = (ImageButton) toolbar.findViewById(R.id.scan);
-        Helper.ImportQr(mPrefManager, getActivity(), myQr);
+//        myQr = (ImageButton) toolbar.findViewById(R.id.my_Qr);
+//        imgbtnScan = (ImageButton) toolbar.findViewById(R.id.scan);
+//        Helper.ImportQr(mPrefManager, getActivity(), myQr);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -288,6 +319,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
 
         edtFilter = (EditText) view.findViewById(R.id.img_filter);
+        edtFilter.setVisibility(View.GONE);
         praxis_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

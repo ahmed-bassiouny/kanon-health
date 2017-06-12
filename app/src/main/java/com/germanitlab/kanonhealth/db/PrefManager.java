@@ -19,6 +19,7 @@ public class PrefManager {
     public static final String DOCTOR_LIST = "doctor_list" ;
     public static final String DOCUMENT_HISTORY ="document_history" ;
     public static final String HISTORY = "history";
+    public static final String TIME_TYPE = "time_type";
     public static String PROFILE_IMAGE = "profileImage";
     public static String PROFILE_QR = "profileQr";
     SharedPreferences pref;

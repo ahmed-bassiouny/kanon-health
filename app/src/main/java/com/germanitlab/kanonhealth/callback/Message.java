@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 
 public interface Message <T>{
-    void Response(ArrayList<T> specialitiesArrayList);
+    void Response(ArrayList<T> specialitiesArrayList,int type);
 }

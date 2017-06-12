@@ -1,11 +1,12 @@
 package com.germanitlab.kanonhealth.main;
 
-import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,34 +14,27 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.doctors.ChatsDoctorFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListMapFragment;
 import com.germanitlab.kanonhealth.documents.DocumentsChatFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.OnImgDoctorListMapClick;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.settings.SettingFragment;
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,27 +48,10 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     private TabLayout mytablayout;
     private ViewPager myviewpager;
-    //public static TextView tab0, tab1, tab2, tab4;
     int speciality_id;
-
-    //ViewPagerAdapter adapter;
-
-/*
-    private int[] tabIcons = {
-            R.drawable.doctorr,
-            R.drawable.my_document,
-            R.drawable.chat,
-            R.drawable.settings
-    };
-*/
-
-//    private FilterCallBackClickListener filterCallBackClickListener;
-
-
-//    private int tabIndex;
-    private boolean temp;
     private int type;
     Intent intent;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,22 +59,26 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         setContentView(R.layout.activity_main);
         //-- set status open when open activity
         AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
-//
-//        tabLayout = (TabLayout) findViewById(R.id.home_tabs);
-//        viewPager = (ViewPager) findViewById(R.id.viewpager);
-
+        initTB();
         mytablayout = (TabLayout) findViewById(R.id.mytablayout);
         myviewpager = (ViewPager) findViewById(R.id.myviewpager);
-        myviewpager.setOffscreenPageLimit(4);
+
+
+        // Set up the ViewPager with the sections adapter.
+        myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+
+
+        mytablayout.setupWithViewPager(myviewpager);
+        setupTabIcons();
+
+//        myviewpager.setOffscreenPageLimit(4);
         intent = getIntent();
-//        tabIndex = intent.getIntExtra("index", 0);
 
         myviewpager.setCurrentItem(indexFromIntent);
 
         speciality_id = intent.getIntExtra("speciality_id", 0);
         type = intent.getIntExtra("type", 2);
 
-        myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
         myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -107,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
             @Override
             public void onPageSelected(int position) {
+                mytablayout.getTabAt(position).getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
                 mytablayout.getTabAt(position).select();
+                invalidateOptionsMenu();
             }
 
             @Override
@@ -118,11 +101,16 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                toolbar.setTitle(tab.getText().toString());
                 myviewpager.setCurrentItem(tab.getPosition(), false);
+                tab.getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                invalidateOptionsMenu();
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
 
             }
 
@@ -131,133 +119,34 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
             }
         });
-
-
-        //myviewpager.setOffscreenPageLimit(4);
-//        setupViewPager(viewPager, speciality_id , type);
-
-//        tabLayout.setupWithViewPager(viewPager);
-
-//        setupCustomTab();
-
-//        viewPager.setCurrentItem(tabIndex);
-
-//        tab0.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new Helper(MainActivity.this).replaceFragments(new DoctorListFragment(),
-//
-//                        R.id.doctor_list_continer, "doctorList");
-//                viewPager.setCurrentItem(0);
-//
-//            }
-//        });
-//
-//        tab2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new Helper(MainActivity.this).replaceFragments(new ChatsDoctorFragment(),
-//                        R.id.doctor_list_continer, "chats");
-//                viewPager.setCurrentItem(2);
-//            }
-//        });
-//
-
     }
+
+    private void initTB() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        toolbar.setTitle("Contacts");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle(getString(R.string.profile));
+    }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+
 
     private void askForPermission(String[] permission, Integer requestCode) {
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
 
-
-    /*private void setupCustomTab() {
-
-        tab0 = (TextView) LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_text, null);
-        tab0.setText(getString(R.string.docor_list));
-        tab0.setCompoundDrawablesWithIntrinsicBounds(0, tabIcons[0], 0, 0);
-        tab0.setTag("doctorList");
-        tabLayout.getTabAt(0).setCustomView(tab0);
-
-
-        tab1 = (TextView) LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_text, null);
-        tab1.setText(getResources().getString(R.string.my_decument));
-        tab1.setCompoundDrawablesWithIntrinsicBounds(0, tabIcons[1], 0, 0);
-        tab0.setTag("myDocument");
-        tabLayout.getTabAt(1).setCustomView(tab1);
-
-        tab2 = (TextView) LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_text, null);
-        tab2.setText(getResources().getString(R.string.chats));
-        tab2.setCompoundDrawablesWithIntrinsicBounds(0, tabIcons[2], 0, 0);
-        tab2.setTag("chats");
-        tabLayout.getTabAt(2).setCustomView(tab2);
-
-        tab4 = (TextView) LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_text, null);
-        tab4.setText(getResources().getString(R.string.setting));
-        tab4.setCompoundDrawablesWithIntrinsicBounds(0, tabIcons[3], 0, 0);
-        tab4.setTag("setting");
-        tabLayout.getTabAt(3).setCustomView(tab4);
-    }
-
-*/
-
-    /**************************************************/
-    /*private void setupViewPager(ViewPager viewPager, int speciality_id , int type) {
-
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        adapter.addFragment(new DoctorListFragment(speciality_id , type), getString(R.string.all_doctors));
-        adapter.addFragment(new DocumentsChatFragment(this), getString(R.string.my_decument));
-        adapter.addFragment(new ChatsDoctorFragment(), getString(R.string.chats));
-        adapter.addFragment(new SettingFragment(), getString(R.string.setting));
-
-        viewPager.setAdapter(adapter);
-    }
-*/
     @Override
     public void OnImgDoctorListMapClick() {
 
         new Helper(MainActivity.this).replaceFragments(new DoctorListMapFragment(MainActivity.this),
                 R.id.doctor_list_continer, "DoctorListMapFragment");
-//        tab2.setText(getString(R.string.docor_list));
-//        tab2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.docto_list_icon, 0, 0);
-//        tab2.setTag("doctorList");
     }
-
-    /*class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return super.getItemId(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
-*/
 
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener() {
         @Override
@@ -289,6 +178,19 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     };
 
 
+    private void setupTabIcons() {
+        mytablayout.getTabAt(0).setIcon(R.drawable.ic_contacts_black_24dp);
+        mytablayout.getTabAt(1).setIcon(R.drawable.ic_assignment_black_24dp);
+        mytablayout.getTabAt(2).setIcon(R.drawable.ic_chat_black_24dp);
+        mytablayout.getTabAt(3).setIcon(R.drawable.ic_settings_black_24dp);
+
+        mytablayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        mytablayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+        mytablayout.getTabAt(2).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+        mytablayout.getTabAt(3).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+
+    }
+
     private void handelMessage(String message) {
 
         Gson gson = new Gson();
@@ -296,37 +198,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         incomingMessage.setMine(false);
         Log.d("incoming Message ", incomingMessage.toString());
-
-//        if (chatFragment == null) {//--- Not have any instance form chatFragment .
-//            showNotification(message, 1, message.toString());
-//
-//        } else if (!chatFragment.isVisible() && chatFragment.doctor == null) {
-//
-//            Log.e("chat tab", "not open any chat details");
-//            showNotification(message, 1, message.toString());
-//        }
-//        //open chat details but another user
-//        else if (chatFragment.isVisible() && chatFragment.doctor.get_Id() != incomingMessage.getFrom_id()) {
-//            Log.e("chat tab", "open chat details but another user");
-//            showNotification(message, 1, message.toString());
-//        }
-//        //open same user but screen off
-//        else if (!chatFragment.isVisible() && chatFragment.doctor.get_Id() == incomingMessage.getFrom_id()) {
-//            Log.e("chat tab", "open same user but screen off");
-//            chatFragment.addMessage(incomingMessage);
-//            showNotification(message, 1, message.toString());
-//        }
-//        //open same user and screen light
-//        else if (chatFragment.isVisible() && chatFragment.doctor.get_Id() == incomingMessage.getFrom_id()) {
-//
-//            Log.e("chat tab", "open same user and screen light");
-//
-//            chatFragment.addMessage(incomingMessage);
-//        } else {
-//
-//            Log.e("------------------ chat tab", "last else");
-//        }
-
     }
 
 
@@ -361,38 +232,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-//
-//        int notificationType = intent.getIntExtra("notification_type", 0);
-//        if (notificationType == Constants.OPEN_CHAT) {
-//
-//
-//            tab2.setText(getString(R.string.request));
-//            tab2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.request, 0, 0);
-//            tab2.setTag("request");
-//            User doctor = new User();
-//
-//            Log.d("User", intent.getStringExtra("message"));
-//
-//            doctor.getDoctor().setId(new Gson().fromJson(intent.getStringExtra("message"), Message.class).getFrom_id());
-//            Log.d("User", doctor.toString());
-//
-//            chatFragment = getFragmentFromMap(doctor.get_Id(), doctor, MainActivity.this);
-//
-//            chatFragment = new ChatFragment(doctor , MainActivity.this);
-//            new Helper(MainActivity.this).replaceFragments(chatFragment, R.id.doctor_list_continer, "request");
-//        }
     }
-
-
-//
-//    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            onBackPressed();
-//            return true;
-//        }
-//        return super.onKeyUp(keyCode, objEvent);
-//    }
 
     @Override
     public void onBackPressed() {
@@ -402,11 +242,11 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             return;
         }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Möchtest du aussteigen ?");
+        builder1.setMessage("Do you want to close app?");
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
-                "Ja",
+                "Ok",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -418,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 });
 
         builder1.setNegativeButton(
-                "Nein",
+                "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -428,48 +268,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
-    //    @Override
-//    public void onBackPressed() {
-//        int backStack = getSupportFragmentManager().getBackStackEntryCount();
-//
-//        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-//            finish();
-//        } else {
-//            // reset selected icons
-//
-//            super.onBackPressed();
-//
-//            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-//
-//
-//            if (backStackEntryCount == 0) {
-//                tab2.setText(getString(R.string.chats));
-//                tab2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.chat, 0, 0);
-//                tab2.setTag("chats");
-//            } else {
-//
-//                FragmentManager.BackStackEntry backStackEntryAt = getSupportFragmentManager().getBackStackEntryAt(backStackEntryCount - 1);
-//                String fragmentTag = backStackEntryAt.getName();
-//                Log.e("fragment tag", fragmentTag);
-//                if (fragmentTag.equalsIgnoreCase("chats")) {
-//
-//
-//                    tab2.setText(getString(R.string.chats));
-//                    tab2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.chat, 0, 0);
-//                    tab2.setTag("chats");
-//
-//                } else if (fragmentTag.equals("doctorList")) {
-//                    tab2.setText(getString(R.string.docor_list));
-//                    tab2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.docto_list_icon, 0, 0);
-//                    tab2.setTag("doctorList");
-//                }
-//
-//            }
-//        }
-//
-//    }
 
-    private class MyPagerAdapter extends FragmentStatePagerAdapter {
+    private class MyPagerAdapter extends FragmentPagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -492,10 +292,26 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Contacts";
+                case 1:
+                    return "Documents";
+                case 2:
+                    return "Chat";
+                case 3:
+                    return "Settings";
+            }
+            return null;
+        }
+
+        @Override
         public int getCount() {
             return 4;
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -10,9 +10,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,15 +38,19 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.germanitlab.kanonhealth.profile.QuestionAdapter;
+import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 
 /**
@@ -60,14 +69,16 @@ public class SettingFragment extends Fragment {
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
     private User user ;
+    private RecyclerView rvPracticies;
 
     //status doctor
-    private TextView txt_status;
+    private TextView txt_status,tvAddPractice;
     private Button btn_change_status;
 
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
     private String UserStatus;
+    private PrcticiesSAdapter mAdapter;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -79,18 +90,46 @@ public class SettingFragment extends Fragment {
         return settingFragment;
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
-        user = userInfoResponse.getUser();
-        initView();
-        handelEvent();
-      //  assignViews();
+
         return view;
+    }
+
+    private void setAdapter() {
+
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+
+        List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
+
+
+        mAdapter = new PrcticiesSAdapter(getContext(),clinicsList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvPracticies.setLayoutManager(mLayoutManager);
+        rvPracticies.setAdapter(mAdapter);
+        rvPracticies.setNestedScrollingEnabled(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_settings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.mi_qr_code:
+//                Helper.ImportQr(mPrefManager , getActivity() , item);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -99,6 +138,20 @@ public class SettingFragment extends Fragment {
         if(getView()!=null && isVisibleToUser){
             getSetting();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+        user = userInfoResponse.getUser();
+        initView();
+        handelEvent();
+        //  assignViews();
+        setHasOptionsMenu(true);
+
+
+        setAdapter();
     }
 
     @Override
@@ -116,7 +169,7 @@ public class SettingFragment extends Fragment {
         videoView.setMediaController(mc);
 
         videoView.requestFocus();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new                                                                                                 MediaPlayer.OnPreparedListener() {
             // Close the progress bar and play the video
             public void onPrepared(MediaPlayer mp) {
                 videoView.start();
@@ -125,25 +178,27 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
+        tvAddPractice= (TextView) view.findViewById(R.id.tv_add_practice);
+        rvPracticies= (RecyclerView) view.findViewById(R.id.recycler_view);
         trSupport = (TableRow) view.findViewById(R.id.tr_support) ;
         profile =(TableRow) view.findViewById(R.id.my_profile);
         trDrStatus =(TableRow) view.findViewById(R.id.dr_status);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+
         tvBack = (TextView) view.findViewById(R.id.tv_back);
-        imgQr = (ImageView) view.findViewById(R.id.myQr);
-        imgScan = (ImageButton) view.findViewById(R.id.scan);
-        imgScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity() , StartQrScan.class));
-            }
-        });
-        Helper.ImportQr(mPrefManager , getActivity() , imgQr);
+//        imgQr = (ImageView) view.findViewById(R.id.myQr);
+//        imgScan = (ImageButton) view.findViewById(R.id.scan);
+//        imgScan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(neONoPw Intent(getActivity() , StartQrScan.class));
+//            }
+//        });
 
         videoView = (VideoView) view.findViewById(R.id.video_view);
         tvSetting = (TextView) view.findViewById(R.id.tv_setting);
@@ -188,6 +243,14 @@ public class SettingFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("from_notification" , 1);
                 intent.putExtra("from_id" , 1);
+                startActivity(intent);
+            }
+        });
+        tvAddPractice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),DoctorProfileActivity.class);
+                intent.putExtra("CLINIC","CLINIC");
                 startActivity(intent);
             }
         });

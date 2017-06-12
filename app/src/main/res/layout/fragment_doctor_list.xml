@@ -3,7 +3,6 @@
     android:id="@+id/doctor_list_continer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
 
@@ -12,11 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/doctor_chat_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/doctor_chat_toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/colorPrimary">-->
 
 
             <ImageView
@@ -35,6 +35,7 @@
 
 
             <TextView
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -42,6 +43,7 @@
                 android:textColor="@color/black" />
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/scan"
                 android:layout_width="@dimen/size_40dp"
                 android:layout_height="36dp"
@@ -54,6 +56,7 @@
                 tools:ignore="ContentDescription,RtlHardcoded" />
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/img_btn_search"
                 android:layout_width="@dimen/size_40dp"
                 android:layout_height="36dp"
@@ -67,7 +70,7 @@
                 tools:ignore="ContentDescription,RtlHardcoded" />
 
 
-        </android.support.v7.widget.Toolbar>
+        <!--</android.support.v7.widget.Toolbar>-->
 
         <!--        <TextView
                     android:id="@+id/filter_to_list"
@@ -105,7 +108,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:textAllCaps="false"
-                android:text="Practice" />
+                android:text="Clinic" />
         </LinearLayout>
 
         <EditText
@@ -126,9 +129,10 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_doctor_chat"
+            android:paddingTop="@dimen/size_10dp"
+            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/size_5dp" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </FrameLayout>

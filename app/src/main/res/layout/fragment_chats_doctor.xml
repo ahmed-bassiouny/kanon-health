@@ -11,14 +11,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/doctor_list_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/doctor_list_toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/colorPrimary">-->
 
 
             <TextView
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -26,6 +27,7 @@
                 android:textColor="@color/black" />
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/scan"
                 android:layout_width="@dimen/size_40dp"
                 android:layout_height="@dimen/size_40dp"
@@ -38,6 +40,7 @@
                 tools:ignore="ContentDescription,RtlHardcoded" />
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/my_Qr"
                 android:layout_width="@dimen/size_40dp"
                 android:layout_height="@dimen/size_35dp"
@@ -47,7 +50,7 @@
                 android:src="@drawable/qrcode"
                 android:scaleType="fitXY"
                 tools:ignore="ContentDescription,RtlHardcoded" />
-        </android.support.v7.widget.Toolbar>
+        <!--</android.support.v7.widget.Toolbar>-->
 
 
         <FrameLayout

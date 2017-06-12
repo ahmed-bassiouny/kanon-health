@@ -28,7 +28,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PaymentActivity extends AppCompatActivity {
-    String doctorJson;
 
     @BindView(R.id.iv_doctor)
     CircleImageView ivDoctor;
@@ -42,7 +41,6 @@ public class PaymentActivity extends AppCompatActivity {
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
     User doctor ;
-    Util util ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +48,8 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.new_activity_payment);
         ButterKnife.bind(this);
         initTB();
-        util = Util.getInstance(getApplicationContext());
-        Intent intent = getIntent();
 
-        doctorJson = intent.getStringExtra("doctor_data");
-        doctor = (User) intent.getSerializableExtra("doctor_obj");
+        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
         /*
         handel data in ui
          */
@@ -131,7 +126,9 @@ public class PaymentActivity extends AppCompatActivity {
 //        PreRequest.preRequest.finish();
                 Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
 
-                doctor.setIsOpen(1);
+        if (doctor!=null) {
+            doctor.setIsOpen(1);
+        }
                 intent.putExtra("doctor_data" , gson.toJson(doctor));
                 intent.putExtra("from" , true);
                 startActivity(intent);

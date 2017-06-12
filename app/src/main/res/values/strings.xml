@@ -25,7 +25,6 @@
     <string name="house_number">House Number :</string>
     <string name="zip_code">Zip Code :</string>
     <string name="provinz">Provinz</string>
-    <string name="country">Country</string>
     <string name="voluntary_info">Voluntary Information</string>
     <string name="question">Question :</string>
     <string name="answer">Answer</string>
@@ -58,6 +57,10 @@
     <string name="youareonline">You are now : Online</string>
     <string name="go_online">Go Online</string>
     <string name="go_offline">Go Offline</string>
+    <string name="location">Location :</string>
+    <string name="city">City :</string>
+    <string name="province">Province :</string>
+    <string name="country">Country :</string>
 
     <string name="hot_line">Hotline</string>
     <string name="fax">Fax</string>
