@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -131,6 +135,16 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
         }
         onBind = false;
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, DoctorProfileActivity.class);
+                intent.putExtra("doctor_data", doctor);
+                intent.putExtra("tab","");
+                activity.startActivity(intent);
+            }
+        });
 
     }
 

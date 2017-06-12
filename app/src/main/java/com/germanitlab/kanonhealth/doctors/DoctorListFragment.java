@@ -105,7 +105,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         prefManager = new PrefManager(getActivity());
         util= Util.getInstance(getActivity());
         initView();
-        handelEvent();
+//        handelEvent();
         gson = new Gson();
         util.showProgressDialog();
         if (type == 0)

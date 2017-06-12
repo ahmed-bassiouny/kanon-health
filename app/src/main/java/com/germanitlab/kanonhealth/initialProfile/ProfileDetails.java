@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -30,6 +31,7 @@ import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
@@ -153,13 +155,28 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         Calendar calender = Calendar.getInstance();
-        Dialog mDialog = new DatePickerDialog(ProfileDetails.this,
-                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                mDateSetListener, calender.get(Calendar.YEAR),
-                calender.get(Calendar.MONTH), calender
-                .get(Calendar.DAY_OF_MONTH));
+//        Dialog mDialog = new DatePickerDialog(ProfileDetails.this,
+//                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+//                mDateSetListener, calender.get(Calendar.YEAR),
+//                calender.get(Calendar.MONTH), calender
+//                .get(Calendar.DAY_OF_MONTH));
+//
+//        mDialog.show();
+        final Context themedContext = new ContextThemeWrapper(
+                ProfileDetails.this,
+                android.R.style.Theme_Holo_Light_Dialog
+        );
+
+        final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
+                themedContext,
+                mDateSetListener,
+                calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH),
+                calender.get(Calendar.DAY_OF_MONTH));
 
         mDialog.show();
+
+
     }
 
     @OnClick(R.id.button_submit)
