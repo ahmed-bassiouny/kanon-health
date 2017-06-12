@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,7 +38,6 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
-import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
@@ -122,8 +123,19 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         initView();
         handelEvent();
 
+        setHasOptionsMenu(true);
         return view;
     }
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
 
 
     private void handelEvent() {
@@ -171,12 +183,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
 
         //---------- Camera
-        imgbtnScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), StartQrScan.class));
-            }
-        });
+//        imgbtnScan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getActivity(), StartQrScan.class));
+//            }
+//        });
 
         edtFilter.addTextChangedListener(new TextWatcher() {
             @Override
@@ -268,14 +280,14 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         doctors_list.setTextColor(getResources().getColor(R.color.white));
         praxis_list.setBackgroundResource(R.color.gray);
         praxis_list.setTextColor(getResources().getColor(R.color.black));
-        toolbar = (Toolbar) view.findViewById(R.id.doctor_list_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        toolbar = (Toolbar) view.findViewById(R.id.doctor_list_toolbar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         doctors_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
-        myQr = (ImageButton) toolbar.findViewById(R.id.my_Qr);
-        imgbtnScan = (ImageButton) toolbar.findViewById(R.id.scan);
-        Helper.ImportQr(mPrefManager, getActivity(), myQr);
+//        myQr = (ImageButton) toolbar.findViewById(R.id.my_Qr);
+//        imgbtnScan = (ImageButton) toolbar.findViewById(R.id.scan);
+//        Helper.ImportQr(mPrefManager, getActivity(), myQr);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

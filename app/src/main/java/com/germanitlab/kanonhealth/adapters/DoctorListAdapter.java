@@ -40,6 +40,10 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
 //        setHasStableIds(true);
         this.doctorContactsList = doctorContactsList;
+        if(doctorContactsList.size()>0) {
+            this.doctorContactsList.add(doctorContactsList.get(0));
+            this.doctorContactsList.add(doctorContactsList.get(0));
+        }
         this.activity = activity;
         this.visibility = visibility ;
         tabPosition=i;
@@ -109,8 +113,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         holder.tvSubtitle.setText(doctor.getSubTitle());
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
-        Helper.setImage(activity ,Constants.CHAT_SERVER_URL
-                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.profile_place_holder );
+//        Helper.setImage(activity ,Constants.CHAT_SERVER_URL
+//                + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.placeholder );
 
 
         if(tabPosition!=3) {

@@ -48,8 +48,7 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".doctors.DoctorMapActivity"
             android:screenOrientation="portrait"

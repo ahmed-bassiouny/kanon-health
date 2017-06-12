@@ -6,7 +6,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:listDivider">@color/medium_grey</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:itemBackground">@color/white</item>
     </style>
 
@@ -119,4 +118,8 @@
     <style name="ToolbarColoredBackArrow" parent="MyMaterialTheme">
         <item name="android:colorControlNormal" tools:targetApi="lollipop">@color/white</item>
     </style>
+
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 </resources>
