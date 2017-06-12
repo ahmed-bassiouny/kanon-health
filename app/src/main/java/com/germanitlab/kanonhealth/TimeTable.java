@@ -13,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.Table;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -75,43 +76,15 @@ public class TimeTable extends AppCompatActivity {
     LinearLayout monday_from_to ;
     @BindView(R.id.ll_schedule)
     LinearLayout linearLayoutSchedule ;
-
+    List<Table> list ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table_activity);
         ButterKnife.bind(this);
         map = new HashMap<>();
-/*        monadaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-               *//* else {
-                    final int count = monday_layout.getChildCount();
-                    for( int i = 0 ; i < count ;  i++){
-                        View v = monday_layout.getChildAt(i);
-                        monday_layout.removeView(v);
-                    }
-
-                }*//*
-            }
-        });
-        tuesdaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    addNewItem(tuesday_layout);
-               *//* else {
-                    final int count = monday_layout.getChildCount();
-                    for( int i = 0 ; i < count ;  i++){
-                        View v = monday_layout.getChildAt(i);
-                        monday_layout.removeView(v);
-                    }
-
-                }*//*
-            }
-        });*/
-        getFromServer();
+        list =(List<Table>) getIntent().getSerializableExtra(Constants.DATA);
+        handleData(list);
 
     }
 
@@ -389,7 +362,7 @@ public class TimeTable extends AppCompatActivity {
                 int count = 0;
                 while (count < Ids.size()) {
                     Table table = new Table();
-                    table.setDayOfWeek(String.valueOf(key));
+                    table.setDayweek(String.valueOf(key));
                     TextView from = (TextView) findViewById(Ids.get(count + 2));
                     TextView to = (TextView) findViewById(Ids.get(count + 3));
                     table.setFrom(String.valueOf(from.getText()));
@@ -403,24 +376,21 @@ public class TimeTable extends AppCompatActivity {
         Toast.makeText(this, new Gson().toJson(list), Toast.LENGTH_SHORT).show();
     }
 
-    public void getFromServer() {
-        String json = "[{\"dayOfWeek\":\"1\",\"from\":\"10:00\",\"to\":\"2.24\"},{\"dayOfWeek\":\"1\",\"from\":\"11:05\",\"to\":\"15:44\"},{\"dayOfWeek\":\"2\",\"from\":\"10:44\",\"to\":\"17.50\"}]";
-        List<Table> list = new Gson().fromJson(json, new TypeToken<List<Table>>() {
-        }.getType());
+    public void handleData(List<Table> list) {
         for (Table table : list) {
-            if (table.getDayOfWeek().equals("1"))
+            if (table.getDayweek().equals("1"))
                 addNewItem(monday_layout, 1, monadaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayOfWeek().equals("2"))
+            else if (table.getDayweek().equals("2"))
                 addNewItem(tuesday_layout, 2, tuesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayOfWeek().equals("3"))
+            else if (table.getDayweek().equals("3"))
                 addNewItem(wendesday_layout, 3, wednesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayOfWeek().equals("4"))
+            else if (table.getDayweek().equals("4"))
                 addNewItem(thurday_layout, 4, thursdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayOfWeek().equals("5"))
+            else if (table.getDayweek().equals("5"))
                 addNewItem(friday_layout, 5, fridaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayOfWeek().equals("6"))
+            else if (table.getDayweek().equals("6"))
                 addNewItem(saturday_layout, 6, saturdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayOfWeek().equals("7"))
+            else if (table.getDayweek().equals("7"))
                 addNewItem(sunday_layout, 7, sundaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
         }
     }

@@ -5,7 +5,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:id="@+id/save"
             android:text="Save"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"
-        android:layout_below="@+id/save"
         android:background="@android:color/white"
         android:layout_margin="5dp"
         android:visibility="gone">

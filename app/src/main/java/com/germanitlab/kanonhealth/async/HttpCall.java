@@ -14,8 +14,8 @@ import com.germanitlab.kanonhealth.models.Questions.InqueryRequest;
 import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Speciality;
-import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
@@ -446,6 +446,30 @@ public class HttpCall {
 
     }
 
+
+    public void addPractice(User request) {
+
+        // UserInfoResponse request = new UserInfoResponse();
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<JsonObject> connection = service.addPractice(request);
+
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("QR ", response.body().toString());
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                Log.e("QR ", " " + t.getLocalizedMessage());
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+
+    }
+
     //--- getQuestions
     public void getDocQuestions(String userID, String password) {
 
@@ -702,15 +726,45 @@ public class HttpCall {
     }
     public void getAllSpecilaities(){
         ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<SpecilaitiesModels>> connection=service.getAllSpecilaities();
-        connection.enqueue(new Callback<List<SpecilaitiesModels>>() {
+        Call<List<ChooseModel>> connection=service.getAllSpecilaities();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
             @Override
-            public void onResponse(Call<List<SpecilaitiesModels>> call, Response<List<SpecilaitiesModels>> response) {
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
                 apiResponse.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<SpecilaitiesModels>> call, Throwable t) {
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void getAllLanguage(){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<ChooseModel>> connection=service.getAllLanguage();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
+            @Override
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void getAllMemberAt(){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<ChooseModel>> connection=service.getAllMemberAt();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
+            @Override
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
                 apiResponse.onFailed(t.getLocalizedMessage());
             }
         });

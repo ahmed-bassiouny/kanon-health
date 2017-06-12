@@ -1507,12 +1507,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 //            intent.putExtra("index", 2);
         //startActivity(intent);
 
-                if (doctor.get_Id() == 1) {
-                    indexFromIntent = 3;
-                }
-        else {
-                    indexFromIntent = 2;
-                }
+        if(doctor!=null) {
+            if (doctor.get_Id() == 1) {
+                indexFromIntent = 3;
+            } else {
+                indexFromIntent = 2;
+            }
+        }else {
+            indexFromIntent=3;
+        }
 
         finish();
     }
@@ -1556,9 +1559,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
-        MenuItem endSession = menu.findItem(R.id.end_session);
-        if(doctor.getIsDoc()!=1)
-            endSession.setVisible(false);
+        int from_id = getIntent().getIntExtra("from_id", 0);
+        if(from_id!=1){
+            MenuItem endSession = menu.findItem(R.id.end_session);
+            if (doctor.getIsDoc() != 1)
+                endSession.setVisible(false);
+        }
         return true;
     }
 

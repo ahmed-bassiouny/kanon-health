@@ -161,6 +161,12 @@ public class PasscodeActivty extends AppCompatActivity {
         if(temp.equals(passcode)) {
             prefManager.put(PrefManager.PASSCODE, passcode);
             Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
+            if(status == 2) {
+                Intent intent  = new Intent(this , MainActivity.class);
+                if (status == 2)
+                    intent.putExtra("index" , 3);
+                startActivity(intent);
+            }
             finish();
         }
         else

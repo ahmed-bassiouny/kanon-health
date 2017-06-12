@@ -1,11 +1,15 @@
+/*
 package com.germanitlab.kanonhealth.models;
 
 import java.io.Serializable;
 
+*/
 /**
  * Created by halima on 07/06/17.
- */
+ *//*
 
+
+*/
 /*
 {
 "id": "0",
@@ -15,7 +19,8 @@ import java.io.Serializable;
 "status": "open",
 "dayweek": "0"
 },
- */
+ *//*
+
 public class openTime implements Serializable{
     String id;
     String to;
@@ -49,3 +54,4 @@ public class openTime implements Serializable{
         this.dayweek = dayweek;
     }
 }
+*/

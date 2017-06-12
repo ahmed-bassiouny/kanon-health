@@ -1,10 +1,9 @@
 package com.germanitlab.kanonhealth.models.user;
 
-import com.germanitlab.kanonhealth.models.MembersAt;
-import com.germanitlab.kanonhealth.models.Specialities;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SupportedLanguage;
+import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.openTime;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -168,6 +167,8 @@ public class User implements Serializable {
     private LinkedHashMap<String, String> questions;
     @SerializedName("info")
     private Info info;
+    @SerializedName("time_type")
+    private int time_type;
     private HashMap<String , String> rate_percentage;
     private float rate_avr;
     private String country_flag ;
@@ -180,10 +181,10 @@ public class User implements Serializable {
     private String parent_id;
 
     private int rate_count;
-    private List<openTime> open_time=new ArrayList<>();
-    private List<SupportedLanguage> supported_lang=new ArrayList<>();
-    private List<Specialities> specialities=new ArrayList<>();
-    private List<MembersAt> members_at=new ArrayList<>();
+    private List<Table> open_time=new ArrayList<>();
+    private List<ChooseModel> supported_lang=new ArrayList<>();
+    private List<ChooseModel> specialities=new ArrayList<>();
+    private List<ChooseModel> members_at=new ArrayList<>();
     private String speciality_id;
     private String speciality_title;
     private String speciality_icon;
@@ -576,19 +577,19 @@ public class User implements Serializable {
         return rate_count;
     }
 
-    public List<openTime> getOpen_time() {
+    public List<Table> getOpen_time() {
         return open_time;
     }
 
-    public List<SupportedLanguage> getSupported_lang() {
+    public List<ChooseModel> getSupported_lang() {
         return supported_lang;
     }
 
-    public List<Specialities> getSpecialities() {
+    public List<ChooseModel> getSpecialities() {
         return specialities;
     }
 
-    public List<MembersAt> getMembers_at() {
+    public List<ChooseModel> getMembers_at() {
         return members_at;
     }
 
@@ -628,19 +629,19 @@ public class User implements Serializable {
         this.rate_count = rate_count;
     }
 
-    public void setOpen_time(List<openTime> open_time) {
+    public void setOpen_time(List<Table> open_time) {
         this.open_time = open_time;
     }
 
-    public void setSupported_lang(List<SupportedLanguage> supported_lang) {
+    public void setSupported_lang(List<ChooseModel> supported_lang) {
         this.supported_lang = supported_lang;
     }
 
-    public void setSpecialities(List<Specialities> specialities) {
+    public void setSpecialities(List<ChooseModel> specialities) {
         this.specialities = specialities;
     }
 
-    public void setMembers_at(List<MembersAt> members_at) {
+    public void setMembers_at(List<ChooseModel> members_at) {
         this.members_at = members_at;
     }
 
@@ -654,6 +655,14 @@ public class User implements Serializable {
 
     public void setSpeciality_icon(String speciality_icon) {
         this.speciality_icon = speciality_icon;
+    }
+
+    public int getTime_type() {
+        return time_type;
+    }
+
+    public void setTime_type(int time_type) {
+        this.time_type = time_type;
     }
 }
 

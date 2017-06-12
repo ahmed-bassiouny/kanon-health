@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.germanitlab.kanonhealth.CheckMutli;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
@@ -38,9 +39,18 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.germanitlab.kanonhealth.profile.QuestionAdapter;
+import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
+import com.google.gson.Gson;
+
+import java.util.List;
 
 
 /**
@@ -53,19 +63,22 @@ public class SettingFragment extends Fragment {
     private Toolbar toolbar ;
     private TextView tvBack, tvSetting , trVersion;
     private ImageView imgQr;
-    private TableRow profile ;
     private ImageButton imgScan ;
     private VideoView videoView;
-    private TableRow trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
+    private TableRow profile,  trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
     private SettingResponse settingResponse;
     private PrefManager mPrefManager ;
+    private User user ;
+    private RecyclerView rvPracticies;
 
     //status doctor
-    private TextView txt_status;
+    private TextView txt_status,tvAddPractice;
     private Button btn_change_status;
 
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
+    private String UserStatus;
+    private PrcticiesSAdapter mAdapter;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -85,11 +98,30 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+        user = userInfoResponse.getUser();
         initView();
         handelEvent();
       //  assignViews();
         setHasOptionsMenu(true);
+
+
+        setAdapter();
         return view;
+    }
+
+    private void setAdapter() {
+
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+
+        List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
+
+
+        mAdapter = new PrcticiesSAdapter(getContext(),clinicsList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvPracticies.setLayoutManager(mLayoutManager);
+        rvPracticies.setAdapter(mAdapter);
+        rvPracticies.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -119,7 +151,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkStatus();
     }
 
     private void assignViews() {
@@ -132,7 +163,7 @@ public class SettingFragment extends Fragment {
         videoView.setMediaController(mc);
 
         videoView.requestFocus();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new                                                                                                 MediaPlayer.OnPreparedListener() {
             // Close the progress bar and play the video
             public void onPrepared(MediaPlayer mp) {
                 videoView.start();
@@ -141,6 +172,8 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
+        tvAddPractice= (TextView) view.findViewById(R.id.tv_add_practice);
+        rvPracticies= (RecyclerView) view.findViewById(R.id.recycler_view);
         trSupport = (TableRow) view.findViewById(R.id.tr_support) ;
         profile =(TableRow) view.findViewById(R.id.my_profile);
         trDrStatus =(TableRow) view.findViewById(R.id.dr_status);
@@ -170,6 +203,10 @@ public class SettingFragment extends Fragment {
         trTerms = (TableRow) view.findViewById(R.id.tr_terms);
         trHelp = (TableRow) view.findViewById(R.id.tr_help);
         trVersion = (TextView) view.findViewById(R.id.tv_version);
+
+        //status doctor
+        txt_status=(TextView)view.findViewById(R.id.txt_status);
+        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
         PackageInfo pInfo = null;
         try {
             pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -202,6 +239,14 @@ public class SettingFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        tvAddPractice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),DoctorProfileActivity.class);
+                intent.putExtra("CLINIC","CLINIC");
+                startActivity(intent);
+            }
+        });
 /*
         trSupport = (TableRow) view.findViewById(R.id.tr_sound);
 */
@@ -215,9 +260,16 @@ public class SettingFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity() , ProfileActivity.class);
-                intent.putExtra("from", true);
-                startActivity(intent);
+                if(user.getIsDoc() == 1){
+                    Intent intent = new Intent(getActivity() , DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data" ,user);
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.putExtra("from", true);
+                    startActivity(intent);
+                }
 //                getContext().startActivity(intent);
             }
         });
@@ -231,25 +283,25 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(getContext() , Help.class));
-                startActivity(new Intent(getContext() , CheckMutli.class));
             }
         });
 
-        //status doctor
-        txt_status=(TextView)view.findViewById(R.id.txt_status);
-        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+        UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+
+        if(UserStatus!=null) {
+        checkStatus(UserStatus);
+        }
 
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // call rest to change data
-//                ChangeStatus();
-                if(btn_change_status.getText().toString().equals("Go Online")){
-                    changStatusService("1");
+                UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+                if(UserStatus.equals("1")){
+                    changStatusService("0");
+
                 }else {
 
-                    changStatusService("0");
-//
+                    changStatusService("1");
                 }
 
             }
@@ -263,15 +315,15 @@ public class SettingFragment extends Fragment {
             public void onSuccess(Object response) {
                 statusResponse = (StatusResponse) response;
                 Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
-                if(statusResponse.getIs_available().equals("0")){
+                new PrefManager(getActivity()).put(PrefManager.USER_STATUS,statusResponse.getIs_available());
 
-                    txt_status.setText(R.string.youareoffline);
-                    btn_change_status.setText(R.string.go_online);
-
-                }else {
+                if(statusResponse.getIs_available().equals("1")){
                     txt_status.setText(R.string.youareonline);
                     btn_change_status.setText(R.string.go_offline);
 
+                }else{
+                    txt_status.setText (R.string.youareoffline);
+                    btn_change_status.setText(R.string.go_online);
                 }
             }
 
@@ -298,18 +350,6 @@ public class SettingFragment extends Fragment {
         });
 
 
-/*        trFaq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (settingResponse != null) {
-
-                    Intent intent = new Intent(getActivity(), FaqActivity.class);
-                    intent.putExtra(Constants.FAQ, settingResponse.getFaq());
-                    getActivity().startActivity(intent);
-                }
-            }
-        });*/
 
     }
 
@@ -330,20 +370,17 @@ public class SettingFragment extends Fragment {
         }).getSetting();
 
     }
+    private void checkStatus(String userStatus){
+        // call rest to get data
 
-    private void ChangeStatus(){
-        int doc_status=1; //online
-        if(doc_status==1){
+        if(userStatus.equals("1")){
             txt_status.setText(R.string.youareonline);
             btn_change_status.setText(R.string.go_offline);
+
         }else{
             txt_status.setText(R.string.youareoffline);
             btn_change_status.setText(R.string.go_online);
         }
-    }
-    private void checkStatus(){
-        // call rest to get data
-        ChangeStatus();
     }
 
 }
