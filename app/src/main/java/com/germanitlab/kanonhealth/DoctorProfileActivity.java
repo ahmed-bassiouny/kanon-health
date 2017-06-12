@@ -231,7 +231,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, PaymentActivity.class);
-            intent.putExtra("doctor_obj", user);
+//            intent.putExtra("doctor_obj", user);
+            intent.putExtra("doctor_data", user);
+
             startActivity(intent);
         }
 
@@ -710,7 +712,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void deleteMyImage() {
         user.setAvatar("");
         Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + user.getAvatar(), imageAvatar, R.drawable.profile_place_holder);
+                + "/" + user.getAvatar(), imageAvatar, R.drawable.placeholder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }
