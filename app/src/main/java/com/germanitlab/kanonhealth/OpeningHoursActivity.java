@@ -38,14 +38,18 @@ public class OpeningHoursActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     public static TimeTable instance = null;
+    public static Boolean active;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_hours);
         ButterKnife.bind(this);
+        instance = new TimeTable();
         initTB();
 
     }
+
 
     void initTB() {
         setSupportActionBar(toolbar);
@@ -58,23 +62,40 @@ public class OpeningHoursActivity extends AppCompatActivity {
 
     @OnClick(R.id.save)
     public void save(View view) {
+        Intent intent = new Intent();
         if (first.isChecked()) {
-            Intent intent = new Intent();
-            intent.putExtra("type", 0);
-            setResult(Constants.HOURS_CODE, intent);
-            finish();
+            if (TimeTable.active) {
+                intent.putExtra("type", 0);
+                setResult(Constants.HOURS_CODE, intent);
+                finish();
+            } else {
+                startActivity(new Intent(this, TimeTable.class));
+                finish();
+            }
         } else {
-            Intent intent = new Intent();
             if (second.isChecked())
                 intent.putExtra("type", 1);
-            else if(third.isChecked())
+            else if (third.isChecked())
                 intent.putExtra("type", 2);
-            else if(fourth.isChecked())
+            else if (fourth.isChecked())
                 intent.putExtra("type", 3);
-            setResult(RESULT_OK, intent);
-            instance.finish();
+            setResult(Constants.TIME_TABLE_TYPE, intent);
+            if (TimeTable.active)
+                instance.finish();
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        active = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
     }
 
     @Override

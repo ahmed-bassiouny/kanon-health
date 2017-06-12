@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -61,31 +62,47 @@ public class TimeTable extends AppCompatActivity {
     @BindView(R.id.sunday_switch)
     Switch sundaySwitch;
     @BindView(R.id.sunday_from_to)
-    LinearLayout sunday_from_to ;
+    LinearLayout sunday_from_to;
     @BindView(R.id.tuesday_from_to)
-    LinearLayout tuesday_from_to ;
+    LinearLayout tuesday_from_to;
     @BindView(R.id.wednesday_from_to)
-    LinearLayout wednesday_from_to ;
+    LinearLayout wednesday_from_to;
     @BindView(R.id.thurday_from_to)
-    LinearLayout thurday_from_to ;
+    LinearLayout thurday_from_to;
     @BindView(R.id.friday_from_to)
-    LinearLayout friday_from_to ;
+    LinearLayout friday_from_to;
     @BindView(R.id.saturday_from_to)
-    LinearLayout saturday_from_to ;
+    LinearLayout saturday_from_to;
     @BindView(R.id.monday_from_to)
-    LinearLayout monday_from_to ;
+    LinearLayout monday_from_to;
     @BindView(R.id.ll_schedule)
-    LinearLayout linearLayoutSchedule ;
-    List<Table> list ;
+    LinearLayout linearLayoutSchedule;
+    List<Table> list;
+    public static Boolean active;
+    public static OpeningHoursActivity instance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table_activity);
         ButterKnife.bind(this);
+        instance = new OpeningHoursActivity();
         map = new HashMap<>();
-        list =(List<Table>) getIntent().getSerializableExtra(Constants.DATA);
+        list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
         handleData(list);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        active = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
     }
 
 
@@ -94,59 +111,59 @@ public class TimeTable extends AppCompatActivity {
         switch (buttonView.getId()) {
             case R.id.monday_switch:
                 if (isChecked) {
-                    if(checkKeys(1))
-                    addNewItem(monday_layout, 1, monadaySwitch, null, null, monday_from_to);
+                    if (checkKeys(1))
+                        addNewItem(monday_layout, 1, monadaySwitch, null, null, monday_from_to);
                 } else {
-                    removeAll(1, monday_layout , monday_from_to);
+                    removeAll(1, monday_layout, monday_from_to);
 
                 }
                 break;
             case R.id.tuesday_switch:
                 if (isChecked) {
-                    if(checkKeys(2))
-                        addNewItem(tuesday_layout, 2, tuesdaySwitch, null, null , tuesday_from_to);
+                    if (checkKeys(2))
+                        addNewItem(tuesday_layout, 2, tuesdaySwitch, null, null, tuesday_from_to);
                 } else {
-                    removeAll(2, tuesday_layout , tuesday_from_to);
+                    removeAll(2, tuesday_layout, tuesday_from_to);
                 }
                 break;
             case R.id.wednesday_switch:
                 if (isChecked) {
-                    if(checkKeys(3))
-                        addNewItem(wendesday_layout, 3, wednesdaySwitch, null, null , wednesday_from_to);
+                    if (checkKeys(3))
+                        addNewItem(wendesday_layout, 3, wednesdaySwitch, null, null, wednesday_from_to);
                 } else {
-                    removeAll(3, wendesday_layout , wednesday_from_to);
+                    removeAll(3, wendesday_layout, wednesday_from_to);
                 }
                 break;
             case R.id.thursday_switch:
                 if (isChecked) {
-                    if(checkKeys(4))
-                    addNewItem(thurday_layout, 4, thursdaySwitch, null, null , thurday_from_to);
+                    if (checkKeys(4))
+                        addNewItem(thurday_layout, 4, thursdaySwitch, null, null, thurday_from_to);
                 } else {
-                    removeAll(4, thurday_layout , thurday_from_to);
+                    removeAll(4, thurday_layout, thurday_from_to);
                 }
                 break;
             case R.id.friday_switch:
                 if (isChecked) {
-                    if(checkKeys(5))
-                    addNewItem(friday_layout, 5, fridaySwitch, null, null , friday_from_to);
+                    if (checkKeys(5))
+                        addNewItem(friday_layout, 5, fridaySwitch, null, null, friday_from_to);
                 } else {
-                    removeAll(5, friday_layout , friday_from_to);
+                    removeAll(5, friday_layout, friday_from_to);
                 }
                 break;
             case R.id.saturday_switch:
                 if (isChecked) {
-                    if(checkKeys(6))
-                    addNewItem(saturday_layout, 6, saturdaySwitch, null, null , saturday_from_to);
+                    if (checkKeys(6))
+                        addNewItem(saturday_layout, 6, saturdaySwitch, null, null, saturday_from_to);
                 } else {
-                    removeAll(6, saturday_layout , saturday_from_to);
+                    removeAll(6, saturday_layout, saturday_from_to);
                 }
                 break;
             case R.id.sunday_switch:
                 if (isChecked) {
-                    if(checkKeys(7))
-                    addNewItem(sunday_layout, 7, sundaySwitch, null, null , sunday_from_to);
+                    if (checkKeys(7))
+                        addNewItem(sunday_layout, 7, sundaySwitch, null, null, sunday_from_to);
                 } else {
-                    removeAll(7, sunday_layout , sunday_from_to);
+                    removeAll(7, sunday_layout, sunday_from_to);
                 }
                 break;
         }
@@ -284,7 +301,7 @@ public class TimeTable extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewItem(layout, day, tempSwitch , null , null, layout_from_to);
+                addNewItem(layout, day, tempSwitch, null, null, layout_from_to);
             }
         });
         linearLayout1.addView(add);
@@ -323,14 +340,13 @@ public class TimeTable extends AppCompatActivity {
     }
 
     private boolean checkKeys(int day) {
-        if(map.containsKey(day)) {
+        if (map.containsKey(day)) {
             List<Integer> Ids = map.get(day);
             if (Ids.size() == 0)
                 return true;
             else
                 return false;
-        }
-        else return true ;
+        } else return true;
     }
 
     private List<Integer> getArray(int key) {
@@ -347,13 +363,15 @@ public class TimeTable extends AppCompatActivity {
 
     @OnClick(R.id.ll_schedule)
     public void schedule(View view) {
-        Intent openingHoursIntent=new Intent(getApplicationContext(),OpeningHoursActivity.class);
+        Intent openingHoursIntent = new Intent(getApplicationContext(), OpeningHoursActivity.class);
         startActivity(openingHoursIntent);
     }
 
 
-        @OnClick(R.id.save)
+    @OnClick(R.id.save)
     public void save(View view) {
+        Intent intent = new Intent();
+        intent.putExtra("type", 0);
         int key = 1;
         List<Table> list = new ArrayList<>();
         while (key < 8) {
@@ -373,6 +391,10 @@ public class TimeTable extends AppCompatActivity {
             }
             key++;
         }
+        intent.putExtra("list" , (Serializable) list);
+        if (OpeningHoursActivity.active)
+            instance.finish();
+        ;
         Toast.makeText(this, new Gson().toJson(list), Toast.LENGTH_SHORT).show();
     }
 

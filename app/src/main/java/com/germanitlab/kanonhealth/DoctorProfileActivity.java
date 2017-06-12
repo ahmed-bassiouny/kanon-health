@@ -243,12 +243,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
-        if(user.getTime_type() == 0){
+        if(user.getOpen_Type() == 0){
         Intent intent = new Intent(this, TimeTable.class);
         intent.putExtra(Constants.DATA , (Serializable) user.getOpen_time());
+            intent.putExtra("type" ,user.getOpen_Type());
         startActivityForResult(intent ,Constants.HOURS_CODE );}
         else {
             startActivityForResult(new Intent(this ,OpeningHoursActivity.class ),Constants.HOURS_TYPE_CODE);
+
         }
     }
 
