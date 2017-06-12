@@ -60,19 +60,19 @@ public class SettingFragment extends Fragment {
 
 
     private View view;
-    private Toolbar toolbar ;
-    private TextView tvBack, tvSetting , trVersion;
+    private Toolbar toolbar;
+    private TextView tvBack, tvSetting, trVersion;
     private ImageView imgQr;
-    private ImageButton imgScan ;
+    private ImageButton imgScan;
     private VideoView videoView;
-    private TableRow profile,  trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend , trHelp , trDrStatus;
+    private TableRow profile, trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend, trHelp, trDrStatus;
     private SettingResponse settingResponse;
-    private PrefManager mPrefManager ;
-    private User user ;
+    private PrefManager mPrefManager;
+    private User user;
     private RecyclerView rvPracticies;
 
     //status doctor
-    private TextView txt_status,tvAddPractice;
+    private TextView txt_status, tvAddPractice;
     private Button btn_change_status;
 
     static private SettingFragment settingFragment;
@@ -84,12 +84,11 @@ public class SettingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SettingFragment newInstance(){
-        if(settingFragment==null)
-            settingFragment=new SettingFragment();
+    public static SettingFragment newInstance() {
+        if (settingFragment == null)
+            settingFragment = new SettingFragment();
         return settingFragment;
     }
-
 
 
     @Override
@@ -98,24 +97,37 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
+        user = userInfoResponse.getUser();
+        initView();
+        handelEvent();
+        //  assignViews();
+        setHasOptionsMenu(true);
 
+        setAdapter();
+
+        if (userInfoResponse.getUser().getIsDoc() == 1) {
+            rvPracticies.setVisibility(View.VISIBLE);
+        } else {
+            rvPracticies.setVisibility(View.GONE);
+
+        }
         return view;
     }
 
     private void setAdapter() {
 
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
 
         List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
 
 
-        mAdapter = new PrcticiesSAdapter(getContext(),clinicsList);
+        mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rvPracticies.setLayoutManager(mLayoutManager);
         rvPracticies.setAdapter(mAdapter);
         rvPracticies.setNestedScrollingEnabled(false);
     }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_settings, menu);
@@ -124,7 +136,7 @@ public class SettingFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.mi_qr_code:
 //                Helper.ImportQr(mPrefManager , getActivity() , item);
                 break;
@@ -135,7 +147,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(getView()!=null && isVisibleToUser){
+        if (getView() != null && isVisibleToUser) {
             getSetting();
         }
     }
@@ -169,7 +181,7 @@ public class SettingFragment extends Fragment {
         videoView.setMediaController(mc);
 
         videoView.requestFocus();
-        videoView.setOnPreparedListener(new                                                                                                 MediaPlayer.OnPreparedListener() {
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             // Close the progress bar and play the video
             public void onPrepared(MediaPlayer mp) {
                 videoView.start();
@@ -178,11 +190,11 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
-        tvAddPractice= (TextView) view.findViewById(R.id.tv_add_practice);
-        rvPracticies= (RecyclerView) view.findViewById(R.id.recycler_view);
-        trSupport = (TableRow) view.findViewById(R.id.tr_support) ;
-        profile =(TableRow) view.findViewById(R.id.my_profile);
-        trDrStatus =(TableRow) view.findViewById(R.id.dr_status);
+        tvAddPractice = (TextView) view.findViewById(R.id.tv_add_practice);
+        rvPracticies = (RecyclerView) view.findViewById(R.id.recycler_view);
+        trSupport = (TableRow) view.findViewById(R.id.tr_support);
+        profile = (TableRow) view.findViewById(R.id.my_profile);
+        trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
 //        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -212,8 +224,8 @@ public class SettingFragment extends Fragment {
         trVersion = (TextView) view.findViewById(R.id.tv_version);
 
         //status doctor
-        txt_status=(TextView)view.findViewById(R.id.txt_status);
-        btn_change_status=(Button) view.findViewById(R.id.btn_change_status);
+        txt_status = (TextView) view.findViewById(R.id.txt_status);
+        btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
         PackageInfo pInfo = null;
         try {
             pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -226,8 +238,8 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PasscodeActivty.class);
-                intent.putExtra("status" , 2);
-                startActivityForResult(intent,13);
+                intent.putExtra("status", 2);
+                startActivityForResult(intent, 13);
             }
         });
         trSound.setOnClickListener(new View.OnClickListener() {
@@ -241,16 +253,16 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("from_notification" , 1);
-                intent.putExtra("from_id" , 1);
+                intent.putExtra("from_notification", 1);
+                intent.putExtra("from_id", 1);
                 startActivity(intent);
             }
         });
         tvAddPractice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getContext(),DoctorProfileActivity.class);
-                intent.putExtra("CLINIC","CLINIC");
+                Intent intent = new Intent(getContext(), DoctorProfileActivity.class);
+                intent.putExtra("CLINIC", "CLINIC");
                 startActivity(intent);
             }
         });
@@ -261,18 +273,17 @@ public class SettingFragment extends Fragment {
         trFaq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext() , DoctorProfileActivity.class));
+                startActivity(new Intent(getContext(), DoctorProfileActivity.class));
             }
         });
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user.getIsDoc() == 1){
-                    Intent intent = new Intent(getActivity() , DoctorProfileActivity.class);
-                    intent.putExtra("doctor_data" ,user);
+                if (user.getIsDoc() == 1) {
+                    Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data", user);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Intent intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.putExtra("from", true);
                     startActivity(intent);
@@ -283,7 +294,7 @@ public class SettingFragment extends Fragment {
         trSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext() , CustomerSupportActivity.class));
+                startActivity(new Intent(getContext(), CustomerSupportActivity.class));
             }
         });
         trHelp.setOnClickListener(new View.OnClickListener() {
@@ -293,20 +304,20 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+        UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
 
-        if(UserStatus!=null) {
-        checkStatus(UserStatus);
+        if (UserStatus != null) {
+            checkStatus(UserStatus);
         }
 
         btn_change_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserStatus=new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
-                if(UserStatus.equals("1")){
+                UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+                if (UserStatus.equals("1")) {
                     changStatusService("0");
 
-                }else {
+                } else {
 
                     changStatusService("1");
                 }
@@ -321,15 +332,15 @@ public class SettingFragment extends Fragment {
             @Override
             public void onSuccess(Object response) {
                 statusResponse = (StatusResponse) response;
-                Toast.makeText(getActivity(), ""+statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
-                new PrefManager(getActivity()).put(PrefManager.USER_STATUS,statusResponse.getIs_available());
+                Toast.makeText(getActivity(), "" + statusResponse.getIs_available(), Toast.LENGTH_SHORT).show();
+                new PrefManager(getActivity()).put(PrefManager.USER_STATUS, statusResponse.getIs_available());
 
-                if(statusResponse.getIs_available().equals("1")){
+                if (statusResponse.getIs_available().equals("1")) {
                     txt_status.setText(R.string.youareonline);
                     btn_change_status.setText(R.string.go_offline);
 
-                }else{
-                    txt_status.setText (R.string.youareoffline);
+                } else {
+                    txt_status.setText(R.string.youareoffline);
                     btn_change_status.setText(R.string.go_online);
                 }
             }
@@ -341,9 +352,10 @@ public class SettingFragment extends Fragment {
 
             }
         }).goOnline(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword(),isAvailable);
+                , AppController.getInstance().getClientInfo().getPassword(), isAvailable);
 
     }
+
     private void handelEvent() {
         trTerms.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,7 +367,6 @@ public class SettingFragment extends Fragment {
                 }
             }
         });
-
 
 
     }
@@ -377,14 +388,15 @@ public class SettingFragment extends Fragment {
         }).getSetting();
 
     }
-    private void checkStatus(String userStatus){
+
+    private void checkStatus(String userStatus) {
         // call rest to get data
 
-        if(userStatus.equals("1")){
+        if (userStatus.equals("1")) {
             txt_status.setText(R.string.youareonline);
             btn_change_status.setText(R.string.go_offline);
 
-        }else{
+        } else {
             txt_status.setText(R.string.youareoffline);
             btn_change_status.setText(R.string.go_online);
         }

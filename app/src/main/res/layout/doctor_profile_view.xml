@@ -87,7 +87,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center"
-                            android:src="@drawable/profile_place_holder" />
+                            android:src="@drawable/placeholder" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="30dp"

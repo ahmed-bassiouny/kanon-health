@@ -135,6 +135,20 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     LinearLayout linear_practice_profile;
 
 
+    @BindView(R.id.ed_location)
+    EditText ed_location;
+    @BindView(R.id.ed_street_name)
+    EditText ed_street_name;
+    @BindView(R.id.ed_house_number)
+    EditText ed_house_number;
+    @BindView(R.id.ed_zip_code)
+    EditText ed_zip_code;
+    @BindView(R.id.ed_city)
+    EditText ed_city;
+    @BindView(R.id.ed_province)
+    EditText ed_province;
+    @BindView(R.id.ed_country)
+    EditText ed_country;
 
     // data of edit
     @BindView(R.id.edit)
@@ -226,7 +240,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, PaymentActivity.class);
-            intent.putExtra("doctor_obj", user);
+//            intent.putExtra("doctor_obj", user);
+            intent.putExtra("doctor_data", user);
+
             startActivity(intent);
         }
 
@@ -251,6 +267,19 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         user.setAddress(et_location.getText().toString());
         tv_telephone.setText(et_telephone.getText().toString());
         user.setPhone(et_telephone.getText().toString());
+        // Edit ahmed 12 - 6-2017
+        /**
+
+         ed_zip_code.setEnabled(editable);
+         ed_city.setEnabled(editable);
+         ed_province.setEnabled(editable);
+         ed_country.setEnabled(editable);*/
+        user.setAddress(ed_location.getText().toString());
+        user.getInfo().setStreetname(ed_street_name.getText().toString());
+        user.getInfo().setHouseNumber(ed_house_number.getText().toString());
+        user.getInfo().setZipCode(ed_zip_code.getText().toString());
+        user.getInfo().setProvinz(ed_province.getText().toString());
+        user.getInfo().setCountry(ed_country.getText().toString());
         sendDataToserver();
     }
 
@@ -275,6 +304,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         edit.setVisibility(visiblitiy);
         save.setVisibility(notvisibility);
         edit_image.setVisibility(notvisibility);
+
+        //Edit ahmed 12-6-2017
+        boolean editable=(visiblitiy==View.GONE) ? true:false;
+        ed_location.setEnabled(editable);
+        ed_street_name.setEnabled(editable);
+        ed_house_number.setEnabled(editable);
+        ed_zip_code.setEnabled(editable);
+        ed_city.setEnabled(editable);
+        ed_province.setEnabled(editable);
+        ed_country.setEnabled(editable);
     }
 
     @OnClick(R.id.edit_time_table)
@@ -430,10 +469,19 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             tv_specilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
-        if(user.isClinic!=1)
+        if(user.isClinic==1)
             linear_practice_profile.setVisibility(View.VISIBLE);
         else
             linear_practice_profile.setVisibility(View.GONE);
+
+        // edit ahmed 12 - 6 - 2017
+        ed_location.setText(user.getAddress());
+        ed_street_name.setText(user.getInfo().getStreetname());
+        ed_house_number.setText(user.getInfo().getHouseNumber());
+        ed_zip_code.setText(user.getInfo().getZipCode());
+        ed_province.setText(user.getInfo().getProvinz());
+        ed_country.setText(user.getInfo().getCountry());
+
     }
 
     public List<User> MockDataforChosen() {
@@ -711,7 +759,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void deleteMyImage() {
         user.setAvatar("");
         Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + user.getAvatar(), imageAvatar, R.drawable.profile_place_holder);
+                + "/" + user.getAvatar(), imageAvatar, R.drawable.placeholder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }

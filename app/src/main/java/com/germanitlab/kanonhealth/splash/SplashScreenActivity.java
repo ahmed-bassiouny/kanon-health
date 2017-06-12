@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.SocketCall;
@@ -16,6 +15,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
+import com.germanitlab.kanonhealth.main.MainActivity;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -46,17 +46,23 @@ public class SplashScreenActivity extends AppCompatActivity {
                 
                 if (isLogin && !storedUser.equals("")) {
                     joinUser();
-                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                    intent.putExtra("status" , 1);
+//                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+//                    intent.putExtra("status" , 1);
+//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
                     startActivity(intent);
+
                     finish();
 
                 } else if(isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
 
                     joinUser();
-                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                    intent.putExtra("status" , 0);
+//                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+//                    intent.putExtra("status" , 0);
+//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
                     startActivity(intent);
+
                     finish();
                 }
                 else if (isLogin && storedUser.equals("")){

@@ -34,6 +34,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -105,14 +106,6 @@ public class initialProfileDetails extends AppCompatActivity {
         }
         Calendar calender = Calendar.getInstance();
 
-//        Dialog mDialog = new DatePickerDialog(initialProfileDetails.this,
-//                android.R.style.Theme_Holo,
-//                mDateSetListener, calender.get(Calendar.YEAR),
-//                calender.get(Calendar.MONTH), calender
-//                .get(Calendar.DAY_OF_MONTH));
-//
-//        mDialog.show();
-
 
         final Context themedContext = new ContextThemeWrapper(
                 initialProfileDetails.this,
@@ -163,9 +156,12 @@ public class initialProfileDetails extends AppCompatActivity {
 
                     mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
                     dismissProgressDialog();
-                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
-                    intent.putExtra("status", 1);
+//                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
+//                    intent.putExtra("status", 1);
+//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
                     startActivity(intent);
+
                     finish();
                 }
 

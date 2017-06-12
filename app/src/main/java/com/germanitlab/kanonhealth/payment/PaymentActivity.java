@@ -49,7 +49,9 @@ public class PaymentActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initTB();
 
-        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
+//        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
+
+        doctor= (User) getIntent().getSerializableExtra("doctor_data");
         /*
         handel data in ui
          */
@@ -62,7 +64,7 @@ public class PaymentActivity extends AppCompatActivity {
             tvDoctorName.setText(doctorObj.getName());
 
             Helper.setImage(this, Constants.CHAT_SERVER_URL
-                    + "/" + doctorObj.getAvatar(), ivDoctor, R.drawable.profile_place_holder);
+                    + "/" + doctorObj.getAvatar(), ivDoctor, R.drawable.placeholder);
 
             if (doctorObj.getRate() != null) {
                 ratingBar.setRating(Float.parseFloat(doctorObj.getRate()));

@@ -358,6 +358,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
     }
 
+
     @OnClick(R.id.img_edit_avatar)
     public void onEditProfileImageClicked() {
         if (ContextCompat.checkSelfPermission(this,

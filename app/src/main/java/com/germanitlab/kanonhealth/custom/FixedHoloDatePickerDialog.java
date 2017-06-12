@@ -18,8 +18,8 @@ import java.lang.reflect.Field;
  * Created by halima on 01/06/17.
  */
 
-public final class FixedHoloDatePickerDialog extends DatePickerDialog {
-    public FixedHoloDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener callBack,
+public final  class FixedHoloDatePickerDialog extends DatePickerDialog {
+    public FixedHoloDatePickerDialog(Context context, OnDateSetListener callBack,
                                      int year, int monthOfYear, int dayOfMonth) {
         super(context, callBack, year, monthOfYear, dayOfMonth);
 
