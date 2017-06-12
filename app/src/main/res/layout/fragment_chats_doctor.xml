@@ -11,11 +11,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/doctor_list_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/doctor_list_toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/colorPrimary">-->
 
 
             <TextView
@@ -47,7 +47,7 @@
                 android:src="@drawable/qrcode"
                 android:scaleType="fitXY"
                 tools:ignore="ContentDescription,RtlHardcoded" />
-        </android.support.v7.widget.Toolbar>
+        <!--</android.support.v7.widget.Toolbar>-->
 
 
         <FrameLayout

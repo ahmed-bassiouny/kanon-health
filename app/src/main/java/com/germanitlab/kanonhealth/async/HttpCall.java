@@ -754,4 +754,19 @@ public class HttpCall {
             }
         });
     }
+    public void getAllMemberAt(){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<ChooseModel>> connection=service.getAllMemberAt();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
+            @Override
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
 }

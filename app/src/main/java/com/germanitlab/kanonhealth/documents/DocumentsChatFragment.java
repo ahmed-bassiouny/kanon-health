@@ -39,6 +39,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,6 +159,7 @@ public class DocumentsChatFragment extends Fragment
         }
 
         view = inflater.inflate(R.layout.fragment_chats_fragments, container, false);
+        setHasOptionsMenu(true);
 
         initView();
 
@@ -168,7 +171,7 @@ public class DocumentsChatFragment extends Fragment
         }
 
         handelEvent();
-        assignViews();
+//        assignViews();
 
         buildGoogleApiClient();
 
@@ -177,10 +180,10 @@ public class DocumentsChatFragment extends Fragment
 
     private void initView() {
 
-        imgbtnAttach = (ImageButton) view.findViewById(R.id.imgbtn_chat_attach);
+//        imgbtnAttach = (ImageButton) view.findViewById(R.id.imgbtn_chat_attach);
         imgbtnSend = (ImageButton) view.findViewById(R.id.imgbtn_chat_autio_send);
         imageView = (CircleImageView) view.findViewById(R.id.img_chat_user_avatar);
-        tvUserName = (TextView) view.findViewById(R.id.tv_chat_user_name);
+//        tvUserName = (TextView) view.findViewById(R.id.tv_chat_user_name);
         etMessage = (EditText) view.findViewById(R.id.et_chat_message);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_chat_messages);
         recyclerView.setHasFixedSize(false);
@@ -325,23 +328,11 @@ public class DocumentsChatFragment extends Fragment
         recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
-//        simpleLocation = new SimpleLocation(getContext());
-
-        //-- init soket
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_document, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
-
-
-    private void assignViews() {
-
-        tvUserName.setText("My Documents");
-    }
-
 
     //------  get chat history
     private void fetchHistory() {
@@ -539,13 +530,13 @@ public class DocumentsChatFragment extends Fragment
             }
         });
 
-        imgbtnAttach.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                showPopup(view);
-            }
-        });
+//        imgbtnAttach.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                showPopup(view);
+//            }
+//        });
 
     }
 

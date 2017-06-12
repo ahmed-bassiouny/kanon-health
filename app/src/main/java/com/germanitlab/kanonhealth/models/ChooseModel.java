@@ -1,7 +1,5 @@
 package com.germanitlab.kanonhealth.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
@@ -32,6 +30,39 @@ public class ChooseModel implements Serializable{
     // Member at
     private int id;
     private String avatar;
+    private String last_name;
+    private String first_name;
+
+    //general attribute
+
+    private int general_id;
+    private String general_name;
+    private String general_icon;
+
+    public int getGeneral_id() {
+        return general_id;
+    }
+
+    public void setGeneral_id(int general_id) {
+        this.general_id = general_id;
+    }
+
+    public String getGeneral_name() {
+        return general_name;
+    }
+
+    public void setGeneral_name(String general_name) {
+        this.general_name = general_name;
+    }
+
+    public String getGeneral_icon() {
+        return general_icon;
+    }
+
+    public void setGeneral_icon(String general_icon) {
+        this.general_icon = general_icon;
+    }
+
 
     public int getIdMember() {
         return id;
@@ -65,8 +96,6 @@ public class ChooseModel implements Serializable{
         this.first_name = first_name;
     }
 
-    private String last_name;
-    private String first_name;
 
     private boolean is_my_choise=false;
 
