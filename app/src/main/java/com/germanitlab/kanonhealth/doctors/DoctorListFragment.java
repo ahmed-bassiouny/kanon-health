@@ -117,7 +117,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.contacts_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
