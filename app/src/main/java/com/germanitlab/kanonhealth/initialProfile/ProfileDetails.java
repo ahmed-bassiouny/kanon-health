@@ -36,6 +36,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -212,8 +213,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
                     mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
                     dismissProgressDialog();
-                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
-                    intent.putExtra("status", 0);
+//                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
+//                    intent.putExtra("status", 0);
+//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
                     startActivity(intent);
                     finish();
                 }

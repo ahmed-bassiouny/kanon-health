@@ -104,7 +104,7 @@ public class PasscodeActivty extends AppCompatActivity {
             if (status == 0) {
                 //second time password entered
                 if(save)
-                    save();
+                    savecode();
                 //first time password entered
                 else if(reEnter)
                     reEnter();
@@ -118,7 +118,7 @@ public class PasscodeActivty extends AppCompatActivity {
                 //update passcode
             } else if (status == 2) {
                 if(save)
-                    save();
+                    savecode();
                 else if(reEnter)
                     reEnter();
                 else {
@@ -157,7 +157,7 @@ public class PasscodeActivty extends AppCompatActivity {
         save = true ;
         reEnter = false ;
     }
-    private void save(){
+    private void savecode(){
         if(temp.equals(passcode)) {
             prefManager.put(PrefManager.PASSCODE, passcode);
             Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
@@ -166,8 +166,6 @@ public class PasscodeActivty extends AppCompatActivity {
                 if (status == 2)
                     intent.putExtra("index" , 3);
                 startActivity(intent);
-            }else {
-                finish();
             }
         }
         else

@@ -171,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         if(!is_doctor) {
             questionAnswer = userInfoResponse.getUser().getQuestions();
             images = userInfoResponse.getUser().getDocuments();
-            Log.d("My question answer", (new ArrayList<String>(questionAnswer.keySet())).get(0).toString());
+//            Log.d("My question answer", (new ArrayList<String>(questionAnswer.keySet())).get(0).toString());
             createAdapter();
         }
 
