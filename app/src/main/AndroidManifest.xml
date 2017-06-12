@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera.front" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera" />
@@ -177,8 +178,10 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".DoctorProfileActivity" />
         <activity android:name=".TimeTable" />
-        <activity android:name=".Comment"
-            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".Comment"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".AddPractics"></activity>
     </application>
 
 </manifest>

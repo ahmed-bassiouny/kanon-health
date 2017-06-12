@@ -146,5 +146,9 @@ public interface ApiInterface {
     Call<List<ChooseModel>> getAllLanguage();
     @POST("/clinics/list")
     Call<List<ChooseModel>> getAllMemberAt();
+    @POST("/doctors/all")
+    Call<List<ChooseModel>> getDoctorAll();
+    @POST("/clinics/add")
+    Call<JsonObject> addClinic(@Body User user);
 }
 

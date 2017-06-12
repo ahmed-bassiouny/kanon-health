@@ -37,6 +37,7 @@ public class Constants {
     public static final int SPECIALITIES=8;
     public static final int LANGUAUGE=9;
     public static final int MEMBERAT=10;
+    public static final int DoctorAll=11;
 
 
     public static final int OPEN_CHAT = 1;

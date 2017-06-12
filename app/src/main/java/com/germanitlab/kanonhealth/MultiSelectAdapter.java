@@ -59,6 +59,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
                 Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getLang_icon(), holder.avatar, R.drawable.profile_place_holder);
                 break;
             case Constants.MEMBERAT:
+            case Constants.DoctorAll:
                 holder.name.setText(model.getLast_nameMember()+" "+model.getFirst_nameMember());
                 Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), holder.avatar, R.drawable.profile_place_holder);
                 break;

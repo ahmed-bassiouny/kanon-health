@@ -109,6 +109,9 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
             case Constants.MEMBERAT:
                 new HttpCall(getActivity(),this).getAllMemberAt();
                 break;
+            case Constants.DoctorAll:
+                new HttpCall(getActivity(),this).getDoctorAll();
+                break;
         }
     }
     private void setDataChecked(CircleImageView checked,boolean show) {
@@ -128,6 +131,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 initDataLanguauge(response);
                 break;
             case Constants.MEMBERAT:
+            case Constants.DoctorAll:
                 initDataMemberAt(response);
                 break;
         }
