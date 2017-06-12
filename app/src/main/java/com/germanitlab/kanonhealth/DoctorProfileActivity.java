@@ -45,7 +45,9 @@ import com.germanitlab.kanonhealth.models.*;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
+import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -129,6 +131,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     User user;
     UploadImageResponse uploadImageResponse;
     Util util;
+    @BindView(R.id.linear_practice_profile)
+    LinearLayout linear_practice_profile;
+
+
 
     // data of edit
     @BindView(R.id.edit)
@@ -183,14 +189,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             user = new User();
             user = (User) getIntent().getSerializableExtra("doctor_data");
             chechEditPermission();
-            bindData();
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
 
         }
 
 
-
+        bindData();
 
     }
 
@@ -200,6 +205,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         else
             is_me = false;
     }
+
 
     @OnClick(R.id.tv_contact)
     public void contactClick(View v) {
@@ -225,6 +231,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.save)
     public void save(View view) {
         handleNewData();
+        bindData();
     }
 
     private void handleNewData() {
@@ -406,6 +413,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             tv_specilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
+        if(user.isClinic!=1)
+            linear_practice_profile.setVisibility(View.VISIBLE);
+        else
+            linear_practice_profile.setVisibility(View.GONE);
     }
 
     public List<User> MockDataforChosen() {
@@ -624,6 +635,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         Toast.makeText(this, "Data saved Successfully", Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
         setVisiblitiy(View.VISIBLE);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        userInfoResponse.setUser(user);
+        prefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
+
 
     }
 

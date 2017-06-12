@@ -38,7 +38,6 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -99,15 +98,7 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
-        user = userInfoResponse.getUser();
-        initView();
-        handelEvent();
-      //  assignViews();
-        setHasOptionsMenu(true);
 
-
-        setAdapter();
         return view;
     }
 
@@ -118,13 +109,11 @@ public class SettingFragment extends Fragment {
         List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
 
 
-        if(clinicsList!=null&&clinicsList.size()>0) {
-            mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            rvPracticies.setLayoutManager(mLayoutManager);
-            rvPracticies.setAdapter(mAdapter);
-            rvPracticies.setNestedScrollingEnabled(false);
-        }
+        mAdapter = new PrcticiesSAdapter(getContext(),clinicsList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvPracticies.setLayoutManager(mLayoutManager);
+        rvPracticies.setAdapter(mAdapter);
+        rvPracticies.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -137,7 +126,7 @@ public class SettingFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.mi_qr_code:
-                Helper.ImportQr(mPrefManager, getActivity());
+//                Helper.ImportQr(mPrefManager , getActivity() , item);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -149,6 +138,20 @@ public class SettingFragment extends Fragment {
         if(getView()!=null && isVisibleToUser){
             getSetting();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
+        user = userInfoResponse.getUser();
+        initView();
+        handelEvent();
+        //  assignViews();
+        setHasOptionsMenu(true);
+
+
+        setAdapter();
     }
 
     @Override
