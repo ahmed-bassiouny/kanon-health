@@ -460,6 +460,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 //        getTimaTableData(user.getTable());
         checkDoctor();
         tv_name.setText(user.getLast_name() + ", " + user.getFirst_name());
+        Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() ,imageAvatar ,R.drawable.placeholder);
         et_last_name.setText(user.getLast_name());
         et_first_name.setText(user.getFirst_name());
         tv_telephone.setText(user.getPhone());
