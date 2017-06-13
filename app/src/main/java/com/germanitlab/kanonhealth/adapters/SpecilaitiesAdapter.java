@@ -25,7 +25,6 @@ import java.util.List;
 
 public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapter.MyViewHolder> {
 
-    private int visiblity;
     Context context ;
     List<ChooseModel> list;
     int type;
@@ -42,9 +41,8 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         }
     }
 
-    public SpecilaitiesAdapter(List<ChooseModel> list, int visiblity , Context context,int type) {
+    public SpecilaitiesAdapter(List<ChooseModel> list , Context context,int type) {
         this.context = context ;
-        this.visiblity = visiblity;
         this.list=list;
         this.type=type;
     }
@@ -70,6 +68,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
                 holder.title.setVisibility(View.GONE);
                 break;
             case Constants.MEMBERAT:
+            case Constants.DoctorAll:
                 holder.title.setText(chooseModel.getLast_nameMember()+" " +list.get(position).getFirst_nameMember());
                 Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getAvatarMember() , holder.image , R.drawable.profile_place_holder);
                 holder.title.setVisibility(View.VISIBLE);

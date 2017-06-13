@@ -769,4 +769,34 @@ public class HttpCall {
             }
         });
     }
+    public void getDoctorAll(){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<ChooseModel>> connection=service.getDoctorAll();
+        connection.enqueue(new Callback<List<ChooseModel>>() {
+            @Override
+            public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
+    public void addClinic(User user){
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<JsonObject> connection=service.addClinic(user);
+        connection.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                apiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                apiResponse.onFailed(t.getLocalizedMessage());
+            }
+        });
+    }
 }

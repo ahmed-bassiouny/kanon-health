@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
@@ -262,7 +263,7 @@ public class SettingFragment extends Fragment {
         tvAddPractice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), DoctorProfileActivity.class);
+                Intent intent = new Intent(getContext(), AddPractics.class);
                 intent.putExtra("CLINIC", "CLINIC");
                 startActivity(intent);
             }

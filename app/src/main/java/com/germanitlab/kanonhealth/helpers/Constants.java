@@ -37,6 +37,7 @@ public class Constants {
     public static final int SPECIALITIES=8;
     public static final int LANGUAUGE=9;
     public static final int MEMBERAT=10;
+    public static final int DoctorAll=11;
 
 
     public static final int OPEN_CHAT = 1;
@@ -62,6 +63,7 @@ public class Constants {
     public static final String DATA = "data";
     public static final int HOURS_CODE = 11;
     public static final int HOURS_TYPE_CODE = 22 ;
+    public static final int TIME_TABLE_TYPE = 30 ;
 
 
     public static File folder = new File(Environment.getExternalStorageDirectory().toString() + "/Health");

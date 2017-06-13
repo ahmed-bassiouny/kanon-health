@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/activity_profile"
@@ -32,24 +31,13 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/edit"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="52dp"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/egypt"
-                    android:visibility="gone" />
-
-                <ImageView
                     android:id="@+id/save"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="52dp"
                     android:layout_gravity="right"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/sbmit"
-                    android:visibility="gone" />
+                    android:src="@drawable/sbmit" />
             </FrameLayout>
 
 
@@ -88,131 +76,20 @@
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center"
-                            android:src="@drawable/placeholder" />
+                            android:src="@drawable/profile_place_holder" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignEnd="@+id/img_edit_avatar"
                             android:layout_alignParentTop="true"
-                            android:visibility="gone"
                             android:id="@+id/edit_image"
                             android:layout_alignRight="@+id/img_edit_avatar"
                             android:src="@drawable/camera" />
-
-
-
-
-
                     </RelativeLayout>
 
-                    <LinearLayout
-                        android:id="@+id/ll_doctor_data"
-                        android:layout_width="@dimen/size_10dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_online"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/custom_edittext_without_border_style"
-                            android:gravity="center"
-                            android:text="ONLINE"
-                            android:textAlignment="center"
-                            android:textColor="@color/red" />
-
-                        <TextView
-                            android:id="@+id/tv_qr_code"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/custom_edittext_without_border_style"
-                            android:gravity="center"
-                            android:text="QR Code"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/background_dark" />
-
-                        <TextView
-                            android:id="@+id/tv_contact"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/custom_edittext_without_border_style"
-                            android:gravity="center"
-                            android:text="Contact"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/background_dark" />
-
-
-
-                    </LinearLayout>
 
                 </LinearLayout>
-                <TableRow android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:id="@+id/edit_name_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_edit_avatar"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
-
-                        <EditText
-                            android:id="@+id/et_last_name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/img_edit_avatar"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="18dp"
-                            android:visibility="visible" />
-
-                        <EditText
-                            android:id="@+id/et_first_name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/img_edit_avatar"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="18dp"
-                            android:visibility="visible" />
-                    </LinearLayout>
-                    <TextView
-                        android:id="@+id/tv_name"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/img_edit_avatar"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="18dp" />
-                    <TextView
-                        android:id="@+id/tv_add_to_favourite"
-                        android:layout_width="0dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/custom_edittext_without_border_style"
-                        android:gravity="center"
-                        android:text="Add to Favourite"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/background_dark" />
-
-                </TableRow>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -254,8 +131,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="10dp"
                         android:src="@drawable/edit"
-                        android:textColor="@android:color/background_dark"
-                        android:visibility="gone" />
+                        android:textColor="@android:color/background_dark" />
                 </RelativeLayout>
 
 
@@ -283,11 +159,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
+                            android:text="Name :"/>
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:id="@+id/ed_name"
+                            android:layout_height="wrap_content"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
                             android:text="@string/location"/>
                         <EditText
                             android:layout_width="match_parent"
                             android:id="@+id/ed_location"
-                            android:enabled="false"
                             android:layout_height="wrap_content"/>
                     </TableRow>
                     <TableRow
@@ -301,7 +189,6 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:id="@+id/ed_street_name"/>
                     </TableRow>
                     <TableRow
@@ -315,7 +202,6 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:id="@+id/ed_house_number"/>
                     </TableRow>
                     <TableRow
@@ -328,7 +214,6 @@
                             android:text="@string/zip_code"/>
                         <EditText
                             android:layout_width="match_parent"
-                            android:enabled="false"
                             android:layout_height="wrap_content"
                             android:id="@+id/ed_zip_code"/>
                     </TableRow>
@@ -343,7 +228,6 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:id="@+id/ed_city"/>
                     </TableRow>
                     <TableRow
@@ -356,7 +240,6 @@
                             android:text="@string/province"/>
                         <EditText
                             android:layout_width="match_parent"
-                            android:enabled="false"
                             android:layout_height="wrap_content"
                             android:id="@+id/ed_province"/>
                     </TableRow>
@@ -372,10 +255,21 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:id="@+id/ed_country"/>
                     </TableRow>
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/black" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Location On Map >"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -422,49 +316,9 @@
                         android:layout_alignTop="@id/language_recycleview"
                         android:layout_marginRight="10dp"
                         android:src="@drawable/edit"
-                        android:textColor="@android:color/background_dark"
-                        android:visibility="gone" />
-                </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@color/black" />
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/member_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:text="Member In clinic"
                         android:textColor="@android:color/background_dark" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/member_recycleview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/member_text"
-                        android:layout_marginLeft="@dimen/size_5dp"
-                        android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
-
-                    <ImageView
-                        android:id="@+id/edit_member_list"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignTop="@id/member_recycleview"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/edit"
-                        android:textColor="@android:color/background_dark"
-                        android:visibility="gone" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -472,51 +326,7 @@
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tv_rating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rating "
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/image_star"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:rotation="180"
-                        android:src="@drawable/back" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <android.support.v7.widget.AppCompatRatingBar
-                        android:id="@+id/ratingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:isIndicator="true"
-                        android:numStars="5" />
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@color/black" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -563,7 +373,6 @@
                         android:layout_marginLeft="8dp"
                         android:gravity="bottom"
                         android:src="@drawable/edit"
-                        android:visibility="gone"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16dp" />
                 </RelativeLayout>
@@ -829,48 +638,6 @@
                         android:textCursorDrawable="@color/black"
                         android:textStyle="bold" />
                 </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/always_open"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_always_open"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:padding="@dimen/size_5dp"
-                        android:text="Always Open"
-                        android:textColor="@color/red"
-                        android:textCursorDrawable="@color/black"
-                        android:textStyle="bold" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/permenant_closed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_permenant_closed"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:padding="@dimen/size_5dp"
-                        android:text="Permant close"
-                        android:textColor="@color/red"
-                        android:textCursorDrawable="@color/black"
-                        android:textStyle="bold" />
-                </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -894,18 +661,6 @@
                         android:textSize="16dp" />
 
 
-                    <TextView
-                        android:id="@+id/tv_telephone"
-                        android:layout_width="0dp"
-                        android:layout_weight="5"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="left"
-                        android:text="01280195069"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-
                     <EditText
                         android:id="@+id/et_telephone"
                         android:layout_width="0dp"
@@ -914,126 +669,49 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="8dp"
                         android:gravity="left"
-                        android:text="01280195069"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:hint="@string/first_name"
-                        android:text="Location : "
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-
-
-                    <EditText
-                        android:id="@+id/et_location"
-                        android:layout_weight="5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="center"
-                        android:text="Alexandria, Egypt"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/tv_location"
-                        android:layout_width="0dp"
-                        android:layout_weight="5"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="bottom"
-                        android:text="Alexandria, Egypt"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16dp" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-
-                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="343dp"
-                    android:layout_height="150dp"
-                    android:orientation="vertical">
-                    <!--loading map in container-->
-                    <fragment
-                        android:id="@+id/map"
-                        android:clickable="false"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:context=".DoctorProfileActivity"/>
-
-                    <!--<com.germanitlab.kanonhealth.RadiusOverlayView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_alignParentTop="true"-->
-                        <!--android:layout_alignParentStart="true" />-->
-                        android:layout_height="match_parent"/>
-
-                </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@color/black" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
-                        android:text="Document"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="150dp"
-                        android:layout_height="2dp"
-                        android:layout_marginBottom="3dp"
-                        android:background="@android:color/background_dark" />
-                </LinearLayout>
-
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/document_recycler_view"
+                    <TextView
+                        android:id="@+id/member_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="vertical" />
-                </LinearLayout>
+                        android:layout_alignParentTop="true"
+                        android:text="Member In clinic"
+                        android:textColor="@android:color/background_dark" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/member_recycleview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@+id/member_text"
+                        android:layout_marginLeft="@dimen/size_5dp"
+                        android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+                    <ImageView
+                        android:id="@+id/edit_member_list"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignTop="@id/member_recycleview"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/edit"
+                        android:textColor="@android:color/background_dark" />
+                </RelativeLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

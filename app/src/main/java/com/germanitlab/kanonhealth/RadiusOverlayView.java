@@ -71,7 +71,7 @@ public class RadiusOverlayView extends LinearLayout {
         float centerX = getWidth() / 2;
         float centerY = getHeight() / 2;
         float radius = Math.min(getWidth(), getHeight()) / 2 ;
-//        osCanvas.drawOval(0, 0, getWidth(), getHeight(), paint);
+        osCanvas.drawOval(0 , 0 , getWidth() , getHeight() , paint);
     }
 
     @Override
