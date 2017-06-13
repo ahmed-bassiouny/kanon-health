@@ -185,6 +185,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     PickerDialog pickerDialog;
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
+    Boolean editboolean ;
 
     @Override
     protected void onResume() {
@@ -197,6 +198,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile_view);
         ButterKnife.bind(this);
+        editboolean = false ;
 
         // check if doctor or clinic
 //
@@ -209,9 +211,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         chechEditPermission();
         prefManager = new PrefManager(this);
         pickerDialog = new PickerDialog(true);
-
-
-        bindData();
 
     }
 
@@ -242,6 +241,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit)
     public void edit(View view) {
         setVisiblitiy(View.GONE);
+        editboolean = true ;
     }
 
     @OnClick(R.id.save)
@@ -406,7 +406,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 case Constants.HOURS_TYPE_CODE :
                     user.setOpen_Type(data.getIntExtra("type" ,0));
             }
-            bindData();
         }
     }
 
@@ -443,7 +442,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tv_telephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
         if (is_me) {
-            edit.setVisibility(View.VISIBLE);
+            if(editboolean)
+            {
+                edit.setVisibility(View.GONE);
+                save.setVisibility(View.VISIBLE);
+            }
+            else {
+                edit.setVisibility(View.VISIBLE);
+                save.setVisibility(View.GONE);
+            }
             tv_add_to_favourite.setVisibility(View.INVISIBLE);
             tv_contact.setVisibility(View.INVISIBLE);
         }
@@ -522,10 +529,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void passData(List<Table> list) {
         clearTexts();
-        int size = 0 ;
-        for (Table table : list) {
-            if(size >= list.size())
-                return;
+        for (int s= 0 ; s < list.size() ; s++) {
+            Table table = list.get(s);
             if (table.getDayweek() != null) {
                 if (table.getDayweek().equals("1")) {
                     setViewText(monday, table);
@@ -549,9 +554,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     setViewText(sunday, table);
                     ll_sunday.setVisibility(View.VISIBLE);
                 }
-                size ++ ;
             }
         }
+        return;
     }
 
     private void clearTexts() {
@@ -572,9 +577,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void setViewText(TextView textView, Table table) {
-        textView.append(textView.getText() + table.getFrom() + " - " + table.getTo());
-        textView.append(" \n " + System.getProperty("line.separator"));
-        textView.append("ilzhdoiflhioflserfrd");
+        textView.append(table.getFrom() + " - " + table.getTo());
+        textView.append(System.getProperty("line.separator"));
     }
 
     @OnClick(R.id.image_star)
@@ -720,6 +724,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         Toast.makeText(this, "Data saved Successfully", Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
         setVisiblitiy(View.VISIBLE);
+        editboolean = false ;
         UserInfoResponse userInfoResponse = new UserInfoResponse();
         userInfoResponse.setUser(user);
         prefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
