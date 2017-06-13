@@ -148,7 +148,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @OnClick(R.id.save)
     public void save(View view) {
-        if(!isvalid(ed_name)&&!isvalid(ed_location)&&!isvalid(ed_house_number)&&!isvalid(ed_zip_code)&&!isvalid(ed_province)&&!isvalid(ed_country)&&!isvalid(et_telephone))
+        if(!isvalid(ed_name)||!isvalid(ed_location)||!isvalid(ed_house_number)||!isvalid(ed_zip_code)||!isvalid(ed_province)||!isvalid(ed_country)||!isvalid(et_telephone))
             return;
         user.setName(ed_name.getText().toString());
         user.setAddress(ed_location.getText().toString());
@@ -164,6 +164,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             @Override
             public void onSuccess(Object response) {
                 Toast.makeText(AddPractics.this, "Save Practics", Toast.LENGTH_LONG).show();
+                finish();
             }
 
             @Override

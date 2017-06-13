@@ -38,8 +38,9 @@
                     android:layout_height="52dp"
                     android:layout_gravity="right"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/egypt"
-                    android:visibility="gone" />
+                    android:src="@drawable/edit_icon"
+                    android:tint="@android:color/white"
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/save"
