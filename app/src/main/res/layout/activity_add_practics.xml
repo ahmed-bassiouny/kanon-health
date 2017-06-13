@@ -267,6 +267,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/locationonmap"
                     android:text="Location On Map >"
                     android:textColor="@color/black"
                     android:textSize="15sp"/>
@@ -644,6 +645,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -688,7 +690,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:text="Member In clinic"
+                        android:text="Invite Doctor"
                         android:textColor="@android:color/background_dark" />
 
                     <android.support.v7.widget.RecyclerView

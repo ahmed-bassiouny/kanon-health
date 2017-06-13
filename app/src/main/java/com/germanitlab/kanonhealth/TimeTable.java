@@ -415,7 +415,7 @@ public class TimeTable extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_OK) {
-
+            list = (List<Table>) data.getSerializableExtra(Constants.DATA);
         }
     }
 

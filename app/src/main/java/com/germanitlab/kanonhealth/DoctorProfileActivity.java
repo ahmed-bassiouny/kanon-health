@@ -48,6 +48,13 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.payment.PreRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -60,7 +67,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>  , Serializable, ApiResponse, DialogPickerCallBacks {
+public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>  , Serializable, ApiResponse, DialogPickerCallBacks, OnMapReadyCallback {
 
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
@@ -185,6 +192,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     PickerDialog pickerDialog;
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
+    private GoogleMap googleMap;
     Boolean editboolean ;
 
     @Override
@@ -198,20 +206,44 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile_view);
         ButterKnife.bind(this);
-        editboolean = false ;
+        editboolean = false;
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
 
         // check if doctor or clinic
+
+
+        if (getIntent().getExtras().containsKey("CLINIC")) {
+            llDoctorData.setVisibility(View.GONE);
+            tv_add_to_favourite.setVisibility(View.GONE);
+            setVisiblitiy(View.GONE);
+
+        } else {
+            llDoctorData.setVisibility(View.VISIBLE);
+            tv_add_to_favourite.setVisibility(View.VISIBLE);
+
+            util = Util.getInstance(this);
+            user = new User();
+            user = (User) getIntent().getSerializableExtra("doctor_data");
+            chechEditPermission();
+            prefManager = new PrefManager(this);
+            pickerDialog = new PickerDialog(true);
 //
-        llDoctorData.setVisibility(View.VISIBLE);
-        tv_add_to_favourite.setVisibility(View.VISIBLE);
+            llDoctorData.setVisibility(View.VISIBLE);
+            tv_add_to_favourite.setVisibility(View.VISIBLE);
 
-        util = Util.getInstance(this);
-        user = new User();
-        user = (User) getIntent().getSerializableExtra("doctor_data");
-        chechEditPermission();
-        prefManager = new PrefManager(this);
-        pickerDialog = new PickerDialog(true);
+                    util = Util.getInstance(this);
+            user = new User();
+            user = (User) getIntent().getSerializableExtra("doctor_data");
+            chechEditPermission();
+            prefManager = new PrefManager(this);
+            pickerDialog = new PickerDialog(true);
 
+        }
     }
 
     private void chechEditPermission() {
@@ -428,6 +460,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 //        getTimaTableData(user.getTable());
         checkDoctor();
         tv_name.setText(user.getLast_name() + ", " + user.getFirst_name());
+        Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() ,imageAvatar ,R.drawable.placeholder);
         et_last_name.setText(user.getLast_name());
         et_first_name.setText(user.getFirst_name());
         tv_telephone.setText(user.getPhone());
@@ -765,5 +798,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 .beginTransaction();
         dialogFragment.setArguments(bundle);
         dialogFragment.show(ft, "list");
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        // Add a marker in Sydney, Australia,
+        // and move the map's camera to the same location.
+        LatLng sydney = new LatLng(user.getLocation_lat(), user.getLocation_long());
+        googleMap.addMarker(new MarkerOptions().position(sydney)
+                .title(user.getFirst_name()));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }

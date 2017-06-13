@@ -93,6 +93,7 @@ public class OpeningHoursActivity extends AppCompatActivity {
         if (first.isChecked()) {
             if (TimeTable.active) {
                 intent.putExtra("type", 0);
+                intent.putExtra(Constants.DATA, (Serializable) list);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
