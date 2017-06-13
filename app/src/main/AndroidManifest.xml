@@ -172,25 +172,27 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/kanon" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".MapsActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".DoctorProfileActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".TimeTable"
-            android:screenOrientation="portrait"/>
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TimeTable"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Comment"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".AddPractics"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AddPractics"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

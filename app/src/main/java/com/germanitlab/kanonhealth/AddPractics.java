@@ -41,6 +41,10 @@ import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -116,11 +120,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     LinearLayout ll_sunday;
     @BindView(R.id.tv_no_time)
     TextView tv_no_time;
-    /*
-    *            Intent intent = new Intent(this, TimeTable.class);
-            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
-            startActivityForResult(intent, Constants.HOURS_CODE);
-            */
+
     // additional data
     User user;
     Info info;
@@ -131,6 +131,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     Util util;
     UploadImageResponse uploadImageResponse;
     private static final int TAKE_PICTURE = 1;
+    int PLACE_PICKER_REQUEST = 22;
 
 
 
@@ -189,7 +190,17 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         bundle.putSerializable(Constants.CHOSED_LIST, (Serializable)user.getSupported_lang());
         showDialogFragment(bundle);
     }
-
+    @OnClick(R.id.locationonmap)
+    public void locationonmap(){
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(AddPractics.this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
     @OnClick(R.id.edit_member_list)
     public void edit_member_list() {
         Bundle bundle = new Bundle();
@@ -345,8 +356,16 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     break;
                 case Constants.HOURS_TYPE_CODE :
                     user.setOpen_Type(data.getIntExtra("type" ,0));
+                    break;
+            }
+        }else if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                user.setLocation_lat(place.getLatLng().latitude);
+                user.setLocation_long(place.getLatLng().longitude);
             }
         }
+
     }
     private void getTimaTableData(List<Table> list) {
         if(user.getOpen_Type() == 3)
