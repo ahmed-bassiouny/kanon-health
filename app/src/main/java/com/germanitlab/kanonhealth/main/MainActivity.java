@@ -21,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     private int type;
     Intent intent;
     private Toolbar toolbar;
+    private TextView tvToolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         setContentView(R.layout.activity_main);
         //-- set status open when open activity
         AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
+        tvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+
         initTB();
         mytablayout = (TabLayout) findViewById(R.id.mytablayout);
         myviewpager = (ViewPager) findViewById(R.id.myviewpager);
@@ -101,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                toolbar.setTitle(tab.getText().toString());
+//                toolbar.setTitle(tab.getText().toString());
+                tvToolbarTitle.setText(tab.getText().toString());
                 myviewpager.setCurrentItem(tab.getPosition(), false);
                 tab.getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
                 invalidateOptionsMenu();
@@ -125,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         assert getSupportActionBar() != null;
-        toolbar.setTitle("Contacts");
+//        toolbar.setTitle("Contacts");
+        tvToolbarTitle.setText("Contacts");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setTitle(getString(R.string.profile));
     }
