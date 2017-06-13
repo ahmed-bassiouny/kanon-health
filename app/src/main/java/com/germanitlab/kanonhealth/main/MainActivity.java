@@ -128,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     private void initTB() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         assert getSupportActionBar() != null;
-//        toolbar.setTitle("Contacts");
         tvToolbarTitle.setText("Contacts");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setTitle(getString(R.string.profile));
