@@ -38,6 +38,7 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -138,7 +139,7 @@ public class SettingFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mi_qr_code:
-//                Helper.ImportQr(mPrefManager , getActivity() , item);
+                Helper.ImportQr(mPrefManager, getActivity());
                 break;
         }
         return super.onOptionsItemSelected(item);
