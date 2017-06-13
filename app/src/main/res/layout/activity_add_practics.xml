@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue">
+            android:background="@color/white">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/my_profile"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -37,12 +37,17 @@
                     android:layout_height="52dp"
                     android:layout_gravity="right"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/sbmit" />
+                    android:src="@drawable/sbmit"
+                    android:tint="@color/blue" />
             </FrameLayout>
 
 
         </android.support.v7.widget.Toolbar>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -79,22 +84,61 @@
                             android:src="@drawable/profile_place_holder" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/edit_image"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignEnd="@+id/img_edit_avatar"
                             android:layout_alignParentTop="true"
-                            android:id="@+id/edit_image"
                             android:layout_alignRight="@+id/img_edit_avatar"
                             android:src="@drawable/camera" />
+
                     </RelativeLayout>
-
-
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name :"
+                        android:textColor="@color/black" />
+
+                    <EditText
+                        android:id="@+id/ed_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/black" />
+
+                <TextView
+                    android:id="@+id/member_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:padding="10dp"
+                    android:text="Invite Doctor"
+                    android:textColor="@android:color/background_dark" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
 
                 <RelativeLayout
@@ -141,142 +185,161 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/background_dark"
                     android:textSize="16dp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
+
                 <LinearLayout
+                    android:id="@+id/linear_practice_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/linear_practice_profile"
                     android:orientation="vertical">
+
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="Name :"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:id="@+id/ed_name"
-                            android:layout_height="wrap_content"/>
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/location"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:id="@+id/ed_location"
-                            android:layout_height="wrap_content"/>
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/streat"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ed_street_name"/>
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/house_number"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ed_house_number"/>
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/zip_code"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ed_zip_code"/>
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/city"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ed_city"/>
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/province"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ed_province"/>
+
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/country"/>
+                            android:text="@string/location"
+                            android:textColor="@color/black" />
+
                         <EditText
+                            android:id="@+id/ed_location"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/ed_country"/>
+                            android:text="@string/streat"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_street_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/house_number"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_house_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/zip_code"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_zip_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/city"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/province"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_province"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/country"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_country"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
                     </TableRow>
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
+
                 <TextView
+                    android:id="@+id/locationonmap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/locationonmap"
                     android:text="Location On Map >"
                     android:textColor="@color/black"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -323,8 +386,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
 
 
@@ -360,7 +423,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="bottom"
                         android:hint="@string/first_name"
-                        android:text="Opening Time"
+                        android:text="Working hours"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16sp" />
 
@@ -639,11 +702,12 @@
                         android:textCursorDrawable="@color/black"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
 
                 <LinearLayout
@@ -654,8 +718,8 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="2"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:gravity="left"
                         android:hint="@string/first_name"
                         android:text="Tel : "
@@ -666,10 +730,10 @@
                     <EditText
                         android:id="@+id/et_telephone"
                         android:layout_width="0dp"
-                        android:layout_weight="5"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="8dp"
+                        android:layout_weight="5"
                         android:gravity="left"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16dp" />
@@ -678,20 +742,23 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/black" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/member_text"
+                        android:id="@+id/documnet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:text="Invite Doctor"
-                        android:textColor="@android:color/background_dark" />
+                        android:text="Practice Documents"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16dp" />
+
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/member_recycleview"
@@ -699,7 +766,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/member_text"
+                        android:layout_below="@+id/documnet"
                         android:layout_marginLeft="@dimen/size_5dp"
                         android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
 

@@ -140,6 +140,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     Util util;
     @BindView(R.id.linear_practice_profile)
     LinearLayout linear_practice_profile;
+    @BindView(R.id.border)
+    View border ;
 
 
     @BindView(R.id.ed_location)
@@ -500,10 +502,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             tv_specilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
-        if(user.isClinic==1)
+        if(user.isClinic==1) {
             linear_practice_profile.setVisibility(View.VISIBLE);
-        else
+            border.setVisibility(View.VISIBLE);
+        }
+        else{
             linear_practice_profile.setVisibility(View.GONE);
+            border.setVisibility(View.GONE);
+        }
 
         // edit ahmed 12 - 6 - 2017
         ed_location.setText(user.getAddress());
