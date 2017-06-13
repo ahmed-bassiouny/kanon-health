@@ -409,7 +409,6 @@ public class TimeTable extends AppCompatActivity {
 
         setResult(RESULT_OK , intent);
         finish();
-        Toast.makeText(this, new Gson().toJson(list), Toast.LENGTH_SHORT).show();
     }
 
     @Override

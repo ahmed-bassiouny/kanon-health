@@ -384,8 +384,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void openPayment() {
         Intent intent = new Intent(this, PaymentActivity.class);
         Gson gson = new Gson();
-        String doctor_data = gson.toJson(doctor);
-        intent.putExtra("doctor_data", doctor_data);
+        intent.putExtra("doctor_data", doctor);
         intent.putExtra("doctor_obj" , doctor);
 
         startActivity(intent);
@@ -1661,10 +1660,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         {
             chat_bar.setVisibility(View.GONE);
             open_chat_session.setVisibility(View.VISIBLE);
+            imageButtonAttach.setVisibility(View.GONE);
         }
         else{
             chat_bar.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
+            imageButtonAttach.setVisibility(View.VISIBLE);
         }
     }
 
