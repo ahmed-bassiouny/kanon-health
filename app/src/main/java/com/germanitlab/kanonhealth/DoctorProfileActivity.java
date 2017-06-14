@@ -197,11 +197,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private GoogleMap googleMap;
     Boolean editboolean ;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bindData();
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,6 +230,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             chechEditPermission();
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
+            bindData();
 
 /*
             llDoctorData.setVisibility(View.VISIBLE);
@@ -388,9 +385,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     selectedImageUri = data.getData();
                     prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                     util.showProgressDialog();
+                    pickerDialog.dismiss();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                     Glide.with(this).load(selectedImageUri).into(imageAvatar);
-                    returnFromPicture();
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
@@ -412,7 +409,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     util.showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
 
-                    returnFromPicture();
+                    pickerDialog.dismiss();
                     prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                     Glide.with(this).load(selectedImageUri).into(imageAvatar);
                     new HttpCall(this, new ApiResponse() {
@@ -456,11 +453,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         return path;
     }
 
-    private void returnFromPicture(){
-        pickerDialog.dismiss();
-        edit.setVisibility(View.GONE);
-        save.setVisibility(View.VISIBLE);
-    }
+
     private void bindData() {
 //        getTimaTableData(user.getTable());
         checkDoctor();
@@ -694,7 +687,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
 
-    @OnClick(R.id.img_edit_avatar)
+    @OnClick(R.id.edit_image)
     public void onEditProfileImageClicked() {
         if (is_me) {
             if (ContextCompat.checkSelfPermission(this,
