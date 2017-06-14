@@ -197,11 +197,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private GoogleMap googleMap;
     Boolean editboolean ;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bindData();
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +230,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             chechEditPermission();
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
-//
+            bindData();
+
+/*
             llDoctorData.setVisibility(View.VISIBLE);
             tv_add_to_favourite.setVisibility(View.VISIBLE);
 
@@ -243,7 +241,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             user = (User) getIntent().getSerializableExtra("doctor_data");
             chechEditPermission();
             prefManager = new PrefManager(this);
-            pickerDialog = new PickerDialog(true);
+            pickerDialog = new PickerDialog(true);*/
 
         }
     }
@@ -387,9 +385,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     selectedImageUri = data.getData();
                     prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                     util.showProgressDialog();
+                    pickerDialog.dismiss();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                     Glide.with(this).load(selectedImageUri).into(imageAvatar);
-
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
@@ -406,14 +404,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         }
                     }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                             , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
-
                     break;
                 case TAKE_PICTURE:
                     util.showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-/*
-                    decodeFile(selectedImageUri.toString());
-*/
+
+                    pickerDialog.dismiss();
                     prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                     Glide.with(this).load(selectedImageUri).into(imageAvatar);
                     new HttpCall(this, new ApiResponse() {
@@ -431,7 +427,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         }
                     }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                             , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
-
                     break;
                 case Constants.HOURS_CODE:
                     user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -457,6 +452,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
         return path;
     }
+
 
     private void bindData() {
 //        getTimaTableData(user.getTable());
@@ -500,6 +496,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             tv_specilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
+
         if(user.isClinic==1) {
             linear_practice_profile.setVisibility(View.VISIBLE);
             border.setVisibility(View.VISIBLE);
@@ -517,15 +514,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ed_province.setText(user.getInfo().getProvinz());
         ed_country.setText(user.getInfo().getCountry());
 
-    }
-
-    public List<User> MockDataforChosen() {
-        String json = " [{\"id\":4,\"email\":null,\"password\":\"78052a040e70547a0df844744bcfa1ee\",\"last_login\":\"2017-05-14 10:46:56\",\"name\":\"Amr \",\"first_name\":\"Amr\",\"last_name\":\"\",\"avatar\":\"\",\"subtitle\":\" \",\"phone\":\"4668426666655\",\"country_code\":\"+49\",\"active\":null,\"is_doc\":1,\"platform\":3,\"token\":\"fESlX7VwypA:APA91bG78yfSbjyayM8ObfRf88UUPUzPoG2ua0nOpTAQjlyK8CRpSoHh_Wqtpr13YE-z3XYEhr8c1sd4IhvlV9wSUvhM-zPW9XsqXnp_jk_OeBT2LB_ggKAYJM2GTzjiwoobz9_Ihq0w\",\"info\":{\"Country\":\"\",\"Provinz\":\"\",\"Birthday\":\"\",\"Zip Code\":\"\",\"Streetname\":\"\",\"House number\":\"\"},\"location_lat\":null,\"location_long\":null,\"payment\":null,\"settings\":null,\"questions\":{},\"address\":null,\"birth_date\":\"2017-06-08\",\"speciality\":null,\"about\":null,\"last_online\":null,\"unreaded_count\":null,\"passcode\":null,\"code\":\"616401\",\"request_type\":null,\"is_open\":null,\"is_clinic\":null,\"parent_id\":null,\"open_time\":null,\"is_available\":null,\"supported_lang\":null,\"rate\":0,\"douments\":null,\"specialities\":null,\"speciality_id\":null,\"speciality_title\":null,\"speciality_icon\":null},{\"id\":6,\"email\":null,\"password\":\"3b018c5427950c2bb33261011cc8f69b\",\"last_login\":\"2017-05-14 11:38:44\",\"name\":\"Andrew Dr\",\"first_name\":\"Dr\",\"last_name\":\"Andrew\",\"avatar\":\"\",\"subtitle\":\" \",\"phone\":\"123456789\",\"country_code\":\"+49\",\"active\":null,\"is_doc\":1,\"platform\":3,\"token\":\"f2MKK3XDa5E:APA91bF_ddycThjvn_ZEhXIoC9236I_L8Yf6Mjhq6jkGjVXbsEMWyaB8tKiMVnuMsPubbiiBKbK7hB3h1YzstjUEra--37u3r0a5Ts19l5nwhP4xWpvfIQ5lu6jrTz8v0X8U2joYLaXA\",\"info\":{\"Country\":\"\",\"Provinz\":\"\",\"Zip Code\":\"\",\"Streetname\":\"\",\"House number\":\"\"},\"location_lat\":\"0\",\"location_long\":\"0\",\"payment\":null,\"settings\":null,\"questions\":{},\"address\":null,\"birth_date\":\"2017-05-15\",\"speciality\":null,\"about\":null,\"last_online\":null,\"unreaded_count\":null,\"passcode\":null,\"code\":\"724299\",\"request_type\":null,\"is_open\":null,\"is_clinic\":null,\"parent_id\":null,\"open_time\":null,\"is_available\":null,\"supported_lang\":null,\"rate\":0,\"douments\":null,\"specialities\":null,\"speciality_id\":null,\"speciality_title\":null,\"speciality_icon\":null}]";
-        Gson gson = new Gson();
-        List<User> chosen = new ArrayList<>();
-        chosen = gson.fromJson(json, new TypeToken<List<User>>() {
-        }.getType());
-        return chosen;
     }
 
 
@@ -699,7 +687,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
 
-    @OnClick(R.id.img_edit_avatar)
+    @OnClick(R.id.edit_image)
     public void onEditProfileImageClicked() {
         if (is_me) {
             if (ContextCompat.checkSelfPermission(this,
