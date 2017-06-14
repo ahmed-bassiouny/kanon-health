@@ -444,17 +444,25 @@ public class DocumentsChatFragment extends Fragment
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     switch (event.getAction()) {
-
+                        case MotionEvent.ACTION_MOVE:
+                            view.getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
                         case MotionEvent.ACTION_DOWN:
 
                             linearTextMsg.setVisibility(View.GONE);
                             relativeAudio.setVisibility(View.VISIBLE);
 
                             Log.e("Start Recording", "start");
-                            startRecording();
+
+                            if(mRecorder==null) {
+                                startRecording();
+                            }
 
                             break;
                         case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            view.getParent().requestDisallowInterceptTouchEvent(false);
+
                             Log.e("stop Recording", "stop");
                             stopRecording(true);
                             long diff = endTimeForRecording - startTimeForRecording;
@@ -1087,14 +1095,19 @@ public class DocumentsChatFragment extends Fragment
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         endTimeForRecording = cal.getTimeInMillis();
 
-        try {
-            mRecorder.stop();
-        } catch (RuntimeException stopException) {
-            //handle cleanup here
-        }
+//        try {
+//            mRecorder.stop();
+//        } catch (RuntimeException stopException) {
+//            //handle cleanup here
+//        }
 
-        mRecorder.release();
-        mRecorder = null;
+        if (mRecorder != null) {
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
+        }
+//        mRecorder.release();
+//        mRecorder = null;
         mStartTime = 0;
         mHandler.removeCallbacks(mTickExecutor);
         if (!saveFile && mOutputFile != null) {

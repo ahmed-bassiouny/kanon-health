@@ -169,7 +169,7 @@ public class User implements Serializable {
     private Info info;
     @SerializedName("open_type")
     private int open_type;
-    private HashMap<String , String> rate_percentage;
+    private HashMap<String , String> rate_percentage=new HashMap<>();
     private float rate_avr;
     private String country_flag ;
     private  String is_available;

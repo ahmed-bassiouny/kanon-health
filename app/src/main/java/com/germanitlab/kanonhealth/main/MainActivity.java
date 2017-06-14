@@ -143,10 +143,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 //    }
 
 
-    private void askForPermission(String[] permission, Integer requestCode) {
-        ActivityCompat.requestPermissions(this, permission, requestCode);
-    }
-
     @Override
     public void OnImgDoctorListMapClick() {
 

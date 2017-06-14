@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -208,6 +209,15 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                startActivity(new Intent(getActivity(), StartQrScan.class));
 //            }
 //        });
+
+        edtFilter.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    return true;
+                }
+                return false;
+            }
+        });
 
         edtFilter.addTextChangedListener(new TextWatcher() {
             @Override

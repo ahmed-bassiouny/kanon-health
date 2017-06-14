@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,9 +24,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
@@ -265,6 +268,30 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             }
         }));
 
+
+
+    }
+
+
+    private void initView() {
+        edtDoctorListFilter = (EditText) view.findViewById(R.id.edt_doctor_list_filter);
+        doctor_list = (Button) view.findViewById(R.id.doctor_list);
+        praxis_list = (Button) view.findViewById(R.id.praxis_list);
+        ImgBtnSearch = (ImageView) view.findViewById(R.id.img_btn_search);
+
+        if (type == 2) {
+            doctor_list.setBackgroundResource(R.color.blue);
+            doctor_list.setTextColor(getResources().getColor(R.color.white));
+            praxis_list.setBackgroundResource(R.color.gray);
+            praxis_list.setTextColor(getResources().getColor(R.color.black));
+        }
+        if (type == 3) {
+            doctor_list.setBackgroundResource(R.color.gray);
+            doctor_list.setTextColor(getResources().getColor(R.color.black));
+            praxis_list.setBackgroundResource(R.color.blue);
+            praxis_list.setTextColor(getResources().getColor(R.color.white));
+        }
+
         edtDoctorListFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -273,7 +300,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
                 if (doctorList != null) {
 
                     if (charSequence.toString().trim().length() > 0) {
@@ -297,26 +323,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             }
         });
-    }
 
 
-    private void initView() {
-        doctor_list = (Button) view.findViewById(R.id.doctor_list);
-        praxis_list = (Button) view.findViewById(R.id.praxis_list);
-        ImgBtnSearch = (ImageView) view.findViewById(R.id.img_btn_search);
-
-        if (type == 2) {
-            doctor_list.setBackgroundResource(R.color.blue);
-            doctor_list.setTextColor(getResources().getColor(R.color.white));
-            praxis_list.setBackgroundResource(R.color.gray);
-            praxis_list.setTextColor(getResources().getColor(R.color.black));
-        }
-        if (type == 3) {
-            doctor_list.setBackgroundResource(R.color.gray);
-            doctor_list.setTextColor(getResources().getColor(R.color.black));
-            praxis_list.setBackgroundResource(R.color.blue);
-            praxis_list.setTextColor(getResources().getColor(R.color.white));
-        }
+        edtDoctorListFilter.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    return true;
+                }
+                return false;
+            }
+        });
 /*
         filter_to_list = (TextView) view.findViewById(R.id.filter_to_list);
 */
@@ -336,7 +352,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         recyclerView.setLayoutManager(llm);
 //        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-        edtDoctorListFilter = (EditText) view.findViewById(R.id.edt_doctor_list_filter);
 /*         filter_to_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
