@@ -477,17 +477,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tv_telephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
         if (is_me) {
-            if(editboolean)
-            {
-                edit.setVisibility(View.GONE);
-                save.setVisibility(View.VISIBLE);
-            }
-            else {
-                edit.setVisibility(View.VISIBLE);
-                save.setVisibility(View.GONE);
-            }
             tv_add_to_favourite.setVisibility(View.INVISIBLE);
             tv_contact.setVisibility(View.INVISIBLE);
+            edit.setVisibility(View.VISIBLE);
+            save.setVisibility(View.GONE);
+        }else{
+            tv_add_to_favourite.setVisibility(View.VISIBLE);
+            tv_contact.setVisibility(View.VISIBLE);
+            edit.setVisibility(View.GONE);
+            save.setVisibility(View.GONE);
         }
         setAdapters();
         tv_rating.setText( "Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
