@@ -201,7 +201,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             e.printStackTrace();
         }
     }
-    @OnClick(R.id.edit_member_list)
+    @OnClick(R.id.member_text)
     public void edit_member_list() {
         Bundle bundle = new Bundle();
         bundle.putInt("Constants", Constants.DoctorAll);
