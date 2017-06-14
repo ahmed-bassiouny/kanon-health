@@ -108,7 +108,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         prefManager = new PrefManager(getActivity());
         util= Util.getInstance(getActivity());
         initView();
-//        handelEvent();
         gson = new Gson();
         util.showProgressDialog();
         if (type == 0)
@@ -235,45 +234,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         dialog.show();
 
     }
-
-
-    private void handelEvent() {
-
-//        imgScan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(getActivity(), StartQrScan.class));
-//            }
-//        });
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new MyClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-
-                PrefManager prefManager = new PrefManager(getActivity());
-                Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-                Gson gson = new Gson();
-                intent.putExtra("doctor_data", doctorList.get(position));
-                intent.putExtra("tab","");
-                startActivity(intent);
-            }
-
-            @Override
-            public void onClick(Object object) {
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
-
-
-    }
-
-
-
 
     private void getBySpeciality() {
         new HttpCall(getActivity(), new ApiResponse() {
