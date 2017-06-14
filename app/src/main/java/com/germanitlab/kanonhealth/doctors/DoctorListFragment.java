@@ -273,6 +273,79 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
 
+
+
+    private void getBySpeciality() {
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                if (type == 2) {
+                    doctor_list.setBackgroundResource(R.color.blue);
+                    doctor_list.setTextColor(getResources().getColor(R.color.white));
+                    praxis_list.setBackgroundResource(R.color.gray);
+                    praxis_list.setTextColor(getResources().getColor(R.color.black));
+                }
+                Log.e("Update user response :", "no response found");
+                jsonString = gson.toJson(response);
+                prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
+                doctorList = (List<User>) response;
+                saveInDB(doctorList);
+                setAdapter(doctorList);
+                util.dismissProgressDialog();
+
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Log.e("Error", error);
+            }
+        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()), speciality_id, type);
+    }
+
+    private void saveInDB(List<User> doctorList) {
+        double count = mDoctorRepository.count();
+        for (User user : doctorList
+                ) {
+            User doctor1 = mDoctorRepository.getDoctor(user) ;
+            if (mDoctorRepository.getDoctor(user) == null) {
+                mDoctorRepository.create(user);
+            } else {
+                if (mDoctorRepository.getDoctor(user).getJsonDocument() == null ||mDoctorRepository.getDoctor(user).getJsonDocument() == "")
+                    mDoctorRepository.updateColoumn(user);
+            }
+        }
+    }
+
+    private void setAdapter(List<User> doctorList) {
+        if (doctorList != null) {
+            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE, 1);
+            recyclerView.setAdapter(doctorListAdapter);
+        }
+    }
+
+
+    @Override
+    public void onSuccess(Object response) {
+
+        doctorList = (List<User>) response;
+        setAdapter(doctorList);
+    }
+
+    @Override
+    public void onFailed(String error) {
+        Log.e("error", error);
+    }
+    private void loadData(){
+        if (Helper.isNetworkAvailable(getContext())) {
+            getBySpeciality();
+        } else {
+            //clinic 3 doctor 2
+            doctorList = mDoctorRepository.getAll(type);
+            setAdapter(doctorList);
+            util.dismissProgressDialog();
+        }
+    }
+
     private void initView() {
         edtDoctorListFilter = (EditText) view.findViewById(R.id.edt_doctor_list_filter);
         doctor_list = (Button) view.findViewById(R.id.doctor_list);
@@ -432,77 +505,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         });
     }
 
-
-    private void getBySpeciality() {
-        new HttpCall(getActivity(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                if (type == 2) {
-                    doctor_list.setBackgroundResource(R.color.blue);
-                    doctor_list.setTextColor(getResources().getColor(R.color.white));
-                    praxis_list.setBackgroundResource(R.color.gray);
-                    praxis_list.setTextColor(getResources().getColor(R.color.black));
-                }
-                Log.e("Update user response :", "no response found");
-                jsonString = gson.toJson(response);
-                prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
-                doctorList = (List<User>) response;
-                saveInDB(doctorList);
-                setAdapter(doctorList);
-                util.dismissProgressDialog();
-
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Log.e("Error", error);
-            }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()), speciality_id, type);
-    }
-
-    private void saveInDB(List<User> doctorList) {
-        double count = mDoctorRepository.count();
-        for (User user : doctorList
-                ) {
-            User doctor1 = mDoctorRepository.getDoctor(user) ;
-            if (mDoctorRepository.getDoctor(user) == null) {
-                mDoctorRepository.create(user);
-            } else {
-                if (mDoctorRepository.getDoctor(user).getJsonDocument() == null ||mDoctorRepository.getDoctor(user).getJsonDocument() == "")
-                    mDoctorRepository.updateColoumn(user);
-            }
-        }
-    }
-
-    private void setAdapter(List<User> doctorList) {
-        if (doctorList != null) {
-            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE, 1);
-            recyclerView.setAdapter(doctorListAdapter);
-        }
-    }
-
-
-    @Override
-    public void onSuccess(Object response) {
-
-        doctorList = (List<User>) response;
-        setAdapter(doctorList);
-    }
-
-    @Override
-    public void onFailed(String error) {
-        Log.e("error", error);
-    }
-    private void loadData(){
-        if (Helper.isNetworkAvailable(getContext())) {
-            getBySpeciality();
-        } else {
-            //clinic 3 doctor 2
-            doctorList = mDoctorRepository.getAll(type);
-            setAdapter(doctorList);
-            util.dismissProgressDialog();
-        }
-    }
 
 
 }

@@ -101,6 +101,22 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(Helper.isNetworkAvailable(getContext())) {
+            util.showProgressDialog();
+            new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                    , AppController.getInstance().getClientInfo().getPassword());
+        }
+        else {
+            TypeToken<List<User>> token = new TypeToken<List<User>>(){};
+            doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST) ,  token.getType());;
+            setAdapter(doctorList);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
