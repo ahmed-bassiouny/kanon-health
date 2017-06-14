@@ -76,6 +76,7 @@ public class SettingFragment extends Fragment {
     //status doctor
     private TextView txt_status, tvAddPractice;
     private Button btn_change_status;
+    View line;
 
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
@@ -173,23 +174,7 @@ public class SettingFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void assignViews() {
 
-
-        Uri uri = Uri.parse("http://www.androidbegin.com/tutorial/AndroidCommercial.3gp");
-        videoView.setVideoURI(uri);
-        MediaController mc = new MediaController(getContext());
-        mc.setAnchorView(videoView);
-        videoView.setMediaController(mc);
-
-        videoView.requestFocus();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            // Close the progress bar and play the video
-            public void onPrepared(MediaPlayer mp) {
-                videoView.start();
-            }
-        });
-    }
 
     private void initView() {
         tvAddPractice = (TextView) view.findViewById(R.id.tv_add_practice);
@@ -197,22 +182,12 @@ public class SettingFragment extends Fragment {
         trSupport = (TableRow) view.findViewById(R.id.tr_support);
         profile = (TableRow) view.findViewById(R.id.my_profile);
         trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
-//        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         tvBack = (TextView) view.findViewById(R.id.tv_back);
-//        imgQr = (ImageView) view.findViewById(R.id.myQr);
-//        imgScan = (ImageButton) view.findViewById(R.id.scan);
-//        imgScan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(neONoPw Intent(getActivity() , StartQrScan.class));
-//            }
-//        });
 
         videoView = (VideoView) view.findViewById(R.id.video_view);
         tvSetting = (TextView) view.findViewById(R.id.tv_setting);
@@ -224,7 +199,7 @@ public class SettingFragment extends Fragment {
         trTerms = (TableRow) view.findViewById(R.id.tr_terms);
         trHelp = (TableRow) view.findViewById(R.id.tr_help);
         trVersion = (TextView) view.findViewById(R.id.tv_version);
-
+        line=(View)view.findViewById(R.id.line);
         //status doctor
         txt_status = (TextView) view.findViewById(R.id.txt_status);
         btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
@@ -268,9 +243,7 @@ public class SettingFragment extends Fragment {
                 startActivity(intent);
             }
         });
-/*
-        trSupport = (TableRow) view.findViewById(R.id.tr_sound);
-*/
+
 
         trFaq.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,7 +263,6 @@ public class SettingFragment extends Fragment {
                     intent.putExtra("from", true);
                     startActivity(intent);
                 }
-//                getContext().startActivity(intent);
             }
         });
         trSupport.setOnClickListener(new View.OnClickListener() {
@@ -302,7 +274,6 @@ public class SettingFragment extends Fragment {
         trHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startActivity(new Intent(getContext() , Help.class));
             }
         });
 
@@ -326,6 +297,12 @@ public class SettingFragment extends Fragment {
 
             }
         });
+        if(user.getIsDoc()==1){
+            tvAddPractice.setVisibility(View.VISIBLE);
+            line.setVisibility(View.VISIBLE);
+            txt_status.setVisibility(View.VISIBLE);
+            btn_change_status.setVisibility(View.VISIBLE);
+        }
     }
 
     private void changStatusService(String isAvailable) {

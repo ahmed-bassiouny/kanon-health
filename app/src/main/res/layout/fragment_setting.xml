@@ -152,6 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
+                    android:visibility="gone"
                     android:text="Add Practice"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -160,6 +161,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:id="@+id/line"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:layout_marginRight="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
@@ -417,6 +420,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
+                    android:visibility="gone"
                     android:layout_marginTop="10dp"
                     android:paddingLeft="@dimen/size_15dp"
                     android:text="@string/youareoffline"
@@ -437,6 +441,7 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:gravity="center"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:text="@string/go_online"
                     android:textStyle="bold" />
             </TableRow>
