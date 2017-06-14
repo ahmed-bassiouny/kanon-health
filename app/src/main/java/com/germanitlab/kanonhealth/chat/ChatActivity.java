@@ -152,7 +152,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private List<Message> mMessages = new ArrayList<>();
     private MessageAdapterClinic mAdapter;
 
-    public static User doctor;
+    public User doctor;
     private String filePath;
     private MessageRepositry mMessageRepositry;
 
@@ -211,6 +211,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         try {
             Intent intent = getIntent();
             String doctorJson = intent.getStringExtra("doctor_data");
+
+
+
             prefManager.put("doctor", doctorJson);
             Log.d("data from json ", prefManager.getData("doctor"));
             Boolean from = intent.getBooleanExtra("from", false);
@@ -1558,13 +1561,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
-        int from_id = getIntent().getIntExtra("from_id", 0);
-        if(from_id!=1){
-            MenuItem endSession = menu.findItem(R.id.end_session);
-            if (doctor.getIsDoc() != 1)
-                endSession.setVisible(false);
+        if(doctor!=null) {
+            int from_id = getIntent().getIntExtra("from_id", 0);
+            if (from_id != 1) {
+                MenuItem endSession = menu.findItem(R.id.end_session);
+                if (doctor.getIsDoc() != 1)
+                    endSession.setVisible(false);
+            }
         }
-        return true;
+            return true;
     }
 
     @Override

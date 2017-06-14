@@ -454,9 +454,8 @@ public class DocumentsChatFragment extends Fragment
 
                             Log.e("Start Recording", "start");
 
-                            if(mRecorder==null) {
-                                startRecording();
-                            }
+
+                            startRecording();
 
                             break;
                         case MotionEvent.ACTION_UP:
@@ -1095,19 +1094,14 @@ public class DocumentsChatFragment extends Fragment
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         endTimeForRecording = cal.getTimeInMillis();
 
-//        try {
-//            mRecorder.stop();
-//        } catch (RuntimeException stopException) {
-//            //handle cleanup here
-//        }
-
-        if (mRecorder != null) {
+        try {
             mRecorder.stop();
-            mRecorder.release();
-            mRecorder = null;
+        } catch (RuntimeException stopException) {
+            //handle cleanup here
         }
-//        mRecorder.release();
-//        mRecorder = null;
+
+        mRecorder.release();
+        mRecorder = null;
         mStartTime = 0;
         mHandler.removeCallbacks(mTickExecutor);
         if (!saveFile && mOutputFile != null) {
