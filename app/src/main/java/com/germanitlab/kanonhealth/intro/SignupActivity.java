@@ -43,7 +43,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     private TextView select_country;
     Boolean found;
     String country, code;
-
+    Constants constants;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         Intent intent = getIntent();
         Constants.COUNTRY_CODES.clear();
         Gson gson = new Gson();
-        List<CountriesCodes> codess = gson.fromJson(Constants.CountryCode ,  new TypeToken<List<CountriesCodes>>(){}.getType());
+        constants=new Constants();
+        List<CountriesCodes> codess = gson.fromJson(constants.CountryCode ,  new TypeToken<List<CountriesCodes>>(){}.getType());
         found = true;
         for (CountriesCodes countriescooed: codess) {
             Constants.COUNTRY_CODES.put(countriescooed.getName() , countriescooed.getDial_code());

@@ -39,7 +39,6 @@
                     android:layout_gravity="right"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/edit_icon"
-                    android:tint="@android:color/holo_blue_bright"
                     android:visibility="visible" />
 
                 <ImageView
@@ -48,6 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="52dp"
                     android:layout_gravity="right"
+                    android:tint="@color/black"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/sbmit"
                     android:visibility="gone" />
