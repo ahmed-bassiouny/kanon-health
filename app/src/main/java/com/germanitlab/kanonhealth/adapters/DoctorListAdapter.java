@@ -83,7 +83,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     list = mMessageRepositry.getAll(doctorContactsList.get(position).get_Id());
 
                     if (list.size() > 0) {
-                        Toast.makeText(activity, "" + list.get(list.size() - 1).getMsg(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(activity, "" + list.get(list.size() - 1).getMsg(), Toast.LENGTH_SHORT).show();
                         holder.tvSpecialist.setText(list.get(list.size() - 1).getMsg()+"");
                     }
                 }
