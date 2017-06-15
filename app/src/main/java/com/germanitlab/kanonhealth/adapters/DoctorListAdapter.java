@@ -90,13 +90,17 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
 
         final User doctor = doctorContactsList.get(position);
+        String lasseen=(doctor.getLastOnline()!="null"&&doctor.getLastOnline()!=null)?doctor.getLastOnline():"";
         if(doctor.getIs_available()!=null) {
             if (doctor.getIs_available().equals("0")) {
                 final int newColor = activity.getResources().getColor(R.color.medium_grey);
                 holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+                holder.tvSpecialist.append("\n"+lasseen+"  "+"Close");
             } else {
                 final int newColor = activity.getResources().getColor(R.color.green);
                 holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+                holder.tvSpecialist.append("\n"+lasseen+"  "+"Open");
+
             }
         }
         holder.tvDoctorName.setText(doctor.getName());

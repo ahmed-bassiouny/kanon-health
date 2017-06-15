@@ -60,6 +60,7 @@ import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfile;
+import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -374,10 +375,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @OnClick({R.id.tv_chat_user_name, R.id.img_chat_user_avatar})
     public void onDoctorNameClicked() {
-        Intent intent = new Intent(this, DoctorProfile.class);
+        Intent intent = new Intent(this, DoctorProfileActivity.class);
         Gson gson = new Gson();
-        String doctor_data = gson.toJson(doctor);
-        intent.putExtra("doctor_data", doctor_data);
+        intent.putExtra("doctor_data", doctor);
         startActivity(intent);
     }
 
