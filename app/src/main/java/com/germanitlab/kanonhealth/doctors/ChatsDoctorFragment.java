@@ -201,7 +201,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), PaymentActivity.class);
-                    intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
+                    intent.putExtra("doctor_data",doctorList.get(position));
                     startActivity(intent);
                 }
             }
@@ -266,22 +266,6 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
             }
         });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-
-
-    public void scanQrCode() {
-
-        //call scan qr code
-        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setResultDisplayDuration(0);
-        integrator.initiateScan();
     }
 
 
