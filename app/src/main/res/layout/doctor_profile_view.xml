@@ -21,14 +21,12 @@
         android:background="@color/colorPrimary">
 
         <TextView
+            android:id="@+id/toolbar_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:text="@string/main_profile"
             android:textSize="18sp"
             android:textColor="@color/white"/>
-
-
 
     </android.support.v7.widget.Toolbar>
 
@@ -122,10 +120,12 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/img_edit_avatar"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="@color/black"
                             android:layout_gravity="center"
                             android:src="@drawable/placeholder" />
 
@@ -158,24 +158,22 @@
                             android:layout_height="0dp"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:backgroundTint="@color/gray"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
-                            android:text="ONLINE"
+                            android:text="Status: Online"
                             android:textAlignment="center"
-                            android:textColor="@color/red" />
+                            android:textColor="@color/black" />
 
                         <TextView
-                            android:id="@+id/tv_qr_code"
+                            android:id="@+id/tv_add_to_favourite"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:backgroundTint="@color/gray"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
-                            android:text="QR Code"
+                            android:text="Add to Favourite"
                             android:textAlignment="center"
                             android:textColor="@android:color/background_dark" />
 
@@ -185,10 +183,9 @@
                             android:layout_height="0dp"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:backgroundTint="@color/gray"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
-                            android:text="Contact"
+                            android:text="Contact by chat"
                             android:textAlignment="center"
                             android:textColor="@android:color/background_dark" />
 
@@ -232,6 +229,7 @@
                             android:visibility="visible" />
                     </LinearLayout>
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/tv_name"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -241,25 +239,25 @@
                         android:gravity="center"
                         android:textColor="@android:color/background_dark"
                         android:textSize="18dp" />
-                    <TextView
-                        android:id="@+id/tv_add_to_favourite"
-                        android:layout_width="0dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:backgroundTint="@color/gray"
-                        android:background="@drawable/custom_edittext_without_border_style"
-                        android:gravity="center"
-                        android:text="Add to Favourite"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/background_dark" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/tv_add_to_favourite"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:layout_marginRight="5dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:backgroundTint="@color/gray"-->
+                        <!--android:background="@drawable/custom_edittext_without_border_style"-->
+                        <!--android:gravity="center"-->
+                        <!--android:text="Add to Favourite"-->
+                        <!--android:textAlignment="center"-->
+                        <!--android:textColor="@android:color/background_dark" />-->
 
                 </TableRow>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
                 <RelativeLayout
@@ -274,7 +272,7 @@
                         android:layout_height="wrap_content"
                         android:text="Rating "
                         android:textColor="@android:color/background_dark"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -284,7 +282,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:rotation="180"
-                        android:src="@drawable/back" />
+                        android:src="@drawable/ic_arrow_back_black_24dp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -301,6 +299,13 @@
                         android:isIndicator="true"
                         android:numStars="5" />
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/black" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -313,6 +318,8 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:text="Specialities"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:textColor="@android:color/background_dark" />
 
                     <android.support.v7.widget.RecyclerView
@@ -346,13 +353,94 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/background_dark"
                     android:textSize="16dp" />
+
+
                 <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/black" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Location"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/background_dark"
+                        android:id="@+id/textView4" />
+
+
+
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/placeholder"
+                        android:textColor="@android:color/background_dark"
+                        android:layout_alignTop="@+id/textView4"
+                        android:layout_toEndOf="@+id/textView4" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_locations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="kjkjojoij"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="16dp" />
+
+                <View
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:id="@+id/border"
                     android:background="@color/black" />
+
+
+                <RelativeLayout
+                    android:layout_width="343dp"
+                    android:layout_height="150dp"
+                    android:id="@+id/rl_map"
+                    android:orientation="vertical">
+                    <!--loading map in container-->
+                    <fragment
+                        android:id="@+id/map"
+                        android:clickable="false"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:context=".DoctorProfileActivity"/>
+
+                    <!--<com.germanitlab.kanonhealth.RadiusOverlayView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_alignParentStart="true" />-->
+                    android:layout_height="match_parent"/>
+
+                </RelativeLayout>
+                <View
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/black" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -365,11 +453,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:text="@string/location"/>
                         <EditText
                             android:layout_width="match_parent"
                             android:id="@+id/ed_location"
                             android:enabled="false"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_height="wrap_content"/>
                     </TableRow>
                     <TableRow
@@ -379,22 +471,32 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:text="@string/streat"/>
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:id="@+id/ed_street_name"/>
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:text="@string/house_number"/>
                         <EditText
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"
@@ -404,11 +506,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:text="@string/zip_code"/>
                         <EditText
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="match_parent"
                             android:enabled="false"
                             android:layout_height="wrap_content"
@@ -418,11 +526,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:text="@string/city"/>
                         <EditText
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"
@@ -432,11 +546,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:text="@string/province"/>
                         <EditText
+
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="match_parent"
                             android:enabled="false"
                             android:layout_height="wrap_content"
@@ -447,11 +567,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:text="@string/country"/>
                         <EditText
+                            android:textSize="16sp"
+                            android:textStyle="bold"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"
@@ -476,6 +600,8 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:text="Languages"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:textColor="@android:color/background_dark" />
 
                     <android.support.v7.widget.RecyclerView
@@ -522,7 +648,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:text="Member In clinic"
+                        android:text="Member In Practice"
+
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:textColor="@android:color/background_dark" />
 
                     <android.support.v7.widget.RecyclerView
@@ -556,26 +685,33 @@
 
 
                 <View
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
                     android:orientation="vertical">
 
                     <TextView
+
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="3dp"
                         android:text="@string/important_info"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16sp" />
+                        android:textColor="@android:color/background_dark" />
 
                     <TextView
+
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:layout_width="200dp"
                         android:layout_height="2dp"
                         android:layout_marginBottom="3dp"
@@ -589,16 +725,21 @@
                     android:orientation="horizontal">
 
                     <TextView
+
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="bottom"
                         android:hint="@string/first_name"
-                        android:text="Opening Time"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16sp" />
+                        android:text="Working Hours"
+                        android:textColor="@android:color/background_dark"/>
 
 
                     <ImageView
+
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:id="@+id/edit_time_table"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
@@ -608,8 +749,7 @@
                         android:gravity="bottom"
                         android:src="@drawable/edit"
                         android:visibility="gone"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
+                        android:textColor="@android:color/background_dark"/>
                 </RelativeLayout>
 
 
@@ -641,18 +781,21 @@
                     android:id="@+id/tablelayout">
                 </TableLayout>
                 <View
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
                     android:orientation="horizontal">
 
                     <TextView
+
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:layout_height="wrap_content"
@@ -690,6 +833,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
@@ -737,42 +881,9 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:background="@color/black" />
+
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-
-                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="343dp"
-                    android:layout_height="150dp"
-                    android:orientation="vertical">
-                    <!--loading map in container-->
-                    <fragment
-                        android:id="@+id/map"
-                        android:clickable="false"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:context=".DoctorProfileActivity"/>
-
-                    <!--<com.germanitlab.kanonhealth.RadiusOverlayView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_alignParentTop="true"-->
-                        <!--android:layout_alignParentStart="true" />-->
-                        android:layout_height="match_parent"/>
-
-                </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@color/black" />
-                <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
@@ -794,6 +905,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -803,6 +915,11 @@
                         android:layout_height="wrap_content"
                         android:scrollbars="vertical" />
                 </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/doc"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,6 +84,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     LinearLayout ll_no;
     @BindView(R.id.tv_no_time)
     TextView tv_no_time;
+    @BindView(R.id.toolbar_name)
+    TextView tvToolbarName;
     @BindView(R.id.tablelayout)
     TableLayout tablelayout;
 
@@ -96,8 +99,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     TextView tv_contact;
     @BindView(R.id.tv_add_to_favourite)
     TextView tv_add_to_favourite;
-    @BindView(R.id.tv_qr_code)
-    TextView tv_qr_code;
+//    @BindView(R.id.tv_qr_code)
+//    TextView tv_qr_code;
     @BindView(R.id.tv_telephone)
     TextView tv_telephone;
     @BindView(R.id.tv_location)
@@ -114,6 +117,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     TextView tv_languages;
     @BindView(R.id.image_star)
     ImageView image_star;
+    @BindView(R.id.iv_location)
+    ImageView ivLocation;
+    @BindView(R.id.tv_locations)
+    TextView tvLocations;
+
+
     @BindView(R.id.edit_time_table)
     ImageView edit_time_table;
     User user;
@@ -123,6 +132,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     LinearLayout linear_practice_profile;
     @BindView(R.id.border)
     View border ;
+
+    @BindView(R.id.rl_map)
+    RelativeLayout rlMap ;
 
 
     @BindView(R.id.ed_location)
@@ -174,6 +186,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private GoogleMap googleMap;
     Boolean editboolean ;
     private Menu menu;
+    private SupportMapFragment mapFragment;
 
 
     @Override
@@ -184,7 +197,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         editboolean = false;
 
         initTB();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -269,7 +282,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void initTB() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_new);
         setSupportActionBar(toolbar);
-        setTitle(getString(R.string.main_profile));
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -460,6 +472,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 case Constants.HOURS_CODE:
                     user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
                     user.setOpen_Type(data.getIntExtra("type" , 0));
+                    getTimaTableData(user.getOpen_time());
                     break;
                 case Constants.HOURS_TYPE_CODE :
                     user.setOpen_Type(data.getIntExtra("type" ,0));
@@ -486,6 +499,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void bindData() {
 //        getTimaTableData(user.getTable());
         checkDoctor();
+        tvToolbarName.setText(user.getFirst_name() +" "+ user.getLast_name());
         tv_name.setText(user.getLast_name() + ", " + user.getFirst_name());
         Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() ,imageAvatar ,R.drawable.placeholder);
         et_last_name.setText(user.getLast_name());
@@ -494,11 +508,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         et_telephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tv_location.setText(user.getAddress());
+        tvLocations.setText(user.getAddress());
+        Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getCountry_flag() ,ivLocation ,R.drawable.placeholder);
+
         if (user.getIs_available() != null) {
             if (!user.getIs_available().equals("1"))
-                tv_online.setText("Offline");
+                tv_online.setText("Status: Offline");
         }
-        loadQRCode(tv_qr_code);
+//        loadQRCode(tv_qr_code);
         tv_telephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
         if (is_me) {
@@ -531,10 +548,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if(user.isClinic==1) {
             linear_practice_profile.setVisibility(View.VISIBLE);
             border.setVisibility(View.VISIBLE);
+            rlMap.setVisibility(View.VISIBLE);
+
         }
         else{
             linear_practice_profile.setVisibility(View.GONE);
             border.setVisibility(View.GONE);
+            rlMap.setVisibility(View.GONE);
+
         }
 
         // edit ahmed 12 - 6 - 2017
@@ -782,5 +803,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title(user.getFirst_name()));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
