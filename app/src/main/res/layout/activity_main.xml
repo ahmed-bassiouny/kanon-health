@@ -21,9 +21,9 @@
             layout="@layout/toolbar_main"/>
 
         <View
-            android:background="@color/medium_grey"
+            android:background="@color/divider"
             android:layout_width="match_parent"
-            android:layout_height="2dp"/>
+            android:layout_height="1dp"/>
 
     </android.support.design.widget.AppBarLayout>
 
