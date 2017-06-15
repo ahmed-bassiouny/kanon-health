@@ -253,5 +253,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="close_conversation">Are you sure you want to close the conversation</string>
     <string name="session_ended">Session Closed</string>
     <string name="rate_conversation">Please rate your conversation</string>
+    <string name="main_profile">Main Profile</string>
 
 </resources>

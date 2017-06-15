@@ -17,7 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,6 +45,7 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.*;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -196,7 +201,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private static final int TAKE_PICTURE = 1;
     private GoogleMap googleMap;
     Boolean editboolean ;
-
+    private Menu menu;
 
 
     @Override
@@ -206,7 +211,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ButterKnife.bind(this);
         editboolean = false;
 
-
+        initTB();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -246,6 +251,58 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
+        menu.findItem(R.id.mi_save).setVisible(false);
+        menu.findItem(R.id.mi_edit).setVisible(true);
+
+
+        if (is_me) {
+            menu.findItem(R.id.mi_save).setVisible(false);
+            menu.findItem(R.id.mi_edit).setVisible(true);
+
+        }else{
+            menu.findItem(R.id.mi_save).setVisible(false);
+            menu.findItem(R.id.mi_edit).setVisible(false);
+
+        }
+        this.menu=menu;
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.mi_edit:
+                editboolean = true ;
+                setVisiblitiy(View.GONE);
+                menu.findItem(R.id.mi_save).setVisible(true);
+                menu.findItem(R.id.mi_edit).setVisible(false);
+                break;
+            case R.id.mi_save:
+                handleNewData();
+                bindData();
+                menu.findItem(R.id.mi_edit).setVisible(true);
+                menu.findItem(R.id.mi_save).setVisible(false);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
+    private void initTB() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_new);
+        setSupportActionBar(toolbar);
+        setTitle(getString(R.string.main_profile));
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
     private void chechEditPermission() {
         if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id())
             is_me = true;
@@ -477,11 +534,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             tv_contact.setVisibility(View.INVISIBLE);
             edit.setVisibility(View.VISIBLE);
             save.setVisibility(View.GONE);
+
         }else{
             tv_add_to_favourite.setVisibility(View.VISIBLE);
             tv_contact.setVisibility(View.VISIBLE);
             edit.setVisibility(View.GONE);
             save.setVisibility(View.GONE);
+
         }
         setAdapters();
         tv_rating.setText( "Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");

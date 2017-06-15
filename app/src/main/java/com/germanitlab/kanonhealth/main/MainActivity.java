@@ -59,16 +59,13 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //-- set status open when open activity
         AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
         tvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-
         initTB();
         mytablayout = (TabLayout) findViewById(R.id.mytablayout);
         myviewpager = (ViewPager) findViewById(R.id.myviewpager);
 
 
-        // Set up the ViewPager with the sections adapter.
         myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
 
@@ -103,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-//                toolbar.setTitle(tab.getText().toString());
                 tvToolbarTitle.setText(tab.getText().toString());
                 myviewpager.setCurrentItem(tab.getPosition(), false);
                 tab.getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
@@ -130,15 +126,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         setSupportActionBar(toolbar);
         assert getSupportActionBar() != null;
         tvToolbarTitle.setText("Contacts");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle(getString(R.string.profile));
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-//        return true;
-//    }
 
 
     @Override
@@ -201,33 +190,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     }
 
 
-    private void showNotification(String message, int type, String obj) {
-
-
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(MainActivity.this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("New Message")
-                        .setSound(uri)
-                        .setAutoCancel(true)
-                        .setContentText(message);
-
-        Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
-        notificationIntent.putExtra("message", message);
-        notificationIntent.putExtra("type", type);
-        notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
-        notificationIntent.putExtra("userObj", obj);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 2, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
-
-        // Add as notification
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(2, builder.build());
-
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {
