@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,39 +78,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.speciality_recycleview)
     RecyclerView speciliatyRecycleView;
     SpecilaitiesAdapter adapter;
-    List<Object> list;
-    List<SpecilaitiesModels> languageList;
-    List<SpecilaitiesModels> memberList;
-    @BindView(R.id.tv_monday)
-    TextView monday;
-    @BindView(R.id.tv_tuesday)
-    TextView tuesday;
-    @BindView(R.id.tv_wednesday)
-    TextView wednesday;
-    @BindView(R.id.tv_thursday)
-    TextView thursday;
-    @BindView(R.id.tv_friday)
-    TextView friday;
-    @BindView(R.id.tv_saturday)
-    TextView saturday;
-    @BindView(R.id.tv_sunday)
-    TextView sunday;
+
     @BindView(R.id.no_time)
     LinearLayout ll_no;
-    @BindView(R.id.monday_time)
-    LinearLayout ll_monday;
-    @BindView(R.id.tuesday_time)
-    LinearLayout ll_tuesday;
-    @BindView(R.id.wednesday_time)
-    LinearLayout ll_wednesday;
-    @BindView(R.id.thursday_time)
-    LinearLayout ll_thursday;
-    @BindView(R.id.friday_time)
-    LinearLayout ll_friday;
-    @BindView(R.id.saturday_time)
-    LinearLayout ll_saturday;
-    @BindView(R.id.sunday_time)
-    LinearLayout ll_sunday;
+    @BindView(R.id.tv_no_time)
+    TextView tv_no_time;
+    @BindView(R.id.tablelayout)
+    TableLayout tablelayout;
+
     @BindView(R.id.tv_online)
     TextView tv_online;
     @BindView(R.id.img_edit_avatar)
@@ -184,10 +160,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     ImageView edit_member_list;
     @BindView(R.id.edit_name_layout)
     LinearLayout edit_name_layout;
-    @BindView(R.id.permenant_closed)
-    LinearLayout permenant_closed ;
-    @BindView(R.id.always_open)
-    LinearLayout always_open;
     @BindView(R.id.save)
     ImageView save;
     @BindView(R.id.ll_doctor_data)
@@ -599,71 +571,22 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         showDialogFragment(bundle);
     }
     private void getTimaTableData(List<Table> list) {
-        if(user.getOpen_Type() == 1)
-            always_open.setVisibility(View.VISIBLE);
-        else if(user.getOpen_Type() == 2)
-            ll_no.setVisibility(View.VISIBLE);
-        else if(user.getOpen_Type() == 3)
-            permenant_closed.setVisibility(View.VISIBLE);
+        if (user.getOpen_Type() == 3)
+            tv_no_time.setText("permenant_closed");
+        else
+            tv_no_time.setText("Always Open");
 
-        if (list.size() > 0)
+        if (list.size() > 0) {
             ll_no.setVisibility(View.GONE);
-        passData(list);
-    }
-
-    private void passData(List<Table> list) {
-        clearTexts();
-        for (int s= 0 ; s < list.size() ; s++) {
-            Table table = list.get(s);
-            if (table.getDayweek() != null) {
-                if (table.getDayweek().equals("1")) {
-                    setViewText(monday, table);
-                    ll_monday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("2")) {
-                    setViewText(tuesday, table);
-                    ll_tuesday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("3")) {
-                    setViewText(wednesday, table);
-                    ll_wednesday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("4")) {
-                    setViewText(thursday, table);
-                    ll_thursday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("5")) {
-                    setViewText(friday, table);
-                    ll_friday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("6")) {
-                    setViewText(saturday, table);
-                    ll_saturday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("7")) {
-                    setViewText(sunday, table);
-                    ll_sunday.setVisibility(View.VISIBLE);
-                }
-            }
+            tablelayout.removeAllViews();
+            com.germanitlab.kanonhealth.helpers.TimeTable timeTable=new com.germanitlab.kanonhealth.helpers.TimeTable();
+            timeTable.creatTimeTable(list,this,tablelayout);
         }
-        return;
+        else
+            ll_no.setVisibility(View.VISIBLE);
+
     }
 
-    private void clearTexts() {
-        monday.setText("");
-        tuesday.setText("");
-        wednesday.setText("");
-        thursday.setText("");
-        friday.setText("");
-        saturday.setText("");
-        sunday.setText("");
-        ll_monday.setVisibility(View.GONE);
-        ll_thursday.setVisibility(View.GONE);
-        ll_friday.setVisibility(View.GONE);
-        ll_saturday.setVisibility(View.GONE);
-        ll_wednesday.setVisibility(View.GONE);
-        ll_sunday.setVisibility(View.GONE);
-        ll_tuesday.setVisibility(View.GONE);
-    }
-
-    private void setViewText(TextView textView, Table table) {
-        textView.append(table.getFrom() + " - " + table.getTo());
-        textView.append(System.getProperty("line.separator"));
-    }
 
     @OnClick(R.id.image_star)
     public void image_star() {
