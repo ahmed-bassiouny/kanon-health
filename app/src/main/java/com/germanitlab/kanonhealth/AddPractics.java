@@ -355,21 +355,16 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         else
             tv_no_time.setText("Always Open");
 
-        if (list.size() > 0)
+        if (list.size() > 0) {
             ll_no.setVisibility(View.GONE);
+            tablelayout.removeAllViews();
+            com.germanitlab.kanonhealth.helpers.TimeTable timeTable=new com.germanitlab.kanonhealth.helpers.TimeTable();
+            timeTable.creatTimeTable(list,this,tablelayout);
+        }
         else
             ll_no.setVisibility(View.VISIBLE);
-        passData(list);
+        
     }
-
-    private void passData(List<Table> list) {
-        tablelayout.removeAllViews();
-        com.germanitlab.kanonhealth.helpers.TimeTable timeTable=new com.germanitlab.kanonhealth.helpers.TimeTable();
-        timeTable.creatTimeTable(list,this,tablelayout);
-    }
-
-
-
 
     @Override
     public void onGalleryClicked(Intent intent) {
