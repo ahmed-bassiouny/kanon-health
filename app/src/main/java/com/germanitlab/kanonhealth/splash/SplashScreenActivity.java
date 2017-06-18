@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.SocketCall;
@@ -43,34 +44,32 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                
+
+                // to check passcode
                 if (isLogin && !storedUser.equals("")) {
                     joinUser();
-//                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-//                    intent.putExtra("status" , 1);
-//                    startActivity(intent);
-                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                    intent.putExtra("checkPassword" ,true);
+                    intent.putExtra("finish",false);
                     startActivity(intent);
 
-                    finish();
-
+                    // all data saved but no passcode set
                 } else if(isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
 
                     joinUser();
-//                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-//                    intent.putExtra("status" , 0);
-//                    startActivity(intent);
-                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                    intent.putExtra("checkPassword" ,false);
+                    intent.putExtra("finish",false);
                     startActivity(intent);
-
-                    finish();
                 }
+                // registered but not filled my data
                 else if (isLogin && storedUser.equals("")){
 
                     joinUser();
                     startActivity(new Intent(SplashScreenActivity.this, ProfileDetails.class));
                     finish();
 
+                    // enter phone
                 } else {
 
                     startActivity(new Intent(SplashScreenActivity.this, SignupActivity.class));

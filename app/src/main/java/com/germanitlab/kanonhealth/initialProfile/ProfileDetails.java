@@ -213,12 +213,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
                     mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
                     dismissProgressDialog();
-//                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
-//                    intent.putExtra("status", 0);
-//                    startActivity(intent);
-                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
+                    intent.putExtra("checkPassword" ,false);
+                    intent.putExtra("finish",false);
                     startActivity(intent);
-                    finish();
                 }
 
                 @Override
