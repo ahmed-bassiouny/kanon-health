@@ -2,18 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:id="@+id/multi_choise_layout"
+    android:layout_margin="10dp"
     android:layout_height="wrap_content">
-    <RelativeLayout
-        android:layout_width="80dp"
-        android:id="@+id/imagelayout"
-        android:layout_height="80dp">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:id="@+id/avatar"
-            android:src="@mipmap/ic_launcher"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/img_icon"
+        android:src="@mipmap/ic_launcher"/>
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kjnklnklfdklvmnklfx"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/img_icon"
+        android:layout_marginStart="5dp"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/rbtn"
+        android:layout_centerInParent="true"/>
+        <!--
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -22,19 +34,8 @@
             android:id="@+id/check"
             android:src="@drawable/check"
             android:visibility="gone"/>
+            -->
     </RelativeLayout>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="kjnklnklfdklvmnklfx"
-            android:textColor="@android:color/background_dark"
-            android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/imagelayout"
-            android:layout_marginStart="26dp" />
 
-</RelativeLayout>
+

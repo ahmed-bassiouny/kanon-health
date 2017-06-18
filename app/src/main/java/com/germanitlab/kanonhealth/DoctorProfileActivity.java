@@ -392,6 +392,17 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etCity.setEnabled(editable);
         etProvince.setEnabled(editable);
         etCountry.setEnabled(editable);
+        ed_location.setEnabled(editable);
+        ed_street_name.setEnabled(editable);
+        ed_house_number.setEnabled(editable);
+        ed_zip_code.setEnabled(editable);
+        ed_city.setEnabled(editable);
+        ed_province.setEnabled(editable);
+        ed_country.setEnabled(editable);
+        if(user.isClinic==1)
+            edit_member_list.setVisibility(View.VISIBLE);
+        else
+            edit_member_list.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.edit_time_table)
