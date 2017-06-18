@@ -275,11 +275,5 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==13){
-            Toast.makeText(this, "TASO fra", Toast.LENGTH_SHORT).show();
-        }
-    }
+
 }

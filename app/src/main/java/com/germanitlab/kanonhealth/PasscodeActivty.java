@@ -15,15 +15,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PasscodeActivty extends AppCompatActivity {
-    String passcode;
+
+    boolean checkPassword; // check password if you want login or enter
+    boolean finish; // finish this activity or redirect to main activity
+    String tempPasscode="";
+    String passcode="";
+    PrefManager prefManager;
     @BindView(R.id.pass)
     TextView pass;
-    PrefManager prefManager;
-    int status;
-    Boolean reEnter, save;
     @BindView(R.id.pass_text)
     TextView passText;
-    String temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +32,11 @@ public class PasscodeActivty extends AppCompatActivity {
         setContentView(R.layout.passcode_activty);
         ButterKnife.bind(this);
         prefManager = new PrefManager(this);
-        reEnter = false;
-        status = getIntent().getIntExtra("status", -1);
-        if (status == 0) {
-            reEnter = true;
+        checkPassword = getIntent().getBooleanExtra("checkPassword", true);
+        finish = getIntent().getBooleanExtra("finish", true);
+        if (!checkPassword) {
             passText.setText("Set your Password");
         }
-        passcode = "";
-        save = false ;
-        temp = "";
-
 
     }
 
@@ -98,45 +94,29 @@ public class PasscodeActivty extends AppCompatActivity {
     public void submit(View view) {
         if (passcode.length() != 6)
             Toast.makeText(this, "wrong passcode", Toast.LENGTH_SHORT).show();
-        else {
-
-            //reset password
-            if (status == 0) {
-                //second time password entered
-                if(save)
-                    savecode();
-                //first time password entered
-                else if(reEnter)
-                    reEnter();
-                else
-                    //nothing entered yet
-                    newPass();
-            }
-            //for check  password
-            if (status == 1) {
-                checkPasscode();
-                //update passcode
-            } else if (status == 2) {
-                if(save)
-                    savecode();
-                else if(reEnter)
-                    reEnter();
-                else {
-                    if (passcode.equals(prefManager.getData(PrefManager.PASSCODE))) {
-                        newPass();
-                    }
-                    else {
-                        wrongPassword();
-                    }
-                }
-
+        else if(checkPassword) {
+            // check password to login
+            checkPasscode();
+        }else{
+            // enter password to save
+            if(tempPasscode.isEmpty()){
+                // enter passcode first time to save it
+                tempPasscode=passcode;
+                passcode="";
+                pass.setText("");
+                passText.setText("Confirm Your Passcode");
+            }else if(tempPasscode.equals(passcode)){
+                //enter passcode second time to save it
+                prefManager.put(PrefManager.PASSCODE, passcode);
+                Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
+                finishActivity();
             }
         }
     }
 
     private void checkPasscode() {
         if(passcode.equals(prefManager.getData(PrefManager.PASSCODE)))
-            startActivity(new Intent(this, MainActivity.class));
+            finishActivity();
         else{
             wrongPassword();
         }
@@ -146,45 +126,10 @@ public class PasscodeActivty extends AppCompatActivity {
         Toast.makeText(this, "Invalid Passcode", Toast.LENGTH_SHORT).show();
         pass.setText("");
         passcode = "" ;
+        tempPasscode="";
     }
 
-    private void reEnter() {
-
-        passText.setText("Re Enter your Passcode");
-        pass.setText("");
-        temp = passcode;
-        passcode = "";
-        save = true ;
-        reEnter = false ;
-    }
-    private void savecode(){
-        if(temp.equals(passcode)) {
-            prefManager.put(PrefManager.PASSCODE, passcode);
-            Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
-            if(status == 2) {
-                Intent intent  = new Intent(this , MainActivity.class);
-                if (status == 2)
-                    intent.putExtra("index" , 3);
-                startActivity(intent);
-            }
-        }
-        else
-        {
-            wrongPassword();
-            save = false ;
-            reEnter = true ;
-            passText.setText("Enter your New Passcode");
-
-        }
-    }
-
-    private void newPass() {
-
-        passText.setText("Enter your New Passcode");
-        passcode = "";
-        pass.setText("");
-        reEnter = true;
-        return;
-
+    private void finishActivity(){
+        if(finish) finish(); else startActivity(new Intent(this,MainActivity.class));
     }
 }

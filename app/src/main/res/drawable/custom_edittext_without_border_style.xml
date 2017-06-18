@@ -15,5 +15,5 @@
 
         <!--android:type="linear" />-->
     <solid
-         android:color="@color/gray"></solid>
+         android:color="@color/white"></solid>
 </shape>

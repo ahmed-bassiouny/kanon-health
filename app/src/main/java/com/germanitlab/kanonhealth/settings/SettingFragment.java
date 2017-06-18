@@ -50,6 +50,7 @@ import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.germanitlab.kanonhealth.profile.QuestionAdapter;
 import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
+import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -380,4 +381,14 @@ public class SettingFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==13){
+            Intent intent = new Intent(getActivity(), PasscodeActivty.class);
+            intent.putExtra("checkPassword" ,false);
+            intent.putExtra("finish",true);
+            startActivity(intent);
+        }
+    }
 }

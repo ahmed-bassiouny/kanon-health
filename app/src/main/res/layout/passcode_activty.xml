@@ -1,278 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@color/gray"
-
     tools:context="com.germanitlab.kanonhealth.PasscodeActivty">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight=".5">
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_height="wrap_content"
             android:textAlignment="center"
             android:id="@+id/pass_text"
+            android:padding="20dp"
             android:textSize="20dp"
             android:textColor="@android:color/background_dark"
             android:text="Enter your passcode"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight=".5">
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/pass"
             android:gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:textColor="@android:color/background_dark"
             android:background="@drawable/custom_edittext_without_border_style"
             android:textAlignment="center"
-            android:textSize="50dp"
+            android:textSize="35dp"
             android:text=""/>
-    </LinearLayout>
-    <LinearLayout
+    <TableLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:layout_gravity="center">
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="35dp"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/one"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/one"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            android:layout_weight="1"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/two"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/two"
+            android:layout_weight="1"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/three"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/three"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/four"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/four"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            android:layout_weight="1"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/five"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/five"
+            android:layout_weight="1"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/six"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/six"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/seven"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/seven"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            android:layout_weight="1"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/eight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/eight"
+            android:layout_weight="1"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/nine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/nine"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/remove"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            android:layout_weight="1"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/zero"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/zero"
+            android:layout_weight="1"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/sbmit"
+            app:civ_border_width="13dp"
+            app:civ_border_color="#0099cc"
+            app:civ_fill_color="#0099cc"/>
+
+    </TableRow>
+    </TableLayout>
+
+
+    <!--
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:gravity="center">
             <at.markushi.ui.CircleButton
                 android:id="@+id/one"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/one"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
-
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
             <at.markushi.ui.CircleButton
                 android:id="@+id/two"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/two"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
+
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/three"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/three"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-
-        android:layout_weight="1">
-        <LinearLayout
+        <TableRow
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/one"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/one"
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
+            <at.markushi.ui.CircleButton
+                android:id="@+id/two"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/two"
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
+
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/three"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/three"
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="10dp"
+            android:gravity="center">
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/four"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/four"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
+                android:layout_weight="1"
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/five"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/five"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/six"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/six"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-
-        android:layout_weight="1">
-        <LinearLayout
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
+        </TableRow>
+        <TableRow
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
-
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
             <at.markushi.ui.CircleButton
                 android:id="@+id/seven"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/seven"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/eight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/eight"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="match_parent">
+                android:layout_weight="1"
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/nine"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/nine"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-
-        android:orientation="horizontal">
-
-        <LinearLayout
+                android:layout_weight="1"
+                app:cb_pressedRingWidth="0dp"
+                app:cb_color="#0099cc" />
+        </TableRow>
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="3"
+            android:gravity="center">
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/delete"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/back1"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+                android:layout_weight="1" />
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/zero"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
+                app:cb_pressedRingWidth="0dp"
+                android:src="@drawable/zero" />
             <at.markushi.ui.CircleButton
-                android:id="@+id/submit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id ="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:src="@drawable/sbmit"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="8dip" />
-        </LinearLayout>
-
-    </LinearLayout>
+                android:scaleType="fitXY" />
+        </TableRow>
+    </TableLayout>
+-->
 
 </LinearLayout>
