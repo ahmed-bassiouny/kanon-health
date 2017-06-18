@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
         mytablayout.setupWithViewPager(myviewpager);
         setupTabIcons();
-
         intent = getIntent();
 
         myviewpager.setCurrentItem(indexFromIntent);

@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -85,6 +86,13 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI")) ;
             Glide.with(this).load(selectedImageUri).into(imageProfile);
         }
+        editLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                textBirthday.performClick();
+                return true;
+            }
+        });
     }
 
     @OnClick(R.id.image_profile)

@@ -82,6 +82,8 @@
                 android:textCursorDrawable="@color/blue"
                 android:layout_weight="1"
                 android:background="@null"
+                android:maxLines="1"
+                android:imeOptions="actionSend"
                 android:inputType="phone"
                 android:paddingLeft="5dp"
                 android:singleLine="true" />

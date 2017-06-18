@@ -63,6 +63,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/edit_last_name"
                 android:hint="@string/first_name"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -83,6 +87,9 @@
                 android:id="@+id/edit_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
                 android:layout_marginLeft="8dp"
                 android:hint="@string/last_name"
                 android:textSize="16dp" />

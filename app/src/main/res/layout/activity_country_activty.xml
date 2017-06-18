@@ -6,6 +6,9 @@
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/search_bar"
+        android:maxLines="1"
+        android:inputType="textPersonName"
+        android:imeOptions="actionSearch"
         android:layout_height="wrap_content" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,6 +39,13 @@ public class Comment extends AppCompatActivity {
         }catch (Exception e){
             doc_id="";
         }
+        edt_comment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                submit();
+                return true;
+            }
+        });
     }
 
     private boolean validationInput(){

@@ -23,6 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -193,6 +194,20 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         etProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
         etCountry.setText(userInfoResponse.getUser().getInfo().getCountry());
         questionAnswer = userInfoResponse.getUser().getQuestions();
+        etCountryCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                submit(null);
+                return true ;
+            }
+        });
+        etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return true;
+            }
+        });
+        etBirthday.performClick();
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {

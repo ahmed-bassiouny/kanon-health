@@ -76,6 +76,8 @@
         android:background="@drawable/custom_edittext_without_border_style"
         android:drawableLeft="@drawable/search"
         android:gravity="center"
+        android:inputType="textPersonName"
+        android:imeOptions="actionSearch"
         android:hint="@string/search"
         android:paddingBottom="@dimen/size_5dp"
         android:paddingLeft="@dimen/size_20dp"

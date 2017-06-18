@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -192,6 +193,13 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
         Helper.setImage(this ,Constants.CHAT_SERVER_URL
                 + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar ,R.drawable.profile_place_holder );
+        etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                etBirthday.performClick();
+                return true;
+            }
+        });
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
@@ -212,6 +220,13 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         etProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
         etCountry.setText(userInfoResponse.getUser().getInfo().getCountry());
         questionAnswer = userInfoResponse.getUser().getQuestions();
+        etCountry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                submit();
+                return true;
+            }
+        });
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
@@ -432,7 +447,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     }
 
     @OnClick(R.id.btn_edit_save)
-    public void submit(View v) {
+    public void submit() {
         setUserObject();
         new HttpCall(this, this).editProfile(user);
         Intent i = new Intent(this, ProfileActivity.class);

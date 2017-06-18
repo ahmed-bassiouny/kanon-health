@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,16 +52,13 @@ import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
-import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -70,125 +72,107 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>  , Serializable, ApiResponse, DialogPickerCallBacks, OnMapReadyCallback {
 
     @BindView(R.id.speciality_recycleview)
-    RecyclerView speciliatyRecycleView;
+    RecyclerView rvSpeciliaty;
     SpecilaitiesAdapter adapter;
-    List<Object> list;
-    List<SpecilaitiesModels> languageList;
-    List<SpecilaitiesModels> memberList;
-    @BindView(R.id.tv_monday)
-    TextView monday;
-    @BindView(R.id.tv_tuesday)
-    TextView tuesday;
-    @BindView(R.id.tv_wednesday)
-    TextView wednesday;
-    @BindView(R.id.tv_thursday)
-    TextView thursday;
-    @BindView(R.id.tv_friday)
-    TextView friday;
-    @BindView(R.id.tv_saturday)
-    TextView saturday;
-    @BindView(R.id.tv_sunday)
-    TextView sunday;
+
     @BindView(R.id.no_time)
-    LinearLayout ll_no;
-    @BindView(R.id.monday_time)
-    LinearLayout ll_monday;
-    @BindView(R.id.tuesday_time)
-    LinearLayout ll_tuesday;
-    @BindView(R.id.wednesday_time)
-    LinearLayout ll_wednesday;
-    @BindView(R.id.thursday_time)
-    LinearLayout ll_thursday;
-    @BindView(R.id.friday_time)
-    LinearLayout ll_friday;
-    @BindView(R.id.saturday_time)
-    LinearLayout ll_saturday;
-    @BindView(R.id.sunday_time)
-    LinearLayout ll_sunday;
+    LinearLayout llNoTime;
+    @BindView(R.id.tv_no_time)
+    TextView tvNoTime;
+    @BindView(R.id.toolbar_name)
+    TextView tvToolbarName;
+    @BindView(R.id.tablelayout)
+    TableLayout tablelayout;
+
     @BindView(R.id.tv_online)
-    TextView tv_online;
+    TextView tvOnline;
     @BindView(R.id.img_edit_avatar)
-    CircleImageView imageAvatar;
+    CircleImageView civEditAvatar;
     @BindView(R.id.tv_name)
-    TextView tv_name;
+    TextView tvName;
     @BindView(R.id.tv_contact)
-    TextView tv_contact;
+    TextView tvContact;
     @BindView(R.id.tv_add_to_favourite)
-    TextView tv_add_to_favourite;
-    @BindView(R.id.tv_qr_code)
-    TextView tv_qr_code;
+    TextView tvAddToFavourite;
+//    @BindView(R.id.tv_qr_code)
+//    TextView tv_qr_code;
     @BindView(R.id.tv_telephone)
-    TextView tv_telephone;
+    TextView tvTelephone;
     @BindView(R.id.tv_location)
-    TextView tv_location;
+    TextView tvLocation;
     @BindView(R.id.tv_rating)
-    TextView tv_rating;
+    TextView tvRating;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
     @BindView(R.id.document_recycler_view)
-    RecyclerView document_recycler_view;
+    RecyclerView recyclerViewDocument;
     @BindView(R.id.tv_specilities)
-    TextView tv_specilities;
+    TextView tvSpecilities;
     @BindView(R.id.tv_languages)
-    TextView tv_languages;
+    TextView tvLanguages;
     @BindView(R.id.image_star)
-    ImageView image_star;
+    ImageView ivStar;
+    @BindView(R.id.iv_location)
+    ImageView ivLocation;
+    @BindView(R.id.tv_locations)
+    TextView tvLocations;
+
+
     @BindView(R.id.edit_time_table)
-    ImageView edit_time_table;
+    ImageView ivTimeTable;
     User user;
     UploadImageResponse uploadImageResponse;
     Util util;
     @BindView(R.id.linear_practice_profile)
-    LinearLayout linear_practice_profile;
+    LinearLayout llPracticeProfile;
     @BindView(R.id.border)
-    View border ;
+    View vBorder;
+
+    @BindView(R.id.rl_map)
+    RelativeLayout rlMap ;
 
 
     @BindView(R.id.ed_location)
-    EditText ed_location;
+    EditText etLocation;
     @BindView(R.id.ed_street_name)
-    EditText ed_street_name;
+    EditText etStreetName;
     @BindView(R.id.ed_house_number)
-    EditText ed_house_number;
+    EditText etHouseNumber;
     @BindView(R.id.ed_zip_code)
-    EditText ed_zip_code;
+    EditText etZipCode;
     @BindView(R.id.ed_city)
-    EditText ed_city;
+    EditText etCity;
     @BindView(R.id.ed_province)
-    EditText ed_province;
+    EditText etProvince;
     @BindView(R.id.ed_country)
-    EditText ed_country;
+    EditText etCountry;
 
-    // data of edit
+    // data of ivEdit
     @BindView(R.id.edit)
-    ImageView edit;
+    ImageView ivEdit;
     @BindView(R.id.et_last_name)
-    EditText et_last_name;
+    EditText etLastName;
     @BindView(R.id.et_first_name)
-    EditText et_first_name;
+    EditText etFirstName;
     @BindView(R.id.et_telephone)
-    EditText et_telephone;
+    EditText etTelephone;
     @BindView(R.id.et_location)
     EditText et_location;
     Boolean is_me;
     @BindView(R.id.edit_speciality_list)
-    ImageView edit_speciality_list;
+    ImageView ivSpecialityList;
     @BindView(R.id.edit_languages_list)
-    ImageView edit_languages_list;
+    ImageView ivLanguagesList;
     @BindView(R.id.edit_member_list)
-    ImageView edit_member_list;
+    ImageView ivMemberList;
     @BindView(R.id.edit_name_layout)
-    LinearLayout edit_name_layout;
-    @BindView(R.id.permenant_closed)
-    LinearLayout permenant_closed ;
-    @BindView(R.id.always_open)
-    LinearLayout always_open;
+    LinearLayout llNameLayout;
     @BindView(R.id.save)
-    ImageView save;
+    ImageView iSave;
     @BindView(R.id.ll_doctor_data)
     LinearLayout llDoctorData;
     @BindView(R.id.edit_image)
-    CircleImageView edit_image;
+    CircleImageView civEditImage;
     private DoctorDocumentAdapter doctorDocumentAdapter;
     PrefManager prefManager;
     PickerDialog pickerDialog;
@@ -196,7 +180,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private static final int TAKE_PICTURE = 1;
     private GoogleMap googleMap;
     Boolean editboolean ;
-
+    private Menu menu;
+    private SupportMapFragment mapFragment;
 
 
     @Override
@@ -206,10 +191,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ButterKnife.bind(this);
         editboolean = false;
 
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        initTB();
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        handleImeActions();
 
 
         // check if doctor or clinic
@@ -217,12 +203,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         if (getIntent().getExtras().containsKey("CLINIC")) {
             llDoctorData.setVisibility(View.GONE);
-            tv_add_to_favourite.setVisibility(View.GONE);
+            tvAddToFavourite.setVisibility(View.GONE);
             setVisiblitiy(View.GONE);
 
         } else {
             llDoctorData.setVisibility(View.VISIBLE);
-            tv_add_to_favourite.setVisibility(View.VISIBLE);
+            tvAddToFavourite.setVisibility(View.VISIBLE);
 
             util = Util.getInstance(this);
             user = new User();
@@ -234,7 +220,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
 /*
             llDoctorData.setVisibility(View.VISIBLE);
-            tv_add_to_favourite.setVisibility(View.VISIBLE);
+            tvAddToFavourite.setVisibility(View.VISIBLE);
 
                     util = Util.getInstance(this);
             user = new User();
@@ -246,7 +232,70 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
     }
 
+    private void handleImeActions() {
+        et_location.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                handleNewData();
+                bindData();
+                return true;
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
+        menu.findItem(R.id.mi_save).setVisible(false);
+        menu.findItem(R.id.mi_edit).setVisible(true);
+
+
+        if (is_me) {
+            menu.findItem(R.id.mi_save).setVisible(false);
+            menu.findItem(R.id.mi_edit).setVisible(true);
+
+        }else{
+            menu.findItem(R.id.mi_save).setVisible(false);
+            menu.findItem(R.id.mi_edit).setVisible(false);
+
+        }
+        this.menu=menu;
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.mi_edit:
+                editboolean = true ;
+                setVisiblitiy(View.GONE);
+                menu.findItem(R.id.mi_save).setVisible(true);
+                menu.findItem(R.id.mi_edit).setVisible(false);
+                break;
+            case R.id.mi_save:
+                handleNewData();
+                bindData();
+                menu.findItem(R.id.mi_edit).setVisible(true);
+                menu.findItem(R.id.mi_save).setVisible(false);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
+    private void initTB() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_new);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
     private void chechEditPermission() {
+        Log.d("my debug id" , String.valueOf(AppController.getInstance().getClientInfo().getUser_id()));
         if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id())
             is_me = true;
         else
@@ -285,26 +334,26 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void handleNewData() {
-        tv_name.setText(et_last_name.getText().toString() + "," + et_first_name.getText().toString());
-        user.setLast_name(et_last_name.getText().toString());
-        user.setFirst_name(et_first_name.getText().toString());
-        tv_location.setText(et_location.getText().toString());
+        tvName.setText(etLastName.getText().toString() + "," + etFirstName.getText().toString());
+        user.setLast_name(etLastName.getText().toString());
+        user.setFirst_name(etFirstName.getText().toString());
+        tvLocation.setText(et_location.getText().toString());
         user.setAddress(et_location.getText().toString());
-        tv_telephone.setText(et_telephone.getText().toString());
-        user.setPhone(et_telephone.getText().toString());
+        tvTelephone.setText(etTelephone.getText().toString());
+        user.setPhone(etTelephone.getText().toString());
         // Edit ahmed 12 - 6-2017
         /**
 
-         ed_zip_code.setEnabled(editable);
-         ed_city.setEnabled(editable);
-         ed_province.setEnabled(editable);
-         ed_country.setEnabled(editable);*/
-        user.setAddress(ed_location.getText().toString());
-        user.getInfo().setStreetname(ed_street_name.getText().toString());
-        user.getInfo().setHouseNumber(ed_house_number.getText().toString());
-        user.getInfo().setZipCode(ed_zip_code.getText().toString());
-        user.getInfo().setProvinz(ed_province.getText().toString());
-        user.getInfo().setCountry(ed_country.getText().toString());
+         etZipCode.setEnabled(editable);
+         etCity.setEnabled(editable);
+         etProvince.setEnabled(editable);
+         etCountry.setEnabled(editable);*/
+        user.setAddress(etLocation.getText().toString());
+        user.getInfo().setStreetname(etStreetName.getText().toString());
+        user.getInfo().setHouseNumber(etHouseNumber.getText().toString());
+        user.getInfo().setZipCode(etZipCode.getText().toString());
+        user.getInfo().setProvinz(etProvince.getText().toString());
+        user.getInfo().setCountry(etCountry.getText().toString());
         sendDataToserver();
     }
 
@@ -316,29 +365,29 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void setVisiblitiy(int visiblitiy) {
         int notvisibility = (visiblitiy == View.VISIBLE) ? View.GONE : View.VISIBLE;
-        tv_name.setVisibility(visiblitiy);
+        tvName.setVisibility(visiblitiy);
         et_location.setVisibility(notvisibility);
-        tv_location.setVisibility(visiblitiy);
-        et_telephone.setVisibility(notvisibility);
-        tv_telephone.setVisibility(visiblitiy);
-        edit_speciality_list.setVisibility(notvisibility);
-        edit_languages_list.setVisibility(notvisibility);
-        edit_member_list.setVisibility(notvisibility);
-        edit_name_layout.setVisibility(notvisibility);
-        edit_time_table.setVisibility(notvisibility);
-        edit.setVisibility(visiblitiy);
-        save.setVisibility(notvisibility);
-        edit_image.setVisibility(notvisibility);
+        tvLocation.setVisibility(visiblitiy);
+        etTelephone.setVisibility(notvisibility);
+        tvTelephone.setVisibility(visiblitiy);
+        ivSpecialityList.setVisibility(notvisibility);
+        ivLanguagesList.setVisibility(notvisibility);
+        ivMemberList.setVisibility(notvisibility);
+        llNameLayout.setVisibility(notvisibility);
+        ivTimeTable.setVisibility(notvisibility);
+        ivEdit.setVisibility(visiblitiy);
+        iSave.setVisibility(notvisibility);
+        civEditImage.setVisibility(notvisibility);
 
         //Edit ahmed 12-6-2017
         boolean editable = (visiblitiy == View.GONE) ? true : false;
-        ed_location.setEnabled(editable);
-        ed_street_name.setEnabled(editable);
-        ed_house_number.setEnabled(editable);
-        ed_zip_code.setEnabled(editable);
-        ed_city.setEnabled(editable);
-        ed_province.setEnabled(editable);
-        ed_country.setEnabled(editable);
+        etLocation.setEnabled(editable);
+        etStreetName.setEnabled(editable);
+        etHouseNumber.setEnabled(editable);
+        etZipCode.setEnabled(editable);
+        etCity.setEnabled(editable);
+        etProvince.setEnabled(editable);
+        etCountry.setEnabled(editable);
     }
 
     @OnClick(R.id.edit_time_table)
@@ -362,9 +411,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
         if (user.getDocuments() != null) {
             doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
-            document_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-            document_recycler_view.setItemAnimator(new DefaultItemAnimator());
-            document_recycler_view.setAdapter(doctorDocumentAdapter);
+            recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewDocument.setAdapter(doctorDocumentAdapter);
         }
     }
 
@@ -389,7 +438,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     util.showProgressDialog();
                     pickerDialog.dismiss();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(selectedImageUri).into(imageAvatar);
+                    Glide.with(this).load(selectedImageUri).into(civEditAvatar);
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
@@ -413,7 +462,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
                     pickerDialog.dismiss();
                     prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    Glide.with(this).load(selectedImageUri).into(imageAvatar);
+                    Glide.with(this).load(selectedImageUri).into(civEditAvatar);
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
@@ -433,6 +482,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 case Constants.HOURS_CODE:
                     user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
                     user.setOpen_Type(data.getIntExtra("type" , 0));
+                    getTimaTableData(user.getOpen_time());
                     break;
                 case Constants.HOURS_TYPE_CODE :
                     user.setOpen_Type(data.getIntExtra("type" ,0));
@@ -459,62 +509,73 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void bindData() {
 //        getTimaTableData(user.getTable());
         checkDoctor();
-        tv_name.setText(user.getLast_name() + ", " + user.getFirst_name());
-        Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() ,imageAvatar ,R.drawable.placeholder);
-        et_last_name.setText(user.getLast_name());
-        et_first_name.setText(user.getFirst_name());
-        tv_telephone.setText(user.getPhone());
-        et_telephone.setText(user.getPhone());
+        tvToolbarName.setText(user.getFirst_name() +" "+ user.getLast_name());
+        tvName.setText(user.getLast_name() + ", " + user.getFirst_name());
+        Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() , civEditAvatar,R.drawable.placeholder);
+        etLastName.setText(user.getLast_name());
+        etFirstName.setText(user.getFirst_name());
+        tvTelephone.setText(user.getPhone());
+        etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
-        tv_location.setText(user.getAddress());
+        tvLocation.setText(user.getAddress());
+        tvLocations.setText(user.getAddress());
+        Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getCountry_flag() ,ivLocation ,R.drawable.placeholder);
+
         if (user.getIs_available() != null) {
             if (!user.getIs_available().equals("1"))
-                tv_online.setText("Offline");
+                tvOnline.setText("Status: Offline");
         }
-        loadQRCode(tv_qr_code);
-        tv_telephone.setText(user.getPhone());
+//        loadQRCode(tv_qr_code);
+        tvTelephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
         if (is_me) {
-            tv_add_to_favourite.setVisibility(View.INVISIBLE);
-            tv_contact.setVisibility(View.INVISIBLE);
-            edit.setVisibility(View.VISIBLE);
-            save.setVisibility(View.GONE);
+            tvAddToFavourite.setVisibility(View.INVISIBLE);
+            tvContact.setVisibility(View.INVISIBLE);
+            ivEdit.setVisibility(View.VISIBLE);
+            iSave.setVisibility(View.GONE);
+
         }else{
-            tv_add_to_favourite.setVisibility(View.VISIBLE);
-            tv_contact.setVisibility(View.VISIBLE);
-            edit.setVisibility(View.GONE);
-            save.setVisibility(View.GONE);
+            tvAddToFavourite.setVisibility(View.VISIBLE);
+            tvContact.setVisibility(View.VISIBLE);
+            ivEdit.setVisibility(View.GONE);
+            iSave.setVisibility(View.GONE);
+
         }
         setAdapters();
-        tv_rating.setText( "Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
-        tv_languages.setText("");
+        tvRating.setText( "Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
+        tvLanguages.setText("");
         for (ChooseModel lang : user.getSupported_lang()
                 ) {
-            tv_languages.append(lang.getLang_title() + " ");
+            tvLanguages.append(lang.getLang_title() + " ");
         }
-        tv_specilities.setText("");
+        tvSpecilities.setText("");
         for (ChooseModel speciality : user.getSpecialities()
                 ) {
-            tv_specilities.append(speciality.getSpeciality_title() + " ");
+            tvSpecilities.append(speciality.getSpeciality_title() + " ");
         }
         getTimaTableData(user.getOpen_time());
 
         if(user.isClinic==1) {
-            linear_practice_profile.setVisibility(View.VISIBLE);
-            border.setVisibility(View.VISIBLE);
+            llPracticeProfile.setVisibility(View.VISIBLE);
+            vBorder.setVisibility(View.VISIBLE);
+            rlMap.setVisibility(View.VISIBLE);
+
         }
         else{
-            linear_practice_profile.setVisibility(View.GONE);
-            border.setVisibility(View.GONE);
+            llPracticeProfile.setVisibility(View.GONE);
+            vBorder.setVisibility(View.GONE);
+            rlMap.setVisibility(View.GONE);
+
         }
 
-        // edit ahmed 12 - 6 - 2017
-        ed_location.setText(user.getAddress());
-        ed_street_name.setText(user.getInfo().getStreetname());
-        ed_house_number.setText(user.getInfo().getHouseNumber());
-        ed_zip_code.setText(user.getInfo().getZipCode());
-        ed_province.setText(user.getInfo().getProvinz());
-        ed_country.setText(user.getInfo().getCountry());
+        // ivEdit ahmed 12 - 6 - 2017
+        etLocation.setText(user.getAddress());
+        etStreetName.setText(user.getInfo().getStreetname());
+        etHouseNumber.setText(user.getInfo().getHouseNumber());
+        etZipCode.setText(user.getInfo().getZipCode());
+        etProvince.setText(user.getInfo().getProvinz());
+        etCountry.setText(user.getInfo().getCountry());
+
 
     }
 
@@ -542,71 +603,22 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         showDialogFragment(bundle);
     }
     private void getTimaTableData(List<Table> list) {
-        if(user.getOpen_Type() == 1)
-            always_open.setVisibility(View.VISIBLE);
-        else if(user.getOpen_Type() == 2)
-            ll_no.setVisibility(View.VISIBLE);
-        else if(user.getOpen_Type() == 3)
-            permenant_closed.setVisibility(View.VISIBLE);
+        if (user.getOpen_Type() == 3)
+            tvNoTime.setText("permenant_closed");
+        else
+            tvNoTime.setText("Always Open");
 
-        if (list.size() > 0)
-            ll_no.setVisibility(View.GONE);
-        passData(list);
-    }
-
-    private void passData(List<Table> list) {
-        clearTexts();
-        for (int s= 0 ; s < list.size() ; s++) {
-            Table table = list.get(s);
-            if (table.getDayweek() != null) {
-                if (table.getDayweek().equals("1")) {
-                    setViewText(monday, table);
-                    ll_monday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("2")) {
-                    setViewText(tuesday, table);
-                    ll_tuesday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("3")) {
-                    setViewText(wednesday, table);
-                    ll_wednesday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("4")) {
-                    setViewText(thursday, table);
-                    ll_thursday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("5")) {
-                    setViewText(friday, table);
-                    ll_friday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("6")) {
-                    setViewText(saturday, table);
-                    ll_saturday.setVisibility(View.VISIBLE);
-                } else if (table.getDayweek().equals("7")) {
-                    setViewText(sunday, table);
-                    ll_sunday.setVisibility(View.VISIBLE);
-                }
-            }
+        if (list.size() > 0) {
+            llNoTime.setVisibility(View.GONE);
+            tablelayout.removeAllViews();
+            com.germanitlab.kanonhealth.helpers.TimeTable timeTable=new com.germanitlab.kanonhealth.helpers.TimeTable();
+            timeTable.creatTimeTable(list,this,tablelayout);
         }
-        return;
+        else
+            llNoTime.setVisibility(View.VISIBLE);
+
     }
 
-    private void clearTexts() {
-        monday.setText("");
-        tuesday.setText("");
-        wednesday.setText("");
-        thursday.setText("");
-        friday.setText("");
-        saturday.setText("");
-        sunday.setText("");
-        ll_monday.setVisibility(View.GONE);
-        ll_thursday.setVisibility(View.GONE);
-        ll_friday.setVisibility(View.GONE);
-        ll_saturday.setVisibility(View.GONE);
-        ll_wednesday.setVisibility(View.GONE);
-        ll_sunday.setVisibility(View.GONE);
-        ll_tuesday.setVisibility(View.GONE);
-    }
-
-    private void setViewText(TextView textView, Table table) {
-        textView.append(table.getFrom() + " - " + table.getTo());
-        textView.append(System.getProperty("line.separator"));
-    }
 
     @OnClick(R.id.image_star)
     public void image_star() {
@@ -650,9 +662,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void checkDoctor() {
         try {
             if (user.getIs_my_doctor() == null)
-                tv_add_to_favourite.setText(getString(R.string.add_to));
+                tvAddToFavourite.setText(getString(R.string.add_to));
             else
-                tv_add_to_favourite.setText(getString(R.string.remove_from));
+                tvAddToFavourite.setText(getString(R.string.remove_from));
         } catch (Exception e) {
         }
 
@@ -781,7 +793,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void deleteMyImage() {
         user.setAvatar("");
         Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + user.getAvatar(), imageAvatar, R.drawable.placeholder);
+                + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }
@@ -802,5 +814,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title(user.getFirst_name()));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

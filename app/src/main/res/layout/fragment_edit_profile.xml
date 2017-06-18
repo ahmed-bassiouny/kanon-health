@@ -122,7 +122,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/first_name"
+                        android:nextFocusForward="@+id/last_name"
+                        android:imeOptions="actionNext"
                         android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -145,7 +148,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/last_name"
+                        android:imeOptions="actionNext"
                         android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -208,6 +213,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/streat"
+                        android:nextFocusForward="@+id/et_edit_house_num"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -230,7 +239,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:hint="@string/house_number"
-                        android:inputType="number"
+                        android:nextFocusForward="@+id/et_edit_zip_code"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -253,6 +265,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:inputType="number"
+                        android:nextFocusForward="@+id/et_edit_proviz"
+                        android:imeOptions="actionNext"
+                        android:maxLines="1"
                         android:hint="@string/zip_code"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
@@ -275,6 +290,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:nextFocusForward="@+id/et_edit_country"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:hint="@string/provinz"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
@@ -297,6 +316,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:imeOptions="actionSend"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:hint="@string/country"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />

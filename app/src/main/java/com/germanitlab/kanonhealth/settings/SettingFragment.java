@@ -214,9 +214,9 @@ public class SettingFragment extends Fragment {
         trChangePassCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Intent intent = new Intent(getActivity(), PasscodeActivty.class);
-                //intent.putExtra("status", 2);
-                //startActivityForResult(intent, 13);
+                Intent intent = new Intent(getActivity(), PasscodeActivty.class);
+                intent.putExtra("status", 2);
+                startActivityForResult(intent, 13);
             }
         });
         trSound.setOnClickListener(new View.OnClickListener() {

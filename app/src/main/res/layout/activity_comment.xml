@@ -88,6 +88,7 @@
         android:id="@+id/edt_comment"
         android:inputType="textMultiLine"
         android:padding="10dp"
+        android:imeOptions="actionSend"
         android:hint="@string/write_review_hint"
         android:textColor="@color/black"
         android:layout_height="200dp" />

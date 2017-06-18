@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     Boolean found;
     String country, code;
     Constants constants;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +53,12 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         Intent intent = getIntent();
         Constants.COUNTRY_CODES.clear();
         Gson gson = new Gson();
-        constants=new Constants();
-        List<CountriesCodes> codess = gson.fromJson(constants.CountryCode ,  new TypeToken<List<CountriesCodes>>(){}.getType());
+        constants = new Constants();
+        List<CountriesCodes> codess = gson.fromJson(constants.CountryCode, new TypeToken<List<CountriesCodes>>() {
+        }.getType());
         found = true;
-        for (CountriesCodes countriescooed: codess) {
-            Constants.COUNTRY_CODES.put(countriescooed.getName() , countriescooed.getDial_code());
+        for (CountriesCodes countriescooed : codess) {
+            Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed.getDial_code());
 
         }
 /*
@@ -139,6 +142,13 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             }
         });
         etMobileNumber.requestFocus();
+        etMobileNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                sendData();
+                return true;
+            }
+        });
     }
 
     private void handelEvent() {
@@ -146,13 +156,17 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null &&  !etMobileNumber.getText().equals("") &&  etMobileNumber.getText().length()>=9)
-                    registerUser(etMobileNumber.getText().toString(), code.toString());
-                else
-                    Toast.makeText(SignupActivity.this, getResources().getText(R.string.Invalid_country), Toast.LENGTH_SHORT).show();
+                sendData();
             }
         });
 
+    }
+
+    private void sendData() {
+        if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 9)
+            registerUser(etMobileNumber.getText().toString(), code.toString());
+        else
+            Toast.makeText(SignupActivity.this, getResources().getText(R.string.Invalid_country), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -169,12 +183,11 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         Log.d("Response", response.toString());
         UserRegisterResponse registerResponse = (UserRegisterResponse) response;
         JSONObject jsonObject = null;
-        Boolean oldUser = false  ;
+        Boolean oldUser = false;
         try {
             jsonObject = new JSONObject(response.toString());
-            if(jsonObject.getBoolean("is_exist"))
-            {
-                oldUser = true ;
+            if (jsonObject.getBoolean("is_exist")) {
+                oldUser = true;
             }
 
         } catch (JSONException e) {
@@ -186,7 +199,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             intent.putExtra("number", etMobileNumber.getText().toString());
             intent.putExtra("codeNumber", code.toString());
             intent.putExtra(Constants.REGISER_RESPONSE, registerResponse);
-            intent.putExtra("oldUser" , oldUser);
+            intent.putExtra("oldUser", oldUser);
             startActivity(intent);
             finish();
 

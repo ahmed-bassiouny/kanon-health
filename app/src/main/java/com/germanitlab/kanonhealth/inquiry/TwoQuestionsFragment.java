@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,8 +81,16 @@ public class TwoQuestionsFragment extends Fragment {
                 secondQuestionKey = getResourceString(R.string.question_252);
             }
         }
+        textSecondAnswer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                onFinishedButtonClicked();
+                return true;
+            }
+        });
         return root;
     }
+
 
     @Override
     public void onAttach(Context context) {

@@ -71,6 +71,8 @@
             android:layout_marginLeft="8dp"
             android:textCursorDrawable="@color/blue"
             android:hint="@string/answer"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             android:textColor="@android:color/background_dark"
             android:textSize="16dp" />
     </LinearLayout>
