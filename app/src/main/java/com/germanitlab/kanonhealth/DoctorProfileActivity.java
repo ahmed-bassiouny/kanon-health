@@ -262,7 +262,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             intent.putExtra("doctor_data", gson.toJson(user));
             intent.putExtra("from", true);
             startActivity(intent);
-        } else {
+        }
+
+        else {
             Intent intent = new Intent(this, PaymentActivity.class);
             intent.putExtra("doctor_data", user);
             startActivity(intent);

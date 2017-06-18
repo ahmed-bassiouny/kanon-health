@@ -20,6 +20,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -139,10 +140,18 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity, DoctorProfileActivity.class);
-                intent.putExtra("doctor_data", doctor);
-                intent.putExtra("tab","");
-                activity.startActivity(intent);
+                if(doctor.getIsDoc() == 1) {
+                    Intent intent = new Intent(activity, DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data", doctor);
+                    intent.putExtra("tab", "");
+                    activity.startActivity(intent);
+                }
+                else if(doctor.getIsClinic() == 1){
+                    Intent intent = new Intent(activity, PaymentActivity.class);
+                    intent.putExtra("doctor_data", doctor);
+                    intent.putExtra("tab", "");
+                    activity.startActivity(intent);
+                }
             }
         });
 

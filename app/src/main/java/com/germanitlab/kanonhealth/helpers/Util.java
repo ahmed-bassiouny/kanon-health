@@ -14,15 +14,15 @@ import com.germanitlab.kanonhealth.R;
  * Created by mohammed on 8/29/15.
  */
 public class Util {
-    private static Util util;
+//    private static Util util;
     private Context context;
     private static ProgressDialog progressDialog;
     public static Util getInstance(Context context) {
-        if(util!=null)
-            return util;
-        else{
+//        if(util!=null)
+//            return util;
+//        else{
             return new Util(context);
-        }
+//        }
     }
     private Util(Context context){
         this.context = context;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -12,6 +13,7 @@ import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -46,6 +48,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(sbuilder.build());

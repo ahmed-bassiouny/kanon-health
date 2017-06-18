@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 24
@@ -40,9 +55,9 @@ dependencies {
     compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
-    //    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
-//        transitive = true;
-//    }
+        compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
 
     compile files('libs/aspectjrt-1.7.3.jar')
     compile files('libs/isoparser-1.0.6.jar')

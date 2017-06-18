@@ -61,7 +61,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="c5ac2db0554539947583fb65cf5561052c164498" />
+            android:value="481c4eca729acf75780d0a13e82b38f1b9f854d3" />
 
         <activity
             android:name=".settings.TermsConditonActivity"

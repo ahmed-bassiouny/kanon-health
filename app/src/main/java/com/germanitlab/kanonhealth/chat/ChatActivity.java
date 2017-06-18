@@ -70,6 +70,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.PopupHelper;
+import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -168,13 +169,13 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private ContentValues contentValues;
 
 
-    public static int indexFromIntent=0;
+    public static int indexFromIntent = 0;
 
     @Inject
     DataManger mDataManger;
     private ChatComponent mChatComponent;
     private Uri selectedUri;
-    private boolean selectetImage=false;
+    private boolean selectetImage = false;
 
     public ChatComponent getmChatComponent() {
         if (mChatComponent == null) {
@@ -185,12 +186,13 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         return mChatComponent;
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
         ButterKnife.bind(this);
-        ttoolbar=(Toolbar)findViewById(R.id.toolbar);
+        ttoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(ttoolbar);
         /* data base
          */
@@ -211,7 +213,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         try {
             Intent intent = getIntent();
             String doctorJson = intent.getStringExtra("doctor_data");
-
 
 
             prefManager.put("doctor", doctorJson);
@@ -257,7 +258,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-
     private void initDialogImgTextSend(final Uri imgFilePath, String filePath, String imgPath) {
         // custom dialog
         final Dialog dialog = new Dialog(this);
@@ -267,7 +267,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         // set the custom dialog components - text, image and button
         final EditText etText = (EditText) dialog.findViewById(R.id.text);
         ImageView image = (ImageView) dialog.findViewById(R.id.image);
-        Toast.makeText(this, "file:/"+filePath, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "file:/" + filePath, Toast.LENGTH_SHORT).show();
         Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
 
         image.setImageURI(Uri.parse(imgPath));
@@ -281,7 +281,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 dialog.dismiss();
                 ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
-                sendMessage(ChatActivity.this.filePath, Constants.IMAGE,etText.getText().toString());
+                sendMessage(ChatActivity.this.filePath, Constants.IMAGE, etText.getText().toString());
 
             }
         });
@@ -382,13 +382,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-
     @OnClick(R.id.button2)
     public void openPayment() {
         Intent intent = new Intent(this, PaymentActivity.class);
         Gson gson = new Gson();
         intent.putExtra("doctor_data", doctor);
-        intent.putExtra("doctor_obj" , doctor);
+        intent.putExtra("doctor_obj", doctor);
 
         startActivity(intent);
     }
@@ -597,7 +596,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 //            scrollToBottom();
 
 
-
         }
     }
 
@@ -726,12 +724,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 @Override
                 public void run() {
 
-                    for (int i=0;i<mMessages.size();i++){
-                            if (mMessages.get(i).getSeen()==0) {
-                                if(recyclerView!=null) {
-                                    recyclerView.scrollToPosition(i);
-                                    break;
-                                }
+                    for (int i = 0; i < mMessages.size(); i++) {
+                        if (mMessages.get(i).getSeen() == 0) {
+                            if (recyclerView != null) {
+                                recyclerView.scrollToPosition(i);
+                                break;
+                            }
                         }
 
                     }
@@ -779,7 +777,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 Log.e("Difference", String.valueOf(diff));
                                 if (diff > 1000) {
                                     Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                    sendMessage(mOutputFile.getPath(), Constants.AUDIO,"");
+                                    sendMessage(mOutputFile.getPath(), Constants.AUDIO, "");
                                 }
                                 setButtonToTextMsg(true);
                             }
@@ -847,7 +845,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                         Log.e("Difference", String.valueOf(diff));
                                         if (diff > 1000) {
                                             Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                            sendMessage(mOutputFile.getPath(), Constants.AUDIO,"");
+                                            sendMessage(mOutputFile.getPath(), Constants.AUDIO, "");
                                         }
                                         setButtonToTextMsg(true);
                                     }
@@ -920,7 +918,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             } else if (requestCode == Constants.GET_LAST_LOCATION_PERMISSION_CODE) {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
-            }else if ( requestCode== PICK_IMAGE) {
+            } else if (requestCode == PICK_IMAGE) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickImage();
                 }
@@ -992,7 +990,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 //                        startActivityForResult(Intent.createChooser(intent,
 //                                "Select Picture"), 100);
 
-                         pickImage();
+                        pickImage();
 
                     } else
                         askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
@@ -1037,7 +1035,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 showPopup.dismiss();
                 if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
-                    sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION,"");
+                    sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION, "");
                 } else {
 
                     if (simpleLocation == null || simpleLocation.getLatitude() == 0) {
@@ -1048,7 +1046,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                     mLastLocation = new Location("");
                     mLastLocation.setLatitude(simpleLocation.getLatitude());
                     mLastLocation.setLongitude(simpleLocation.getLongitude());
-                    sendMessage("long: " + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION,"");
+                    sendMessage("long: " + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION, "");
                 }
             }
         });
@@ -1091,23 +1089,22 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             if (mimeType != null) {
 
 
-
                                 if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
 //                                    sendMessage(getPathFromURI(selectedUri), Constants.IMAGE,"");
 //                                    if(selectetImage){
 
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                initDialogImgTextSend(selectedUri,filePath,imgPath);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            initDialogImgTextSend(selectedUri, filePath, imgPath);
 
-                                            }
-                                        });
+                                        }
+                                    });
 
-                                        selectetImage=false;
+                                    selectetImage = false;
 //                                    }
                                 } else {
-                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO,"");
+                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO, "");
                                 }
 
                             } else {
@@ -1115,10 +1112,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
                                     filePath = getPath(ChatActivity.this, selectedUri);
 
-                                    selectetImage=true;
+                                    selectetImage = true;
 
                                 } else {
-                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO,"");
+                                    sendMessage(getPath(ChatActivity.this, selectedUri), Constants.VIDEO, "");
                                 }
                             }
 
@@ -1151,11 +1148,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         if (mimeType != null) {
 
 
-
                             if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
-                                sendMessage(getPathFromURI(selectedUri), Constants.IMAGE,"");
+                                sendMessage(getPathFromURI(selectedUri), Constants.IMAGE, "");
                             } else {
-                                sendMessage(getPath(this, selectedUri), Constants.VIDEO,"");
+                                sendMessage(getPath(this, selectedUri), Constants.VIDEO, "");
                             }
 
                         } else {
@@ -1163,28 +1159,28 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
                                 filePath = getPath(this, selectedUri);
 
-                                selectetImage=true;
+                                selectetImage = true;
 
 
-                                    } else {
-                                sendMessage(getPath(this, selectedUri), Constants.VIDEO,"");
+                            } else {
+                                sendMessage(getPath(this, selectedUri), Constants.VIDEO, "");
                             }
                         }
                         break;
                     case 200://for video
                         Uri uriVideo = data.getData();
-                        sendMessage(getPath(this, uriVideo), Constants.VIDEO,"");
+                        sendMessage(getPath(this, uriVideo), Constants.VIDEO, "");
                         break;
                     case 300:
                         Uri savedUri = data.getData();
-                        sendMessage(getPath(this, savedUri), Constants.AUDIO,"");
+                        sendMessage(getPath(this, savedUri), Constants.AUDIO, "");
                         break;
                 }
             } else {
                 if (requestCode == TAKE_PICTURE) {
                     try {
                         File finalFile = new File(getRealPathFromURI(selectedImageUri));
-                        sendMessage(finalFile.getPath(), Constants.IMAGE,"");
+                        sendMessage(finalFile.getPath(), Constants.IMAGE, "");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1243,7 +1239,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         return cursor.getString(idx);
     }
 
-    private void sendMessage(String path, String type,String textWithImage) {
+    private void sendMessage(String path, String type, String textWithImage) {
         Message message = new Message();
         message.setType(type);
         message.setMsg(path);
@@ -1509,14 +1505,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 //            intent.putExtra("index", 2);
         //startActivity(intent);
 
-        if(doctor!=null) {
+        if (doctor != null) {
             if (doctor.get_Id() == 1) {
                 indexFromIntent = 3;
             } else {
                 indexFromIntent = 2;
             }
-        }else {
-            indexFromIntent=3;
+        } else {
+            indexFromIntent = 3;
         }
 
         finish();
@@ -1549,19 +1545,19 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onStart() {
         super.onStart();
-        appStatus=true;
+        appStatus = true;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        appStatus=false;
+        appStatus = false;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
-        if(doctor!=null) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        if (doctor != null) {
             int from_id = getIntent().getIntExtra("from_id", 0);
             if (from_id != 1) {
                 MenuItem endSession = menu.findItem(R.id.end_session);
@@ -1569,64 +1565,74 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                     endSession.setVisible(false);
             }
         }
-            return true;
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.start_session:
-                //startActivity(new Intent(this, Comment.class));
-                AlertDialog.Builder adb_start = new AlertDialog.Builder(this);
-                adb_start.setTitle(R.string.close_conversation);
-                adb_start.setCancelable(false);
-                adb_start.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        new HttpCall(ChatActivity.this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                doctor.setIsOpen(0);
-                                checkSessionOpen();
-                                Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
-                                adb.setTitle(R.string.rate_conversation);
-                                adb.setCancelable(true);
-                                adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        new HttpCall(ChatActivity.this, new ApiResponse() {
-                                            @Override
-                                            public void onSuccess(Object response) {
-                                                Intent intent = new Intent(ChatActivity.this, Comment.class);
-                                                intent.putExtra("doc_id",String.valueOf(doctor.get_Id()));
-                                                startActivity(intent);
-                                            }
+                if (doctor.getIsClinic() == 1) {
+                    Intent intent = new Intent(ChatActivity.this, InquiryActivity.class );
+                    UserInfoResponse userInfoResponse = new UserInfoResponse();
+                    userInfoResponse.setUser(doctor);
+                    Gson gson = new Gson();
+                    intent.putExtra("doctor_data" , gson.toJson(userInfoResponse));
+                    startActivity(intent);
+                } else {
+                    //startActivity(new Intent(this, Comment.class));
+                    AlertDialog.Builder adb_start = new AlertDialog.Builder(this);
+                    adb_start.setTitle(R.string.close_conversation);
+                    adb_start.setCancelable(false);
+                    adb_start.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            new HttpCall(ChatActivity.this, new ApiResponse() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    doctor.setIsOpen(0);
+                                    checkSessionOpen();
+                                    Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                    AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
+                                    adb.setTitle(R.string.rate_conversation);
+                                    adb.setCancelable(true);
+                                    adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            new HttpCall(ChatActivity.this, new ApiResponse() {
+                                                @Override
+                                                public void onSuccess(Object response) {
+                                                    Intent intent = new Intent(ChatActivity.this, Comment.class);
+                                                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                                                    startActivity(intent);
+                                                }
 
-                                            @Override
-                                            public void onFailed(String error) {
+                                                @Override
+                                                public void onFailed(String error) {
 
-                                            }
-                                        }).closeSession(String.valueOf(doctor.getId()));
-                                    }
-                                });
-                                adb.show();
-                            }
+                                                }
+                                            }).closeSession(String.valueOf(doctor.getId()));
+                                        }
+                                    });
+                                    adb.show();
+                                }
 
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
-                            }
-                        }).closeSession(String.valueOf(doctor.getId()));
-                    }
-                });
-                adb_start.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                adb_start.show();
+                                @Override
+                                public void onFailed(String error) {
+                                    Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                                }
+                            }).closeSession(String.valueOf(doctor.getId()));
+                        }
+                    });
+                    adb_start.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    adb_start.show();
+                }
                 break;
+
             case R.id.end_session:
                 AlertDialog.Builder adb_end = new AlertDialog.Builder(this);
                 adb_end.setTitle(R.string.close_conversation);
@@ -1659,15 +1665,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         return super.onOptionsItemSelected(item);
     }
-    private void checkSessionOpen(){
 
-        if(doctor.getIsOpen() == 0)
-        {
+    private void checkSessionOpen() {
+
+        if (doctor.getIsOpen() == 0) {
             chat_bar.setVisibility(View.GONE);
             open_chat_session.setVisibility(View.VISIBLE);
             imageButtonAttach.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             chat_bar.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
             imageButtonAttach.setVisibility(View.VISIBLE);
@@ -1735,7 +1740,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             return "";
         }
     }
-
 
 
 }

@@ -201,7 +201,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), PaymentActivity.class);
-                    intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
+                    intent.putExtra("doctor_data", doctorList.get(position));
                     startActivity(intent);
                 }
             }
