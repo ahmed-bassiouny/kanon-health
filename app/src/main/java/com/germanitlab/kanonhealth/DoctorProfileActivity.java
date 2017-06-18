@@ -288,10 +288,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     }
     private void chechEditPermission() {
-        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id())
+        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id()) {
             is_me = true;
-        else
+            tvToolbarName.setText(getResources().getString(R.string.my_profile));
+        }
+        else {
             is_me = false;
+            tvToolbarName.setText(user.getLast_name()+" "+user.getFirst_name());
+        }
     }
 
 

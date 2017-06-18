@@ -15,10 +15,10 @@
         app:theme="@style/ToolbarColoredBackArrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@color/white"
-        app:subtitleTextColor="@color/white"
-        android:titleTextColor="@color/white"
-        android:background="@color/colorPrimary">
+        app:titleTextColor="@color/black"
+        app:subtitleTextColor="@color/black"
+        android:titleTextColor="@color/black"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/toolbar_name"
@@ -26,10 +26,15 @@
             android:layout_height="wrap_content"
             android:text="@string/main_profile"
             android:textSize="18sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
 
     </android.support.v7.widget.Toolbar>
 
+    <View
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

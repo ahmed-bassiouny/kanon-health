@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -36,6 +37,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
@@ -43,6 +45,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
+import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
@@ -352,13 +355,27 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         Calendar calender = Calendar.getInstance();
-        Dialog mDialog = new DatePickerDialog(EditDoctorProfileActivity.this,
+       /* Dialog mDialog = new DatePickerDialog(EditDoctorProfileActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog,
                 mDateSetListener, calender.get(Calendar.YEAR),
                 calender.get(Calendar.MONTH), calender
                 .get(Calendar.DAY_OF_MONTH));
 
+        mDialog.show();*/
+        final Context themedContext = new ContextThemeWrapper(
+                EditDoctorProfileActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog
+        );
+
+        final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
+                themedContext,
+                mDateSetListener,
+                calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH),
+                calender.get(Calendar.DAY_OF_MONTH));
+
         mDialog.show();
+
     }
 
     @OnClick(R.id.img_edit_avatar)
