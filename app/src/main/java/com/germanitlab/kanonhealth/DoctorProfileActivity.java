@@ -91,8 +91,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @BindView(R.id.tv_contact)
     EditText tvContact;
-    @BindView(R.id.tv_add_to_favourite)
-    EditText tvAddToFavourite;
+    @BindView(R.id.ed_add_to_favourite)
+    EditText edAddToFavourite;
 //    @BindView(R.id.tv_qr_code)
 //    TextView tv_qr_code;
     @BindView(R.id.tv_telephone)
@@ -162,8 +162,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     ImageView ivMemberList;
     @BindView(R.id.save)
     ImageView iSave;
-    @BindView(R.id.ll_doctor_data)
-    LinearLayout llDoctorData;
     @BindView(R.id.edit_image)
     CircleImageView civEditImage;
     private DoctorDocumentAdapter doctorDocumentAdapter;
@@ -194,14 +192,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         // check if doctor or clinic
 
         try {
-            if (getIntent().getExtras().containsKey("CLINIC")) {
-                llDoctorData.setVisibility(View.GONE);
-                tvAddToFavourite.setVisibility(View.GONE);
-                setVisiblitiy(View.GONE);
-
-            } else {
-                llDoctorData.setVisibility(View.VISIBLE);
-                tvAddToFavourite.setVisibility(View.VISIBLE);
 
                 util = Util.getInstance(this);
                 user = new User();
@@ -211,19 +201,19 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 pickerDialog = new PickerDialog(true);
                 bindData();
 
-                    util = Util.getInstance(this);
-            user = new User();
-            user = (User) getIntent().getSerializableExtra("doctor_data");
-            chechEditPermission();
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
 
-            }
         }catch (Exception e){
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
-
+        edAddToFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(DoctorProfileActivity.this, "asasas", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void handleImeActions() {
@@ -268,7 +258,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 menu.findItem(R.id.mi_save).setVisible(true);
                 menu.findItem(R.id.mi_edit).setVisible(false);
                 tvOnline.setText(user.getSubTitle());
-                tvAddToFavourite.setText(user.getFirst_name());
+                edAddToFavourite.setText(user.getFirst_name());
                 tvContact.setText(user.getLast_name());
                 break;
             case R.id.mi_save:
@@ -327,7 +317,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
         editboolean = true ;
         tvOnline.setText(user.getSubTitle());
-        tvAddToFavourite.setText(user.getFirst_name());
+        edAddToFavourite.setText(user.getFirst_name());
         tvContact.setText(user.getLast_name());
     }
 
@@ -340,7 +330,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void handleNewData() {
         user.setSubTitle(tvOnline.getText().toString());
         user.setLast_name(tvContact.getText().toString());
-        user.setFirst_name(tvAddToFavourite.getText().toString());
+        user.setFirst_name(edAddToFavourite.getText().toString());
         tvLocation.setText(et_location.getText().toString());
         user.setAddress(et_location.getText().toString());
         tvTelephone.setText(etTelephone.getText().toString());
@@ -397,7 +387,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         else
             ivMemberList.setVisibility(View.GONE);
         tvContact.setEnabled(editable);
-        tvAddToFavourite.setEnabled(editable);
+        edAddToFavourite.setEnabled(editable);
         tvOnline.setEnabled(editable);
     }
 
@@ -590,14 +580,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id()) {
             is_me = true;
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
-            tvAddToFavourite.setText(user.getSubTitle()+" "+user.getFirst_name());
+            edAddToFavourite.setText(user.getSubTitle()+" "+user.getFirst_name());
             tvContact.setText(user.getLast_name());
 
         }
         else {
             is_me = false;
             tvToolbarName.setText(user.getSubTitle()+" "+user.getLast_name()+" "+user.getFirst_name());
-            tvAddToFavourite.setText(R.string.add_to);
+            edAddToFavourite.setText(R.string.add_to);
             tvContact.setText(R.string.contact_by_chat);
         }
 
@@ -652,7 +642,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         startActivity(intent);
     }
 
-    @OnClick(R.id.tv_add_to_favourite)
+    @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
         if(is_me)
             return;
@@ -692,10 +682,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if(is_me)
             return;
         try {
-            if (user.getIs_my_doctor().equals("1"))
-                tvAddToFavourite.setText(getString(R.string.remove_from));
+            if (user.getIs_my_doctor().equals("null")||user.getIs_my_doctor()==null)
+                edAddToFavourite.setText(getString(R.string.add_to));
             else
-                tvAddToFavourite.setText(getString(R.string.add_to));
+                edAddToFavourite.setText(getString(R.string.remove_from));
         } catch (Exception e) {
         }
 
