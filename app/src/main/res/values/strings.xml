@@ -27,7 +27,7 @@
     <string name="provinz">Provinz</string>
     <string name="voluntary_info">Voluntary Information</string>
     <string name="question">Question :</string>
-    <string name="answer">Answer</string>
+    <string name="answer">Please Fill Data</string>
     <string name="back">Back</string>
     <string name="change_passcode">Change Passcode</string>
     <string name="change_phone">Change Phone Number</string>
@@ -264,6 +264,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="contact_by_chat">Contact By Chat</string>
     <string name="status_online">Status Online</string>
     <string name="status_offline">Status Offline</string>
+    <string name="title">Title</string>
 
 
 </resources>

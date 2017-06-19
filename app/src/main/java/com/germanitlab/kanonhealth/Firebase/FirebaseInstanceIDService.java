@@ -27,7 +27,6 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
             sendRegistrationToServer(refreshedToken);
         } catch (Exception e){
             Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
