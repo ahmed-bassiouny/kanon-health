@@ -261,6 +261,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="error_loading_data">error while loading data</string>
     <string name="error_saving_data">error while saving data</string>
     <string name="error_playing">error while plying video</string>
+    <string name="contact_by_chat">Contact By Chat</string>
 
 
 </resources>

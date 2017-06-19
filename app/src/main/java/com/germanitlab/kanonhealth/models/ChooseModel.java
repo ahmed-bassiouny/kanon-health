@@ -39,6 +39,7 @@ public class ChooseModel implements Serializable{
     private int general_id;
     private String general_name;
     private String general_icon;
+    private boolean is_my_choise=false;
 
     public int getGeneral_id() {
         return general_id;
@@ -98,7 +99,6 @@ public class ChooseModel implements Serializable{
     }
 
 
-    private boolean is_my_choise=false;
 
 
     public int getLang_id() {
@@ -122,6 +122,7 @@ public class ChooseModel implements Serializable{
     }
 
     public void setLang_icon(String lang_icon) {
+
         this.lang_icon = lang_icon;
     }
 
@@ -166,7 +167,7 @@ public class ChooseModel implements Serializable{
 
 
     public String getIs_available() {
-        return is_available;
+        return (is_available==null)? "0":is_available;
     }
 
     public void setIs_available(String is_available) {

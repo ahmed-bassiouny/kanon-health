@@ -121,12 +121,6 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 break;
         }
     }
-    /*private void setDataChecked(RadioButton rbtn,boolean show) {
-        if(show)
-            rbtn.setChecked(true);
-        else
-            r.setVisibility(View.GONE);
-    }*/
 
     @Override
     public void onSuccess(Object response) {

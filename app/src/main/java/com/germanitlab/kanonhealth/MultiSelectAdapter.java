@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
             case Constants.LANGUAUGE:
                  itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_select_row, parent, false);
                 break;
-            case Constants.MEMBERAT:
             case Constants.DoctorAll:
                   itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invite_doctor, parent, false);
                 break;
@@ -61,6 +61,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
         try {
             setDataChecked(holder.rbtn, model.getIsMyChoise());
             switch (type){
+
                 case Constants.SPECIALITIES:
                     holder.tv_title.setText(model.getSpeciality_title());
                     Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), holder.img_icon, R.drawable.profile_place_holder);
@@ -84,7 +85,6 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
-
     }
 
 
