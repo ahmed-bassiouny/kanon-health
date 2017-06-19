@@ -16,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -98,28 +100,34 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         setContentView(R.layout.fragment_profile);
         ButterKnife.bind(this);
 
-        if (Helper.isNetworkAvailable(getApplicationContext())) {
-            tvEdit.setVisibility(View.VISIBLE);
-        }else {
-            tvEdit.setVisibility(View.GONE);
+        try {
+            if (Helper.isNetworkAvailable(getApplicationContext())) {
+                tvEdit.setVisibility(View.VISIBLE);
+            }else {
+                tvEdit.setVisibility(View.GONE);
+            }
+
+            mPrefManager = new PrefManager(this);
+            Intent intent = getIntent();
+            Boolean from = intent.getBooleanExtra("from", false);
+            Log.e("Where  coming ", from.toString());
+            if (!from) {
+
+                userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
+                mPrefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
+                bindData();
+
+                progressBar.setVisibility(View.GONE);
+
+                linearProfileContent.setVisibility(View.VISIBLE);
+            } else {
+                new HttpCall(this, this).getProfile(AppController.getInstance().getClientInfo());
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
-        mPrefManager = new PrefManager(this);
-        Intent intent = getIntent();
-        Boolean from = intent.getBooleanExtra("from", false);
-        Log.e("Where  coming ", from.toString());
-        if (!from) {
-
-            userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
-            mPrefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
-            bindData();
-
-            progressBar.setVisibility(View.GONE);
-
-            linearProfileContent.setVisibility(View.VISIBLE);
-        } else {
-            new HttpCall(this, this).getProfile(AppController.getInstance().getClientInfo());
-        }
 
     }
 
@@ -201,21 +209,27 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     @Override
     public void onSuccess(Object response) {
 
-        progressBar.setVisibility(View.GONE);
+        try {
+            progressBar.setVisibility(View.GONE);
 
-        if (response != null) {
+            if (response != null) {
 
-            userInfoResponse = (UserInfoResponse) response;
-            Gson gson = new Gson();
-            mPrefManager.put(PrefManager.USER_KEY , gson.toJson(response));
-            bindData();
+                userInfoResponse = (UserInfoResponse) response;
+                Gson gson = new Gson();
+                mPrefManager.put(PrefManager.USER_KEY , gson.toJson(response));
+                bindData();
 
-            linearProfileContent.setVisibility(View.VISIBLE);
+                linearProfileContent.setVisibility(View.VISIBLE);
 
-        } else {
-            tvLoadingError.setVisibility(View.VISIBLE);
-            tvLoadingError.setText("Some thing went wrong");
+            } else {
+                tvLoadingError.setVisibility(View.VISIBLE);
+                tvLoadingError.setText("Some thing went wrong");
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -226,6 +240,8 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             tvLoadingError.setText(error);
         else
             tvLoadingError.setText("Some thing went wrong");
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

@@ -2,7 +2,10 @@ package com.germanitlab.kanonhealth.helpers;
 
 import android.app.Activity;
 import android.content.IntentSender;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -34,9 +37,11 @@ public class LocationServicesTurn {
                     try {
                         status.startResolutionForResult(
                                 requestActivity, 1000);
-                    } catch (IntentSender.SendIntentException e) {
-                        // Ignore the error.
+                    } catch (Exception e){
+                        Crashlytics.logException(e);
+                        Toast.makeText(requestActivity, requestActivity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                     }
+
                 }
             }
         });

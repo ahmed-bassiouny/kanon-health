@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -49,13 +50,19 @@ public class PaymentActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initTB();
 
-//        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
+        try {
+            //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
-        doctor= (User) getIntent().getSerializableExtra("doctor_data");
+            doctor= (User) getIntent().getSerializableExtra("doctor_data");
         /*
         handel data in ui
          */
-        handelUI(doctor);
+            handelUI(doctor);
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void handelUI(User doctorObj) {
@@ -98,43 +105,22 @@ public class PaymentActivity extends AppCompatActivity {
 
     @OnClick(R.id.next)
     public void nextClicked (){
-//        util.showProgressDialog();
-        final Gson gson = new Gson();
-//        new HttpCall(this, new ApiResponse() {
-//            @Override
-//            public void onSuccess(Object response) {
-////                util.dismissProgressDialog();
-//                Log.e("Update user response :", "no response found");
-//                Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
-//                doctor.setIsOpen(1);
-//                intent.putExtra("doctor_data" , gson.toJson(doctor));
-//                intent.putExtra("from" , true);
-//                startActivity(intent);
-//                finish();
-//            }
-//
-//            @Override
-//            public void onFailed(String error) {
-//                Toast.makeText(PaymentActivity.this, "No net", Toast.LENGTH_SHORT).show();
-//                Log.e("Error", error);
-//            }
-//        }).sendSessionRequest(
-//                String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),
-//                String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
-//                String.valueOf(doctor.get_Id())
-//                , "free");
+        try {
+            final Gson gson = new Gson();
+            Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
 
-//        DoctorProfile.profileActivity.finish();
-//        PreRequest.preRequest.finish();
-                Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
-
-        if (doctor!=null) {
-            doctor.setIsOpen(1);
+            if (doctor!=null) {
+                doctor.setIsOpen(1);
+            }
+            intent.putExtra("doctor_data" , gson.toJson(doctor));
+            intent.putExtra("from" , true);
+            startActivity(intent);
+            finish();
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
-                intent.putExtra("doctor_data" , gson.toJson(doctor));
-                intent.putExtra("from" , true);
-                startActivity(intent);
-                finish();
+
     }
 
 //    @OnClick(R.id.cancel)

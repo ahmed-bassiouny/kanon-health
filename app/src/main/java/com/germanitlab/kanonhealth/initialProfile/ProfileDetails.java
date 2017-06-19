@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -77,22 +78,29 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPrefManager = new PrefManager(this);
-        pickerDialog = new PickerDialog();
-        setContentView(R.layout.profile_details_activity);
-        ButterKnife.bind(this);
-        if(savedInstanceState != null) {
-            textBirthday.setText(savedInstanceState.getString("birthdate"));
-            selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI")) ;
-            Glide.with(this).load(selectedImageUri).into(imageProfile);
-        }
-        editLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                textBirthday.performClick();
-                return true;
+        try {
+            mPrefManager = new PrefManager(this);
+            pickerDialog = new PickerDialog();
+            setContentView(R.layout.profile_details_activity);
+            ButterKnife.bind(this);
+            if(savedInstanceState != null) {
+                textBirthday.setText(savedInstanceState.getString("birthdate"));
+                selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI")) ;
+                Glide.with(this).load(selectedImageUri).into(imageProfile);
             }
-        });
+            editLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    textBirthday.performClick();
+                    return true;
+                }
+            });
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @OnClick(R.id.image_profile)

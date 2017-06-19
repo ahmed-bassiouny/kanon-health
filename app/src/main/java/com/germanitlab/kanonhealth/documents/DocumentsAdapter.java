@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.documents;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -228,723 +230,45 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 //=============================================================
 
     private void setTextMessage(final TextMsgViewHolder textMsgViewHolder, final int position) {
-
-        final Message textMessage = mMessages.get(position);
-        textMsgViewHolder.myMessage.setText(textMessage.getMsg());
-        setImagePrivacy(textMessage.getPrivacy() , textMsgViewHolder.privacyImage);
-
-
         try {
-            String[] split = textMessage.getSent_at().split(" ");
-            textMsgViewHolder.tvDateMy.setText(split[0] + " " + split[1] + " " + split[2] + " " + split[3] + " " + split[4]);
-        } catch (Exception ex) {
-            textMsgViewHolder.tvDateMy.setText(textMessage.getSent_at());
-        }
-        textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(textMessage.get_Id()))
-                    selectItem(textMsgViewHolder.background, textMessage);
-                else {
-                    unselectItem(textMsgViewHolder.background, textMessage);
-                }
-                return true;
+            final Message textMessage = mMessages.get(position);
+            textMsgViewHolder.myMessage.setText(textMessage.getMsg());
+            setImagePrivacy(textMessage.getPrivacy() , textMsgViewHolder.privacyImage);
+
+
+            try {
+                String[] split = textMessage.getSent_at().split(" ");
+                textMsgViewHolder.tvDateMy.setText(split[0] + " " + split[1] + " " + split[2] + " " + split[3] + " " + split[4]);
+            } catch (Exception ex) {
+                textMsgViewHolder.tvDateMy.setText(textMessage.getSent_at());
             }
-        });
-        textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected) {
+            textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (!selected) {
+                        changeToolbar(true);
+                    }
                     if (!list.contains(textMessage.get_Id()))
                         selectItem(textMsgViewHolder.background, textMessage);
                     else {
                         unselectItem(textMsgViewHolder.background, textMessage);
                     }
+                    return true;
                 }
-            }
-        });
-        textMsgViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage(R.string.change_privacy_msg);
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Ja",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                final int privacy ;
-                                if(mMessages.get(position).getPrivacy() == 0)
-                                    privacy = 1 ;
-                                else if(mMessages.get(position).getPrivacy() == 1)
-                                    privacy = 2 ;
-                                else
-                                    privacy = 0 ;
-                                new HttpCall(new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        mMessages.get(position).setPrivacy(privacy);
-                                        notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-
-                                    }
-                                }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                        , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "Nein",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-            }
-        });
-
-    }
-
-    //-----------------------------------------------------------------------------------------------------
-
-
-    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position) {
-        Log.d("date form Image ", mMessages.get(position).getSent_at().toString());
-
-        final Message message = mMessages.get(position);
-        imageViewHolder.tvDateMy.setText(message.getSent_at());
-
-        setImagePrivacy(message.getPrivacy() , imageViewHolder.privacy_image);
-
-        if (!new File(message.getMsg()).exists()) {
-            String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
-            File file = new File(folder, fileName);
-            if (file.exists()) {
-                message.setMsg(file.getPath());
-                message.setLoaded(true);
-                message.setLoading(false);
-            }
-        }
-
-        Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-        Glide.with(context).load(imageUri).into(imageViewHolder.myMessage);
-
-
-        if (!message.isLoaded() && !message.isLoading()) {
-
-            message.setLoading(true);
-
-            imageViewHolder.progressBar.setVisibility(View.VISIBLE);
-            internetFilesOperations.uploadFileWithProgress(imageViewHolder.progressBar, Constants.UPLOAD_URL, message.getMsg(), new UploadListener() {
+            });
+            textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onUploadFinish(final String result) {
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            message.setLoading(false);
-                            try {
-                                JSONObject jsonObject = new JSONObject(result);
-                                if (jsonObject.has("error")) {
-                                    message.setLoaded(true);
-                                    showAlerDialog(Constants.UPLOAD_URL, Html.fromHtml(jsonObject.getString("error")).toString());
-                                } else {
-                                    if (!folder.exists()) folder.mkdirs();
-                                    String source = message.getMsg();
-                                    File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                    if (moveFile(new File(source), destination)) {
-                                        message.setMsg(destination.getPath());
-                                    }
-                                    message.setLoaded(true);
-                                    sendMessage(jsonObject.getString("file_url"), Constants.IMAGE);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                public void onClick(View view) {
+                    if (selected) {
+                        if (!list.contains(textMessage.get_Id()))
+                            selectItem(textMsgViewHolder.background, textMessage);
+                        else {
+                            unselectItem(textMsgViewHolder.background, textMessage);
                         }
-                    });
-                }
-            });
-        } else {
-            imageViewHolder.progressBar.setVisibility(View.INVISIBLE);
-        }
-
-/*        imageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(context, Document_Update.class);
-                intent.putExtra("data" ,  message);
-                intent.putExtra("type", Constants.IMAGE);
-                context.startActivity(intent);
-                return true;
-            }
-        });*/
-        imageViewHolder.myMessageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                File file = new File(mMessages.get(position).getMsg());
-
-                if (file.exists())
-                    Util.getInstance(context).showPhoto(Uri.fromFile(file));
-            }
-        });
-        imageViewHolder.myMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected) {
-                    if (!list.contains(message.get_Id()))
-                        selectItem(imageViewHolder.messageContainer, message);
-                    else
-                        unselectItem(imageViewHolder.messageContainer, message);
-                }  else {
-
-                    File file = new File(mMessages.get(position).getMsg());
-
-                    if (file.exists())
-                        Util.getInstance(context).showPhoto(Uri.fromFile(file));
-                }
-            }
-        });
-        imageViewHolder.myMessage.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(message.get_Id()))
-                    selectItem(imageViewHolder.messageContainer, message);
-                else {
-                    unselectItem(imageViewHolder.messageContainer, message);
-                }
-                return true;
-            }
-        });
-
-        imageViewHolder.privacy_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage(R.string.change_privacy_msg);
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Ja",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                final int privacy ;
-                                if(mMessages.get(position).getPrivacy() == 0)
-                                    privacy = 1 ;
-                                else if(mMessages.get(position).getPrivacy() == 1)
-                                    privacy = 2 ;
-                                else
-                                    privacy = 0 ;
-                                new HttpCall(new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        mMessages.get(position).setPrivacy(privacy);
-                                        notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-
-                                    }
-                                }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                        , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "Nein",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-            }
-        });
-
-    }
-
-    private static final int RED_COLOR_STRING = 0;
-    private static final int BLUE_COLOR_STRING = 1;
-    private static final int GREEN_COLOR_STRING = 2;
-
-
-    private void setVideoMessage(final VideoViewHolder videoViewHolder, final int position) {
-
-        final Message mediaMessage = mMessages.get(position);
-
-        videoViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
-
-        if (!new File(mediaMessage.getMsg()).exists()) {
-            String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
-            File file = new File(folder, fileName);
-            if (file.exists()) {
-                mediaMessage.setMsg(file.getPath());
-                mediaMessage.setLoaded(true);
-                mediaMessage.setLoading(false);
-                setVideoOnClick(videoViewHolder.myFrameVideo, file.getPath(), mediaMessage);
-            }
-        }
-        setImagePrivacy(mediaMessage.getPrivacy() , videoViewHolder.privacyImage);
-
-        setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
-        videoViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage(R.string.change_privacy_msg);
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Ja",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                final int privacy ;
-                                if(mMessages.get(position).getPrivacy() == 0)
-                                    privacy = 1 ;
-                                else if(mMessages.get(position).getPrivacy() == 1)
-                                    privacy = 2 ;
-                                else
-                                    privacy = 0 ;
-                                new HttpCall(new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        mMessages.get(position).setPrivacy(privacy);
-                                        notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-
-                                    }
-                                }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                        , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "Nein",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-
-            }
-        });
-
-
-        videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
-                MediaStore.Video.Thumbnails.MICRO_KIND));
-
-
-        if (!mediaMessage.isLoaded() && !mediaMessage.isLoading()) {
-            mediaMessage.isLoading();
-            videoViewHolder.progressBar.setVisibility(View.VISIBLE);
-            internetFilesOperations.uploadFileWithProgress(videoViewHolder.progressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
-                @Override
-                public void onUploadFinish(final String result) {
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                JSONObject jsonObject = new JSONObject(result);
-                                if (jsonObject.has("error")) {
-                                    //show dialog
-                                    mediaMessage.setLoaded(true);
-                                    showAlerDialog("Video", Html.fromHtml(jsonObject.getString("error")).toString());
-                                } else {
-
-                                    if (!folder.exists()) folder.mkdirs();
-
-                                    String source = mediaMessage.getMsg();
-                                    File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                    if (moveFile(new File(source), destination)) {
-                                        mediaMessage.setMsg(destination.getPath());
-
-                                        videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
-                                                MediaStore.Video.Thumbnails.MICRO_KIND));
-                                    }
-                                    mediaMessage.setLoaded(true);
-                                    mediaMessage.setLoading(false);
-
-                                    setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
-
-                                    sendMessage(jsonObject.getString("file_url"), Constants.VIDEO);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            videoViewHolder.progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
-
-    public void setVideoOnClick(View view, final String path, final Message message) {
-/*        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(context, Document_Update.class);
-                intent.putExtra("data" , (Parcelable) message );
-                intent.putExtra("type", Constants.VIDEO);
-                context.startActivity(intent);
-                return true ;
-            }
-        });*/
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                File file = new File(path);
-                if (file.exists())
-                    Util.getInstance(context).showVideo(Uri.fromFile(file));
-                else {
-                    String url = Constants.CHAT_SERVER_URL + "/" + path;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    intent.setDataAndType(Uri.parse(url), "video");
-                    context.startActivity(intent);
-                }
-            }
-        });
-    }
-
-    //-----------------------------------------------------------------------------------------------------
-    private void setAudioMessage(final AudioViewHolder audioViewHolder, final int position) {
-        final Message mediaMessage = mMessages.get(position);
-
-        audioViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
-
-        // Mediaplayer
-        audioViewHolder.mp = new MediaPlayer();
-        audioViewHolder.utils = new MediaUtilities();
-
-        final Runnable mUpdateTimeTask = new Runnable() {
-            public void run() {
-                long totalDuration = audioViewHolder.mp.getDuration();
-                long currentDuration = audioViewHolder.mp.getCurrentPosition();
-
-
-                // Updating progress bar
-                int progress = (int) (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
-                //Log.d("Progress", ""+progress);
-                audioViewHolder.seekBarMusic.setProgress(progress);
-
-                // Running this thread after 100 milliseconds
-                audioViewHolder.mHandler.postDelayed(this, 30);
-            }
-        };
-
-        setImagePrivacy(mediaMessage.getPrivacy() , audioViewHolder.privacy_image);
-
-        // Listeners
-        audioViewHolder.privacy_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                builder1.setMessage(R.string.change_privacy_msg);
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Ja",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                final int privacy ;
-                                if(mMessages.get(position).getPrivacy() == 0)
-                                    privacy = 1 ;
-                                else if(mMessages.get(position).getPrivacy() == 1)
-                                    privacy = 2 ;
-                                else
-                                    privacy = 0 ;
-                                new HttpCall(new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        mMessages.get(position).setPrivacy(privacy);
-                                        notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-
-                                    }
-                                }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                        , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "Nein",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-            }
-        });
-        audioViewHolder.seekBarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-                int totalDuration = audioViewHolder.mp.getDuration();
-                int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
-                audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-
-                // forward or backward to certain seconds
-                audioViewHolder.mp.seekTo(currentPosition);
-
-                // update timer progress again
-                audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-
-            }
-        }); // Important
-        audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
-            }
-        }); // Important
-
-        audioViewHolder.playPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (audioViewHolder.mp.isPlaying()) {
-                    if (audioViewHolder.mp != null) {
-                        audioViewHolder.mp.pause();
-                        // Changing button image to play button
-                        audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
-                    }
-                } else {
-                    // Resume song
-                    if (audioViewHolder.mp != null) {
-                        audioViewHolder.mp.start();
-                        // Changing button image to pause button
-                        audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_pause);
-                    }
-                }
-            }
-        });
-        if (!new File(mediaMessage.getMsg()).exists()) {
-            String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
-            File file = new File(folder, fileName);
-
-            if (file.exists()) {
-
-                mediaMessage.setMsg(file.getPath());
-                mediaMessage.setLoaded(true);
-                mediaMessage.setLoading(false);
-
-                try {
-                    audioViewHolder.mp.reset();
-                    audioViewHolder.mp.setDataSource(file.getPath());
-                    audioViewHolder.mp.prepare();
-
-                    // set Progress bar values
-                    audioViewHolder.seekBarMusic.setProgress(0);
-                    audioViewHolder.seekBarMusic.setMax(100);
-
-                    // Updating progress bar
-                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-
-            try {
-                audioViewHolder.mp.reset();
-                audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
-                audioViewHolder.mp.prepare();
-
-                // set Progress bar values
-                audioViewHolder.seekBarMusic.setProgress(0);
-                audioViewHolder.seekBarMusic.setMax(100);
-
-                // Updating progress bar
-                audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (!mediaMessage.isLoaded()) {
-            audioViewHolder.myProgressBar.setVisibility(View.VISIBLE);
-            internetFilesOperations.uploadFileWithProgress(audioViewHolder.myProgressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
-                @Override
-                public void onUploadFinish(final String result) {
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                JSONObject jsonObject = new JSONObject(result);
-                                if (jsonObject.has("error")) {
-                                    //show dialog
-                                    mediaMessage.setLoaded(true);
-                                    showAlerDialog("Audio", Html.fromHtml(jsonObject.getString("error")).toString());
-                                } else {
-
-                                    if (!folder.exists()) folder.mkdirs();
-                                    String source = mediaMessage.getMsg();
-                                    File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                    if (moveFile(new File(source), destination)) {
-                                        mediaMessage.setMsg(destination.getPath());
-                                    }
-                                    mediaMessage.setLoaded(true);
-                                    mediaMessage.setLoading(false);
-                                    sendMessage(jsonObject.getString("file_url"), Constants.AUDIO);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            audioViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
-        }
-        int totalDuration = audioViewHolder.mp.getDuration();
-        audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-
-        audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(context, Document_Update.class);
-                intent.putExtra("data", (Parcelable) mediaMessage);
-                intent.putExtra("type", Constants.AUDIO);
-                context.startActivity(intent);
-/*
-                showMediaOptions("Audio", position, Constants.AUDIO_MESSAGE, mediaMessage.getMsg());
-*/
-                return true;
-            }
-        });
-        audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(mediaMessage.get_Id()))
-                    selectItem(audioViewHolder.messageContainer, mediaMessage);
-                else {
-                    unselectItem(audioViewHolder.messageContainer, mediaMessage);
-                }
-
-/*
-                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
-*/
-
-                return true;
-            }
-        });
-        audioViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected)
-                    if (!list.contains(mediaMessage.get_Id()))
-                        selectItem(audioViewHolder.messageContainer, mediaMessage);
-                    else {
-                        unselectItem(audioViewHolder.messageContainer, mediaMessage);
-                    }
-                else {
-
-                }
-            }
-        });
-
-    }
-
-    //-----------------------------------------------------------------------------------------------------
-    private void setLocationMessage(final LocationViewHolder locationViewHolder, final int position) {
-        final Message locationMessage = mMessages.get(position);
-
-        if (locationMessage.isMine()) {
-
-            locationViewHolder.tvDateMy.setText(locationMessage.getSent_at());
-            locationViewHolder.myMessageContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        Intent intent = new Intent(context, MapsActivity.class);
-                        intent.putExtra("lat", jsonObject.getString("lat"));
-                        intent.putExtra("long", jsonObject.getString("long"));
-
-                        Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
-                        context.startActivity(intent);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             });
-            locationViewHolder.myMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("longi"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return false;
-                }
-            });
-
-            locationViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
+            textMsgViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
@@ -991,163 +315,874 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                     alert11.show();
                 }
             });
-            if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
-                locationMessage.setLoading(true);
 
-                new Thread(new Runnable() {
+
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+
+
+    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position) {
+        try {
+            Log.d("date form Image ", mMessages.get(position).getSent_at().toString());
+
+            final Message message = mMessages.get(position);
+            imageViewHolder.tvDateMy.setText(message.getSent_at());
+
+            setImagePrivacy(message.getPrivacy() , imageViewHolder.privacy_image);
+
+            if (!new File(message.getMsg()).exists()) {
+                String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
+                File file = new File(folder, fileName);
+                if (file.exists()) {
+                    message.setMsg(file.getPath());
+                    message.setLoaded(true);
+                    message.setLoading(false);
+                }
+            }
+
+            Uri imageUri = Uri.fromFile(new File(message.getMsg()));
+            Glide.with(context).load(imageUri).into(imageViewHolder.myMessage);
+
+
+            if (!message.isLoaded() && !message.isLoading()) {
+
+                message.setLoading(true);
+
+                imageViewHolder.progressBar.setVisibility(View.VISIBLE);
+                internetFilesOperations.uploadFileWithProgress(imageViewHolder.progressBar, Constants.UPLOAD_URL, message.getMsg(), new UploadListener() {
                     @Override
-                    public void run() {
-
-                        String msg = "{" + locationMessage.getMsg() + "}";
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(msg);
-                            double lat = jsonObject.getDouble("lat");
-                            double lng = jsonObject.getDouble("long");
-
-                            locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng));
-                            locationMessage.setLoading(false);
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    locationViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
-                                    locationViewHolder.myMessage.setImageBitmap(locationMessage.getLocationBitmap());
-                                    locationMessage.setLoaded(true);
-
+                    public void onUploadFinish(final String result) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                message.setLoading(false);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(result);
+                                    if (jsonObject.has("error")) {
+                                        message.setLoaded(true);
+                                        showAlerDialog(Constants.UPLOAD_URL, Html.fromHtml(jsonObject.getString("error")).toString());
+                                    } else {
+                                        if (!folder.exists()) folder.mkdirs();
+                                        String source = message.getMsg();
+                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                        if (moveFile(new File(source), destination)) {
+                                            message.setMsg(destination.getPath());
+                                        }
+                                        message.setLoaded(true);
+                                        sendMessage(jsonObject.getString("file_url"), Constants.IMAGE);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
+                            }
+                        });
                     }
-                }).start();
+                });
+            } else {
+                imageViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
 
-            if (!locationMessage.isLoaded()) {
-                sendMessage(locationMessage.getMsg(), Constants.LOCATION);
+/*        imageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(context, Document_Update.class);
+                intent.putExtra("data" ,  message);
+                intent.putExtra("type", Constants.IMAGE);
+                context.startActivity(intent);
+                return true;
             }
-
-        } else {
-            locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
-            locationViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
-            locationViewHolder.hisMessageContainer.setOnClickListener(new View.OnClickListener() {
+        });*/
+            imageViewHolder.myMessageContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        Intent intent = new Intent(context, MapsActivity.class);
-                        intent.putExtra("lat", jsonObject.getString("lat"));
-                        intent.putExtra("long", jsonObject.getString("long"));
-                        Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
-                        context.startActivity(intent);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                public void onClick(View view) {
+                    File file = new File(mMessages.get(position).getMsg());
+
+                    if (file.exists())
+                        Util.getInstance(context).showPhoto(Uri.fromFile(file));
+                }
+            });
+            imageViewHolder.myMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected) {
+                        if (!list.contains(message.get_Id()))
+                            selectItem(imageViewHolder.messageContainer, message);
+                        else
+                            unselectItem(imageViewHolder.messageContainer, message);
+                    }  else {
+
+                        File file = new File(mMessages.get(position).getMsg());
+
+                        if (file.exists())
+                            Util.getInstance(context).showPhoto(Uri.fromFile(file));
                     }
                 }
             });
-
-            locationViewHolder.hisMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            imageViewHolder.myMessage.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("long"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    if (!selected) {
+                        changeToolbar(true);
                     }
-                    return false;
+                    if (!list.contains(message.get_Id()))
+                        selectItem(imageViewHolder.messageContainer, message);
+                    else {
+                        unselectItem(imageViewHolder.messageContainer, message);
+                    }
+                    return true;
                 }
             });
 
-            locationViewHolder.tvDate.setText(locationMessage.getSent_at());
+            imageViewHolder.privacy_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setMessage(R.string.change_privacy_msg);
+                    builder1.setCancelable(true);
 
+                    builder1.setPositiveButton(
+                            "Ja",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    final int privacy ;
+                                    if(mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1 ;
+                                    else if(mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2 ;
+                                    else
+                                        privacy = 0 ;
+                                    new HttpCall(new ApiResponse() {
+                                        @Override
+                                        public void onSuccess(Object response) {
+                                            mMessages.get(position).setPrivacy(privacy);
+                                            notifyDataSetChanged();
+                                        }
 
-            if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
+                                        @Override
+                                        public void onFailed(String error) {
 
-                locationMessage.setLoading(true);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        String msg = "{" + locationMessage.getMsg() + "}";
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(msg);
-                            double lat = jsonObject.getDouble("lat");
-                            double lng = jsonObject.getDouble("long");
-                            locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng));
-                            locationMessage.setLoading(false);
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    locationViewHolder.hisProgressBar.setVisibility(View.INVISIBLE);
-                                    locationViewHolder.hisMessage.setImageBitmap(locationMessage.getLocationBitmap());
-                                    locationMessage.setLoaded(true);
+                                        }
+                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
                                 }
                             });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+                    builder1.setNegativeButton(
+                            "Nein",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }
+            });
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+
+    private void setVideoMessage(final VideoViewHolder videoViewHolder, final int position) {
+        try {
+
+            final Message mediaMessage = mMessages.get(position);
+
+            videoViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
+
+            if (!new File(mediaMessage.getMsg()).exists()) {
+                String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
+                File file = new File(folder, fileName);
+                if (file.exists()) {
+                    mediaMessage.setMsg(file.getPath());
+                    mediaMessage.setLoaded(true);
+                    mediaMessage.setLoading(false);
+                    setVideoOnClick(videoViewHolder.myFrameVideo, file.getPath(), mediaMessage);
+                }
+            }
+            setImagePrivacy(mediaMessage.getPrivacy() , videoViewHolder.privacyImage);
+
+            setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
+            videoViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setMessage(R.string.change_privacy_msg);
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Ja",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    final int privacy ;
+                                    if(mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1 ;
+                                    else if(mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2 ;
+                                    else
+                                        privacy = 0 ;
+                                    new HttpCall(new ApiResponse() {
+                                        @Override
+                                        public void onSuccess(Object response) {
+                                            mMessages.get(position).setPrivacy(privacy);
+                                            notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onFailed(String error) {
+
+                                        }
+                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "Nein",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+                }
+            });
+
+
+            videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
+                    MediaStore.Video.Thumbnails.MICRO_KIND));
+
+
+            if (!mediaMessage.isLoaded() && !mediaMessage.isLoading()) {
+                mediaMessage.isLoading();
+                videoViewHolder.progressBar.setVisibility(View.VISIBLE);
+                internetFilesOperations.uploadFileWithProgress(videoViewHolder.progressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
+                    @Override
+                    public void onUploadFinish(final String result) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(result);
+                                    if (jsonObject.has("error")) {
+                                        //show dialog
+                                        mediaMessage.setLoaded(true);
+                                        showAlerDialog("Video", Html.fromHtml(jsonObject.getString("error")).toString());
+                                    } else {
+
+                                        if (!folder.exists()) folder.mkdirs();
+
+                                        String source = mediaMessage.getMsg();
+                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                        if (moveFile(new File(source), destination)) {
+                                            mediaMessage.setMsg(destination.getPath());
+
+                                            videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
+                                                    MediaStore.Video.Thumbnails.MICRO_KIND));
+                                        }
+                                        mediaMessage.setLoaded(true);
+                                        mediaMessage.setLoading(false);
+
+                                        setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
+
+                                        sendMessage(jsonObject.getString("file_url"), Constants.VIDEO);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                videoViewHolder.progressBar.setVisibility(View.INVISIBLE);
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    public void setVideoOnClick(View view, final String path, final Message message) {
+/*        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(context, Document_Update.class);
+                intent.putExtra("data" , (Parcelable) message );
+                intent.putExtra("type", Constants.VIDEO);
+                context.startActivity(intent);
+                return true ;
+            }
+        });*/
+try {
+    view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            File file = new File(path);
+            if (file.exists())
+                Util.getInstance(context).showVideo(Uri.fromFile(file));
+            else {
+                String url = Constants.CHAT_SERVER_URL + "/" + path;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.setDataAndType(Uri.parse(url), "video");
+                context.startActivity(intent);
+            }
+        }
+    });
+}catch (Exception e){
+    Crashlytics.logException(e);
+    Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+}
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    private void setAudioMessage(final AudioViewHolder audioViewHolder, final int position) {
+        try {
+            final Message mediaMessage = mMessages.get(position);
+
+            audioViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
+
+            // Mediaplayer
+            audioViewHolder.mp = new MediaPlayer();
+            audioViewHolder.utils = new MediaUtilities();
+
+            final Runnable mUpdateTimeTask = new Runnable() {
+                public void run() {
+                    long totalDuration = audioViewHolder.mp.getDuration();
+                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
+
+
+                    // Updating progress bar
+                    int progress = (int) (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
+                    //Log.d("Progress", ""+progress);
+                    audioViewHolder.seekBarMusic.setProgress(progress);
+
+                    // Running this thread after 100 milliseconds
+                    audioViewHolder.mHandler.postDelayed(this, 30);
+                }
+            };
+
+            setImagePrivacy(mediaMessage.getPrivacy() , audioViewHolder.privacy_image);
+
+            // Listeners
+            audioViewHolder.privacy_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setMessage(R.string.change_privacy_msg);
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Ja",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    final int privacy ;
+                                    if(mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1 ;
+                                    else if(mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2 ;
+                                    else
+                                        privacy = 0 ;
+                                    new HttpCall(new ApiResponse() {
+                                        @Override
+                                        public void onSuccess(Object response) {
+                                            mMessages.get(position).setPrivacy(privacy);
+                                            notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onFailed(String error) {
+
+                                        }
+                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "Nein",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }
+            });
+            audioViewHolder.seekBarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                    audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                    int totalDuration = audioViewHolder.mp.getDuration();
+                    int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
+                    audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+
+                    // forward or backward to certain seconds
+                    audioViewHolder.mp.seekTo(currentPosition);
+
+                    // update timer progress again
+                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+
+                }
+            }); // Important
+            audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
+                }
+            }); // Important
+
+            audioViewHolder.playPauseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (audioViewHolder.mp.isPlaying()) {
+                        if (audioViewHolder.mp != null) {
+                            audioViewHolder.mp.pause();
+                            // Changing button image to play button
+                            audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
+                        }
+                    } else {
+                        // Resume song
+                        if (audioViewHolder.mp != null) {
+                            audioViewHolder.mp.start();
+                            // Changing button image to pause button
+                            audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_pause);
                         }
                     }
-                }).start();
+                }
+            });
+            if (!new File(mediaMessage.getMsg()).exists()) {
+                String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
+                File file = new File(folder, fileName);
 
-                locationViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                if (file.exists()) {
+
+                    mediaMessage.setMsg(file.getPath());
+                    mediaMessage.setLoaded(true);
+                    mediaMessage.setLoading(false);
+
+                    try {
+                        audioViewHolder.mp.reset();
+                        audioViewHolder.mp.setDataSource(file.getPath());
+                        audioViewHolder.mp.prepare();
+
+                        // set Progress bar values
+                        audioViewHolder.seekBarMusic.setProgress(0);
+                        audioViewHolder.seekBarMusic.setMax(100);
+
+                        // Updating progress bar
+                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+
+                try {
+                    audioViewHolder.mp.reset();
+                    audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
+                    audioViewHolder.mp.prepare();
+
+                    // set Progress bar values
+                    audioViewHolder.seekBarMusic.setProgress(0);
+                    audioViewHolder.seekBarMusic.setMax(100);
+
+                    // Updating progress bar
+                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (!mediaMessage.isLoaded()) {
+                audioViewHolder.myProgressBar.setVisibility(View.VISIBLE);
+                internetFilesOperations.uploadFileWithProgress(audioViewHolder.myProgressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
                     @Override
-                    public boolean onLongClick(View view) {
-                        if (!selected) {
-                            changeToolbar(true);
-                        }
-                        if (!list.contains(locationMessage.get_Id()))
-                            selectItem(locationViewHolder.messageContainer, locationMessage);
-                        else {
-                            unselectItem(locationViewHolder.messageContainer, locationMessage);
-                        }
+                    public void onUploadFinish(final String result) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(result);
+                                    if (jsonObject.has("error")) {
+                                        //show dialog
+                                        mediaMessage.setLoaded(true);
+                                        showAlerDialog("Audio", Html.fromHtml(jsonObject.getString("error")).toString());
+                                    } else {
+
+                                        if (!folder.exists()) folder.mkdirs();
+                                        String source = mediaMessage.getMsg();
+                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                        if (moveFile(new File(source), destination)) {
+                                            mediaMessage.setMsg(destination.getPath());
+                                        }
+                                        mediaMessage.setLoaded(true);
+                                        mediaMessage.setLoading(false);
+                                        sendMessage(jsonObject.getString("file_url"), Constants.AUDIO);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                audioViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
+            }
+            int totalDuration = audioViewHolder.mp.getDuration();
+            audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+
+            audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent intent = new Intent(context, Document_Update.class);
+                    intent.putExtra("data", (Parcelable) mediaMessage);
+                    intent.putExtra("type", Constants.AUDIO);
+                    context.startActivity(intent);
+/*
+                showMediaOptions("Audio", position, Constants.AUDIO_MESSAGE, mediaMessage.getMsg());
+*/
+                    return true;
+                }
+            });
+            audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (!selected) {
+                        changeToolbar(true);
+                    }
+                    if (!list.contains(mediaMessage.get_Id()))
+                        selectItem(audioViewHolder.messageContainer, mediaMessage);
+                    else {
+                        unselectItem(audioViewHolder.messageContainer, mediaMessage);
+                    }
 
 /*
                     showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
 */
 
-                        return true;
+                    return true;
+                }
+            });
+            audioViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected)
+                        if (!list.contains(mediaMessage.get_Id()))
+                            selectItem(audioViewHolder.messageContainer, mediaMessage);
+                        else {
+                            unselectItem(audioViewHolder.messageContainer, mediaMessage);
+                        }
+                    else {
+
+                    }
+                }
+            });
+
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    private void setLocationMessage(final LocationViewHolder locationViewHolder, final int position) {
+        try {
+            final Message locationMessage = mMessages.get(position);
+
+            if (locationMessage.isMine()) {
+
+                locationViewHolder.tvDateMy.setText(locationMessage.getSent_at());
+                locationViewHolder.myMessageContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            Intent intent = new Intent(context, MapsActivity.class);
+                            intent.putExtra("lat", jsonObject.getString("lat"));
+                            intent.putExtra("long", jsonObject.getString("long"));
+
+                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
+                            context.startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
-                locationViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                locationViewHolder.myMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        if (selected)
+                    public boolean onLongClick(View view) {
+
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("longi"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        return false;
+                    }
+                });
+
+                locationViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                        builder1.setMessage(R.string.change_privacy_msg);
+                        builder1.setCancelable(true);
+
+                        builder1.setPositiveButton(
+                                "Ja",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                        final int privacy ;
+                                        if(mMessages.get(position).getPrivacy() == 0)
+                                            privacy = 1 ;
+                                        else if(mMessages.get(position).getPrivacy() == 1)
+                                            privacy = 2 ;
+                                        else
+                                            privacy = 0 ;
+                                        new HttpCall(new ApiResponse() {
+                                            @Override
+                                            public void onSuccess(Object response) {
+                                                mMessages.get(position).setPrivacy(privacy);
+                                                notifyDataSetChanged();
+                                            }
+
+                                            @Override
+                                            public void onFailed(String error) {
+
+                                            }
+                                        }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                                , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                    }
+                                });
+
+                        builder1.setNegativeButton(
+                                "Nein",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+                    }
+                });
+                if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
+
+                    locationMessage.setLoading(true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            String msg = "{" + locationMessage.getMsg() + "}";
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(msg);
+                                double lat = jsonObject.getDouble("lat");
+                                double lng = jsonObject.getDouble("long");
+
+                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng , context));
+                                locationMessage.setLoading(false);
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        locationViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
+                                        locationViewHolder.myMessage.setImageBitmap(locationMessage.getLocationBitmap());
+                                        locationMessage.setLoaded(true);
+
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }).start();
+                }
+
+                if (!locationMessage.isLoaded()) {
+                    sendMessage(locationMessage.getMsg(), Constants.LOCATION);
+                }
+
+            } else {
+                locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                locationViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+                locationViewHolder.hisMessageContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            Intent intent = new Intent(context, MapsActivity.class);
+                            intent.putExtra("lat", jsonObject.getString("lat"));
+                            intent.putExtra("long", jsonObject.getString("long"));
+                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
+                            context.startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                locationViewHolder.hisMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("long"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    }
+                });
+
+                locationViewHolder.tvDate.setText(locationMessage.getSent_at());
+
+
+                if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
+
+                    locationMessage.setLoading(true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            String msg = "{" + locationMessage.getMsg() + "}";
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(msg);
+                                double lat = jsonObject.getDouble("lat");
+                                double lng = jsonObject.getDouble("long");
+                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng , context));
+                                locationMessage.setLoading(false);
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        locationViewHolder.hisProgressBar.setVisibility(View.INVISIBLE);
+                                        locationViewHolder.hisMessage.setImageBitmap(locationMessage.getLocationBitmap());
+                                        locationMessage.setLoaded(true);
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+                    locationViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (!selected) {
+                                changeToolbar(true);
+                            }
                             if (!list.contains(locationMessage.get_Id()))
                                 selectItem(locationViewHolder.messageContainer, locationMessage);
                             else {
                                 unselectItem(locationViewHolder.messageContainer, locationMessage);
                             }
-                        else {
 
+/*
+                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
+*/
+
+                            return true;
                         }
-                    }
-                });
-            }
+                    });
+                    locationViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (selected)
+                                if (!list.contains(locationMessage.get_Id()))
+                                    selectItem(locationViewHolder.messageContainer, locationMessage);
+                                else {
+                                    unselectItem(locationViewHolder.messageContainer, locationMessage);
+                                }
+                            else {
 
-        }
-        locationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String msg = "{" + locationMessage.getMsg() + "}";
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(msg);
-                    double lat = jsonObject.getDouble("lat");
-                    double lng = jsonObject.getDouble("long");
-                    Util.getInstance(context).showLocation(lat, lng);
-                } catch (JSONException e) {
-                    Log.e("ex", e.getMessage());
+                            }
+                        }
+                    });
                 }
+
             }
-        });
+            locationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String msg = "{" + locationMessage.getMsg() + "}";
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(msg);
+                        double lat = jsonObject.getDouble("lat");
+                        double lng = jsonObject.getDouble("long");
+                        Util.getInstance(context).showLocation(lat, lng);
+                    } catch (JSONException e) {
+                        Log.e("ex", e.getMessage());
+                    }
+                }
+            });
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void showAlerDialog(String title, String message) {
@@ -1231,12 +1266,10 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
                 }
             });
-        } catch (JSONException e) {
-
-            Log.e("Ex", e.getLocalizedMessage());
-
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void showLocationOptions(String title, final int position, String lat, String lng) {
@@ -1327,9 +1360,10 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
         try {
             builderSingle.show();
-        } catch (Exception ex) {
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public boolean moveFile(File source, File destination) {
@@ -1357,17 +1391,16 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
             return true;
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
         return false;
     }
 
 
     //===========================================================
-    public static Bitmap getGoogleMapThumbnail(double lati, double longi) {
+    public static Bitmap getGoogleMapThumbnail(double lati, double longi , Context context) {
         String URL = "http://maps.google.com/maps/api/staticmap?center=" + lati + "," + longi + "&zoom=15&size=200x200&sensor=false";
         Bitmap bmp = null;
         HttpClient httpclient = new DefaultHttpClient();
@@ -1378,17 +1411,10 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             in = httpclient.execute(request).getEntity().getContent();
             bmp = BitmapFactory.decodeStream(in);
             in.close();
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
         return bmp;
     }
 

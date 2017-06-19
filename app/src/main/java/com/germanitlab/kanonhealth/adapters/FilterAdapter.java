@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.main.MainActivity;
@@ -26,7 +28,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
     private HashMap<Integer, Integer> positionId;
     private Activity activity;
     Boolean from;
-    int type ;
+    int type;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
@@ -39,11 +41,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
     }
 
 
-    public FilterAdapter(List<Speciality> specialityList, Activity activity, Boolean from , int type) {
+    public FilterAdapter(List<Speciality> specialityList, Activity activity, Boolean from, int type) {
         this.specialityList = specialityList;
         this.activity = activity;
         this.from = from;
-        this.type = type ;
+        this.type = type;
         positionId = new HashMap<>();
     }
 
@@ -57,37 +59,40 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Speciality speciality = specialityList.get(position);
-        holder.title.setText(speciality.getSpeciality_title());
-        positionId.put(position, speciality.getSpeciality_id());
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(from)
-                {
-                    // from map
-                    int id = positionId.get(position);
-                    Intent intent = new Intent(activity , MapsActivity.class);
-                    intent.putExtra("speciality_id",id);
-                    intent.putExtra("type", type);
-                    intent.putExtra("from_map", true);
-                    activity.startActivity(intent);
-                }
-                else {
-                    //from main activity
-                    int id = positionId.get(position);
-                    Intent intent = new Intent(activity , MainActivity.class);
-                    intent.putExtra("speciality_id", id);
-                    intent.putExtra("type", type);
-                    intent.putExtra("index", -1);
-                    activity.startActivity(intent);
+        try {
+            Speciality speciality = specialityList.get(position);
+            holder.title.setText(speciality.getSpeciality_title());
+            positionId.put(position, speciality.getSpeciality_id());
+            holder.title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (from) {
+                        // from map
+                        int id = positionId.get(position);
+                        Intent intent = new Intent(activity, MapsActivity.class);
+                        intent.putExtra("speciality_id", id);
+                        intent.putExtra("type", type);
+                        intent.putExtra("from_map", true);
+                        activity.startActivity(intent);
+                    } else {
+                        //from main activity
+                        int id = positionId.get(position);
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        intent.putExtra("speciality_id", id);
+                        intent.putExtra("type", type);
+                        intent.putExtra("index", -1);
+                        activity.startActivity(intent);
 
+                    }
                 }
-            }
-        });
+            });
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
     }
-
 
 
     @Override

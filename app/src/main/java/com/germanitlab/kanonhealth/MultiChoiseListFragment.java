@@ -10,9 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -55,40 +59,43 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         save = (Button) view.findViewById(R.id.save);
         error_message=(TextView)view.findViewById(R.id.error_message);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            type=bundle.getInt("Constants");
-            chosedspecialist = (ArrayList<ChooseModel>) bundle.getSerializable(Constants.CHOSED_LIST);
+        try {
+            Bundle bundle = this.getArguments();
+            if (bundle != null) {
+                type=bundle.getInt("Constants");
+                chosedspecialist = (ArrayList<ChooseModel>) bundle.getSerializable(Constants.CHOSED_LIST);
+            }
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    message.Response(allspecialist,type);
+                    getDialog().dismiss();
+                }
+            });
+            getData();
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new MyClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    CheckBox rbtn=(CheckBox)view.findViewById(R.id.rbtn);
+                    //rbtn.setChecked(!allspecialist.get(position).getIsMyChoise());
+                    allspecialist.get(position).setIsMyChoise(rbtn.isChecked());
+                }
+
+                @Override
+                public void onClick(Object object) {
+
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+                }
+            }));
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                message.Response(allspecialist,type);
-                getDialog().dismiss();
-            }
-        });
-        getData();
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new MyClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                CircleImageView check=(CircleImageView)view.findViewById(R.id.check);
-                setDataChecked(check,!allspecialist.get(position).getIsMyChoise());
-                if(check.getVisibility()==View.VISIBLE)
-                    allspecialist.get(position).setIsMyChoise(true);
-                else
-                    allspecialist.get(position).setIsMyChoise(false);
-            }
 
-            @Override
-            public void onClick(Object object) {
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
         return view;
     }
 
@@ -114,12 +121,12 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 break;
         }
     }
-    private void setDataChecked(CircleImageView checked,boolean show) {
+    /*private void setDataChecked(RadioButton rbtn,boolean show) {
         if(show)
-            checked.setVisibility(View.VISIBLE);
+            rbtn.setChecked(true);
         else
-            checked.setVisibility(View.GONE);
-    }
+            r.setVisibility(View.GONE);
+    }*/
 
     @Override
     public void onSuccess(Object response) {

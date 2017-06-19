@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
@@ -97,29 +98,34 @@ public class DoctorProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile);
         profileActivity=this;
-
-        mPrefManager = new PrefManager(this);
-        ButterKnife.bind(this);
-        util = Util.getInstance(this);
-        util.showProgressDialog();
-        Intent intent = getIntent();
-        Gson gson = new Gson();
-        mDoctorRepository = new UserRepository(getApplicationContext());
-        doctorJson = intent.getStringExtra("doctor_data");
-        doctor = gson.fromJson(intent.getStringExtra("doctor_data"), User.class);
-        if (Helper.isNetworkAvailable(getApplicationContext())) {
-            getDoctorData();
-        } else {
-            doctor = mDoctorRepository.getDoctor(doctor);
-            doctor.setInfo(gson.fromJson(doctor.getJsonInfo(), Info.class));
-            ArrayList<Message> dos = gson.fromJson(doctor.getJsonDocument(), new TypeToken<ArrayList<Message>>() {
-            }.getType());
-            if (dos != null)
-                doctor.setDocuments(dos);
-            bindData();
-            util.dismissProgressDialog();
-            checkDoctor();
+        try {
+            mPrefManager = new PrefManager(this);
+            ButterKnife.bind(this);
+            util = Util.getInstance(this);
+            util.showProgressDialog();
+            Intent intent = getIntent();
+            Gson gson = new Gson();
+            mDoctorRepository = new UserRepository(getApplicationContext());
+            doctorJson = intent.getStringExtra("doctor_data");
+            doctor = gson.fromJson(intent.getStringExtra("doctor_data"), User.class);
+            if (Helper.isNetworkAvailable(getApplicationContext())) {
+                getDoctorData();
+            } else {
+                doctor = mDoctorRepository.getDoctor(doctor);
+                doctor.setInfo(gson.fromJson(doctor.getJsonInfo(), Info.class));
+                ArrayList<Message> dos = gson.fromJson(doctor.getJsonDocument(), new TypeToken<ArrayList<Message>>() {
+                }.getType());
+                if (dos != null)
+                    doctor.setDocuments(dos);
+                bindData();
+                util.dismissProgressDialog();
+                checkDoctor();
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -134,14 +140,20 @@ public class DoctorProfile extends AppCompatActivity {
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                Gson gson = new Gson();
-                doctorJson = gson.toJson(response);
-                UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                doctor = userInfoResponse.getUser();
-                util.dismissProgressDialog();
-                mDoctorRepository.insertDocument(doctor);
-                bindData();
-                checkDoctor();
+                try {
+                    Gson gson = new Gson();
+                    doctorJson = gson.toJson(response);
+                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+                    doctor = userInfoResponse.getUser();
+                    util.dismissProgressDialog();
+                    mDoctorRepository.insertDocument(doctor);
+                    bindData();
+                    checkDoctor();
+                }catch (Exception e){
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
@@ -225,6 +237,7 @@ public class DoctorProfile extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
+                    Toast.makeText(DoctorProfile.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                     Log.i("Error ", " " + error);
                 }
             }).addToMyDoctor(doctor.get_Id() + "");
@@ -238,6 +251,7 @@ public class DoctorProfile extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
+                    Toast.makeText(DoctorProfile.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                     Log.i("Error ", " " + error);
                 }
             }).removeFromMyDoctor(doctor.get_Id() + "");

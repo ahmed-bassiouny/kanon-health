@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
@@ -66,8 +67,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private View view;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
-//    private ImageButton imgScan;
-    private ImageView filter, map,ImgBtnSearch;
+    //    private ImageButton imgScan;
+    private ImageView filter, map, ImgBtnSearch;
 
     /*
     private TextView filter_to_list;
@@ -83,18 +84,18 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private EditText edtDoctorListFilter;
     private FilterCallBackClickListener filterCallBackClickListener;
     static DoctorListFragment doctorListFragment;
-    private Util util ;
+    private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
 
     public DoctorListFragment() {
     }
 
-    public static DoctorListFragment newInstance(int mspeciality_id, int mtype){
+    public static DoctorListFragment newInstance(int mspeciality_id, int mtype) {
         Bundle bundle = new Bundle();
-        bundle.putInt("speciality_id",mspeciality_id);
-        bundle.putInt("type",mtype);
-        if(doctorListFragment==null)
-            doctorListFragment=new DoctorListFragment();
+        bundle.putInt("speciality_id", mspeciality_id);
+        bundle.putInt("type", mtype);
+        if (doctorListFragment == null)
+            doctorListFragment = new DoctorListFragment();
         doctorListFragment.setArguments(bundle);
         return doctorListFragment;
     }
@@ -103,17 +104,24 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_doctor_list, container, false);
-        setHasOptionsMenu(true);
-        prefManager = new PrefManager(getActivity());
-        util= Util.getInstance(getActivity());
-        initView();
-        gson = new Gson();
-        util.showProgressDialog();
-        if (type == 0)
-            type = 2;
-        mDoctorRepository = new UserRepository(getContext());
-        loadData();
+        try {
+            view = inflater.inflate(R.layout.fragment_doctor_list, container, false);
+            setHasOptionsMenu(true);
+            prefManager = new PrefManager(getActivity());
+            util = Util.getInstance(getActivity());
+            initView();
+            gson = new Gson();
+            util.showProgressDialog();
+            if (type == 0)
+                type = 2;
+            mDoctorRepository = new UserRepository(getContext());
+            loadData();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
         return view;
     }
 
@@ -126,18 +134,18 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.mi_search:
-                if(edtDoctorListFilter.getVisibility()==View.GONE)
+                if (edtDoctorListFilter.getVisibility() == View.GONE)
                     edtDoctorListFilter.setVisibility(View.VISIBLE);
-                else if(edtDoctorListFilter.getVisibility()==View.VISIBLE)
+                else if (edtDoctorListFilter.getVisibility() == View.VISIBLE)
                     edtDoctorListFilter.setVisibility(View.GONE);
                 break;
             case R.id.mi_scan:
 
                 if (!checkPermissionForCamera()) {
                     requestPermissionForCamera();
-                }else {
+                } else {
                     startActivity(new Intent(getActivity(), StartQrScan.class));
                 }
                 break;
@@ -146,19 +154,19 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     }
 
-    public void requestPermissionForCamera(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)){
+    public void requestPermissionForCamera() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
             Toast.makeText(getContext().getApplicationContext(), "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
         } else {
-            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
             startActivity(new Intent(getActivity(), StartQrScan.class));
         }
     }
 
 
-    public boolean checkPermissionForCamera(){
+    public boolean checkPermissionForCamera() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
-        if (result == PackageManager.PERMISSION_GRANTED){
+        if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             return false;
@@ -168,8 +176,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        speciality_id=getArguments().getInt("speciality_id");
-        type=getArguments().getInt("type");
+        speciality_id = getArguments().getInt("speciality_id");
+        type = getArguments().getInt("type");
     }
 
     @Override
@@ -213,7 +221,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
                     @Override
                     public void onFailed(String error) {
-
+                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                         Log.d("Response", error);
                         dialog.dismiss();
                     }
@@ -239,25 +247,32 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                if (type == 2) {
-                    doctor_list.setBackgroundResource(R.color.blue);
-                    doctor_list.setTextColor(getResources().getColor(R.color.white));
-                    praxis_list.setBackgroundResource(R.color.gray);
-                    praxis_list.setTextColor(getResources().getColor(R.color.black));
+                try {
+                    if (type == 2) {
+                        doctor_list.setBackgroundResource(R.color.blue);
+                        doctor_list.setTextColor(getResources().getColor(R.color.white));
+                        praxis_list.setBackgroundResource(R.color.gray);
+                        praxis_list.setTextColor(getResources().getColor(R.color.black));
+                    }
+                    Log.e("Update user response :", "no response found");
+                    jsonString = gson.toJson(response);
+                    prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
+                    doctorList = (List<User>) response;
+                    saveInDB(doctorList);
+                    setAdapter(doctorList);
+                    util.dismissProgressDialog();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
-                Log.e("Update user response :", "no response found");
-                jsonString = gson.toJson(response);
-                prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
-                doctorList = (List<User>) response;
-                saveInDB(doctorList);
-                setAdapter(doctorList);
-                util.dismissProgressDialog();
+
 
             }
 
             @Override
             public void onFailed(String error) {
                 Log.e("Error", error);
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()), speciality_id, type);
     }
@@ -266,11 +281,11 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         double count = mDoctorRepository.count();
         for (User user : doctorList
                 ) {
-            User doctor1 = mDoctorRepository.getDoctor(user) ;
+            User doctor1 = mDoctorRepository.getDoctor(user);
             if (mDoctorRepository.getDoctor(user) == null) {
                 mDoctorRepository.create(user);
             } else {
-                if (mDoctorRepository.getDoctor(user).getJsonDocument() == null ||mDoctorRepository.getDoctor(user).getJsonDocument() == "")
+                if (mDoctorRepository.getDoctor(user).getJsonDocument() == null || mDoctorRepository.getDoctor(user).getJsonDocument() == "")
                     mDoctorRepository.updateColoumn(user);
             }
         }
@@ -278,7 +293,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() ,View.VISIBLE, 1);
+            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), View.VISIBLE, 1);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }
@@ -286,16 +301,22 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onSuccess(Object response) {
-
-        doctorList = (List<User>) response;
-        setAdapter(doctorList);
+        try {
+            doctorList = (List<User>) response;
+            setAdapter(doctorList);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onFailed(String error) {
+        Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         Log.e("error", error);
     }
-    private void loadData(){
+
+    private void loadData() {
         if (Helper.isNetworkAvailable(getContext())) {
             getBySpeciality();
         } else {
@@ -402,14 +423,13 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             @Override
             public void onClick(View view) {
 
-                if(edtDoctorListFilter.getVisibility()==View.GONE)
+                if (edtDoctorListFilter.getVisibility() == View.GONE)
                     edtDoctorListFilter.setVisibility(View.VISIBLE);
-                else if(edtDoctorListFilter.getVisibility()==View.VISIBLE)
+                else if (edtDoctorListFilter.getVisibility() == View.VISIBLE)
                     edtDoctorListFilter.setVisibility(View.GONE);
 
             }
         });
-
 
 
         filter.setOnClickListener(new View.OnClickListener() {
@@ -464,7 +484,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             }
         });
     }
-
 
 
 }

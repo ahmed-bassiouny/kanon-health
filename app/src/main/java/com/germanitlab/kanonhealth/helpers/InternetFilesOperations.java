@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.callback.UploadListener;
@@ -81,7 +84,8 @@ public class InternetFilesOperations {
                     uploadListener.onUploadFinish(responseStr);
                     Log.e("log_tag ******", "good connection");
                 } catch (Exception e) {
-                    Log.e("log_tag ******", "Error in http connection " + e.toString());
+                    Crashlytics.logException(e);
+                    Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -178,11 +182,11 @@ public class InternetFilesOperations {
                             + statusCode;
                 }
 
-            } catch (ClientProtocolException e) {
-                responseString = e.toString();
-            } catch (IOException e) {
-                responseString = e.toString();
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
+
 
             return responseString;
 
@@ -326,9 +330,11 @@ public class InternetFilesOperations {
                     file.createNewFile();
 
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
+
         }
 
         /**
@@ -385,8 +391,9 @@ public class InternetFilesOperations {
                 input.close();
 
 
-            } catch (Exception e) {
-                Log.e("Error: ", e.getMessage());
+            } catch (Exception e){
+                Crashlytics.logException(e);
+                Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
 
             return null;

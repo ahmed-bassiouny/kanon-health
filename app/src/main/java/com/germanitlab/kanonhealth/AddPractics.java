@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -286,72 +287,81 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case Constants.IMAGE_REQUEST:
-                    selectedImageUri = data.getData();
-                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    util.showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(selectedImageUri).into(civImageAvatar);
-
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            util.dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            user.setAvatar(uploadImageResponse.getFile_url());
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                            prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
-                    pickerDialog.dismiss();
-
-                    break;
-                case TAKE_PICTURE:
-                    util.showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-
-                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    Glide.with(this).load(selectedImageUri).into(civImageAvatar);
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            util.dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            user.setAvatar(uploadImageResponse.getFile_url());
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
-                    pickerDialog.dismiss();
-                    break;
-                case Constants.HOURS_CODE:
-                    user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
-                    user.setOpen_Type(data.getIntExtra("type", 0));
-                    getTimaTableData(user.getOpen_time());
-                    break;
-                case Constants.HOURS_TYPE_CODE:
-                    user.setOpen_Type(data.getIntExtra("type", 0));
-                    break;
-            }
-        } else if (requestCode == PLACE_PICKER_REQUEST) {
+        try {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
-                user.setLocation_lat(place.getLatLng().latitude);
-                user.setLocation_long(place.getLatLng().longitude);
+                switch (requestCode) {
+                    case Constants.IMAGE_REQUEST:
+                        selectedImageUri = data.getData();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        util.showProgressDialog();
+                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+                        Glide.with(this).load(selectedImageUri).into(civImageAvatar);
+
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                util.dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                                prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Log.e("upload image failed :", error);
+                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                        pickerDialog.dismiss();
+
+                        break;
+                    case TAKE_PICTURE:
+                        util.showProgressDialog();
+                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        Glide.with(this).load(selectedImageUri).into(civImageAvatar);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                util.dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Log.e("upload image failed :", error);                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                        pickerDialog.dismiss();
+                        break;
+                    case Constants.HOURS_CODE:
+                        user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
+                        user.setOpen_Type(data.getIntExtra("type", 0));
+                        getTimaTableData(user.getOpen_time());
+                        break;
+                    case Constants.HOURS_TYPE_CODE:
+                        user.setOpen_Type(data.getIntExtra("type", 0));
+                        break;
+                }
+            } else if (requestCode == PLACE_PICKER_REQUEST) {
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(data, this);
+                    user.setLocation_lat(place.getLatLng().latitude);
+                    user.setLocation_long(place.getLatLng().longitude);
+                }
             }
+
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
     }

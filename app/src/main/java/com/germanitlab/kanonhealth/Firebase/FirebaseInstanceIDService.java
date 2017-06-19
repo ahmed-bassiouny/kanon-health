@@ -1,7 +1,10 @@
 package com.germanitlab.kanonhealth.Firebase;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
@@ -22,9 +25,11 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
         // TODO: Implement this method to send any registration to your app's servers.
         try {
             sendRegistrationToServer(refreshedToken);
-        } catch (Exception e) {
-
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void sendRegistrationToServer(String token) {

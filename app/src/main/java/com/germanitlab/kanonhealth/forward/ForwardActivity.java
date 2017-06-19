@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -75,20 +76,28 @@ public class ForwardActivity extends AppCompatActivity {
         new HttpCall(new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                dismissProgressDialog();
-                ListDoctors = (List<User>) response;
-                ChooseList.addAll(ListDoctors);
-                recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-                setAdapter(ChooseList);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(mAdapter);
-                addListener(recyclerView);
+                try {
+                    dismissProgressDialog();
+                    ListDoctors = (List<User>) response;
+                    ChooseList.addAll(ListDoctors);
+                    recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                    setAdapter(ChooseList);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(mAdapter);
+                    addListener(recyclerView);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
+
+
             }
 
             @Override
             public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 /*tvLoadingError.setVisibility(View.VISIBLE);
                 if (error != null && error.length() > 0)
                     tvLoadingError.setText(error);
@@ -135,15 +144,20 @@ public class ForwardActivity extends AppCompatActivity {
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                Log.e("Update user response :", "no response found");
-                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                intent.putExtra("from_notification", 1);
-                if (doctorsForward.size() > 1) {
-                    intent.putExtra("from_id", user.get_Id());
-                } else {
-                    intent.putExtra("from_id", doctorsForward.get(0));
+                try {
+                    Log.e("Update user response :", "no response found");
+                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    intent.putExtra("from_notification", 1);
+                    if (doctorsForward.size() > 1) {
+                        intent.putExtra("from_id", user.get_Id());
+                    } else {
+                        intent.putExtra("from_id", doctorsForward.get(0));
+                    }
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
-                startActivity(intent);
 
 
             }
@@ -201,7 +215,7 @@ public class ForwardActivity extends AppCompatActivity {
 
     private void setAdapter(List<User> DoctorList) {
         if (DoctorList != null) {
-            mAdapter = new DoctorListAdapter(DoctorList, this , View.GONE, 3);
+            mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3);
             recyclerView.setAdapter(mAdapter);
         }
     }
@@ -255,55 +269,61 @@ public class ForwardActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
 
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null) {
+                if (result.getContents() == null) {
+                    Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                } else {
 /*
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 */
-                final String key = result.getContents();
-                final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.activity_qr_activity);
-                dialog.setTitle("Custom Alert Dialog");
-                dialog.setCanceledOnTouchOutside(false);
-                Button btnDoctor = (Button) dialog.findViewById(R.id.doctor);
-                Button btnClinic = (Button) dialog.findViewById(R.id.clinic);
-                Button btnUser = (Button) dialog.findViewById(R.id.doctor);
-                Button btnCancel = (Button) dialog.findViewById(R.id.cancel);
-                btnDoctor.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendRequest(key, 2);
-                    }
-                });
-                btnClinic.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendRequest(key, 3);
-                    }
-                });
-                btnUser.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendRequest(key, 1);
-                    }
-                });
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
-                });
+                    final String key = result.getContents();
+                    final Dialog dialog = new Dialog(this);
+                    dialog.setContentView(R.layout.activity_qr_activity);
+                    dialog.setTitle("Custom Alert Dialog");
+                    dialog.setCanceledOnTouchOutside(false);
+                    Button btnDoctor = (Button) dialog.findViewById(R.id.doctor);
+                    Button btnClinic = (Button) dialog.findViewById(R.id.clinic);
+                    Button btnUser = (Button) dialog.findViewById(R.id.doctor);
+                    Button btnCancel = (Button) dialog.findViewById(R.id.cancel);
+                    btnDoctor.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendRequest(key, 2);
+                        }
+                    });
+                    btnClinic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendRequest(key, 3);
+                        }
+                    });
+                    btnUser.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendRequest(key, 1);
+                        }
+                    });
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        }
+                    });
 
-                dialog.show();
+                    dialog.show();
 
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void sendRequest(String key, int entity_type) {
@@ -311,16 +331,20 @@ public class ForwardActivity extends AppCompatActivity {
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                User user = (User) response;
-                doctorsForward.clear();
-                doctorsForward.add(user.get_Id());
-                sendForward();
-
-
+                try {
+                    User user = (User) response;
+                    doctorsForward.clear();
+                    doctorsForward.add(user.get_Id());
+                    sendForward();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 Log.e("My error ", error.toString());
 
             }

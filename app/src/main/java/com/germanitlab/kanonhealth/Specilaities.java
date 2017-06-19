@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.FilterAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -32,42 +34,53 @@ public class Specilaities extends AppCompatActivity {
     TypeToken<List<Speciality>> token;
     private LinearLayout toolbar;
     private Boolean from;
-    private int type ;
-
+    private int type;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_specialities);
-        token = new TypeToken<List<Speciality>>() {
-        };
-        toolbar = (LinearLayout) findViewById(R.id.toolbar);
-        Intent intent = getIntent();
+        try {
+            token = new TypeToken<List<Speciality>>() {
+            };
+            toolbar = (LinearLayout) findViewById(R.id.toolbar);
+            Intent intent = getIntent();
 /*            String dd = savedInstanceState.getString("data");
             Log.d("my string ", dd.toString());*/
-        from = intent.getBooleanExtra("from" ,true);
-        type = intent.getIntExtra("type" , 0);
-        try {
-            boolean hide = intent.getBooleanExtra("hide" , true);
-            if (hide)
-                toolbar.setVisibility(View.GONE);
-        } catch (Exception e) {
+            from = intent.getBooleanExtra("from", true);
+            type = intent.getIntExtra("type", 0);
+            try {
+                boolean hide = intent.getBooleanExtra("hide", true);
+                if (hide)
+                    toolbar.setVisibility(View.GONE);
+            } catch (Exception e) {
 
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                Gson gson = new Gson();
-                String json = gson.toJson(response);
-                Log.e("returned msg ", json);
-                specialityList = (List<Speciality>) response;
-                createAdapter(specialityList, from);
+                try {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response);
+                    Log.e("returned msg ", json);
+                    specialityList = (List<Speciality>) response;
+                    createAdapter(specialityList, from);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                }
 
             }
 
             @Override
             public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                 Log.e("error in returned json", error);
             }
         }).getSpecialities((String.valueOf(AppController.getInstance().getClientInfo().getUser_id()))
@@ -76,7 +89,7 @@ public class Specilaities extends AppCompatActivity {
 
     public void createAdapter(List<Speciality> specialityList, Boolean from) {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new FilterAdapter(specialityList, this, from , type);
+        mAdapter = new FilterAdapter(specialityList, this, from, type);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

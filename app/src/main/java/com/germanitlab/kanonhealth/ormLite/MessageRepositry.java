@@ -2,7 +2,10 @@ package com.germanitlab.kanonhealth.ormLite;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -19,14 +22,16 @@ public class MessageRepositry {
 
     private DatabaseHelper db;
     Dao<Message, Integer> messagesDao;
+    private Context context ;
 
     public MessageRepositry(Context context) {
         DatabaseManager databaseManager = new DatabaseManager();
+        this.context = context ;
         db = databaseManager.getHelper(context);
         try {
             messagesDao = db.getMessagesDao();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
     }
 
@@ -34,8 +39,9 @@ public class MessageRepositry {
         try {
             if (!messagesDao.idExists(message.get_Id()))
                 return messagesDao.create(message);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.erre_database_insert), Toast.LENGTH_SHORT).show();
         }
         return 0;
     }
@@ -63,7 +69,8 @@ public class MessageRepositry {
             List<Message> messageList = messagesDao.query(preparedQuery);
             return messageList;
         } catch (Exception e) {
-            Log.d("Exceptoion", e.toString());
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
         return null;
     }

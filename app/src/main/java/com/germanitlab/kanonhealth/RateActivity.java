@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
@@ -60,32 +62,38 @@ public class RateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
-        recycler_view.setLayoutManager( new LinearLayoutManager(getApplicationContext()));
-        rate_percentages=new HashMap<>();
-        rate_percentages.put("r1", 22);
-        rate_percentages.put("r2", 33);
-        rate_percentages.put("r3", 44);
-        rate_percentages.put("r4", 2);
-        rate_percentages.put("r5", 18);
+        try {
+            recycler_view.setLayoutManager( new LinearLayoutManager(getApplicationContext()));
+            rate_percentages=new HashMap<>();
+            rate_percentages.put("r1", 22);
+            rate_percentages.put("r2", 33);
+            rate_percentages.put("r3", 44);
+            rate_percentages.put("r4", 2);
+            rate_percentages.put("r5", 18);
 
-        //doc_id=getIntent().getStringExtra("doc_id");
-        if(doc_id.isEmpty())
-            finish();
-        loadData();
-        txt_one_star.post(new TimerTask() {
-            @Override
-            public void run() {
+            //doc_id=getIntent().getStringExtra("doc_id");
+            if(doc_id.isEmpty())
+                finish();
+            loadData();
+            txt_one_star.post(new TimerTask() {
+                @Override
+                public void run() {
 
-                height=temp.getHeight();
-                width=temp.getWidth();
-                for(String key:rate_percentages.keySet())
-                    setRate(key,rate_percentages.get(key));
-                rate_result=(sum_rate_result/sum_rate_number);
-                txt_reviews.setText(String.format("%.02f",rate_result)+" Of 5 Stars - "+sum_rate_number+" Reviews");
-                rb_doctor_rate.setRating(rate_result);
+                    height=temp.getHeight();
+                    width=temp.getWidth();
+                    for(String key:rate_percentages.keySet())
+                        setRate(key,rate_percentages.get(key));
+                    rate_result=(sum_rate_result/sum_rate_number);
+                    txt_reviews.setText(String.format("%.02f",rate_result)+" Of 5 Stars - "+sum_rate_number+" Reviews");
+                    rb_doctor_rate.setRating(rate_result);
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -100,6 +108,7 @@ public class RateActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 Log.i("error", error);
             }
         }).getrating(doc_id);

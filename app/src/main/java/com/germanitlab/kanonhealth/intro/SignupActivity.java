@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -190,8 +191,9 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                 oldUser = true;
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
         if (registerResponse.isSucess()) {
             dismissProgressDialog();

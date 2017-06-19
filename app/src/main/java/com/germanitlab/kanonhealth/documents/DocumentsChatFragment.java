@@ -54,6 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.SocketCall;
@@ -128,13 +129,14 @@ public class DocumentsChatFragment extends Fragment
     private static DocumentsChatFragment documentsChatFragment;
 
 
-    public static DocumentsChatFragment newInstance(){
-        if(documentsChatFragment==null)
-            documentsChatFragment=new DocumentsChatFragment();
+    public static DocumentsChatFragment newInstance() {
+        if (documentsChatFragment == null)
+            documentsChatFragment = new DocumentsChatFragment();
         return documentsChatFragment;
     }
-    public DocumentsChatFragment(){
-        
+
+    public DocumentsChatFragment() {
+
     }
 
     @Override
@@ -146,35 +148,41 @@ public class DocumentsChatFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        prefManager = new PrefManager(getActivity());
-        if (view != null) {
+        try {
+            prefManager = new PrefManager(getActivity());
+            if (view != null) {
 
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null) {
+                ViewGroup parent = (ViewGroup) view.getParent();
+                if (parent != null) {
 
-                parent.removeView(view);
+                    parent.removeView(view);
+                }
+
+                return view;
+
             }
 
-            return view;
+            view = inflater.inflate(R.layout.fragment_chats_fragments, container, false);
+            setHasOptionsMenu(true);
 
-        }
+            initView();
 
-        view = inflater.inflate(R.layout.fragment_chats_fragments, container, false);
-        setHasOptionsMenu(true);
+            if (Helper.isNetworkAvailable(getContext())) {
 
-        initView();
+                fetchHistory();
+            } else {
+                handleJsonHistory(prefManager.getData(PrefManager.DOCUMENT_HISTORY), false);
+            }
 
-        if (Helper.isNetworkAvailable(getContext())) {
-
-            fetchHistory();
-        } else {
-            handleJsonHistory(prefManager.getData(PrefManager.DOCUMENT_HISTORY), false);
-        }
-
-        handelEvent();
+            handelEvent();
 //        assignViews();
 
-        buildGoogleApiClient();
+            buildGoogleApiClient();
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
         return view;
     }
@@ -278,11 +286,11 @@ public class DocumentsChatFragment extends Fragment
 
                 }
             });
-        } catch (JSONException e) {
-
-            Log.e("Ex", e.getLocalizedMessage());
-
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -312,7 +320,8 @@ public class DocumentsChatFragment extends Fragment
             Log.d("sent at ", message.getSent_at().toString());
             message.setSent_at(formatDate(message.getSent_at().toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
         mMessages.add(message);
@@ -326,7 +335,12 @@ public class DocumentsChatFragment extends Fragment
 
 
     private void scrollToBottom() {
-        recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        try {
+            recyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -337,7 +351,7 @@ public class DocumentsChatFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.mi_attach:
                 showPopup(view);
                 break;
@@ -352,17 +366,18 @@ public class DocumentsChatFragment extends Fragment
             @Override
             public void onSuccess(Object response) {
 
-                Log.e("fetch history", response.toString());
-                prefManager.put(PrefManager.DOCUMENT_HISTORY , response.toString());
-                handleJsonHistory(response.toString(), true);
-
-
+                try {
+                    prefManager.put(PrefManager.DOCUMENT_HISTORY, response.toString());
+                    handleJsonHistory(response.toString(), true);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailed(String error) {
-
-                Log.e("fetch history error ", error + " +");
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         }).fetchMessage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), "1");
     }
@@ -404,8 +419,10 @@ public class DocumentsChatFragment extends Fragment
                 Log.e("time in history", formattedDate);
                 message.setSent_at(formatDate(formattedDate));
             } catch (Exception e) {
-                e.printStackTrace();
+                Crashlytics.logException(e);
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
+
 
             if (message.getFrom_id() == AppController.getInstance().getClientInfo().getUser_id()) {
                 message.setMine(true);
@@ -435,118 +452,118 @@ public class DocumentsChatFragment extends Fragment
     }
 
     private void handelEvent() {
+        try {
+            imgbtnSend.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // TODO Auto-generated method stub
 
-        imgbtnSend.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+                            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_MOVE:
+                                view.getParent().requestDisallowInterceptTouchEvent(true);
+                                break;
+                            case MotionEvent.ACTION_DOWN:
 
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_MOVE:
-                            view.getParent().requestDisallowInterceptTouchEvent(true);
-                            break;
-                        case MotionEvent.ACTION_DOWN:
+                                linearTextMsg.setVisibility(View.GONE);
+                                relativeAudio.setVisibility(View.VISIBLE);
 
-                            linearTextMsg.setVisibility(View.GONE);
-                            relativeAudio.setVisibility(View.VISIBLE);
-
-                            Log.e("Start Recording", "start");
-
-
-                            startRecording();
-
-                            break;
-                        case MotionEvent.ACTION_UP:
-                        case MotionEvent.ACTION_CANCEL:
-                            view.getParent().requestDisallowInterceptTouchEvent(false);
-
-                            Log.e("stop Recording", "stop");
-                            stopRecording(true);
-                            long diff = endTimeForRecording - startTimeForRecording;
-                            Log.e("Difference", String.valueOf(diff));
-                            if (diff > 1000) {
-                                Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                sendMessage(mOutputFile.getPath(), Constants.AUDIO);
-                            }
-                            setButtonToTextMsg(true);
-
-                            break;
-                    }
-                } else {
-                    askForPermission(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
-                }
-                return false;
-            }
-        });
+                                Log.e("Start Recording", "start");
 
 
-        etMessage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                startRecording();
 
-            }
+                                break;
+                            case MotionEvent.ACTION_UP:
+                            case MotionEvent.ACTION_CANCEL:
+                                view.getParent().requestDisallowInterceptTouchEvent(false);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                Log.e("stop Recording", "stop");
+                                stopRecording(true);
+                                long diff = endTimeForRecording - startTimeForRecording;
+                                Log.e("Difference", String.valueOf(diff));
+                                if (diff > 1000) {
+                                    Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+                                    sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                }
+                                setButtonToTextMsg(true);
 
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                if (editable.toString().trim().length() > 0) {
-
-                    setButtonToTextMsg(false);
-
-                } else {
-
-                    imgbtnSend.setImageResource(R.drawable.mic);
-                    imgbtnSend.setOnClickListener(null);
-                    imgbtnSend.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            switch (event.getAction()) {
-                                case MotionEvent.ACTION_DOWN:
-
-                                    linearTextMsg.setVisibility(View.GONE);
-                                    relativeAudio.setVisibility(View.VISIBLE);
-
-                                    Log.e("Start Recording", "start");
-
-                                    startRecording();
-
-                                    break;
-                                case MotionEvent.ACTION_UP:
-
-                                    Log.e("stop Recording", "stop");
-                                    stopRecording(true);
-
-
-                                    long diff = endTimeForRecording - startTimeForRecording;
-                                    Log.e("Difference", String.valueOf(diff));
-                                    if (diff > 1000) {
-
-                                        Log.e("file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                        sendMessage(mOutputFile.getPath(), Constants.AUDIO);
-                                    }
-
-                                    setButtonToTextMsg(true);
-                                    imgbtnSend.setImageResource(R.drawable.mic);
-
-
-                                    break;
-                            }
-                            return false;
+                                break;
                         }
-                    });
+                    } else {
+                        askForPermission(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
+                    }
+                    return false;
+                }
+            });
+
+
+            etMessage.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                 }
 
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-        });
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                    if (editable.toString().trim().length() > 0) {
+
+                        setButtonToTextMsg(false);
+
+                    } else {
+
+                        imgbtnSend.setImageResource(R.drawable.mic);
+                        imgbtnSend.setOnClickListener(null);
+                        imgbtnSend.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                switch (event.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+
+                                        linearTextMsg.setVisibility(View.GONE);
+                                        relativeAudio.setVisibility(View.VISIBLE);
+
+                                        Log.e("Start Recording", "start");
+
+                                        startRecording();
+
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+
+                                        Log.e("stop Recording", "stop");
+                                        stopRecording(true);
+
+
+                                        long diff = endTimeForRecording - startTimeForRecording;
+                                        Log.e("Difference", String.valueOf(diff));
+                                        if (diff > 1000) {
+
+                                            Log.e("file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+                                            sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                        }
+
+                                        setButtonToTextMsg(true);
+                                        imgbtnSend.setImageResource(R.drawable.mic);
+
+
+                                        break;
+                                }
+                                return false;
+                            }
+                        });
+
+                    }
+
+
+                }
+            });
 
 //        imgbtnAttach.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -555,6 +572,10 @@ public class DocumentsChatFragment extends Fragment
 //                showPopup(view);
 //            }
 //        });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -580,31 +601,35 @@ public class DocumentsChatFragment extends Fragment
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        try {
+            if (ActivityCompat.checkSelfPermission(getContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
 
-        if (ActivityCompat.checkSelfPermission(getContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-
-            if (requestCode == Constants.CAMERA_PERMISSION_CODE) {
-                takePhoto();
-            } else if (requestCode == Constants.VIDEO_PERMISSION_CODE) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                startActivityForResult(intent, 200);
-            } else if (requestCode == Constants.LAST_LOCATION_PERMISSION_CODE) {
+                if (requestCode == Constants.CAMERA_PERMISSION_CODE) {
+                    takePhoto();
+                } else if (requestCode == Constants.VIDEO_PERMISSION_CODE) {
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                    startActivityForResult(intent, 200);
+                } else if (requestCode == Constants.LAST_LOCATION_PERMISSION_CODE) {
 //                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
 //                        mGoogleApiClient);
-            } else if (requestCode == Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE) {
-                Intent intent = new Intent();
-                intent.setType("image/* video/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,
-                        "Select Picture"), 100);
-            } else if (requestCode == Constants.AUDIO_PERMISSION_CODE) {
-                Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-                startActivityForResult(intent, 300);
-            } else if (requestCode == Constants.GET_LAST_LOCATION_PERMISSION_CODE) {
-                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
+                } else if (requestCode == Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE) {
+                    Intent intent = new Intent();
+                    intent.setType("image/* video/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent,
+                            "Select Picture"), 100);
+                } else if (requestCode == Constants.AUDIO_PERMISSION_CODE) {
+                    Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                    startActivityForResult(intent, 300);
+                } else if (requestCode == Constants.GET_LAST_LOCATION_PERMISSION_CODE) {
+                    mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            mGoogleApiClient);
+                }
             }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -622,9 +647,6 @@ public class DocumentsChatFragment extends Fragment
     public void onConnected(Bundle bundle) {
 
 
-
-
-
     }
 
     @Override
@@ -633,185 +655,197 @@ public class DocumentsChatFragment extends Fragment
     }
 
     private void showPopup(View view) {
-        final PopupWindow showPopup = PopupHelper
-                .newBasicPopupWindow(getContext());
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.custom_navigation_menu, null);
+        try {
+            final PopupWindow showPopup = PopupHelper
+                    .newBasicPopupWindow(getContext());
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.custom_navigation_menu, null);
 
 
-        popupView.findViewById(R.id.img_view_take_photo).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            popupView.findViewById(R.id.img_view_take_photo).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        takePhoto();
-                    } else
-                        askForPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.CAMERA_PERMISSION_CODE);
-                } else takePhoto();
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            takePhoto();
+                        } else
+                            askForPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.CAMERA_PERMISSION_CODE);
+                    } else takePhoto();
 
-                showPopup.dismiss();
-            }
-        });
-        popupView.findViewById(R.id.img_view_gallery).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    showPopup.dismiss();
+                }
+            });
+            popupView.findViewById(R.id.img_view_gallery).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            Intent intent = new Intent();
+                            intent.setType("image/* video/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent,
+                                    "Select Picture"), 100);
+                        } else
+                            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
+                    } else {
                         Intent intent = new Intent();
                         intent.setType("image/* video/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,
-                                "Select Picture"), 100);
-                    } else
-                        askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
-                } else {
-                    Intent intent = new Intent();
-                    intent.setType("image/* video/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+                    }
+
+
+                    showPopup.dismiss();
                 }
+            });
+            popupView.findViewById(R.id.img_view_video).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 
-                showPopup.dismiss();
-            }
-        });
-        popupView.findViewById(R.id.img_view_video).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
+                            Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+                            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                            startActivityForResult(intent, 200);
 
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
+                        } else
+                            askForPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
+                    } else {
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
                         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
                         startActivityForResult(intent, 200);
+                    }
 
-                    } else
-                        askForPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
-                } else {
-                    Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                    startActivityForResult(intent, 200);
+
+                    showPopup.dismiss();
                 }
+            });
+            popupView.findViewById(R.id.img_view_location).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    showPopup.dismiss();
 
-                showPopup.dismiss();
-            }
-        });
-        popupView.findViewById(R.id.img_view_location).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+                            askForPermission(permission,
+                                    Constants.LAST_LOCATION_PERMISSION_CODE);
+                        } else {
+                            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                                    mGoogleApiClient);
+                        }
+                    } else mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            mGoogleApiClient);
 
-                showPopup.dismiss();
-
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                        askForPermission(permission,
-                                Constants.LAST_LOCATION_PERMISSION_CODE);
+                    if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
+                        sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
                     } else {
-                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                                mGoogleApiClient);
-                    }
-                } else mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
 
-                if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
-                    sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
-                } else {
-
-                    if (simpleLocation == null || simpleLocation.getLatitude() == 0) {
-                        Toast.makeText(getActivity(), "Can't get your location", Toast.LENGTH_LONG).show();
-                        mGoogleApiClient.reconnect();
-                        return;
+                        if (simpleLocation == null || simpleLocation.getLatitude() == 0) {
+                            Toast.makeText(getActivity(), "Can't get your location", Toast.LENGTH_LONG).show();
+                            mGoogleApiClient.reconnect();
+                            return;
+                        }
+                        mLastLocation = new Location("");
+                        mLastLocation.setLatitude(simpleLocation.getLatitude());
+                        mLastLocation.setLongitude(simpleLocation.getLongitude());
+                        sendMessage("long: " + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
                     }
-                    mLastLocation = new Location("");
-                    mLastLocation.setLatitude(simpleLocation.getLatitude());
-                    mLastLocation.setLongitude(simpleLocation.getLongitude());
-                    sendMessage("long: " + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
                 }
-            }
-        });
+            });
 
-        showPopup.setContentView(popupView);
+            showPopup.setContentView(popupView);
 
-        showPopup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        showPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        showPopup.setAnimationStyle(R.style.Animations_GrowFromTop);
+            showPopup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            showPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+            showPopup.setAnimationStyle(R.style.Animations_GrowFromTop);
 
-        Log.e("view ", showPopup.getHeight() + " ");
+            Log.e("view ", showPopup.getHeight() + " ");
 
-        showPopup.showAtLocation(view, Gravity.TOP, 0,
-                400);
+            showPopup.showAtLocation(view, Gravity.TOP, 0,
+                    400);
 
 
-        showPopup.setOutsideTouchable(true);
+            showPopup.setOutsideTouchable(true);
 
-        showPopup.setFocusable(true);
-        // Removes default background.
-        showPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            showPopup.setFocusable(true);
+            // Removes default background.
+            showPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
 
     private void askForPermission(String[] permission, Integer requestCode) {
-       ActivityCompat.requestPermissions(getActivity(), permission, requestCode);
+        ActivityCompat.requestPermissions(getActivity(), permission, requestCode);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ChatFragment", "Result");
-        if (resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                switch (requestCode) {
-                    case 100:
-                        final Uri selectedUri = data.getData();
-                        String mimeType = getMimeType(data.getData().getPath());
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    switch (requestCode) {
+                        case 100:
+                            final Uri selectedUri = data.getData();
+                            String mimeType = getMimeType(data.getData().getPath());
 
-                        if (mimeType != null) {
+                            if (mimeType != null) {
 
-                            if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
-                                sendMessage(getPathFromURI(selectedUri), Constants.IMAGE);
+                                if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
+                                    sendMessage(getPathFromURI(selectedUri), Constants.IMAGE);
+                                } else {
+                                    sendMessage(getPath(getActivity(), selectedUri), Constants.VIDEO);
+                                }
+
                             } else {
-                                sendMessage(getPath(getActivity(), selectedUri), Constants.VIDEO);
+                                if (isImageFile(selectedUri)) {
+                                    filePath = getPath(getActivity(), selectedUri);
+                                    sendMessage(filePath, Constants.IMAGE);
+                                } else {
+                                    sendMessage(getPath(getActivity(), selectedUri), Constants.VIDEO);
+                                }
                             }
-
-                        } else {
-                            if (isImageFile(selectedUri)) {
-                                filePath = getPath(getActivity(), selectedUri);
-                                sendMessage(filePath, Constants.IMAGE);
-                            } else {
-                                sendMessage(getPath(getActivity(), selectedUri), Constants.VIDEO);
-                            }
+                            break;
+                        case 200://for video
+                            Uri uriVideo = data.getData();
+                            sendMessage(getPath(getActivity(), uriVideo), Constants.VIDEO);
+                            break;
+                        case 300:
+                            Uri savedUri = data.getData();
+                            sendMessage(getPath(getActivity(), savedUri), Constants.AUDIO);
+                            break;
+                    }
+                } else {
+                    if (requestCode == TAKE_PICTURE) {
+                        try {
+                            File finalFile = new File(getRealPathFromURI(selectedImageUri));
+                            sendMessage(finalFile.getPath(), Constants.IMAGE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        break;
-                    case 200://for video
-                        Uri uriVideo = data.getData();
-                        sendMessage(getPath(getActivity(), uriVideo), Constants.VIDEO);
-                        break;
-                    case 300:
-                        Uri savedUri = data.getData();
-                        sendMessage(getPath(getActivity(), savedUri), Constants.AUDIO);
-                        break;
-                }
-            } else {
-                if (requestCode == TAKE_PICTURE) {
-                    try {
-                        File finalFile = new File(getRealPathFromURI(selectedImageUri));
-                        sendMessage(finalFile.getPath(), Constants.IMAGE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }
-        }
 
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /* Get the real path from the URI */
@@ -890,73 +924,77 @@ public class DocumentsChatFragment extends Fragment
     //===================================
     public static String getPath(final Context context, final Uri uri) {
 
+        try {
 
-        Log.e("uri", uri == null ? "null" : "not null");
+            Log.e("uri", uri == null ? "null" : "not null");
 
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+            final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
-        // DocumentProvider
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-                // ExternalStorageProvider
-                if (isExternalStorageDocument(uri)) {
-                    final String docId = DocumentsContract.getDocumentId(uri);
-                    final String[] split = docId.split(":");
-                    final String type = split[0];
+            // DocumentProvider
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+                    // ExternalStorageProvider
+                    if (isExternalStorageDocument(uri)) {
+                        final String docId = DocumentsContract.getDocumentId(uri);
+                        final String[] split = docId.split(":");
+                        final String type = split[0];
 
-                    if ("primary".equalsIgnoreCase(type)) {
-                        return Environment.getExternalStorageDirectory() + "/" + split[1];
+                        if ("primary".equalsIgnoreCase(type)) {
+                            return Environment.getExternalStorageDirectory() + "/" + split[1];
+                        }
+
+                        // TODO handle non-primary volumes
                     }
+                    // DownloadsProvider
+                    else if (isDownloadsDocument(uri)) {
 
-                    // TODO handle non-primary volumes
-                }
-                // DownloadsProvider
-                else if (isDownloadsDocument(uri)) {
+                        final String id = DocumentsContract.getDocumentId(uri);
+                        final Uri contentUri = ContentUris.withAppendedId(
+                                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-                    final String id = DocumentsContract.getDocumentId(uri);
-                    final Uri contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                    return getDataColumn(context, contentUri, null, null);
-                }
-                // MediaProvider
-                else if (isMediaDocument(uri)) {
-                    final String docId = DocumentsContract.getDocumentId(uri);
-                    final String[] split = docId.split(":");
-                    final String type = split[0];
-
-                    Uri contentUri = null;
-                    if ("image".equals(type)) {
-                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("video".equals(type)) {
-                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("audio".equals(type)) {
-                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                        return getDataColumn(context, contentUri, null, null);
                     }
+                    // MediaProvider
+                    else if (isMediaDocument(uri)) {
+                        final String docId = DocumentsContract.getDocumentId(uri);
+                        final String[] split = docId.split(":");
+                        final String type = split[0];
 
-                    final String selection = "_id=?";
-                    final String[] selectionArgs = new String[]{
-                            split[1]
-                    };
+                        Uri contentUri = null;
+                        if ("image".equals(type)) {
+                            contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                        } else if ("video".equals(type)) {
+                            contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                        } else if ("audio".equals(type)) {
+                            contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                        }
 
-                    return getDataColumn(context, contentUri, selection, selectionArgs);
+                        final String selection = "_id=?";
+                        final String[] selectionArgs = new String[]{
+                                split[1]
+                        };
+
+                        return getDataColumn(context, contentUri, selection, selectionArgs);
+                    }
+                }
+                // MediaStore (and general)
+                else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+                    // Return the remote address
+                    if (isGooglePhotosUri(uri))
+                        return uri.getLastPathSegment();
+
+                    return getDataColumn(context, uri, null, null);
+                }
+                // File
+                else if ("file".equalsIgnoreCase(uri.getScheme())) {
+                    return uri.getPath();
                 }
             }
-            // MediaStore (and general)
-            else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-                // Return the remote address
-                if (isGooglePhotosUri(uri))
-                    return uri.getLastPathSegment();
-
-                return getDataColumn(context, uri, null, null);
-            }
-            // File
-            else if ("file".equalsIgnoreCase(uri.getScheme())) {
-                return uri.getPath();
-            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
         return null;
     }
 
@@ -1032,6 +1070,7 @@ public class DocumentsChatFragment extends Fragment
     }
 
     private void startRecording() {
+
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         startTimeForRecording = cal.getTimeInMillis();
         mRecorder = new MediaRecorder();
@@ -1055,8 +1094,9 @@ public class DocumentsChatFragment extends Fragment
             mStartTime = SystemClock.elapsedRealtime();
             mHandler.postDelayed(mTickExecutor, 100);
             Log.d("Voice Recorder", "started recording to " + mOutputFile.getAbsolutePath());
-        } catch (IOException e) {
-            Log.e("Voice Recorder", "prepare() failed " + e.getMessage());
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1096,9 +1136,11 @@ public class DocumentsChatFragment extends Fragment
 
         try {
             mRecorder.stop();
-        } catch (RuntimeException stopException) {
-            //handle cleanup here
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
 
         mRecorder.release();
         mRecorder = null;
@@ -1117,10 +1159,10 @@ public class DocumentsChatFragment extends Fragment
     public String formatDate(String date) {
         String[] current_date = date.split(" ")[1].split(":");
         Log.e("Length of the array", String.valueOf(current_date.length));
-        if (current_date.length < 3){
-            return  current_date[0] + ":" + current_date[1];
+        if (current_date.length < 3) {
+            return current_date[0] + ":" + current_date[1];
         }
-        return current_date[0] + ":" + current_date[1]  + ":" + current_date[2];
+        return current_date[0] + ":" + current_date[1] + ":" + current_date[2];
 
     }
 

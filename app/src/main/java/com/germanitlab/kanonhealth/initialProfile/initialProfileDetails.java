@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -145,24 +146,31 @@ public class initialProfileDetails extends AppCompatActivity {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-                    Log.e("Update user response :", user != null ? response.toString() : "no response found" );
+                    try {
+                        Log.e("Update user response :", user != null ? response.toString() : "no response found" );
 
 
-                    mPrefManager.put(mPrefManager.USER_KEY, response.toString());
-                    Gson gson = new Gson();
-                    UserInfoResponse userInfoResponse = gson.fromJson(response.toString() , UserInfoResponse.class);
-                    Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
-                    mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
+                        mPrefManager.put(mPrefManager.USER_KEY, response.toString());
+                        Gson gson = new Gson();
+                        UserInfoResponse userInfoResponse = gson.fromJson(response.toString() , UserInfoResponse.class);
+                        Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
+                        mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
 
-                    mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
-                    dismissProgressDialog();
+                        mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
+                        dismissProgressDialog();
 //                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
 //                    intent.putExtra("status", 1);
 //                    startActivity(intent);
-                    Intent intent = new Intent(getApplicationContext() , MainActivity.class);
-                    startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+                        startActivity(intent);
 
-                    finish();
+                        finish();
+                    }catch (Exception e){
+                        Crashlytics.logException(e);
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
 
                 @Override

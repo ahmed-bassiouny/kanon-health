@@ -30,8 +30,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -122,13 +124,14 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_edit_profile);
-        prefManager = new PrefManager(this);
-        pickerDialog = new PickerDialog(true);
-        ButterKnife.bind(this);
-        etFirstName.setSelected(false);
-        Intent i = getIntent();
-        userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
-        bindData();
+        try {
+            prefManager = new PrefManager(this);
+            pickerDialog = new PickerDialog(true);
+            ButterKnife.bind(this);
+            etFirstName.setSelected(false);
+            Intent i = getIntent();
+            userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
+            bindData();
 /*        if (savedInstanceState != null) {
             etFirstName.setSelected(false);
             imageUri = Uri.parse(savedInstanceState.getString("imageURI"));
@@ -136,15 +139,20 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
             userInfoResponse = (UserInfoResponse) savedInstanceState.getSerializable("userdata");
 
         }*/
-        user = userInfoResponse.getUser();
-        Log.e("My user ", String.valueOf(user.get_Id()));
-        info = user.getInfo();
-        createAdapter();
+            user = userInfoResponse.getUser();
+            Log.e("My user ", String.valueOf(user.get_Id()));
+            info = user.getInfo();
+            createAdapter();
 
-        if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
-            String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-            Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
+            if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
+                String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
+                Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -232,62 +240,67 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        try {
+            pickerDialog.dismiss();
+            if (resultCode == RESULT_OK) {
+                switch (requestCode) {
+                    case Constants.IMAGE_REQUEST:
+                        selectedImageUri = data.getData();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        showProgressDialog();
+                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
 
-        pickerDialog.dismiss();
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case Constants.IMAGE_REQUEST:
-                    selectedImageUri = data.getData();
-                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(selectedImageUri).into(imgAvatar);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                                prefManager.put(PrefManager.PROFILE_IMAGE , uploadImageResponse.getFile_url());
+                            }
 
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            user.setAvatar(uploadImageResponse.getFile_url());
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                            prefManager.put(PrefManager.PROFILE_IMAGE , uploadImageResponse.getFile_url());
-                        }
+                            @Override
+                            public void onFailed(String error) {
+                                Log.e("upload image failed :", error);
+                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
 
-                        @Override
-                        public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
-
-                    break;
-                case TAKE_PICTURE:
-                    showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+                        break;
+                    case TAKE_PICTURE:
+                        showProgressDialog();
+                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
 /*
                     decodeFile(selectedImageUri.toString());
 */
-                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    Glide.with(this).load(selectedImageUri).into(imgAvatar);
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            user.setAvatar(uploadImageResponse.getFile_url());
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                        }
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                            }
 
-                        @Override
-                        public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                            @Override
+                            public void onFailed(String error) {
+                                Log.e("upload image failed :", error);
+                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
 
-                    break;
+                        break;
+                }
             }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /* Get the real path from the URI */

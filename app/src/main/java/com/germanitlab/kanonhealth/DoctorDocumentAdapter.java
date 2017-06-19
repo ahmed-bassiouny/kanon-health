@@ -21,7 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
@@ -92,16 +94,22 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Message message = messageList.get(position);
-        if (message.getType().equals(Constants.TEXT)) {
-            holder.textLayout.setVisibility(View.VISIBLE);
-            holder.textView.setText(message.getMsg());
-        } else if (message.getType().equals(Constants.VIDEO)) {
-            createVideo(holder, position, message);
-        } else if (message.getType().equals(Constants.AUDIO)) {
-            createAudio(holder, position, message);
-        } else if (message.getType().equals(Constants.IMAGE)) {
-            createImage(holder, position, message);
+        try {
+            if (message.getType().equals(Constants.TEXT)) {
+                holder.textLayout.setVisibility(View.VISIBLE);
+                holder.textView.setText(message.getMsg());
+            } else if (message.getType().equals(Constants.VIDEO)) {
+                createVideo(holder, position, message);
+            } else if (message.getType().equals(Constants.AUDIO)) {
+                createAudio(holder, position, message);
+            } else if (message.getType().equals(Constants.IMAGE)) {
+                createImage(holder, position, message);
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void createImage(MyViewHolder holder, int position, Message message) {

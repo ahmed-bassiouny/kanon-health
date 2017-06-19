@@ -28,7 +28,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -66,18 +68,18 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private TextView tvLoadingError;
     private LinearLayout linearLayoutContent;
-    private LinearLayout chat_layout ;
+    private LinearLayout chat_layout;
     private PrefManager mPrefManager;
-    Gson gson ;
+    Gson gson;
 
     private EditText edtFilter;
     private Button doctors_list, praxis_list;
     private static ChatsDoctorFragment chatsDoctorFragment;
-    Util util ;
+    Util util;
 
-    public static ChatsDoctorFragment newInstance(){
-        if(chatsDoctorFragment==null)
-            chatsDoctorFragment=new ChatsDoctorFragment();
+    public static ChatsDoctorFragment newInstance() {
+        if (chatsDoctorFragment == null)
+            chatsDoctorFragment = new ChatsDoctorFragment();
         return chatsDoctorFragment;
     }
 
@@ -87,81 +89,100 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(getView()!=null &&isVisibleToUser ){
-            if(Helper.isNetworkAvailable(getContext())) {
-                util.showProgressDialog();
-                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword());
+        try {
+            if (getView() != null && isVisibleToUser) {
+                if (Helper.isNetworkAvailable(getContext())) {
+                    util.showProgressDialog();
+                    new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                            , AppController.getInstance().getClientInfo().getPassword());
+                } else {
+                    TypeToken<List<User>> token = new TypeToken<List<User>>() {
+                    };
+                    doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST), token.getType());
+                    ;
+                    setAdapter(doctorList);
+                }
             }
-            else {
-                TypeToken<List<User>> token = new TypeToken<List<User>>(){};
-                doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST) ,  token.getType());;
-                setAdapter(doctorList);
-            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getActivity(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        if(Helper.isNetworkAvailable(getContext())) {
-            util.showProgressDialog();
-            new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                    , AppController.getInstance().getClientInfo().getPassword());
+        try {
+            if (Helper.isNetworkAvailable(getContext())) {
+                util.showProgressDialog();
+                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                        , AppController.getInstance().getClientInfo().getPassword());
+            } else {
+                TypeToken<List<User>> token = new TypeToken<List<User>>() {
+                };
+                doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST), token.getType());
+                ;
+                setAdapter(doctorList);
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        else {
-            TypeToken<List<User>> token = new TypeToken<List<User>>(){};
-            doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST) ,  token.getType());;
-            setAdapter(doctorList);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if (view != null) {
+        try {
+            if (view != null) {
 
-            ViewGroup parent = (ViewGroup) view.getParent();
-            if (parent != null) {
+                ViewGroup parent = (ViewGroup) view.getParent();
+                if (parent != null) {
 
-                parent.removeView(view);
+                    parent.removeView(view);
+                }
+
+                return view;
+
             }
+            util = Util.getInstance(getActivity());
+            gson = new Gson();
+            mPrefManager = new PrefManager(getActivity());
 
-            return view;
 
+            view = inflater.inflate(R.layout.fragment_chats_doctor, container, false);
+
+            initView();
+            handelEvent();
+
+            setHasOptionsMenu(true);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        util = Util.getInstance(getActivity());
-        gson = new Gson();
-        mPrefManager = new PrefManager(getActivity());
 
-
-        view = inflater.inflate(R.layout.fragment_chats_doctor, container, false);
-
-        initView();
-        handelEvent();
-
-        setHasOptionsMenu(true);
         return view;
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu,menu);
+        inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.mi_search:
-                if(edtFilter.getVisibility()==View.GONE)
+                if (edtFilter.getVisibility() == View.GONE)
                     edtFilter.setVisibility(View.VISIBLE);
-                else if(edtFilter.getVisibility()==View.VISIBLE)
+                else if (edtFilter.getVisibility() == View.VISIBLE)
                     edtFilter.setVisibility(View.GONE);
                 break;
             case R.id.mi_scan:
@@ -171,7 +192,6 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         return super.onOptionsItemSelected(item);
 
     }
-
 
 
     private void handelEvent() {
@@ -190,21 +210,27 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new MyClickListener() {
             @Override
             public void onClick(View view, int position) {
+                try {
+                    PrefManager prefManager = new PrefManager(getActivity());
+                    Gson gson = new Gson();
+                    prefManager.put(PrefManager.DOCTOR_KEY, gson.toJson(doctorList.get(position)));
+                    if (mPrefManager.get(mPrefManager.IS_DOCTOR) || doctorList.get(position).getIsOpen() == 1) {
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
+                        intent.putExtra("from", true);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
 
-                PrefManager prefManager = new PrefManager(getActivity());
-                Gson gson = new Gson();
-                prefManager.put(PrefManager.DOCTOR_KEY, gson.toJson(doctorList.get(position)));
-                if (mPrefManager.get(mPrefManager.IS_DOCTOR )|| doctorList.get(position).getIsOpen() == 1) {
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
-                    intent.putExtra("from", true);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), PaymentActivity.class);
-
-                    intent.putExtra("doctor_data",doctorList.get(position));
-                    startActivity(intent);
+                        intent.putExtra("doctor_data", doctorList.get(position));
+                        startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
+
+
             }
 
             @Override
@@ -290,9 +316,11 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
                     act.startActivity(intent);
 
-                } catch (ActivityNotFoundException anfe) {
-
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(act, act.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
         downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
@@ -303,7 +331,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     }
 
     private void initView() {
-        praxis_list = (Button)view.findViewById(R.id.praxis_list);
+        praxis_list = (Button) view.findViewById(R.id.praxis_list);
         chat_layout = (LinearLayout) view.findViewById(R.id.chat_layout);
         doctors_list = (Button) view.findViewById(R.id.doctor_list);
         doctors_list.setBackgroundResource(R.color.blue);
@@ -400,7 +428,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity() , view.VISIBLE,3);
+            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), view.VISIBLE, 3);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }
@@ -408,13 +436,20 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onSuccess(Object response) {
-        util.dismissProgressDialog();
-        doctorList = (List<User>) response;
-        Gson gson = new Gson();
-        String jsonData = gson.toJson(response);
-        mPrefManager.put(PrefManager.CHAT_LIST , jsonData);
-        setAdapter(doctorList);
-        linearLayoutContent.setVisibility(View.VISIBLE);
+        try {
+            util.dismissProgressDialog();
+            doctorList = (List<User>) response;
+            Gson gson = new Gson();
+            String jsonData = gson.toJson(response);
+            mPrefManager.put(PrefManager.CHAT_LIST, jsonData);
+            setAdapter(doctorList);
+            linearLayoutContent.setVisibility(View.VISIBLE);
+
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

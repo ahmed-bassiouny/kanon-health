@@ -2,7 +2,9 @@ package com.germanitlab.kanonhealth.ormLite;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -26,13 +28,15 @@ import java.util.Map;
 public class UserRepository {
     private DatabaseHelper db;
     Dao<User, Integer> doctorsDao;
+    private Context context ;
     public UserRepository(Context context){
         DatabaseManager databaseManager = new DatabaseManager();
         db = databaseManager.getHelper(context);
+        this.context = context ;
         try {
             doctorsDao = db.getUsersDao();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
     }
 
@@ -40,8 +44,9 @@ public class UserRepository {
         try {
             doctor.setJsonInfo(new Gson().toJson(doctor.getInfo()));
             return doctorsDao.create(doctor);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_create_database), Toast.LENGTH_SHORT).show();
         }
         return 0;
     }
@@ -67,8 +72,8 @@ public class UserRepository {
             updateBuilder.updateColumnValue("jsonDocument" /* column */, json/* value */);
 
             updateBuilder.update();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
         return 0;
     }
@@ -83,9 +88,8 @@ public class UserRepository {
 // update the value of your field(s)
             updateBuilder.updateColumnValue("jsonDocument" /* column */, json/* value */);
             updateBuilder.update();
-        }
-        catch (Exception e){
-
+        }catch (Exception e) {
+            Crashlytics.logException(e);
         }
         return 0;
 
@@ -93,8 +97,8 @@ public class UserRepository {
     public int delete(User doctor){
         try {
             return doctorsDao.delete(doctor);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
         return 0;
     }
@@ -103,7 +107,7 @@ public class UserRepository {
             DeleteBuilder<User, Integer> db = doctorsDao.deleteBuilder();
             db.delete();
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -111,8 +115,8 @@ public class UserRepository {
     public double count(){
         try {
             return doctorsDao.countOf();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
         return 0;
     }
@@ -130,8 +134,9 @@ public class UserRepository {
                     whereCondition.put("is_clinic",0);
                     return doctorsDao.queryForFieldValues(whereCondition);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
         return null ;
     }
@@ -149,17 +154,17 @@ public class UserRepository {
             List<User> accountList = doctorsDao.query(preparedQuery);
             if(accountList.size() == 1)
                 return accountList.get(0);
-        }
-        catch (Exception e){
-            Log.d("Exception", e.toString());
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
         return null ;
     }
     public boolean isExist(User doctor){
         try {
             return doctorsDao.idExists(doctor.get_Id());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
         return false ;
     }
@@ -170,8 +175,8 @@ public class UserRepository {
             List<User> doctorsList = queryBuilder.query();
             if(doctorsList.size() == 1)
                 return doctorsList.get(0).getDocuments();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
         return null;
     }

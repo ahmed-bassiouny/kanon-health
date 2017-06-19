@@ -10,8 +10,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -50,31 +52,38 @@ public class Document_Update extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_document__update);
-        ButterKnife.bind(this);
-        Intent intent = getIntent();
-        String type = intent.getStringExtra("type");
-        message =(Message) intent.getSerializableExtra("data");
-        if(type.equals(Constants.IMAGE)) {
-            image_layout.setVisibility(View.VISIBLE);
-            Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-            Glide.with(this).load(imageUri).into(imageView);
+        try {
+            setContentView(R.layout.activity_document__update);
+            ButterKnife.bind(this);
+            Intent intent = getIntent();
+            String type = intent.getStringExtra("type");
+            message =(Message) intent.getSerializableExtra("data");
+            if(type.equals(Constants.IMAGE)) {
+                image_layout.setVisibility(View.VISIBLE);
+                Uri imageUri = Uri.fromFile(new File(message.getMsg()));
+                Glide.with(this).load(imageUri).into(imageView);
 
+            }
+            else if (type == Constants.VIDEO) {
+                video_layout.setVisibility(View.VISIBLE);
+                videoMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(message.getMsg(),
+                        MediaStore.Video.Thumbnails.MICRO_KIND));
+            }
+            else if(type == Constants.AUDIO) {
+                audio_layout.setVisibility(View.VISIBLE);
+            }
+            date.setText(message.getDate());
+            category.setText(message.getCategory());
+            doctor.setText(message.getDoctor());
+            diagnose.setText(message.getDiagnose());
+            report.setText(message.getReport());
+            comment.setText(message.getComment());
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        else if (type == Constants.VIDEO) {
-            video_layout.setVisibility(View.VISIBLE);
-            videoMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(message.getMsg(),
-                    MediaStore.Video.Thumbnails.MICRO_KIND));
-        }
-        else if(type == Constants.AUDIO) {
-            audio_layout.setVisibility(View.VISIBLE);
-        }
-        date.setText(message.getDate());
-        category.setText(message.getCategory());
-        doctor.setText(message.getDoctor());
-        diagnose.setText(message.getDiagnose());
-        report.setText(message.getReport());
-        comment.setText(message.getComment());
+
+
 
     }
     @OnClick(R.id.save)

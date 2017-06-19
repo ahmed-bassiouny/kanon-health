@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 
 import java.util.ArrayList;
@@ -42,10 +44,16 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     @Override
     public void onBindViewHolder(QuestionAdapter.MyViewHolder holder, int position)
     {
-        String question = (new ArrayList<String>(questionAnswer.keySet())).get(position);
-        holder.tv_question.setText(question);
-        String answer = (new ArrayList<String>(questionAnswer.values())).get(position);
-        holder.tv_answer.setText(answer);
+        try {
+            String question = (new ArrayList<String>(questionAnswer.keySet())).get(position);
+            holder.tv_question.setText(question);
+            String answer = (new ArrayList<String>(questionAnswer.values())).get(position);
+            holder.tv_answer.setText(answer);
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(mContext, mContext.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

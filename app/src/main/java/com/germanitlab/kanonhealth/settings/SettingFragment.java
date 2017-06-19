@@ -224,6 +224,7 @@ public class SettingFragment extends Fragment {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+
             trChangePassCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -245,6 +246,7 @@ public class SettingFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("from_notification", 1);
                     intent.putExtra("from_id", 1);
+
                     startActivity(intent);
                 }
             });

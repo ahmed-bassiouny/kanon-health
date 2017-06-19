@@ -32,6 +32,7 @@ public class ChooseModel implements Serializable{
     private String avatar;
     private String last_name;
     private String first_name;
+    private String is_available;
 
     //general attribute
 
@@ -164,4 +165,11 @@ public class ChooseModel implements Serializable{
     }
 
 
+    public String getIs_available() {
+        return is_available;
+    }
+
+    public void setIs_available(String is_available) {
+        this.is_available = is_available;
+    }
 }

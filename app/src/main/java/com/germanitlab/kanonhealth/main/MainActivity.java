@@ -24,6 +24,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.doctors.ChatsDoctorFragment;
@@ -59,65 +60,71 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
-        tvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        initTB();
-        mytablayout = (TabLayout) findViewById(R.id.mytablayout);
-        myviewpager = (ViewPager) findViewById(R.id.myviewpager);
+        try {
+            AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
+            tvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+            initTB();
+            mytablayout = (TabLayout) findViewById(R.id.mytablayout);
+            myviewpager = (ViewPager) findViewById(R.id.myviewpager);
 
 
-        myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+            myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
 
-        mytablayout.setupWithViewPager(myviewpager);
-        setupTabIcons();
-        intent = getIntent();
+            mytablayout.setupWithViewPager(myviewpager);
+            setupTabIcons();
+            intent = getIntent();
 
-        myviewpager.setCurrentItem(indexFromIntent);
+            myviewpager.setCurrentItem(indexFromIntent);
 
-        speciality_id = intent.getIntExtra("speciality_id", 0);
-        type = intent.getIntExtra("type", 2);
+            speciality_id = intent.getIntExtra("speciality_id", 0);
+            type = intent.getIntExtra("type", 2);
 
 
-        myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
+                }
 
-            @Override
-            public void onPageSelected(int position) {
-                mytablayout.getTabAt(position).getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-                mytablayout.getTabAt(position).select();
-                invalidateOptionsMenu();
-            }
+                @Override
+                public void onPageSelected(int position) {
+                    mytablayout.getTabAt(position).getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                    mytablayout.getTabAt(position).select();
+                    invalidateOptionsMenu();
+                }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-            }
-        });
-        mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                tvToolbarTitle.setText(tab.getText().toString());
-                myviewpager.setCurrentItem(tab.getPosition(), false);
-                tab.getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-                invalidateOptionsMenu();
+                }
+            });
+            mytablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    tvToolbarTitle.setText(tab.getText().toString());
+                    myviewpager.setCurrentItem(tab.getPosition(), false);
+                    tab.getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                    invalidateOptionsMenu();
 
-            }
+                }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                tab.getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    tab.getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void initTB() {

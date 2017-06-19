@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -124,14 +125,14 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_edit_profile);
-
-        prefManager = new PrefManager(this);
-        pickerDialog = new PickerDialog(true);
-        ButterKnife.bind(this);
-        etFirstName.setSelected(false);
-        Intent i = getIntent();
-        userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
-        bindData();
+        try {
+            prefManager = new PrefManager(this);
+            pickerDialog = new PickerDialog(true);
+            ButterKnife.bind(this);
+            etFirstName.setSelected(false);
+            Intent i = getIntent();
+            userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
+            bindData();
 /*        if (savedInstanceState != null) {
             etFirstName.setSelected(false);
             imageUri = Uri.parse(savedInstanceState.getString("imageURI"));
@@ -139,16 +140,21 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             userInfoResponse = (UserInfoResponse) savedInstanceState.getSerializable("userdata");
 
         }*/
-        user = userInfoResponse.getUser();
-        Log.e("My user ", String.valueOf(user.get_Id()));
-        info = user.getInfo();
-        createAdapter();
+            user = userInfoResponse.getUser();
+            Log.e("My user ", String.valueOf(user.get_Id()));
+            info = user.getInfo();
+            createAdapter();
 
-        if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
+            if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
 
-            String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-            Helper.setImage(this , path , imgAvatar , R.drawable.profile_place_holder);
+                String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
+                Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
 /*        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -194,8 +200,8 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     private void bindData() {
 
 
-        Helper.setImage(this ,Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar ,R.drawable.profile_place_holder );
+        Helper.setImage(this, Constants.CHAT_SERVER_URL
+                + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -209,10 +215,10 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         etCountryCode.setText(userInfoResponse.getUser().getCountryCOde());
         birthdate = userInfoResponse.getUser().getBirth_date();
         etPhone.setText(userInfoResponse.getUser().getPhone());
-         try {
+        try {
             Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
             String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            Log.d("my converted date" ,s );
+            Log.d("my converted date", s);
             etBirthday.setText(s);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -254,60 +260,76 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        try {
+            pickerDialog.dismiss();
+            if (resultCode == RESULT_OK) {
+                switch (requestCode) {
+                    case Constants.IMAGE_REQUEST:
+                        selectedImageUri = data.getData();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        showProgressDialog();
+                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
 
-        pickerDialog.dismiss();
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case Constants.IMAGE_REQUEST:
-                    selectedImageUri = data.getData();
-                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(selectedImageUri).into(imgAvatar);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                try {
+                                    dismissProgressDialog();
+                                    uploadImageResponse = (UploadImageResponse) response;
+                                    user.setAvatar(uploadImageResponse.getFile_url());
+                                    Log.e("After Casting", uploadImageResponse.getFile_url());
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                }
 
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            user.setAvatar(uploadImageResponse.getFile_url());
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                        }
+                            }
 
-                        @Override
-                        public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
 
-                    break;
-                case TAKE_PICTURE:
-                    showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+                        break;
+                    case TAKE_PICTURE:
+                        showProgressDialog();
+                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
 /*
                     decodeFile(selectedImageUri.toString());
 */
-                    prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                    Glide.with(this).load(selectedImageUri).into(imgAvatar);
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            user.setAvatar(uploadImageResponse.getFile_url());
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                        }
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                try {
+                                    dismissProgressDialog();
+                                    uploadImageResponse = (UploadImageResponse) response;
+                                    user.setAvatar(uploadImageResponse.getFile_url());
+                                    Log.e("After Casting", uploadImageResponse.getFile_url());
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                }
 
-                        @Override
-                        public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                            }
 
-                    break;
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+
+                        break;
+                }
             }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -338,12 +360,18 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("userInfoResponse", userInfoResponse);
-        intent.putExtra("from", false);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        try {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("userInfoResponse", userInfoResponse);
+            intent.putExtra("from", false);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -465,12 +493,18 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @OnClick(R.id.btn_edit_save)
     public void submit() {
-        setUserObject();
-        new HttpCall(this, this).editProfile(user);
-        Intent i = new Intent(this, ProfileActivity.class);
-        i.putExtra("userInfoResponse", userInfoResponse);
-        i.putExtra("from", false);
-        startActivity(i);
+        try {
+            setUserObject();
+            new HttpCall(this, this).editProfile(user);
+            Intent i = new Intent(this, ProfileActivity.class);
+            i.putExtra("userInfoResponse", userInfoResponse);
+            i.putExtra("from", false);
+            startActivity(i);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void setUserObject() {
@@ -479,7 +513,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         user.setPlatform("3");
         user.setPhone(etPhone.getText().toString());
         user.setBirthDate(birthdate);
-        Log.d("my birthdate format" ,etBirthday.getText().toString() );
+        Log.d("my birthdate format", etBirthday.getText().toString());
         info.setStreetname(etStreet.getText().toString());
         info.setZipCode(etZip.getText().toString());
         info.setHouseNumber(etHousePhone.getText().toString());
@@ -494,6 +528,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
         user.setInfo(info);
     }
+
     public void decodeFile(String filePath) {
 
         // Decode image size
@@ -519,7 +554,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         Bitmap b1 = BitmapFactory.decodeFile(filePath, o2);
-        Bitmap b= ExifUtils.rotateBitmap(filePath, b1);
+        Bitmap b = ExifUtils.rotateBitmap(filePath, b1);
 
         // image.setImageBitmap(bitmap);
     }
@@ -546,8 +581,8 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        Helper.setImage(this , Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar, R.drawable.profile_place_holder);
+        Helper.setImage(this, Constants.CHAT_SERVER_URL
+                + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
 

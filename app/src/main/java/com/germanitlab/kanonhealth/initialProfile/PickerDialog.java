@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 
 import butterknife.ButterKnife;
@@ -33,10 +35,11 @@ public class PickerDialog  extends DialogFragment {
         //Make sure the container activity implemented the callback interface.
         try {
             callBacks = (DialogPickerCallBacks) context;
-        } catch (ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement DialogPickerCallBacks");
+        } catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public PickerDialog(){}

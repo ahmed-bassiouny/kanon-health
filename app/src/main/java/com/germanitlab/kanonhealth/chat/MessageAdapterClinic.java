@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
@@ -83,23 +84,29 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
     private MessageRepositry mMessageRepositry ;
 
     public MessageAdapterClinic(List<Message> messages, final Activity context, User doctor) {
-        mMessages = messages;
-        this.context = context;
-        internetFilesOperations = InternetFilesOperations.getInstance(context.getApplicationContext());
-        this.mDoctor = doctor;
-        forward = (ImageView) context.findViewById(R.id.imgbtn_forward);
+        try {
+            mMessages = messages;
+            this.context = context;
+            internetFilesOperations = InternetFilesOperations.getInstance(context.getApplicationContext());
+            this.mDoctor = doctor;
+            forward = (ImageView) context.findViewById(R.id.imgbtn_forward);
 
-        forward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (list.size() == 0)
-                    Toast.makeText(context, "Please Select Messages", Toast.LENGTH_LONG).show();
-                else {
-                    sendForward();
+            forward.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (list.size() == 0)
+                        Toast.makeText(context, "Please Select Messages", Toast.LENGTH_LONG).show();
+                    else {
+                        sendForward();
+                    }
                 }
-            }
-        });
-        mMessageRepositry = new MessageRepositry(context);
+            });
+            mMessageRepositry = new MessageRepositry(context);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

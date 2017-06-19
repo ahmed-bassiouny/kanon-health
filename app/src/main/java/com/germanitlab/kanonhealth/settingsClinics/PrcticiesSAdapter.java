@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -46,7 +48,13 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
     @Override
     public void onBindViewHolder(PrcticiesSAdapter.MyViewHolder holder, int position)
     {
-        holder.tvPracticeName.setText(clinicsList.get(position).getFirst_nameMember()+"");
+        try {
+            holder.tvPracticeName.setText(clinicsList.get(position).getFirst_nameMember()+"");
+
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(mContext, mContext.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

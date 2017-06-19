@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -51,63 +52,70 @@ public class QrActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-                if (prefManager.getData(Constants.USER_ID) != null) {
+        try {
+            if (result != null) {
+                if (result.getContents() == null) {
+                    Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                    if (prefManager.getData(Constants.USER_ID) != null) {
 
-                    Intent i = new Intent(this, MainActivity.class);
-                    startActivity(i);
+                        Intent i = new Intent(this, MainActivity.class);
+                        startActivity(i);
+                    }
+                    finish();
+
+                } else {
+                    Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                    final String key = result.getContents();
+                    final Dialog dialog = new Dialog(this);
+                    dialog.setContentView(R.layout.activity_qr_activity);
+                    dialog.setTitle("Custom Alert Dialog");
+                    dialog.setCanceledOnTouchOutside(false);
+                    Button btnDoctor = (Button) dialog.findViewById(R.id.doctor);
+                    Button btnClinic = (Button) dialog.findViewById(R.id.clinic);
+                    Button btnUser = (Button) dialog.findViewById(R.id.doctor);
+                    Button btnCancel = (Button) dialog.findViewById(R.id.cancel);
+                    btnDoctor.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendRequest(key, 2);
+                        }
+                    });
+                    btnClinic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendRequest(key, 3);
+                        }
+                    });
+                    btnUser.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendRequest(key, 1);
+                        }
+                    });
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        }
+                    });
+
+                    dialog.show();
+
+
+                    //Getting the doctor's data
+
+                    //Save the User ID in the sh
+
                 }
-                finish();
-
             } else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-                final String key = result.getContents();
-                final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.activity_qr_activity);
-                dialog.setTitle("Custom Alert Dialog");
-                dialog.setCanceledOnTouchOutside(false);
-                Button btnDoctor = (Button) dialog.findViewById(R.id.doctor);
-                Button btnClinic = (Button) dialog.findViewById(R.id.clinic);
-                Button btnUser = (Button) dialog.findViewById(R.id.doctor);
-                Button btnCancel = (Button) dialog.findViewById(R.id.cancel);
-                btnDoctor.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendRequest(key, 2);
-                    }
-                });
-                btnClinic.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendRequest(key, 3);
-                    }
-                });
-                btnUser.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendRequest(key, 1);
-                    }
-                });
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
-                });
-
-                dialog.show();
-
-
-                //Getting the doctor's data
-
-                //Save the User ID in the sh
-
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     public void sendRequest(String key, int entity_type) {
@@ -115,15 +123,21 @@ public class QrActivity extends AppCompatActivity {
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                doctor = (User) response;
-                Gson gson = new Gson();
-                String json = gson.toJson(doctor);
-                prefManager.put(prefManager.DOCTOR_KEY, json);
-                Intent i = new Intent(getApplicationContext(), InquiryActivity.class);
-                i.putExtra("doctor_data", json);
-                startActivity(i);
-                finish();
-                DismissProgressDialog();
+                try {
+                    doctor = (User) response;
+                    Gson gson = new Gson();
+                    String json = gson.toJson(doctor);
+                    prefManager.put(prefManager.DOCTOR_KEY, json);
+                    Intent i = new Intent(getApplicationContext(), InquiryActivity.class);
+                    i.putExtra("doctor_data", json);
+                    startActivity(i);
+                    finish();
+                    DismissProgressDialog();
+
+                }catch (Exception e){
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -142,16 +156,21 @@ public class QrActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        prefManager = new PrefManager(this);
-        String doctorId = prefManager.getData("doctor_id");
-        Log.e("Splash User id", doctorId);
-        if (doctorId.equals("")) {
-            setContentView(R.layout.activity_qr_layout);
-            ButterKnife.bind(this);
-        } else {
-            new IntentIntegrator(this).initiateScan();
+        try {
+            prefManager = new PrefManager(this);
+            String doctorId = prefManager.getData("doctor_id");
+            Log.e("Splash User id", doctorId);
+            if (doctorId.equals("")) {
+                setContentView(R.layout.activity_qr_layout);
+                ButterKnife.bind(this);
+            } else {
+                new IntentIntegrator(this).initiateScan();
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @OnClick(R.id.button_qr_scanning)

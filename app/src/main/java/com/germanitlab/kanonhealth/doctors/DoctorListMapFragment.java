@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -51,10 +52,10 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     MapView mapView;
     ImageButton imgBtnBack;
     GoogleMap map;
-    private ImageView myQr ;
-    private PrefManager mPrefManager ;
+    private ImageView myQr;
+    private PrefManager mPrefManager;
     private GoogleApiClient mGoogleApiClient;
-    private boolean isFirst  = true  ;
+    private boolean isFirst = true;
 
     public DoctorListMapFragment() {
         // Required empty public constructor
@@ -96,10 +97,15 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_doctor_list_map, container, false);
 
+        try {
+            intViews(view);
+            assignMap(savedInstanceState);
+            handleEvent();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
-        intViews(view);
-        assignMap(savedInstanceState);
-        handleEvent();
 
         return view;
     }
@@ -219,7 +225,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     @Override
     public void onLocationChanged(Location location) {
         if (map != null && isFirst) {
-            isFirst = false ;
+            isFirst = false;
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng).zoom(18).build();
@@ -238,23 +244,30 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
 
     @Override
     public void onSuccess(Object response) {
-        Log.e("respone " , response.toString());
-        doctorResponseList = (List<User>) response;
-        if (map != null) {
+        try {
+            doctorResponseList = (List<User>) response;
+            if (map != null) {
 
-            for (User doctorResponse : doctorResponseList) {
+                for (User doctorResponse : doctorResponseList) {
 
-                double lat = doctorResponse.getLocation_lat();
-                double lng = doctorResponse.getLocation_long();
+                    double lat = doctorResponse.getLocation_lat();
+                    double lng = doctorResponse.getLocation_long();
 
-                map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getName()));
+                    map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getName()));
+                }
+
             }
-
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     @Override
     public void onFailed(String error) {
+        Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         Log.e("error", error + " +++");
     }
 }

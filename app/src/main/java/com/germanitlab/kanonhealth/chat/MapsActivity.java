@@ -39,16 +39,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Intent intent;
     ArrayList<User> list;
     LinearLayout layout;
-    String jsonString ;
-    ProgressDialog progressDialog ;
-    int create  ;
+    String jsonString;
+    ProgressDialog progressDialog;
+    int create;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         final ImageView back, filter;
-        create = 2 ;
+        create = 2;
         try {
             back = (ImageView) this.findViewById(R.id.img_btn_back);
             layout = (LinearLayout) this.findViewById(R.id.toolbar);
@@ -56,18 +56,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             filter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent= new Intent(getApplicationContext() , Specilaities.class);
+                    Intent intent = new Intent(getApplicationContext(), Specilaities.class);
                     intent.putExtra("hide", true);
                     intent.putExtra("from", true);
                     startActivity(intent);
                 }
             });
             intent = getIntent();
-            if(intent.getBooleanExtra("from_map" , false))
-            {
-                getBySpeciality(intent.getIntExtra("speciality_id" , 0) ,intent.getIntExtra("type" , 0) );
-            }
-            else {
+            if (intent.getBooleanExtra("from_map", false)) {
+                getBySpeciality(intent.getIntExtra("speciality_id", 0), intent.getIntExtra("type", 0));
+            } else {
                 if (intent.getBooleanExtra("from", false)) {
                     layout.setVisibility(View.VISIBLE);
                     jsonString = intent.getStringExtra("Location");
@@ -87,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         startActivity(intent);
                     }
                 });
-                if(create == 1 )
+                if (create == 1)
                     draw(intent);
                 create = 0;
             }
@@ -96,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -117,29 +115,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         Intent intent = getIntent();
-        if(create == 0)
-        {
+        if (create == 0) {
             draw(intent);
 
         }
-        create = 1 ;
+        create = 1;
 
     }
-    public void draw(Intent intent){
-        if (intent.getBooleanExtra("from", false) || intent.getBooleanExtra("from_map" , false)) {
-            for (User doctor : list
-                    ) {
 
-                LatLng sydney = new LatLng(doctor.getLocation_lat(), doctor.getLocation_long());
-                mMap.addMarker(new MarkerOptions().position(sydney).title(doctor.getName()));
+    public void draw(Intent intent) {
+        try {
+            if (intent.getBooleanExtra("from", false) || intent.getBooleanExtra("from_map", false)) {
+                for (User doctor : list
+                        ) {
+
+                    LatLng sydney = new LatLng(doctor.getLocation_lat(), doctor.getLocation_long());
+                    mMap.addMarker(new MarkerOptions().position(sydney).title(doctor.getName()));
+                }
+            } else {
+                // Add a marker in Sydney and move the camera
+                LatLng sydney = new LatLng(lat, longi);
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Location"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             }
-        } else {
-            // Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(lat, longi);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void getBySpeciality(final int id, int type) {
@@ -147,26 +151,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                Log.e("Update user response :", "no response found");
-                Gson gson = new Gson();
-                jsonString = gson.toJson(response);
-                dismissProgressDialog();
-                layout.setVisibility(View.VISIBLE);
-                jsonString = intent.getStringExtra("Location");
-                Type listType = new TypeToken<List<User>>() {
-                }.getType();
-                list = gson.fromJson(jsonString, listType);
-                if(create == 1 )
-                    draw(intent);
-                create = 0 ;
+                try {
+                    Log.e("Update user response :", "no response found");
+                    Gson gson = new Gson();
+                    jsonString = gson.toJson(response);
+                    dismissProgressDialog();
+                    layout.setVisibility(View.VISIBLE);
+                    jsonString = intent.getStringExtra("Location");
+                    Type listType = new TypeToken<List<User>>() {
+                    }.getType();
+                    list = gson.fromJson(jsonString, listType);
+                    if (create == 1)
+                        draw(intent);
+                    create = 0;
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
             public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 Log.e("Error", error);
             }
         }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), id, type);
     }
+
     public void dismissProgressDialog() {
         progressDialog.dismiss();
     }

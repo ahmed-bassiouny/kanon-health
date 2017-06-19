@@ -4,8 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -14,6 +16,7 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import io.fabric.sdk.android.Fabric;
+
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -95,7 +98,8 @@ public class AppController extends Application {
             });
             Log.d("Socket", " " + mSocket.connected());
         } catch (URISyntaxException e) {
-
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.d("Ex", e.getLocalizedMessage());
         }
 
@@ -117,7 +121,7 @@ public class AppController extends Application {
 
         //Picasso configration
         Picasso.Builder builder = new Picasso.Builder(this);
-        builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(true);
         built.setLoggingEnabled(true);

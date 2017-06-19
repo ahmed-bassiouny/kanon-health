@@ -254,6 +254,13 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="session_ended">Session Closed</string>
     <string name="rate_conversation">Please rate your conversation</string>
     <string name="main_profile">Main Profile</string>
+    <string name="error_create_database">error while create database</string>
+    <string name="error_update_database">error while update database</string>
+    <string name="erre_database_insert">error while insert in database</string>
+    <string name="error_getting_database">error while getting data from database</string>
+    <string name="error_loading_data">error while loading data</string>
+    <string name="error_saving_data">error while saving data</string>
+    <string name="error_playing">error while plying video</string>
 
 
 </resources>

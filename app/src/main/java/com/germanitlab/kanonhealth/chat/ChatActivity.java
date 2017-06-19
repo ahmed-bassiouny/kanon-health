@@ -230,16 +230,22 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                            doctor = userInfoResponse.getUser();
-                            dismissProgressDialog();
-                            handleMyData();
+                            try {
+                                UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+                                doctor = userInfoResponse.getUser();
+                                dismissProgressDialog();
+                                handleMyData();
+                            } catch (Exception e) {
+                                Crashlytics.logException(e);
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                            }
+
 
                         }
 
                         @Override
                         public void onFailed(String error) {
-
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                         }
                     }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                             , AppController.getInstance().getClientInfo().getPassword(), String.valueOf(from_id));
@@ -258,7 +264,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 handleMyData();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -666,14 +672,19 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onSuccess(Object response) {
 
                 Log.e("fetch history", response.toString());
+                try {
+                    handleJsonHistory(response.toString());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
 
-                handleJsonHistory(response.toString());
 
             }
 
             @Override
             public void onFailed(String error) {
-
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 Log.e("fetch history error ", error + " +");
             }
         }).fetchMessage(String.valueOf(doctor.get_Id()), "1");
@@ -1589,11 +1600,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         switch (item.getItemId()) {
             case R.id.start_session:
                 if (doctor.getIsClinic() == 1) {
-                    Intent intent = new Intent(ChatActivity.this, InquiryActivity.class );
+                    Intent intent = new Intent(ChatActivity.this, InquiryActivity.class);
                     UserInfoResponse userInfoResponse = new UserInfoResponse();
                     userInfoResponse.setUser(doctor);
                     Gson gson = new Gson();
-                    intent.putExtra("doctor_data" , gson.toJson(userInfoResponse));
+                    intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                     startActivity(intent);
                 } else {
                     //startActivity(new Intent(this, Comment.class));
@@ -1606,31 +1617,37 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             new HttpCall(ChatActivity.this, new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
-                                    doctor.setIsOpen(0);
-                                    checkSessionOpen();
-                                    Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                    AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
-                                    adb.setTitle(R.string.rate_conversation);
-                                    adb.setCancelable(true);
-                                    adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            new HttpCall(ChatActivity.this, new ApiResponse() {
-                                                @Override
-                                                public void onSuccess(Object response) {
-                                                    Intent intent = new Intent(ChatActivity.this, Comment.class);
-                                                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-                                                    startActivity(intent);
-                                                }
+                                    try {
+                                        doctor.setIsOpen(0);
+                                        checkSessionOpen();
+                                        Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                        AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
+                                        adb.setTitle(R.string.rate_conversation);
+                                        adb.setCancelable(true);
+                                        adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                new HttpCall(ChatActivity.this, new ApiResponse() {
+                                                    @Override
+                                                    public void onSuccess(Object response) {
+                                                        Intent intent = new Intent(ChatActivity.this, Comment.class);
+                                                        intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                                                        startActivity(intent);
+                                                    }
 
-                                                @Override
-                                                public void onFailed(String error) {
+                                                    @Override
+                                                    public void onFailed(String error) {
+                                                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }).closeSession(String.valueOf(doctor.getId()));
+                                            }
+                                        });
+                                        adb.show();
+                                    } catch (Exception e) {
+                                        Crashlytics.logException(e);
+                                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                    }
 
-                                                }
-                                            }).closeSession(String.valueOf(doctor.getId()));
-                                        }
-                                    });
-                                    adb.show();
                                 }
 
                                 @Override
@@ -1659,9 +1676,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         new HttpCall(ChatActivity.this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
-                                Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                doctor.setIsOpen(0);
-                                checkSessionOpen();
+                                try {
+                                    Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                    doctor.setIsOpen(0);
+                                    checkSessionOpen();
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                }
+
                             }
 
                             @Override

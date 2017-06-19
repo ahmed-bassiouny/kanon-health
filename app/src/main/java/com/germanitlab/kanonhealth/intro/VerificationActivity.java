@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -61,24 +62,30 @@ public class VerificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
-        Intent intent = getIntent();
-        number = intent.getStringExtra("number");
-        code = intent.getStringExtra("codeNumber");
-        mPrefManager = new PrefManager(this);
-        oldUser = intent.getBooleanExtra("oldUser" , false);
-        tv_toolbar_mobile_number = (TextView) findViewById(R.id.tv_toolbar_mobile_number);
-        tv_toolbar_mobile_number.append("  " + code + " " + number);
-        ButterKnife.bind(this);
-        verification_Code.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                verify();
-                return true;
-            }
-        });
+        try {
+            Intent intent = getIntent();
+            number = intent.getStringExtra("number");
+            code = intent.getStringExtra("codeNumber");
+            mPrefManager = new PrefManager(this);
+            oldUser = intent.getBooleanExtra("oldUser" , false);
+            tv_toolbar_mobile_number = (TextView) findViewById(R.id.tv_toolbar_mobile_number);
+            tv_toolbar_mobile_number.append("  " + code + " " + number);
+            ButterKnife.bind(this);
+            verification_Code.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    verify();
+                    return true;
+                }
+            });
 
-        initView();
-        handelEvent();
+            initView();
+            handelEvent();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
 
     }
@@ -156,11 +163,9 @@ public class VerificationActivity extends AppCompatActivity {
                         snackbar.show();
 
                     }
-                } catch (JSONException e) {
-
-                    Log.e("Ex", e.getLocalizedMessage());
-                } catch (IOException e) {
-                    Log.e("Ex", e.getLocalizedMessage());
+                } catch (Exception e){
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
 
             }

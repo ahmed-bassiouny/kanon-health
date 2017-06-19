@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
@@ -56,13 +58,19 @@ public class OpeningHoursActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_hours);
-        prefManager = new PrefManager(this);
-        ButterKnife.bind(this);
-        list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
-        type = getIntent().getIntExtra("type", 0);
-        instance = new TimeTable();
-        initTB();
-        addSelected(type);
+        try {
+            prefManager = new PrefManager(this);
+            ButterKnife.bind(this);
+            list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
+            type = getIntent().getIntExtra("type", 0);
+            instance = new TimeTable();
+            initTB();
+            addSelected(type);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -89,34 +97,40 @@ public class OpeningHoursActivity extends AppCompatActivity {
 
     @OnClick(R.id.save)
     public void save(View view) {
-        Intent intent = new Intent();
-        if (first.isChecked()) {
-            if (TimeTable.active) {
-                intent.putExtra("type", 0);
-                intent.putExtra(Constants.DATA, (Serializable) list);
-                setResult(RESULT_OK, intent);
-                finish();
+        try {
+            Intent intent = new Intent();
+            if (first.isChecked()) {
+                if (TimeTable.active) {
+                    intent.putExtra("type", 0);
+                    intent.putExtra(Constants.DATA, (Serializable) list);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    Intent intent1 = new Intent(this, TimeTable.class);
+                    intent1.putExtra(Constants.DATA , (Serializable) list);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    startActivity(intent1);
+                    finish();
+                }
             } else {
-                Intent intent1 = new Intent(this, TimeTable.class);
-                intent1.putExtra(Constants.DATA , (Serializable) list);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                startActivity(intent1);
+                if (second.isChecked())
+                    intent.putExtra("type", 1);
+                else if (third.isChecked())
+                    intent.putExtra("type", 2);
+                else if (fourth.isChecked())
+                    intent.putExtra("type", 3);
+                intent.putExtra(Constants.DATA , (Serializable) list);
+                setResult(RESULT_OK , intent);
+                if (TimeTable.active)
+//                instance.finish();
+                    TimetableInstance.finish();
                 finish();
             }
-        } else {
-            if (second.isChecked())
-                intent.putExtra("type", 1);
-            else if (third.isChecked())
-                intent.putExtra("type", 2);
-            else if (fourth.isChecked())
-                intent.putExtra("type", 3);
-            intent.putExtra(Constants.DATA , (Serializable) list);
-            setResult(RESULT_OK , intent);
-            if (TimeTable.active)
-//                instance.finish();
-                TimetableInstance.finish();
-            finish();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.Table;
 import com.google.gson.Gson;
@@ -89,14 +90,20 @@ public class TimeTable extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table_activity);
-        TimetableInstance = this;
+        try {
+            TimetableInstance = this;
 
-        ButterKnife.bind(this);
-        instance = new OpeningHoursActivity();
-        map = new HashMap<>();
-        list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
-        type = getIntent().getIntExtra("type",0);
-        handleData(list);
+            ButterKnife.bind(this);
+            instance = new OpeningHoursActivity();
+            map = new HashMap<>();
+            list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
+            type = getIntent().getIntExtra("type",0);
+            handleData(list);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
+
 
 
     }

@@ -3,7 +3,10 @@ package com.germanitlab.kanonhealth.ormLite;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -23,7 +26,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "kanon.db";
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
-
+    private Context context ;
     // the DAO object we use to access the SimpleData table
     private Dao<User, Integer> doctorsDao = null;
     private Dao<Message, Integer> messagesDao = null;
@@ -32,16 +35,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context ;
     }
+
     @Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, Message.class);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_create_database), Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
+
         }
 
         // here we try inserting data in the on-create as a test
@@ -59,9 +67,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Message.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource);
-        } catch (SQLException e) {
-            Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
+        }catch (Exception e) {
+            Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_update_database), Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
+
         }
     }
 
@@ -96,7 +107,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return messagesRuntimeDao;
     }
-
 
 
 }

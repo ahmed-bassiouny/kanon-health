@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -35,11 +37,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        if(images[position] !=null)
-        {
-            Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
-                    + "/" + images[position] , holder.image , R.drawable.profile_place_holder );
+        try {
+            if(images[position] !=null)
+            {
+                Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
+                        + "/" + images[position] , holder.image , R.drawable.profile_place_holder );
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
