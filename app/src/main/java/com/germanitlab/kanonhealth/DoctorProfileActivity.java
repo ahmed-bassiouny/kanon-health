@@ -200,23 +200,23 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         // check if doctor or clinic
 
+        try {
+            if (getIntent().getExtras().containsKey("CLINIC")) {
+                llDoctorData.setVisibility(View.GONE);
+                tvAddToFavourite.setVisibility(View.GONE);
+                setVisiblitiy(View.GONE);
 
-        if (getIntent().getExtras().containsKey("CLINIC")) {
-            llDoctorData.setVisibility(View.GONE);
-            tvAddToFavourite.setVisibility(View.GONE);
-            setVisiblitiy(View.GONE);
+            } else {
+                llDoctorData.setVisibility(View.VISIBLE);
+                tvAddToFavourite.setVisibility(View.VISIBLE);
 
-        } else {
-            llDoctorData.setVisibility(View.VISIBLE);
-            tvAddToFavourite.setVisibility(View.VISIBLE);
-
-            util = Util.getInstance(this);
-            user = new User();
-            user = (User) getIntent().getSerializableExtra("doctor_data");
-            chechEditPermission();
-            prefManager = new PrefManager(this);
-            pickerDialog = new PickerDialog(true);
-            bindData();
+                util = Util.getInstance(this);
+                user = new User();
+                user = (User) getIntent().getSerializableExtra("doctor_data");
+                chechEditPermission();
+                prefManager = new PrefManager(this);
+                pickerDialog = new PickerDialog(true);
+                bindData();
 
 /*
             llDoctorData.setVisibility(View.VISIBLE);
@@ -229,7 +229,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);*/
 
+            }
+        }catch (Exception e){
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void handleImeActions() {

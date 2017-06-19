@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -47,52 +49,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         final ImageView back, filter;
         create = 2 ;
-        back = (ImageView) this.findViewById(R.id.img_btn_back);
-        layout = (LinearLayout) this.findViewById(R.id.toolbar);
-        filter = (ImageView) this.findViewById(R.id.filter);
-        filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent= new Intent(getApplicationContext() , Specilaities.class);
-                intent.putExtra("hide", true);
-                intent.putExtra("from", true);
-                startActivity(intent);
-            }
-        });
-        intent = getIntent();
-        if(intent.getBooleanExtra("from_map" , false))
-        {
-            getBySpeciality(intent.getIntExtra("speciality_id" , 0) ,intent.getIntExtra("type" , 0) );
-        }
-        else {
-            if (intent.getBooleanExtra("from", false)) {
-                layout.setVisibility(View.VISIBLE);
-                jsonString = intent.getStringExtra("Location");
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<User>>() {
-                }.getType();
-                list = gson.fromJson(jsonString, listType);
-            } else {
-                lat = Double.parseDouble(intent.getStringExtra("lat"));
-                longi = Double.parseDouble(intent.getStringExtra("long"));
-            }
-            back.setOnClickListener(new View.OnClickListener() {
+        try {
+            back = (ImageView) this.findViewById(R.id.img_btn_back);
+            layout = (LinearLayout) this.findViewById(R.id.toolbar);
+            filter = (ImageView) this.findViewById(R.id.filter);
+            filter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("from", 2);
+                    Intent intent= new Intent(getApplicationContext() , Specilaities.class);
+                    intent.putExtra("hide", true);
+                    intent.putExtra("from", true);
                     startActivity(intent);
                 }
             });
-            if(create == 1 )
-            draw(intent);
-            create = 0;
+            intent = getIntent();
+            if(intent.getBooleanExtra("from_map" , false))
+            {
+                getBySpeciality(intent.getIntExtra("speciality_id" , 0) ,intent.getIntExtra("type" , 0) );
+            }
+            else {
+                if (intent.getBooleanExtra("from", false)) {
+                    layout.setVisibility(View.VISIBLE);
+                    jsonString = intent.getStringExtra("Location");
+                    Gson gson = new Gson();
+                    Type listType = new TypeToken<List<User>>() {
+                    }.getType();
+                    list = gson.fromJson(jsonString, listType);
+                } else {
+                    lat = Double.parseDouble(intent.getStringExtra("lat"));
+                    longi = Double.parseDouble(intent.getStringExtra("long"));
+                }
+                back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("from", 2);
+                        startActivity(intent);
+                    }
+                });
+                if(create == 1 )
+                    draw(intent);
+                create = 0;
+            }
+
+            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
 

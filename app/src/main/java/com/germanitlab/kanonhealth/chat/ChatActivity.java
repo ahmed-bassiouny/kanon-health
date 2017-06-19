@@ -59,6 +59,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
@@ -194,66 +195,72 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
         ButterKnife.bind(this);
-        ttoolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(ttoolbar);
+        try {
+            ttoolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(ttoolbar);
         /* data base
          */
-        mMessageRepositry = new MessageRepositry(getApplicationContext());
-        getmChatComponent().inject(this);
+            mMessageRepositry = new MessageRepositry(getApplicationContext());
+            getmChatComponent().inject(this);
 //        List<Message> list = mMessageRepositry.getAll(user_id);
 
 
-        open_chat_session.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            open_chat_session.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            }
-        });
-        Gson gson = new Gson();
-        prefManager = new PrefManager(this);
-        Log.e("Docot in chat data", prefManager.getData("doctor"));
-        try {
-            Intent intent = getIntent();
-            String doctorJson = intent.getStringExtra("doctor_data");
+                }
+            });
+            Gson gson = new Gson();
+            prefManager = new PrefManager(this);
+            Log.e("Docot in chat data", prefManager.getData("doctor"));
+            try {
+                Intent intent = getIntent();
+                String doctorJson = intent.getStringExtra("doctor_data");
 
 
-            prefManager.put("doctor", doctorJson);
-            Log.d("data from json ", prefManager.getData("doctor"));
-            Boolean from = intent.getBooleanExtra("from", false);
-            int from_notification = intent.getIntExtra("from_notification", 0);
+                prefManager.put("doctor", doctorJson);
+                Log.d("data from json ", prefManager.getData("doctor"));
+                Boolean from = intent.getBooleanExtra("from", false);
+                int from_notification = intent.getIntExtra("from_notification", 0);
 
-            if (from_notification == 1) {
-                int from_id = intent.getIntExtra("from_id", 0);
-                showProgressDialog();
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                        doctor = userInfoResponse.getUser();
-                        dismissProgressDialog();
-                        handleMyData();
+                if (from_notification == 1) {
+                    int from_id = intent.getIntExtra("from_id", 0);
+                    showProgressDialog();
+                    new HttpCall(this, new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+                            doctor = userInfoResponse.getUser();
+                            dismissProgressDialog();
+                            handleMyData();
 
-                    }
+                        }
 
-                    @Override
-                    public void onFailed(String error) {
+                        @Override
+                        public void onFailed(String error) {
 
-                    }
-                }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword(), String.valueOf(from_id));
-            } else if (from) {
-                UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
-                doctor = userInfoResponse.getUser();
+                        }
+                    }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                            , AppController.getInstance().getClientInfo().getPassword(), String.valueOf(from_id));
+                } else if (from) {
+                    UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
+                    doctor = userInfoResponse.getUser();
+                    handleMyData();
+                } else {
+                    UserInfoResponse userInfoResponse = gson.fromJson(intent.getStringExtra("doctor_data"), UserInfoResponse.class);
+                    doctor = userInfoResponse.getUser();
+                    handleMyData();
+                }
+
+            } catch (Exception e) {
+                doctor = gson.fromJson(prefManager.getData("doctor"), User.class);
                 handleMyData();
-            } else {
-                UserInfoResponse userInfoResponse = gson.fromJson(intent.getStringExtra("doctor_data"), UserInfoResponse.class);
-                doctor = userInfoResponse.getUser();
-                handleMyData();
             }
 
-        } catch (Exception e) {
-            doctor = gson.fromJson(prefManager.getData("doctor"), User.class);
-            handleMyData();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 

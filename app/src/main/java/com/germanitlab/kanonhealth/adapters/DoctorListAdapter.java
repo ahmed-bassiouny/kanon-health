@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -32,7 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ItemView>{
-    private final MessageRepositry mMessageRepositry;
+    private MessageRepositry mMessageRepositry;
     private List<User> doctorContactsList;
     Activity activity;
     int visibility ;
@@ -43,13 +44,19 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
 
     public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
-//        setHasStableIds(true);
-        this.doctorContactsList = doctorContactsList;
-        this.activity = activity;
-        this.visibility = visibility ;
-        tabPosition=i;
+        try {
+            this.doctorContactsList = doctorContactsList;
+            this.activity = activity;
+            this.visibility = visibility ;
+            tabPosition=i;
 
-        mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
+            mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+//        setHasStableIds(true);
+
     }
 
 

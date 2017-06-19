@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
@@ -101,36 +102,46 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
-        user = userInfoResponse.getUser();
-        initView();
-        handelEvent();
-        //  assignViews();
-        setHasOptionsMenu(true);
+        UserInfoResponse userInfoResponse = new UserInfoResponse() ;
+        try {
+            userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
+            user = userInfoResponse.getUser();
+            initView();
+            handelEvent();
+            //  assignViews();
+            setHasOptionsMenu(true);
 
-        setAdapter();
+            setAdapter();
 
-        if (userInfoResponse.getUser().getIsDoc() == 1) {
-            rvPracticies.setVisibility(View.VISIBLE);
-        } else {
-            rvPracticies.setVisibility(View.GONE);
+            if (userInfoResponse.getUser().getIsDoc() == 1) {
+                rvPracticies.setVisibility(View.VISIBLE);
+            } else {
+                rvPracticies.setVisibility(View.GONE);
 
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
         return view;
     }
 
     private void setAdapter() {
+        try {
 
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
+            UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
 
-        List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
+            List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
 
 
-        mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvPracticies.setLayoutManager(mLayoutManager);
-        rvPracticies.setAdapter(mAdapter);
-        rvPracticies.setNestedScrollingEnabled(false);
+            mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            rvPracticies.setLayoutManager(mLayoutManager);
+            rvPracticies.setAdapter(mAdapter);
+            rvPracticies.setNestedScrollingEnabled(false);
+        }
+        catch (Exception e){}
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -178,132 +189,138 @@ public class SettingFragment extends Fragment {
 
 
     private void initView() {
-        tvAddPractice = (TextView) view.findViewById(R.id.tv_add_practice);
-        rvPracticies = (RecyclerView) view.findViewById(R.id.recycler_view);
-        trSupport = (TableRow) view.findViewById(R.id.tr_support);
-        profile = (TableRow) view.findViewById(R.id.my_profile);
-        trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
-        tvBack = (TextView) view.findViewById(R.id.tv_back);
-
-        videoView = (VideoView) view.findViewById(R.id.video_view);
-        tvSetting = (TextView) view.findViewById(R.id.tv_setting);
-
-        trChangePassCode = (TableRow) view.findViewById(R.id.tr_change_pass);
-        tvChangeMobileNumber = (TableRow) view.findViewById(R.id.tr_mobile_number);
-        trSound = (TableRow) view.findViewById(R.id.tr_sound);
-        trFaq = (TableRow) view.findViewById(R.id.tr_faq);
-        trTerms = (TableRow) view.findViewById(R.id.tr_terms);
-        trHelp = (TableRow) view.findViewById(R.id.tr_help);
-        trVersion = (TextView) view.findViewById(R.id.tv_version);
-        line=(View)view.findViewById(R.id.line);
-        //status doctor
-        txt_status = (TextView) view.findViewById(R.id.txt_status);
-        btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
-        PackageInfo pInfo = null;
         try {
-            pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            String version = pInfo.versionName;
-            trVersion.setText("Version : " + version);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        trChangePassCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), PasscodeActivty.class);
-                intent.putExtra("status", 2);
-                startActivityForResult(intent, 13);
-            }
-        });
-        trSound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), TimeTable.class));
-            }
-        });
+            tvAddPractice = (TextView) view.findViewById(R.id.tv_add_practice);
+            rvPracticies = (RecyclerView) view.findViewById(R.id.recycler_view);
+            trSupport = (TableRow) view.findViewById(R.id.tr_support);
+            profile = (TableRow) view.findViewById(R.id.my_profile);
+            trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
 
-        trDrStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("from_notification", 1);
-                intent.putExtra("from_id", 1);
-                startActivity(intent);
-            }
-        });
-        tvAddPractice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddPractics.class);
-                intent.putExtra("CLINIC", "CLINIC");
-                startActivity(intent);
-            }
-        });
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-        trFaq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), DoctorProfileActivity.class));
+            tvBack = (TextView) view.findViewById(R.id.tv_back);
+
+            videoView = (VideoView) view.findViewById(R.id.video_view);
+            tvSetting = (TextView) view.findViewById(R.id.tv_setting);
+
+            trChangePassCode = (TableRow) view.findViewById(R.id.tr_change_pass);
+            tvChangeMobileNumber = (TableRow) view.findViewById(R.id.tr_mobile_number);
+            trSound = (TableRow) view.findViewById(R.id.tr_sound);
+            trFaq = (TableRow) view.findViewById(R.id.tr_faq);
+            trTerms = (TableRow) view.findViewById(R.id.tr_terms);
+            trHelp = (TableRow) view.findViewById(R.id.tr_help);
+            trVersion = (TextView) view.findViewById(R.id.tv_version);
+            line=(View)view.findViewById(R.id.line);
+            //status doctor
+            txt_status = (TextView) view.findViewById(R.id.txt_status);
+            btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
+            PackageInfo pInfo = null;
+            try {
+                pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+                String version = pInfo.versionName;
+                trVersion.setText("Version : " + version);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
-        });
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (user.getIsDoc() == 1) {
-                    Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-                    intent.putExtra("doctor_data", user);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                    intent.putExtra("from", true);
+            trChangePassCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), PasscodeActivty.class);
+                    intent.putExtra("status", 2);
+                    startActivityForResult(intent, 13);
+                }
+            });
+            trSound.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), TimeTable.class));
+                }
+            });
+
+            trDrStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("from_notification", 1);
+                    intent.putExtra("from_id", 1);
                     startActivity(intent);
                 }
-            }
-        });
-        trSupport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), CustomerSupportActivity.class));
-            }
-        });
-        trHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-
-        UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
-
-        if (UserStatus != null) {
-            checkStatus(UserStatus);
-        }
-
-        btn_change_status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
-                if (UserStatus.equals("1")) {
-                    changStatusService("0");
-
-                } else {
-
-                    changStatusService("1");
+            });
+            tvAddPractice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), AddPractics.class);
+                    intent.putExtra("CLINIC", "CLINIC");
+                    startActivity(intent);
                 }
+            });
 
+
+            trFaq.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getContext(), DoctorProfileActivity.class));
+                }
+            });
+            profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (user.getIsDoc() == 1) {
+                        Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+                        intent.putExtra("doctor_data", user);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        intent.putExtra("from", true);
+                        startActivity(intent);
+                    }
+                }
+            });
+            trSupport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getContext(), CustomerSupportActivity.class));
+                }
+            });
+            trHelp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+
+            UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+
+            if (UserStatus != null) {
+                checkStatus(UserStatus);
             }
-        });
-        if(user.getIsDoc()==1){
-            tvAddPractice.setVisibility(View.VISIBLE);
-            line.setVisibility(View.VISIBLE);
-            txt_status.setVisibility(View.VISIBLE);
-            btn_change_status.setVisibility(View.VISIBLE);
+
+            btn_change_status.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+                    if (UserStatus.equals("1")) {
+                        changStatusService("0");
+
+                    } else {
+
+                        changStatusService("1");
+                    }
+
+                }
+            });
+            if(user.getIsDoc()==1){
+                tvAddPractice.setVisibility(View.VISIBLE);
+                line.setVisibility(View.VISIBLE);
+                txt_status.setVisibility(View.VISIBLE);
+                btn_change_status.setVisibility(View.VISIBLE);
+            }
         }
+        catch (Exception e){
+            Toast.makeText(getContext(), "Error while loading data", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void changStatusService(String isAvailable) {
@@ -336,16 +353,20 @@ public class SettingFragment extends Fragment {
     }
 
     private void handelEvent() {
-        trTerms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (settingResponse != null) {
-                    Intent intent = new Intent(getActivity(), TermsConditonActivity.class);
-                    intent.putExtra(Constants.TERMS, settingResponse.getTerms());
-                    getActivity().startActivity(intent);
+        try {
+            trTerms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (settingResponse != null) {
+                        Intent intent = new Intent(getActivity(), TermsConditonActivity.class);
+                        intent.putExtra(Constants.TERMS, settingResponse.getTerms());
+                        getActivity().startActivity(intent);
+                    }
                 }
-            }
-        });
+            });
+        }
+        catch (Exception e){}
+
 
 
     }
