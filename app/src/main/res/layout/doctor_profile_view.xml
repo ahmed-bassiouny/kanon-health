@@ -157,11 +157,12 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
+                        <EditText
                             android:id="@+id/tv_online"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_margin="5dp"
+                            android:enabled="false"
                             android:layout_weight="1"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
@@ -169,28 +170,30 @@
                             android:textAlignment="center"
                             android:textColor="@color/black" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/tv_add_to_favourite"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="5dp"
+                            android:enabled="false"
                             android:layout_weight="1"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
-                            android:text="Add to Favourite"
+                            android:text="@string/add_to"
                             android:textAlignment="center"
                             android:textColor="@android:color/background_dark" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/tv_contact"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
+                            android:enabled="false"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
-                            android:text="Contact by chat"
+                            android:text="@string/contact_by_chat"
                             android:textAlignment="center"
                             android:textColor="@android:color/background_dark" />
 

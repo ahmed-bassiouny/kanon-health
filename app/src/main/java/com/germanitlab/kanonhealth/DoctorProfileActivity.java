@@ -85,15 +85,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     TableLayout tablelayout;
 
     @BindView(R.id.tv_online)
-    TextView tvOnline;
+    EditText tvOnline;
     @BindView(R.id.img_edit_avatar)
     CircleImageView civEditAvatar;
     @BindView(R.id.tv_name)
     TextView tvName;
     @BindView(R.id.tv_contact)
-    TextView tvContact;
+    EditText tvContact;
     @BindView(R.id.tv_add_to_favourite)
-    TextView tvAddToFavourite;
+    EditText tvAddToFavourite;
 //    @BindView(R.id.tv_qr_code)
 //    TextView tv_qr_code;
     @BindView(R.id.tv_telephone)
@@ -201,35 +201,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         // check if doctor or clinic
 
 
-        if (getIntent().getExtras().containsKey("CLINIC")) {
-            llDoctorData.setVisibility(View.GONE);
-            tvAddToFavourite.setVisibility(View.GONE);
-            setVisiblitiy(View.GONE);
-
-        } else {
-            llDoctorData.setVisibility(View.VISIBLE);
-            tvAddToFavourite.setVisibility(View.VISIBLE);
-
             util = Util.getInstance(this);
             user = new User();
             user = (User) getIntent().getSerializableExtra("doctor_data");
-            chechEditPermission();
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
             bindData();
 
-/*
-            llDoctorData.setVisibility(View.VISIBLE);
-            tvAddToFavourite.setVisibility(View.VISIBLE);
 
-                    util = Util.getInstance(this);
-            user = new User();
-            user = (User) getIntent().getSerializableExtra("doctor_data");
-            chechEditPermission();
-            prefManager = new PrefManager(this);
-            pickerDialog = new PickerDialog(true);*/
-
-        }
     }
 
     private void handleImeActions() {
@@ -296,19 +275,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
     private void chechEditPermission() {
 
-        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id()) {
+        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id())
             is_me = true;
-            tvToolbarName.setText(getResources().getString(R.string.my_profile));
-        }
-        else {
+        else
             is_me = false;
-            tvToolbarName.setText(user.getLast_name()+" "+user.getFirst_name());
-        }
+
     }
 
 
     @OnClick(R.id.tv_contact)
     public void contactClick(View v) {
+        if(is_me)
+            return;
         Gson gson = new Gson();
         if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
             Intent intent = new Intent(this, ChatActivity.class);
@@ -328,7 +306,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit)
     public void edit(View view) {
         setVisiblitiy(View.GONE);
+        Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
         editboolean = true ;
+        tvOnline.setText(user.getSubTitle());
+        tvAddToFavourite.setText(user.getFirst_name());
+        tvContact.setText(user.getLast_name());
     }
 
     @OnClick(R.id.save)
@@ -338,9 +320,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void handleNewData() {
-        tvName.setText(etLastName.getText().toString() + "," + etFirstName.getText().toString());
-        user.setLast_name(etLastName.getText().toString());
-        user.setFirst_name(etFirstName.getText().toString());
+        //tvName.setText(etLastName.getText().toString() + "," + etFirstName.getText().toString());
+        user.setSubTitle(tvOnline.getText().toString());
+        user.setLast_name(tvContact.getText().toString());
+        user.setFirst_name(tvAddToFavourite.getText().toString());
         tvLocation.setText(et_location.getText().toString());
         user.setAddress(et_location.getText().toString());
         tvTelephone.setText(etTelephone.getText().toString());
@@ -394,6 +377,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etCity.setEnabled(editable);
         etProvince.setEnabled(editable);
         etCountry.setEnabled(editable);
+        tvContact.setEnabled(editable);
+        tvAddToFavourite.setEnabled(editable);
+        tvOnline.setEnabled(editable);
     }
 
     @OnClick(R.id.edit_time_table)
@@ -514,8 +500,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void bindData() {
 //        getTimaTableData(user.getTable());
+        chechEditPermission();
         checkDoctor();
-        tvToolbarName.setText(user.getFirst_name() +" "+ user.getLast_name());
         tvName.setText(user.getLast_name() + ", " + user.getFirst_name());
         Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() , civEditAvatar,R.drawable.placeholder);
         etLastName.setText(user.getLast_name());
@@ -535,14 +521,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tvTelephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
         if (is_me) {
-            tvAddToFavourite.setVisibility(View.INVISIBLE);
-            tvContact.setVisibility(View.INVISIBLE);
             ivEdit.setVisibility(View.VISIBLE);
             iSave.setVisibility(View.GONE);
 
         }else{
-            tvAddToFavourite.setVisibility(View.VISIBLE);
-            tvContact.setVisibility(View.VISIBLE);
             ivEdit.setVisibility(View.GONE);
             iSave.setVisibility(View.GONE);
 
@@ -581,6 +563,19 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etZipCode.setText(user.getInfo().getZipCode());
         etProvince.setText(user.getInfo().getProvinz());
         etCountry.setText(user.getInfo().getCountry());
+        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id()) {
+            is_me = true;
+            tvToolbarName.setText(getResources().getString(R.string.my_profile));
+            tvAddToFavourite.setText(user.getSubTitle()+" "+user.getFirst_name());
+            tvContact.setText(user.getLast_name());
+
+        }
+        else {
+            is_me = false;
+            tvToolbarName.setText(user.getSubTitle()+" "+user.getLast_name()+" "+user.getFirst_name());
+            tvAddToFavourite.setText(R.string.add_to);
+            tvContact.setText(R.string.contact_by_chat);
+        }
 
 
     }
@@ -635,6 +630,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @OnClick(R.id.tv_add_to_favourite)
     public void addToMyDoctor() {
+        if(is_me)
+            return;
         if (user.getIs_my_doctor() == null) {
             new HttpCall(this, new ApiResponse() {
                 @Override
@@ -666,11 +663,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void checkDoctor() {
+        if(is_me)
+            return;
         try {
-            if (user.getIs_my_doctor() == null)
-                tvAddToFavourite.setText(getString(R.string.add_to));
-            else
+            if (user.getIs_my_doctor().equals("1"))
                 tvAddToFavourite.setText(getString(R.string.remove_from));
+            else
+                tvAddToFavourite.setText(getString(R.string.add_to));
         } catch (Exception e) {
         }
 
