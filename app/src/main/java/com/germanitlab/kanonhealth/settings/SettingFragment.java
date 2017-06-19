@@ -407,7 +407,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==13){
+        if(requestCode==13&& resultCode==getActivity().RESULT_OK){
             Intent intent = new Intent(getActivity(), PasscodeActivty.class);
             intent.putExtra("checkPassword" ,false);
             intent.putExtra("finish",true);
