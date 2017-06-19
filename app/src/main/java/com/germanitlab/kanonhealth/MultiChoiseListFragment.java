@@ -73,9 +73,8 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new MyClickListener() {
             @Override
             public void onClick(View view, int position) {
-                CheckBox rbtn=(CheckBox)view.findViewById(R.id.rbtn);
                 //rbtn.setChecked(!allspecialist.get(position).getIsMyChoise());
-                allspecialist.get(position).setIsMyChoise(rbtn.isChecked());
+                allspecialist.get(position).setIsMyChoise(!allspecialist.get(position).getIsMyChoise());
             }
 
             @Override
@@ -113,12 +112,6 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 break;
         }
     }
-    /*private void setDataChecked(RadioButton rbtn,boolean show) {
-        if(show)
-            rbtn.setChecked(true);
-        else
-            r.setVisibility(View.GONE);
-    }*/
 
     @Override
     public void onSuccess(Object response) {

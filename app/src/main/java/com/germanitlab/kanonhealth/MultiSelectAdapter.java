@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
             case Constants.LANGUAUGE:
                  itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_select_row, parent, false);
                 break;
-            case Constants.MEMBERAT:
             case Constants.DoctorAll:
                   itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invite_doctor, parent, false);
                 break;
@@ -57,28 +57,27 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         ChooseModel model = allspecialist.get(position);
-
         setDataChecked(holder.rbtn, model.getIsMyChoise());
-        switch (type){
-            case Constants.SPECIALITIES:
-                holder.tv_title.setText(model.getSpeciality_title());
-                Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), holder.img_icon, R.drawable.profile_place_holder);
-                break;
-            case Constants.LANGUAUGE:
-                holder.tv_title.setText(model.getLang_title());
-                holder.img_icon.setVisibility(View.GONE);
-                break;
-            case Constants.MEMBERAT:
-                break;
-            case Constants.DoctorAll:
-                holder.tv_title.setText(model.getLast_nameMember()+" "+model.getFirst_nameMember());
-                Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), holder.img_icon, R.drawable.profile_place_holder);
-                if(model.getIs_available().equals("1"))
-                    holder.status.setImageResource(R.color.green);
-                else
-                    holder.status.setImageResource(R.color.gray);
-                break;
-        }
+            switch (type) {
+                case Constants.SPECIALITIES:
+                    holder.tv_title.setText(model.getSpeciality_title());
+                    Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), holder.img_icon, R.drawable.profile_place_holder);
+                    break;
+                case Constants.LANGUAUGE:
+                    holder.tv_title.setText(model.getLang_title());
+                    holder.img_icon.setVisibility(View.GONE);
+                    break;
+                case Constants.DoctorAll:
+                    holder.tv_title.setText(model.getLast_nameMember() + " " + model.getFirst_nameMember());
+                    Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), holder.img_icon, R.drawable.profile_place_holder);
+                    holder.status.setSelected(model.getIsMyChoise());
+                    if (model.getIs_available().equals("1"))
+                        holder.status.setImageResource(R.color.green);
+                    else
+                        holder.status.setImageResource(R.color.gray);
+                    break;
+            }
+
     }
 
 

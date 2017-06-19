@@ -382,6 +382,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ivEdit.setVisibility(visiblitiy);
         iSave.setVisibility(notvisibility);
         civEditImage.setVisibility(notvisibility);
+        if(user.isClinic==1)
+            ivMemberList.setVisibility(notvisibility);
 
         //Edit ahmed 12-6-2017
         boolean editable = (visiblitiy == View.GONE) ? true : false;
@@ -392,17 +394,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etCity.setEnabled(editable);
         etProvince.setEnabled(editable);
         etCountry.setEnabled(editable);
-        ed_location.setEnabled(editable);
-        ed_street_name.setEnabled(editable);
-        ed_house_number.setEnabled(editable);
-        ed_zip_code.setEnabled(editable);
-        ed_city.setEnabled(editable);
-        ed_province.setEnabled(editable);
-        ed_country.setEnabled(editable);
-        if(user.isClinic==1)
-            edit_member_list.setVisibility(View.VISIBLE);
-        else
-            edit_member_list.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.edit_time_table)
@@ -613,7 +604,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit_member_list)
     public void edit_member_list(){
         Bundle bundle = new Bundle();
-        bundle.putInt("Constants",Constants.MEMBERAT);
+        bundle.putInt("Constants",Constants.DoctorAll);
         bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
         showDialogFragment(bundle);
     }
@@ -745,6 +736,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public void Response(ArrayList<ChooseModel> specialitiesArrayList, int type) {
         ArrayList<ChooseModel> templist = new ArrayList<>();
+        RecyclerView recyclerView = new RecyclerView(getApplicationContext());
         switch (type) {
             case Constants.SPECIALITIES:
                 user.getSpecialities().clear();
@@ -753,6 +745,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setSpecialities(templist);
+                set(adapter, user.getSpecialities(), recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+                tvSpecilities.setText("");
+                for (ChooseModel speciality : user.getSpecialities()) {
+                    tvSpecilities.append(speciality.getSpeciality_title() + " ");
+                }
                 break;
             case Constants.LANGUAUGE:
                 user.getSupported_lang().clear();
@@ -761,14 +758,20 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setSupported_lang(templist);
+                set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+                tvLanguages.setText("");
+                for (ChooseModel lang : user.getSupported_lang()) {
+                    tvLanguages.append(lang.getLang_title() + " ");
+                }
                 break;
-            case Constants.MEMBERAT:
+            case Constants.DoctorAll:
                 user.getMembers_at().clear();
                 for (ChooseModel item : specialitiesArrayList) {
                     if (item.getIsMyChoise())
                         templist.add(item);
                 }
                 user.setMembers_at(templist);
+                set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                 break;
         }
     }
