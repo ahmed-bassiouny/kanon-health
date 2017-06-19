@@ -88,8 +88,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     EditText tvOnline;
     @BindView(R.id.img_edit_avatar)
     CircleImageView civEditAvatar;
-    @BindView(R.id.tv_name)
-    TextView tvName;
+
     @BindView(R.id.tv_contact)
     EditText tvContact;
     @BindView(R.id.tv_add_to_favourite)
@@ -150,10 +149,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     // data of ivEdit
     @BindView(R.id.edit)
     ImageView ivEdit;
-    @BindView(R.id.et_last_name)
-    EditText etLastName;
-    @BindView(R.id.et_first_name)
-    EditText etFirstName;
     @BindView(R.id.et_telephone)
     EditText etTelephone;
     @BindView(R.id.et_location)
@@ -165,8 +160,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     ImageView ivLanguagesList;
     @BindView(R.id.edit_member_list)
     ImageView ivMemberList;
-    @BindView(R.id.edit_name_layout)
-    LinearLayout llNameLayout;
     @BindView(R.id.save)
     ImageView iSave;
     @BindView(R.id.ll_doctor_data)
@@ -274,6 +267,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 setVisiblitiy(View.GONE);
                 menu.findItem(R.id.mi_save).setVisible(true);
                 menu.findItem(R.id.mi_edit).setVisible(false);
+                tvOnline.setText(user.getSubTitle());
+                tvAddToFavourite.setText(user.getFirst_name());
+                tvContact.setText(user.getLast_name());
                 break;
             case R.id.mi_save:
                 handleNewData();
@@ -342,7 +338,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void handleNewData() {
-        //tvName.setText(etLastName.getText().toString() + "," + etFirstName.getText().toString());
         user.setSubTitle(tvOnline.getText().toString());
         user.setLast_name(tvContact.getText().toString());
         user.setFirst_name(tvAddToFavourite.getText().toString());
@@ -374,7 +369,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void setVisiblitiy(int visiblitiy) {
         int notvisibility = (visiblitiy == View.VISIBLE) ? View.GONE : View.VISIBLE;
-        tvName.setVisibility(visiblitiy);
         et_location.setVisibility(notvisibility);
         tvLocation.setVisibility(visiblitiy);
         etTelephone.setVisibility(notvisibility);
@@ -382,7 +376,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ivSpecialityList.setVisibility(notvisibility);
         ivLanguagesList.setVisibility(notvisibility);
         ivMemberList.setVisibility(notvisibility);
-        llNameLayout.setVisibility(notvisibility);
         ivTimeTable.setVisibility(notvisibility);
         ivEdit.setVisibility(visiblitiy);
         iSave.setVisibility(notvisibility);
@@ -535,10 +528,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 //        getTimaTableData(user.getTable());
         chechEditPermission();
         checkDoctor();
-        tvName.setText(user.getLast_name() + ", " + user.getFirst_name());
         Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getAvatar() , civEditAvatar,R.drawable.placeholder);
-        etLastName.setText(user.getLast_name());
-        etFirstName.setText(user.getFirst_name());
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
@@ -546,10 +536,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tvLocations.setText(user.getAddress());
         Helper.setImage(getApplicationContext() ,Constants.CHAT_SERVER_URL + "/"+user.getCountry_flag() ,ivLocation ,R.drawable.placeholder);
 
-        if (user.getIs_available() != null) {
-            if (!user.getIs_available().equals("1"))
-                tvOnline.setText("Status: Offline");
-        }
+        if (user.getIs_available() != null && user.getIs_available().equals("1"))
+                tvOnline.setText(R.string.status_online);
+        else
+            tvOnline.setText(R.string.status_offline);
+
 //        loadQRCode(tv_qr_code);
         tvTelephone.setText(user.getPhone());
         et_location.setText(user.getAddress());
