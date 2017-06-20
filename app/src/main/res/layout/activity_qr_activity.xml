@@ -28,7 +28,7 @@
         android:text="client"
         android:textColor="@color/white"
         android:layout_gravity="center"/>
-    <Button
+<!--    <Button
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"
@@ -39,7 +39,7 @@
         android:gravity="center"
         android:id="@+id/doctor"
         android:text="doctor"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"/>-->
     <Button
         android:layout_width="match_parent"
         android:background="@color/blue"
