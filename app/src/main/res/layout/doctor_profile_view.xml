@@ -25,6 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_profile"
+            android:maxLines="2"
+            android:lines="2"
             android:textSize="18sp"
             android:textColor="@color/black"/>
 
@@ -164,20 +166,27 @@
                             android:layout_margin="5dp"
                             android:enabled="false"
                             android:layout_weight="1"
+                            android:lines="1"
+                            android:textSize="15sp"
+                            android:maxLines="1"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
-                            android:text="Status: Online"
+                            android:text="@string/status_online"
                             android:textAlignment="center"
                             android:textColor="@color/black" />
 
                         <EditText
-                            android:id="@+id/tv_add_to_favourite"
+                            android:id="@+id/ed_add_to_favourite"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="5dp"
-                            android:enabled="false"
+                            android:focusable="false"
+                            android:clickable="true"
                             android:layout_weight="1"
+                            android:lines="1"
+                            android:textSize="15sp"
+                            android:maxLines="1"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
                             android:text="@string/add_to"
@@ -188,9 +197,13 @@
                             android:id="@+id/tv_contact"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:enabled="false"
+                            android:focusable="false"
+                            android:clickable="true"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
+                            android:lines="1"
+                            android:textSize="15sp"
+                            android:maxLines="1"
                             android:background="@drawable/custom_edittext_without_border_style"
                             android:gravity="center"
                             android:text="@string/contact_by_chat"
@@ -202,74 +215,6 @@
                     </LinearLayout>
 
                 </LinearLayout>
-                <TableRow android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:id="@+id/edit_name_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_edit_avatar"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
-
-                        <EditText
-                            android:id="@+id/et_last_name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:layout_alignBottom="@+id/img_edit_avatar"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:nextFocusForward="@+id/et_first_name"
-                            android:maxLines="1"
-                            android:inputType="textPersonName"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="18dp"
-                            android:visibility="visible" />
-
-                        <EditText
-                            android:id="@+id/et_first_name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/img_edit_avatar"
-                            android:layout_gravity="center"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_location"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="18dp"
-                            android:visibility="visible" />
-                    </LinearLayout>
-                    <TextView
-                        android:visibility="visible"
-                        android:id="@+id/tv_name"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/img_edit_avatar"
-                        android:layout_gravity="left"
-                        android:gravity="center"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="18dp" />
-                    <!--<TextView-->
-                        <!--android:id="@+id/tv_add_to_favourite"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_marginLeft="5dp"-->
-                        <!--android:layout_marginRight="5dp"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:backgroundTint="@color/gray"-->
-                        <!--android:background="@drawable/custom_edittext_without_border_style"-->
-                        <!--android:gravity="center"-->
-                        <!--android:text="Add to Favourite"-->
-                        <!--android:textAlignment="center"-->
-                        <!--android:textColor="@android:color/background_dark" />-->
-
-                </TableRow>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

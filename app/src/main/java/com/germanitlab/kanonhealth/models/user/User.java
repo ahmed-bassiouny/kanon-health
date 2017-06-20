@@ -84,6 +84,29 @@ public class User implements Serializable {
     @SerializedName("password")
     private String password;
     @DatabaseField
+    @SerializedName("gender")
+    private int gender;
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
+    public String getGender_other() {
+        return gender_other;
+    }
+
+    public void setGender_other(String gender_other) {
+        this.gender_other = gender_other;
+    }
+
+    @DatabaseField
+    @SerializedName("gender_other")
+    private String gender_other;
+    @DatabaseField
     @SerializedName("qr_url")
     private String qr_url;
     @DatabaseField

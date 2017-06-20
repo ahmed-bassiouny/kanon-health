@@ -204,6 +204,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         Intent i = new Intent(getApplicationContext(), EditDoctorProfileActivity.class);
         i.putExtra("userInfoResponse", userInfoResponse);
         startActivity(i);
+        finish();
     }
 
     @Override
@@ -263,7 +264,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             indexFromIntent = 3;
 
         }
-
-        finish();
+        ProfileActivity.super.onBackPressed();
     }
 }

@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.settings;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -102,28 +103,6 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
-        UserInfoResponse userInfoResponse = new UserInfoResponse() ;
-        try {
-            userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
-            user = userInfoResponse.getUser();
-            initView();
-            handelEvent();
-            //  assignViews();
-            setHasOptionsMenu(true);
-
-            setAdapter();
-
-            if (userInfoResponse.getUser().getIsDoc() == 1) {
-                rvPracticies.setVisibility(View.VISIBLE);
-            } else {
-                rvPracticies.setVisibility(View.GONE);
-
-            }
-        }catch (Exception e){
-            Crashlytics.logException(e);
-            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
         return view;
     }
 
@@ -163,30 +142,55 @@ public class SettingFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null && isVisibleToUser) {
+            loadData();
             getSetting();
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
-        user = userInfoResponse.getUser();
-        initView();
-        handelEvent();
-        //  assignViews();
-        setHasOptionsMenu(true);
+    private void loadData(){
+        try {
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle(R.string.waiting_text);
+            progressDialog.setCancelable(false);
+            new HttpCall(getActivity(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    if (response != null) {
+                        Gson gson = new Gson();
+                        mPrefManager.put(PrefManager.USER_KEY , gson.toJson(response));
+                        user= new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class ).getUser();
+                        progressDialog.dismiss();
+
+                    } else {
+                        user=new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+                        Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                    initView();
+                    handelEvent();
+                    setHasOptionsMenu(true);
+                    setAdapter();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    user=new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+                    progressDialog.dismiss();
+                    Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                    initView();
+                    handelEvent();
+                    setHasOptionsMenu(true);
+                    setAdapter();
+                }
+            }).getProfile(AppController.getInstance().getClientInfo());
 
 
-        setAdapter();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-
 
     private void initView() {
         try {
@@ -216,6 +220,12 @@ public class SettingFragment extends Fragment {
             //status doctor
             txt_status = (TextView) view.findViewById(R.id.txt_status);
             btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
+            if (user.getIsDoc() == 1) {
+                rvPracticies.setVisibility(View.VISIBLE);
+            } else {
+                rvPracticies.setVisibility(View.GONE);
+
+            }
             PackageInfo pInfo = null;
             try {
                 pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -269,7 +279,7 @@ public class SettingFragment extends Fragment {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (user.getIsDoc() == 1) {
+                    if (user.getIsDoc() == 1 || user.getIsClinic() == 1) {
                         Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", user);
                         startActivity(intent);
@@ -408,7 +418,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==13){
+        if(requestCode==13&& resultCode==getActivity().RESULT_OK){
             Intent intent = new Intent(getActivity(), PasscodeActivty.class);
             intent.putExtra("checkPassword" ,false);
             intent.putExtra("finish",true);

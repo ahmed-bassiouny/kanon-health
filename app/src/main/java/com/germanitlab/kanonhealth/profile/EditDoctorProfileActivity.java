@@ -350,7 +350,11 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @Override
     public void onSuccess(Object response) {
-        Log.d("Update User1 Success", "on response");
+        Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("userInfoResponse", userInfoResponse);
+        i.putExtra("from", false);
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -363,11 +367,11 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @Override
     public void onBackPressed() {
         try {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("userInfoResponse", userInfoResponse);
-            intent.putExtra("from", false);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            Intent i = new Intent(this, ProfileActivity.class);
+            i.putExtra("userInfoResponse", userInfoResponse);
+            i.putExtra("from", false);
+            startActivity(i);
+            finish();
             finish();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -498,10 +502,6 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         try {
             setUserObject();
             new HttpCall(this, this).editProfile(user);
-            Intent i = new Intent(this, ProfileActivity.class);
-            i.putExtra("userInfoResponse", userInfoResponse);
-            i.putExtra("from", false);
-            startActivity(i);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

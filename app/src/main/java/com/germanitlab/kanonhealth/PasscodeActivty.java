@@ -110,6 +110,9 @@ public class PasscodeActivty extends AppCompatActivity {
                 prefManager.put(PrefManager.PASSCODE, passcode);
                 Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
                 finishActivity();
+            }else if(!tempPasscode.equals(passcode)){
+                passText.setText("Set your Password");
+                wrongPassword();
             }
         }
     }
@@ -130,6 +133,9 @@ public class PasscodeActivty extends AppCompatActivity {
     }
 
     private void finishActivity(){
-        if(finish) finish(); else startActivity(new Intent(this,MainActivity.class));
+        if(finish){
+            this.setResult(RESULT_OK);
+            finish();
+        } else startActivity(new Intent(this,MainActivity.class));
     }
 }

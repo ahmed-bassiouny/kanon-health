@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
     private static final int TAKE_PICTURE = 1;
 
+    @BindView(R.id.rggender)
+    RadioGroup rgGender;
+    @BindView(R.id.edgender)
+    EditText edGender;
     @BindView(R.id.image_profile)
     ImageView imageProfile;
     @BindView(R.id.edit_first_name)
@@ -74,6 +80,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     private Uri selectedImageUri;
     PickerDialog pickerDialog;
     String birthdate ;
+    String gender_other="Male";
+    int gender=1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +107,29 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
+        rgGender.check(R.id.rbmale);
+        rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                switch (i){
+                    case R.id.rbmale:
+                        gender_other="Male";
+                        gender=1;
+                        edGender.setVisibility(View.GONE);
+                        break;
+                    case R.id.rbfemal:
+                        gender_other="Femal";
+                        gender=2;
+                        edGender.setVisibility(View.GONE);
+                        break;
+                    case R.id.rbother:
+                        gender_other="";
+                        gender=3;
+                        edGender.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        });
 
     }
 
@@ -202,9 +232,12 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         String firstName = editLastName.getText().toString();
         String lastName = editFirstName.getText().toString();
         String birthDate = textBirthday.getText().toString();
-
-
-        if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")) {
+        gender_other=edGender.getText().toString();
+        if(gender==3 &&gender_other.trim().isEmpty()){
+            Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!firstName.trim().isEmpty() && !lastName.trim().isEmpty() && !birthDate.trim().isEmpty()) {
             showProgressDialog();
             final User user = new User();
             user.setId(AppController.getInstance().getClientInfo().getUser_id());
@@ -212,6 +245,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             user.setFirst_name(firstName);
             user.setLast_name(lastName);
             user.setBirthDate(birthdate);
+            user.setGender(gender);
+            user.setGender_other(gender_other);
             if (uploadImageResponse != null) {
                 user.setAvatar(uploadImageResponse.getFile_url());
             }
