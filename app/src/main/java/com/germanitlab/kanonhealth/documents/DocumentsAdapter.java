@@ -243,20 +243,20 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             } catch (Exception ex) {
                 textMsgViewHolder.tvDateMy.setText(textMessage.getSent_at());
             }
-            textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (!selected) {
-                        changeToolbar(true);
-                    }
-                    if (!list.contains(textMessage.get_Id()))
-                        selectItem(textMsgViewHolder.background, textMessage);
-                    else {
-                        unselectItem(textMsgViewHolder.background, textMessage);
-                    }
-                    return true;
-                }
-            });
+//            textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    if (!selected) {
+//                        changeToolbar(true);
+//                    }
+//                    if (!list.contains(textMessage.get_Id()))
+//                        selectItem(textMsgViewHolder.background, textMessage);
+//                    else {
+//                        unselectItem(textMsgViewHolder.background, textMessage);
+//                    }
+//                    return true;
+//                }
+//            });
             textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1654,8 +1654,8 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
         Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
         Toolbar toolbar1 = (Toolbar) context.findViewById(R.id.toolbar2);
         if (select) {
-            toolbar.setVisibility(View.GONE);
-            toolbar1.setVisibility(View.VISIBLE);
+//            toolbar.setVisibility(View.GONE);
+//            toolbar1.setVisibility(View.VISIBLE);
         } else {
             toolbar.setVisibility(View.VISIBLE);
             toolbar1.setVisibility(View.GONE);

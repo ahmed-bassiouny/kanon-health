@@ -6,17 +6,15 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
-    android:background="@android:color/white"
-    tools:context="com.kanonhealth.kanon_health.payment.PreRequest">
-    <TextView
-        android:layout_width="368dp"
+    android:background="@android:color/white">
+    <me.biubiubiu.justifytext.library.JustifyTextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="In Order to Chat to the doctor click on the Image below and select your pament method "
         android:gravity="center"
         android:textSize="25dp"
         android:textColor="@android:color/background_dark"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center" />
     <ImageButton
         android:layout_width="100dp"
         android:layout_height="200dp"

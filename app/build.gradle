@@ -102,6 +102,7 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'me.biubiubiu.justifytext:library:1.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

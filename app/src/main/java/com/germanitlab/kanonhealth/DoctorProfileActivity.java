@@ -189,7 +189,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         mapFragment.getMapAsync(this);
         handleImeActions();
 
-
         // check if doctor or clinic
 
         try {
