@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.settings;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -102,7 +103,7 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
-        UserInfoResponse userInfoResponse = new UserInfoResponse() ;
+        UserInfoResponse userInfoResponse ;
         try {
             userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
             user = userInfoResponse.getUser();
@@ -170,8 +171,30 @@ public class SettingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class );
-        user = userInfoResponse.getUser();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(R.string.waiting_text);
+        progressDialog.setCancelable(false);
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                if (response != null) {
+                    Gson gson = new Gson();
+                    mPrefManager.put(PrefManager.USER_KEY , gson.toJson(response));
+                    user= new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class ).getUser();
+                    progressDialog.dismiss();
+
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailed(String error) {
+                progressDialog.dismiss();
+                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+            }
+        }).getProfile(AppController.getInstance().getClientInfo());
         initView();
         handelEvent();
         //  assignViews();
