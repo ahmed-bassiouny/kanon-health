@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,32 +15,38 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:background="@color/white">
 
-            <FrameLayout
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="52dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:lines="2"
                     android:text="@string/my_profile"
+                    android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_widthPercent="73%" />
 
                 <ImageView
                     android:id="@+id/save"
                     style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
                     android:layout_height="52dp"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/sbmit"
-                    android:tint="@color/blue" />
-            </FrameLayout>
+                    android:tint="@color/blue"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="25%" />
+
+            </android.support.percent.PercentRelativeLayout>
 
 
         </android.support.v7.widget.Toolbar>
@@ -60,40 +67,34 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                        android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_edit_avatar"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        android:src="@drawable/profile_place_holder" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/img_edit_avatar"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_gravity="center"
-                            android:src="@drawable/profile_place_holder" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/edit_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignEnd="@+id/img_edit_avatar"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignRight="@+id/img_edit_avatar"
+                        android:src="@drawable/camera" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/edit_image"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignEnd="@+id/img_edit_avatar"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignRight="@+id/img_edit_avatar"
-                            android:src="@drawable/camera" />
-
-                    </RelativeLayout>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -114,12 +115,12 @@
 
                     <EditText
                         android:id="@+id/ed_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
                         android:inputType="textPersonName"
                         android:maxLines="1"
-                        android:imeOptions="actionNext"
-                        android:nextFocusForward="@+id/ed_location"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:nextFocusForward="@+id/ed_location" />
                 </LinearLayout>
 
                 <View
@@ -221,12 +222,12 @@
 
                         <EditText
                             android:id="@+id/ed_location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_street_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/ed_street_name" />
                     </TableRow>
 
                     <TableRow
@@ -241,12 +242,12 @@
 
                         <EditText
                             android:id="@+id/ed_street_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_house_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/ed_house_number" />
                     </TableRow>
 
                     <TableRow
@@ -261,12 +262,12 @@
 
                         <EditText
                             android:id="@+id/ed_house_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_zip_code"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/ed_zip_code" />
                     </TableRow>
 
                     <TableRow
@@ -281,12 +282,12 @@
 
                         <EditText
                             android:id="@+id/ed_zip_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_city"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/ed_city" />
                     </TableRow>
 
                     <TableRow
@@ -301,12 +302,12 @@
 
                         <EditText
                             android:id="@+id/ed_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_province"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/ed_province" />
                     </TableRow>
 
                     <TableRow
@@ -321,12 +322,12 @@
 
                         <EditText
                             android:id="@+id/ed_province"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/ed_country"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/ed_country" />
                     </TableRow>
 
                     <TableRow
@@ -341,12 +342,12 @@
 
                         <EditText
                             android:id="@+id/ed_country"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:imeOptions="actionNext"
-                            android:nextFocusForward="@+id/et_telephone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:nextFocusForward="@+id/et_telephone" />
                     </TableRow>
                 </LinearLayout>
 
@@ -474,7 +475,6 @@
                 </RelativeLayout>
 
 
-
                 <LinearLayout
                     android:id="@+id/no_time"
                     android:layout_width="match_parent"
@@ -495,12 +495,12 @@
                         android:textCursorDrawable="@color/black"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <TableLayout
+                    android:id="@+id/tablelayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:id="@+id/tablelayout">
-                </TableLayout>
+                    android:layout_margin="10dp"></TableLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -534,9 +534,9 @@
                         android:layout_marginLeft="8dp"
                         android:layout_weight="5"
                         android:gravity="left"
+                        android:imeOptions="actionSend"
                         android:inputType="textPersonName"
                         android:maxLines="1"
-                        android:imeOptions="actionSend"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16dp" />
                 </LinearLayout>
