@@ -455,6 +455,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
+        util.dismissProgressDialog();
 //        util.dismissProgressDialog();
         tvLoadingError.setVisibility(View.VISIBLE);
         if (error != null && error.length() > 0)

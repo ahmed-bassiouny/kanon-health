@@ -237,6 +237,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 handleMyData();
                             } catch (Exception e) {
                                 Crashlytics.logException(e);
+                                dismissProgressDialog();
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                             }
 
@@ -245,6 +246,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
                         @Override
                         public void onFailed(String error) {
+                            dismissProgressDialog();
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                         }
                     }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())

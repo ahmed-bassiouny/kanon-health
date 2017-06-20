@@ -470,6 +470,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
                             @Override
                             public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(DoctorProfileActivity.this, "Uplaod Failed", Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
@@ -825,6 +827,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @Override
     public void onFailed(String error) {
+        util.dismissProgressDialog();
         Toast.makeText(this, "Error in saving data", Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
 

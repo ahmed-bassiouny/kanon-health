@@ -223,8 +223,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
-
-
+        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
     }
 
     public void showProgressDialog() {

@@ -356,6 +356,8 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @Override
     public void onFailed(String error) {
         Log.d("Update User1 failes", "on Failed");
+        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

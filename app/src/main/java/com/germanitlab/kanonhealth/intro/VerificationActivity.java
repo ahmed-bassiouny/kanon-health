@@ -145,6 +145,7 @@ public class VerificationActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailed(String error) {
+                                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
 
                                 }
                             }).editProfile(user);
@@ -173,6 +174,7 @@ public class VerificationActivity extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 dismissProgressDialog();
+                Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
             }
         }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
     }

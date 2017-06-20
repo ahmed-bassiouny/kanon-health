@@ -296,6 +296,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
                                         @Override
                                         public void onFailed(String error) {
+                                            Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                         }
                                     }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
@@ -468,7 +469,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
                                         @Override
                                         public void onFailed(String error) {
-
+                                            Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         }
                                     }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                                             , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
@@ -544,6 +545,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
                                         @Override
                                         public void onFailed(String error) {
+                                            Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                         }
                                     }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
@@ -715,7 +717,7 @@ try {
 
                                         @Override
                                         public void onFailed(String error) {
-
+                                            Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         }
                                     }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                                             , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
@@ -1002,6 +1004,7 @@ try {
 
                                             @Override
                                             public void onFailed(String error) {
+                                                Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                             }
                                         }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())

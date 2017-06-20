@@ -264,6 +264,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                             @Override
                             public void onFailed(String error) {
                                 Log.e("upload image failed :", error);
+                                Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                                 , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
@@ -289,6 +290,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                             @Override
                             public void onFailed(String error) {
                                 Log.e("upload image failed :", error);
+                                Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                                 , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
@@ -326,6 +328,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     @Override
     public void onFailed(String error) {
         Log.d("Update User1 failes", "on Failed");
+        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
     }
 
     @Override

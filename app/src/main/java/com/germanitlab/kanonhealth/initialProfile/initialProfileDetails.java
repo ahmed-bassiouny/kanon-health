@@ -175,8 +175,7 @@ public class initialProfileDetails extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
-                    Toast.makeText(initialProfileDetails.this, "Error", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                 }
             }).editProfile(user);
         } else {
@@ -217,7 +216,7 @@ public class initialProfileDetails extends AppCompatActivity {
 
                         @Override
                         public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                         }
                     }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
                             , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(imageUri));

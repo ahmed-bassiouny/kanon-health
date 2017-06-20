@@ -27,7 +27,6 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
             sendRegistrationToServer(refreshedToken);
         } catch (Exception e){
             Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -43,6 +42,7 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
             @Override
             public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
             }
         }).updateToken(requsetToken);

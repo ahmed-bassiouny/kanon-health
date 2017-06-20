@@ -51,21 +51,21 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (isLogin && !storedUser.equals("")) {
                         joinUser();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                        intent.putExtra("checkPassword" ,true);
-                        intent.putExtra("finish",false);
+                        intent.putExtra("checkPassword", true);
+                        intent.putExtra("finish", false);
                         startActivity(intent);
 
                         // all data saved but no passcode set
-                    } else if(isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
+                    } else if (isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
 
                         joinUser();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                        intent.putExtra("checkPassword" ,false);
-                        intent.putExtra("finish",false);
+                        intent.putExtra("checkPassword", false);
+                        intent.putExtra("finish", false);
                         startActivity(intent);
                     }
                     // registered but not filled my data
-                    else if (isLogin && storedUser.equals("")){
+                    else if (isLogin && storedUser.equals("")) {
 
                         joinUser();
                         startActivity(new Intent(SplashScreenActivity.this, ProfileDetails.class));
@@ -79,7 +79,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     }
                 }
             }, timeOut);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
         }
@@ -101,7 +101,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 Log.e("Join User1 Response", error.toString());
 
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
                 Helper.showAlertDialog(getApplicationContext(), getString(R.string.warning), getString(R.string.wrong_code), new DialogInterface.OnClickListener() {
                     @Override

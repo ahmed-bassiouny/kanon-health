@@ -176,6 +176,7 @@ public class InquiryMainFragment extends Fragment {
                         @Override
                         public void onFailed(String error) {
                             dismissProgressDialog();
+                            Toast.makeText(getContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                         }
                     }).sendPopUpResult(AppController.getInstance().getClientInfo().getUser_id(),
                             AppController.getInstance().getClientInfo().getPassword(),

@@ -97,6 +97,7 @@ public class ForwardActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(String error) {
+                dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 /*tvLoadingError.setVisibility(View.VISIBLE);
                 if (error != null && error.length() > 0)
@@ -165,6 +166,7 @@ public class ForwardActivity extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 Log.e("Error", error);
+                Toast.makeText(ForwardActivity.this, getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
             }
         }).forward(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), messagesForward, doctorsForward);
     }

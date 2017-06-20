@@ -271,6 +271,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             @Override
             public void onFailed(String error) {
+                util.dismissProgressDialog();
                 Log.e("Error", error);
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
