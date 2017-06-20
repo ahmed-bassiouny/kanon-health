@@ -108,6 +108,7 @@ public class SettingFragment extends Fragment {
         }catch (Exception e){
         }
         initView();
+        loadData();
         return view;
     }
 

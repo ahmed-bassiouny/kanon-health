@@ -88,11 +88,18 @@ public class Document_Update extends AppCompatActivity {
     }
     @OnClick(R.id.save)
     public void SaveData(View v) {
-        message.setDate(date.getText().toString());
-        message.setCategory(category.getText().toString());
-        message.setDoctor(doctor.getText().toString());
-        message.setDiagnose(diagnose.getText().toString());
-        message.setReport(report.getText().toString());
-        message.setComment(comment.getText().toString());
+        try {
+            message.setDate(date.getText().toString());
+            message.setCategory(category.getText().toString());
+            message.setDoctor(doctor.getText().toString());
+            message.setDiagnose(diagnose.getText().toString());
+            message.setReport(report.getText().toString());
+            message.setComment(comment.getText().toString());
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }

@@ -51,18 +51,17 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
-
-        StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(sbuilder.build());
-
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-        appComponent.inject(this);
-        mInstance = this;
-
         try {
+            Fabric.with(this, new Crashlytics());
+            StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(sbuilder.build());
+
+            appComponent = DaggerAppComponent.builder()
+                    .appModule(new AppModule(this))
+                    .build();
+            appComponent.inject(this);
+            mInstance = this;
+
             mSocket = IO.socket(Constants.CHAT_SERVER_URL);
             mSocket.connect();
             mSocket.on(mSocket.EVENT_CONNECT, new Emitter.Listener() {
@@ -97,36 +96,35 @@ public class AppController extends Application {
 
             });
             Log.d("Socket", " " + mSocket.connected());
+
+            if (clientInfo == null) {
+                if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
+
+                    try {
+
+                        Log.d("Client Info : ", "Read client info form cach ");
+                        clientInfo = (UserRegisterResponse) CacheJson.readObject(mInstance, Constants.REGISER_RESPONSE);
+
+                    } catch (Exception e) {
+
+                        clientInfo = null;
+                        Log.e("Ex", " " + e.getLocalizedMessage());
+                    }
+                }
+            }
+
+            //Picasso configration
+            Picasso.Builder builder = new Picasso.Builder(this);
+            builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+            Picasso built = builder.build();
+            built.setIndicatorsEnabled(true);
+            built.setLoggingEnabled(true);
+            Picasso.setSingletonInstance(built);
         } catch (URISyntaxException e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.d("Ex", e.getLocalizedMessage());
         }
-
-        if (clientInfo == null) {
-            if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
-
-                try {
-
-                    Log.d("Client Info : ", "Read client info form cach ");
-                    clientInfo = (UserRegisterResponse) CacheJson.readObject(mInstance, Constants.REGISER_RESPONSE);
-
-                } catch (Exception e) {
-
-                    clientInfo = null;
-                    Log.e("Ex", " " + e.getLocalizedMessage());
-                }
-            }
-        }
-
-        //Picasso configration
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
-        Picasso built = builder.build();
-        built.setIndicatorsEnabled(true);
-        built.setLoggingEnabled(true);
-        Picasso.setSingletonInstance(built);
-
 
     }
 
@@ -136,17 +134,24 @@ public class AppController extends Application {
 
 
     public Socket getSocket() {
-        if (mSocket.connected()) {
-            return mSocket;
-        } else {
-            mSocket.connect();
-            try {
-                socketCall.joinUser(AppController.getInstance().getClientInfo().getUser_id());
-            } catch (Exception e) {
+        try {
+            if (mSocket.connected()) {
+                return mSocket;
+            } else {
+                mSocket.connect();
+                try {
+                    socketCall.joinUser(AppController.getInstance().getClientInfo().getUser_id());
+                } catch (Exception e) {
 
+                }
             }
+            Log.d("Soket ", " " + mSocket.connected());
         }
-        Log.d("Soket ", " " + mSocket.connected());
+        catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
         return mSocket;
     }
 

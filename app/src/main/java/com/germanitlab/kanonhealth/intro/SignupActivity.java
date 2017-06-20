@@ -51,70 +51,76 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        Intent intent = getIntent();
-        Constants.COUNTRY_CODES.clear();
-        Gson gson = new Gson();
-        constants = new Constants();
-        List<CountriesCodes> codess = gson.fromJson(constants.CountryCode, new TypeToken<List<CountriesCodes>>() {
-        }.getType());
-        found = true;
-        for (CountriesCodes countriescooed : codess) {
-            Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed.getDial_code());
-
-        }
-        initView();
-        handelEvent();
         try {
-            code = intent.getStringExtra("codeC");
-            etPostelCode.setText(code);
-            country = intent.getStringExtra("country");
-            select_country.setText(intent.getStringExtra("country"));
-            if (code == null || select_country == null) {
-                code = "+49";
+            Intent intent = getIntent();
+            Constants.COUNTRY_CODES.clear();
+            Gson gson = new Gson();
+            constants = new Constants();
+            List<CountriesCodes> codess = gson.fromJson(constants.CountryCode, new TypeToken<List<CountriesCodes>>() {
+            }.getType());
+            found = true;
+            for (CountriesCodes countriescooed : codess) {
+                Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed.getDial_code());
+
+            }
+            initView();
+            handelEvent();
+            try {
+                code = intent.getStringExtra("codeC");
+                etPostelCode.setText(code);
+                country = intent.getStringExtra("country");
+                select_country.setText(intent.getStringExtra("country"));
+                if (code == null || select_country == null) {
+                    code = "+49";
+                    etPostelCode.setText("+49");
+                    select_country.setText("Germany");
+                    found = true;
+                }
+            } catch (Exception e) {
                 etPostelCode.setText("+49");
                 select_country.setText("Germany");
-                found = true;
             }
-        } catch (Exception e) {
-            etPostelCode.setText("+49");
-            select_country.setText("Germany");
-        }
-        etPostelCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            etPostelCode.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                found = false;
-
-                String temp = etPostelCode.getText().toString().replaceAll(Pattern.quote("+"), "");
-                if (temp == "") {
-                } else {
-                    int number = Integer.parseInt(temp);
                 }
-                for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
-                    if (e.getValue().toLowerCase().equals("+" + temp)) {
-                        select_country.setText(e.getKey().toString());
-                        country = e.getKey().toString();
-                        code = e.getValue().toString();
-                        found = true;
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    found = false;
+
+                    String temp = etPostelCode.getText().toString().replaceAll(Pattern.quote("+"), "");
+                    if (temp == "") {
+                    } else {
+                        int number = Integer.parseInt(temp);
                     }
-                }
-                if (!found) {
-                    select_country.setText(getResources().getString(R.string.Invalid_country));
-                    country = "";
-                    code = "";
-                }
+                    for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
+                        if (e.getValue().toLowerCase().equals("+" + temp)) {
+                            select_country.setText(e.getKey().toString());
+                            country = e.getKey().toString();
+                            code = e.getValue().toString();
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        select_country.setText(getResources().getString(R.string.Invalid_country));
+                        country = "";
+                        code = "";
+                    }
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

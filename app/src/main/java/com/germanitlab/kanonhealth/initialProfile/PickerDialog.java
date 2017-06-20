@@ -67,32 +67,45 @@ public class PickerDialog  extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.image_picker_dialog,null);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View view = inflater.inflate(R.layout.image_picker_dialog,null);
 
-        ButterKnife.bind(this, view);
-        if(delete)
-            view.findViewById(R.id.delete_image).setVisibility(View.VISIBLE);
+            ButterKnife.bind(this, view);
+            if(delete)
+                view.findViewById(R.id.delete_image).setVisibility(View.VISIBLE);
 
-        builder.setView(view);
+            builder.setView(view);
+            return builder.create();
 
-        return builder.create();
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            return null ;
+        }
+
+
     }
 
     @OnClick(R.id.select_image)
     public void onTakeImageClicked (){
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
+        try {
+            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            getIntent.setType("image/*");
 
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
 
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
-        callBacks.onGalleryClicked(chooserIntent);
+            callBacks.onGalleryClicked(chooserIntent);
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getActivity(),getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.take_image)

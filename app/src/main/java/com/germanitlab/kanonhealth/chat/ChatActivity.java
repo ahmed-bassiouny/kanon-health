@@ -276,42 +276,48 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     private void initDialogImgTextSend(final Uri imgFilePath, String filePath, String imgPath) {
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_chat_img_text);
-        dialog.setTitle("Image Description");
+        try {
+            // custom dialog
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog_chat_img_text);
+            dialog.setTitle("Image Description");
 
-        // set the custom dialog components - text, image and button
-        final EditText etText = (EditText) dialog.findViewById(R.id.text);
-        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-        Toast.makeText(this, "file:/" + filePath, Toast.LENGTH_SHORT).show();
-        Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
+            // set the custom dialog components - text, image and button
+            final EditText etText = (EditText) dialog.findViewById(R.id.text);
+            ImageView image = (ImageView) dialog.findViewById(R.id.image);
+            Toast.makeText(this, "file:/" + filePath, Toast.LENGTH_SHORT).show();
+            Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
 
-        image.setImageURI(Uri.parse(imgPath));
+            image.setImageURI(Uri.parse(imgPath));
 
-        image.postInvalidate();
+            image.postInvalidate();
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
-                sendMessage(ChatActivity.this.filePath, Constants.IMAGE, etText.getText().toString());
+            Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
+                    sendMessage(ChatActivity.this.filePath, Constants.IMAGE, etText.getText().toString());
 
-            }
-        });
-        etText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
-                sendMessage(ChatActivity.this.filePath, Constants.IMAGE, etText.getText().toString());
-                return true;
-            }
-        });
+                }
+            });
+            etText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    ChatActivity.this.filePath = getPath(getApplicationContext(), selectedUri);
+                    sendMessage(ChatActivity.this.filePath, Constants.IMAGE, etText.getText().toString());
+                    return true;
+                }
+            });
 
-        dialog.show();
+            dialog.show();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void dismissProgressDialog() {
@@ -325,57 +331,69 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     public void handleMyData() {
-        user_id = doctor.get_Id();
-        checkSessionOpen();
-        mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
+        try {
+            user_id = doctor.get_Id();
+            checkSessionOpen();
+            mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
-        if (Helper.isNetworkAvailable(this)) {
-            fetchHistory();
-        } else {
-            List<Message> list = mMessageRepositry.getAll(user_id);
-            insertMessages(list);
+            if (Helper.isNetworkAvailable(this)) {
+                fetchHistory();
+            } else {
+                List<Message> list = mMessageRepositry.getAll(user_id);
+                insertMessages(list);
+            }
+
+            handelEvent();
+            assignViews();
+
+            buildGoogleApiClient();
+
+            recyclerView.setHasFixedSize(false);
+            LinearLayoutManager llm = new LinearLayoutManager(this);
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(llm);
+
+            recyclerView.setAdapter(mAdapter);
+            AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
+            AppController.getInstance().getSocket().on("IsSeen", isSeen);
+            AppController.getInstance().getSocket().on("IsDeliver", isDeliver);
+            sendIsSeen();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
-        handelEvent();
-        assignViews();
-
-        buildGoogleApiClient();
-
-        recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-
-        recyclerView.setAdapter(mAdapter);
-        AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
-        AppController.getInstance().getSocket().on("IsSeen", isSeen);
-        AppController.getInstance().getSocket().on("IsDeliver", isDeliver);
-        sendIsSeen();
 
     }
 
     private Emitter.Listener isDeliver = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    Log.d("Incoming Message SEEN", args[0].toString());
-                    Log.d("doctor ID", String.valueOf(doctor.get_Id()));
-                    try {
-                        int id = data.optInt("id");
-                        if (id == (Integer.parseInt(String.valueOf(doctor.get_Id())))) {
+            try {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        Log.d("Incoming Message SEEN", args[0].toString());
+                        Log.d("doctor ID", String.valueOf(doctor.get_Id()));
+                        try {
+                            int id = data.optInt("id");
+                            if (id == (Integer.parseInt(String.valueOf(doctor.get_Id())))) {
 
-                            changeStatusToDeliver();
-                            Log.d("my seen JSON", args[0].toString());
+                                changeStatusToDeliver();
+                                Log.d("my seen JSON", args[0].toString());
 
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
-            });
+                });
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            }
+
         }
     };
 
@@ -399,116 +417,133 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @OnClick({R.id.tv_chat_user_name, R.id.img_chat_user_avatar})
     public void onDoctorNameClicked() {
-        Intent intent = new Intent(this, DoctorProfileActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("doctor_data", doctor);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(this, DoctorProfileActivity.class);
+            Gson gson = new Gson();
+            intent.putExtra("doctor_data", doctor);
+            startActivity(intent);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
     @OnClick(R.id.button2)
     public void openPayment() {
-        Intent intent = new Intent(this, PaymentActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra("doctor_data", doctor);
-        intent.putExtra("doctor_obj", doctor);
+        try {
+            Intent intent = new Intent(this, PaymentActivity.class);
+            Gson gson = new Gson();
+            intent.putExtra("doctor_data", doctor);
+            intent.putExtra("doctor_obj", doctor);
 
-        startActivity(intent);
+            startActivity(intent);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void sendMessage() {
-
-        String message = etMessage.getText().toString().trim();
-
-        if (message.length() == 0) return;
-
-        final Message msg = new Message();
-        msg.setMsg(message);
-        msg.setMine(true);
-        msg.setType(Constants.TEXT);
-        msg.setTo_id(doctor.get_Id());
-        msg.setFrom_id(AppController.getInstance().getClientInfo().getUser_id());
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        final String str = sdf.format(new Date());
-        msg.setSent_at(str);
-
-        msg.setStatus(Constants.PENDING_STATUS);
-
-        etMessage.setText("");
-        final int position = addMessage(msg);
-        JSONObject sendText = new JSONObject();
         try {
-            Log.d("User Response", doctor.toString());
-            sendText.put("to_id", doctor.get_Id());
-            sendText.put("type", Constants.TEXT);
-            sendText.put("msg", message);
-            sendText.put("text_image", message);
-            sendText.put("position", position);
-            sendText.put("from_id", AppController.getInstance().getClientInfo().getUser_id());
+            String message = etMessage.getText().toString().trim();
 
-            Log.d("Message ", sendText.toString());
+            if (message.length() == 0) return;
 
-            AppController.getInstance().getSocket().emit("ChatMessageSend", sendText);
-            AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
+            final Message msg = new Message();
+            msg.setMsg(message);
+            msg.setMine(true);
+            msg.setType(Constants.TEXT);
+            msg.setTo_id(doctor.get_Id());
+            msg.setFrom_id(AppController.getInstance().getClientInfo().getUser_id());
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            final String str = sdf.format(new Date());
+            msg.setSent_at(str);
 
-                    Log.e("Message Response", args[0].toString());
-                    Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
-                    Log.e("my uri from here ", imageUri.toString());
+            msg.setStatus(Constants.PENDING_STATUS);
 
-                    try {
-                        if (prefManager.getData(PrefManager.HISTORY) != "") {
-                            String history = prefManager.getData(PrefManager.HISTORY);
-                            history = history.substring(0, history.length() - 1);
-                            history = history + " , " + args[0].toString() + "]";
-                            prefManager.put(PrefManager.HISTORY, history);
-                            Log.d("history after ", prefManager.getData(PrefManager.HISTORY));
-                        } else {
-                            prefManager.put(PrefManager.HISTORY, "[" + args[0] + "]");
-                        }
+            etMessage.setText("");
+            final int position = addMessage(msg);
+            JSONObject sendText = new JSONObject();
+            try {
+                Log.d("User Response", doctor.toString());
+                sendText.put("to_id", doctor.get_Id());
+                sendText.put("type", Constants.TEXT);
+                sendText.put("msg", message);
+                sendText.put("text_image", message);
+                sendText.put("position", position);
+                sendText.put("from_id", AppController.getInstance().getClientInfo().getUser_id());
 
-                        JSONObject jsonObject = new JSONObject(args[0].toString());
-                        Log.d("my type", jsonObject.getString("type"));
-                        Log.d("my type", jsonObject.getString("type"));
-                        if (jsonObject.getString("type").equals(Constants.IMAGE)) {
-                            Log.d("I'm inside the image", jsonObject.getString("msg"));
-                        }
-                        int poisition = jsonObject.getInt("position");
-                        Message messageInPosition = mMessages.get(poisition);
-                        messageInPosition.setStatus(Constants.SENT_STATUS);
-                        messageInPosition.setId(jsonObject.getInt("id"));
-                        mMessageRepositry.create(messageInPosition);
-                        Log.d("count " + mMessageRepositry.count(), "Count ");
+                Log.d("Message ", sendText.toString());
+
+                AppController.getInstance().getSocket().emit("ChatMessageSend", sendText);
+                AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+
+                        Log.e("Message Response", args[0].toString());
+                        Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
+                        Log.e("my uri from here ", imageUri.toString());
+
                         try {
-                            Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
-                            messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAdapter.notifyItemChanged(position);
-                                recyclerView.setAdapter(mAdapter);
-                                scrollToUp();
-                                scrollToBottom();
+                            if (prefManager.getData(PrefManager.HISTORY) != "") {
+                                String history = prefManager.getData(PrefManager.HISTORY);
+                                history = history.substring(0, history.length() - 1);
+                                history = history + " , " + args[0].toString() + "]";
+                                prefManager.put(PrefManager.HISTORY, history);
+                                Log.d("history after ", prefManager.getData(PrefManager.HISTORY));
+                            } else {
+                                prefManager.put(PrefManager.HISTORY, "[" + args[0] + "]");
                             }
 
+                            JSONObject jsonObject = new JSONObject(args[0].toString());
+                            Log.d("my type", jsonObject.getString("type"));
+                            Log.d("my type", jsonObject.getString("type"));
+                            if (jsonObject.getString("type").equals(Constants.IMAGE)) {
+                                Log.d("I'm inside the image", jsonObject.getString("msg"));
+                            }
+                            int poisition = jsonObject.getInt("position");
+                            Message messageInPosition = mMessages.get(poisition);
+                            messageInPosition.setStatus(Constants.SENT_STATUS);
+                            messageInPosition.setId(jsonObject.getInt("id"));
+                            mMessageRepositry.create(messageInPosition);
+                            Log.d("count " + mMessageRepositry.count(), "Count ");
+                            try {
+                                Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
+                                messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mAdapter.notifyItemChanged(position);
+                                    recyclerView.setAdapter(mAdapter);
+                                    scrollToUp();
+                                    scrollToBottom();
+                                }
 
-                        });
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            });
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
+                });
+            } catch (JSONException e) {
 
+                Log.e("Ex", e.getLocalizedMessage());
 
-                }
-            });
-        } catch (JSONException e) {
+            }
 
-            Log.e("Ex", e.getLocalizedMessage());
-
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -516,38 +551,44 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    Log.d("Incoming Message", args[0].toString());
+            try {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        Log.d("Incoming Message", args[0].toString());
 
-                    try {
-                        if (String.valueOf(doctor.get_Id()).equals(String.valueOf(data.get("from_id")))) {
-                            if (data.get("type").equals(Constants.LOCATION)) {
-                                String msgLoc = data.getString("msg");
-                                JSONObject jsonObject = new JSONObject(msgLoc);
-                                double lat = jsonObject.getDouble("lat");
-                                double lng = jsonObject.getDouble("long");
-                                data.put("msg", "long:" + lng + ",lat:" + lat);
+                        try {
+                            if (String.valueOf(doctor.get_Id()).equals(String.valueOf(data.get("from_id")))) {
+                                if (data.get("type").equals(Constants.LOCATION)) {
+                                    String msgLoc = data.getString("msg");
+                                    JSONObject jsonObject = new JSONObject(msgLoc);
+                                    double lat = jsonObject.getDouble("lat");
+                                    double lng = jsonObject.getDouble("long");
+                                    data.put("msg", "long:" + lng + ",lat:" + lat);
 
+                                }
+                                handelMessage(data.toString());
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                             handelMessage(data.toString());
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        handelMessage(data.toString());
+                        JSONObject sendSeen = new JSONObject();
+                        try {
+                            sendSeen.put("id", doctor.get_Id());
+                            sendSeen.put("is_seen", 1);
+                            AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    JSONObject sendSeen = new JSONObject();
-                    try {
-                        sendSeen.put("id", doctor.get_Id());
-                        sendSeen.put("is_seen", 1);
-                        AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+                });
+            }catch (Exception e) {
+                Crashlytics.logException(e);
+                Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            }
+
         }
     };
 
@@ -556,70 +597,88 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void handelMessage(String message) {
-        Gson gson = new Gson();
-        Message incomingMessage = gson.fromJson(message, Message.class);
-
         try {
-            Date parseDate = DateUtil.getFormat().parse(incomingMessage.getSent_at());
-            incomingMessage.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            Gson gson = new Gson();
+            Message incomingMessage = gson.fromJson(message, Message.class);
+
+            try {
+                Date parseDate = DateUtil.getFormat().parse(incomingMessage.getSent_at());
+                incomingMessage.setSent_at(DateUtil.formatDate(parseDate.getTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 /*        if (isBackground)
             showNotification(incomingMessage.getMsg(), 1, incomingMessage.getMsg(), incomingMessage.getFrom_id());*/
-        addMessage(incomingMessage);
-        incomingMessage.setMine(false);
-        JSONObject sendSeen = new JSONObject();
-        try {
-            sendSeen.put("id", doctor.get_Id());
-            sendSeen.put("is_seen", 1);
-            AppController.getInstance().getSocket().emit("IsSeen", sendSeen);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            addMessage(incomingMessage);
+            incomingMessage.setMine(false);
+            JSONObject sendSeen = new JSONObject();
+            try {
+                sendSeen.put("id", doctor.get_Id());
+                sendSeen.put("is_seen", 1);
+                AppController.getInstance().getSocket().emit("IsSeen", sendSeen);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
     private Emitter.Listener isSeen = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    Log.d("Incoming Message SEEN", args[0].toString());
-                    Log.d("doctor ID", String.valueOf(doctor.get_Id()));
-                    try {
-                        int id = data.optInt("id");
-                        if (id == (doctor.get_Id())) {
+            try {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        Log.d("Incoming Message SEEN", args[0].toString());
+                        Log.d("doctor ID", String.valueOf(doctor.get_Id()));
+                        try {
+                            int id = data.optInt("id");
+                            if (id == (doctor.get_Id())) {
 
-                            changeStatus();
-                            Log.d("my seen JSON", args[0].toString());
+                                changeStatus();
+                                Log.d("my seen JSON", args[0].toString());
 
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
-            });
+                });
+            }catch (Exception e) {
+                Crashlytics.logException(e);
+                Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            }
+
         }
     };
 
     public void changeStatus() {
-        for (Message message : mMessages) {
+        try {
 
-            if (message.isMine() && message.getStatus() == Constants.SENT_STATUS) {
-                message.setStatus(Constants.SEEN_STATUS);
+            for (Message message : mMessages) {
+
+                if (message.isMine() && message.getStatus() == Constants.SENT_STATUS) {
+                    message.setStatus(Constants.SEEN_STATUS);
+                }
             }
-        }
-        if (mAdapter != null) {
-            mAdapter.setList(mMessages);
+            if (mAdapter != null) {
+                mAdapter.setList(mMessages);
 
-            mAdapter.notifyDataSetChanged();
-            recyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+                recyclerView.setAdapter(mAdapter);
 //            scrollToBottom();
 
 
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
 

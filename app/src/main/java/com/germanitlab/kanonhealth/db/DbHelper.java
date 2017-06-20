@@ -7,7 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
 import javax.inject.Inject;
@@ -71,8 +74,8 @@ public class DbHelper extends SQLiteOpenHelper {
                             + MESSAGES_COLUMN_MESSAGE_SEEN + "VARCHAR(10), "
                             + ")"
             );
-        } catch (SQLiteException e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
     }
 

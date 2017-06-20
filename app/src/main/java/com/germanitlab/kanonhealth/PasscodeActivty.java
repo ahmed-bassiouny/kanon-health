@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.main.MainActivity;
 
@@ -31,11 +32,16 @@ public class PasscodeActivty extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.passcode_activty);
         ButterKnife.bind(this);
-        prefManager = new PrefManager(this);
-        checkPassword = getIntent().getBooleanExtra("checkPassword", true);
-        finish = getIntent().getBooleanExtra("finish", true);
-        if (!checkPassword) {
-            passText.setText("Set your Password");
+        try {
+            prefManager = new PrefManager(this);
+            checkPassword = getIntent().getBooleanExtra("checkPassword", true);
+            finish = getIntent().getBooleanExtra("finish", true);
+            if (!checkPassword) {
+                passText.setText("Set your Password");
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -83,38 +89,50 @@ public class PasscodeActivty extends AppCompatActivity {
 
     @OnClick(R.id.delete)
     public void deleteChar(View view) {
-        if (passcode.length() > 0) {
-            String temp = pass.getText().toString();
-            pass.setText(temp.substring(0, pass.getText().length() - 1));
-            passcode = passcode.substring(0, passcode.length() - 1);
+        try {
+            if (passcode.length() > 0) {
+                String temp = pass.getText().toString();
+                pass.setText(temp.substring(0, pass.getText().length() - 1));
+                passcode = passcode.substring(0, passcode.length() - 1);
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @OnClick(R.id.submit)
     public void submit(View view) {
-        if (passcode.length() != 6)
-            Toast.makeText(this, "wrong passcode", Toast.LENGTH_SHORT).show();
-        else if(checkPassword) {
-            // check password to login
-            checkPasscode();
-        }else{
-            // enter password to save
-            if(tempPasscode.isEmpty()){
-                // enter passcode first time to save it
-                tempPasscode=passcode;
-                passcode="";
-                pass.setText("");
-                passText.setText("Confirm Your Passcode");
-            }else if(tempPasscode.equals(passcode)){
-                //enter passcode second time to save it
-                prefManager.put(PrefManager.PASSCODE, passcode);
-                Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
-                finishActivity();
-            }else if(!tempPasscode.equals(passcode)){
-                passText.setText("Set your Password");
-                wrongPassword();
+        try {
+            if (passcode.length() != 6)
+                Toast.makeText(this, "wrong passcode", Toast.LENGTH_SHORT).show();
+            else if(checkPassword) {
+                // check password to login
+                checkPasscode();
+            }else{
+                // enter password to save
+                if(tempPasscode.isEmpty()){
+                    // enter passcode first time to save it
+                    tempPasscode=passcode;
+                    passcode="";
+                    pass.setText("");
+                    passText.setText("Confirm Your Passcode");
+                }else if(tempPasscode.equals(passcode)){
+                    //enter passcode second time to save it
+                    prefManager.put(PrefManager.PASSCODE, passcode);
+                    Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
+                    finishActivity();
+                }else if(!tempPasscode.equals(passcode)){
+                    passText.setText("Set your Password");
+                    wrongPassword();
+                }
             }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void checkPasscode() {

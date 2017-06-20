@@ -134,87 +134,125 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @OnClick(R.id.save)
     public void save(View view) {
-        if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry) || !isvalid(etTelephone))
-            return;
-        user.setName(etName.getText().toString());
-        user.setAddress(etLocation.getText().toString());
-        info.setHouseNumber(etHouseNumber.getText().toString());
-        info.setZipCode(etZipCode.getText().toString());
-        info.setProvinz(etProvince.getText().toString());
-        info.setCountry(etCountry.getText().toString());
-        user.setInfo(info);
-        user.setPhone(etTelephone.getText().toString());
-        user.setId(AppController.getInstance().getClientInfo().getUser_id());
-        user.setPassword(AppController.getInstance().getClientInfo().getPassword());
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                Toast.makeText(AddPractics.this, "Save Practics", Toast.LENGTH_LONG).show();
-                finish();
-            }
+        try {
+            if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry) || !isvalid(etTelephone))
+                return;
+            user.setName(etName.getText().toString());
+            user.setAddress(etLocation.getText().toString());
+            info.setHouseNumber(etHouseNumber.getText().toString());
+            info.setZipCode(etZipCode.getText().toString());
+            info.setProvinz(etProvince.getText().toString());
+            info.setCountry(etCountry.getText().toString());
+            user.setInfo(info);
+            user.setPhone(etTelephone.getText().toString());
+            user.setId(AppController.getInstance().getClientInfo().getUser_id());
+            user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    Toast.makeText(AddPractics.this, "Save Practics", Toast.LENGTH_LONG).show();
+                    finish();
+                }
 
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
-            }
-        }).addClinic(user);
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
+                }
+            }).addClinic(user);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @OnClick(R.id.edit_speciality_list)
     public void editSpecialityList(View view) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("Constants", Constants.SPECIALITIES);
-        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
-        showDialogFragment(bundle);
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putInt("Constants", Constants.SPECIALITIES);
+            bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
+            showDialogFragment(bundle);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @OnClick(R.id.edit_languages_list)
     public void edit_languages_list() {
-        Bundle bundle = new Bundle();
-        bundle.putInt("Constants", Constants.LANGUAUGE);
-        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
-        showDialogFragment(bundle);
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putInt("Constants", Constants.LANGUAUGE);
+            bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
+            showDialogFragment(bundle);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.locationonmap)
     public void locationonmap() {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
-            startActivityForResult(builder.build(AddPractics.this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(AddPractics.this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @OnClick(R.id.member_text)
     public void edit_member_list() {
-        Bundle bundle = new Bundle();
-        bundle.putInt("Constants", Constants.DoctorAll);
-        bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
-        showDialogFragment(bundle);
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putInt("Constants", Constants.DoctorAll);
+            bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
+            showDialogFragment(bundle);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.edit_image)
     public void onEditProfileImageClicked() {
+        try {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    ) {
 
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                ) {
 
-
-            pickerDialog.show(getFragmentManager(), "imagePickerDialog");
-        } else {
-            askForPermission(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            android.Manifest.permission.CAMERA},
-                    Constants.GALLERY_PERMISSION_CODE);
+                pickerDialog.show(getFragmentManager(), "imagePickerDialog");
+            } else {
+                askForPermission(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                android.Manifest.permission.CAMERA},
+                        Constants.GALLERY_PERMISSION_CODE);
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
+
 
     }
 
@@ -224,9 +262,15 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
-        Intent intent = new Intent(this, TimeTable.class);
-        intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
-        startActivityForResult(intent, Constants.HOURS_CODE);
+        try {
+            Intent intent = new Intent(this, TimeTable.class);
+            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
+            startActivityForResult(intent, Constants.HOURS_CODE);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void showDialogFragment(Bundle bundle) {
@@ -239,38 +283,44 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @Override
     public void Response(ArrayList<ChooseModel> specialitiesArrayList, int type) {
-        ArrayList<ChooseModel> templist = new ArrayList<>();
-        switch (type) {
-            case Constants.SPECIALITIES:
-                user.getSpecialities().clear();
-                for (ChooseModel item : specialitiesArrayList) {
-                    if (item.getIsMyChoise())
-                        templist.add(item);
-                }
-                user.setSpecialities(templist);
-                setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
-                break;
-            case Constants.LANGUAUGE:
-                user.getSupported_lang().clear();
-                for (ChooseModel item : specialitiesArrayList) {
-                    if (item.getIsMyChoise())
-                        templist.add(item);
-                }
-                user.setSupported_lang(templist);
-                setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
-                break;
-            case Constants.MEMBERAT:
-            case Constants.DoctorAll:
-                user.getMembers_at().clear();
-                for (ChooseModel item : specialitiesArrayList) {
-                    if (item.getIsMyChoise())
-                        templist.add(item);
-                }
-                user.setMembers_at(templist);
-                setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+        try {
+            ArrayList<ChooseModel> templist = new ArrayList<>();
+            switch (type) {
+                case Constants.SPECIALITIES:
+                    user.getSpecialities().clear();
+                    for (ChooseModel item : specialitiesArrayList) {
+                        if (item.getIsMyChoise())
+                            templist.add(item);
+                    }
+                    user.setSpecialities(templist);
+                    setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+                    break;
+                case Constants.LANGUAUGE:
+                    user.getSupported_lang().clear();
+                    for (ChooseModel item : specialitiesArrayList) {
+                        if (item.getIsMyChoise())
+                            templist.add(item);
+                    }
+                    user.setSupported_lang(templist);
+                    setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+                    break;
+                case Constants.MEMBERAT:
+                case Constants.DoctorAll:
+                    user.getMembers_at().clear();
+                    for (ChooseModel item : specialitiesArrayList) {
+                        if (item.getIsMyChoise())
+                            templist.add(item);
+                    }
+                    user.setMembers_at(templist);
+                    setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
 
-                break;
+                    break;
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void setRecyclerView(List<ChooseModel> list, int id, int linearLayoutManager, int type) {
@@ -286,7 +336,6 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         try {
             if (resultCode == RESULT_OK) {
                 switch (requestCode) {
@@ -396,11 +445,17 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @Override
     public void deleteMyImage() {
-        user.setAvatar("");
-        Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + user.getAvatar(), civImageAvatar, R.drawable.placeholder);
-        prefManager.put(PrefManager.PROFILE_IMAGE, "");
-        pickerDialog.dismiss();
+        try {
+            user.setAvatar("");
+            Helper.setImage(this, Constants.CHAT_SERVER_URL
+                    + "/" + user.getAvatar(), civImageAvatar, R.drawable.placeholder);
+            prefManager.put(PrefManager.PROFILE_IMAGE, "");
+            pickerDialog.dismiss();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void takeImageWithCamera() {

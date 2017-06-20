@@ -210,6 +210,7 @@ public class DocumentsChatFragment extends Fragment
 
 
     private void sendMessage() {
+        try {
 
         String message = etMessage.getText().toString().trim();
 
@@ -230,7 +231,6 @@ public class DocumentsChatFragment extends Fragment
         etMessage.setText("");
         int position = addMessage(msg);
         JSONObject sendText = new JSONObject();
-        try {
             sendText.put("to_id", mUserId);
             sendText.put("type", Constants.TEXT);
             sendText.put("msg", message);
@@ -1094,7 +1094,7 @@ public class DocumentsChatFragment extends Fragment
             mStartTime = SystemClock.elapsedRealtime();
             mHandler.postDelayed(mTickExecutor, 100);
             Log.d("Voice Recorder", "started recording to " + mOutputFile.getAbsolutePath());
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1136,7 +1136,7 @@ public class DocumentsChatFragment extends Fragment
 
         try {
             mRecorder.stop();
-        } catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

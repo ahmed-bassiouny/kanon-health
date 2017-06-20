@@ -91,47 +91,53 @@ public class SpecialitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         final View view = inflater.inflate(R.layout.fragment_specialities, container, false);
-        token = new TypeToken<List<Speciality>>() {
-        };
-        toolbar = (LinearLayout) view.findViewById(R.id.toolbar);
-        Bundle bundle = getArguments();
+        try {
+            token = new TypeToken<List<Speciality>>() {
+            };
+            toolbar = (LinearLayout) view.findViewById(R.id.toolbar);
+            Bundle bundle = getArguments();
 /*            String dd = savedInstanceState.getString("data");
             Log.d("my string ", dd.toString());*/
-        from = bundle.getBoolean("from");
-        type = bundle.getInt("type");
-        try {
-            boolean hide = bundle.getBoolean("hide");
-            if (hide)
-                toolbar.setVisibility(View.GONE);
-        } catch (Exception e) {
+            from = bundle.getBoolean("from");
+            type = bundle.getInt("type");
+            try {
+                boolean hide = bundle.getBoolean("hide");
+                if (hide)
+                    toolbar.setVisibility(View.GONE);
+            } catch (Exception e) {
 
-        }
-        new HttpCall(getActivity(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                try {
-                    Gson gson = new Gson();
-                    String json = gson.toJson(response);
-                    Log.e("returned msg ", json);
-                    specialityList = (List<Speciality>) response;
-                    createAdapter(specialityList, view, from);
-                }catch (Exception e)
-                {
-                    Crashlytics.logException(e);
-                    Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            }
+            new HttpCall(getActivity(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    try {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(response);
+                        Log.e("returned msg ", json);
+                        specialityList = (List<Speciality>) response;
+                        createAdapter(specialityList, view, from);
+                    }catch (Exception e)
+                    {
+                        Crashlytics.logException(e);
+                        Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
 
-
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Log.e("error in returned json", error);
-                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-            }
-        }).getSpecialities((String.valueOf(AppController.getInstance().getClientInfo().getUser_id()))
-                , AppController.getInstance().getClientInfo().getPassword());
+                @Override
+                public void onFailed(String error) {
+                    Log.e("error in returned json", error);
+                    Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                }
+            }).getSpecialities((String.valueOf(AppController.getInstance().getClientInfo().getUser_id()))
+                    , AppController.getInstance().getClientInfo().getPassword());
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
         return view;
     }
 

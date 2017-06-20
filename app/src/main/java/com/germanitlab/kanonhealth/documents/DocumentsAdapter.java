@@ -1630,15 +1630,20 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
         alert11.show();
     }
     public void changeToolbar(Boolean select) {
-        selected = true;
-        Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
-        Toolbar toolbar1 = (Toolbar) context.findViewById(R.id.toolbar2);
-        if (select) {
-            toolbar.setVisibility(View.GONE);
-            toolbar1.setVisibility(View.VISIBLE);
-        } else {
-            toolbar.setVisibility(View.VISIBLE);
-            toolbar1.setVisibility(View.GONE);
+        try {
+            selected = true;
+            Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
+            Toolbar toolbar1 = (Toolbar) context.findViewById(R.id.toolbar2);
+            if (select) {
+                toolbar.setVisibility(View.GONE);
+                toolbar1.setVisibility(View.VISIBLE);
+            } else {
+                toolbar.setVisibility(View.VISIBLE);
+                toolbar1.setVisibility(View.GONE);
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }

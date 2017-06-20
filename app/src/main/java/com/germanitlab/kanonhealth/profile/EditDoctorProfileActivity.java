@@ -250,11 +250,17 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (imageUri != null)
-            outState.putString("imageURI", imageUri.toString());
-        setUserObject();
-        outState.putSerializable("userdata", userInfoResponse);
-        super.onSaveInstanceState(outState);
+        try {
+            if (imageUri != null)
+                outState.putString("imageURI", imageUri.toString());
+            setUserObject();
+            outState.putSerializable("userdata", userInfoResponse);
+            super.onSaveInstanceState(outState);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -350,11 +356,17 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @Override
     public void onSuccess(Object response) {
-        Intent i = new Intent(this, ProfileActivity.class);
-        i.putExtra("userInfoResponse", userInfoResponse);
-        i.putExtra("from", false);
-        startActivity(i);
-        finish();
+        try {
+            Intent i = new Intent(this, ProfileActivity.class);
+            i.putExtra("userInfoResponse", userInfoResponse);
+            i.putExtra("from", false);
+            startActivity(i);
+            finish();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -398,12 +410,13 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @OnClick(R.id.et_edit_birthday)
     public void viewBirthdate(View v) {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-        Calendar calender = Calendar.getInstance();
+        try {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            Calendar calender = Calendar.getInstance();
        /* Dialog mDialog = new DatePickerDialog(EditDoctorProfileActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog,
                 mDateSetListener, calender.get(Calendar.YEAR),
@@ -411,40 +424,46 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                 .get(Calendar.DAY_OF_MONTH));
 
         mDialog.show();*/
-        final Context themedContext = new ContextThemeWrapper(
-                EditDoctorProfileActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog
-        );
+            final Context themedContext = new ContextThemeWrapper(
+                    EditDoctorProfileActivity.this,
+                    android.R.style.Theme_Holo_Light_Dialog
+            );
 
-        final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
-                themedContext,
-                mDateSetListener,
-                calender.get(Calendar.YEAR),
-                calender.get(Calendar.MONTH),
-                calender.get(Calendar.DAY_OF_MONTH));
+            final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
+                    themedContext,
+                    mDateSetListener,
+                    calender.get(Calendar.YEAR),
+                    calender.get(Calendar.MONTH),
+                    calender.get(Calendar.DAY_OF_MONTH));
 
-        mDialog.show();
+            mDialog.show();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
     @OnClick(R.id.img_edit_avatar)
     public void onEditProfileImageClicked() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                ) {
+        try {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    ) {
 
 
-            pickerDialog.show(getFragmentManager(), "imagePickerDialog");
-        } else {
-            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.CAMERA},
-                    Constants.GALLERY_PERMISSION_CODE);
-        }
+                pickerDialog.show(getFragmentManager(), "imagePickerDialog");
+            } else {
+                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        Constants.GALLERY_PERMISSION_CODE);
+            }
 /*        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -460,6 +479,11 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         } else {
             askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE);
         }*/
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
 
     }
@@ -582,11 +606,15 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
 
     @Override
     public void deleteMyImage() {
-        user.setAvatar("");
-        Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
-        prefManager.put(PrefManager.PROFILE_IMAGE, "");
-        pickerDialog.dismiss();
-
+        try {
+            user.setAvatar("");
+            Helper.setImage(this, Constants.CHAT_SERVER_URL
+                    + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+            prefManager.put(PrefManager.PROFILE_IMAGE, "");
+            pickerDialog.dismiss();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
     }
 }

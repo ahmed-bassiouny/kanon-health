@@ -1,6 +1,10 @@
 package com.germanitlab.kanonhealth.async;
 
 
+import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -29,22 +33,27 @@ public class ApiClient {
 
 
     public static Retrofit getClient() {
+        try {
+            if (retrofit == null) {
+                HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                OkHttpClient.Builder httpClient = new OkHttpClient
+                        .Builder()
+                        .readTimeout(60, TimeUnit.SECONDS)
+                        .writeTimeout(60, TimeUnit.SECONDS)
+                        .connectTimeout(60, TimeUnit.SECONDS);
+                httpClient.addInterceptor(loggingInterceptor);  // <-- this is the important line!
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(Constants.CHAT_SERVER_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(httpClient.build())
+                        .build();
+            }
 
-        if (retrofit == null) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            OkHttpClient.Builder httpClient = new OkHttpClient
-                    .Builder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS);
-            httpClient.addInterceptor(loggingInterceptor);  // <-- this is the important line!
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.CHAT_SERVER_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient.build())
-                    .build();
+        }catch (Exception e){
+            Crashlytics.logException(e);
         }
+
 
         return retrofit;
 

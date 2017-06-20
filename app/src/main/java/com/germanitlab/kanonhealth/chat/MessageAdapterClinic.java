@@ -191,22 +191,28 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 
     @Override
     public int getItemViewType(int position) {
+        try {
+            String type = mMessages.get(position).getType();
 
-        String type = mMessages.get(position).getType();
+            switch (type) {
 
-        switch (type) {
+                case Constants.TEXT:
+                    return Constants.TEXT_MESSAGE;
+                case Constants.AUDIO:
+                    return Constants.AUDIO_MESSAGE;
+                case Constants.VIDEO:
+                    return Constants.VIDEO_MESSAGE;
+                case Constants.IMAGE:
+                    return Constants.IMAGE_MESSAGE;
+                case Constants.LOCATION:
+                    return Constants.LOCATION_MESSAGE;
+            }
 
-            case Constants.TEXT:
-                return Constants.TEXT_MESSAGE;
-            case Constants.AUDIO:
-                return Constants.AUDIO_MESSAGE;
-            case Constants.VIDEO:
-                return Constants.VIDEO_MESSAGE;
-            case Constants.IMAGE:
-                return Constants.IMAGE_MESSAGE;
-            case Constants.LOCATION:
-                return Constants.LOCATION_MESSAGE;
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
 
         return -1;
     }
@@ -247,77 +253,83 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 //=============================================================
 
     private void setTextMessage(final TextMsgViewHolder textMsgViewHolder, final int position) {
-        final Message textMessage = mMessages.get(position);
+        try {
+            final Message textMessage = mMessages.get(position);
 
-        if (mMessages.get(position).isMine()) {
-            textMsgViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
-            textMsgViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
+            if (mMessages.get(position).isMine()) {
+                textMsgViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
+                textMsgViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
 
-            textMsgViewHolder.myMessage.setText(textMessage.getMsg());
+                textMsgViewHolder.myMessage.setText(textMessage.getMsg());
 
-            try {
-                String[] split = textMessage.getSent_at().split(" ");
-                textMsgViewHolder.tvDateMy.setText(split[0] + " " + split[1] + " " + split[2] + " " + split[3] + " " + split[4]);
-            } catch (Exception ex) {
-                textMsgViewHolder.tvDateMy.setText(textMessage.getSent_at());
-            }
+                try {
+                    String[] split = textMessage.getSent_at().split(" ");
+                    textMsgViewHolder.tvDateMy.setText(split[0] + " " + split[1] + " " + split[2] + " " + split[3] + " " + split[4]);
+                } catch (Exception ex) {
+                    textMsgViewHolder.tvDateMy.setText(textMessage.getSent_at());
+                }
 
-            int status = textMessage.getStatus();
-            if (status == Constants.PENDING_STATUS) {
-                textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
-            } else if (status == Constants.SENT_STATUS) {
-                textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
-            } else if (status == Constants.DELIVER_STATUS) {
-                textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
-            } else if (status == Constants.SEEN_STATUS)
-                textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
+                int status = textMessage.getStatus();
+                if (status == Constants.PENDING_STATUS) {
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
+                } else if (status == Constants.SENT_STATUS) {
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
+                } else if (status == Constants.DELIVER_STATUS) {
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
+                } else if (status == Constants.SEEN_STATUS)
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
 
 
-        } else {
-            textMsgViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
-            textMsgViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
-            textMsgViewHolder.hisMessage.setText(mMessages.get(position).getMsg());
+            } else {
+                textMsgViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+                textMsgViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                textMsgViewHolder.hisMessage.setText(mMessages.get(position).getMsg());
 
-            mMessageRepositry.create(textMessage);
+                mMessageRepositry.create(textMessage);
 
-            try {
-                String[] split = textMessage.getSent_at().split(" ");
-                textMsgViewHolder.tvDate.setText(split[0] + " " + split[1] + " " + split[2] + " " + split[3] + " " + split[4]);
-            } catch (Exception ex) {
-                textMsgViewHolder.tvDate.setText(textMessage.getSent_at());
-            }
+                try {
+                    String[] split = textMessage.getSent_at().split(" ");
+                    textMsgViewHolder.tvDate.setText(split[0] + " " + split[1] + " " + split[2] + " " + split[3] + " " + split[4]);
+                } catch (Exception ex) {
+                    textMsgViewHolder.tvDate.setText(textMessage.getSent_at());
+                }
 //            if (Helper.isNetworkAvailable(context)) {
 //
 //                caching(textMessage, prefManager);
 //            }
 
-        }
-        textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(textMessage.get_Id()))
-                    selectItem(textMsgViewHolder.background, textMessage);
-                else {
-                    unselectItem(textMsgViewHolder.background, textMessage);
-                }
-                return true;
             }
-        });
-        textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected) {
+            textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (!selected) {
+                        changeToolbar(true);
+                    }
                     if (!list.contains(textMessage.get_Id()))
                         selectItem(textMsgViewHolder.background, textMessage);
                     else {
                         unselectItem(textMsgViewHolder.background, textMessage);
                     }
+                    return true;
                 }
-            }
-        });
+            });
+            textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected) {
+                        if (!list.contains(textMessage.get_Id()))
+                            selectItem(textMsgViewHolder.background, textMessage);
+                        else {
+                            unselectItem(textMsgViewHolder.background, textMessage);
+                        }
+                    }
+                }
+            });
+
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -325,205 +337,224 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 
 
     private void setImageMessage(final ImageViewHolder imageViewHolder, final int position,boolean isImgPlusText) {
-        Log.d("date form Image ", mMessages.get(position).getSent_at().toString());
-        final Message message = mMessages.get(position);
+        try {
+            Log.d("date form Image ", mMessages.get(position).getSent_at().toString());
+            final Message message = mMessages.get(position);
 
-        if (mMessages.get(position).isMine()) {
-            imageViewHolder.myMessage.setMinimumWidth(500);
-            imageViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
-            imageViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
-            imageViewHolder.tvDateMy.setText(message.getSent_at());
-            imageViewHolder.tvMyTextImg.setText(message.getImageText());
+            if (mMessages.get(position).isMine()) {
+                imageViewHolder.myMessage.setMinimumWidth(500);
+                imageViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
+                imageViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
+                imageViewHolder.tvDateMy.setText(message.getSent_at());
+                imageViewHolder.tvMyTextImg.setText(message.getImageText());
 
 
-            if(message.getMsg()!=null) {
-                if (!new File(message.getMsg()).exists()) {
-                    String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
-                    File file = new File(folder, fileName);
-                    if (file.exists()) {
-                        message.setMsg(file.getPath());
-                        message.setLoaded(true);
-                        message.setLoading(false);
+                if(message.getMsg()!=null) {
+                    if (!new File(message.getMsg()).exists()) {
+                        String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
+                        File file = new File(folder, fileName);
+                        if (file.exists()) {
+                            message.setMsg(file.getPath());
+                            message.setLoaded(true);
+                            message.setLoading(false);
 
+                        }
                     }
                 }
-            }
 
-            Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-            Glide.with(context).load(imageUri).into(imageViewHolder.myMessage);
-
-
-            if (!message.isLoaded() && !message.isLoading()) {
-
-                message.setLoading(true);
-
-                imageViewHolder.progressBar.setVisibility(View.VISIBLE);
-                internetFilesOperations.uploadFileWithProgress(imageViewHolder.progressBar, Constants.UPLOAD_URL, message.getMsg(), new UploadListener() {
-                    @Override
-                    public void onUploadFinish(final String result) {
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                message.setLoading(false);
-                                try {
-                                    JSONObject jsonObject = new JSONObject(result);
-                                    if (jsonObject.has("error")) {
-                                        //show dialog
-                                        message.setLoaded(true);
-                                        showAlerDialog(Constants.UPLOAD_URL, Html.fromHtml(jsonObject.getString("error")).toString());
-                                    } else {
-
-                                        if (!folder.exists()) folder.mkdirs();
-
-                                        String source = message.getMsg();
-                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                        if (moveFile(new File(source), destination)) {
-                                            message.setMsg(destination.getPath());
-                                        }
-                                        message.setLoaded(true);
-                                        sendMessage(jsonObject.getString("file_url"), Constants.IMAGE);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                });
-            } else {
-                imageViewHolder.progressBar.setVisibility(View.INVISIBLE);
-            }
-            int status = message.getStatus();
-            if (status == Constants.PENDING_STATUS) {
-                imageViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
-            } else if (status == Constants.SENT_STATUS) {
-                imageViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
-            } else if (status == Constants.DELIVER_STATUS) {
-                imageViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
-            } else if (status == Constants.SEEN_STATUS)
-                imageViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
-
-            imageViewHolder.myMessage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (selected) {
-                        if (!list.contains(message.get_Id()))
-                            selectItem(imageViewHolder.messageContainer, message);
-                        else
-                            unselectItem(imageViewHolder.messageContainer, message);
-                    }  else {
-
-                        File file = new File(mMessages.get(position).getMsg());
-
-                        if (file.exists())
-
-                            Util.getInstance(context).showPhoto(Uri.fromFile(file));
+                Uri imageUri = Uri.fromFile(new File(message.getMsg()));
+                Glide.with(context).load(imageUri).into(imageViewHolder.myMessage);
 
 
-                    }
-                }
-            });
-            imageViewHolder.myMessage.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (!selected) {
-                        changeToolbar(true);
-                    }
-                    if (!list.contains(message.get_Id()))
-                        selectItem(imageViewHolder.messageContainer, message);
-                    else {
-                        unselectItem(imageViewHolder.messageContainer, message);
-                    }
-                    return true;
-                }
-            });
+                if (!message.isLoaded() && !message.isLoading()) {
 
-        } else {
+                    message.setLoading(true);
 
-
-            imageViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
-            imageViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
-            imageViewHolder.tvHisTextImg.setText(message.getImageText());
-
-
-            imageViewHolder.tvDate.setText(message.getSent_at());
-
-
-            if (!new File(message.getMsg()).exists()) {
-                String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
-                File file = new File(folder, fileName);
-
-                if (file.exists()) {
-                    message.setLoaded(true);
-                    message.setLoading(false);
-                    message.setMsg(file.getPath());
-
-                    imageViewHolder.hisMessage.setImageURI(Uri.fromFile(new File(message.getMsg())));
-
-
-                } else {
-
-                    imageViewHolder.hisMessage.setImageResource(R.drawable.default_image);
-                    internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progressViewDownload, "", message.getMsg(), new DownloadListener() {
+                    imageViewHolder.progressBar.setVisibility(View.VISIBLE);
+                    internetFilesOperations.uploadFileWithProgress(imageViewHolder.progressBar, Constants.UPLOAD_URL, message.getMsg(), new UploadListener() {
                         @Override
-                        public void onDownloadFinish(final String pathOFDownloadedFile) {
+                        public void onUploadFinish(final String result) {
                             ((Activity) context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    message.setMsg(pathOFDownloadedFile);
-                                    message.setLoaded(true);
+
                                     message.setLoading(false);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        if (jsonObject.has("error")) {
+                                            //show dialog
+                                            message.setLoaded(true);
+                                            showAlerDialog(Constants.UPLOAD_URL, Html.fromHtml(jsonObject.getString("error")).toString());
+                                        } else {
 
-                                    File file1 = new File(message.getMsg());
-                                    Log.e("is exist", file1.exists() + "");
-                                    Uri uri = Uri.fromFile(new File(message.getMsg()));
-                                    imageViewHolder.hisMessage.setImageURI(uri);
-                                    message.setMsg(uri.toString());
+                                            if (!folder.exists()) folder.mkdirs();
 
-
+                                            String source = message.getMsg();
+                                            File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                            if (moveFile(new File(source), destination)) {
+                                                message.setMsg(destination.getPath());
+                                            }
+                                            message.setLoaded(true);
+                                            sendMessage(jsonObject.getString("file_url"), Constants.IMAGE);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                         }
                     });
-
+                } else {
+                    imageViewHolder.progressBar.setVisibility(View.INVISIBLE);
                 }
+                int status = message.getStatus();
+                if (status == Constants.PENDING_STATUS) {
+                    imageViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
+                } else if (status == Constants.SENT_STATUS) {
+                    imageViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
+                } else if (status == Constants.DELIVER_STATUS) {
+                    imageViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
+                } else if (status == Constants.SEEN_STATUS)
+                    imageViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
+
+                imageViewHolder.myMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (selected) {
+                            if (!list.contains(message.get_Id()))
+                                selectItem(imageViewHolder.messageContainer, message);
+                            else
+                                unselectItem(imageViewHolder.messageContainer, message);
+                        }  else {
+
+                            File file = new File(mMessages.get(position).getMsg());
+
+                            if (file.exists())
+
+                                Util.getInstance(context).showPhoto(Uri.fromFile(file));
+
+
+                        }
+                    }
+                });
+                imageViewHolder.myMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if (!selected) {
+                            changeToolbar(true);
+                        }
+                        if (!list.contains(message.get_Id()))
+                            selectItem(imageViewHolder.messageContainer, message);
+                        else {
+                            unselectItem(imageViewHolder.messageContainer, message);
+                        }
+                        return true;
+                    }
+                });
+
             } else {
-                imageViewHolder.hisMessage.setImageURI(Uri.fromFile(new File(message.getMsg())));
+
+
+                imageViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                imageViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+                imageViewHolder.tvHisTextImg.setText(message.getImageText());
+
+
+                imageViewHolder.tvDate.setText(message.getSent_at());
+
+
+                if (!new File(message.getMsg()).exists()) {
+                    String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
+                    File file = new File(folder, fileName);
+
+                    if (file.exists()) {
+                        message.setLoaded(true);
+                        message.setLoading(false);
+                        message.setMsg(file.getPath());
+
+                        imageViewHolder.hisMessage.setImageURI(Uri.fromFile(new File(message.getMsg())));
+
+
+                    } else {
+
+                        imageViewHolder.hisMessage.setImageResource(R.drawable.default_image);
+                        internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progressViewDownload, "", message.getMsg(), new DownloadListener() {
+                            @Override
+                            public void onDownloadFinish(final String pathOFDownloadedFile) {
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        message.setMsg(pathOFDownloadedFile);
+                                        message.setLoaded(true);
+                                        message.setLoading(false);
+
+                                        File file1 = new File(message.getMsg());
+                                        Log.e("is exist", file1.exists() + "");
+                                        Uri uri = Uri.fromFile(new File(message.getMsg()));
+                                        imageViewHolder.hisMessage.setImageURI(uri);
+                                        message.setMsg(uri.toString());
+
+
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                } else {
+                    imageViewHolder.hisMessage.setImageURI(Uri.fromFile(new File(message.getMsg())));
 /*
                 prefManager.put(message.get_Id() , Uri.fromFile(new File(message.getMsg())));
 */
 
 
-            }
-            mMessageRepositry.create(message);
+                }
+                mMessageRepositry.create(message);
 
-            File file1 = new File(message.getMsg());
-            Log.e("is exist", file1.exists() + "");
-            Uri uri = Uri.fromFile(new File(message.getMsg()));
-            imageViewHolder.hisMessage.setImageURI(uri);
+                File file1 = new File(message.getMsg());
+                Log.e("is exist", file1.exists() + "");
+                Uri uri = Uri.fromFile(new File(message.getMsg()));
+                imageViewHolder.hisMessage.setImageURI(uri);
 //            if (Helper.isNetworkAvailable(context)) {
 //
 //                caching(message, prefManager);
 //            }
-            imageViewHolder.hisMessage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (selected) {
+                imageViewHolder.hisMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (selected) {
+                            if (!list.contains(message.get_Id()))
+                                selectItem(imageViewHolder.messageContainer, message);
+                            else
+                                unselectItem(imageViewHolder.messageContainer, message);
+                        } else {
+
+                            File file = new File(mMessages.get(position).getMsg());
+
+                            if (file.exists())
+                                Util.getInstance(context).showPhoto(Uri.fromFile(file));
+                        }
+                    }
+                });
+                imageViewHolder.hisMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if (!selected) {
+                            changeToolbar(true);
+                        }
                         if (!list.contains(message.get_Id()))
                             selectItem(imageViewHolder.messageContainer, message);
-                        else
+                        else {
                             unselectItem(imageViewHolder.messageContainer, message);
-                    } else {
-
-                        File file = new File(mMessages.get(position).getMsg());
-
-                        if (file.exists())
-                            Util.getInstance(context).showPhoto(Uri.fromFile(file));
+                        }
+                        return true;
                     }
-                }
-            });
-            imageViewHolder.hisMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                });
+
+            }
+
+
+            imageViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (!selected) {
@@ -534,145 +565,574 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     else {
                         unselectItem(imageViewHolder.messageContainer, message);
                     }
+
+
                     return true;
                 }
             });
+            imageViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected)
+                        if (!list.contains(message.get_Id()))
+                            selectItem(imageViewHolder.messageContainer, message);
+                        else {
+                            unselectItem(imageViewHolder.messageContainer, message);
+                        }
+                    else {
 
+                    }
+                }
+            });
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
-
-        imageViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(message.get_Id()))
-                    selectItem(imageViewHolder.messageContainer, message);
-                else {
-                    unselectItem(imageViewHolder.messageContainer, message);
-                }
-
-
-                return true;
-            }
-        });
-        imageViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected)
-                    if (!list.contains(message.get_Id()))
-                        selectItem(imageViewHolder.messageContainer, message);
-                    else {
-                        unselectItem(imageViewHolder.messageContainer, message);
-                    }
-                else {
-
-                }
-            }
-        });
 
 
     }
 
     private void unselectItem(RelativeLayout messageContainer, Message message) {
-        messageContainer.setBackgroundResource(0);
-        list.remove(list.indexOf(message.get_Id()));
-        if (list.size() == 0) {
-            changeToolbar(false);
-            selected = false;
+        try {
+            messageContainer.setBackgroundResource(0);
+            list.remove(list.indexOf(message.get_Id()));
+            if (list.size() == 0) {
+                changeToolbar(false);
+                selected = false;
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
     //-----------------------------------------------------------------------------------------------------
 
     private void setVideoMessage(final VideoViewHolder videoViewHolder, final int position) {
-        final Message mediaMessage = mMessages.get(position);
+        try {
+            final Message mediaMessage = mMessages.get(position);
 
-        if (mMessages.get(position).isMine()) {
+            if (mMessages.get(position).isMine()) {
 
-            videoViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
-            videoViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
+                videoViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
+                videoViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
 
 
-            videoViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
+                videoViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
 
-            if (!new File(mediaMessage.getMsg()).exists()) {
-                String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
-                File file = new File(folder, fileName);
-                if (file.exists()) {
-                    mediaMessage.setMsg(file.getPath());
-                    mediaMessage.setLoaded(true);
-                    mediaMessage.setLoading(false);
-                    setVideoOnClick(videoViewHolder.myFrameVideo, file.getPath());
+                if (!new File(mediaMessage.getMsg()).exists()) {
+                    String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
+                    File file = new File(folder, fileName);
+                    if (file.exists()) {
+                        mediaMessage.setMsg(file.getPath());
+                        mediaMessage.setLoaded(true);
+                        mediaMessage.setLoading(false);
+                        setVideoOnClick(videoViewHolder.myFrameVideo, file.getPath());
 
+                    }
                 }
-            }
 
 
-            setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg());
+                setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg());
 
 
-            videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
-                    MediaStore.Video.Thumbnails.MICRO_KIND));
+                videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
+                        MediaStore.Video.Thumbnails.MICRO_KIND));
 
 
-            if (!mediaMessage.isLoaded() && !mediaMessage.isLoading()) {
-                mediaMessage.isLoading();
-                videoViewHolder.progressBar.setVisibility(View.VISIBLE);
-                internetFilesOperations.uploadFileWithProgress(videoViewHolder.progressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
-                    @Override
-                    public void onUploadFinish(final String result) {
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                if (!mediaMessage.isLoaded() && !mediaMessage.isLoading()) {
+                    mediaMessage.isLoading();
+                    videoViewHolder.progressBar.setVisibility(View.VISIBLE);
+                    internetFilesOperations.uploadFileWithProgress(videoViewHolder.progressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
+                        @Override
+                        public void onUploadFinish(final String result) {
+                            ((Activity) context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                try {
-                                    JSONObject jsonObject = new JSONObject(result);
-                                    if (jsonObject.has("error")) {
-                                        //show dialog
-                                        mediaMessage.setLoaded(true);
-                                        showAlerDialog("Video", Html.fromHtml(jsonObject.getString("error")).toString());
-                                    } else {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        if (jsonObject.has("error")) {
+                                            //show dialog
+                                            mediaMessage.setLoaded(true);
+                                            showAlerDialog("Video", Html.fromHtml(jsonObject.getString("error")).toString());
+                                        } else {
 
-                                        if (!folder.exists()) folder.mkdirs();
+                                            if (!folder.exists()) folder.mkdirs();
 
-                                        String source = mediaMessage.getMsg();
-                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                        if (moveFile(new File(source), destination)) {
-                                            mediaMessage.setMsg(destination.getPath());
+                                            String source = mediaMessage.getMsg();
+                                            File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                            if (moveFile(new File(source), destination)) {
+                                                mediaMessage.setMsg(destination.getPath());
 
-                                            videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
-                                                    MediaStore.Video.Thumbnails.MICRO_KIND));
+                                                videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
+                                                        MediaStore.Video.Thumbnails.MICRO_KIND));
+                                            }
+
+                                            mediaMessage.setLoaded(true);
+                                            mediaMessage.setLoading(false);
+
+                                            setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg());
+
+                                            sendMessage(jsonObject.getString("file_url"), Constants.VIDEO);
                                         }
-
-                                        mediaMessage.setLoaded(true);
-                                        mediaMessage.setLoading(false);
-
-                                        setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg());
-
-                                        sendMessage(jsonObject.getString("file_url"), Constants.VIDEO);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+
+
                                 }
+                            });
+                        }
+                    });
+                    videoViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (!selected) {
+                                changeToolbar(true);
+                            }
+                            if (!list.contains(mediaMessage.get_Id()))
+                                selectItem(videoViewHolder.messageContainer, mediaMessage);
+                            else {
+                                unselectItem(videoViewHolder.messageContainer, mediaMessage);
+                            }
+
+/*
+                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
+*/
+
+                            return true;
+                        }
+                    });
+                    videoViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (selected)
+                                if (!list.contains(mediaMessage.get_Id()))
+                                    selectItem(videoViewHolder.messageContainer, mediaMessage);
+                                else {
+                                    unselectItem(videoViewHolder.messageContainer, mediaMessage);
+                                }
+                            else {
+
+                            }
+                        }
+                    });
+                } else {
+                    videoViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                }
+                int status = mediaMessage.getStatus();
+                if (status == Constants.PENDING_STATUS) {
+                    videoViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
+                } else if (status == Constants.SENT_STATUS) {
+                    videoViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
+                } else if (status == Constants.DELIVER_STATUS) {
+                    videoViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
+                } else if (status == Constants.SEEN_STATUS)
+                    videoViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
+            } else {
+                videoViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                videoViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+                videoViewHolder.tvDate.setText(mediaMessage.getSent_at());
+
+                if (!new File(mediaMessage.getMsg()).exists()) {
+                    final String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
+                    final File file = new File(folder, fileName);
+
+                    if (file.exists()) {
+                        mediaMessage.setLoaded(true);
+                        mediaMessage.setLoading(false);
+                        mediaMessage.setMsg(file.getPath());
 
 
+                        Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
+                                MediaStore.Video.Thumbnails.MICRO_KIND);
+
+                        videoViewHolder.hisMessage.setImageBitmap(videoThumbnail);
+
+
+                        setVideoOnClick(videoViewHolder.hisFrameVideo, file.getPath());
+
+                    } else {
+                        internetFilesOperations.downloadUrlWithProgress(videoViewHolder.progressViewDownload, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
+                            @Override
+                            public void onDownloadFinish(final String pathOFDownloadedFile) {
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mediaMessage.setMsg(pathOFDownloadedFile);
+                                        mediaMessage.setLoaded(true);
+                                        videoViewHolder.hisMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
+                                                MediaStore.Video.Thumbnails.MICRO_KIND));
+
+                                        context.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                                        Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
+                                        mediaMessage.setMsg(uri.toString());
+
+                                        setVideoOnClick(videoViewHolder.hisFrameVideo, mediaMessage.getMsg());
+                                    }
+                                });
                             }
                         });
                     }
+
+                } else {
+
+
+                }
+//            if (Helper.isNetworkAvailable(context)) {
+//
+//                caching(mediaMessage, prefManager);
+//            }
+            }
+            mMessageRepositry.create(mediaMessage);
+
+            videoViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (!selected) {
+                        changeToolbar(true);
+                    }
+                    if (!list.contains(mediaMessage.get_Id()))
+                        selectItem(videoViewHolder.messageContainer, mediaMessage);
+                    else {
+                        unselectItem(videoViewHolder.messageContainer, mediaMessage);
+                    }
+
+/*
+                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
+*/
+
+                    return true;
+                }
+            });
+            videoViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected)
+                        if (!list.contains(mediaMessage.get_Id()))
+                            selectItem(videoViewHolder.messageContainer, mediaMessage);
+                        else {
+                            unselectItem(videoViewHolder.messageContainer, mediaMessage);
+                        }
+                    else {
+
+                    }
+                }
+            });
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+
+    public void setVideoOnClick(View view, final String path) {
+        try {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    File file = new File(path);
+                    if (file.exists())
+                        Util.getInstance(context).showVideo(Uri.fromFile(file));
+                    else {
+                        String url = Constants.CHAT_SERVER_URL + "/" + path;
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        intent.setDataAndType(Uri.parse(url), "video/*");
+                        context.startActivity(intent);
+                    }
+                }
+            });
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    private void setAudioMessage(final AudioViewHolder audioViewHolder, final int position) {
+        try {
+            final Message mediaMessage = mMessages.get(position);
+
+            if (mMessages.get(position).isMine()) {
+                audioViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
+                audioViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
+
+                audioViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
+
+
+                // Mediaplayer
+                audioViewHolder.mp = new MediaPlayer();
+                audioViewHolder.utils = new MediaUtilities();
+
+                final Runnable mUpdateTimeTask = new Runnable() {
+                    public void run() {
+                        long totalDuration = audioViewHolder.mp.getDuration();
+                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                        // Displaying Total Duration time
+//                            songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
+                        // Displaying time completed playing
+                        // Updating progress bar
+                        int progress = (int) (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
+                        //Log.d("Progress", ""+progress);
+                        audioViewHolder.seekBarMusic.setProgress(progress);
+
+                        // Running this thread after 100 milliseconds
+                        audioViewHolder.mHandler.postDelayed(this, 30);
+                    }
+                };
+                // Listeners
+
+                audioViewHolder.seekBarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                        audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                        int totalDuration = audioViewHolder.mp.getDuration();
+                        int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
+                        audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+                        // forward or backward to certain seconds
+                        audioViewHolder.mp.seekTo(currentPosition);
+
+                        // update timer progress again
+                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+
+                    }
+                }); // Important
+                audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
+                        audioViewHolder.seekBarMusic.setProgress(0);
+                    }
+                }); // Important
+
+
+                audioViewHolder.playPauseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (audioViewHolder.mp.isPlaying()) {
+                            if (audioViewHolder.mp != null) {
+                                audioViewHolder.mp.pause();
+                                // Changing button image to play button
+                                audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
+                            }
+                        } else {
+                            // Resume song
+                            if (audioViewHolder.mp != null) {
+                                audioViewHolder.mp.start();
+                                // Changing button image to pause button
+                                audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_pause);
+                            }
+                        }
+                    }
                 });
-                videoViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                if (!new File(mediaMessage.getMsg()).exists()) {
+                    String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
+                    File file = new File(folder, fileName);
+
+                    if (file.exists()) {
+
+                        mediaMessage.setMsg(file.getPath());
+                        mediaMessage.setLoaded(true);
+                        mediaMessage.setLoading(false);
+
+                        try {
+                            audioViewHolder.mp.reset();
+                            audioViewHolder.mp.setDataSource(file.getPath());
+                            audioViewHolder.mp.prepare();
+//            mp.start();
+
+                            // Changing Button Image to pause image
+//            btnPlay.setImageResource(R.drawable.btn_pause);
+
+                            // set Progress bar values
+                            audioViewHolder.seekBarMusic.setProgress(0);
+                            audioViewHolder.seekBarMusic.setMax(100);
+
+                            // Updating progress bar
+                            audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } catch (IllegalStateException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                } else {
+
+                    try {
+                        audioViewHolder.mp.reset();
+                        audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
+                        audioViewHolder.mp.prepare();
+
+                        // set Progress bar values
+                        audioViewHolder.seekBarMusic.setProgress(0);
+                        audioViewHolder.seekBarMusic.setMax(100);
+
+                        // Updating progress bar
+                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                if (!mediaMessage.isLoaded()) {
+                    audioViewHolder.myProgressBar.setVisibility(View.VISIBLE);
+                    internetFilesOperations.uploadFileWithProgress(audioViewHolder.myProgressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
+                        @Override
+                        public void onUploadFinish(final String result) {
+                            ((Activity) context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        if (jsonObject.has("error")) {
+                                            //show dialog
+                                            mediaMessage.setLoaded(true);
+                                            showAlerDialog("Audio", Html.fromHtml(jsonObject.getString("error")).toString());
+                                        } else {
+
+                                            if (!folder.exists()) folder.mkdirs();
+
+
+                                            String source = mediaMessage.getMsg();
+                                            File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                            if (moveFile(new File(source), destination)) {
+                                                mediaMessage.setMsg(destination.getPath());
+                                            }
+
+
+                                            mediaMessage.setLoaded(true);
+                                            mediaMessage.setLoading(false);
+                                            sendMessage(jsonObject.getString("file_url"), Constants.AUDIO);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    audioViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
+                }
+
+                int totalDuration = audioViewHolder.mp.getDuration();
+                audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+                int status = mediaMessage.getStatus();
+                if (status == Constants.PENDING_STATUS) {
+                    audioViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
+                } else if (status == Constants.SENT_STATUS) {
+                    audioViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
+                } else if (status == Constants.DELIVER_STATUS) {
+                    audioViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
+                } else if (status == Constants.SEEN_STATUS)
+                    audioViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
+            } else {
+                audioViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                audioViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+
+                audioViewHolder.tvDate.setText(mediaMessage.getSent_at());
+
+
+                // Mediaplayer
+                audioViewHolder.mp = new MediaPlayer();
+                audioViewHolder.utils = new MediaUtilities();
+
+                final Runnable mUpdateTimeTask = new Runnable() {
+                    public void run() {
+                        long totalDuration = audioViewHolder.mp.getDuration();
+                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
+
+                        int progress = (int) (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
+                        //Log.d("Progress", ""+progress);
+                        audioViewHolder.seekBarHisMusic.setProgress(progress);
+
+                        // Running this thread after 100 milliseconds
+                        audioViewHolder.mHandler.postDelayed(this, 30);
+                    }
+                };
+                // Listeners
+                audioViewHolder.seekBarHisMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                        audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        int totalDuration = audioViewHolder.mp.getDuration();
+                        int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
+                        audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+                        audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                        // forward or backward to certain seconds
+                        audioViewHolder.mp.seekTo(currentPosition);
+
+                        // update timer progress again
+                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+
+                    }
+                }); // Important
+                audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        audioViewHolder.hisPlayPauseButton.setImageResource(R.drawable.ic_music_play);
+                        audioViewHolder.seekBarHisMusic.setProgress(0);
+                    }
+                }); // Important
+
+                audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
                         if (!selected) {
                             changeToolbar(true);
                         }
                         if (!list.contains(mediaMessage.get_Id()))
-                            selectItem(videoViewHolder.messageContainer, mediaMessage);
+                            selectItem(audioViewHolder.messageContainer, mediaMessage);
                         else {
-                            unselectItem(videoViewHolder.messageContainer, mediaMessage);
+                            unselectItem(audioViewHolder.messageContainer, mediaMessage);
                         }
 
 /*
@@ -682,253 +1142,127 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                         return true;
                     }
                 });
-                videoViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                audioViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (selected)
                             if (!list.contains(mediaMessage.get_Id()))
-                                selectItem(videoViewHolder.messageContainer, mediaMessage);
+                                selectItem(audioViewHolder.messageContainer, mediaMessage);
                             else {
-                                unselectItem(videoViewHolder.messageContainer, mediaMessage);
+                                unselectItem(audioViewHolder.messageContainer, mediaMessage);
                             }
                         else {
 
                         }
                     }
                 });
-            } else {
-                videoViewHolder.progressBar.setVisibility(View.INVISIBLE);
-            }
-            int status = mediaMessage.getStatus();
-            if (status == Constants.PENDING_STATUS) {
-                videoViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
-            } else if (status == Constants.SENT_STATUS) {
-                videoViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
-            } else if (status == Constants.DELIVER_STATUS) {
-                videoViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
-            } else if (status == Constants.SEEN_STATUS)
-                videoViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
-        } else {
-            videoViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
-            videoViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
-            videoViewHolder.tvDate.setText(mediaMessage.getSent_at());
 
-            if (!new File(mediaMessage.getMsg()).exists()) {
-                final String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
-                final File file = new File(folder, fileName);
-
-                if (file.exists()) {
-                    mediaMessage.setLoaded(true);
-                    mediaMessage.setLoading(false);
-                    mediaMessage.setMsg(file.getPath());
-
-
-                    Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
-                            MediaStore.Video.Thumbnails.MICRO_KIND);
-
-                    videoViewHolder.hisMessage.setImageBitmap(videoThumbnail);
-
-
-                    setVideoOnClick(videoViewHolder.hisFrameVideo, file.getPath());
-
-                } else {
-                    internetFilesOperations.downloadUrlWithProgress(videoViewHolder.progressViewDownload, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
-                        @Override
-                        public void onDownloadFinish(final String pathOFDownloadedFile) {
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mediaMessage.setMsg(pathOFDownloadedFile);
-                                    mediaMessage.setLoaded(true);
-                                    videoViewHolder.hisMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
-                                            MediaStore.Video.Thumbnails.MICRO_KIND));
-
-                                    context.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            notifyDataSetChanged();
-                                        }
-                                    });
-                                    Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
-                                    mediaMessage.setMsg(uri.toString());
-
-                                    setVideoOnClick(videoViewHolder.hisFrameVideo, mediaMessage.getMsg());
-                                }
-                            });
+                audioViewHolder.hisPlayPauseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (audioViewHolder.mp.isPlaying()) {
+                            if (audioViewHolder.mp != null) {
+                                audioViewHolder.mp.pause();
+                                // Changing button image to play button
+                                audioViewHolder.hisPlayPauseButton.setImageResource(R.drawable.ic_music_play);
+                            }
+                        } else {
+                            // Resume song
+                            if (audioViewHolder.mp != null) {
+                                audioViewHolder.mp.start();
+                                // Changing button image to pause button
+                                audioViewHolder.hisPlayPauseButton.setImageResource(R.drawable.ic_music_pause);
+                            }
                         }
-                    });
-                }
-
-            } else {
-
-
-            }
-//            if (Helper.isNetworkAvailable(context)) {
-//
-//                caching(mediaMessage, prefManager);
-//            }
-        }
-        mMessageRepositry.create(mediaMessage);
-
-        videoViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(mediaMessage.get_Id()))
-                    selectItem(videoViewHolder.messageContainer, mediaMessage);
-                else {
-                    unselectItem(videoViewHolder.messageContainer, mediaMessage);
-                }
-
-/*
-                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
-*/
-
-                return true;
-            }
-        });
-        videoViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected)
-                    if (!list.contains(mediaMessage.get_Id()))
-                        selectItem(videoViewHolder.messageContainer, mediaMessage);
-                    else {
-                        unselectItem(videoViewHolder.messageContainer, mediaMessage);
                     }
-                else {
+                });
 
-                }
-            }
-        });
+                if (!new File(mediaMessage.getMsg()).exists()) {
+                    String fileName = mediaMessage.getMsg();
+                    File file = new File(folder, fileName);
 
-    }
+                    if (file.exists()) {
+                        mediaMessage.setLoaded(true);
+                        mediaMessage.setLoading(false);
 
-
-    public void setVideoOnClick(View view, final String path) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                        mediaMessage.setMsg(file.getPath());
 
 
-                File file = new File(path);
-                if (file.exists())
-                    Util.getInstance(context).showVideo(Uri.fromFile(file));
-                else {
-                    String url = Constants.CHAT_SERVER_URL + "/" + path;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    intent.setDataAndType(Uri.parse(url), "video/*");
-                    context.startActivity(intent);
-                }
-            }
-        });
-    }
+                        try {
+                            audioViewHolder.mp.reset();
+                            audioViewHolder.mp.setDataSource(file.getPath());
+                            audioViewHolder.mp.prepare();
+//            mp.start();
+                            long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                            audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+                            // Changing Button Image to pause image
+//            btnPlay.setImageResource(R.drawable.btn_pause);
 
-    //-----------------------------------------------------------------------------------------------------
-    private void setAudioMessage(final AudioViewHolder audioViewHolder, final int position) {
-        final Message mediaMessage = mMessages.get(position);
+                            // set Progress bar values
+                            audioViewHolder.seekBarMusic.setProgress(0);
+                            audioViewHolder.seekBarMusic.setMax(100);
 
-        if (mMessages.get(position).isMine()) {
-            audioViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
-            audioViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
+                            // Updating progress bar
+                            audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } catch (IllegalStateException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-            audioViewHolder.tvDateMy.setText(mediaMessage.getSent_at());
+                    } else {
+                        internetFilesOperations.downloadUrlWithProgress(audioViewHolder.progressViewDownload, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
+                            @Override
+                            public void onDownloadFinish(final String pathOFDownloadedFile) {
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                audioViewHolder.hisMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getPath(),
+//                                        MediaStore.Video.Thumbnails.MICRO_KIND));
+                                        mediaMessage.setMsg(pathOFDownloadedFile);
+                                        mediaMessage.setLoaded(true);
+
+                                        try {
+                                            audioViewHolder.mp.reset();
+                                            audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
+                                            audioViewHolder.mp.prepare();
+//            mp.start();
+                                            long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                                            audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+                                            // Changing Button Image to pause image
+//            btnPlay.setImageResource(R.drawable.btn_pause);
+                                            // set Progress bar values
+                                            audioViewHolder.seekBarMusic.setProgress(0);
+                                            audioViewHolder.seekBarMusic.setMax(100);
+                                            Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
+                                            mediaMessage.setMsg(uri.toString());
+                                            // Updating progress bar
+                                            audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                                        } catch (IllegalArgumentException e) {
+                                            e.printStackTrace();
+                                        } catch (IllegalStateException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
 
 
-            // Mediaplayer
-            audioViewHolder.mp = new MediaPlayer();
-            audioViewHolder.utils = new MediaUtilities();
-
-            final Runnable mUpdateTimeTask = new Runnable() {
-                public void run() {
-                    long totalDuration = audioViewHolder.mp.getDuration();
-                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
                     // Displaying Total Duration time
 //                            songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
                     // Displaying time completed playing
-                    // Updating progress bar
-                    int progress = (int) (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
-                    //Log.d("Progress", ""+progress);
-                    audioViewHolder.seekBarMusic.setProgress(progress);
-
-                    // Running this thread after 100 milliseconds
-                    audioViewHolder.mHandler.postDelayed(this, 30);
-                }
-            };
-            // Listeners
-
-            audioViewHolder.seekBarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                    audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-                    int totalDuration = audioViewHolder.mp.getDuration();
-                    int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
-                    audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-                    // forward or backward to certain seconds
-                    audioViewHolder.mp.seekTo(currentPosition);
-
-                    // update timer progress again
-                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-
-                }
-            }); // Important
-            audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
-                    audioViewHolder.seekBarMusic.setProgress(0);
-                }
-            }); // Important
-
-
-            audioViewHolder.playPauseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (audioViewHolder.mp.isPlaying()) {
-                        if (audioViewHolder.mp != null) {
-                            audioViewHolder.mp.pause();
-                            // Changing button image to play button
-                            audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_play);
-                        }
-                    } else {
-                        // Resume song
-                        if (audioViewHolder.mp != null) {
-                            audioViewHolder.mp.start();
-                            // Changing button image to pause button
-                            audioViewHolder.playPauseButton.setImageResource(R.drawable.ic_music_pause);
-                        }
-                    }
-                }
-            });
-            if (!new File(mediaMessage.getMsg()).exists()) {
-                String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
-                File file = new File(folder, fileName);
-
-                if (file.exists()) {
-
-                    mediaMessage.setMsg(file.getPath());
-                    mediaMessage.setLoaded(true);
-                    mediaMessage.setLoading(false);
 
                     try {
                         audioViewHolder.mp.reset();
-                        audioViewHolder.mp.setDataSource(file.getPath());
+                        audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
                         audioViewHolder.mp.prepare();
 //            mp.start();
 
@@ -950,141 +1284,8 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
 
-            } else {
-
-                try {
-                    audioViewHolder.mp.reset();
-                    audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
-                    audioViewHolder.mp.prepare();
-
-                    // set Progress bar values
-                    audioViewHolder.seekBarMusic.setProgress(0);
-                    audioViewHolder.seekBarMusic.setMax(100);
-
-                    // Updating progress bar
-                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
-
-            if (!mediaMessage.isLoaded()) {
-                audioViewHolder.myProgressBar.setVisibility(View.VISIBLE);
-                internetFilesOperations.uploadFileWithProgress(audioViewHolder.myProgressBar, Constants.UPLOAD_URL, mediaMessage.getMsg(), new UploadListener() {
-                    @Override
-                    public void onUploadFinish(final String result) {
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                try {
-                                    JSONObject jsonObject = new JSONObject(result);
-                                    if (jsonObject.has("error")) {
-                                        //show dialog
-                                        mediaMessage.setLoaded(true);
-                                        showAlerDialog("Audio", Html.fromHtml(jsonObject.getString("error")).toString());
-                                    } else {
-
-                                        if (!folder.exists()) folder.mkdirs();
-
-
-                                        String source = mediaMessage.getMsg();
-                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                        if (moveFile(new File(source), destination)) {
-                                            mediaMessage.setMsg(destination.getPath());
-                                        }
-
-
-                                        mediaMessage.setLoaded(true);
-                                        mediaMessage.setLoading(false);
-                                        sendMessage(jsonObject.getString("file_url"), Constants.AUDIO);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                });
-            } else {
-                audioViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            int totalDuration = audioViewHolder.mp.getDuration();
-            audioViewHolder.tvMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-            int status = mediaMessage.getStatus();
-            if (status == Constants.PENDING_STATUS) {
-                audioViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
-            } else if (status == Constants.SENT_STATUS) {
-                audioViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
-            } else if (status == Constants.DELIVER_STATUS) {
-                audioViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
-            } else if (status == Constants.SEEN_STATUS)
-                audioViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
-        } else {
-            audioViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
-            audioViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
-
-            audioViewHolder.tvDate.setText(mediaMessage.getSent_at());
-
-
-            // Mediaplayer
-            audioViewHolder.mp = new MediaPlayer();
-            audioViewHolder.utils = new MediaUtilities();
-
-            final Runnable mUpdateTimeTask = new Runnable() {
-                public void run() {
-                    long totalDuration = audioViewHolder.mp.getDuration();
-                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
-
-                    int progress = (int) (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
-                    //Log.d("Progress", ""+progress);
-                    audioViewHolder.seekBarHisMusic.setProgress(progress);
-
-                    // Running this thread after 100 milliseconds
-                    audioViewHolder.mHandler.postDelayed(this, 30);
-                }
-            };
-            // Listeners
-            audioViewHolder.seekBarHisMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                    audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    int totalDuration = audioViewHolder.mp.getDuration();
-                    int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
-                    audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-                    // forward or backward to certain seconds
-                    audioViewHolder.mp.seekTo(currentPosition);
-
-                    // update timer progress again
-                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-
-                }
-            }); // Important
-            audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    audioViewHolder.hisPlayPauseButton.setImageResource(R.drawable.ic_music_play);
-                    audioViewHolder.seekBarHisMusic.setProgress(0);
-                }
-            }); // Important
+            mMessageRepositry.create(mediaMessage);
 
             audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -1119,377 +1320,224 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
             });
-
-            audioViewHolder.hisPlayPauseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (audioViewHolder.mp.isPlaying()) {
-                        if (audioViewHolder.mp != null) {
-                            audioViewHolder.mp.pause();
-                            // Changing button image to play button
-                            audioViewHolder.hisPlayPauseButton.setImageResource(R.drawable.ic_music_play);
-                        }
-                    } else {
-                        // Resume song
-                        if (audioViewHolder.mp != null) {
-                            audioViewHolder.mp.start();
-                            // Changing button image to pause button
-                            audioViewHolder.hisPlayPauseButton.setImageResource(R.drawable.ic_music_pause);
-                        }
-                    }
-                }
-            });
-
-            if (!new File(mediaMessage.getMsg()).exists()) {
-                String fileName = mediaMessage.getMsg();
-                File file = new File(folder, fileName);
-
-                if (file.exists()) {
-                    mediaMessage.setLoaded(true);
-                    mediaMessage.setLoading(false);
-
-                    mediaMessage.setMsg(file.getPath());
-
-
-                    try {
-                        audioViewHolder.mp.reset();
-                        audioViewHolder.mp.setDataSource(file.getPath());
-                        audioViewHolder.mp.prepare();
-//            mp.start();
-                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                        audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-                        // Changing Button Image to pause image
-//            btnPlay.setImageResource(R.drawable.btn_pause);
-
-                        // set Progress bar values
-                        audioViewHolder.seekBarMusic.setProgress(0);
-                        audioViewHolder.seekBarMusic.setMax(100);
-
-                        // Updating progress bar
-                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    internetFilesOperations.downloadUrlWithProgress(audioViewHolder.progressViewDownload, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
-                        @Override
-                        public void onDownloadFinish(final String pathOFDownloadedFile) {
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-//                                audioViewHolder.hisMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getPath(),
-//                                        MediaStore.Video.Thumbnails.MICRO_KIND));
-                                    mediaMessage.setMsg(pathOFDownloadedFile);
-                                    mediaMessage.setLoaded(true);
-
-                                    try {
-                                        audioViewHolder.mp.reset();
-                                        audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
-                                        audioViewHolder.mp.prepare();
-//            mp.start();
-                                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                                        audioViewHolder.tvHisMusicDuration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-                                        // Changing Button Image to pause image
-//            btnPlay.setImageResource(R.drawable.btn_pause);
-                                        // set Progress bar values
-                                        audioViewHolder.seekBarMusic.setProgress(0);
-                                        audioViewHolder.seekBarMusic.setMax(100);
-                                        Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
-                                        mediaMessage.setMsg(uri.toString());
-                                        // Updating progress bar
-                                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                                    } catch (IllegalArgumentException e) {
-                                        e.printStackTrace();
-                                    } catch (IllegalStateException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            });
-                        }
-                    });
-                }
-            } else {
-
-
-                // Displaying Total Duration time
-//                            songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
-                // Displaying time completed playing
-
-                try {
-                    audioViewHolder.mp.reset();
-                    audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
-                    audioViewHolder.mp.prepare();
-//            mp.start();
-
-                    // Changing Button Image to pause image
-//            btnPlay.setImageResource(R.drawable.btn_pause);
-
-                    // set Progress bar values
-                    audioViewHolder.seekBarMusic.setProgress(0);
-                    audioViewHolder.seekBarMusic.setMax(100);
-
-                    // Updating progress bar
-                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        mMessageRepositry.create(mediaMessage);
 
-        audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
-                }
-                if (!list.contains(mediaMessage.get_Id()))
-                    selectItem(audioViewHolder.messageContainer, mediaMessage);
-                else {
-                    unselectItem(audioViewHolder.messageContainer, mediaMessage);
-                }
-
-/*
-                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
-*/
-
-                return true;
-            }
-        });
-        audioViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected)
-                    if (!list.contains(mediaMessage.get_Id()))
-                        selectItem(audioViewHolder.messageContainer, mediaMessage);
-                    else {
-                        unselectItem(audioViewHolder.messageContainer, mediaMessage);
-                    }
-                else {
-
-                }
-            }
-        });
     }
 
     //-----------------------------------------------------------------------------------------------------
     private void setLocationMessage(final LocationViewHolder locationViewHolder, final int position) {
-        final Message locationMessage = mMessages.get(position);
-        if (locationMessage.isMine()) {
-            locationViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
-            locationViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
+        try {
+            final Message locationMessage = mMessages.get(position);
+            if (locationMessage.isMine()) {
+                locationViewHolder.myMessageContainer.setVisibility(View.VISIBLE);
+                locationViewHolder.hisMessageContainer.setVisibility(View.INVISIBLE);
 
-            locationViewHolder.tvDateMy.setText(locationMessage.getSent_at());
-            locationViewHolder.myMessageContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        Intent intent = new Intent(context, MapsActivity.class);
-                        intent.putExtra("lat", jsonObject.getString("lat"));
-                        intent.putExtra("long", jsonObject.getString("long"));
-
-                        Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
-                        context.startActivity(intent);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            locationViewHolder.myMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("longi"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return false;
-                }
-            });
-
-
-            if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
-
-                locationMessage.setLoading(true);
-
-                new Thread(new Runnable() {
+                locationViewHolder.tvDateMy.setText(locationMessage.getSent_at());
+                locationViewHolder.myMessageContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void run() {
+                    public void onClick(View v) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            Intent intent = new Intent(context, MapsActivity.class);
+                            intent.putExtra("lat", jsonObject.getString("lat"));
+                            intent.putExtra("long", jsonObject.getString("long"));
+
+                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
+                            context.startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                locationViewHolder.myMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
 
                         String msg = "{" + locationMessage.getMsg() + "}";
-                        JSONObject jsonObject = null;
                         try {
-                            jsonObject = new JSONObject(msg);
-                            double lat = jsonObject.getDouble("lat");
-                            double lng = jsonObject.getDouble("long");
-
-                            locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng));
-                            locationMessage.setLoading(false);
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    locationViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
-                                    locationViewHolder.myMessage.setImageBitmap(locationMessage.getLocationBitmap());
-                                    locationMessage.setLoaded(true);
-
-                                }
-                            });
+                            JSONObject jsonObject = new JSONObject(msg);
+                            showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("longi"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
+                        return false;
                     }
-                }).start();
-            }
+                });
 
-            if (!locationMessage.isLoaded()) {
-                sendMessage(locationMessage.getMsg(), Constants.LOCATION);
-            }
-        } else {
-            locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
-            locationViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
-            locationViewHolder.hisMessageContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        Intent intent = new Intent(context, MapsActivity.class);
-                        intent.putExtra("lat", jsonObject.getString("lat"));
-                        intent.putExtra("long", jsonObject.getString("long"));
 
-                        Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
-                        context.startActivity(intent);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
+
+                    locationMessage.setLoading(true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            String msg = "{" + locationMessage.getMsg() + "}";
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(msg);
+                                double lat = jsonObject.getDouble("lat");
+                                double lng = jsonObject.getDouble("long");
+
+                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng));
+                                locationMessage.setLoading(false);
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        locationViewHolder.myProgressBar.setVisibility(View.INVISIBLE);
+                                        locationViewHolder.myMessage.setImageBitmap(locationMessage.getLocationBitmap());
+                                        locationMessage.setLoaded(true);
+
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }).start();
                 }
-            });
 
-            locationViewHolder.hisMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg);
-                        showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("long"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    return false;
+                if (!locationMessage.isLoaded()) {
+                    sendMessage(locationMessage.getMsg(), Constants.LOCATION);
                 }
-            });
-
-            locationViewHolder.tvDate.setText(locationMessage.getSent_at());
-
-
-            if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
-
-                locationMessage.setLoading(true);
-
-                new Thread(new Runnable() {
+            } else {
+                locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                locationViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
+                locationViewHolder.hisMessageContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void run() {
-
+                    public void onClick(View v) {
                         String msg = "{" + locationMessage.getMsg() + "}";
-                        JSONObject jsonObject = null;
                         try {
-                            jsonObject = new JSONObject(msg);
-                            double lat = jsonObject.getDouble("lat");
-                            double lng = jsonObject.getDouble("long");
-                            locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng));
-                            locationMessage.setLoading(false);
-                            ((Activity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    locationViewHolder.hisProgressBar.setVisibility(View.INVISIBLE);
-                                    locationViewHolder.hisMessage.setImageBitmap(locationMessage.getLocationBitmap());
-                                    locationMessage.setLoaded(true);
-                                }
-                            });
+                            JSONObject jsonObject = new JSONObject(msg);
+                            Intent intent = new Intent(context, MapsActivity.class);
+                            intent.putExtra("lat", jsonObject.getString("lat"));
+                            intent.putExtra("long", jsonObject.getString("long"));
+
+                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
+                            context.startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
-                }).start();
-            }
+                });
+
+                locationViewHolder.hisMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("long"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    }
+                });
+
+                locationViewHolder.tvDate.setText(locationMessage.getSent_at());
+
+
+                if (locationMessage.getLocationBitmap() == null && !locationMessage.isLoading()) {
+
+                    locationMessage.setLoading(true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            String msg = "{" + locationMessage.getMsg() + "}";
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(msg);
+                                double lat = jsonObject.getDouble("lat");
+                                double lng = jsonObject.getDouble("long");
+                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng));
+                                locationMessage.setLoading(false);
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        locationViewHolder.hisProgressBar.setVisibility(View.INVISIBLE);
+                                        locationViewHolder.hisMessage.setImageBitmap(locationMessage.getLocationBitmap());
+                                        locationMessage.setLoaded(true);
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }).start();
+                }
 //            }
 
 
-        }
-        mMessageRepositry.create(locationMessage);
-
-        locationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String msg = "{" + locationMessage.getMsg() + "}";
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(msg);
-                    double lat = jsonObject.getDouble("lat");
-                    double lng = jsonObject.getDouble("long");
-                    Util.getInstance(context).showLocation(lat, lng);
-                } catch (JSONException e) {
-                    Log.e("ex", e.getMessage());
-                }
             }
-        });
+            mMessageRepositry.create(locationMessage);
 
-        locationViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!selected) {
-                    changeToolbar(true);
+            locationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String msg = "{" + locationMessage.getMsg() + "}";
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(msg);
+                        double lat = jsonObject.getDouble("lat");
+                        double lng = jsonObject.getDouble("long");
+                        Util.getInstance(context).showLocation(lat, lng);
+                    } catch (JSONException e) {
+                        Log.e("ex", e.getMessage());
+                    }
                 }
-                if (!list.contains(locationMessage.get_Id()))
-                    selectItem(locationViewHolder.messageContainer, locationMessage);
-                else {
-                    unselectItem(locationViewHolder.messageContainer, locationMessage);
-                }
+            });
 
-/*
-                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
-*/
-
-                return true;
-            }
-        });
-        locationViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected)
+            locationViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (!selected) {
+                        changeToolbar(true);
+                    }
                     if (!list.contains(locationMessage.get_Id()))
                         selectItem(locationViewHolder.messageContainer, locationMessage);
                     else {
                         unselectItem(locationViewHolder.messageContainer, locationMessage);
                     }
-                else {
 
+/*
+                    showMediaOptions("Image", position, Constants.IMAGE_MESSAGE, message.getMsg());
+*/
+
+                    return true;
                 }
-            }
-        });
+            });
+            locationViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected)
+                        if (!list.contains(locationMessage.get_Id()))
+                            selectItem(locationViewHolder.messageContainer, locationMessage);
+                        else {
+                            unselectItem(locationViewHolder.messageContainer, locationMessage);
+                        }
+                    else {
+
+                    }
+                }
+            });
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
     //-----------------------------------------------------------------------------------------------------
 

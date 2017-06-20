@@ -87,39 +87,44 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void joinUser() {
+        try {
+            new SocketCall(getApplicationContext(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
 
-        new SocketCall(getApplicationContext(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
+                    Log.d("Join User1 Response", response.toString());
 
-                Log.d("Join User1 Response", response.toString());
+                }
 
-            }
+                @Override
+                public void onFailed(String error) {
 
-            @Override
-            public void onFailed(String error) {
+                    Log.e("Join User1 Response", error.toString());
 
-                Log.e("Join User1 Response", error.toString());
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                    Helper.showAlertDialog(getApplicationContext(), getString(R.string.warning), getString(R.string.wrong_code), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                Helper.showAlertDialog(getApplicationContext(), getString(R.string.warning), getString(R.string.wrong_code), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        joinUser();
-                        dialogInterface.dismiss();
-                    }
-                }, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
+                            joinUser();
+                            dialogInterface.dismiss();
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    });
 
 
-            }
-        }).joinUser(AppController.getInstance().getClientInfo().getUser_id());
+                }
+            }).joinUser(AppController.getInstance().getClientInfo().getUser_id());
+        }catch (Exception e){
+            Crashlytics.logException(e);
+        }
+
+
 
     }
 
