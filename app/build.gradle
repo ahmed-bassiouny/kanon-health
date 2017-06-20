@@ -16,7 +16,7 @@ repositories {
 
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
     useLibrary 'org.apache.http.legacy'
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "com.germanitlab.kanonhealth"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -68,8 +68,8 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton:butterknife:8.5.1'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -78,7 +78,8 @@ dependencies {
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.wdullaer:materialdatetimepicker:3.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:percent:25.3.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.google.zxing:core:2.2'
     compile 'com.journeyapps:zxing-android-embedded:2.0.1@aar'
