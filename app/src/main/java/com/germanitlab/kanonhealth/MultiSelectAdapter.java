@@ -57,8 +57,8 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        ChooseModel model = allspecialist.get(position);
         try {
+            ChooseModel model = allspecialist.get(position);
             setDataChecked(holder.rbtn, model.getIsMyChoise());
             switch (type){
 

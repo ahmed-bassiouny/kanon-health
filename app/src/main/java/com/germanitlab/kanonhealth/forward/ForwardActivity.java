@@ -62,83 +62,101 @@ public class ForwardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forward);
-        doctorsForward = new ArrayList<>();
-        messagesForward = new ArrayList<>();
-        ButterKnife.bind(this);
-        user = new User();
-        search = false;
-        user = (User) getIntent().getSerializableExtra("chat_doctor");
-        messagesForward = getIntent().getIntegerArrayListExtra("list");
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ListDoctors = new ArrayList<>();
-        edtDoctorListFilter = (EditText) findViewById(R.id.edt_doctor_list_filter);
-        showProgressDialog();
-        new HttpCall(new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                try {
-                    dismissProgressDialog();
-                    ListDoctors = (List<User>) response;
-                    ChooseList.addAll(ListDoctors);
-                    recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-                    setAdapter(ChooseList);
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    recyclerView.setLayoutManager(mLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(mAdapter);
-                    addListener(recyclerView);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        try {
+            doctorsForward = new ArrayList<>();
+            messagesForward = new ArrayList<>();
+            ButterKnife.bind(this);
+            user = new User();
+            search = false;
+            user = (User) getIntent().getSerializableExtra("chat_doctor");
+            messagesForward = getIntent().getIntegerArrayListExtra("list");
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            ListDoctors = new ArrayList<>();
+            edtDoctorListFilter = (EditText) findViewById(R.id.edt_doctor_list_filter);
+            showProgressDialog();
+            new HttpCall(new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    try {
+                        dismissProgressDialog();
+                        ListDoctors = (List<User>) response;
+                        ChooseList.addAll(ListDoctors);
+                        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                        setAdapter(ChooseList);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(mAdapter);
+                        addListener(recyclerView);
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
 
-
-            }
-
-            @Override
-            public void onFailed(String error) {
-                dismissProgressDialog();
-                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailed(String error) {
+                    dismissProgressDialog();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 /*tvLoadingError.setVisibility(View.VISIBLE);
                 if (error != null && error.length() > 0)
                     tvLoadingError.setText(error);
                 else tvLoadingError.setText("Some thing went wrong");*/
-            }
-        }).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword());
+                }
+            }).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                    , AppController.getInstance().getClientInfo().getPassword());
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
     @OnTextChanged(value = R.id.edt_doctor_list_filter, callback = OnTextChanged.Callback.TEXT_CHANGED)
     void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (ListDoctors != null) {
-            ChooseList.clear();
-            if (charSequence.toString().trim().length() > 0) {
-                for (int j = 0; j < ListDoctors.size(); j++) {
+        try {
+            if (ListDoctors != null) {
+                ChooseList.clear();
+                if (charSequence.toString().trim().length() > 0) {
+                    for (int j = 0; j < ListDoctors.size(); j++) {
 
-                    String name = ListDoctors.get(j).getName();
+                        String name = ListDoctors.get(j).getName();
 
-                    if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                        if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
-                        ChooseList.add(ListDoctors.get(j));
+                            ChooseList.add(ListDoctors.get(j));
+                        }
+                        search = true;
                     }
-                    search = true;
+                    setAdapter(ChooseList);
+                } else {
+                    setAdapter(ListDoctors);
+                    search = false;
                 }
-                setAdapter(ChooseList);
-            } else {
-                setAdapter(ListDoctors);
-                search = false;
             }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
     @OnClick(R.id.imgbtn_forward)
     public void forwardTo(View view) {
-        if (doctorsForward.size() > 0)
-            sendForward();
-        else
-            Toast.makeText(getApplicationContext(), "please Select", Toast.LENGTH_LONG).show();
+        try {
+            if (doctorsForward.size() > 0)
+                sendForward();
+            else
+                Toast.makeText(getApplicationContext(), "please Select", Toast.LENGTH_LONG).show();
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void sendForward() {
@@ -191,42 +209,60 @@ public class ForwardActivity extends AppCompatActivity {
     }
 
     private void addToList(View view, int position) {
-        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.background);
-        if (ChooseList.size() == 0) {
-            if (!doctorsForward.contains(ListDoctors.get(position).get_Id())) {
-                doctorsForward.add(ListDoctors.get(position).get_Id());
-                linearLayout.setBackgroundResource(R.color.gray_black);
-                ListDoctors.get(position).setChosen(true);
+        try {
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.background);
+            if (ChooseList.size() == 0) {
+                if (!doctorsForward.contains(ListDoctors.get(position).get_Id())) {
+                    doctorsForward.add(ListDoctors.get(position).get_Id());
+                    linearLayout.setBackgroundResource(R.color.gray_black);
+                    ListDoctors.get(position).setChosen(true);
+                } else {
+                    doctorsForward.remove(doctorsForward.indexOf(ListDoctors.get(position).get_Id()));
+                    linearLayout.setBackgroundResource(0);
+                    ListDoctors.get(position).setChosen(false);
+                }
             } else {
-                doctorsForward.remove(doctorsForward.indexOf(ListDoctors.get(position).get_Id()));
-                linearLayout.setBackgroundResource(0);
-                ListDoctors.get(position).setChosen(false);
+                if (!doctorsForward.contains(ChooseList.get(position).get_Id())) {
+                    doctorsForward.add(ChooseList.get(position).get_Id());
+                    linearLayout.setBackgroundResource(R.color.gray_black);
+                    ChooseList.get(position).setChosen(true);
+                } else {
+                    doctorsForward.remove(doctorsForward.indexOf(ChooseList.get(position).get_Id()));
+                    linearLayout.setBackgroundResource(0);
+                    ChooseList.get(position).setChosen(false);
+                }
             }
-        } else {
-            if (!doctorsForward.contains(ChooseList.get(position).get_Id())) {
-                doctorsForward.add(ChooseList.get(position).get_Id());
-                linearLayout.setBackgroundResource(R.color.gray_black);
-                ChooseList.get(position).setChosen(true);
-            } else {
-                doctorsForward.remove(doctorsForward.indexOf(ChooseList.get(position).get_Id()));
-                linearLayout.setBackgroundResource(0);
-                ChooseList.get(position).setChosen(false);
-            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void setAdapter(List<User> DoctorList) {
-        if (DoctorList != null) {
-            mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3);
-            recyclerView.setAdapter(mAdapter);
+        try {
+            if (DoctorList != null) {
+                mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3);
+                recyclerView.setAdapter(mAdapter);
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @OnClick(R.id.btn_forward_document)
     public void toDocument(View view) {
-        doctorsForward.clear();
-        doctorsForward.add(AppController.getInstance().getClientInfo().getUser_id());
-        sendForward();
+        try {
+            doctorsForward.clear();
+            doctorsForward.add(AppController.getInstance().getClientInfo().getUser_id());
+            sendForward();
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.scan)
@@ -235,15 +271,21 @@ public class ForwardActivity extends AppCompatActivity {
     }
 
     private void askForPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            //Asking for the camera permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST_CAMERA);
-        } else {
-            //Opening the QR Scanner
-            new IntentIntegrator(this).initiateScan();
+        try {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                //Asking for the camera permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
+            } else {
+                //Opening the QR Scanner
+                new IntentIntegrator(this).initiateScan();
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override

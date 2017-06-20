@@ -113,13 +113,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        Intent intent = getIntent();
-        if (create == 0) {
-            draw(intent);
+        try {
+            mMap = googleMap;
+            Intent intent = getIntent();
+            if (create == 0) {
+                draw(intent);
 
+            }
+            create = 1;
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        create = 1;
+
 
     }
 

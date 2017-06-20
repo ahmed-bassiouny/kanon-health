@@ -77,21 +77,27 @@ public class initialProfileDetails extends AppCompatActivity {
     }
 
     public  void dispatchOpenGalleryIntent () {
-        if (ContextCompat.checkSelfPermission(this , Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            getIntent.setType("image/*");
+        try {
+            if (ContextCompat.checkSelfPermission(this , Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
 
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickIntent.setType("image/*");
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
 
-            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
-            startActivityForResult(chooserIntent, Constants.IMAGE_REQUEST);
-        } else {
-            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE );
+                startActivityForResult(chooserIntent, Constants.IMAGE_REQUEST);
+            } else {
+                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE );
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
@@ -100,87 +106,99 @@ public class initialProfileDetails extends AppCompatActivity {
 
     @OnClick(R.id.edit_birthday)
     public void onEditBirthdayClicked (){
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        try {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            Calendar calender = Calendar.getInstance();
+
+
+            final Context themedContext = new ContextThemeWrapper(
+                    initialProfileDetails.this,
+                    android.R.style.Theme_Holo_Light_Dialog
+            );
+
+            final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
+                    themedContext,
+                    mDateSetListener,
+                    calender.get(Calendar.YEAR),
+                    calender.get(Calendar.MONTH),
+                    calender.get(Calendar.DAY_OF_MONTH));
+
+            mDialog.show();
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        Calendar calender = Calendar.getInstance();
 
-
-        final Context themedContext = new ContextThemeWrapper(
-                initialProfileDetails.this,
-                android.R.style.Theme_Holo_Light_Dialog
-        );
-
-        final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
-                themedContext,
-                mDateSetListener,
-                calender.get(Calendar.YEAR),
-                calender.get(Calendar.MONTH),
-                calender.get(Calendar.DAY_OF_MONTH));
-
-        mDialog.show();
 
     }
 
     @OnClick(R.id.button_submit)
     public void onSubmitClicked (){
-
-        String firstName = editLastName.getText().toString();
-        String lastName = editFirstName.getText().toString();
-        String birthDate = textBirthday.getText().toString();
-
-
-        if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")){
-            showProgressDialog();
-            final User user = new User();
-            user.setId(AppController.getInstance().getClientInfo().getUser_id());
-            user.setPassword(AppController.getInstance().getClientInfo().getPassword());
-            user.setName(firstName + " " +lastName);
-            user.setBirthDate(birthDate);
-            if (uploadImageResponse != null){
-                user.setAvatar(uploadImageResponse.getFile_url());
-            }
-
-            new HttpCall(this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    try {
-                        Log.e("Update user response :", user != null ? response.toString() : "no response found" );
+        try {
+            String firstName = editLastName.getText().toString();
+            String lastName = editFirstName.getText().toString();
+            String birthDate = textBirthday.getText().toString();
 
 
-                        mPrefManager.put(mPrefManager.USER_KEY, response.toString());
-                        Gson gson = new Gson();
-                        UserInfoResponse userInfoResponse = gson.fromJson(response.toString() , UserInfoResponse.class);
-                        Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
-                        mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
+            if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")){
+                showProgressDialog();
+                final User user = new User();
+                user.setId(AppController.getInstance().getClientInfo().getUser_id());
+                user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+                user.setName(firstName + " " +lastName);
+                user.setBirthDate(birthDate);
+                if (uploadImageResponse != null){
+                    user.setAvatar(uploadImageResponse.getFile_url());
+                }
 
-                        mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
-                        dismissProgressDialog();
+                new HttpCall(this, new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        try {
+                            Log.e("Update user response :", user != null ? response.toString() : "no response found" );
+
+
+                            mPrefManager.put(mPrefManager.USER_KEY, response.toString());
+                            Gson gson = new Gson();
+                            UserInfoResponse userInfoResponse = gson.fromJson(response.toString() , UserInfoResponse.class);
+                            Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
+                            mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
+
+                            mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
+                            dismissProgressDialog();
 //                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
 //                    intent.putExtra("status", 1);
 //                    startActivity(intent);
-                        Intent intent = new Intent(getApplicationContext() , MainActivity.class);
-                        startActivity(intent);
+                            Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+                            startActivity(intent);
 
-                        finish();
-                    }catch (Exception e){
-                        Crashlytics.logException(e);
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }catch (Exception e){
+                            Crashlytics.logException(e);
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                        }
+
+
                     }
 
+                    @Override
+                    public void onFailed(String error) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                    }
+                }).editProfile(user);
+            } else {
+                Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
+            }
 
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                }
-            }).editProfile(user);
-        } else {
-            Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this,getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -196,35 +214,41 @@ public class initialProfileDetails extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK ){
-            switch (requestCode) {
-                case Constants.IMAGE_REQUEST:
+        try {
+            if (resultCode == RESULT_OK ){
+                switch (requestCode) {
+                    case Constants.IMAGE_REQUEST:
 
 
-                    Uri imageUri = data.getData();
-                    showProgressDialog();
-                    Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(imageUri).into(imageProfile);
+                        Uri imageUri = data.getData();
+                        showProgressDialog();
+                        Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
+                        Glide.with(this).load(imageUri).into(imageProfile);
 
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                        }
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                            }
 
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                        }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(imageUri));
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                            }
+                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
+                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(imageUri));
 
-                    break;
+                        break;
 
+                }
             }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /* Get the real path from the URI */

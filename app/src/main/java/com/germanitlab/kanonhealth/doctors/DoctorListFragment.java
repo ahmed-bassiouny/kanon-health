@@ -280,10 +280,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
     private void saveInDB(List<User> doctorList) {
-        double count = mDoctorRepository.count();
         for (User user : doctorList
                 ) {
-            User doctor1 = mDoctorRepository.getDoctor(user);
             if (mDoctorRepository.getDoctor(user) == null) {
                 mDoctorRepository.create(user);
             } else {

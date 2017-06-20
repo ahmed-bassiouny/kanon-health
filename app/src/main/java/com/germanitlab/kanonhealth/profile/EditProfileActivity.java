@@ -230,11 +230,17 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (imageUri != null)
-            outState.putString("imageURI", imageUri.toString());
-        setUserObject();
-        outState.putSerializable("userdata", userInfoResponse);
-        super.onSaveInstanceState(outState);
+        try {
+            if (imageUri != null)
+                outState.putString("imageURI", imageUri.toString());
+            setUserObject();
+            outState.putSerializable("userdata", userInfoResponse);
+            super.onSaveInstanceState(outState);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 
@@ -58,20 +59,25 @@ public class Comment extends AppCompatActivity {
 
     @OnClick(R.id.submit)
     public void submit(){
-        Toast.makeText(this, doc_id, Toast.LENGTH_SHORT).show();
-        if(validationInput()){
-            new HttpCall(this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    Toast.makeText(Comment.this, R.string.thanksforcomment, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+        try {
+            if(validationInput()){
+                new HttpCall(this, new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Toast.makeText(Comment.this, R.string.thanksforcomment, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
 
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
-                }
-            }).rateDoctor(doc_id,edt_comment.getText().toString(),String.valueOf(rb_doctor_rate.getRating()));
+                    @Override
+                    public void onFailed(String error) {
+                        Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                    }
+                }).rateDoctor(doc_id,edt_comment.getText().toString(),String.valueOf(rb_doctor_rate.getRating()));
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 }

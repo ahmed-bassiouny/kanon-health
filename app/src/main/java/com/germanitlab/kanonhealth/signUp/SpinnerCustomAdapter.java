@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 
 
@@ -42,10 +44,17 @@ public class SpinnerCustomAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view = inflter.inflate(R.layout.spinner_layout, null);
+        try {
+            view = inflter.inflate(R.layout.spinner_layout, null);
 
-        TextView names = (TextView) view.findViewById(R.id.tv_spinner_layout_county_title);
-        names.setText(countryNames[i]);
+            TextView names = (TextView) view.findViewById(R.id.tv_spinner_layout_county_title);
+            names.setText(countryNames[i]);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
         return view;
     }
 }

@@ -121,28 +121,34 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     }
 
     private void assignMap(Bundle savedInstanceState) {
+        try {
+            mapView.onCreate(savedInstanceState);
+            mapView.onResume();
+            mapView.getMapAsync(new OnMapReadyCallback() {
 
-        mapView.onCreate(savedInstanceState);
-        mapView.onResume();
-        mapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    map = googleMap;
 
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
+                    if (doctorResponseList != null) {
 
-                if (doctorResponseList != null) {
+                        for (User doctorResponse : doctorResponseList) {
 
-                    for (User doctorResponse : doctorResponseList) {
+                            double lat = doctorResponse.getLocation_lat();
+                            double lng = doctorResponse.getLocation_long();
 
-                        double lat = doctorResponse.getLocation_lat();
-                        double lng = doctorResponse.getLocation_long();
+                            map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getName()));
+                        }
 
-                        map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getName()));
                     }
-
                 }
-            }
-        });
+            });
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     private void intViews(View view) {
@@ -156,24 +162,30 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        try {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                LocationRequest mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(5000); //5 seconds
+                mLocationRequest.setFastestInterval(3000); //3 seconds
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
 
-            LocationRequest mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(5000); //5 seconds
-            mLocationRequest.setFastestInterval(3000); //3 seconds
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-            final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    LocationServicesTurn.turnGPSOn(mGoogleApiClient, mLocationRequest, getActivity());
+                }
+            } else
+                askForPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 6);
 
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                LocationServicesTurn.turnGPSOn(mGoogleApiClient, mLocationRequest, getActivity());
-            }
-        } else
-            askForPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 6);
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -186,29 +198,35 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (ActivityCompat.checkSelfPermission(getContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == 5) {
-                map.setMyLocationEnabled(true);
-            } else if (requestCode == 6) {
+        try {
+            if (ActivityCompat.checkSelfPermission(getContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+                if (requestCode == 5) {
+                    map.setMyLocationEnabled(true);
+                } else if (requestCode == 6) {
 
-                LocationRequest mLocationRequest = new LocationRequest();
-                mLocationRequest.setInterval(5000); //5 seconds
-                mLocationRequest.setFastestInterval(3000); //3 seconds
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
+                    LocationRequest mLocationRequest = new LocationRequest();
+                    mLocationRequest.setInterval(5000); //5 seconds
+                    mLocationRequest.setFastestInterval(3000); //3 seconds
+                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
 
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-                final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                    final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    LocationServicesTurn.turnGPSOn(mGoogleApiClient, mLocationRequest, getActivity());
+                    if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        LocationServicesTurn.turnGPSOn(mGoogleApiClient, mLocationRequest, getActivity());
+                    }
                 }
-            }
 
-        } else {
-            Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -224,14 +242,21 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
 
     @Override
     public void onLocationChanged(Location location) {
-        if (map != null && isFirst) {
-            isFirst = false;
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng).zoom(18).build();
-            map.animateCamera(CameraUpdateFactory
-                    .newCameraPosition(cameraPosition));
+        try {
+            if (map != null && isFirst) {
+                isFirst = false;
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng).zoom(18).build();
+                map.animateCamera(CameraUpdateFactory
+                        .newCameraPosition(cameraPosition));
+            }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     @Override

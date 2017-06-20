@@ -6,7 +6,10 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.Table;
 
 import java.util.Collections;
@@ -41,34 +44,40 @@ public class TimeTable {
     }
 
     public void creatTimeTable(List<Table> list, Context context, TableLayout tablelayout) {
-        Collections.sort(list, new Comparator<Table>() {
-            @Override
-            public int compare(Table t2, Table t1) {
-                return t2.getDayweek().compareTo(t1.getDayweek());
-            }
-        });
-        String temp = "";
-        for (Table item : list) {
-            TableRow row = new TableRow(context);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-            row.setLayoutParams(lp);
-            TextView day = new TextView(context);
-            day.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        try {
+            Collections.sort(list, new Comparator<Table>() {
+                @Override
+                public int compare(Table t2, Table t1) {
+                    return t2.getDayweek().compareTo(t1.getDayweek());
+                }
+            });
+            String temp = "";
+            for (Table item : list) {
+                TableRow row = new TableRow(context);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+                row.setLayoutParams(lp);
+                TextView day = new TextView(context);
+                day.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
-            day.setTextColor(Color.BLACK);
-            TextView time = new TextView(context);
-            time.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f));
-            time.setText(item.getFrom() + " - " + item.getTo());
-            time.setTextColor(Color.BLACK);
-            if (temp.equals(item.getDayweek())) {
-                day.setText(getDayOfWeek(""));
-            } else {
-                day.setText(getDayOfWeek(item.getDayweek()));
-                temp = item.getDayweek();
+                day.setTextColor(Color.BLACK);
+                TextView time = new TextView(context);
+                time.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f));
+                time.setText(item.getFrom() + " - " + item.getTo());
+                time.setTextColor(Color.BLACK);
+                if (temp.equals(item.getDayweek())) {
+                    day.setText(getDayOfWeek(""));
+                } else {
+                    day.setText(getDayOfWeek(item.getDayweek()));
+                    temp = item.getDayweek();
+                }
+                row.addView(day);
+                row.addView(time);
+                tablelayout.addView(row);
             }
-            row.addView(day);
-            row.addView(time);
-            tablelayout.addView(row);
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 }

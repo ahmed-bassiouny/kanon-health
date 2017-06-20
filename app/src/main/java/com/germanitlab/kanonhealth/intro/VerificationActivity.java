@@ -92,91 +92,97 @@ public class VerificationActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_verification_verify_code)
     public void verify(){
-        if (verification_Code.getText().toString().length() == 0 ) {
-            Toast.makeText(getApplicationContext(), "Geben Sie den richtigen Code ein", Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            verificationCode = verification_Code.getText().toString();
-        }
-        final UserRegisterResponse registerResponse = (UserRegisterResponse) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
-        showProgressDialog();
-        new HttpCall(VerificationActivity.this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
+        try {
+            if (verification_Code.getText().toString().length() == 0 ) {
+                Toast.makeText(getApplicationContext(), "Geben Sie den richtigen Code ein", Toast.LENGTH_LONG).show();
+                return;
+            } else {
+                verificationCode = verification_Code.getText().toString();
+            }
+            final UserRegisterResponse registerResponse = (UserRegisterResponse) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
+            showProgressDialog();
+            new HttpCall(VerificationActivity.this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
 
-                JSONObject jsonObject = null;
-                try {
-                    Log.d("my response server ", response.toString());
-                    jsonObject = new JSONObject(response.toString());
-                    if (jsonObject.has("status") && jsonObject.getInt("active") == 1) {
-                        PrefManager prefManager = new PrefManager(VerificationActivity.this);
-                        prefManager.setLogin(true);
-                        AppController.getInstance().setClientInfo(registerResponse);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    FirebaseInstanceId.getInstance().deleteInstanceId();
-                                    FirebaseInstanceId.getInstance().getToken();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                    JSONObject jsonObject = null;
+                    try {
+                        Log.d("my response server ", response.toString());
+                        jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.has("status") && jsonObject.getInt("active") == 1) {
+                            PrefManager prefManager = new PrefManager(VerificationActivity.this);
+                            prefManager.setLogin(true);
+                            AppController.getInstance().setClientInfo(registerResponse);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        FirebaseInstanceId.getInstance().deleteInstanceId();
+                                        FirebaseInstanceId.getInstance().getToken();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
+                            }).start();
+                            CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, registerResponse);
+                            joinUser();
+                            dismissProgressDialog();
+                            if(oldUser) {
+                                User user = new User();
+                                user.setId(AppController.getInstance().getClientInfo().getUser_id());
+                                user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+                                new HttpCall(VerificationActivity.this, new ApiResponse() {
+                                    @Override
+                                    public void onSuccess(Object response) {
+
+
+                                        mPrefManager.put(mPrefManager.USER_KEY, response.toString());
+
+                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(i);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFailed(String error) {
+                                        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }).editProfile(user);
                             }
-                        }).start();
-                        CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, registerResponse);
-                        joinUser();
-                        dismissProgressDialog();
-                        if(oldUser) {
-                            User user = new User();
-                            user.setId(AppController.getInstance().getClientInfo().getUser_id());
-                            user.setPassword(AppController.getInstance().getClientInfo().getPassword());
-                            new HttpCall(VerificationActivity.this, new ApiResponse() {
-                                @Override
-                                public void onSuccess(Object response) {
+                            else {
+                                Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
+                                i.putExtra("isfirst", "true");
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
+                                finish();
+                            }
+                        } else {
+                            dismissProgressDialog();
+                            Snackbar snackbar = Snackbar
+                                    .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
+                            snackbar.show();
 
-
-                                    mPrefManager.put(mPrefManager.USER_KEY, response.toString());
-
-                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(i);
-                                    finish();
-                                }
-
-                                @Override
-                                public void onFailed(String error) {
-                                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-
-                                }
-                            }).editProfile(user);
                         }
-                        else {
-                            Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
-                            i.putExtra("isfirst", "true");
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(i);
-                            finish();
-                        }
-                    } else {
-                        dismissProgressDialog();
-                        Snackbar snackbar = Snackbar
-                                .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
-                        snackbar.show();
-
+                    } catch (Exception e){
+                        Crashlytics.logException(e);
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e){
-                    Crashlytics.logException(e);
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+
                 }
 
-            }
+                @Override
+                public void onFailed(String error) {
+                    dismissProgressDialog();
+                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                }
+            }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
-            @Override
-            public void onFailed(String error) {
-                dismissProgressDialog();
-                Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-            }
-        }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
     }
 
     private void handelEvent() {

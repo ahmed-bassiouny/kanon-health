@@ -1,12 +1,15 @@
 package com.germanitlab.kanonhealth.initialProfile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
 
@@ -19,6 +22,7 @@ import java.util.HashMap;
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHolder> {
     HashMap<String , String> countryCode ;
+    Context context ;
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,13 +33,20 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(CountryAdapter.MyViewHolder holder, int position) {
-        String country = (new ArrayList<String>(countryCode.keySet())).get(position);
-        String code = (new ArrayList<String>(countryCode.values())).get(position);
-        holder.code.setText(code);
-        holder.country.setText(country);
+        try {
+            String country = (new ArrayList<String>(countryCode.keySet())).get(position);
+            String code = (new ArrayList<String>(countryCode.values())).get(position);
+            holder.code.setText(code);
+            holder.country.setText(country);
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
-    public CountryAdapter(HashMap<String , String> countryCode){
+    public CountryAdapter(HashMap<String , String> countryCode , Context context){
         this.countryCode = countryCode ;
+        this.context = context ;
     }
 
     @Override

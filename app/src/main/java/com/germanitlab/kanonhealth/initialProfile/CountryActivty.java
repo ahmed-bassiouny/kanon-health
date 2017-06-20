@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 
@@ -28,56 +30,62 @@ public class CountryActivty extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_country_activty);
-        search_bar = (EditText) findViewById(R.id.search_bar);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        try {
+            search_bar = (EditText) findViewById(R.id.search_bar);
+            recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        mAdapter = new CountryAdapter(Constants.COUNTRY_CODES);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        search_bar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            mAdapter = new CountryAdapter(Constants.COUNTRY_CODES , getApplicationContext());
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(mAdapter);
+            search_bar.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                HashMap<String, String> search = new HashMap<String, String>();
-                try{
-                    String temp = search_bar.getText().toString().replaceAll(Pattern.quote("+"), "");
-                    if(temp == "") {
-                    }
-                    else {
-                        int number = Integer.parseInt(temp);
-                    }
-                    for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
-                        if (e.getValue().toLowerCase().startsWith("+"+temp)) {
-                            search.put(e.getKey().toString(), e.getValue().toString());
+                @Override
+                public void afterTextChanged(Editable s) {
+                    HashMap<String, String> search = new HashMap<String, String>();
+                    try{
+                        String temp = search_bar.getText().toString().replaceAll(Pattern.quote("+"), "");
+                        if(temp == "") {
+                        }
+                        else {
+                            int number = Integer.parseInt(temp);
+                        }
+                        for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
+                            if (e.getValue().toLowerCase().startsWith("+"+temp)) {
+                                search.put(e.getKey().toString(), e.getValue().toString());
 
+                            }
                         }
                     }
-                }
-                catch (Exception w) {
-                    for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
-                        Log.d(e.getKey().toLowerCase().toString() , e.getValue().toString());
-                        if (e.getKey().toLowerCase().startsWith(search_bar.getText().toString().toLowerCase())) {
-                            search.put(e.getKey().toString(), e.getValue().toString());
+                    catch (Exception w) {
+                        for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
+                            Log.d(e.getKey().toLowerCase().toString() , e.getValue().toString());
+                            if (e.getKey().toLowerCase().startsWith(search_bar.getText().toString().toLowerCase())) {
+                                search.put(e.getKey().toString(), e.getValue().toString());
 
+                            }
                         }
                     }
-                }
-                mAdapter = new CountryAdapter(search);
-                recyclerView.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                    mAdapter = new CountryAdapter(search , getApplicationContext());
+                    recyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
 
-            }
-        });
+                }
+            });
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -97,8 +97,8 @@ public class DoctorProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile);
-        profileActivity=this;
         try {
+            profileActivity=this;
             mPrefManager = new PrefManager(this);
             ButterKnife.bind(this);
             util = Util.getInstance(this);

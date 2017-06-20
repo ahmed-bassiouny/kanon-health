@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -90,6 +93,9 @@ public class TimeTable extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table_activity);
+
+        initTB();
+
         try {
             TimetableInstance = this;
 
@@ -108,6 +114,38 @@ public class TimeTable extends AppCompatActivity {
 
     }
 
+    private void initTB() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_time_table, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+//                onBackPressed();
+                break;
+            case R.id.mi_save:
+                save();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -122,65 +160,71 @@ public class TimeTable extends AppCompatActivity {
 
     @OnCheckedChanged({R.id.monday_switch, R.id.tuesday_switch, R.id.wednesday_switch, R.id.thursday_switch, R.id.friday_switch, R.id.saturday_switch, R.id.sunday_switch})
     public void checkboxToggled(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.monday_switch:
-                if (isChecked) {
-                    if (checkKeys(1))
-                        addNewItem(monday_layout, 1, monadaySwitch, null, null, monday_from_to);
-                } else {
-                    removeAll(1, monday_layout, monday_from_to);
+        try {
+            switch (buttonView.getId()) {
+                case R.id.monday_switch:
+                    if (isChecked) {
+                        if (checkKeys(1))
+                            addNewItem(monday_layout, 1, monadaySwitch, null, null, monday_from_to);
+                    } else {
+                        removeAll(1, monday_layout, monday_from_to);
 
-                }
-                break;
-            case R.id.tuesday_switch:
-                if (isChecked) {
-                    if (checkKeys(2))
-                        addNewItem(tuesday_layout, 2, tuesdaySwitch, null, null, tuesday_from_to);
-                } else {
-                    removeAll(2, tuesday_layout, tuesday_from_to);
-                }
-                break;
-            case R.id.wednesday_switch:
-                if (isChecked) {
-                    if (checkKeys(3))
-                        addNewItem(wendesday_layout, 3, wednesdaySwitch, null, null, wednesday_from_to);
-                } else {
-                    removeAll(3, wendesday_layout, wednesday_from_to);
-                }
-                break;
-            case R.id.thursday_switch:
-                if (isChecked) {
-                    if (checkKeys(4))
-                        addNewItem(thurday_layout, 4, thursdaySwitch, null, null, thurday_from_to);
-                } else {
-                    removeAll(4, thurday_layout, thurday_from_to);
-                }
-                break;
-            case R.id.friday_switch:
-                if (isChecked) {
-                    if (checkKeys(5))
-                        addNewItem(friday_layout, 5, fridaySwitch, null, null, friday_from_to);
-                } else {
-                    removeAll(5, friday_layout, friday_from_to);
-                }
-                break;
-            case R.id.saturday_switch:
-                if (isChecked) {
-                    if (checkKeys(6))
-                        addNewItem(saturday_layout, 6, saturdaySwitch, null, null, saturday_from_to);
-                } else {
-                    removeAll(6, saturday_layout, saturday_from_to);
-                }
-                break;
-            case R.id.sunday_switch:
-                if (isChecked) {
-                    if (checkKeys(7))
-                        addNewItem(sunday_layout, 7, sundaySwitch, null, null, sunday_from_to);
-                } else {
-                    removeAll(7, sunday_layout, sunday_from_to);
-                }
-                break;
+                    }
+                    break;
+                case R.id.tuesday_switch:
+                    if (isChecked) {
+                        if (checkKeys(2))
+                            addNewItem(tuesday_layout, 2, tuesdaySwitch, null, null, tuesday_from_to);
+                    } else {
+                        removeAll(2, tuesday_layout, tuesday_from_to);
+                    }
+                    break;
+                case R.id.wednesday_switch:
+                    if (isChecked) {
+                        if (checkKeys(3))
+                            addNewItem(wendesday_layout, 3, wednesdaySwitch, null, null, wednesday_from_to);
+                    } else {
+                        removeAll(3, wendesday_layout, wednesday_from_to);
+                    }
+                    break;
+                case R.id.thursday_switch:
+                    if (isChecked) {
+                        if (checkKeys(4))
+                            addNewItem(thurday_layout, 4, thursdaySwitch, null, null, thurday_from_to);
+                    } else {
+                        removeAll(4, thurday_layout, thurday_from_to);
+                    }
+                    break;
+                case R.id.friday_switch:
+                    if (isChecked) {
+                        if (checkKeys(5))
+                            addNewItem(friday_layout, 5, fridaySwitch, null, null, friday_from_to);
+                    } else {
+                        removeAll(5, friday_layout, friday_from_to);
+                    }
+                    break;
+                case R.id.saturday_switch:
+                    if (isChecked) {
+                        if (checkKeys(6))
+                            addNewItem(saturday_layout, 6, saturdaySwitch, null, null, saturday_from_to);
+                    } else {
+                        removeAll(6, saturday_layout, saturday_from_to);
+                    }
+                    break;
+                case R.id.sunday_switch:
+                    if (isChecked) {
+                        if (checkKeys(7))
+                            addNewItem(sunday_layout, 7, sundaySwitch, null, null, sunday_from_to);
+                    } else {
+                        removeAll(7, sunday_layout, sunday_from_to);
+                    }
+                    break;
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -199,129 +243,135 @@ public class TimeTable extends AppCompatActivity {
 
 
     private void addNewItem(final LinearLayout layout, final int day, final Switch tempSwitch, String tfrom, String tto, final LinearLayout layout_from_to) {
-        final LinearLayout line = new LinearLayout(this);
-        final int lineId = line.generateViewId();
-        line.setId(lineId);
-        line.setMinimumWidth(1);
-        line.setMinimumHeight(1);
-        layout_from_to.setVisibility(View.VISIBLE);
-        line.setBackgroundColor(getResources().getColor(R.color.black));
-        layout.addView(line);
-        final LinearLayout linearLayout = new LinearLayout(this);
-        final int layoutId = linearLayout.generateViewId();
-        linearLayout.setId(layoutId);
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, getPixal(30)));
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setBackgroundColor(getResources().getColor(R.color.white));
-        final TextView from = new TextView(this);
-        if (tfrom != null)
-            from.setText(tfrom);
-        else
-            from.setText("10:00");
-        from.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog dpd = TimePickerDialog.newInstance(
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                if (minute < 10)
-                                    from.setText(hourOfDay + ":0" + minute);
-                                else
-                                    from.setText(hourOfDay + ":" + minute);
-                            }
-                        },
-                        now.get(Calendar.MINUTE),
-                        now.get(Calendar.SECOND),
-                        false
-                );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
-            }
-        });
-        from.setTextColor(getResources().getColor(R.color.black));
-        final int fromId = from.generateViewId();
-        from.setId(fromId);
-        from.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-        from.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        linearLayout.addView(from);
-        LinearLayout verticalLine = new LinearLayout(this);
-        verticalLine.setLayoutParams(new LinearLayout.LayoutParams(
-                getPixal(1), LinearLayout.LayoutParams.MATCH_PARENT));
-        verticalLine.setBackgroundResource(R.color.black);
-        linearLayout.addView(verticalLine);
-        final TextView to = new TextView(this);
-        if (tto != null)
-            to.setText(tto);
-        else
-            to.setText("10:00");
-        to.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog dpd = TimePickerDialog.newInstance(
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                if (minute < 10)
-                                    to.setText(hourOfDay + ":0" + minute);
-                                else
-                                    to.setText(hourOfDay + ":" + minute);
-                            }
-                        },
-                        now.get(Calendar.HOUR),
-                        now.get(Calendar.MINUTE),
-                        false
-                );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
-            }
-        });
-        to.setTextColor(getResources().getColor(R.color.black));
-        to.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-        to.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        final int toId = to.generateViewId();
-        to.setId(toId);
-        linearLayout.addView(to);
-        if (getArray(day) == null)
-            createNewList(day, lineId, layoutId, fromId, toId);
-        else
-            addToArray(day, lineId, layoutId, fromId, toId);
-        LinearLayout linearLayout1 = new LinearLayout(this);
-        linearLayout1.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, .33f));
-        linearLayout1.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-        ImageView minus = new ImageView(this);
-        minus.setBackgroundResource(R.drawable.ic_remove_black_24dp);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(getPixal(40), LinearLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.RIGHT;
-        layoutParams.setMargins(5, 0, 5, 0);
-        minus.setLayoutParams(layoutParams);
-        minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layout.removeView(linearLayout);
-                layout.removeView(line);
-                removeFromList(day, lineId, layoutId, fromId, toId);
-                if (checkKeys(day)) {
-                    tempSwitch.setChecked(false);
-                    layout_from_to.setVisibility(View.GONE);
+        try {
+            final LinearLayout line = new LinearLayout(this);
+            final int lineId = line.generateViewId();
+            line.setId(lineId);
+            line.setMinimumWidth(1);
+            line.setMinimumHeight(1);
+            layout_from_to.setVisibility(View.VISIBLE);
+            line.setBackgroundColor(getResources().getColor(R.color.black));
+            layout.addView(line);
+            final LinearLayout linearLayout = new LinearLayout(this);
+            final int layoutId = linearLayout.generateViewId();
+            linearLayout.setId(layoutId);
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, getPixal(30)));
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setBackgroundColor(getResources().getColor(R.color.white));
+            final TextView from = new TextView(this);
+            if (tfrom != null)
+                from.setText(tfrom);
+            else
+                from.setText("10:00");
+            from.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar now = Calendar.getInstance();
+                    TimePickerDialog dpd = TimePickerDialog.newInstance(
+                            new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                                    if (minute < 10)
+                                        from.setText(hourOfDay + ":0" + minute);
+                                    else
+                                        from.setText(hourOfDay + ":" + minute);
+                                }
+                            },
+                            now.get(Calendar.MINUTE),
+                            now.get(Calendar.SECOND),
+                            false
+                    );
+                    dpd.show(getFragmentManager(), "Datepickerdialog");
                 }
-            }
-        });
-        linearLayout1.addView(minus);
-        final ImageView add = new ImageView(this);
-        add.setBackgroundResource(R.drawable.ic_add_black_24dp);
-        add.setLayoutParams(layoutParams);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addNewItem(layout, day, tempSwitch, null, null, layout_from_to);
-            }
-        });
-        linearLayout1.addView(add);
-        linearLayout.addView(linearLayout1);
-        layout.addView(linearLayout);
-        tempSwitch.setChecked(true);
+            });
+            from.setTextColor(getResources().getColor(R.color.black));
+            final int fromId = from.generateViewId();
+            from.setId(fromId);
+            from.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
+            from.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            linearLayout.addView(from);
+            LinearLayout verticalLine = new LinearLayout(this);
+            verticalLine.setLayoutParams(new LinearLayout.LayoutParams(
+                    getPixal(1), LinearLayout.LayoutParams.MATCH_PARENT));
+            verticalLine.setBackgroundResource(R.color.black);
+            linearLayout.addView(verticalLine);
+            final TextView to = new TextView(this);
+            if (tto != null)
+                to.setText(tto);
+            else
+                to.setText("10:00");
+            to.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar now = Calendar.getInstance();
+                    TimePickerDialog dpd = TimePickerDialog.newInstance(
+                            new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                                    if (minute < 10)
+                                        to.setText(hourOfDay + ":0" + minute);
+                                    else
+                                        to.setText(hourOfDay + ":" + minute);
+                                }
+                            },
+                            now.get(Calendar.HOUR),
+                            now.get(Calendar.MINUTE),
+                            false
+                    );
+                    dpd.show(getFragmentManager(), "Datepickerdialog");
+                }
+            });
+            to.setTextColor(getResources().getColor(R.color.black));
+            to.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
+            to.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            final int toId = to.generateViewId();
+            to.setId(toId);
+            linearLayout.addView(to);
+            if (getArray(day) == null)
+                createNewList(day, lineId, layoutId, fromId, toId);
+            else
+                addToArray(day, lineId, layoutId, fromId, toId);
+            LinearLayout linearLayout1 = new LinearLayout(this);
+            linearLayout1.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, .33f));
+            linearLayout1.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+            ImageView minus = new ImageView(this);
+            minus.setBackgroundResource(R.drawable.ic_remove_black_24dp);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(getPixal(40), LinearLayout.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity = Gravity.RIGHT;
+            layoutParams.setMargins(5, 0, 5, 0);
+            minus.setLayoutParams(layoutParams);
+            minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    layout.removeView(linearLayout);
+                    layout.removeView(line);
+                    removeFromList(day, lineId, layoutId, fromId, toId);
+                    if (checkKeys(day)) {
+                        tempSwitch.setChecked(false);
+                        layout_from_to.setVisibility(View.GONE);
+                    }
+                }
+            });
+            linearLayout1.addView(minus);
+            final ImageView add = new ImageView(this);
+            add.setBackgroundResource(R.drawable.ic_add_black_24dp);
+            add.setLayoutParams(layoutParams);
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addNewItem(layout, day, tempSwitch, null, null, layout_from_to);
+                }
+            });
+            linearLayout1.addView(add);
+            linearLayout.addView(linearLayout1);
+            layout.addView(linearLayout);
+            tempSwitch.setChecked(true);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void removeFromList(int day, int lineId, int layoutId, int fromId, int toId) {
@@ -377,53 +427,71 @@ public class TimeTable extends AppCompatActivity {
 
     @OnClick(R.id.ll_schedule)
     public void schedule(View view) {
-        Intent openingHoursIntent = new Intent(getApplicationContext(), OpeningHoursActivity.class);
-        openingHoursIntent.putExtra(Constants.DATA , (Serializable) list);
-        openingHoursIntent.putExtra("type",type);
-        openingHoursIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        startActivity(openingHoursIntent );
+        try {
+            Intent openingHoursIntent = new Intent(getApplicationContext(), OpeningHoursActivity.class);
+            openingHoursIntent.putExtra(Constants.DATA , (Serializable) list);
+            openingHoursIntent.putExtra("type",type);
+            openingHoursIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            startActivity(openingHoursIntent );
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
-    @OnClick(R.id.save)
-    public void save(View view) {
-        Intent intent = new Intent();
-        intent.putExtra("type", 0);
-        int key = 1;
-        List<Table> list = new ArrayList<>();
-        while (key < 8) {
-            if (map.containsKey(key)) {
-                List<Integer> Ids = map.get(key);
-                int count = 0;
-                while (count < Ids.size()) {
-                    Table table = new Table();
-                    table.setDayweek(String.valueOf(key));
-                    TextView from = (TextView) findViewById(Ids.get(count + 2));
-                    TextView to = (TextView) findViewById(Ids.get(count + 3));
-                    table.setFrom(String.valueOf(from.getText()));
-                    table.setTo(String.valueOf(to.getText()));
-                    list.add(table);
-                    count += 4;
-                }
-            }
-            key++;
-        }
-        intent.putExtra(Constants.DATA , (Serializable) list);
+//    @OnClick(R.id.save)
+    public void save() {
         try {
-            if (OpeningHoursActivity.active )
-                instance.finish();
-        }catch (Exception e){}
+            Intent intent = new Intent();
+            intent.putExtra("type", 0);
+            int key = 1;
+            List<Table> list = new ArrayList<>();
+            while (key < 8) {
+                if (map.containsKey(key)) {
+                    List<Integer> Ids = map.get(key);
+                    int count = 0;
+                    while (count < Ids.size()) {
+                        Table table = new Table();
+                        table.setDayweek(String.valueOf(key));
+                        TextView from = (TextView) findViewById(Ids.get(count + 2));
+                        TextView to = (TextView) findViewById(Ids.get(count + 3));
+                        table.setFrom(String.valueOf(from.getText()));
+                        table.setTo(String.valueOf(to.getText()));
+                        list.add(table);
+                        count += 4;
+                    }
+                }
+                key++;
+            }
+            intent.putExtra(Constants.DATA , (Serializable) list);
+            try {
+                if (OpeningHoursActivity.active )
+                    instance.finish();
+            }catch (Exception e){}
 
-        setResult(RESULT_OK , intent);
-        finish();
+            setResult(RESULT_OK , intent);
+            finish();
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_OK) {
-            list = (List<Table>) data.getSerializableExtra(Constants.DATA);
+        try {
+            if(requestCode == RESULT_OK) {
+                list = (List<Table>) data.getSerializableExtra(Constants.DATA);
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void handleData(List<Table> list) {

@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.async;
 import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 
@@ -27,6 +28,7 @@ public class SocketCall {
         // AppController.getInstance().getSocket().connect();
         this.activity = activity;
     }
+
     public SocketCall(Context activity, ApiResponse apiResponse) {
 
         // AppController.getInstance().getSocket().connect();
@@ -184,27 +186,27 @@ public class SocketCall {
     }
 
     public void setNewMessage(String to_id, String msg, String type) {
-
-        JSONObject request = null;
         try {
+            JSONObject request = null;
+            try {
 
-            request = new JSONObject();
-            request.put("to_id", to_id);
-            request.put("msg", msg);
-            request.put("type", type);
+                request = new JSONObject();
+                request.put("to_id", to_id);
+                request.put("msg", msg);
+                request.put("type", type);
 
-        } catch (JSONException e) {
+            } catch (JSONException e) {
 
-            Log.d("EX ", e.getLocalizedMessage());
-        }
+                Log.d("EX ", e.getLocalizedMessage());
+            }
 
-        AppController.getInstance().getSocket().emit("ChatMessage", request);
-        Log.d("Before request", " " + AppController.getInstance().getSocket().connected());
-        AppController.getInstance().getSocket().on("ChatMessage", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
+            AppController.getInstance().getSocket().emit("ChatMessage", request);
+            Log.d("Before request", " " + AppController.getInstance().getSocket().connected());
+            AppController.getInstance().getSocket().on("ChatMessage", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
 
-                Log.d("New Message response : ", args[0].toString());
+                    Log.d("New Message response : ", args[0].toString());
 //                JSONObject response = (JSONObject) args[0];
 //
 //                String mJsonString = response.toString();
@@ -214,17 +216,21 @@ public class SocketCall {
 //                JsonElement mJson = parser.parse(mJsonString);
 //                UserRegisterResponse object = gson.fromJson(mJson, UserRegisterResponse.class);
 //
-                apiResponse.onSuccess(args[0].toString());
-            }
-        }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
+                    apiResponse.onSuccess(args[0].toString());
+                }
+            }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
 
-                apiResponse.onFailed(args[0].toString());
-            }
-        });
+                    apiResponse.onFailed(args[0].toString());
+                }
+            });
 
-        Log.d(" After Socket", " " + AppController.getInstance().getSocket().connected());
+            Log.d(" After Socket", " " + AppController.getInstance().getSocket().connected());
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
 
     }
 

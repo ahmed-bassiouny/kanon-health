@@ -17,6 +17,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -679,11 +680,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (is_me)
             return;
         try {
-            if (user.getIs_my_doctor().equals("null") || user.getIs_my_doctor() == null)
+            if (TextUtils.isEmpty(user.getIs_my_doctor()) || user.getIs_my_doctor().equals("0"))
                 edAddToFavourite.setText(getString(R.string.add_to));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));
-        } catch (Exception e) {
+           } catch (Exception e) {
             e.printStackTrace();
             Log.e("a*a*s*as*a", e.getLocalizedMessage());
         }
