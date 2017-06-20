@@ -414,6 +414,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         intent.putExtra("doctor_obj", doctor);
 
         startActivity(intent);
+        finish();
     }
 
     private void sendMessage() {

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -101,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
         ButterKnife.bind(this);
-
+        initTB();
         try {
             if (Helper.isNetworkAvailable(getApplicationContext())) {
                 tvEdit.setVisibility(View.VISIBLE);
@@ -132,6 +134,49 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
 
     }
+
+    @Override
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+
+            case android.R.id.home:
+
+                finish();
+
+//                onBackPressed();
+
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
+
+    private void initTB() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+    }
+
+
+
+
 
     private void bindData() {
 

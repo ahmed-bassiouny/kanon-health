@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -42,6 +43,7 @@ public class PaymentActivity extends AppCompatActivity {
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
     User doctor ;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +99,8 @@ public class PaymentActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                onBackPressed();
+                finish();
+//                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -106,7 +109,33 @@ public class PaymentActivity extends AppCompatActivity {
     @OnClick(R.id.next)
     public void nextClicked (){
         try {
-            final Gson gson = new Gson();
+            if(doctor.isClinic==1)
+            {
+                type="3";
+            }else {
+                type="2";
+            }
+
+            new HttpCall(PaymentActivity.this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+//                    Intent intent = new Intent(PaymentActivity.this, Comment.class);
+//                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+//                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
+            }).sendSessionRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),
+                    String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+                    String.valueOf(doctor.getId()),
+                    type);
+
+
+
+        final Gson gson = new Gson();
             Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
 
             if (doctor!=null) {

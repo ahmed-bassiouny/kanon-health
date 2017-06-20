@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -1593,15 +1594,34 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
     {
         if(privacy == 0)
         {
-            image.setBackgroundResource(R.drawable.red);
+//            image.setBackgroundResource(R.drawable.red);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.red, context.getTheme()));
+            } else {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.red));
+            }
+
         }
         if(privacy == 1)
         {
-            image.setBackgroundResource(R.drawable.blue);
+//            image.setBackgroundResource(R.drawable.blue);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.blue, context.getTheme()));
+            } else {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.blue));
+            }
+
         }
         if(privacy == 2)
         {
-            image.setBackgroundResource(R.drawable.green);
+//            image.setBackgroundResource(R.drawable.green);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.green, context.getTheme()));
+            } else {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.green));
+            }
+
         }
     }
 

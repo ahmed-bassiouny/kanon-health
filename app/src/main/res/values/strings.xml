@@ -10,8 +10,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="my_profile">Mein Profil</string>
-    <string name="edit">Ändern</string>
+    <string name="my_profile">My Profile</string>
+    <string name="edit">Edit</string>
 
     <string name="personal_info">Important Information</string>
     <string name="birthday">Birthday :</string>

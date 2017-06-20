@@ -175,10 +175,15 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
 
     private void setupTabIcons() {
-        mytablayout.getTabAt(0).setIcon(R.drawable.ic_contacts_black_24dp);
-        mytablayout.getTabAt(1).setIcon(R.drawable.ic_assignment_black_24dp);
-        mytablayout.getTabAt(2).setIcon(R.drawable.ic_chat_black_24dp);
-        mytablayout.getTabAt(3).setIcon(R.drawable.ic_settings_black_24dp);
+//        mytablayout.getTabAt(0).setIcon(R.drawable.ic_contacts_black_24dp);
+//        mytablayout.getTabAt(1).setIcon(R.drawable.ic_assignment_black_24dp);
+//        mytablayout.getTabAt(2).setIcon(R.drawable.ic_chat_black_24dp);
+//        mytablayout.getTabAt(3).setIcon(R.drawable.ic_settings_black_24dp);
+
+        mytablayout.getTabAt(0).setIcon(R.drawable.doctor_tab);
+        mytablayout.getTabAt(1).setIcon(R.drawable.document_tab);
+        mytablayout.getTabAt(2).setIcon(R.drawable.chat_tab);
+        mytablayout.getTabAt(3).setIcon(R.drawable.setting_tab);
 
         mytablayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         mytablayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor("#a8a8a8"), PorterDuff.Mode.SRC_IN);
@@ -264,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Contacts";
+                    return "Contact";
                 case 1:
                     return "Documents";
                 case 2:

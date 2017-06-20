@@ -6,8 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,9 @@ public class RateActivity extends AppCompatActivity {
     @BindView(R.id.txt_doctor_name) TextView txt_doctor_name;
     @BindView(R.id.rb_doctor_rate) RatingBar rb_doctor_rate;
     @BindView(R.id.txt_reviews) TextView txt_reviews;
+    @BindView(R.id.img_back)
+
+    ImageView ivBack;
 
     // rate stars Button
     @BindView(R.id.btn_five_stars) Button btn_five_stars;
@@ -62,6 +67,21 @@ public class RateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
+
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View view) {
+
+                finish();
+
+            }
+
+        });
+
+
         try {
             recycler_view.setLayoutManager( new LinearLayoutManager(getApplicationContext()));
             rate_percentages=new HashMap<>();
