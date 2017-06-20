@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Comment {
     @SerializedName("user_id")
-    private String userID;
+    private int userID;
     @SerializedName("password")
     private String password;
     @SerializedName("key")
@@ -31,7 +31,7 @@ public class Comment {
     private String country_flag;
 
 
-    public Comment(String userID, String password, String key, String doc_id, String comment, String rate) {
+    public Comment(int userID, String password, String key, String doc_id, String comment, String rate) {
         this.userID = userID;
         this.password = password;
         this.Key = key;
@@ -112,7 +112,7 @@ public class Comment {
         this.country_flag = country_flag;
     }
 
-    public Comment(String userID, String password, String key, String doc_id) {
+    public Comment(int userID, String password, String key, String doc_id) {
         this.userID = userID;
         this.password = password;
         this.Key = key;

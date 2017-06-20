@@ -333,11 +333,6 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("userInfoResponse", userInfoResponse);
-        intent.putExtra("from", false);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
         finish();
     }
 
@@ -542,6 +537,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     public void onCameraClicked() {
         takeImageWithCamera();
     }
+
 
     @Override
     public void deleteMyImage() {

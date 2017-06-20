@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -364,9 +365,15 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             public void onClick(View view) {
                 util.showProgressDialog();
                 doctors_list.setBackgroundResource(R.color.gray);
-                doctors_list.setTextColor(getResources().getColor(R.color.black));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    doctors_list.setTextColor(getResources().getColor(R.color.black ,null));
+                    praxis_list.setTextColor(getResources().getColor(R.color.white, null));
+                }
+                else {
+                    doctors_list.setTextColor(getResources().getColor(R.color.black));
+                    praxis_list.setTextColor(getResources().getColor(R.color.white));
+                }
                 praxis_list.setBackgroundResource(R.color.blue);
-                praxis_list.setTextColor(getResources().getColor(R.color.white));
                 new HttpCall(new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {

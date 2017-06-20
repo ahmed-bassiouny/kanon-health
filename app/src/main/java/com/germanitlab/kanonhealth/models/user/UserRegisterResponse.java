@@ -20,6 +20,13 @@ public class UserRegisterResponse implements Serializable {
     @SerializedName("sucess")
     private boolean sucess;
 
+    public boolean is_exist() {
+        return is_exist;
+    }
+
+    @SerializedName("is_exist")
+    private boolean is_exist;
+
 
     public String getPassword() {
         return password;
@@ -51,6 +58,11 @@ public class UserRegisterResponse implements Serializable {
                 "password='" + password + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", sucess=" + sucess +
+                ", is_exist=" + is_exist +
                 '}';
+    }
+
+    public void setIs_exist(boolean is_exist) {
+        this.is_exist = is_exist;
     }
 }

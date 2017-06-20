@@ -401,7 +401,7 @@ public class HttpCall {
 
     public void getrating(String doctorID) {
         try {
-            Comment comment = new Comment(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "0", doctorID);
+            Comment comment = new Comment(AppController.getInstance().getClientInfo().getUser_id(), AppController.getInstance().getClientInfo().getPassword(), "0", doctorID);
             ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<List<Comment>> call = apiInterface.getrating(comment);
             call.enqueue(new Callback<List<Comment>>() {
@@ -836,7 +836,7 @@ public class HttpCall {
     public void rateDoctor(String doc_id, String txtcomment, String rate) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            Comment comment = new Comment(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "0", doc_id, txtcomment, rate);
+            Comment comment = new Comment(AppController.getInstance().getClientInfo().getUser_id(), AppController.getInstance().getClientInfo().getPassword(), "0", doc_id, txtcomment, rate);
             Call<JsonObject> connection = service.rateDoctor(comment);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override

@@ -41,7 +41,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
+
 public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @BindView(R.id.tv_profile_edit)
@@ -74,14 +76,14 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     RecyclerView recyclerView;
     @BindView(R.id.recycler_view2)
     RecyclerView recyclerView2;
-//    @BindView(R.id.img_profile_qr)
+    //    @BindView(R.id.img_profile_qr)
 //    ImageView qr;
     @BindView(R.id.scrollView)
-    ScrollView scrollView ;
+    ScrollView scrollView;
     @BindView(R.id.video_layout)
-    LinearLayout video_layout ;
+    LinearLayout video_layout;
     private UserInfoResponse userInfoResponse;
-    private PrefManager mPrefManager ;
+    private PrefManager mPrefManager;
 
     private QuestionAdapter mAdapter;
     private DoctorDocumentAdapter mAdapter2;
@@ -91,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     ArrayList<Message> images;
     Dialog dialog;
-    boolean is_doctor ;
+    boolean is_doctor;
 
 
     @Override
@@ -103,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         try {
             if (Helper.isNetworkAvailable(getApplicationContext())) {
                 tvEdit.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 tvEdit.setVisibility(View.GONE);
             }
 
@@ -114,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             if (!from) {
 
                 userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
-                mPrefManager.put(PrefManager.USER_KEY , new Gson().toJson(userInfoResponse));
+                mPrefManager.put(PrefManager.USER_KEY, new Gson().toJson(userInfoResponse));
                 bindData();
 
                 progressBar.setVisibility(View.GONE);
@@ -123,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             } else {
                 new HttpCall(this, this).getProfile(AppController.getInstance().getClientInfo());
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -134,14 +136,14 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     private void bindData() {
 
         PrefManager prefManager = new PrefManager(this);
-        if ( prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "" ){
+        if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
 
             String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
 
-            Helper.setImage(this, path , imgAvatar, R.drawable.profile_place_holder);
+            Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
         }
 
-        if(userInfoResponse.getUser().getIsDoc() == 1)
+        if (userInfoResponse.getUser().getIsDoc() == 1)
             is_doctor = true;
         else
             is_doctor = false;
@@ -165,7 +167,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         try {
             Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
             String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            Log.d("my converted date" ,s );
+            Log.d("my converted date", s);
             tvBirthDate.setText(s);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -176,7 +178,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         tvZipCode.setText(userInfoResponse.getUser().getInfo().getZipCode());
         tvProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
         tvCounty.setText(userInfoResponse.getUser().getInfo().getCountry());
-        if(!is_doctor) {
+        if (!is_doctor) {
             questionAnswer = userInfoResponse.getUser().getQuestions();
             images = userInfoResponse.getUser().getDocuments();
             createAdapter();
@@ -217,7 +219,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
                 userInfoResponse = (UserInfoResponse) response;
                 Gson gson = new Gson();
-                mPrefManager.put(PrefManager.USER_KEY , gson.toJson(response));
+                mPrefManager.put(PrefManager.USER_KEY, gson.toJson(response));
                 bindData();
 
                 linearProfileContent.setVisibility(View.VISIBLE);
@@ -226,7 +228,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
                 tvLoadingError.setVisibility(View.VISIBLE);
                 tvLoadingError.setText("Some thing went wrong");
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -241,7 +243,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             tvLoadingError.setText(error);
         else
             tvLoadingError.setText("Some thing went wrong");
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -257,13 +259,14 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 //        intent.putExtra("index" , 3);
 //        startActivity(intent);
 
-        if(getIntent().getExtras().containsKey("tab")){
+/*        if(getIntent().getExtras().containsKey("tab")){
             indexFromIntent = 1;
 
         }else {
             indexFromIntent = 3;
 
         }
-        ProfileActivity.super.onBackPressed();
+        ProfileActivity.super.onBackPressed();*/
+        finish();
     }
 }

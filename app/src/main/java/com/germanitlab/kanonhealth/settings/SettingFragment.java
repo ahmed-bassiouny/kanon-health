@@ -103,6 +103,11 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
+        try {
+            user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+        }catch (Exception e){
+        }
+        initView();
         return view;
     }
 
@@ -220,12 +225,7 @@ public class SettingFragment extends Fragment {
             //status doctor
             txt_status = (TextView) view.findViewById(R.id.txt_status);
             btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
-            if (user.getIsDoc() == 1) {
-                rvPracticies.setVisibility(View.VISIBLE);
-            } else {
-                rvPracticies.setVisibility(View.GONE);
 
-            }
             PackageInfo pInfo = null;
             try {
                 pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -327,6 +327,12 @@ public class SettingFragment extends Fragment {
                 line.setVisibility(View.VISIBLE);
                 txt_status.setVisibility(View.VISIBLE);
                 btn_change_status.setVisibility(View.VISIBLE);
+            }
+            if (user.getIsDoc() == 1) {
+                rvPracticies.setVisibility(View.VISIBLE);
+            } else {
+                rvPracticies.setVisibility(View.GONE);
+
             }
         }
         catch (Exception e){

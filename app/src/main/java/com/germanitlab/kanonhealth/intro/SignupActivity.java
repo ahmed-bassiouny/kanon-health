@@ -62,17 +62,6 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed.getDial_code());
 
         }
-/*
-        Constants.COUNTRY_CODES.clear();
-        Constants.COUNTRY_CODES.put("مصر", "+20");
-        Constants.COUNTRY_CODES.put("Germany", "+49");
-        Constants.COUNTRY_CODES.put("USA", "+10");
-        Constants.COUNTRY_CODES.put("JER", "+50");
-        Constants.COUNTRY_CODES.put("Kore", "+58");
-        Constants.COUNTRY_CODES.put("Dew", "+74");
-        Constants.COUNTRY_CODES.put("SWQ", "+84");
-*/
-
         initView();
         handelEvent();
         try {
@@ -180,38 +169,35 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     @Override
     public void onSuccess(Object response) {
         //-- Response : {"password":"831558a6e65a225c710b084742f407b6","user_id":97,"sucess":true}
-
-        Log.d("Response", response.toString());
-        UserRegisterResponse registerResponse = (UserRegisterResponse) response;
-        JSONObject jsonObject = null;
-        Boolean oldUser = false;
         try {
-            jsonObject = new JSONObject(response.toString());
-            if (jsonObject.getBoolean("is_exist")) {
+            Log.d("Response", response.toString());
+            UserRegisterResponse registerResponse = (UserRegisterResponse) response;
+            JSONObject jsonObject = null;
+            Boolean oldUser = false;
+            if (registerResponse.is_exist()) {
                 oldUser = true;
             }
+            if (registerResponse.isSucess()) {
+                dismissProgressDialog();
+                Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
+                intent.putExtra("number", etMobileNumber.getText().toString());
+                intent.putExtra("codeNumber", code.toString());
+                intent.putExtra(Constants.REGISER_RESPONSE, registerResponse);
+                intent.putExtra("oldUser", oldUser);
+                startActivity(intent);
+                finish();
 
-        } catch (Exception e){
+            } else {
+
+                dismissProgressDialog();
+                Snackbar snackbar = Snackbar
+                        .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
+                snackbar.show();
+
+            }
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-        if (registerResponse.isSucess()) {
-            dismissProgressDialog();
-            Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
-            intent.putExtra("number", etMobileNumber.getText().toString());
-            intent.putExtra("codeNumber", code.toString());
-            intent.putExtra(Constants.REGISER_RESPONSE, registerResponse);
-            intent.putExtra("oldUser", oldUser);
-            startActivity(intent);
-            finish();
-
-        } else {
-
-            dismissProgressDialog();
-            Snackbar snackbar = Snackbar
-                    .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
-            snackbar.show();
-
         }
 
     }
@@ -223,7 +209,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
-        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+        dismissProgressDialog();
+        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
     }
 
     public void showProgressDialog() {
