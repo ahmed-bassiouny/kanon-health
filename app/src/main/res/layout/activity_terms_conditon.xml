@@ -38,7 +38,7 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <TextView
+    <me.biubiubiu.justifytext.library.JustifyTextView
         android:id="@+id/tv_terms"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

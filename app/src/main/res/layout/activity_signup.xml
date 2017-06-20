@@ -33,7 +33,7 @@
         android:gravity="top"
         android:orientation="vertical">
 
-        <TextView
+        <me.biubiubiu.justifytext.library.JustifyTextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
