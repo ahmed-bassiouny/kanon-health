@@ -95,9 +95,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             new SocketCall(getApplicationContext(), new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-
                     Log.d("Join User1 Response", response.toString());
-
                 }
 
                 @Override
@@ -127,9 +125,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
         }
-
-
-
     }
 
 }

@@ -53,7 +53,6 @@ public class StartQrScan extends AppCompatActivity {
                     Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                     final String key = result.getContents();
                     final Dialog dialog = new Dialog(this);
-
                     dialog.setContentView(R.layout.activity_qr_activity);
                     dialog.setTitle("Custom Alert Dialog");
                     dialog.setCanceledOnTouchOutside(false);
