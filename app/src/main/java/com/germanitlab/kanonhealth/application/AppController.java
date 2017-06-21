@@ -9,8 +9,10 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.SocketCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
@@ -156,6 +158,7 @@ public class AppController extends Application {
     }
 
     public UserRegisterResponse getClientInfo() {
+        User user =new PrefManager(this).get(PrefManager.USER_KEY);
         return clientInfo;
     }
 
