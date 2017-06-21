@@ -87,6 +87,10 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void joinUser() {
+        if(AppController.getInstance().getClientInfo().getUser_id() == 0 || String.valueOf(AppController.getInstance().getClientInfo().getUser_id()).equals(null)){
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            System.exit(0);
+        }
         try {
             new SocketCall(getApplicationContext(), new ApiResponse() {
                 @Override
