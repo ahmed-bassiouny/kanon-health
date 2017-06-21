@@ -14,6 +14,7 @@ import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+import com.google.gson.Gson;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
@@ -158,7 +159,7 @@ public class AppController extends Application {
     }
 
     public UserRegisterResponse getClientInfo() {
-        User user =new PrefManager(this).get(PrefManager.USER_KEY);
+        User user =new Gson().fromJson(new PrefManager(this).get(PrefManager.USER_KEY),User.class);
         return clientInfo;
     }
 
