@@ -147,6 +147,7 @@ public class VerificationActivity extends AppCompatActivity {
                                         intent.putExtra("checkPassword", false);
                                         intent.putExtra("finish", false);
                                         startActivity(intent);
+                                        finish();
                                     }
 
                                     @Override
@@ -158,8 +159,8 @@ public class VerificationActivity extends AppCompatActivity {
                             }
                             else {
                                 Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
-                                i.putExtra("isfirst", "true");
-                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                //i.putExtra("isfirst", "true");
+                                //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                                 finish();
                             }
@@ -180,7 +181,7 @@ public class VerificationActivity extends AppCompatActivity {
                 @Override
                 public void onFailed(String error) {
                     dismissProgressDialog();
-                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 }
             }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
         }catch (Exception e){
@@ -244,11 +245,6 @@ public class VerificationActivity extends AppCompatActivity {
 
             }
         }).joinUser(AppController.getInstance().getClientInfo().getUser_id());
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this, SignupActivity.class));
     }
 
     public void showProgressDialog() {

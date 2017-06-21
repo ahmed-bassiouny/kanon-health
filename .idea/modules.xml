@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-<<<<<<< HEAD
-=======
-      <module fileurl="file://$PROJECT_DIR$/kanon.iml" filepath="$PROJECT_DIR$/kanon.iml" />
->>>>>>> 90a6d5142b7577c9f1b02f8110a6ae72ae1f777b
+      <module fileurl="file://$PROJECT_DIR$/kanonGithup.iml" filepath="$PROJECT_DIR$/kanonGithup.iml" />
       <module fileurl="file://$PROJECT_DIR$/kanonhealth.iml" filepath="$PROJECT_DIR$/kanonhealth.iml" />
     </modules>
   </component>
