@@ -334,6 +334,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void handleMyData() {
         try {
             user_id = doctor.get_Id();
+
+
             checkSessionOpen();
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
