@@ -18,15 +18,13 @@ repositories {
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
     useLibrary 'org.apache.http.legacy'
-
     defaultConfig {
         applicationId "com.germanitlab.kanonhealth"
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName '1.2.1'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -35,7 +33,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     allprojects {
         repositories {
             maven { url "https://jitpack.io" }
@@ -43,7 +40,8 @@ android {
         }
 
     }
-
+    productFlavors {
+    }
 }
 
 
@@ -55,17 +53,14 @@ dependencies {
     compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
-        compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
-
     compile files('libs/aspectjrt-1.7.3.jar')
     compile files('libs/isoparser-1.0.6.jar')
-
     //Dagger 2
+
     //compile 'com.squareup.okhttp3:okhttp:3.4.1'
-
-
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
@@ -103,6 +98,5 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'me.biubiubiu.justifytext:library:1.1'
-
 }
 apply plugin: 'com.google.gms.google-services'
