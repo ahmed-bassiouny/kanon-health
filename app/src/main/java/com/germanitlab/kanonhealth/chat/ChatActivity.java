@@ -73,6 +73,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.PopupHelper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
@@ -86,6 +87,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -170,7 +172,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private Uri selectedImageUri = null;
     private ContentValues contentValues;
-
+    private Util util;
 
     public static int indexFromIntent = 0;
 
@@ -179,6 +181,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private ChatComponent mChatComponent;
     private Uri selectedUri;
     private boolean selectetImage = false;
+    private MenuItem endSession;
+    private MenuItem startSession;
 
     public ChatComponent getmChatComponent() {
         if (mChatComponent == null) {
@@ -195,6 +199,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
         ButterKnife.bind(this);
+        Toast.makeText(this, "222222222222222", Toast.LENGTH_SHORT).show();
+        util = Util.getInstance(this);
         try {
             ttoolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(ttoolbar);
@@ -342,6 +348,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 imageButtonAttach.setVisibility(View.GONE);
                 tvUserName.setText("Support");
 
+                endSession.setVisible(false);
+                startSession.setVisible(false);
+                this.invalidateOptionsMenu();
+
+
+
             }else {
                 checkSessionOpen();
             }
@@ -448,18 +460,30 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
-            Intent intent = new Intent(this, PaymentActivity.class);
-            Gson gson = new Gson();
-            intent.putExtra("doctor_data", doctor);
-            intent.putExtra("doctor_obj", doctor);
+            if (doctor.isClinic == 1) {
+                Intent intent = new Intent(this, DoctorProfileActivity.class);
+                Gson gson = new Gson();
+                intent.putExtra("doctor_data", doctor);
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(this, PaymentActivity.class);
+                Gson gson = new Gson();
+                intent.putExtra("doctor_data", doctor);
+                intent.putExtra("doctor_obj", doctor);
 
-            startActivity(intent);
-            finish();
+                startActivity(intent);
+                finish();
+            }
 
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void sendMessage() {
@@ -567,6 +591,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            Toast.makeText(ChatActivity.this, "111111111111", Toast.LENGTH_SHORT).show();
             try {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -575,16 +600,18 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         Log.d("Incoming Message", args[0].toString());
 
                         try {
-                            if (String.valueOf(doctor.get_Id()).equals(String.valueOf(data.get("from_id")))) {
-                                if (data.get("type").equals(Constants.LOCATION)) {
-                                    String msgLoc = data.getString("msg");
-                                    JSONObject jsonObject = new JSONObject(msgLoc);
-                                    double lat = jsonObject.getDouble("lat");
-                                    double lng = jsonObject.getDouble("long");
-                                    data.put("msg", "long:" + lng + ",lat:" + lat);
+                            if(doctor != null) {
+                                if (String.valueOf(doctor.get_Id()).equals(String.valueOf(data.get("from_id")))) {
+                                    if (data.get("type").equals(Constants.LOCATION)) {
+                                        String msgLoc = data.getString("msg");
+                                        JSONObject jsonObject = new JSONObject(msgLoc);
+                                        double lat = jsonObject.getDouble("lat");
+                                        double lng = jsonObject.getDouble("long");
+                                        data.put("msg", "long:" + lng + ",lat:" + lat);
 
+                                    }
+                                    handelMessage(data.toString());
                                 }
-                                handelMessage(data.toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -600,7 +627,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         }
                     }
                 });
-            }catch (Exception e) {
+            } catch (Exception e) {
                 Crashlytics.logException(e);
                 Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
@@ -635,7 +662,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -666,7 +693,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         }
                     }
                 });
-            }catch (Exception e) {
+            } catch (Exception e) {
                 Crashlytics.logException(e);
                 Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
@@ -692,7 +719,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(ChatActivity.this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1664,14 +1691,30 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        if (doctor != null) {
-            int from_id = getIntent().getIntExtra("from_id", 0);
-            if (from_id != 1) {
-                MenuItem endSession = menu.findItem(R.id.end_session);
-                if (doctor.getIsDoc() != 1)
+
+        endSession = menu.findItem(R.id.end_session);
+        startSession = menu.findItem(R.id.start_session);
+
+
+            if (doctor != null) {
+                if(doctor.get_Id()==1){
                     endSession.setVisible(false);
+                    startSession.setVisible(false);
+                    this.invalidateOptionsMenu();
+
+                }else {
+                    int from_id = getIntent().getIntExtra("from_id", 0);
+                    if (doctor.isClinic == 1) {
+//                MenuItem endSession = menu.findItem(R.id.end_session);
+                        endSession.setVisible(true);
+                    } else if (from_id != 1) {
+//                MenuItem endSession = menu.findItem(R.id.end_session);
+                        if (doctor.getIsDoc() != 1)
+                            endSession.setVisible(false);
+                    }
+                }
             }
-        }
+
         return true;
     }
 
@@ -1679,6 +1722,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.start_session:
+
                 try {
                     if (doctor.getIsClinic() == 1) {
                         Intent intent = new Intent(ChatActivity.this, InquiryActivity.class);
@@ -1744,10 +1788,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             }
                         });
                         adb_start.show();
-                }
+                    }
 
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
@@ -1765,9 +1809,34 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 @Override
                                 public void onSuccess(Object response) {
                                     try {
+
                                         Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
                                         checkSessionOpen();
+                                        if(doctor.isClinic == 1){
+                                            AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
+                                            adb.setTitle(R.string.rate_conversation);
+                                            adb.setCancelable(true);
+                                            adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    new HttpCall(ChatActivity.this, new ApiResponse() {
+                                                        @Override
+                                                        public void onSuccess(Object response) {
+                                                            Intent intent = new Intent(ChatActivity.this, Comment.class);
+                                                            intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                                                            startActivity(intent);
+                                                        }
+
+                                                        @Override
+                                                        public void onFailed(String error) {
+                                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }).closeSession(String.valueOf(doctor.getId()));
+                                                }
+                                            });
+                                            adb.show();
+                                        }
                                     } catch (Exception e) {
                                         Crashlytics.logException(e);
                                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -1781,6 +1850,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 }
                             }).closeSession(String.valueOf(doctor.getId()));
                         }
+
                     });
                     adb_end.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
@@ -1789,13 +1859,40 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                     });
                     adb_end.show();
 
-                }catch (Exception e){
+
+                } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startnewRequest() {
+        Log.d("doctor ID", String.valueOf(doctor.getId()));
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                util.dismissProgressDialog();
+                Intent intent = new Intent(ChatActivity.this, InquiryActivity.class);
+                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                userInfoResponse.setUser(doctor);
+                Gson gson = new Gson();
+                intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailed(String error) {
+                util.dismissProgressDialog();
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            }
+        }).sendSessionRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),
+                String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+                String.valueOf(doctor.getId()),
+                "3");
+
     }
 
     private void checkSessionOpen() {

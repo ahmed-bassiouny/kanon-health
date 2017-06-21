@@ -310,87 +310,8 @@
                             android:visibility="gone" />
                     </RelativeLayout>
 
-
-                    <TextView
-                        android:id="@+id/tv_specilities"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/black" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="Location"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-
-                        <ImageView
-                            android:id="@+id/iv_location"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignTop="@+id/textView4"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_toEndOf="@+id/textView4"
-                            android:src="@drawable/placeholder"
-                            android:textColor="@android:color/background_dark" />
-                    </RelativeLayout>
-
-
-                    <TextView
-                        android:id="@+id/tv_locations"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="kjkjojoij"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-
                     <View
                         android:id="@+id/border"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginTop="2dp"
-                        android:background="@color/black"
-                        android:visibility="gone" />
-
-
-                    <RelativeLayout
-                        android:id="@+id/rl_map"
-                        android:layout_width="343dp"
-                        android:layout_height="150dp"
-                        android:orientation="vertical">
-                        <!--loading map in container-->
-                        <fragment
-                            android:id="@+id/map"
-                            android:name="com.google.android.gms.maps.SupportMapFragment"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:clickable="false"
-                            tools:context=".DoctorProfileActivity" />
-                </RelativeLayout>
-
-
-                    <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginBottom="2dp"
@@ -585,6 +506,88 @@
                                 android:textStyle="bold" />
                         </TableRow>
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_specilities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16dp" />
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/black" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="Location"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+
+                        <ImageView
+                            android:id="@+id/iv_location"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignTop="@+id/textView4"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_toEndOf="@+id/textView4"
+                            android:src="@drawable/placeholder"
+                            android:textColor="@android:color/background_dark" />
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:id="@+id/tv_locations"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="kjkjojoij"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16dp" />
+
+
+
+
+                    <RelativeLayout
+                        android:id="@+id/rl_map"
+                        android:layout_width="343dp"
+                        android:layout_height="150dp"
+                        android:orientation="vertical">
+                        <!--loading map in container-->
+                        <fragment
+                            android:id="@+id/map"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="false"
+                            tools:context=".DoctorProfileActivity" />
+
+                </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black"
+                        android:visibility="gone" />
+
+
 
                     <View
                         android:layout_width="match_parent"

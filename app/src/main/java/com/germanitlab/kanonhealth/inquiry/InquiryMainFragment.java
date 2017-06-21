@@ -16,12 +16,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
@@ -39,15 +41,15 @@ public class InquiryMainFragment extends Fragment {
 
     ProgressDialog progressDialog;
     OnChoiceSelectedListener mCallback;
-    String jsonString ;
+    String jsonString;
 
-    public InquiryMainFragment (){
+    public InquiryMainFragment() {
 
     }
 
     @SuppressLint("ValidFragment")
-    public InquiryMainFragment (String jsonString){
-        this.jsonString = jsonString ;
+    public InquiryMainFragment(String jsonString) {
+        this.jsonString = jsonString;
     }
 
     private String mFirstLevelName;
@@ -62,7 +64,7 @@ public class InquiryMainFragment extends Fragment {
     Button buttonUntersuchung;
     @BindView(R.id.button_submit)
     FloatingActionButton floatingActionButton;
-    UserInfoResponse doctor ;
+    UserInfoResponse doctor;
 
     private PrefManager prefManager;
 
@@ -93,11 +95,11 @@ public class InquiryMainFragment extends Fragment {
         return root;
     }
 
-    private void disableFinishedButtons (ArrayList<String> fragmentsNames){
+    private void disableFinishedButtons(ArrayList<String> fragmentsNames) {
 
 
         for (String name : fragmentsNames) {
-            if (name.equals(getResourceString(R.string.question_2))){
+            if (name.equals(getResourceString(R.string.question_2))) {
 
                 buttonMedizinische.setEnabled(false);
             } else if (name.equals(getResourceString(R.string.question_1))) {
@@ -158,34 +160,50 @@ public class InquiryMainFragment extends Fragment {
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_4), secondLevelFragment);
                 break;
             case R.id.button_submit:
-                if (InquiryActivity.inquiryResult.size() > 0) {
-                    Gson gson = new Gson();
-                    doctor = gson.fromJson(jsonString , UserInfoResponse.class);
-                    Log.d("doctor Data from QR",jsonString );
-                    showProgressDialog();
-                    new HttpCall(getActivity(), new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            Intent intent = new Intent(getActivity(), ChatActivity.class);
-                            intent.putExtra("doctor_data" ,jsonString);
-                            startActivity(intent);
-                            dismissProgressDialog();
-                            getActivity().finish();
-                        }
+                try {
+                    if (InquiryActivity.inquiryResult.size() > 0) {
+                        final Gson gson = new Gson();
+                        doctor = gson.fromJson(jsonString, UserInfoResponse.class);
+                        Log.d("doctor Data from QR", jsonString);
+                        showProgressDialog();
+                        new HttpCall(getActivity(), new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                try {
+                                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                    UserInfoResponse userInfoResponse = new UserInfoResponse();
+                                    userInfoResponse = gson.fromJson(jsonString , UserInfoResponse.class);
+                                    userInfoResponse.getUser().setIsOpen(1);
+                                    intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                    startActivity(intent);
+                                    dismissProgressDialog();
+                                    getActivity().finish();
+                                }catch (Exception e){
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getContext(),getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                }
 
-                        @Override
-                        public void onFailed(String error) {
-                            dismissProgressDialog();
-                            Toast.makeText(getContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                        }
-                    }).sendPopUpResult(AppController.getInstance().getClientInfo().getUser_id(),
-                            AppController.getInstance().getClientInfo().getPassword(),
-                            String.valueOf(doctor.getUser().get_Id()),
-                            InquiryActivity.inquiryResult);
-                    break;
-                }
-                else {
-                    Toast.makeText(getActivity() , "Bitte wählen Sie eine Option. Abbrechen über Zurück." , Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                dismissProgressDialog();
+                                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                            }
+                        }).sendPopUpResult(AppController.getInstance().getClientInfo().getUser_id(),
+                                AppController.getInstance().getClientInfo().getPassword(),
+                                String.valueOf(doctor.getUser().get_Id()),
+                                InquiryActivity.inquiryResult);
+
+
+                        break;
+                    } else {
+                        Toast.makeText(getActivity(), "Bitte wählen Sie eine Option. Abbrechen über Zurück.", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+
                 }
         }
     }
@@ -197,12 +215,16 @@ public class InquiryMainFragment extends Fragment {
         return bundle;
     }
 
-    public String getResourceString (int resource){
+    public String getResourceString(int resource) {
         return getResources().getString(resource);
     }
 
-    public void showProgressDialog(){progressDialog = ProgressDialog.show(getActivity(), "", "Bitte, Warten Sie...", true);}
+    public void showProgressDialog() {
+        progressDialog = ProgressDialog.show(getActivity(), "", "Bitte, Warten Sie...", true);
+    }
 
-    public void dismissProgressDialog() {progressDialog.dismiss();}
+    public void dismissProgressDialog() {
+        progressDialog.dismiss();
+    }
 
 }
