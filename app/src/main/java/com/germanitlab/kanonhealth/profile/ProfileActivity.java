@@ -186,11 +186,10 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
         }
 
-        String url= Constants.CHAT_SERVER_URL + "/" +userInfoResponse.getUser().getAvatar();
-        if(url!=null || !url.equals("")) {
-            url=url.replace(":3001","");
-            Helper.setImage(this, url, imgAvatar, R.drawable.profile_place_holder);
-        }
+
+        if(userInfoResponse.getUser().getAvatar()!=null || !userInfoResponse.getUser().getAvatar().equals(""))
+            Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+
         if (userInfoResponse.getUser().getIsDoc() == 1)
             is_doctor = true;
         else
