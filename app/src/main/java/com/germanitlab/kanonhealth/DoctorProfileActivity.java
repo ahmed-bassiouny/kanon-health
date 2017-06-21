@@ -312,10 +312,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit)
     public void edit(View view) {
         setVisiblitiy(View.GONE);
-        Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
         editboolean = true;
         tvOnline.setText(user.getSubTitle());
         edAddToFavourite.setText(user.getFirst_name());
+        edAddToFavourite.requestFocus();
         tvContact.setText(user.getLast_name());
     }
 
@@ -384,9 +384,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ivMemberList.setVisibility(View.VISIBLE);
         else
             ivMemberList.setVisibility(View.GONE);
-        tvContact.setEnabled(editable);
         edAddToFavourite.setFocusable(editable);
         tvOnline.setFocusable(editable);
+        tvContact.setFocusable(editable);
     }
 
     @OnClick(R.id.edit_time_table)
