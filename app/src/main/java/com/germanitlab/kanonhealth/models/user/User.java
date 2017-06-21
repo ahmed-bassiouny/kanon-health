@@ -138,7 +138,7 @@ public class User implements Serializable {
     private int isDoc;
     @DatabaseField
     @SerializedName("is_clinic")
-    public int isClinic;
+    public Integer isClinic;
     @DatabaseField
     @SerializedName("is_open")
     private int isOpen;
@@ -225,7 +225,7 @@ public class User implements Serializable {
         return id;
     }
 
-    public int getIsClinic() {
+    public Integer getIsClinic() {
         return isClinic;
     }
 
