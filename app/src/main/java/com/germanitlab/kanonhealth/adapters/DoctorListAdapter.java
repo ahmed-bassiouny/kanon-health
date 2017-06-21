@@ -154,18 +154,11 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(doctor.getIsDoc() == 1) {
                         Intent intent = new Intent(activity, DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", doctor);
                         intent.putExtra("tab", "");
                         activity.startActivity(intent);
-                    }
-                    else if(doctor.getIsClinic() == 1){
-                        Intent intent = new Intent(activity, PaymentActivity.class);
-                        intent.putExtra("doctor_data", doctor);
-                        intent.putExtra("tab", "");
-                        activity.startActivity(intent);
-                    }
+
                 }
             });
         }catch (Exception e){
