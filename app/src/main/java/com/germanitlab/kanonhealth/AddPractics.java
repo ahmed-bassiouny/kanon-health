@@ -14,8 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +45,7 @@ import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -96,6 +100,11 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     TextView tvNoTime;
     @BindView(R.id.tablelayout)
     TableLayout tablelayout;
+    @BindView(R.id.tv_specilities)
+    TextView tvSpecilities;
+
+    @BindView(R.id.tv_languages)
+    TextView tvLanguages;
 
     // additional data
     User user;
@@ -115,6 +124,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_practics);
         ButterKnife.bind(this);
+        initTB();
         user = new User();
         info = new Info();
         pickerDialog = new PickerDialog(true);
@@ -123,20 +133,50 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         handleImoAction();
     }
 
+    private void initTB() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.new_toolbar);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_practice, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.mi_save:
+                save();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void handleImoAction() {
         etTelephone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                save(null);
+                save();
                 return true;
             }
         });
     }
 
-    @OnClick(R.id.save)
-    public void save(View view) {
+    public void save() {
         try {
-            if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry) || !isvalid(etTelephone))
+            if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry))
                 return;
             user.setName(etName.getText().toString());
             user.setAddress(etLocation.getText().toString());
@@ -294,6 +334,12 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                             templist.add(item);
                     }
                     user.setSpecialities(templist);
+
+                    tvSpecilities.setText("");
+                    for (ChooseModel speciality : user.getSpecialities()) {
+                        tvSpecilities.append(speciality.getSpeciality_title() + " ");
+                    }
+
                     setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
                     break;
                 case Constants.LANGUAUGE:
@@ -303,6 +349,10 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                             templist.add(item);
                     }
                     user.setSupported_lang(templist);
+                    tvLanguages.setText("");
+                    for (ChooseModel lang : user.getSupported_lang()) {
+                        tvLanguages.append(lang.getLang_title() + " ");
+                    }
                     setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
                     break;
                 case Constants.MEMBERAT:
@@ -364,7 +414,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 Log.e("upload image failed :", error);
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
                         pickerDialog.dismiss();
 
                         break;
@@ -389,7 +439,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);                            }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
                         pickerDialog.dismiss();
                         break;
                     case Constants.HOURS_CODE:
@@ -469,7 +519,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         startActivityForResult(intent, TAKE_PICTURE);
     }
 
-    /* Get the real path from the URI */
+    /* Get the real path from the URI
     public String getPathFromURI(Uri contentUri) {
         String path;
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
@@ -478,11 +528,14 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         } else {
             cursor.moveToFirst();
             int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            path = cursor.getString(idx);
+            if(idx==-1)
+                path = contentUri.getPath();
+            else
+                path = cursor.getString(idx);
             cursor.close();
         }
         return path;
-    }
+    }*/
 
     private boolean isvalid(EditText editText) {
         if (editText.getText().toString().trim().isEmpty()) {

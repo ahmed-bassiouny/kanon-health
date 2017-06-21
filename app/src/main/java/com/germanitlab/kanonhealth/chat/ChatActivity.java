@@ -181,6 +181,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private ChatComponent mChatComponent;
     private Uri selectedUri;
     private boolean selectetImage = false;
+    private MenuItem endSession;
+    private MenuItem startSession;
 
     public ChatComponent getmChatComponent() {
         if (mChatComponent == null) {
@@ -338,7 +340,27 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void handleMyData() {
         try {
             user_id = doctor.get_Id();
-            checkSessionOpen();
+
+
+            if(user_id==1){
+                chat_bar.setVisibility(View.VISIBLE);
+                open_chat_session.setVisibility(View.GONE);
+                imageButtonAttach.setVisibility(View.GONE);
+                tvUserName.setText("Support");
+
+                endSession.setVisible(false);
+                startSession.setVisible(false);
+                this.invalidateOptionsMenu();
+
+
+
+            }else {
+                checkSessionOpen();
+            }
+
+            Helper.setImage(this , Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar() , imageUser , R.drawable.placeholder);
+
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
             if (Helper.isNetworkAvailable(this)) {
@@ -737,7 +759,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void assignViews() {
 
-        tvUserName.setText(doctor.getName());
+        if(user_id!=1) {
+
+            tvUserName.setText(doctor.getName());
+        }
 //            Log.e("returned image :", doctor.getAvatar());
 //            Helper.setImage(this , Constants.CHAT_SERVER_URL
 //                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
@@ -1666,17 +1691,30 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        if (doctor != null) {
-            int from_id = getIntent().getIntExtra("from_id", 0);
-            if (doctor.isClinic == 1) {
-                MenuItem endSession = menu.findItem(R.id.end_session);
-                endSession.setVisible(true);
-            } else if (from_id != 1) {
-                MenuItem endSession = menu.findItem(R.id.end_session);
-                if (doctor.getIsDoc() != 1)
+
+        endSession = menu.findItem(R.id.end_session);
+        startSession = menu.findItem(R.id.start_session);
+
+
+            if (doctor != null) {
+                if(doctor.get_Id()==1){
                     endSession.setVisible(false);
+                    startSession.setVisible(false);
+                    this.invalidateOptionsMenu();
+
+                }else {
+                    int from_id = getIntent().getIntExtra("from_id", 0);
+                    if (doctor.isClinic == 1) {
+//                MenuItem endSession = menu.findItem(R.id.end_session);
+                        endSession.setVisible(true);
+                    } else if (from_id != 1) {
+//                MenuItem endSession = menu.findItem(R.id.end_session);
+                        if (doctor.getIsDoc() != 1)
+                            endSession.setVisible(false);
+                    }
+                }
             }
-        }
+
         return true;
     }
 

@@ -216,6 +216,11 @@ public class User implements Serializable {
     @ForeignCollectionField(eager = true , foreignColumnName = "document")
 */
 
+
+    public void setOpen_type(int open_type) {
+        this.open_type = open_type;
+    }
+
     public int getId() {
         return id;
     }
