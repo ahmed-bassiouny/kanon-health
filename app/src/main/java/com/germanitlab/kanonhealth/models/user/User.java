@@ -135,7 +135,7 @@ public class User implements Serializable {
     private String active;
     @DatabaseField
     @SerializedName("is_doc")
-    private int isDoc;
+    private Integer isDoc;
     @DatabaseField
     @SerializedName("is_clinic")
     public Integer isClinic;
@@ -311,7 +311,7 @@ public class User implements Serializable {
         this.active = active;
     }
 
-    public int getIsDoc() {
+    public Integer getIsDoc() {
         return isDoc;
     }
 
