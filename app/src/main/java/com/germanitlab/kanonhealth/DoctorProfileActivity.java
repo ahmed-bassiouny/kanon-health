@@ -46,6 +46,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
+import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Table;
@@ -117,7 +118,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     ImageView ivLocation;
     @BindView(R.id.tv_locations)
     TextView tvLocations;
-
 
     @BindView(R.id.edit_time_table)
     ImageView ivTimeTable;
@@ -296,7 +296,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (is_me)
             return;
         Gson gson = new Gson();
-        if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
+        if(user.isClinic == 1 ){
+            Intent intent = new Intent(this, InquiryActivity.class);
+            UserInfoResponse userInfoResponse = new UserInfoResponse();
+            userInfoResponse.setUser(user);
+            intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+            startActivity(intent);
+        }
+        else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
             Intent intent = new Intent(this, ChatActivity.class);
             intent.putExtra("doctor_data", gson.toJson(user));
             intent.putExtra("from", true);
@@ -312,10 +319,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit)
     public void edit(View view) {
         setVisiblitiy(View.GONE);
-        Toast.makeText(this, "aaaa", Toast.LENGTH_SHORT).show();
         editboolean = true;
         tvOnline.setText(user.getSubTitle());
         edAddToFavourite.setText(user.getFirst_name());
+        edAddToFavourite.requestFocus();
         tvContact.setText(user.getLast_name());
     }
 
@@ -384,9 +391,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ivMemberList.setVisibility(View.VISIBLE);
         else
             ivMemberList.setVisibility(View.GONE);
-        tvContact.setEnabled(editable);
         edAddToFavourite.setFocusable(editable);
         tvOnline.setFocusable(editable);
+        tvContact.setFocusable(editable);
     }
 
     @OnClick(R.id.edit_time_table)

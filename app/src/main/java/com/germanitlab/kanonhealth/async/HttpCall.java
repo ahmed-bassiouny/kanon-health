@@ -692,7 +692,7 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("Answers ", " " + t.getLocalizedMessage());
+                    Log.e("Answers ", " " + t.getMessage());
                     apiResponse.onFailed(t.getLocalizedMessage());
                 }
             });
@@ -975,6 +975,45 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     apiResponse.onSuccess(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    apiResponse.onFailed(t.getLocalizedMessage());
+                }
+            });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void closeSessionAndOpenNewSession(final String userID, final String password, final String id, final String type) {
+        try {
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            DoctorRequest mDoctorRequest = new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "", id);
+            final Call<JsonObject> connection = service.closeSession(mDoctorRequest);
+            connection.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    Payment payment = new Payment(userID, password, id, type);
+                    ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+                    Call<JsonObject> connection2 = service.sendSessionRequest(payment);
+                    connection2.enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                Log.d("Answers ", response.body().toString());
+                            apiResponse.onSuccess(response.body());
+                        }
+
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                            Log.e("Answers ", " " + t.getMessage());
+                            apiResponse.onFailed(t.getLocalizedMessage());
+                        }
+                    });
                 }
 
                 @Override

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -138,10 +139,14 @@ public class VerificationActivity extends AppCompatActivity {
 
                                         mPrefManager.put(mPrefManager.USER_KEY, response.toString());
 
-                                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                        /*Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(i);
-                                        finish();
+                                        finish();*/
+                                        Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
+                                        intent.putExtra("checkPassword", false);
+                                        intent.putExtra("finish", false);
+                                        startActivity(intent);
                                     }
 
                                     @Override
