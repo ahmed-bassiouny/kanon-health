@@ -345,7 +345,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             if(user_id==1){
                 chat_bar.setVisibility(View.VISIBLE);
                 open_chat_session.setVisibility(View.GONE);
-                imageButtonAttach.setVisibility(View.GONE);
+                imageButtonAttach.setVisibility(View.VISIBLE);
                 tvUserName.setText("Support");
 
                 endSession.setVisible(false);

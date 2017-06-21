@@ -36,17 +36,16 @@
 
 
         <LinearLayout
-            android:id="@+id/layout_chat_attach"
             android:layout_width="67dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:visibility="gone"
             android:layout_weight="0.22"
             android:gravity="center"
             android:padding="10dp"
             android:weightSum="1">
 
             <ImageButton
-                android:id="@+id/imgbtn_chat_attach"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
@@ -178,6 +177,23 @@
                     android:textStyle="bold"
                     android:typeface="monospace" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_chat_attach"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:gravity="center"
+                android:layout_margin="5dp">
+
+                <ImageButton
+                    android:id="@+id/imgbtn_chat_attach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|center"
+                    android:background="@drawable/ic_attach_file_black_24dp"
+                    android:duplicateParentState="true" />
+            </LinearLayout>
 
 
             <LinearLayout
