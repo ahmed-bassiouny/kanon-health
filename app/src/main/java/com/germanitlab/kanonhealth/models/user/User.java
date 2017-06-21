@@ -66,7 +66,7 @@ public class User implements Serializable {
      */
     @DatabaseField(id = true)
     @SerializedName("id")
-    private int id;
+    private Integer id;
     @DatabaseField
     @SerializedName("email")
     private String email;
@@ -221,7 +221,7 @@ public class User implements Serializable {
         this.open_type = open_type;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

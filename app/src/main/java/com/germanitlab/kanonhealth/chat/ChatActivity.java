@@ -339,6 +339,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void handleMyData() {
         try {
+            if(doctor.getId()==null){
+                Toast.makeText(this, "Sorry Missing Data , Please Contact with Support", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
             user_id = doctor.get_Id();
 
 
