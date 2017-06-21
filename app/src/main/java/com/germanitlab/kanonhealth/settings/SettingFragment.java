@@ -254,11 +254,12 @@ public class SettingFragment extends Fragment {
             trDrStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("from_notification", 1);
                     intent.putExtra("from_id", 1);
-
                     startActivity(intent);
+
                 }
             });
             tvAddPractice.setOnClickListener(new View.OnClickListener() {
