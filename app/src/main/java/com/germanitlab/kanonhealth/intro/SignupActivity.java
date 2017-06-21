@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.intro;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -46,11 +47,13 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     Boolean found;
     String country, code;
     Constants constants;
+    public SignupActivity signupActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        signupActivity=this;
         try {
             Intent intent = getIntent();
             Constants.COUNTRY_CODES.clear();
@@ -96,10 +99,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                     found = false;
 
                     String temp = etPostelCode.getText().toString().replaceAll(Pattern.quote("+"), "");
-                    if (temp == "") {
-                    } else {
-                        int number = Integer.parseInt(temp);
-                    }
+
                     for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
                         if (e.getValue().toLowerCase().equals("+" + temp)) {
                             select_country.setText(e.getKey().toString());
@@ -121,6 +121,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
+        if(savedInstanceState !=null)
+            etMobileNumber.setText(savedInstanceState.getString("phone"));
     }
 
 
@@ -196,7 +198,6 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                 intent.putExtra(Constants.REGISER_RESPONSE, registerResponse);
                 intent.putExtra("oldUser", oldUser);
                 startActivity(intent);
-                finish();
 
             } else {
 
@@ -232,4 +233,20 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         progressDialog.dismiss();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putString("phone",etMobileNumber.getText().toString());
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("phone",etMobileNumber.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
 }

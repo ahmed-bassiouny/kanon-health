@@ -48,31 +48,33 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void run() {
 
                     // to check passcode
-                    if (isLogin && !storedUser.equals("")) {
+                    if (isLogin && !storedUser.equals("") &&prefManager.getData(PrefManager.PASSCODE).length() == 6) {
                         joinUser();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", true);
                         intent.putExtra("finish", false);
                         startActivity(intent);
+                        finish();
 
-                        // all data saved but no passcode set
-                    } else if (isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
+
+                    } // registered but not filled my data
+                    else if (isLogin && storedUser.equals("")) {
+
+                        joinUser();
+                        startActivity(new Intent(SplashScreenActivity.this, ProfileDetails.class));
+                        finish();
+                    }
+                    // all data saved but no passcode set
+                    else if (isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
 
                         joinUser();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
                         intent.putExtra("finish", false);
                         startActivity(intent);
-                    }
-                    // registered but not filled my data
-                    else if (isLogin && storedUser.equals("")) {
-
-                        joinUser();
-                        startActivity(new Intent(SplashScreenActivity.this, ProfileDetails.class));
                         finish();
-
-                        // enter phone
-                    } else {
+                    }
+                     else {
 
                         startActivity(new Intent(SplashScreenActivity.this, SignupActivity.class));
                         finish();

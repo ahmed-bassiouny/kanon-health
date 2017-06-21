@@ -45,6 +45,7 @@ import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -413,7 +414,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 Log.e("upload image failed :", error);
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
                         pickerDialog.dismiss();
 
                         break;
@@ -438,8 +439,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);                            }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.
-                                        .(selectedImageUri));
+                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
                         pickerDialog.dismiss();
                         break;
                     case Constants.HOURS_CODE:

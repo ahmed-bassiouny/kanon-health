@@ -336,7 +336,19 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             user_id = doctor.get_Id();
 
 
-            checkSessionOpen();
+            if(user_id==1){
+                chat_bar.setVisibility(View.VISIBLE);
+                open_chat_session.setVisibility(View.GONE);
+                imageButtonAttach.setVisibility(View.GONE);
+                tvUserName.setText("Support");
+
+            }else {
+                checkSessionOpen();
+            }
+
+            Helper.setImage(this , Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar() , imageUser , R.drawable.placeholder);
+
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
             if (Helper.isNetworkAvailable(this)) {
@@ -720,7 +732,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void assignViews() {
 
-        tvUserName.setText(doctor.getName());
+        if(user_id!=1) {
+
+            tvUserName.setText(doctor.getName());
+        }
 //            Log.e("returned image :", doctor.getAvatar());
 //            Helper.setImage(this , Constants.CHAT_SERVER_URL
 //                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
