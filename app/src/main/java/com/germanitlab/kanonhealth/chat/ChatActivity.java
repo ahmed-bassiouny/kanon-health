@@ -460,15 +460,16 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
+            if(doctor.isClinic==null)
+                doctor.setIsClinic(0);
+
             if (doctor.isClinic == 1) {
                 Intent intent = new Intent(this, DoctorProfileActivity.class);
-                Gson gson = new Gson();
                 intent.putExtra("doctor_data", doctor);
                 startActivity(intent);
                 finish();
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                Gson gson = new Gson();
                 intent.putExtra("doctor_data", doctor);
                 intent.putExtra("doctor_obj", doctor);
 
