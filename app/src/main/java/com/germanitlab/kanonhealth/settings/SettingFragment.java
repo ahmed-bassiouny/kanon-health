@@ -240,7 +240,8 @@ public class SettingFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getActivity(), PasscodeActivty.class);
-                    intent.putExtra("status", 2);
+                    intent.putExtra("checkPassword", true);
+                    intent.putExtra("finish", true);
                     startActivityForResult(intent, 13);
                 }
             });

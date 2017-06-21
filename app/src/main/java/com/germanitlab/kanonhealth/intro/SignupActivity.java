@@ -176,8 +176,13 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     public void onSuccess(Object response) {
         //-- Response : {"password":"831558a6e65a225c710b084742f407b6","user_id":97,"sucess":true}
         try {
+
             Log.d("Response", response.toString());
             UserRegisterResponse registerResponse = (UserRegisterResponse) response;
+            if(String.valueOf(registerResponse.getUser_id()).isEmpty() || registerResponse.getUser_id() == 0 || String.valueOf(registerResponse.getUser_id()).equals(null)) {
+                Toast.makeText(this, getResources().getText(R.string.error_in_registeration), Toast.LENGTH_SHORT).show();
+                System.exit(0);
+            }
             JSONObject jsonObject = null;
             Boolean oldUser = false;
             if (registerResponse.is_exist()) {

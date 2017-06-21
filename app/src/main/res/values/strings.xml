@@ -265,6 +265,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="status_online">Status Online</string>
     <string name="status_offline">Status Offline</string>
     <string name="title">Title</string>
+    <string name="error_in_registeration">error in registeration</string>
 
 
 </resources>
