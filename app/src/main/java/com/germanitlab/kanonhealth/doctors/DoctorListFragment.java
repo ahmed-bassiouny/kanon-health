@@ -463,7 +463,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     type = 3;
                     util.showProgressDialog();
                     loadData();
-//                    getBySpeciality();
                 }
 
             }

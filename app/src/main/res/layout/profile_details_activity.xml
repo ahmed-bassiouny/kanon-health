@@ -40,6 +40,7 @@
                 android:layout_height="30dp"
                 android:layout_alignEnd="@+id/image_profile"
                 android:layout_alignParentTop="true"
+                android:id="@+id/image_profile_edit"
                 android:layout_alignRight="@+id/image_profile"
 
                 android:src="@drawable/camera" />
@@ -115,7 +116,6 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:maxLines="1"
-                android:lines="1"
                 android:imeOptions="actionNext"
                 android:layout_marginLeft="8dp"
                 android:hint="@string/last_name"

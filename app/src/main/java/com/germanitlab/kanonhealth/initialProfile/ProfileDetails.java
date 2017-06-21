@@ -45,6 +45,7 @@ import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -134,24 +135,31 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
     }
 
-    @OnClick(R.id.image_profile)
+    @OnClick(R.id.image_profile_edit)
     public void onAddProfileImageClicked() {
+        if(!Helper.isNetworkAvailable(this)){
+            Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    ) {
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                ) {
 
-
-            pickerDialog.show(getFragmentManager(), "imagePickerDialog");
-        } else {
-            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.CAMERA},
-                    Constants.GALLERY_PERMISSION_CODE);
+                pickerDialog.show(getFragmentManager(), "imagePickerDialog");
+            } else {
+                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        Constants.GALLERY_PERMISSION_CODE);
+            }
+        }catch (RuntimeException e){
+            Toast.makeText(this, R.string.please_access_storage, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -278,6 +286,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                    dismissProgressDialog();
+                    Log.i("a*a*a*a", "onFailed: ");
 
                 }
             }).editProfile(user);
@@ -322,6 +332,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                             dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
                             Log.e("After Casting", uploadImageResponse.getFile_url());
+                            Toast.makeText(ProfileDetails.this, "onSuccess", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -330,7 +341,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                             Toast.makeText(getApplicationContext(),"upload image failed ", Toast.LENGTH_SHORT).show();
                         }
                     }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                            , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
 
                     break;
                 case TAKE_PICTURE:
@@ -350,26 +361,11 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                             Toast.makeText(getApplicationContext(),"upload image failed ", Toast.LENGTH_SHORT).show();
                         }
                     }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                            , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
 
                     break;
             }
         }
-    }
-
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String path;
-        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            path = contentUri.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            path = cursor.getString(idx);
-            cursor.close();
-        }
-        return path;
     }
 
 
