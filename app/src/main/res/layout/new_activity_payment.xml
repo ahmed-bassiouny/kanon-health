@@ -14,10 +14,13 @@
                 app:theme="@style/ToolbarColoredBackArrow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:titleTextColor="@color/white"
-                app:subtitleTextColor="@color/white"
-                android:titleTextColor="@color/white"
-                android:background="@color/colorPrimary">
+                app:titleTextColor="@color/black"
+
+                app:subtitleTextColor="@color/black"
+
+                android:titleTextColor="@color/black"
+
+                android:background="@color/white">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -25,11 +28,25 @@
                     android:layout_gravity="center"
                     android:text="@string/payment"
                     android:textSize="18sp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/black"/>
 
 
 
             </android.support.v7.widget.Toolbar>
+
+    <TextView
+
+        android:layout_width="match_parent"
+
+        android:layout_height="1dp"
+
+        android:layout_marginEnd="@dimen/size_5dp"
+
+        android:layout_marginStart="@dimen/size_5dp"
+
+        android:background="@color/dark_gray"
+
+        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -242,26 +259,19 @@
                 <RadioButton
                     android:layout_weight="1"
 
-                    android:drawableRight="@drawable/mastercard"
+                    android:drawableRight="@drawable/sofo"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:enabled="false"
                     android:layout_margin="10dp"/>
+
                 <RadioButton
                     android:layout_weight="1"
-
-                    android:drawableRight="@drawable/visa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
                     android:enabled="false"
-                    android:layout_margin="10dp" />
-                <RadioButton
-                    android:layout_weight="1"
-
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:text="Free Beta"/>
+                    android:text="Voucher code"/>
                 <RadioButton
                     android:layout_weight="1"
                     android:layout_width="wrap_content"

@@ -439,11 +439,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             intent.putExtra("doctor_obj", doctor);
 
             startActivity(intent);
+            finish();
+
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void sendMessage() {

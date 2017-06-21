@@ -215,17 +215,17 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     PrefManager prefManager = new PrefManager(getActivity());
                     Gson gson = new Gson();
                     prefManager.put(PrefManager.DOCTOR_KEY, gson.toJson(doctorList.get(position)));
-                    if (mPrefManager.get(mPrefManager.IS_DOCTOR) || doctorList.get(position).getIsOpen() == 1) {
+//                    if (mPrefManager.get(mPrefManager.IS_DOCTOR) || doctorList.get(position).getIsOpen() == 1) {
                         Intent intent = new Intent(getActivity(), ChatActivity.class);
                         intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
                         intent.putExtra("from", true);
                         startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
-
-                        intent.putExtra("doctor_data", doctorList.get(position));
-                        startActivity(intent);
-                    }
+//                    } else {
+//                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+//
+//                        intent.putExtra("doctor_data", doctorList.get(position));
+//                        startActivity(intent);
+//                    }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -464,6 +464,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     public void onFailed(String error) {
         util.dismissProgressDialog();
 //        util.dismissProgressDialog();
+        linearLayoutContent.setVisibility(View.GONE);
         tvLoadingError.setVisibility(View.VISIBLE);
         if (error != null && error.length() > 0)
             tvLoadingError.setText(error);

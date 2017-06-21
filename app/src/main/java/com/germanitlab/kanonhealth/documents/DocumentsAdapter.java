@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -242,20 +243,20 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             } catch (Exception ex) {
                 textMsgViewHolder.tvDateMy.setText(textMessage.getSent_at());
             }
-            textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (!selected) {
-                        changeToolbar(true);
-                    }
-                    if (!list.contains(textMessage.get_Id()))
-                        selectItem(textMsgViewHolder.background, textMessage);
-                    else {
-                        unselectItem(textMsgViewHolder.background, textMessage);
-                    }
-                    return true;
-                }
-            });
+//            textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    if (!selected) {
+//                        changeToolbar(true);
+//                    }
+//                    if (!list.contains(textMessage.get_Id()))
+//                        selectItem(textMsgViewHolder.background, textMessage);
+//                    else {
+//                        unselectItem(textMsgViewHolder.background, textMessage);
+//                    }
+//                    return true;
+//                }
+//            });
             textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1593,15 +1594,34 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
     {
         if(privacy == 0)
         {
-            image.setBackgroundResource(R.drawable.red);
+//            image.setBackgroundResource(R.drawable.red);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.red, context.getTheme()));
+            } else {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.red));
+            }
+
         }
         if(privacy == 1)
         {
-            image.setBackgroundResource(R.drawable.blue);
+//            image.setBackgroundResource(R.drawable.blue);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.blue, context.getTheme()));
+            } else {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.blue));
+            }
+
         }
         if(privacy == 2)
         {
-            image.setBackgroundResource(R.drawable.green);
+//            image.setBackgroundResource(R.drawable.green);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.green, context.getTheme()));
+            } else {
+                image.setImageDrawable(context.getResources().getDrawable(R.drawable.green));
+            }
+
         }
     }
 
@@ -1635,8 +1655,8 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
             Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
             Toolbar toolbar1 = (Toolbar) context.findViewById(R.id.toolbar2);
             if (select) {
-                toolbar.setVisibility(View.GONE);
-                toolbar1.setVisibility(View.VISIBLE);
+//                toolbar.setVisibility(View.GONE);
+//                toolbar1.setVisibility(View.VISIBLE);
             } else {
                 toolbar.setVisibility(View.VISIBLE);
                 toolbar1.setVisibility(View.GONE);

@@ -190,7 +190,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         mapFragment.getMapAsync(this);
         handleImeActions();
 
-
         // check if doctor or clinic
 
         try {
@@ -248,6 +247,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case android.R.id.home:
+//                onBackPressed();
+                finish();
+                break;
             case R.id.mi_edit:
                 editboolean = true;
                 setVisiblitiy(View.GONE);
@@ -520,7 +523,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
-        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL + "/" + user.getCountry_flag(), ivLocation, R.drawable.placeholder);
+        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL + "/" + user.getCountry_flag(), ivLocation, R.drawable.profile_place_holder);
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
@@ -580,7 +583,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         } else {
             is_me = false;
-            tvToolbarName.setText(user.getSubTitle() + " " + user.getLast_name() + " " + user.getFirst_name());
+            tvToolbarName.setText(user.getLast_name() + " " + user.getFirst_name());
             edAddToFavourite.setText(R.string.add_to);
             tvContact.setText(R.string.contact_by_chat);
         }
@@ -641,7 +644,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void addToMyDoctor() {
         if (is_me)
             return;
-        if (user.getIs_my_doctor() == null ||user.getIs_my_doctor().equals("null")) {
+        if (user.getIs_my_doctor() == null || user.getIs_my_doctor().equals("null")) {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {

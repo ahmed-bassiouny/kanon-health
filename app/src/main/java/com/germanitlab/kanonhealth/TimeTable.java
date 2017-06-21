@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -90,6 +93,9 @@ public class TimeTable extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table_activity);
+
+        initTB();
+
         try {
             TimetableInstance = this;
 
@@ -106,6 +112,38 @@ public class TimeTable extends AppCompatActivity {
 
 
 
+    }
+
+    private void initTB() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_time_table, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+//                onBackPressed();
+                break;
+            case R.id.mi_save:
+                save();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -403,8 +441,8 @@ public class TimeTable extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.save)
-    public void save(View view) {
+//    @OnClick(R.id.save)
+    public void save() {
         try {
             Intent intent = new Intent();
             intent.putExtra("type", 0);

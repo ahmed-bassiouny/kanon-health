@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue">
+            android:background="@color/white">
 
 
             <TextView
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/my_profile"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
 
@@ -35,10 +35,20 @@
                 android:layout_marginRight="@dimen/size_20dp"
                 android:padding="@dimen/size_5dp"
                 android:text="@string/edit"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/size_15sp"
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
+
+        <View
+
+            android:layout_width="match_parent"
+
+            android:layout_height="1dp"
+
+            android:background="@color/gray" />
+
+
 
 
         <ScrollView

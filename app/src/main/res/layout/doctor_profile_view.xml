@@ -388,14 +388,18 @@
                             android:clickable="false"
                             tools:context=".DoctorProfileActivity" />
 
-                        <!--<com.germanitlab.kanonhealth.RadiusOverlayView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_alignParentTop="true"-->
-                        <!--android:layout_alignParentStart="true" />-->
-                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/profile_place_holder"
+                        android:textColor="@android:color/background_dark"
+                        android:layout_alignTop="@+id/textView4"
+                        android:layout_toEndOf="@+id/textView4" />
+                </RelativeLayout>
 
-                    </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"

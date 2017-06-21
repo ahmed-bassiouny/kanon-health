@@ -275,7 +275,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 Log.e("Error", error);
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()), speciality_id, type);
+        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+                speciality_id, type);
     }
 
     private void saveInDB(List<User> doctorList) {
