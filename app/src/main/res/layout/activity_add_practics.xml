@@ -29,7 +29,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:lines="2"
-                    android:text="@string/my_profile"
+                    android:text="Practice profile"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textStyle="bold"

@@ -39,6 +39,7 @@ import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
@@ -229,6 +230,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     @OnClick(R.id.button_submit)
     public void onSubmitClicked() {
 
+        if(!Helper.isNetworkAvailable(this)){
+            Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
+            return;
+        }
         String firstName = editLastName.getText().toString();
         String lastName = editFirstName.getText().toString();
         String birthDate = textBirthday.getText().toString();

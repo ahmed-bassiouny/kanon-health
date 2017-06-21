@@ -77,8 +77,8 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 @Override
                 public void onClick(View view, int position) {
                     CheckBox rbtn=(CheckBox)view.findViewById(R.id.rbtn);
-                    //rbtn.setChecked(!allspecialist.get(position).getIsMyChoise());
-                    allspecialist.get(position).setIsMyChoise(rbtn.isChecked());
+                    allspecialist.get(position).setIsMyChoise(!rbtn.isChecked());
+                    Toast.makeText(getActivity(), !rbtn.isChecked()+"", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

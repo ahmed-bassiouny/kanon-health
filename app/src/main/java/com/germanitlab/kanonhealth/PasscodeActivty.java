@@ -154,6 +154,10 @@ public class PasscodeActivty extends AppCompatActivity {
         if(finish){
             this.setResult(RESULT_OK);
             finish();
-        } else startActivity(new Intent(this,MainActivity.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
     }
 }

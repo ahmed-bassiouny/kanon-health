@@ -105,6 +105,7 @@ public class Helper {
         }*/
                 Dialog dialog   ;
                 dialog = new Dialog(activity);
+                dialog.setCancelable(true);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.custom_dialoge);
                 dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT ,
@@ -117,16 +118,17 @@ public class Helper {
                 Gson gson = new Gson();
                 Log.d("user data" , mPrefManager.getData(PrefManager.USER_KEY));
                 UserInfoResponse userInfoResponse =gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
-                TextView first_name = (TextView) dialog.findViewById(R.id.first_name);
-                TextView last_name = (TextView) dialog.findViewById(R.id.last_name);
+                TextView name = (TextView) dialog.findViewById(R.id.name);
+//                TextView last_name = (TextView) dialog.findViewById(R.id.last_name);
                 TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
                 CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
+
                 if(userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "" ) {
                     Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getAvatar() , circleImageView , R.drawable.profile_place_holder);
+                            + "/" + userInfoResponse.getUser().getAvatar() , circleImageView , R.drawable.placeholder);
                 }
-                first_name.setText(userInfoResponse.getUser().getFirst_name().toString());
-                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
+                name.setText(userInfoResponse.getUser().getFirst_name().toString()+" "+userInfoResponse.getUser().getLast_name().toString());
+//                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
                 try {
                     Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
                     String s = (DateUtil.formatBirthday(parseDate.getTime()));
