@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -292,28 +293,33 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @OnClick(R.id.tv_contact)
     public void contactClick(View v) {
-        if (is_me)
-            return;
-        Gson gson = new Gson();
-        if(user.isClinic == 1 ){
-            Intent intent = new Intent(this, InquiryActivity.class);
-            UserInfoResponse userInfoResponse = new UserInfoResponse();
-            userInfoResponse.setUser(user);
-            intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
-            startActivity(intent);
-        }
-        else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
-            Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("doctor_data", gson.toJson(user));
-            intent.putExtra("from", true);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, PaymentActivity.class);
-            intent.putExtra("doctor_data", user);
-            startActivity(intent);
-        }
+        try {
+            if (is_me)
+                return;
+            Gson gson = new Gson();
+            if (user.isClinic == 1) {
+                Intent intent = new Intent(this, InquiryActivity.class);
+                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                userInfoResponse.setUser(user);
+                intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                startActivity(intent);
+            } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
+                Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra("doctor_data", gson.toJson(user));
+                intent.putExtra("from", true);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, PaymentActivity.class);
+                intent.putExtra("doctor_data", user);
+                startActivity(intent);
+            }
 
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e("error", e.toString());
+        }
     }
+
 
     /*@OnClick(R.id.edit)
     public void edit(View view) {
@@ -331,7 +337,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }*/
 
     private void handleNewData() {
-        if(tvContact.getText().toString().trim().isEmpty() ||edAddToFavourite.getText().toString().trim().isEmpty()){
+        if (tvContact.getText().toString().trim().isEmpty() || edAddToFavourite.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, R.string.answer, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -349,14 +355,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
          etCity.setEnabled(editable);
          etProvince.setEnabled(editable);
          etCountry.setEnabled(editable);*/
-        if(user.isClinic==1) {
+        if (user.isClinic == 1) {
             user.setAddress(etLocation.getText().toString());
             user.getInfo().setStreetname(etStreetName.getText().toString());
             user.getInfo().setHouseNumber(etHouseNumber.getText().toString());
             user.getInfo().setZipCode(etZipCode.getText().toString());
             user.getInfo().setProvinz(etProvince.getText().toString());
             user.getInfo().setCountry(etCountry.getText().toString());
-        }else{
+        } else {
             user.setInfo(new Info());
         }
         sendDataToserver();
@@ -397,11 +403,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ivMemberList.setVisibility(View.VISIBLE);
         else
             ivMemberList.setVisibility(View.GONE);
-        if(editable) {
+        if (editable) {
             tvOnline.setFocusableInTouchMode(true);
             edAddToFavourite.setFocusableInTouchMode(true);
             tvContact.setFocusableInTouchMode(true);
-        }else {
+        } else {
             tvOnline.setFocusable(false);
             edAddToFavourite.setFocusable(false);
             tvContact.setFocusable(false);
@@ -474,7 +480,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                                 Toast.makeText(DoctorProfileActivity.this, "Uplaod Failed", Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
                     case TAKE_PICTURE:
                         util.showProgressDialog();
@@ -498,7 +504,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -514,7 +520,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
 
     }
-
 
 
     private void bindData() {
@@ -578,7 +583,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etZipCode.setText(user.getInfo().getZipCode());
         etProvince.setText(user.getInfo().getProvinz());
         etCountry.setText(user.getInfo().getCountry());
-        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))){
+        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
             is_me = true;
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
             edAddToFavourite.setText(user.getSubTitle() + " " + user.getFirst_name());
@@ -587,7 +592,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         } else {
             is_me = false;
             tvToolbarName.setText(user.getLast_name() + " " + user.getFirst_name());
-            edAddToFavourite.setText(R.string.add_to);
+            if (TextUtils.isEmpty(user.getIs_my_doctor()) || user.getIs_my_doctor().equals("0"))
+                edAddToFavourite.setText(R.string.add_to);
+            else
+                edAddToFavourite.setText(R.string.remove_from);
             tvContact.setText(R.string.contact_by_chat);
         }
 
@@ -647,7 +655,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void addToMyDoctor() {
         if (is_me)
             return;
-        if (user.getIs_my_doctor() == null || user.getIs_my_doctor().equals("null")) {
+        if (user.getIs_my_doctor() == null || user.getIs_my_doctor().equals("0")) {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -666,7 +674,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-                    user.setIs_my_doctor("null");
+                    user.setIs_my_doctor("0");
                     checkDoctor();
                 }
 
@@ -687,7 +695,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 edAddToFavourite.setText(getString(R.string.add_to));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));
-           } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e("a*a*s*as*a", e.getLocalizedMessage());
         }
@@ -850,6 +858,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title(user.getFirst_name()));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                intent.putExtra("long", user.getLocation_long());
+                intent.putExtra("lat", user.getLocation_lat());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

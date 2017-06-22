@@ -70,19 +70,25 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void handelUI(User doctorObj) {
+        try {
+            if(doctorObj!=null) {
+                tvDoctorName.setText(doctorObj.getName());
 
-        if(doctorObj!=null) {
-            tvDoctorName.setText(doctorObj.getName());
+                Helper.setImage(this, Constants.CHAT_SERVER_URL
+                        + "/" + doctorObj.getAvatar(), ivDoctor, R.drawable.placeholder);
 
-            Helper.setImage(this, Constants.CHAT_SERVER_URL
-                    + "/" + doctorObj.getAvatar(), ivDoctor, R.drawable.placeholder);
-
-            if (doctorObj.getRate() != null) {
-                ratingBar.setRating(Float.parseFloat(doctorObj.getRate()));
-            } else {
-                ratingBar.setRating(0);
+                if (doctorObj.getRate() != null) {
+                    ratingBar.setRating(Float.parseFloat(doctorObj.getRate()));
+                } else {
+                    ratingBar.setRating(0);
+                }
             }
+        }catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     private void initTB() {

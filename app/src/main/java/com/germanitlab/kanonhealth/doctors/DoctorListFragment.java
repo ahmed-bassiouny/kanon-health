@@ -120,8 +120,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
-
         return view;
     }
 
@@ -152,6 +150,12 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBySpeciality();
     }
 
     public void requestPermissionForCamera() {

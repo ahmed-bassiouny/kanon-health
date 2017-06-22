@@ -87,7 +87,7 @@
         <activity
             android:name=".chat.ChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".initialProfile.initialProfileDetails"
             android:screenOrientation="portrait" />
