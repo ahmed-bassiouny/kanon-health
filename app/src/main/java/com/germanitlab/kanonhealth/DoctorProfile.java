@@ -126,6 +126,7 @@ public class DoctorProfile extends AppCompatActivity {
         }catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Doctor Profile", "Doctor Profile ", e);
         }
 
 
@@ -153,6 +154,7 @@ public class DoctorProfile extends AppCompatActivity {
                     checkDoctor();
                 }catch (Exception e){
                     Crashlytics.logException(e);
+                    Log.e("Doctor Profile", "Doctor Profile ", e);
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                 }
 
@@ -162,6 +164,7 @@ public class DoctorProfile extends AppCompatActivity {
             public void onFailed(String error) {
                 util.dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+                Log.e("Doctor Profile", error);
 
             }
         }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), String.valueOf(doctor.get_Id()));
@@ -240,7 +243,7 @@ public class DoctorProfile extends AppCompatActivity {
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(DoctorProfile.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                    Log.i("Error ", " " + error);
+                    Log.i("Doctor Profile ", " " + error);
                 }
             }).addToMyDoctor(doctor.get_Id() + "");
         } else {
@@ -254,7 +257,7 @@ public class DoctorProfile extends AppCompatActivity {
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(DoctorProfile.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                    Log.i("Error ", " " + error);
+                    Log.i("Doctor Profile ", " " + error);
                 }
             }).removeFromMyDoctor(doctor.get_Id() + "");
         }

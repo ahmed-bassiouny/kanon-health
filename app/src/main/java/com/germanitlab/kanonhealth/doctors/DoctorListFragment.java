@@ -94,9 +94,12 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         Bundle bundle = new Bundle();
         bundle.putInt("speciality_id", mspeciality_id);
         bundle.putInt("type", mtype);
-        if (doctorListFragment == null)
+        if (doctorListFragment == null) {
             doctorListFragment = new DoctorListFragment();
-        doctorListFragment.setArguments(bundle);
+            doctorListFragment.setArguments(bundle);
+        }else{
+            doctorListFragment.getArguments().putAll(bundle);
+        }
         return doctorListFragment;
     }
 
@@ -253,7 +256,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                         praxis_list.setBackgroundResource(R.color.gray);
                         praxis_list.setTextColor(getResources().getColor(R.color.black));
                     }
-                    Log.e("Update user response :", "no response found");
                     jsonString = gson.toJson(response);
                     prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
                     doctorList = (List<User>) response;
@@ -262,6 +264,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     util.dismissProgressDialog();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
+                    Log.e("tag about Exception", "msg about Exception ", e);
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
 

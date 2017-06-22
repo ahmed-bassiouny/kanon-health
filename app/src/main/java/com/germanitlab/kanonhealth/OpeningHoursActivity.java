@@ -69,6 +69,7 @@ public class OpeningHoursActivity extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Opening Hours", "Activity ",e );
         }
 
 
@@ -129,6 +130,7 @@ public class OpeningHoursActivity extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+            Log.e("Opening Hours", "Activity ",e );
         }
 
     }

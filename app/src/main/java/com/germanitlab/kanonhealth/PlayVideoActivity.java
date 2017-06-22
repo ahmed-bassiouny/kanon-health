@@ -88,6 +88,7 @@ public class PlayVideoActivity extends Activity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_playing), Toast.LENGTH_SHORT).show();
+            Log.e("Passcode", "Activity ",e );
         }
 
     }
