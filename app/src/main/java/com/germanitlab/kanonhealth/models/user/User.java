@@ -67,6 +67,18 @@ public class User implements Serializable {
     @DatabaseField(id = true)
     @SerializedName("id")
     private Integer id;
+
+    public Integer getUserID_request() {
+        return userID_request;
+    }
+
+    public void setUserID_request(Integer userID_request) {
+        this.userID_request = userID_request;
+    }
+
+    @DatabaseField
+    @SerializedName("user_id")
+    private Integer userID_request = id; // user id must be to make request
     @DatabaseField
     @SerializedName("email")
     private String email;

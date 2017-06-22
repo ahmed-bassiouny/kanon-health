@@ -27,8 +27,6 @@ import com.germanitlab.kanonhealth.models.ChooseModel;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 /**
  * Created by Geram IT Lab on 05/06/2017.
  */
@@ -78,7 +76,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 public void onClick(View view, int position) {
                     CheckBox rbtn=(CheckBox)view.findViewById(R.id.rbtn);
                     allspecialist.get(position).setIsMyChoise(!rbtn.isChecked());
-                    Toast.makeText(getActivity(), !rbtn.isChecked()+"", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), !rbtn.isChecked()+"", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
