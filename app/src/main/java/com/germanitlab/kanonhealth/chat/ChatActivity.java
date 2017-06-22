@@ -255,7 +255,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             dismissProgressDialog();
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                         }
-                    }).getDoctorId(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), String.valueOf(from_id));
+                    }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), String.valueOf(from_id));
 
                 } else if (from) {
 //                    UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
@@ -339,7 +339,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void handleMyData() {
         try {
-            if(doctor.getId()==null){
+            if (doctor.getId() == null) {
                 Toast.makeText(this, R.string.contact_support, Toast.LENGTH_SHORT).show();
                 finish();
                 return;
@@ -347,18 +347,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             user_id = doctor.get_Id();
 
 
-//            if(doctor.getIsOpen()==1){
-//                startSession.setVisible(false);
-//                this.invalidateOptionsMenu();
-//
-//            }else {
-//                startSession.setVisible(true);
-//                this.invalidateOptionsMenu();
-//            }
-//
-
-
-            if(user_id==1){
+            if (user_id == 1) {
                 imageUser.setVisibility(View.GONE);
                 chat_bar.setVisibility(View.VISIBLE);
                 open_chat_session.setVisibility(View.GONE);
@@ -370,13 +359,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 this.invalidateOptionsMenu();
 
 
-
-            }else {
+            } else {
                 checkSessionOpen();
             }
 
-            Helper.setImage(this , Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar() , imageUser , R.drawable.placeholder);
+            Helper.setImage(this, Constants.CHAT_SERVER_URL
+                    + "/" + doctor.getAvatar(), imageUser, R.drawable.placeholder);
 
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
@@ -391,6 +379,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             assignViews();
 
             buildGoogleApiClient();
+
 
             recyclerView.setHasFixedSize(false);
             LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -417,19 +406,21 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        JSONObject data = (JSONObject) args[0];
-                        Log.d("Incoming Message SEEN", args[0].toString());
-                        Log.d("doctor ID", String.valueOf(doctor.get_Id()));
-                        try {
-                            int id = data.optInt("id");
-                            if (id == (Integer.parseInt(String.valueOf(doctor.get_Id())))) {
+                        if (doctor != null) {
+                            JSONObject data = (JSONObject) args[0];
+                            Log.d("Incoming Message SEEN", args[0].toString());
+                            Log.d("doctor ID", String.valueOf(doctor.get_Id()));
+                            try {
+                                int id = data.optInt("id");
+                                if (id == (Integer.parseInt(String.valueOf(doctor.get_Id())))) {
 
-                                changeStatusToDeliver();
-                                Log.d("my seen JSON", args[0].toString());
+                                    changeStatusToDeliver();
+                                    Log.d("my seen JSON", args[0].toString());
 
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 });
@@ -477,7 +468,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
-            if(doctor.isClinic==null)
+            if (doctor.isClinic == null)
                 doctor.setIsClinic(0);
 
             if (doctor.isClinic == 1) {
@@ -616,7 +607,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         Log.d("Incoming Message", args[0].toString());
 
                         try {
-                            if(doctor != null) {
+                            if (doctor != null) {
                                 if (String.valueOf(doctor.get_Id()).equals(String.valueOf(data.get("from_id")))) {
                                     if (data.get("type").equals(Constants.LOCATION)) {
                                         String msgLoc = data.getString("msg");
@@ -635,7 +626,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         }
                         JSONObject sendSeen = new JSONObject();
                         try {
-                            if(doctor != null) {
+                            if (doctor != null) {
                                 sendSeen.put("id", doctor.get_Id());
                             }
                             sendSeen.put("is_seen", 1);
@@ -777,7 +768,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void assignViews() {
 
-        if(user_id!=1) {
+        if (user_id != 1) {
 
             tvUserName.setText(doctor.getName());
         }
@@ -856,7 +847,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 e.printStackTrace();
             }
 
-            if (message.getFrom_id() ==Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
+            if (message.getFrom_id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
                 message.setMine(true);
                 message.setLoaded(true);
                 if (message.getSeen() == 1) {
@@ -1717,24 +1708,33 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         startSession = menu.findItem(R.id.start_session);
 
 
-            if (doctor != null) {
-                if(doctor.get_Id()==1){
-                    endSession.setVisible(false);
-                    startSession.setVisible(false);
-                    this.invalidateOptionsMenu();
+        if (doctor.getIsOpen() == 1) {
+            startSession.setVisible(false);
+            this.invalidateOptionsMenu();
 
-                }else {
-                    int from_id = getIntent().getIntExtra("from_id", 0);
-                    if (doctor.isClinic == 1) {
+        } else {
+            startSession.setVisible(true);
+            this.invalidateOptionsMenu();
+        }
+
+        if (doctor != null) {
+            if (doctor.get_Id() == 1) {
+                endSession.setVisible(false);
+                startSession.setVisible(false);
+                this.invalidateOptionsMenu();
+
+            } else {
+                int from_id = getIntent().getIntExtra("from_id", 0);
+                if (doctor.isClinic == 1) {
 //                MenuItem endSession = menu.findItem(R.id.end_session);
-                        endSession.setVisible(true);
-                    } else if (from_id != 1) {
+                    endSession.setVisible(true);
+                } else if (from_id != 1) {
 //                MenuItem endSession = menu.findItem(R.id.end_session);
-                        if (doctor.getIsDoc() != 1)
-                            endSession.setVisible(false);
-                    }
+                    if (doctor.getIsDoc() != 1)
+                        endSession.setVisible(false);
                 }
             }
+        }
 
         return true;
     }
@@ -1753,9 +1753,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                         startActivity(intent);
                     } else {
-                        if(doctor.getIsOpen()==1){
+                        if (doctor.getIsOpen() == 1) {
                             Toast.makeText(this, "Session Already opened ! ", Toast.LENGTH_SHORT).show();
-                        }else {
+                        } else {
                             openPayment();
                         }
 
@@ -1840,7 +1840,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                         Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
                                         checkSessionOpen();
-                                        if(doctor.isClinic == 1){
+                                        if (doctor.isClinic == 1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
                                             adb.setTitle(R.string.rate_conversation);
                                             adb.setCancelable(true);
@@ -1915,7 +1915,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 util.dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
-        }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD),
+        }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                 String.valueOf(doctor.getId()),
                 "3");
 
