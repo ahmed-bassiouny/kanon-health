@@ -143,6 +143,7 @@ public class DocumentsChatFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         mAdapter = new DocumentsAdapter(mMessages, getActivity(), this);
+        prefManager = new PrefManager(context);
     }
 
     @Override
