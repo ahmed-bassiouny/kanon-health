@@ -15,6 +15,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -42,6 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String jsonString;
     ProgressDialog progressDialog;
     int create;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final ImageView back, filter;
         create = 2;
         try {
+            prefManager = new PrefManager(this);
             back = (ImageView) this.findViewById(R.id.img_btn_back);
             layout = (LinearLayout) this.findViewById(R.id.toolbar);
             filter = (ImageView) this.findViewById(R.id.filter);
@@ -183,7 +186,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 Log.e("Error", error);
             }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), id, type);
+        }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), id, type);
     }
 
     public void dismissProgressDialog() {

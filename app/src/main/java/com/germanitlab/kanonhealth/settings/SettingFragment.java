@@ -49,6 +49,7 @@ import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.germanitlab.kanonhealth.profile.QuestionAdapter;
 import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
@@ -85,6 +86,7 @@ public class SettingFragment extends Fragment {
     private StatusResponse statusResponse;
     private String UserStatus;
     private PrcticiesSAdapter mAdapter;
+    PrefManager prefManager ;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -103,6 +105,7 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         mPrefManager = new PrefManager(getActivity());
+        prefManager = new PrefManager(getContext());
         try {
             user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
         }catch (Exception e){
@@ -158,6 +161,9 @@ public class SettingFragment extends Fragment {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(R.string.waiting_text);
             progressDialog.setCancelable(false);
+            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             new HttpCall(getActivity(), new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -188,7 +194,7 @@ public class SettingFragment extends Fragment {
                     setHasOptionsMenu(true);
                     setAdapter();
                 }
-            }).getProfile(AppController.getInstance().getClientInfo());
+            }).getProfile(userRegisterResponse);
 
 
         }catch (Exception e){
@@ -372,8 +378,7 @@ public class SettingFragment extends Fragment {
                 Log.e("Error", error + "++");
 
             }
-        }).goOnline(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword(), isAvailable);
+        }).goOnline(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), isAvailable);
 
     }
 

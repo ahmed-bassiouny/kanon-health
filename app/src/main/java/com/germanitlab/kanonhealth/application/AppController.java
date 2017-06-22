@@ -39,7 +39,7 @@ public class AppController extends Application {
     private SocketCall socketCall;
 
     private static AppController mInstance;
-     private UserRegisterResponse clientInfo;
+ //   private UserRegisterResponse clientInfo;
     PrefManager prefManager ;
     protected AppComponent appComponent;
 
@@ -100,7 +100,7 @@ public class AppController extends Application {
             });
             Log.d("Socket", " " + mSocket.connected());
 
-            if (clientInfo == null) {
+/*            if (clientInfo == null) {
                 if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
 
                     try {
@@ -114,7 +114,7 @@ public class AppController extends Application {
                         Log.e("Ex", " " + e.getLocalizedMessage());
                     }
                 }
-            }
+            }*/
 
             //Picasso configration
             Picasso.Builder builder = new Picasso.Builder(this);
@@ -157,7 +157,7 @@ public class AppController extends Application {
         return mSocket;
     }
 
-    public UserRegisterResponse getClientInfo() {
+  /*  public UserRegisterResponse getClientInfo() {
 
         if (clientInfo == null) {
             if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
@@ -189,8 +189,9 @@ public class AppController extends Application {
         }
         return clientInfo;
     }
-    public void setClientInfo(UserRegisterResponse clientInfo) {
+*/
+   /* public void setClientInfo(UserRegisterResponse clientInfo) {
         this.clientInfo = clientInfo;
-    }
+    }*/
 
 }

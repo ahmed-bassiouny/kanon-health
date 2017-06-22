@@ -57,13 +57,14 @@ public class VerificationActivity extends AppCompatActivity {
     @BindView(R.id.verification_Code)
     EditText verification_Code;
     Boolean oldUser ;
-
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
         try {
+            prefManager = new PrefManager(VerificationActivity.this);
             Intent intent = getIntent();
             number = intent.getStringExtra("number");
             code = intent.getStringExtra("codeNumber");
@@ -111,9 +112,9 @@ public class VerificationActivity extends AppCompatActivity {
                         Log.d("my response server ", response.toString());
                         jsonObject = new JSONObject(response.toString());
                         if (jsonObject.has("status") && jsonObject.getInt("active") == 1) {
-                            PrefManager prefManager = new PrefManager(VerificationActivity.this);
                             prefManager.setLogin(true);
-                            AppController.getInstance().setClientInfo(registerResponse);
+                            prefManager.put(PrefManager.USER_ID , String.valueOf(registerResponse.getUser_id()));
+                            prefManager.put(PrefManager.USER_PASSWORD , registerResponse.getPassword());
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -130,8 +131,8 @@ public class VerificationActivity extends AppCompatActivity {
                             dismissProgressDialog();
                             if(oldUser) {
                                 User user = new User();
-                                user.setId(AppController.getInstance().getClientInfo().getUser_id());
-                                user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+                                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+                                user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
                                 new HttpCall(VerificationActivity.this, new ApiResponse() {
                                     @Override
                                     public void onSuccess(Object response) {
@@ -244,7 +245,7 @@ public class VerificationActivity extends AppCompatActivity {
 
 
             }
-        }).joinUser(AppController.getInstance().getClientInfo().getUser_id());
+        }).joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
     }
 
     public void showProgressDialog() {

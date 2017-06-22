@@ -17,6 +17,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
@@ -44,6 +45,7 @@ public class PaymentActivity extends AppCompatActivity {
     RatingBar ratingBar;
     User doctor ;
     private String type;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.new_activity_payment);
         ButterKnife.bind(this);
         initTB();
-
+        prefManager = new PrefManager(this);
         try {
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
@@ -128,8 +130,7 @@ public class PaymentActivity extends AppCompatActivity {
                 public void onFailed(String error) {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
-            }).sendSessionRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),
-                    String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+            }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                     String.valueOf(doctor.getId()),
                     type);
 

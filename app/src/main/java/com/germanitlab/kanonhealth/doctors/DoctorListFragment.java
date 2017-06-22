@@ -225,8 +225,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                         Log.d("Response", error);
                         dialog.dismiss();
                     }
-                }).login(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword(), qr);
+                }).login(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), qr);
             }
         });
 
@@ -275,7 +274,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 Log.e("Error", error);
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
-        }).getlocations(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+        }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                 speciality_id, type);
     }
 

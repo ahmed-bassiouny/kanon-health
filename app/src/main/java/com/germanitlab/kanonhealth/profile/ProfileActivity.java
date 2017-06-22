@@ -32,6 +32,8 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
+import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -89,6 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     private QuestionAdapter mAdapter;
     private DoctorDocumentAdapter mAdapter2;
     LinkedHashMap<String, String> questionAnswer;
+    PrefManager prefManager ;
 
 //    public static int indexFromIntent=0;
 
@@ -103,6 +106,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         setContentView(R.layout.fragment_profile);
         ButterKnife.bind(this);
         initTB();
+        prefManager = new PrefManager(this);
         try {
             if (Helper.isNetworkAvailable(getApplicationContext())) {
                 tvEdit.setVisibility(View.VISIBLE);
@@ -124,7 +128,10 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
                 linearProfileContent.setVisibility(View.VISIBLE);
             } else {
-                new HttpCall(this, this).getProfile(AppController.getInstance().getClientInfo());
+                UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+                userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+                userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+                new HttpCall(this, this).getProfile(userRegisterResponse);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

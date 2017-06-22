@@ -166,7 +166,6 @@ public class InternetFilesOperations {
                 try {
                     entity.addPart("token", new StringBody(prefManager.getData(PrefManager.USER_PASSWORD)));
 
-                    Log.e("token", AppController.getInstance().getClientInfo().getPassword());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

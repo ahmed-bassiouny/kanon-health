@@ -272,8 +272,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                                 Log.e("upload image failed :", error);
                                 Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
 
                         break;
                     case TAKE_PICTURE:
@@ -298,8 +297,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                                 Log.e("upload image failed :", error);
                                 Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
 
                         break;
                 }

@@ -300,8 +300,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                         }
-                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
                                 }
                             });
 
@@ -472,8 +471,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                         public void onFailed(String error) {
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         }
-                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id() , privacy);
                                 }
                             });
 
@@ -549,8 +547,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                         }
-                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
                                 }
                             });
 
@@ -720,8 +717,7 @@ try {
                                         public void onFailed(String error) {
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         }
-                                    }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                            , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
                                 }
                             });
 
@@ -1008,8 +1004,7 @@ try {
                                                 Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                             }
-                                        }).updatePrivacy(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                                , AppController.getInstance().getClientInfo().getPassword() , mMessages.get(position).get_Id() , privacy);
+                                        }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
                                     }
                                 });
 
@@ -1216,7 +1211,7 @@ try {
 
         JSONObject sendText = new JSONObject();
         try {
-            sendText.put("to_id", AppController.getInstance().getClientInfo().getUser_id());
+            sendText.put("to_id", prefManager.getData(PrefManager.USER_ID));
             sendText.put("type", type);
 
 

@@ -15,6 +15,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.FilterAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ public class Specilaities extends AppCompatActivity {
     private LinearLayout toolbar;
     private Boolean from;
     private int type;
+    PrefManager prefManager ;
 
 
     @Override
@@ -42,6 +44,7 @@ public class Specilaities extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_specialities);
         try {
+            prefManager = new PrefManager(this);
             token = new TypeToken<List<Speciality>>() {
             };
             toolbar = (LinearLayout) findViewById(R.id.toolbar);
@@ -83,8 +86,7 @@ public class Specilaities extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                 Log.e("error in returned json", error);
             }
-        }).getSpecialities((String.valueOf(AppController.getInstance().getClientInfo().getUser_id()))
-                , AppController.getInstance().getClientInfo().getPassword());
+        }).getSpecialities(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
     }
 
     public void createAdapter(List<Speciality> specialityList, Boolean from) {

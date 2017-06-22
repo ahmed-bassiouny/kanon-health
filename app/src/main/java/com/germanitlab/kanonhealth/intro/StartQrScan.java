@@ -125,8 +125,7 @@ public class StartQrScan extends AppCompatActivity {
                 DismissProgressDialog();
                 Log.e("My error ", error.toString());
             }
-        }).getDoctor(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword(), key, i);
+        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key, i);
     }
 
     public void showProgressDialog() {

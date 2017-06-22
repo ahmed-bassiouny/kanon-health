@@ -56,6 +56,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     private PrefManager mPrefManager;
     private GoogleApiClient mGoogleApiClient;
     private boolean isFirst = true;
+    PrefManager prefManager ;
 
     public DoctorListMapFragment() {
         // Required empty public constructor
@@ -71,14 +72,13 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        prefManager = new PrefManager(getContext());
         buildGoogleApiClient();
         mPrefManager = new PrefManager(getActivity());
         mGoogleApiClient.connect();
         MapsInitializer.initialize(this.getActivity());
 
-        new HttpCall(activity, this).getAllDoctor(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword());
+        new HttpCall(activity, this).getAllDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
 
 
     }

@@ -84,6 +84,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     String birthdate ;
     String gender_other="Male";
     int gender=1;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             pickerDialog = new PickerDialog();
             setContentView(R.layout.profile_details_activity);
             ButterKnife.bind(this);
+            prefManager = new PrefManager(this);
             if(savedInstanceState != null) {
                 textBirthday.setText(savedInstanceState.getString("birthdate"));
                 selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI")) ;
@@ -253,8 +255,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         if (!firstName.trim().isEmpty() && !lastName.trim().isEmpty() && !birthDate.trim().isEmpty()) {
             showProgressDialog();
             final User user = new User();
-            user.setId(AppController.getInstance().getClientInfo().getUser_id());
-            user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+            user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             user.setFirst_name(firstName);
             user.setLast_name(lastName);
             user.setBirthDate(birthdate);
@@ -340,8 +342,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                             Log.e("upload image failed :", error);
                             Toast.makeText(getApplicationContext(),"upload image failed ", Toast.LENGTH_SHORT).show();
                         }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
+                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
 
                     break;
                 case TAKE_PICTURE:
@@ -360,8 +361,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         public void onFailed(String error) {
                             Toast.makeText(getApplicationContext(),"upload image failed ", Toast.LENGTH_SHORT).show();
                         }
-                    }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
+                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
 
                     break;
             }

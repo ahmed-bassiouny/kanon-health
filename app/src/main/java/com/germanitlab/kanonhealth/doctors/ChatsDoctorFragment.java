@@ -77,6 +77,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     private Button doctors_list, praxis_list;
     private static ChatsDoctorFragment chatsDoctorFragment;
     Util util;
+    PrefManager prefManager ;
 
     public static ChatsDoctorFragment newInstance() {
         if (chatsDoctorFragment == null)
@@ -94,8 +95,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             if (getView() != null && isVisibleToUser) {
                 if (Helper.isNetworkAvailable(getContext())) {
                     util.showProgressDialog();
-                    new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword());
+                    new HttpCall(getActivity(), this).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
                 } else {
                     TypeToken<List<User>> token = new TypeToken<List<User>>() {
                     };
@@ -116,10 +116,10 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     public void onResume() {
         super.onResume();
         try {
+            prefManager = new PrefManager(getContext());
             if (Helper.isNetworkAvailable(getContext())) {
                 util.showProgressDialog();
-                new HttpCall(getActivity(), this).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword());
+                new HttpCall(getActivity(), this).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
             } else {
                 TypeToken<List<User>> token = new TypeToken<List<User>>() {
                 };
@@ -393,8 +393,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                         else tvLoadingError.setText("Some thing went wrong");
                         chat_layout.setVisibility(View.GONE);
                     }
-                }).getChatClinics(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword());
+                }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
             }
         });
         doctors_list.setOnClickListener(new View.OnClickListener() {
@@ -424,8 +423,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                             tvLoadingError.setText(error);
                         else tvLoadingError.setText("Some thing went wrong");
                     }
-                }).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                        , AppController.getInstance().getClientInfo().getPassword());
+                }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
             }
         });
 

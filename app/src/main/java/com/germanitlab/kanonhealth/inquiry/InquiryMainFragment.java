@@ -190,8 +190,7 @@ public class InquiryMainFragment extends Fragment {
                                 dismissProgressDialog();
                                 Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).sendPopUpResult(AppController.getInstance().getClientInfo().getUser_id(),
-                                AppController.getInstance().getClientInfo().getPassword(),
+                        }).sendPopUpResult(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD),
                                 String.valueOf(doctor.getUser().get_Id()),
                                 InquiryActivity.inquiryResult);
 
