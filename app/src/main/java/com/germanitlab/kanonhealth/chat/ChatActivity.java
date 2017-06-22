@@ -259,8 +259,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             , AppController.getInstance().getClientInfo().getPassword(), String.valueOf(from_id));
 
                 } else if (from) {
-                    UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
-                    doctor = userInfoResponse.getUser();
+//                    UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
+//                    doctor = userInfoResponse.getUser();
+                    doctor = gson.fromJson(prefManager.getData("doctor"), User.class);
                     handleMyData();
                 } else {
                     UserInfoResponse userInfoResponse = gson.fromJson(intent.getStringExtra("doctor_data"), UserInfoResponse.class);
@@ -626,7 +627,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         }
                         JSONObject sendSeen = new JSONObject();
                         try {
-                            sendSeen.put("id", doctor.get_Id());
+                            if(doctor != null) {
+                                sendSeen.put("id", doctor.get_Id());
+                            }
                             sendSeen.put("is_seen", 1);
                             AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
                         } catch (JSONException e) {
@@ -1742,62 +1745,68 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                         startActivity(intent);
                     } else {
+                        if(doctor.getIsOpen()==1){
+                            Toast.makeText(this, "Session Already opened ! ", Toast.LENGTH_SHORT).show();
+                        }else {
+                            openPayment();
+                        }
+
                         //startActivity(new Intent(this, Comment.class));
-                        AlertDialog.Builder adb_start = new AlertDialog.Builder(this);
-                        adb_start.setTitle(R.string.close_conversation);
-                        adb_start.setCancelable(false);
-                        adb_start.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                new HttpCall(ChatActivity.this, new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        try {
-                                            doctor.setIsOpen(0);
-                                            checkSessionOpen();
-                                            Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                            AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
-                                            adb.setTitle(R.string.rate_conversation);
-                                            adb.setCancelable(true);
-                                            adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    new HttpCall(ChatActivity.this, new ApiResponse() {
-                                                        @Override
-                                                        public void onSuccess(Object response) {
-                                                            Intent intent = new Intent(ChatActivity.this, Comment.class);
-                                                            intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-                                                            startActivity(intent);
-                                                        }
-
-                                                        @Override
-                                                        public void onFailed(String error) {
-                                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }).closeSession(String.valueOf(doctor.getId()));
-                                                }
-                                            });
-                                            adb.show();
-                                        } catch (Exception e) {
-                                            Crashlytics.logException(e);
-                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-                                        Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
-                                    }
-                                }).closeSession(String.valueOf(doctor.getId()));
-                            }
-                        });
-                        adb_start.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        });
-                        adb_start.show();
+//                        AlertDialog.Builder adb_start = new AlertDialog.Builder(this);
+//                        adb_start.setTitle(R.string.close_conversation);
+//                        adb_start.setCancelable(false);
+//                        adb_start.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                new HttpCall(ChatActivity.this, new ApiResponse() {
+//                                    @Override
+//                                    public void onSuccess(Object response) {
+//                                        try {
+//                                            doctor.setIsOpen(0);
+//                                            checkSessionOpen();
+//                                            Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+//                                            AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
+//                                            adb.setTitle(R.string.rate_conversation);
+//                                            adb.setCancelable(true);
+//                                            adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                    new HttpCall(ChatActivity.this, new ApiResponse() {
+//                                                        @Override
+//                                                        public void onSuccess(Object response) {
+//                                                            Intent intent = new Intent(ChatActivity.this, Comment.class);
+//                                                            intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+//                                                            startActivity(intent);
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onFailed(String error) {
+//                                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                                                        }
+//                                                    }).closeSession(String.valueOf(doctor.getId()));
+//                                                }
+//                                            });
+//                                            adb.show();
+//                                        } catch (Exception e) {
+//                                            Crashlytics.logException(e);
+//                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                                        }
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailed(String error) {
+//                                        Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }).closeSession(String.valueOf(doctor.getId()));
+//                            }
+//                        });
+//                        adb_start.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                            }
+//                        });
+//                        adb_start.show();
                     }
 
 

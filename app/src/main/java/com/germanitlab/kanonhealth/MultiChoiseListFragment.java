@@ -27,8 +27,6 @@ import com.germanitlab.kanonhealth.models.ChooseModel;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 /**
  * Created by Geram IT Lab on 05/06/2017.
  */
