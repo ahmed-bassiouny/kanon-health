@@ -108,6 +108,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
         }catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("Doctor Document adapter", "Doctor Document adapter", e);
         }
 
     }

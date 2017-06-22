@@ -206,6 +206,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.i("Doctor Profile  ", " Activity " , e);
         }
 
     }
@@ -471,8 +472,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             @Override
                             public void onFailed(String error) {
                                 util.dismissProgressDialog();
-                                Toast.makeText(DoctorProfileActivity.this, "Uplaod Failed", Toast.LENGTH_SHORT).show();
-                                Log.e("upload image failed :", error);
+                                Toast.makeText(DoctorProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                                Log.i("Doctor Profile  ", " Activity " + error);
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
                         break;
@@ -496,7 +497,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             public void onFailed(String error) {
                                 util.dismissProgressDialog();
                                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                                Log.e("upload image failed :", error);
+                                Log.i("Doctor Profile  ", " Activity " + error);
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
                         break;
@@ -511,6 +512,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             }
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.i("Doctor Profile  ", " Activity " , e);
         }
 
     }
@@ -659,7 +661,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                    Log.i("Error ", " " + error);
+                    Log.i("Doctor Profile  ", " Activity " + error);
                 }
             }).addToMyDoctor(user.get_Id() + "");
         } else {
@@ -673,7 +675,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                    Log.i("Error ", " " + error);
+                    Log.i("Doctor Profile  ", " Activity " + error);
                 }
             }).removeFromMyDoctor(user.get_Id() + "");
         }
@@ -796,7 +798,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     @Override
     public void onSuccess(Object response) {
-        Toast.makeText(this, "Data saved Successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
         setVisiblitiy(View.VISIBLE);
         UserInfoResponse userInfoResponse = new UserInfoResponse();
@@ -809,9 +811,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public void onFailed(String error) {
         util.dismissProgressDialog();
-        Toast.makeText(this, "Error in saving data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
-
+        Log.i("Doctor Profile  ", " Activity " + error);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +99,7 @@ public class PasscodeActivty extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("Passcode", "Activity ",e );
         }
 
     }

@@ -70,6 +70,7 @@ public class Comment extends AppCompatActivity {
 
                     @Override
                     public void onFailed(String error) {
+                        Log.e("Comment Tag", error);
                         Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
                     }
                 }).rateDoctor(doc_id,edt_comment.getText().toString(),String.valueOf(rb_doctor_rate.getRating()));
@@ -77,6 +78,7 @@ public class Comment extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("Comment Tag", "Comment Excepotion",e );
         }
 
     }
