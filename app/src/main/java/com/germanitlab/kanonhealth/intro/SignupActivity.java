@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.initialProfile.CountriesCodes;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
@@ -48,6 +49,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     String country, code;
     Constants constants;
     public SignupActivity signupActivity;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             Constants.COUNTRY_CODES.clear();
             Gson gson = new Gson();
             constants = new Constants();
+            prefManager = new PrefManager(this);
             List<CountriesCodes> codess = gson.fromJson(constants.CountryCode, new TypeToken<List<CountriesCodes>>() {
             }.getType());
             found = true;
@@ -185,6 +188,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                 Toast.makeText(this, getResources().getText(R.string.error_in_registeration), Toast.LENGTH_SHORT).show();
                 System.exit(0);
             }
+            prefManager.put(PrefManager.USER_ID ,String.valueOf(registerResponse.getUser_id()));
+            prefManager.put(PrefManager.USER_PASSWORD ,String.valueOf(registerResponse.getPassword()));
             JSONObject jsonObject = null;
             Boolean oldUser = false;
             if (registerResponse.is_exist()) {

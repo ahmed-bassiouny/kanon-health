@@ -288,7 +288,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                         privacy = 2 ;
                                     else
                                         privacy = 0 ;
-                                    new HttpCall(new ApiResponse() {
+                                    new HttpCall(context ,new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -461,7 +461,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                         privacy = 2 ;
                                     else
                                         privacy = 0 ;
-                                    new HttpCall(new ApiResponse() {
+                                    new HttpCall(context ,new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -537,7 +537,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                         privacy = 2 ;
                                     else
                                         privacy = 0 ;
-                                    new HttpCall(new ApiResponse() {
+                                    new HttpCall(context ,new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -709,7 +709,7 @@ try {
                                         privacy = 2 ;
                                     else
                                         privacy = 0 ;
-                                    new HttpCall(new ApiResponse() {
+                                    new HttpCall(context ,new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -996,7 +996,7 @@ try {
                                             privacy = 2 ;
                                         else
                                             privacy = 0 ;
-                                        new HttpCall(new ApiResponse() {
+                                        new HttpCall(context,new ApiResponse() {
                                             @Override
                                             public void onSuccess(Object response) {
                                                 mMessages.get(position).setPrivacy(privacy);

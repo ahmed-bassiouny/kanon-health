@@ -27,6 +27,7 @@ import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
@@ -57,12 +58,14 @@ public class ForwardActivity extends AppCompatActivity {
     Boolean search;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private int entity_type;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forward);
         try {
+            prefManager = new PrefManager(this);
             doctorsForward = new ArrayList<>();
             messagesForward = new ArrayList<>();
             ButterKnife.bind(this);
@@ -74,7 +77,7 @@ public class ForwardActivity extends AppCompatActivity {
             ListDoctors = new ArrayList<>();
             edtDoctorListFilter = (EditText) findViewById(R.id.edt_doctor_list_filter);
             showProgressDialog();
-            new HttpCall(new ApiResponse() {
+            new HttpCall(getApplicationContext() ,new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
                     try {
@@ -105,8 +108,7 @@ public class ForwardActivity extends AppCompatActivity {
                     tvLoadingError.setText(error);
                 else tvLoadingError.setText("Some thing went wrong");*/
                 }
-            }).getChatDoctors(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                    , AppController.getInstance().getClientInfo().getPassword());
+            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD));
         }catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -186,7 +188,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Log.e("Error", error);
                 Toast.makeText(ForwardActivity.this, getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
             }
-        }).forward(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), messagesForward, doctorsForward);
+        }).forward(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), messagesForward, doctorsForward);
     }
 
     private void addListener(RecyclerView recyclerView) {
@@ -256,7 +258,7 @@ public class ForwardActivity extends AppCompatActivity {
     public void toDocument(View view) {
         try {
             doctorsForward.clear();
-            doctorsForward.add(AppController.getInstance().getClientInfo().getUser_id());
+            doctorsForward.add(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             sendForward();
         }catch (Exception e) {
             Crashlytics.logException(e);
@@ -392,8 +394,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Log.e("My error ", error.toString());
 
             }
-        }).getDoctor(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword(), key, entity_type);
+        }).getDoctor(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), key, entity_type);
     }
 
     public void dismissProgressDialog() {

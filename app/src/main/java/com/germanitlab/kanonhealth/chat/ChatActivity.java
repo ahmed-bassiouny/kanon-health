@@ -199,7 +199,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
         ButterKnife.bind(this);
-        Toast.makeText(this, "222222222222222", Toast.LENGTH_SHORT).show();
         util = Util.getInstance(this);
         try {
             ttoolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -255,8 +254,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             dismissProgressDialog();
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                         }
-                    }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                            , AppController.getInstance().getClientInfo().getPassword(), String.valueOf(from_id));
+                    }).getDoctorId(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), String.valueOf(from_id));
 
                 } else if (from) {
                     UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
@@ -503,7 +501,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             msg.setMine(true);
             msg.setType(Constants.TEXT);
             msg.setTo_id(doctor.get_Id());
-            msg.setFrom_id(AppController.getInstance().getClientInfo().getUser_id());
+            msg.setFrom_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             final String str = sdf.format(new Date());
             msg.setSent_at(str);
@@ -520,7 +518,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 sendText.put("msg", message);
                 sendText.put("text_image", message);
                 sendText.put("position", position);
-                sendText.put("from_id", AppController.getInstance().getClientInfo().getUser_id());
+                sendText.put("from_id", prefManager.getData(PrefManager.USER_ID));
 
                 Log.d("Message ", sendText.toString());
 
@@ -584,7 +582,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             } catch (JSONException e) {
 
                 Log.e("Ex", e.getLocalizedMessage());
-
             }
 
         } catch (Exception e) {
@@ -597,7 +594,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            Toast.makeText(ChatActivity.this, "111111111111", Toast.LENGTH_SHORT).show();
             try {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -844,7 +840,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 e.printStackTrace();
             }
 
-            if (message.getFrom_id() == AppController.getInstance().getClientInfo().getUser_id()) {
+            if (message.getFrom_id() ==Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
                 message.setMine(true);
                 message.setLoaded(true);
                 if (message.getSeen() == 1) {
@@ -1894,8 +1890,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 util.dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
-        }).sendSessionRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()),
-                String.valueOf(AppController.getInstance().getClientInfo().getPassword()),
+        }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD),
                 String.valueOf(doctor.getId()),
                 "3");
 

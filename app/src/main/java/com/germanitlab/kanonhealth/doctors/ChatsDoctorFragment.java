@@ -374,7 +374,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     praxis_list.setTextColor(getResources().getColor(R.color.white));
                 }
                 praxis_list.setBackgroundResource(R.color.blue);
-                new HttpCall(new ApiResponse() {
+                new HttpCall(getActivity(), new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
                         util.dismissProgressDialog();
@@ -405,7 +405,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 doctors_list.setTextColor(getResources().getColor(R.color.white));
                 praxis_list.setBackgroundResource(R.color.gray);
                 praxis_list.setTextColor(getResources().getColor(R.color.black));
-                new HttpCall(new ApiResponse() {
+                new HttpCall(getActivity() ,new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
                         util.dismissProgressDialog();

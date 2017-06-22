@@ -1,12 +1,13 @@
 package com.germanitlab.kanonhealth.async;
 
-import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiInterface;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.Forward;
@@ -53,19 +54,17 @@ import retrofit2.Response;
 
 public class HttpCall {
 
-    private Activity activity;
+    private Context context;
     private ApiResponse apiResponse;
+    PrefManager prefManager ;
 
-    public HttpCall(Activity activity, ApiResponse apiResponse) {
+    public HttpCall(Context actcontextvity, ApiResponse apiResponse) {
 
-        this.activity = activity;
+        this.context = actcontextvity;
         this.apiResponse = apiResponse;
+        prefManager = new PrefManager(actcontextvity);
     }
 
-    public HttpCall(ApiResponse apiResponse) {
-
-        this.apiResponse = apiResponse;
-    }
 
     public void updateToken(RequsetToken requsetToken) {
         try {
@@ -89,7 +88,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -118,7 +117,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -149,7 +148,7 @@ public class HttpCall {
 
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -176,7 +175,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -206,7 +205,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -236,7 +235,7 @@ public class HttpCall {
 
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -259,7 +258,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -287,7 +286,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -317,7 +316,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -344,7 +343,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -369,7 +368,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -394,14 +393,14 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     public void getrating(String doctorID) {
         try {
-            Comment comment = new Comment(AppController.getInstance().getClientInfo().getUser_id(), AppController.getInstance().getClientInfo().getPassword(), "0", doctorID);
+            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)),prefManager.getData(PrefManager.USER_ID), "0", doctorID);
             ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<List<Comment>> call = apiInterface.getrating(comment);
             call.enqueue(new Callback<List<Comment>>() {
@@ -419,7 +418,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -448,7 +447,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -492,7 +491,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -522,7 +521,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -551,7 +550,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -582,7 +581,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -614,7 +613,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -645,7 +644,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -672,7 +671,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -698,7 +697,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -725,7 +724,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -754,7 +753,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -782,7 +781,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -790,7 +789,7 @@ public class HttpCall {
     public void addToMyDoctor(String doc_id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "", doc_id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
             Call<JsonObject> connection = service.addToMyDoctor(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -805,7 +804,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -813,7 +812,7 @@ public class HttpCall {
     public void removeFromMyDoctor(String doc_id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "", doc_id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
             Call<JsonObject> connection = service.removeFromMyDoctor(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -828,7 +827,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -836,7 +835,7 @@ public class HttpCall {
     public void rateDoctor(String doc_id, String txtcomment, String rate) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            Comment comment = new Comment(AppController.getInstance().getClientInfo().getUser_id(), AppController.getInstance().getClientInfo().getPassword(), "0", doc_id, txtcomment, rate);
+            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)),prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate);
             Call<JsonObject> connection = service.rateDoctor(comment);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -851,7 +850,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -859,7 +858,7 @@ public class HttpCall {
     public void closeSession(String doc_id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "", doc_id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
             Call<JsonObject> connection = service.closeSession(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -874,7 +873,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -896,7 +895,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -918,7 +917,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -940,7 +939,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -962,7 +961,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -984,7 +983,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -992,7 +991,7 @@ public class HttpCall {
     public void closeSessionAndOpenNewSession(final String userID, final String password, final String id, final String type) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), "", id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), "", id);
             final Call<JsonObject> connection = service.closeSession(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -1023,7 +1022,7 @@ public class HttpCall {
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }

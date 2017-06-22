@@ -21,6 +21,8 @@ public class PrefManager {
     public static final String DOCUMENT_HISTORY ="document_history" ;
     public static final String HISTORY = "history";
     public static final String TIME_TYPE = "time_type";
+    public static final String USER_ID = "user_id";
+    public static final String USER_PASSWORD = "user_password";
     public static String PROFILE_IMAGE = "profileImage";
     public static String PROFILE_QR = "profileQr";
     SharedPreferences pref;
