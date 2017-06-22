@@ -347,6 +347,17 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             user_id = doctor.get_Id();
 
 
+//            if(doctor.getIsOpen()==1){
+//                startSession.setVisible(false);
+//                this.invalidateOptionsMenu();
+//
+//            }else {
+//                startSession.setVisible(true);
+//                this.invalidateOptionsMenu();
+//            }
+//
+
+
             if(user_id==1){
                 imageUser.setVisibility(View.GONE);
                 chat_bar.setVisibility(View.VISIBLE);
