@@ -90,6 +90,7 @@
                         android:inputType="text"
                         android:textCursorDrawable="@color/blue"
                         android:background="@drawable/custom_edittext_without_border_style"
+                        android:layout_margin="5dp"
                         android:padding="@dimen/size_5dp" />
 
 

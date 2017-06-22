@@ -247,6 +247,7 @@ public class DocumentsChatFragment extends Fragment
                 @Override
                 public void call(Object... args) {
 
+
                     Log.e("Message Response", args[0].toString());
                     Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
                     Log.e("my uri from here ", imageUri.toString());
