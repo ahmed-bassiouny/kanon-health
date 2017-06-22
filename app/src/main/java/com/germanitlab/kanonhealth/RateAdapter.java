@@ -62,6 +62,7 @@ public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(activity,activity.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Rate Activity", "",e);
         }
 
 

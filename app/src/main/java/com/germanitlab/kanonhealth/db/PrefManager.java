@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.db;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
 
@@ -87,6 +88,20 @@ public class PrefManager {
     }
 
     public int getInt(String key) {
-        return pref.getInt(key, 0);
+        String result = getData(key);
+        if(TextUtils.isEmpty(result))
+        {
+            return 0;
+        }
+        else
+        {
+            try{
+                return Integer.parseInt(result);
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
     }
 }
