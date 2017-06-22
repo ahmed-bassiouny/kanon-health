@@ -124,7 +124,7 @@ public class DocumentsChatFragment extends Fragment
     private Uri selectedImageUri = null;
     private ContentValues contentValues;
 
-    private int mUserId = AppController.getInstance().getClientInfo().getUser_id();
+    private int mUserId  ;
 
     private static DocumentsChatFragment documentsChatFragment;
 
@@ -149,6 +149,7 @@ public class DocumentsChatFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
+            mUserId =Integer.parseInt(prefManager.getData(PrefManager.USER_ID));
             prefManager = new PrefManager(getActivity());
             if (view != null) {
 
@@ -235,7 +236,7 @@ public class DocumentsChatFragment extends Fragment
             sendText.put("type", Constants.TEXT);
             sendText.put("msg", message);
             sendText.put("position", position);
-            sendText.put("from_id", AppController.getInstance().getClientInfo().getUser_id());
+            sendText.put("from_id",prefManager.getData(PrefManager.USER_ID));
 
 
             Log.d("Message ", sendText.toString());
@@ -371,7 +372,7 @@ public class DocumentsChatFragment extends Fragment
                     handleJsonHistory(response.toString(), true);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -379,7 +380,7 @@ public class DocumentsChatFragment extends Fragment
             public void onFailed(String error) {
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
-        }).fetchMessage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), "1");
+        }).fetchMessage(prefManager.getData(PrefManager.USER_ID), "1");
     }
 
 
@@ -424,7 +425,7 @@ public class DocumentsChatFragment extends Fragment
             }
 
 
-            if (message.getFrom_id() == AppController.getInstance().getClientInfo().getUser_id()) {
+            if (message.getFrom_id() ==Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
                 message.setMine(true);
                 message.setLoaded(true);
                 if (message.getSeen() == 1) {
@@ -905,7 +906,7 @@ public class DocumentsChatFragment extends Fragment
         String str = sdf.format(new Date());
         message.setSent_at(str);
         message.setMine(true);
-        message.setTo_id(AppController.getInstance().getClientInfo().getUser_id());
+        message.setTo_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
         addMessage(message);
     }
 

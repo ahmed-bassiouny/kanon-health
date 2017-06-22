@@ -89,7 +89,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void joinUser() {
-        if(AppController.getInstance().getClientInfo().getUser_id() == 0 || String.valueOf(AppController.getInstance().getClientInfo().getUser_id()).equals(null)){
+        if(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)) == 0 || prefManager.getData(PrefManager.USER_ID).equals(null)){
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             System.exit(0);
         }
@@ -123,7 +123,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
                 }
-            }).joinUser(AppController.getInstance().getClientInfo().getUser_id());
+            }).joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
         }catch (Exception e){
             Crashlytics.logException(e);
         }

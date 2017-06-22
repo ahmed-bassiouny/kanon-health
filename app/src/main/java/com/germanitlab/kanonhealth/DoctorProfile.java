@@ -92,12 +92,14 @@ public class DoctorProfile extends AppCompatActivity {
     private Util util ;
 
     public static Activity profileActivity;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile);
         try {
+            prefManager = new PrefManager(this);
             profileActivity=this;
             mPrefManager = new PrefManager(this);
             ButterKnife.bind(this);
@@ -162,7 +164,7 @@ public class DoctorProfile extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
 
             }
-        }).getDoctorId(String.valueOf(AppController.getInstance().getClientInfo().getUser_id()), AppController.getInstance().getClientInfo().getPassword(), String.valueOf(doctor.get_Id()));
+        }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), String.valueOf(doctor.get_Id()));
     }
 
 

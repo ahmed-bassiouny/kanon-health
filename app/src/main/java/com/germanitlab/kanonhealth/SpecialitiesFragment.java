@@ -18,6 +18,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.FilterAdapter;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
@@ -40,6 +41,7 @@ public class SpecialitiesFragment extends Fragment {
     private LinearLayout toolbar;
     private Boolean from;
     private int type ;
+    PrefManager prefManager ;
 
 
     public SpecialitiesFragment() {
@@ -94,6 +96,7 @@ public class SpecialitiesFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_specialities, container, false);
         try {
+            prefManager = new PrefManager(getContext());
             token = new TypeToken<List<Speciality>>() {
             };
             toolbar = (LinearLayout) view.findViewById(R.id.toolbar);
@@ -132,8 +135,7 @@ public class SpecialitiesFragment extends Fragment {
                     Log.e("error in returned json", error);
                     Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 }
-            }).getSpecialities((String.valueOf(AppController.getInstance().getClientInfo().getUser_id()))
-                    , AppController.getInstance().getClientInfo().getPassword());
+            }).getSpecialities(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

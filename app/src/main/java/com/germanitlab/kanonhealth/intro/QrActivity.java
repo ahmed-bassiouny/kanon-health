@@ -149,8 +149,7 @@ public class QrActivity extends AppCompatActivity {
                 linearLayout.setVisibility(View.GONE);
                 errortxt.setVisibility(View.VISIBLE);
             }
-        }).getDoctor(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                , AppController.getInstance().getClientInfo().getPassword(), key, entity_type);
+        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key, entity_type);
     }
 
     @Override

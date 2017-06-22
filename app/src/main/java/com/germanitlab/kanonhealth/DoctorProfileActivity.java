@@ -282,7 +282,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void chechEditPermission() {
 
-        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id())
+        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID)))
             is_me = true;
         else
             is_me = false;
@@ -397,12 +397,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ivMemberList.setVisibility(View.VISIBLE);
         else
             ivMemberList.setVisibility(View.GONE);
-        tvOnline.setFocusable(editable);
-        tvOnline.setFocusableInTouchMode(editable);
-        edAddToFavourite.setFocusable(editable);
-        edAddToFavourite.setFocusableInTouchMode(editable);
-        tvContact.setFocusable(editable);
-        tvContact.setFocusableInTouchMode(editable);
+        if(editable) {
+            tvOnline.setFocusableInTouchMode(true);
+            edAddToFavourite.setFocusableInTouchMode(true);
+            tvContact.setFocusableInTouchMode(true);
+        }else {
+            tvOnline.setFocusable(false);
+            edAddToFavourite.setFocusable(false);
+            tvContact.setFocusable(false);
+        }
     }
 
     @OnClick(R.id.edit_time_table)
@@ -471,8 +474,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                                 Toast.makeText(DoctorProfileActivity.this, "Uplaod Failed", Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
                         break;
                     case TAKE_PICTURE:
                         util.showProgressDialog();
@@ -496,8 +498,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -577,7 +578,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etZipCode.setText(user.getInfo().getZipCode());
         etProvince.setText(user.getInfo().getProvinz());
         etCountry.setText(user.getInfo().getCountry());
-        if (user.get_Id() == AppController.getInstance().getClientInfo().getUser_id()) {
+        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))){
             is_me = true;
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
             edAddToFavourite.setText(user.getSubTitle() + " " + user.getFirst_name());

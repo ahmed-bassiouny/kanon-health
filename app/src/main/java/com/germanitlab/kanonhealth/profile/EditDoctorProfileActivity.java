@@ -296,8 +296,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
 
                         break;
                     case TAKE_PICTURE:
@@ -327,8 +326,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
 
                         break;
                 }

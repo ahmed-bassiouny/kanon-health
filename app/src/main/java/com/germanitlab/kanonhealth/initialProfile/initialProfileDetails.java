@@ -61,6 +61,7 @@ public class initialProfileDetails extends AppCompatActivity {
     UploadImageResponse uploadImageResponse;
     private InternetFilesOperations internetFilesOperations;
     ProgressDialog progressDialog;
+    PrefManager prefManager ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class initialProfileDetails extends AppCompatActivity {
          mPrefManager = new PrefManager(this);
         setContentView(R.layout.profile_details_activity);
         ButterKnife.bind(this);
+        prefManager = new PrefManager(this);
 
     }
 
@@ -147,8 +149,8 @@ public class initialProfileDetails extends AppCompatActivity {
             if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")){
                 showProgressDialog();
                 final User user = new User();
-                user.setId(AppController.getInstance().getClientInfo().getUser_id());
-                user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+                user.setPassword( prefManager.getData(PrefManager.USER_PASSWORD));
                 user.setName(firstName + " " +lastName);
                 user.setBirthDate(birthDate);
                 if (uploadImageResponse != null){
@@ -237,8 +239,7 @@ public class initialProfileDetails extends AppCompatActivity {
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(imageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(imageUri));
 
                         break;
 

@@ -128,7 +128,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             holder.tvSubtitle.setText(doctor.getSubTitle());
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
-            Helper.setImage(activity ,Constants.CHAT_SERVER_URL
+            Helper.setImage(activity ,Constants.CHAT_SERVER_URL_IMAGE
                     + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.placeholder );
 
 

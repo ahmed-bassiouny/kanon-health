@@ -39,8 +39,8 @@ public class AppController extends Application {
     private SocketCall socketCall;
 
     private static AppController mInstance;
-    private UserRegisterResponse clientInfo;
-
+ //   private UserRegisterResponse clientInfo;
+    PrefManager prefManager ;
     protected AppComponent appComponent;
 
 
@@ -56,6 +56,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         try {
+            prefManager = new PrefManager(this);
             Fabric.with(this, new Crashlytics());
             StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(sbuilder.build());
@@ -75,13 +76,11 @@ public class AppController extends Application {
 
                     try {
                         JSONObject request = null;
-                        int i = AppController.getInstance().getClientInfo().getUser_id();
-                        String s = String.valueOf(AppController.getInstance().getClientInfo().getUser_id());
                         request = new JSONObject();
-                        request.put("id", AppController.getInstance().getClientInfo().getUser_id());
+                        request.put("id", prefManager.getData(PrefManager.USER_ID));
                         Log.d("Join user", request.toString());
                         AppController.getInstance().getSocket().emit("JoinUser", request);
-                        mSocket.emit("JoinUser", AppController.getInstance().getClientInfo().getUser_id());
+                        mSocket.emit("JoinUser", prefManager.getData(PrefManager.USER_ID));
 
 
                     } catch (Exception e) {
@@ -101,7 +100,7 @@ public class AppController extends Application {
             });
             Log.d("Socket", " " + mSocket.connected());
 
-            if (clientInfo == null) {
+/*            if (clientInfo == null) {
                 if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
 
                     try {
@@ -115,7 +114,7 @@ public class AppController extends Application {
                         Log.e("Ex", " " + e.getLocalizedMessage());
                     }
                 }
-            }
+            }*/
 
             //Picasso configration
             Picasso.Builder builder = new Picasso.Builder(this);
@@ -144,7 +143,7 @@ public class AppController extends Application {
             } else {
                 mSocket.connect();
                 try {
-                    socketCall.joinUser(AppController.getInstance().getClientInfo().getUser_id());
+                    socketCall.joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 } catch (Exception e) {
 
                 }
@@ -158,7 +157,7 @@ public class AppController extends Application {
         return mSocket;
     }
 
-    public UserRegisterResponse getClientInfo() {
+  /*  public UserRegisterResponse getClientInfo() {
 
         if (clientInfo == null) {
             if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
@@ -190,9 +189,9 @@ public class AppController extends Application {
         }
         return clientInfo;
     }
-
-    public void setClientInfo(UserRegisterResponse clientInfo) {
+*/
+   /* public void setClientInfo(UserRegisterResponse clientInfo) {
         this.clientInfo = clientInfo;
-    }
+    }*/
 
 }

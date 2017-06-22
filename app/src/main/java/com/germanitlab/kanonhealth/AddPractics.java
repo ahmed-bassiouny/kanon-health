@@ -186,8 +186,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             info.setCountry(etCountry.getText().toString());
             user.setInfo(info);
             user.setPhone(etTelephone.getText().toString());
-            user.setId(AppController.getInstance().getClientInfo().getUser_id());
-            user.setPassword(AppController.getInstance().getClientInfo().getPassword());
+            user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -413,8 +413,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
                             }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
+                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
                         pickerDialog.dismiss();
 
                         break;
@@ -438,8 +438,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 util.dismissProgressDialog();
                                 Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);                            }
-                        }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
+                                ,prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
                         pickerDialog.dismiss();
                         break;
                     case Constants.HOURS_CODE:

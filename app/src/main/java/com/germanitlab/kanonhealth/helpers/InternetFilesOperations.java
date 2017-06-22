@@ -15,6 +15,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.callback.UploadListener;
+import com.germanitlab.kanonhealth.db.PrefManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -44,6 +45,7 @@ public class InternetFilesOperations {
 
     private static InternetFilesOperations internetFilesOperations;
     private Context context;
+    PrefManager prefManager ;
 
     public static InternetFilesOperations getInstance(Context context) {
         if (internetFilesOperations != null)
@@ -55,6 +57,8 @@ public class InternetFilesOperations {
 
     private InternetFilesOperations(Context context) {
         this.context = context;
+        prefManager = new PrefManager(context);
+
     }
 
     public void uploadFile(final String filePath, final UploadListener uploadListener) {
@@ -160,9 +164,8 @@ public class InternetFilesOperations {
                 entity.addPart("file", new FileBody(sourceFile, "application/octet"));
 
                 try {
-                    entity.addPart("token", new StringBody(AppController.getInstance().getClientInfo().getPassword()));
+                    entity.addPart("token", new StringBody(prefManager.getData(PrefManager.USER_PASSWORD)));
 
-                    Log.e("token", AppController.getInstance().getClientInfo().getPassword());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
