@@ -157,7 +157,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     EditText etTelephone;
     @BindView(R.id.et_location)
     EditText et_location;
-    Boolean is_me;
+    Boolean is_me=false;
     @BindView(R.id.edit_speciality_list)
     ImageView ivSpecialityList;
     @BindView(R.id.edit_languages_list)
@@ -207,6 +207,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             Log.i("Doctor Profile  ", " Activity " , e);
+            finish();
         }
 
     }
@@ -283,7 +284,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void chechEditPermission() {
 
-        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID)))
+        if (user.get_Id() == prefManager.getInt(PrefManager.USER_ID))
             is_me = true;
         else
             is_me = false;

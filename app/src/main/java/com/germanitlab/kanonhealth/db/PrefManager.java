@@ -81,7 +81,12 @@ public class PrefManager {
     public boolean get(String key){
         return pref.getBoolean(key, false);
     }
+
     public String getData(String key) {
         return pref.getString(key, "");
+    }
+
+    public int getInt(String key) {
+        return pref.getInt(key, 0);
     }
 }

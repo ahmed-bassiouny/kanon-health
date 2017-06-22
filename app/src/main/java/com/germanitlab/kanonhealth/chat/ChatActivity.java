@@ -836,7 +836,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 /*
                 2017-03-15T09:14:35.000Z
 */
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 df.setTimeZone(TimeZone.getTimeZone("GMT"));
                 Date date = df.parse(message.getSent_at().toString());
                 df.setTimeZone(TimeZone.getDefault());
@@ -1636,7 +1636,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public String formatDate(String date) {
-        String[] current_date = date.split("T")[1].split(":");
+        String[] current_date = date.split(" ")[1].split(":");
         return current_date[0] + ":" + current_date[1];
 
     }
