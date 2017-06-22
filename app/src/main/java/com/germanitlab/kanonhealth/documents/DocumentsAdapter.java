@@ -581,29 +581,31 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             public void run() {
 
                                 try {
-                                    JSONObject jsonObject = new JSONObject(result);
-                                    if (jsonObject.has("error")) {
-                                        //show dialog
-                                        mediaMessage.setLoaded(true);
-                                        showAlerDialog("Video", Html.fromHtml(jsonObject.getString("error")).toString());
-                                    } else {
+                                    if(result!=null) {
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        if (jsonObject.has("error")) {
+                                            //show dialog
+                                            mediaMessage.setLoaded(true);
+                                            showAlerDialog("Video", Html.fromHtml(jsonObject.getString("error")).toString());
+                                        } else {
 
-                                        if (!folder.exists()) folder.mkdirs();
+                                            if (!folder.exists()) folder.mkdirs();
 
-                                        String source = mediaMessage.getMsg();
-                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                        if (moveFile(new File(source), destination)) {
-                                            mediaMessage.setMsg(destination.getPath());
+                                            String source = mediaMessage.getMsg();
+                                            File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                            if (moveFile(new File(source), destination)) {
+                                                mediaMessage.setMsg(destination.getPath());
 
-                                            videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
-                                                    MediaStore.Video.Thumbnails.MICRO_KIND));
+                                                videoViewHolder.myMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(mediaMessage.getMsg(),
+                                                        MediaStore.Video.Thumbnails.MICRO_KIND));
+                                            }
+                                            mediaMessage.setLoaded(true);
+                                            mediaMessage.setLoading(false);
+
+                                            setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
+
+                                            sendMessage(jsonObject.getString("file_url"), Constants.VIDEO);
                                         }
-                                        mediaMessage.setLoaded(true);
-                                        mediaMessage.setLoading(false);
-
-                                        setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
-
-                                        sendMessage(jsonObject.getString("file_url"), Constants.VIDEO);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
