@@ -247,6 +247,7 @@ public class DocumentsChatFragment extends Fragment
                 @Override
                 public void call(Object... args) {
 
+
                     Log.e("Message Response", args[0].toString());
                     Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
                     Log.e("my uri from here ", imageUri.toString());
@@ -319,7 +320,6 @@ public class DocumentsChatFragment extends Fragment
         try {
 //            Date parseDate = DateUtil.getFormat().parse(message.getSent_at());
 //            message.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-            Log.d("sent at ", message.getSent_at().toString());
             message.setSent_at(formatDate(message.getSent_at().toString()));
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -1159,12 +1159,17 @@ public class DocumentsChatFragment extends Fragment
     }
 
     public String formatDate(String date) {
-        String[] current_date = date.split(" ")[1].split(":");
-        Log.e("Length of the array", String.valueOf(current_date.length));
-        if (current_date.length < 3) {
-            return current_date[0] + ":" + current_date[1];
+        try {
+            String[] current_date = date.split(" ")[1].split(":");
+            if (current_date.length < 3) {
+                return current_date[0] + ":" + current_date[1];
+            }
+            return current_date[0] + ":" + current_date[1] + ":" + current_date[2];
+        }catch (Exception e){
+            Log.e("Documentchat", e.getLocalizedMessage());
+            Crashlytics.logException(e);
+            return "";
         }
-        return current_date[0] + ":" + current_date[1] + ":" + current_date[2];
 
     }
 

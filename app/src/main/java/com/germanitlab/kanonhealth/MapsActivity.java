@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -30,6 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.i("Maps Activity ", "" + e);
         }
 
     }
@@ -56,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.i("Maps activity ", "" + e);
         }
 
     }

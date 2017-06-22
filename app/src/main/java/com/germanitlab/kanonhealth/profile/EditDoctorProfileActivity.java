@@ -132,17 +132,11 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             etFirstName.setSelected(false);
             Intent i = getIntent();
             userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
-            bindData();
-/*        if (savedInstanceState != null) {
-            etFirstName.setSelected(false);
-            imageUri = Uri.parse(savedInstanceState.getString("imageURI"));
-            Picasso.with(this).load(imageUri).into(imgAvatar);
-            userInfoResponse = (UserInfoResponse) savedInstanceState.getSerializable("userdata");
 
-        }*/
             user = userInfoResponse.getUser();
             Log.e("My user ", String.valueOf(user.get_Id()));
             info = user.getInfo();
+            bindData();
             createAdapter();
 
             if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
@@ -155,25 +149,6 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
-/*        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Log.i("ddeasdf", "Place: " + place.getName());
-                LatLng latLng = place.getLatLng();
-                Log.e("latitude", "latitude: " + latLng.latitude);
-                Log.e("longitude", "longitude: " + latLng.longitude);
-
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.i("ddeasdf", "Place: " + status.toString());
-
-            }
-        });*/
     }
 
     public void createAdapter() {
@@ -296,15 +271,12 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
 
                         break;
                     case TAKE_PICTURE:
                         showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-/*
-                    decodeFile(selectedImageUri.toString());
-*/
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         Glide.with(this).load(selectedImageUri).into(imgAvatar);
                         new HttpCall(this, new ApiResponse() {
@@ -326,7 +298,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
 
                         break;
                 }
@@ -337,20 +309,6 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         }
     }
 
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String path;
-        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            path = contentUri.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            path = cursor.getString(idx);
-            cursor.close();
-        }
-        return path;
-    }
 
     @Override
     public void onSuccess(Object response) {

@@ -112,6 +112,8 @@ public class RateActivity extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Rate Activity", "",e);
+
         }
 
 
@@ -129,7 +131,7 @@ public class RateActivity extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                Log.i("error", error);
+                Log.e("Rate Activity", error);
             }
         }).getrating(doc_id);
     }

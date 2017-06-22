@@ -30,6 +30,7 @@ public class Specialities extends AppCompatActivity {
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                    Log.e("Specialities","" ,e);
                 }
 
             }

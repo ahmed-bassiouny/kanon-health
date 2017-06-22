@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.i("MultiChoiselist", "Fragment" + e);
         }
 
         return view;
