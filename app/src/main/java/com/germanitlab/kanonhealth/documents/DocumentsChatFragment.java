@@ -371,7 +371,7 @@ public class DocumentsChatFragment extends Fragment
                     handleJsonHistory(response.toString(), true);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT).show();
                 }
             }
 

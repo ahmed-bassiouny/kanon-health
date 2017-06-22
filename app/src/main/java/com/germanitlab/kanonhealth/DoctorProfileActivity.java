@@ -397,12 +397,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ivMemberList.setVisibility(View.VISIBLE);
         else
             ivMemberList.setVisibility(View.GONE);
-        tvOnline.setFocusable(editable);
-        tvOnline.setFocusableInTouchMode(editable);
-        edAddToFavourite.setFocusable(editable);
-        edAddToFavourite.setFocusableInTouchMode(editable);
-        tvContact.setFocusable(editable);
-        tvContact.setFocusableInTouchMode(editable);
+        if(editable) {
+            tvOnline.setFocusableInTouchMode(true);
+            edAddToFavourite.setFocusableInTouchMode(true);
+            tvContact.setFocusableInTouchMode(true);
+        }else {
+            tvOnline.setFocusable(false);
+            edAddToFavourite.setFocusable(false);
+            tvContact.setFocusable(false);
+        }
     }
 
     @OnClick(R.id.edit_time_table)
