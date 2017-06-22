@@ -267,6 +267,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="title">Title</string>
     <string name="error_in_registeration">error in registeration</string>
     <string name="please_access_storage">Can\'t Access Storage</string>
+    <string name="save_practics">Practics Saved</string>
 
 
 </resources>
