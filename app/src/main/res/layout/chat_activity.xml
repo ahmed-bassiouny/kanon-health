@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:paddingLeft="16dp"
+        android:title=""
         android:paddingRight="16dp"
         android:weightSum="1">
 
@@ -156,8 +157,8 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/size_20dp"
+                    android:layout_height="@dimen/size_20dp"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:scaleType="fitXY"
@@ -188,10 +189,11 @@
 
                 <ImageButton
                     android:id="@+id/imgbtn_chat_attach"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="@dimen/size_20dp"
+                    android:layout_height="@dimen/size_20dp"
+                    android:rotation="270"
                     android:layout_gravity="right|center"
-                    android:background="@drawable/ic_attach_file_black_24dp"
+                    android:background="@drawable/attach_file"
                     android:duplicateParentState="true" />
             </LinearLayout>
 

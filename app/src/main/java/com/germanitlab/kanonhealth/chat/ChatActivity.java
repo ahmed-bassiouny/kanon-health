@@ -199,10 +199,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
         ButterKnife.bind(this);
-        Toast.makeText(this, "222222222222222", Toast.LENGTH_SHORT).show();
         util = Util.getInstance(this);
         try {
             ttoolbar = (Toolbar) findViewById(R.id.toolbar);
+            ttoolbar.setTitle("");
             setSupportActionBar(ttoolbar);
         /* data base
          */
@@ -348,6 +348,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
             if(user_id==1){
+                imageUser.setVisibility(View.GONE);
                 chat_bar.setVisibility(View.VISIBLE);
                 open_chat_session.setVisibility(View.GONE);
                 imageButtonAttach.setVisibility(View.VISIBLE);
@@ -903,10 +904,13 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             imageButtonSend.setBackgroundResource(0);
                             Log.e("Start Recording", "start");
                             startRecording();
+                            imageButtonAttach.setVisibility(View.GONE);
 
                             break;
                         case MotionEvent.ACTION_UP:
                             Log.e("stop Recording", "stop");
+                            imageButtonAttach.setVisibility(View.VISIBLE);
+
                             if (imageButtonSend.getProgress() < 30) {
                                 Toast.makeText(getApplicationContext(), "You cancel record", Toast.LENGTH_SHORT).show();
                                 stopRecording(true);
