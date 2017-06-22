@@ -286,15 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             return 4;
         }
 
-        // problem is Fatal Exception: java.lang.IllegalStateException
-        // it's mean i try add fragment already added
-        @Override
-        public Parcelable saveState() {
-            return null;
-        }
     }
-
-
-
 
 }

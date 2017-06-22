@@ -84,6 +84,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.i("MultiSelect", "Adapter" + e);
         }
     }
 

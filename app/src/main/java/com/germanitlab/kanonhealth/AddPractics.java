@@ -192,17 +192,19 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-                    Toast.makeText(AddPractics.this, "Save Practics", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
                     finish();
                 }
 
                 @Override
                 public void onFailed(String error) {
+                    Log.e("Add Practics Tag", error);
                     Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
                 }
             }).addClinic(user);
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -218,6 +220,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             showDialogFragment(bundle);
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -233,6 +236,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             showDialogFragment(bundle);
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -251,6 +255,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             }
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -265,6 +270,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             showDialogFragment(bundle);
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -291,6 +297,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             }
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -310,6 +317,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             startActivityForResult(intent, Constants.HOURS_CODE);
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -370,6 +378,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             }
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
@@ -462,6 +471,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
         }catch (Exception e) {
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
@@ -505,6 +515,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             pickerDialog.dismiss();
         }catch (Exception e){
             Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
