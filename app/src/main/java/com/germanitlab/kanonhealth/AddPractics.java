@@ -186,6 +186,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             info.setCountry(etCountry.getText().toString());
             user.setInfo(info);
             user.setPhone(etTelephone.getText().toString());
+            user.setUserID_request(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             new HttpCall(this, new ApiResponse() {
@@ -498,7 +499,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     public void deleteMyImage() {
         try {
             user.setAvatar("");
-            Helper.setImage(this, Constants.CHAT_SERVER_URL
+            Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE
                     + "/" + user.getAvatar(), civImageAvatar, R.drawable.placeholder);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
