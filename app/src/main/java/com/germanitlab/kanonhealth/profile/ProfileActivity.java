@@ -85,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     @BindView(R.id.scrollView)
     ScrollView scrollView;
 
-    private UserInfoResponse userInfoResponse;
+    private UserInfoResponse userInfoResponse=new UserInfoResponse();
     private PrefManager mPrefManager;
 
     private QuestionAdapter mAdapter;
@@ -117,15 +117,12 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             mPrefManager = new PrefManager(this);
             Intent intent = getIntent();
             Boolean from = intent.getBooleanExtra("from", false);
-            Log.e("Where  coming ", from.toString());
             if (!from) {
 
                 userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
                 mPrefManager.put(PrefManager.USER_KEY, new Gson().toJson(userInfoResponse));
                 bindData();
-
                 progressBar.setVisibility(View.GONE);
-
                 linearProfileContent.setVisibility(View.VISIBLE);
             } else {
                 UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
@@ -152,9 +149,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             case android.R.id.home:
 
                 finish();
-
-//                onBackPressed();
-
                 break;
 
         }
@@ -186,12 +180,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     private void bindData() {
 
-        PrefManager prefManager = new PrefManager(this);
-        if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
 
-            String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-
-        }
 
 
         if(userInfoResponse.getUser().getAvatar()!=null || !userInfoResponse.getUser().getAvatar().equals(""))
@@ -241,11 +230,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setNestedScrollingEnabled(false);
-        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getApplicationContext());
-
-/*        mAdapter2 = new DoctorDocumentAdapter(images, getApplicationContext(), this , scrollView , video_layout);
-        recyclerView2.setLayoutManager(mLayoutManager2);
-        recyclerView2.setAdapter(mAdapter2);*/
     }
 
     @OnClick(R.id.tv_profile_edit)
@@ -295,26 +279,9 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("onResume", "called");
-    }
 
     @Override
     public void onBackPressed() {
-//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//        intent.putExtra("index" , 3);
-//        startActivity(intent);
-
-/*        if(getIntent().getExtras().containsKey("tab")){
-            indexFromIntent = 1;
-
-        }else {
-            indexFromIntent = 3;
-
-        }
-        ProfileActivity.super.onBackPressed();*/
         finish();
     }
 }
