@@ -63,17 +63,17 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         try {
             switch (type){
                 case Constants.SPECIALITIES:
-                    Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getSpeciality_icon() , holder.image , R.drawable.profile_place_holder);
+                    Helper.setImage(context , Constants.CHAT_SERVER_URL_IMAGE + "/"+list.get(position).getSpeciality_icon() , holder.image , R.drawable.profile_place_holder);
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.LANGUAUGE:
-                    Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getLang_icon() , holder.image , R.drawable.profile_place_holder);
+                    Helper.setImage(context , Constants.CHAT_SERVER_URL_IMAGE + "/"+list.get(position).getLang_icon() , holder.image , R.drawable.profile_place_holder);
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.MEMBERAT:
                 case Constants.DoctorAll:
                     holder.title.setText(chooseModel.getLast_nameMember()+" " +list.get(position).getFirst_nameMember());
-                    Helper.setImage(context , Constants.CHAT_SERVER_URL + "/"+list.get(position).getAvatarMember() , holder.image , R.drawable.profile_place_holder);
+                    Helper.setImage(context , Constants.CHAT_SERVER_URL_IMAGE + "/"+list.get(position).getAvatarMember() , holder.image , R.drawable.profile_place_holder);
                     holder.title.setVisibility(View.VISIBLE);
                     break;
             }

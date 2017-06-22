@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.db;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -24,7 +25,7 @@ public class PrefManager {
     public static String PROFILE_QR = "profileQr";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
-    Activity _context;
+    Context _context;
 
     //Keys
     public static String DOCTOR_KEY = "doctor";
@@ -42,7 +43,7 @@ public class PrefManager {
     private static final String PREF_NAME = Constants.PREF_NAME;
     private static final String IS_FIRST_TIME_LAUNCH = Constants.IS_FIRST_LAUNCH;
 
-    public PrefManager(Activity context) {
+    public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();

@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -284,7 +285,15 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         public int getCount() {
             return 4;
         }
+
+        // problem is Fatal Exception: java.lang.IllegalStateException
+        // it's mean i try add fragment already added
+        @Override
+        public Parcelable saveState() {
+            return null;
+        }
     }
+
 
 
 

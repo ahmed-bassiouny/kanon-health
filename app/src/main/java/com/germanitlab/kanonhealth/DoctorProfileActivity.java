@@ -50,10 +50,12 @@ import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Table;
+import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
+import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -172,7 +174,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
     private GoogleMap googleMap;
-    Boolean editboolean;
     private Menu menu;
     private SupportMapFragment mapFragment;
 
@@ -182,7 +183,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_profile_view);
         ButterKnife.bind(this);
-        editboolean = false;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initTB();
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -252,7 +252,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 finish();
                 break;
             case R.id.mi_edit:
-                editboolean = true;
                 setVisiblitiy(View.GONE);
                 menu.findItem(R.id.mi_save).setVisible(true);
                 menu.findItem(R.id.mi_edit).setVisible(false);
@@ -316,13 +315,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     }
 
-    @OnClick(R.id.edit)
+    /*@OnClick(R.id.edit)
     public void edit(View view) {
         setVisiblitiy(View.GONE);
         editboolean = true;
         tvOnline.setText(user.getSubTitle());
         edAddToFavourite.setText(user.getFirst_name());
-        edAddToFavourite.requestFocus();
         tvContact.setText(user.getLast_name());
     }
 
@@ -330,9 +328,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void save(View view) {
         handleNewData();
         bindData();
-    }
+    }*/
 
     private void handleNewData() {
+        if(tvContact.getText().toString().trim().isEmpty() ||edAddToFavourite.getText().toString().trim().isEmpty()){
+            Toast.makeText(this, R.string.answer, Toast.LENGTH_SHORT).show();
+            return;
+        }
         user.setSubTitle(tvOnline.getText().toString());
         user.setLast_name(tvContact.getText().toString());
         user.setFirst_name(edAddToFavourite.getText().toString());
@@ -347,12 +349,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
          etCity.setEnabled(editable);
          etProvince.setEnabled(editable);
          etCountry.setEnabled(editable);*/
-        user.setAddress(etLocation.getText().toString());
-        user.getInfo().setStreetname(etStreetName.getText().toString());
-        user.getInfo().setHouseNumber(etHouseNumber.getText().toString());
-        user.getInfo().setZipCode(etZipCode.getText().toString());
-        user.getInfo().setProvinz(etProvince.getText().toString());
-        user.getInfo().setCountry(etCountry.getText().toString());
+        if(user.isClinic==1) {
+            user.setAddress(etLocation.getText().toString());
+            user.getInfo().setStreetname(etStreetName.getText().toString());
+            user.getInfo().setHouseNumber(etHouseNumber.getText().toString());
+            user.getInfo().setZipCode(etZipCode.getText().toString());
+            user.getInfo().setProvinz(etProvince.getText().toString());
+            user.getInfo().setCountry(etCountry.getText().toString());
+        }else{
+            user.setInfo(new Info());
+        }
         sendDataToserver();
     }
 
@@ -391,9 +397,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ivMemberList.setVisibility(View.VISIBLE);
         else
             ivMemberList.setVisibility(View.GONE);
-        edAddToFavourite.setFocusable(editable);
         tvOnline.setFocusable(editable);
+        tvOnline.setFocusableInTouchMode(editable);
+        edAddToFavourite.setFocusable(editable);
+        edAddToFavourite.setFocusableInTouchMode(editable);
         tvContact.setFocusable(editable);
+        tvContact.setFocusableInTouchMode(editable);
     }
 
     @OnClick(R.id.edit_time_table)
@@ -463,7 +472,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                                 Log.e("upload image failed :", error);
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
                         break;
                     case TAKE_PICTURE:
                         util.showProgressDialog();
@@ -488,7 +497,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                                 Log.e("upload image failed :", error);
                             }
                         }).uploadImage(String.valueOf(AppController.getInstance().getClientInfo().getUser_id())
-                                , AppController.getInstance().getClientInfo().getPassword(), getPathFromURI(selectedImageUri));
+                                , AppController.getInstance().getClientInfo().getPassword(), ImageFilePath.getPath(this,selectedImageUri));
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -505,32 +514,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     }
 
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String path;
-        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            path = contentUri.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            path = cursor.getString(idx);
-            cursor.close();
-        }
-        return path;
-    }
 
 
     private void bindData() {
         chechEditPermission();
         checkDoctor();
-        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
+        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
-        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL + "/" + user.getCountry_flag(), ivLocation, R.drawable.profile_place_holder);
+        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), ivLocation, R.drawable.profile_place_holder);
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
@@ -803,7 +798,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         Toast.makeText(this, "Data saved Successfully", Toast.LENGTH_SHORT).show();
         util.dismissProgressDialog();
         setVisiblitiy(View.VISIBLE);
-        editboolean = false;
         UserInfoResponse userInfoResponse = new UserInfoResponse();
         userInfoResponse.setUser(user);
         prefManager.put(PrefManager.USER_KEY, new Gson().toJson(userInfoResponse));

@@ -9,9 +9,13 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.SocketCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+import com.google.gson.Gson;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
@@ -146,8 +150,7 @@ public class AppController extends Application {
                 }
             }
             Log.d("Soket ", " " + mSocket.connected());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -156,6 +159,35 @@ public class AppController extends Application {
     }
 
     public UserRegisterResponse getClientInfo() {
+
+        if (clientInfo == null) {
+            if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
+
+                try {
+
+                    Log.d("Client Info : ", "Read client info form cach ");
+                    clientInfo = (UserRegisterResponse) CacheJson.readObject(mInstance, Constants.REGISER_RESPONSE);
+
+                } catch (Exception e) {
+
+                    clientInfo = null;
+                    Log.e("Ex", " " + e.getLocalizedMessage());
+                }
+            }
+        }
+
+        if (clientInfo == null) {
+            PrefManager prefManager = new PrefManager(getApplicationContext());
+            if (prefManager.isLogin()) {
+                Gson gson = new Gson();
+                UserInfoResponse userInfoResponse = gson.fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
+                clientInfo = new UserRegisterResponse();
+                clientInfo.setUser_id(userInfoResponse.getUser().get_Id());
+                clientInfo.setPassword(userInfoResponse.getUser().getPassword());
+                clientInfo.setIs_exist(true);
+                clientInfo.setSucess(true);
+            }
+        }
         return clientInfo;
     }
 

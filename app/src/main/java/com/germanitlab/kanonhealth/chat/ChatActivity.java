@@ -339,6 +339,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void handleMyData() {
         try {
+            if(doctor.getId()==null){
+                Toast.makeText(this, R.string.contact_support, Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
             user_id = doctor.get_Id();
 
 
@@ -460,15 +465,16 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
+            if(doctor.isClinic==null)
+                doctor.setIsClinic(0);
+
             if (doctor.isClinic == 1) {
                 Intent intent = new Intent(this, DoctorProfileActivity.class);
-                Gson gson = new Gson();
                 intent.putExtra("doctor_data", doctor);
                 startActivity(intent);
                 finish();
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                Gson gson = new Gson();
                 intent.putExtra("doctor_data", doctor);
                 intent.putExtra("doctor_obj", doctor);
 

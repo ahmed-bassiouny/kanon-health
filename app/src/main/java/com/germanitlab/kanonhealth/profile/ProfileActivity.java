@@ -82,8 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 //    ImageView qr;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
-    @BindView(R.id.video_layout)
-    LinearLayout video_layout;
+
     private UserInfoResponse userInfoResponse;
     private PrefManager mPrefManager;
 
@@ -185,20 +184,17 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
             String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
 
-            Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
         }
+
+
+        if(userInfoResponse.getUser().getAvatar()!=null || !userInfoResponse.getUser().getAvatar().equals(""))
+            Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
 
         if (userInfoResponse.getUser().getIsDoc() == 1)
             is_doctor = true;
         else
             is_doctor = false;
 
-//        if (userInfoResponse.getUser().getQr_url() != null) {
-//            Helper.ImportQr(mPrefManager, this, qr);
-//        } else {
-//            Helper.setImage(this,Constants.CHAT_SERVER_URL
-//                    + "/" + userInfoResponse.getUser().getQr_url() , imgAvatar, R.drawable.qr);
-//        }
 
         tvName.setText(userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
         tvPhone.setText(userInfoResponse.getUser().getCountryCOde() + userInfoResponse.getUser().getPhone());

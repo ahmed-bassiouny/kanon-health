@@ -66,7 +66,7 @@ public class User implements Serializable {
      */
     @DatabaseField(id = true)
     @SerializedName("id")
-    private int id;
+    private Integer id;
     @DatabaseField
     @SerializedName("email")
     private String email;
@@ -135,10 +135,10 @@ public class User implements Serializable {
     private String active;
     @DatabaseField
     @SerializedName("is_doc")
-    private int isDoc;
+    private Integer isDoc;
     @DatabaseField
     @SerializedName("is_clinic")
-    public int isClinic;
+    public Integer isClinic;
     @DatabaseField
     @SerializedName("is_open")
     private int isOpen;
@@ -221,11 +221,11 @@ public class User implements Serializable {
         this.open_type = open_type;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int getIsClinic() {
+    public Integer getIsClinic() {
         return isClinic;
     }
 
@@ -311,7 +311,7 @@ public class User implements Serializable {
         this.active = active;
     }
 
-    public int getIsDoc() {
+    public Integer getIsDoc() {
         return isDoc;
     }
 
