@@ -1706,17 +1706,17 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         endSession = menu.findItem(R.id.end_session);
         startSession = menu.findItem(R.id.start_session);
 
-
-        if (doctor.getIsOpen() == 1) {
-            startSession.setVisible(false);
-            this.invalidateOptionsMenu();
-
-        } else {
-            startSession.setVisible(true);
-            this.invalidateOptionsMenu();
-        }
-
         if (doctor != null) {
+
+            if (doctor.getIsOpen() == 1) {
+                startSession.setVisible(false);
+                this.invalidateOptionsMenu();
+
+            } else {
+                startSession.setVisible(true);
+                this.invalidateOptionsMenu();
+            }
+
             if (doctor.get_Id() == 1) {
                 endSession.setVisible(false);
                 startSession.setVisible(false);
