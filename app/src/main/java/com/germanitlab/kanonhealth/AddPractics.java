@@ -161,7 +161,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     user=userInfoResponse.getUser();
                     if(user.getAvatar()!=null && !user.getAvatar().isEmpty())
                     Glide.with(AddPractics.this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar()).into(civImageAvatar);
-                    etName.setText(user.getName());
+                    etName.setText(user.getFirst_name());
                     etLocation.setText(user.getAddress());
                     etHouseNumber.setText(user.getInfo().getHouseNumber());
                     etZipCode.setText(user.getInfo().getZipCode());
@@ -229,7 +229,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         try {
             if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry))
                 return;
-            user.setName(etName.getText().toString());
+            user.setFirst_name(etName.getText().toString());
             user.setAddress(etLocation.getText().toString());
             info.setHouseNumber(etHouseNumber.getText().toString());
             info.setZipCode(etZipCode.getText().toString());
