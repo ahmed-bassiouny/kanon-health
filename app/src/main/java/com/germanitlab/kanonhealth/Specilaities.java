@@ -49,8 +49,6 @@ public class Specilaities extends AppCompatActivity {
             };
             toolbar = (LinearLayout) findViewById(R.id.toolbar);
             Intent intent = getIntent();
-/*            String dd = savedInstanceState.getString("data");
-            Log.d("my string ", dd.toString());*/
             from = intent.getBooleanExtra("from", true);
             type = intent.getIntExtra("type", 0);
             try {
@@ -63,20 +61,19 @@ public class Specilaities extends AppCompatActivity {
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Specilaities", "onCreate: ", e);
         }
 
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    Gson gson = new Gson();
-                    String json = gson.toJson(response);
-                    Log.e("returned msg ", json);
                     specialityList = (List<Speciality>) response;
                     createAdapter(specialityList, from);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                    Log.e("Specilaities", "onSuccess ", e);
                 }
 
             }
@@ -84,7 +81,7 @@ public class Specilaities extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                Log.e("error in returned json", error);
+                Log.e("Specilaities",  error);
             }
         }).getSpecialities(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
     }

@@ -85,6 +85,7 @@ public class SpecialitiesFragment extends Fragment {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("SpecialitiesFragment","onResume",e);
         }
 
     }
@@ -118,13 +119,13 @@ public class SpecialitiesFragment extends Fragment {
                     try {
                         Gson gson = new Gson();
                         String json = gson.toJson(response);
-                        Log.e("returned msg ", json);
                         specialityList = (List<Speciality>) response;
                         createAdapter(specialityList, view, from);
                     }catch (Exception e)
                     {
                         Crashlytics.logException(e);
                         Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                        Log.e("SpecialitiesFragment", "onSuccess: ", e);
                     }
 
 
@@ -132,13 +133,14 @@ public class SpecialitiesFragment extends Fragment {
 
                 @Override
                 public void onFailed(String error) {
-                    Log.e("error in returned json", error);
                     Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                    Log.e("SpecialitiesFragment",error);
                 }
             }).getSpecialities(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("SpecialitiesFragment","onFailed",e);
         }
         return view;
     }

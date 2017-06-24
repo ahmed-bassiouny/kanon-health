@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +55,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("DoctorListAdapter", "DoctorListAdapter: ", e);
         }
-//        setHasStableIds(true);
-
     }
 
 
@@ -139,7 +139,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     int width = 60;
                     int height = 60;
 
-                    Helper.setImage(activity ,Constants.CHAT_SERVER_URL
+                    Helper.setImage(activity ,Constants.CHAT_SERVER_URL_IMAGE
                             + "/" + doctor.getSpecialities().get(x).getSpeciality_icon() , image , R.drawable.doctor_icon );
 
                     LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
@@ -163,6 +163,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("DoctorListAdapter", "onBindViewHolder: ", e);
         }
 
 

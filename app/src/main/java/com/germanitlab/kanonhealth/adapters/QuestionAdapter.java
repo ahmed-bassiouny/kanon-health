@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("QuestionAdapter", "onBindViewHolder: ",e );
         }
 
     }

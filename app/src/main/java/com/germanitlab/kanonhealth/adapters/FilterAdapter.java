@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("FilterAdapter", "onBindViewHolder: ", e);
         }
 
     }

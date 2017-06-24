@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class VideoFragment extends DialogFragment implements EasyVideoCallback {
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("VideFragment", "onCreateView: ", e);
         }
 
         return view;
@@ -68,6 +70,7 @@ public class VideoFragment extends DialogFragment implements EasyVideoCallback {
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("VideFragment", "onActivityCreated: ", e);
         }
 
     }

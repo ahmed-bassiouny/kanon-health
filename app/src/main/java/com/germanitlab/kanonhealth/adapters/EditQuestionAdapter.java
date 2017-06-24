@@ -45,7 +45,6 @@ public class EditQuestionAdapter extends RecyclerView.Adapter<EditQuestionAdapte
     @Override
     public void onBindViewHolder(EditQuestionAdapter.MyViewHolder holder, int position) {
         try {
-            Log.e("answer :", holder.tv_question.getText().toString());
             String question = (new ArrayList<String>(questionAnswer.keySet())).get(position);
             holder.tv_question.setText(question);
             String answer = (new ArrayList<String>(questionAnswer.values())).get(position);
@@ -53,6 +52,7 @@ public class EditQuestionAdapter extends RecyclerView.Adapter<EditQuestionAdapte
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("EditQuestion", "onBindViewHolder: ", e);
         }
 
     }

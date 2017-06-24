@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,6 +109,7 @@ public class TimeTable extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Specilaities", "onCreate" ,e);
         }
 
 
@@ -223,6 +225,7 @@ public class TimeTable extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("Specilaities", "checkboxToggled" ,e);
         }
 
 
@@ -370,6 +373,7 @@ public class TimeTable extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("Specilaities", "addNewItem" ,e);
         }
 
     }
@@ -436,6 +440,7 @@ public class TimeTable extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("TimeTable", "schedule: ", e);
         }
 
     }
@@ -490,6 +495,7 @@ public class TimeTable extends AppCompatActivity {
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("Specilaities", "onActivityResult" ,e);
         }
 
     }

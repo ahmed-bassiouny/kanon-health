@@ -80,12 +80,8 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         }catch (Exception e){
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Log.e("SpecilaitiesAdapter", "onBindViewHolder: ",e );
         }
-
-        /*holder.title.setVisibility(visiblity);
-        if(visiblity == View.VISIBLE)
-        holder.name.setVisibility(visiblity==View.VISIBLE ? View.GONE : View.VISIBLE);*/
-
     }
 
     @Override
