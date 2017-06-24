@@ -354,24 +354,6 @@ public class SettingFragment extends Fragment {
         catch (Exception e){
             Toast.makeText(getContext(), "Error while loading data", Toast.LENGTH_SHORT).show();
         }
-        rvPracticies.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rvPracticies, new MyClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Intent intent = new Intent(getActivity(),AddPractics.class);
-                intent.putExtra("PRACTICS_ID",user.getMembers_at().get(position).getIdMember()+"");
-                startActivity(intent);
-            }
-
-            @Override
-            public void onClick(Object object) {
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
 
     }
 

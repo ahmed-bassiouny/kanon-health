@@ -141,7 +141,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             Log.e("AddPractics", "onCreate: ",e );
             Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
         }
-        if(!practics_id.isEmpty()){
+        if(practics_id!=null){
             bindData();
         }
 
@@ -238,7 +238,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             user.setInfo(info);
             user.setPhone(etTelephone.getText().toString());
             user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            if(practics_id.isEmpty()){
+            if(practics_id==null){
                 user.setUserID_request(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 new HttpCall(this, new ApiResponse() {
@@ -255,8 +255,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     }
                 }).addClinic(user);
             }else {
-                user.setUserID_request(Integer.valueOf(practics_id)
-                );
+                user.setUserID_request(Integer.valueOf(practics_id));
                 user.setId(Integer.valueOf(practics_id));
                 new HttpCall(this, new ApiResponse() {
                     @Override

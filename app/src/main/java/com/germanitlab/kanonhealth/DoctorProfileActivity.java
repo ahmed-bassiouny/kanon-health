@@ -432,8 +432,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
+        if(user.getSpecialities()!=null)
         set(adapter, user.getSpecialities(), recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+        if(user.getSupported_lang()!=null)
         set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+        if(user.getMembers_at()!=null)
         set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
         if (user.getDocuments() != null) {
             doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
@@ -557,13 +560,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         setAdapters();
         tvRating.setText("Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
         tvLanguages.setText("");
-        for (ChooseModel lang : user.getSupported_lang()
-                ) {
+        if(user.getSupported_lang()!=null)
+        for (ChooseModel lang : user.getSupported_lang()) {
             tvLanguages.append(lang.getLang_title() + " ");
         }
         tvSpecilities.setText("");
-        for (ChooseModel speciality : user.getSpecialities()
-                ) {
+        if(user.getSpecialities()!=null)
+        for (ChooseModel speciality : user.getSpecialities()) {
             tvSpecilities.append(speciality.getSpeciality_title() + " ");
         }
         if(user.getOpen_time()!=null)

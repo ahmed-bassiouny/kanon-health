@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.settingsClinics;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -46,10 +48,18 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(PrcticiesSAdapter.MyViewHolder holder, int position)
+    public void onBindViewHolder(PrcticiesSAdapter.MyViewHolder holder, final int position)
     {
         try {
             holder.tvPracticeName.setText(clinicsList.get(position).getFirst_nameMember()+"");
+            holder.tvPracticeName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext,AddPractics.class);
+                    intent.putExtra("PRACTICS_ID",clinicsList.get(position).getIdMember()+"");
+                    mContext.startActivity(intent);
+                }
+            });
 
         }catch (Exception e) {
             Crashlytics.logException(e);

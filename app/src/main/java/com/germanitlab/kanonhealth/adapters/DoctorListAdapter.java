@@ -133,7 +133,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
 
 
-            if(tabPosition!=3) {
+            if(tabPosition!=3&&doctor.getSpecialities()!=null) {
                 for (int x = 0; x < doctor.getSpecialities().size(); x++) {
                     ImageView image = new ImageView(activity);
 //                image.setBackgroundResource(R.drawable.doctor_icon);
