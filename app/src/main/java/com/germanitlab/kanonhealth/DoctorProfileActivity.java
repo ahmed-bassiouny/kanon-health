@@ -581,12 +581,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
 
         // ivEdit ahmed 12 - 6 - 2017
-        etLocation.setText(user.getAddress());
-        etStreetName.setText(user.getInfo().getStreetname());
-        etHouseNumber.setText(user.getInfo().getHouseNumber());
-        etZipCode.setText(user.getInfo().getZipCode());
-        etProvince.setText(user.getInfo().getProvinz());
-        etCountry.setText(user.getInfo().getCountry());
+        if(user.getInfo() !=null) {
+            etLocation.setText(user.getAddress());
+            etStreetName.setText(user.getInfo().getStreetname());
+            etHouseNumber.setText(user.getInfo().getHouseNumber());
+            etZipCode.setText(user.getInfo().getZipCode());
+            etProvince.setText(user.getInfo().getProvinz());
+            etCountry.setText(user.getInfo().getCountry());
+        }
         if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))){
             is_me = true;
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
@@ -713,7 +715,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 edAddToFavourite.setText(getString(R.string.remove_from));
            } catch (Exception e) {
             e.printStackTrace();
-            Log.e("a*a*s*as*a", e.getLocalizedMessage());
         }
 
     }
