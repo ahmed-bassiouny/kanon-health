@@ -91,4 +91,10 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
     public String getResourceString(int resource) {
         return getResources().getString(resource);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

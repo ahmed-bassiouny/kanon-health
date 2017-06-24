@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
@@ -35,6 +36,7 @@ import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -183,8 +185,10 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
 
 
+        String c=Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar();
         if(userInfoResponse.getUser().getAvatar()!=null || !userInfoResponse.getUser().getAvatar().equals(""))
-            Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+        //Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+        Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar()).into(imgAvatar);
 
         if (userInfoResponse.getUser().getIsDoc() == 1)
             is_doctor = true;

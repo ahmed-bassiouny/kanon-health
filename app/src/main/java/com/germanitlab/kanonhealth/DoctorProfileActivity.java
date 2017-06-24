@@ -566,6 +566,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 ) {
             tvSpecilities.append(speciality.getSpeciality_title() + " ");
         }
+        if(user.getOpen_time()!=null)
         getTimaTableData(user.getOpen_time());
 
         if (user.isClinic == 1) {

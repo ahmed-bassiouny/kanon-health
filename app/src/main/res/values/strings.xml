@@ -44,6 +44,7 @@
     <string name="add_to">Add to My Doctor\'s</string>
     <string name="remove_from">Remove as my Doctor</string>
     <string name="error_connection">Please Check Your Internet Connection</string>
+    <string name="serror_connection">Please Check Your Internet Connection</string>
     <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
     <string name="end_session">Close Current Request</string>
     <string name="start_session">Start New Conversation</string>

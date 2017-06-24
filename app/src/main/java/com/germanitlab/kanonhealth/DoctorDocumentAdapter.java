@@ -94,6 +94,8 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Message message = messageList.get(position);
+        if(message.getType()==null)
+            message.setType("text");
         try {
             if (message.getType().equals(Constants.TEXT)) {
                 holder.textLayout.setVisibility(View.VISIBLE);

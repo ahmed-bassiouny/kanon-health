@@ -139,11 +139,6 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             bindData();
             createAdapter();
 
-            if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
-
-                String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-                Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
-            }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
@@ -175,8 +170,10 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     private void bindData() {
 
 
-        Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+        /*Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE
+                + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);*/
+        Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar()).into(imgAvatar);
+
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {

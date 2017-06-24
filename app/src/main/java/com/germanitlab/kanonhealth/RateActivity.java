@@ -91,7 +91,7 @@ public class RateActivity extends AppCompatActivity {
             rate_percentages.put("r4", 2);
             rate_percentages.put("r5", 18);
 
-            //doc_id=getIntent().getStringExtra("doc_id");
+            doc_id=getIntent().getStringExtra("doc_id");
             if(doc_id.isEmpty())
                 finish();
             loadData();
