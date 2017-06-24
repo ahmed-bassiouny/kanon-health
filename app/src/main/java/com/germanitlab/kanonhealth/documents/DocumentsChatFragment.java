@@ -144,6 +144,11 @@ public class DocumentsChatFragment extends Fragment
         super.onAttach(context);
         mAdapter = new DocumentsAdapter(mMessages, getActivity(), this);
         prefManager = new PrefManager(context);
+        if (Helper.isNetworkAvailable(getContext())) {
+            fetchHistory();
+        } else {
+            handleJsonHistory(prefManager.getData(PrefManager.DOCUMENT_HISTORY), false);
+        }
     }
 
     @Override
@@ -168,13 +173,6 @@ public class DocumentsChatFragment extends Fragment
             setHasOptionsMenu(true);
 
             initView();
-
-            if (Helper.isNetworkAvailable(getContext())) {
-
-                fetchHistory();
-            } else {
-                handleJsonHistory(prefManager.getData(PrefManager.DOCUMENT_HISTORY), false);
-            }
 
             handelEvent();
 //        assignViews();

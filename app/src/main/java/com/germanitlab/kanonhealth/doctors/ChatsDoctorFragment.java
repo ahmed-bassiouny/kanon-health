@@ -62,10 +62,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private View view;
     private RecyclerView recyclerView;
-    private ImageButton myQr, imgbtnScan;
     List<User> doctorList;
-    Toolbar toolbar;
-    ProgressDialog progressDialog;
 
     private TextView tvLoadingError;
     private LinearLayout linearLayoutContent;
@@ -100,7 +97,6 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     TypeToken<List<User>> token = new TypeToken<List<User>>() {
                     };
                     doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST), token.getType());
-                    ;
                     setAdapter(doctorList);
                 }
             }
@@ -131,6 +127,11 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+        doctors_list.setBackgroundResource(R.color.blue);
+        doctors_list.setTextColor(getResources().getColor(R.color.white));
+        praxis_list.setBackgroundResource(R.color.gray);
+        praxis_list.setTextColor(getResources().getColor(R.color.black));
+
 
     }
 
@@ -468,6 +469,5 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             tvLoadingError.setText(error);
         else tvLoadingError.setText("Some thing went wrong");
     }
-
 
 }

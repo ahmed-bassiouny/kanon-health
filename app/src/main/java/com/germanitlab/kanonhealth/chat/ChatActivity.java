@@ -344,9 +344,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 finish();
                 return;
             }
+
             user_id = doctor.get_Id();
-
-
             if (user_id == 1) {
                 imageUser.setVisibility(View.GONE);
                 chat_bar.setVisibility(View.VISIBLE);
@@ -1923,7 +1922,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void checkSessionOpen() {
 
-        if (doctor.getIsOpen() == 0) {
+        if(doctor.getIsClinic()==1){
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
+            imageButtonAttach.setVisibility(View.VISIBLE);
+        }
+        else if (doctor.getIsOpen() == 0) {
             chat_bar.setVisibility(View.GONE);
             open_chat_session.setVisibility(View.VISIBLE);
             imageButtonAttach.setVisibility(View.GONE);
