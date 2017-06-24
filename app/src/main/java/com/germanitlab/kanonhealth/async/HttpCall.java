@@ -1026,4 +1026,25 @@ public class HttpCall {
         }
 
     }
+    public void editClinic(User user) {
+        try {
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<JsonObject> connection = service.editClinic(user);
+            connection.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    apiResponse.onSuccess(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    apiResponse.onFailed(t.getLocalizedMessage());
+                }
+            });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

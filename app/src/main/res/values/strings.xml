@@ -271,6 +271,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="save_practics">Practics Saved</string>
     <string name="upload_failed">Upload Failed</string>
     <string name="save_success">Save Success</string>
+    <string name="edit_practics">Pracits Edit</string>
 
 
 </resources>

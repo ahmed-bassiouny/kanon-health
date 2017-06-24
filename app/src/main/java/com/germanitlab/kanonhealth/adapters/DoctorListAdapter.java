@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
@@ -128,8 +129,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             holder.tvSubtitle.setText(doctor.getSubTitle());
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
-            Helper.setImage(activity ,Constants.CHAT_SERVER_URL_IMAGE
-                    + "/" + doctor.getAvatar() , holder.imgAvatar , R.drawable.placeholder );
+            if(doctor.getAvatar()!=null && !doctor.getAvatar().isEmpty())
+                Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
 
 
             if(tabPosition!=3) {

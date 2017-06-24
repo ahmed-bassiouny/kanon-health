@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,6 +44,8 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.interfaces.MyClickListener;
+import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
@@ -351,6 +354,24 @@ public class SettingFragment extends Fragment {
         catch (Exception e){
             Toast.makeText(getContext(), "Error while loading data", Toast.LENGTH_SHORT).show();
         }
+        rvPracticies.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), rvPracticies, new MyClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(getActivity(),AddPractics.class);
+                intent.putExtra("PRACTICS_ID",user.getMembers_at().get(position).getIdMember()+"");
+                startActivity(intent);
+            }
+
+            @Override
+            public void onClick(Object object) {
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
     }
 

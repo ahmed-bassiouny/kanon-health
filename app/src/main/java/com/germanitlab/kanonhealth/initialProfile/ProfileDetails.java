@@ -289,7 +289,6 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 public void onFailed(String error) {
                     Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                     dismissProgressDialog();
-                    Log.i("a*a*a*a", "onFailed: ");
 
                 }
             }).editProfile(user);

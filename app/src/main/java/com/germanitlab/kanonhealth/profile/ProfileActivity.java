@@ -182,12 +182,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     private void bindData() {
 
-
-
-
-        String c=Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar();
-        if(userInfoResponse.getUser().getAvatar()!=null || !userInfoResponse.getUser().getAvatar().equals(""))
-        //Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+        if(userInfoResponse.getUser().getAvatar()!=null && !userInfoResponse.getUser().getAvatar().isEmpty())
         Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar()).into(imgAvatar);
 
         if (userInfoResponse.getUser().getIsDoc() == 1)

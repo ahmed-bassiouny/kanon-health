@@ -527,9 +527,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
 
     private void bindData() {
-        chechEditPermission();
-        checkDoctor();
-        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
+
+        //Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
+        if(user.getAvatar()!=null && !user.getAvatar().isEmpty())
+        Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar()).into(civEditAvatar);
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
@@ -602,8 +603,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             edAddToFavourite.setText(R.string.add_to);
             tvContact.setText(R.string.contact_by_chat);
         }
-
-
+        chechEditPermission();
+        checkDoctor();
     }
 
 
@@ -659,14 +660,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void addToMyDoctor() {
         if (is_me)
             return;
-        if (user.getIs_my_doctor() == null || user.getIs_my_doctor().equals("0")) {
-            if (!isProcessingFavClick) {
-                if (user.getIs_my_doctor() == null || user.getIs_my_doctor().equals("null")) {
+
+                if (user.getIs_my_doctor().equals("0")) {
                     isProcessingFavClick = true;
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            Log.i("Answers ", response.toString());
                             user.setIs_my_doctor("1");
                             checkDoctor();
                             isProcessingFavClick = false;
@@ -697,20 +696,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         }
                     }).removeFromMyDoctor(user.get_Id() + "");
                 }
-            } else {
-                return;
-            }
-        }
-        else {
-            return;
-        }
+
     }
 
     private void checkDoctor() {
         if (is_me)
             return;
         try {
-            if (TextUtils.isEmpty(user.getIs_my_doctor()) || user.getIs_my_doctor().equals("0"))
+            if (user.getIs_my_doctor().equals("0"))
                 edAddToFavourite.setText(getString(R.string.add_to));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));

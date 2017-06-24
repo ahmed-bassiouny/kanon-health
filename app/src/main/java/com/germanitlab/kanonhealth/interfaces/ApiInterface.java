@@ -154,5 +154,8 @@ public interface ApiInterface {
 
     @POST("/clinics/add")
     Call<JsonObject> addClinic(@Body User user);
+
+    @POST("/clinics/edit")
+    Call<JsonObject> editClinic(@Body User user);
 }
 

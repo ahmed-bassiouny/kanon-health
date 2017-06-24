@@ -117,7 +117,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
     private void createImage(MyViewHolder holder, int position, Message message) {
         holder.imageLayout.setVisibility(View.VISIBLE);
-        Helper.setImage(context ,Constants.CHAT_SERVER_URL + "/" + message.getMsg() , holder.imageView , R.drawable.profile_place_holder );
+        Helper.setImage(context ,Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg() , holder.imageView , R.drawable.profile_place_holder );
     }
 
     private void createAudio(final MyViewHolder holder, int position, Message message) {
