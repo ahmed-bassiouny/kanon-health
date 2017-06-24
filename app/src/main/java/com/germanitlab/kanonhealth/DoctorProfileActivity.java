@@ -177,7 +177,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private GoogleMap googleMap;
     private Menu menu;
     private SupportMapFragment mapFragment;
-    private boolean isProcessingFavClick = false;
 
 
     @Override
@@ -662,37 +661,31 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             return;
 
                 if (user.getIs_my_doctor().equals("0")) {
-                    isProcessingFavClick = true;
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
                             user.setIs_my_doctor("1");
                             checkDoctor();
-                            isProcessingFavClick = false;
                         }
 
                         @Override
                         public void onFailed(String error) {
                             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             Log.i("Doctor Profile  ", " Activity " + error);
-                            isProcessingFavClick = false;
                         }
                     }).addToMyDoctor(user.get_Id() + "");
                 } else {
-                    isProcessingFavClick = true;
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
                             user.setIs_my_doctor("0");
                             checkDoctor();
-                            isProcessingFavClick = false;
                         }
 
                         @Override
                         public void onFailed(String error) {
                             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             Log.i("Doctor Profile  ", " Activity " + error);
-                            isProcessingFavClick = false;
                         }
                     }).removeFromMyDoctor(user.get_Id() + "");
                 }
