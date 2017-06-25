@@ -13,7 +13,7 @@
         <ImageView
             android:layout_width="@dimen/size_40dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_check_black_24dp"
+            android:src="@drawable/checkmark"
             android:id="@+id/button_finish"
             android:onClick="addMyQuestionsAnswer"
             android:layout_gravity="right"/>

@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/round"
-            android:drawableLeft="@drawable/document"
+            android:drawableLeft="@drawable/documents_white"
             android:text="@string/medizinische_dokumente"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_submit"
-            android:src="@drawable/ic_check_black_24dp"
+            android:src="@drawable/checkmark"
             app:backgroundTint="@color/blue"
             />
     </LinearLayout>
