@@ -272,6 +272,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="upload_failed">Upload Failed</string>
     <string name="save_success">Save Success</string>
     <string name="edit_practics">Pracits Edit</string>
+    <string name="image_not_found">Sorry Image not found</string>
 
 
 </resources>

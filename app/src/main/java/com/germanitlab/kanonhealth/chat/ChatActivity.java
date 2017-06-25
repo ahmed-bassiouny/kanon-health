@@ -681,13 +681,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Emitter.Listener isSeen = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(doctor==null) {
+                Toast.makeText(ChatActivity.this, "Please Try again later", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             try {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         JSONObject data = (JSONObject) args[0];
-                        Log.d("Incoming Message SEEN", args[0].toString());
-                        Log.d("doctor ID", String.valueOf(doctor.get_Id()));
                         try {
                             int id = data.optInt("id");
                             if (id == (doctor.get_Id())) {
@@ -1064,9 +1066,10 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
             } else if (requestCode == PICK_IMAGE) {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 )
+                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     pickImage();
-                }
+
             }
         }
     }

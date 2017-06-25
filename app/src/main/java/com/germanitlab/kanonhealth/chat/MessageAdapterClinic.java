@@ -1589,7 +1589,6 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 @Override
                 public void call(Object... args) {
 
-                    Log.d("Message Response", args[0].toString());
                     try {
                         Gson gson = new Gson();
                         Message message = gson.fromJson(args[0].toString(), Message.class);

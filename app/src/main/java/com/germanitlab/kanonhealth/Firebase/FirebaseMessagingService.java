@@ -12,6 +12,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
@@ -28,29 +29,25 @@ import org.json.JSONObject;
 // Edit by ahmed bassiouny on 24/05/2017
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
-    String TAG="*a*a*a*a**a";
+
+    int id=0;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d("545", "575");
+
         Object obj = remoteMessage.getData().get("from_id");
         if (obj != null) {
-            int id = Integer.valueOf(obj.toString());
-            JSONObject sendSeen = new JSONObject();
             try {
+                 id = Integer.valueOf(obj.toString());
+                JSONObject sendSeen = new JSONObject();
                 sendSeen.put("id", id);
                 sendSeen.put("is_seen", 1);
                 AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e("FirebaseMessaging", "onMessageReceived: ",e );
+                Crashlytics.logException(e);
             }
-            Log.i(TAG, "remoteMessage.getData().get(\"from_id\") = "+remoteMessage.getData().get("from_id"));
-            Log.i(TAG, "String.valueOf(ChatActivity.user_id )="+String.valueOf(ChatActivity.user_id ));
-            Log.i(TAG, ChatActivity.appStatus+"");
             if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id ) && ChatActivity.appStatus != true)
                 showNotification(remoteMessage.getData().get("msg"), 1, id);
-/*            if (MainActivity.appStatus != true) {
-                obj = remoteMessage.getData().get("msg");
-            }*/
 
         }
     }
