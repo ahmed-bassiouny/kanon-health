@@ -432,7 +432,7 @@ public class DocumentsChatFragment extends Fragment
 /*
                 2017-03-15T09:14:35.000Z
 */
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 df.setTimeZone(TimeZone.getTimeZone("GMT"));
                 Date date = df.parse(message.getSent_at().toString());
                 df.setTimeZone(TimeZone.getDefault());
