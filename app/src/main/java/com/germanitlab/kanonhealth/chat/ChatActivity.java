@@ -380,6 +380,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             recyclerView.setHasFixedSize(false);
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
+            llm.setStackFromEnd(true);
             recyclerView.setLayoutManager(llm);
 
             recyclerView.setAdapter(mAdapter);
@@ -1041,6 +1042,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if(permissions.length<=0)
+            return;
         if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
 
             if (requestCode == Constants.CAMERA_PERMISSION_CODE) {

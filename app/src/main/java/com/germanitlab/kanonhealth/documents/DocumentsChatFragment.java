@@ -217,6 +217,7 @@ public class DocumentsChatFragment extends Fragment
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
 
         recyclerView.setAdapter(mAdapter);
