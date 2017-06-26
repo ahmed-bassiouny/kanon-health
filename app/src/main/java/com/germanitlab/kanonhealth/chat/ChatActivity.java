@@ -352,8 +352,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 imageButtonAttach.setVisibility(View.VISIBLE);
                 tvUserName.setText("Support");
 
-                endSession.setVisible(false);
-                startSession.setVisible(false);
                 this.invalidateOptionsMenu();
 
 
@@ -547,14 +545,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             }
 
                             JSONObject jsonObject = new JSONObject(args[0].toString());
-                            Log.d("my type", jsonObject.getString("type"));
-                            Log.d("my type", jsonObject.getString("type"));
+
                             if (jsonObject.getString("type").equals(Constants.IMAGE)) {
                                 Log.d("I'm inside the image", jsonObject.getString("msg"));
                             }
                             try {
 
                                 int poisition = jsonObject.getInt("position");
+                                if(position>=mMessages.size())
+                                    return;
                                 Message messageInPosition = mMessages.get(poisition);
                                 messageInPosition.setStatus(Constants.SENT_STATUS);
                                 messageInPosition.setId(jsonObject.getInt("id"));
@@ -683,8 +682,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         @Override
         public void call(final Object... args) {
             if(doctor==null) {
-                Toast.makeText(ChatActivity.this, "Please Try again later", Toast.LENGTH_SHORT).show();
-                finish();
+                return;
             }
             try {
                 runOnUiThread(new Runnable() {

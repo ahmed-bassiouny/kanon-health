@@ -1180,11 +1180,16 @@ public class DocumentsChatFragment extends Fragment
 
     public String formatDate(String date) {
         try {
-            String[] current_date = date.split(" ")[1].split(":");
-            if (current_date.length < 3) {
-                return current_date[0] + ":" + current_date[1];
+            String []time=date.split(" ");
+            if(time.length<=0)
+                return "";
+            else {
+                String[] current_date = time[1].split(":");
+                if (current_date.length >= 2)
+                    return current_date[0] + ":" + current_date[1];
+                else
+                    return "";
             }
-            return current_date[0] + ":" + current_date[1] + ":" + current_date[2];
         } catch (Exception e) {
             Log.e("Documentchat", e.getLocalizedMessage());
             Log.e("date", date);

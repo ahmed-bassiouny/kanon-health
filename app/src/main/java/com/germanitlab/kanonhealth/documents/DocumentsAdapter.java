@@ -938,6 +938,7 @@ try {
     private void setLocationMessage(final LocationViewHolder locationViewHolder, final int position) {
         try {
             final Message locationMessage = mMessages.get(position);
+            setImagePrivacy(locationMessage.getPrivacy() , locationViewHolder.privacyImage);
 
             if (locationMessage.isMine()) {
 
@@ -1061,7 +1062,9 @@ try {
                 }
 
             } else {
-                locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
+                                //**bug number 136 in version 1.2.7 *//
+                //***** NULL Pointer Exception hisMessageContainer  because not found in layout *//
+                /*locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
                 locationViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
                 locationViewHolder.hisMessageContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1092,7 +1095,7 @@ try {
                         }
                         return false;
                     }
-                });
+                });*/
 
                 locationViewHolder.tvDate.setText(locationMessage.getSent_at());
 
@@ -1234,19 +1237,14 @@ try {
                 @Override
                 public void call(Object... args) {
 
-                    Log.d("Message Response", args[0].toString());
                     try {
-//                        Gson gson = new Gson();
-//                        Message message = gson.fromJson(args[0].toString(), Message.class);
-//                        caching(message, prefManager);
-                        JSONObject jsonObject = new JSONObject(args[0].toString());
-                        int poisition = jsonObject.getInt("position");
-                        Message messageInPosition = mMessages.get(poisition);
-                        messageInPosition.setStatus(Constants.SENT_STATUS);
-                        messageInPosition.setId(jsonObject.getInt("id"));
-
 
                         try {
+                            JSONObject jsonObject = new JSONObject(args[0].toString());
+                            int poisition = jsonObject.getInt("position");
+                            Message messageInPosition = mMessages.get(poisition);
+                            messageInPosition.setStatus(Constants.SENT_STATUS);
+                            messageInPosition.setId(jsonObject.getInt("id"));
                             Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
                             messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
                         } catch (ParseException e) {
