@@ -76,7 +76,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -123,8 +122,9 @@ public class DocumentsChatFragment extends Fragment
 
     private Uri selectedImageUri = null;
     private ContentValues contentValues;
+    public boolean appStatus = false;
 
-    private int mUserId  ;
+    private int mUserId;
 
     private static DocumentsChatFragment documentsChatFragment;
 
@@ -140,14 +140,33 @@ public class DocumentsChatFragment extends Fragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        appStatus=true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        appStatus=false;
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mAdapter = new DocumentsAdapter(mMessages, getActivity(), this);
         prefManager = new PrefManager(context);
-        if (Helper.isNetworkAvailable(getContext())) {
-            fetchHistory();
-        } else {
-            handleJsonHistory(prefManager.getData(PrefManager.DOCUMENT_HISTORY), false);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (Helper.isNetworkAvailable(getContext())) {
+                fetchHistory();
+            } else {
+                handleJsonHistory(prefManager.getData(PrefManager.DOCUMENT_HISTORY), false);
+            }
         }
     }
 
@@ -155,7 +174,7 @@ public class DocumentsChatFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
-            mUserId =Integer.parseInt(prefManager.getData(PrefManager.USER_ID));
+            mUserId = Integer.parseInt(prefManager.getData(PrefManager.USER_ID));
             prefManager = new PrefManager(getActivity());
             if (view != null) {
 
@@ -212,30 +231,30 @@ public class DocumentsChatFragment extends Fragment
     private void sendMessage() {
         try {
 
-        String message = etMessage.getText().toString().trim();
+            String message = etMessage.getText().toString().trim();
 
-        if (message.length() == 0) return;
+            if (message.length() == 0) return;
 
-        final Message msg = new Message();
-        msg.setMsg(message);
-        msg.setMine(true);
-        msg.setType(Constants.TEXT);
+            final Message msg = new Message();
+            msg.setMsg(message);
+            msg.setMine(true);
+            msg.setType(Constants.TEXT);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        final String str = sdf.format(new Date());
-        msg.setSent_at(str);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            final String str = sdf.format(new Date());
+            msg.setSent_at(str);
 
 
-        msg.setStatus(Constants.PENDING_STATUS);
+            msg.setStatus(Constants.PENDING_STATUS);
 
-        etMessage.setText("");
-        int position = addMessage(msg);
-        JSONObject sendText = new JSONObject();
+            etMessage.setText("");
+            int position = addMessage(msg);
+            JSONObject sendText = new JSONObject();
             sendText.put("to_id", mUserId);
             sendText.put("type", Constants.TEXT);
             sendText.put("msg", message);
             sendText.put("position", position);
-            sendText.put("from_id",prefManager.getData(PrefManager.USER_ID));
+            sendText.put("from_id", prefManager.getData(PrefManager.USER_ID));
 
 
             Log.d("Message ", sendText.toString());
@@ -244,7 +263,8 @@ public class DocumentsChatFragment extends Fragment
             AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-
+                    if(!appStatus)
+                        return;
 
                     Log.e("Message Response", args[0].toString());
                     Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
@@ -263,11 +283,12 @@ public class DocumentsChatFragment extends Fragment
                             Log.d("I'm inside the image", jsonObject.getString("msg"));
 
                         }
-                        int poisition = jsonObject.getInt("position");
-                        Message messageInPosition = mMessages.get(poisition);
-                        messageInPosition.setStatus(Constants.SENT_STATUS);
-                        messageInPosition.setId(jsonObject.getInt("id"));
                         try {
+
+                            int poisition = jsonObject.getInt("position");
+                            Message messageInPosition = mMessages.get(poisition);
+                            messageInPosition.setStatus(Constants.SENT_STATUS);
+                            messageInPosition.setId(jsonObject.getInt("id"));
                             Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
                             messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
                         } catch (ParseException e) {
@@ -424,7 +445,7 @@ public class DocumentsChatFragment extends Fragment
             }
 
 
-            if (message.getFrom_id() ==Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
+            if (message.getFrom_id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
                 message.setMine(true);
                 message.setLoaded(true);
                 if (message.getSeen() == 1) {
@@ -434,6 +455,7 @@ public class DocumentsChatFragment extends Fragment
 
         }
         {
+            mMessages.clear();
             mMessages.addAll(0, historyMessage);
 
         }
@@ -1163,10 +1185,11 @@ public class DocumentsChatFragment extends Fragment
                 return current_date[0] + ":" + current_date[1];
             }
             return current_date[0] + ":" + current_date[1] + ":" + current_date[2];
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e("Documentchat", e.getLocalizedMessage());
+            Log.e("date", date);
             Crashlytics.logException(e);
-            return "";
+            return date;
         }
 
     }

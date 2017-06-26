@@ -37,7 +37,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Object obj = remoteMessage.getData().get("from_id");
         if (obj != null) {
             try {
-                 id = Integer.valueOf(obj.toString());
+                if(obj.toString().trim().isEmpty())
+                    return;
                 JSONObject sendSeen = new JSONObject();
                 sendSeen.put("id", id);
                 sendSeen.put("is_seen", 1);

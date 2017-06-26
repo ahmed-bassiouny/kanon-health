@@ -175,7 +175,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Util util;
 
     public static int indexFromIntent = 0;
-
     @Inject
     DataManger mDataManger;
     private ChatComponent mChatComponent;
@@ -530,7 +529,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
-
+                        if(!appStatus)
+                            return;
                         Log.e("Message Response", args[0].toString());
                         Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
                         Log.e("my uri from here ", imageUri.toString());
@@ -552,13 +552,14 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             if (jsonObject.getString("type").equals(Constants.IMAGE)) {
                                 Log.d("I'm inside the image", jsonObject.getString("msg"));
                             }
-                            int poisition = jsonObject.getInt("position");
-                            Message messageInPosition = mMessages.get(poisition);
-                            messageInPosition.setStatus(Constants.SENT_STATUS);
-                            messageInPosition.setId(jsonObject.getInt("id"));
-                            mMessageRepositry.create(messageInPosition);
-                            Log.d("count " + mMessageRepositry.count(), "Count ");
                             try {
+
+                                int poisition = jsonObject.getInt("position");
+                                Message messageInPosition = mMessages.get(poisition);
+                                messageInPosition.setStatus(Constants.SENT_STATUS);
+                                messageInPosition.setId(jsonObject.getInt("id"));
+                                mMessageRepositry.create(messageInPosition);
+                                Log.d("count " + mMessageRepositry.count(), "Count ");
                                 Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
                                 messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
                             } catch (ParseException e) {
@@ -858,6 +859,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
         }
         {
+            mMessages.clear();
             mMessages.addAll(0, historyMessage);
 
         }

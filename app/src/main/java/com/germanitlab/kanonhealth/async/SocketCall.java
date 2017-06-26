@@ -161,7 +161,7 @@ public class SocketCall {
             Log.d("EX ", e.getLocalizedMessage());
         }
 
-        Log.d("Request DoctorsListRequest", request.toString());
+
         AppController.getInstance().getSocket().emit("getMessages", request);
         AppController.getInstance().getSocket().on("FetchMsgs", new Emitter.Listener() {
             @Override

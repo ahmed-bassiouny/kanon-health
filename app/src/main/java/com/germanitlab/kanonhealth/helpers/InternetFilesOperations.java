@@ -296,7 +296,7 @@ public class InternetFilesOperations {
 
     public void downloadUrlWithProgress(ProgressBar progressBar, String mediaMessageType, String downloadUrl, DownloadListener onDownloadFinish) {
 
-        new DownloadFileFromURL(progressBar, mediaMessageType, downloadUrl, onDownloadFinish).execute();
+        new DownloadFileFromURL(progressBar, mediaMessageType, downloadUrl, onDownloadFinish).execute(downloadUrl);
     }
 
 

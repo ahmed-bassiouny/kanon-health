@@ -209,6 +209,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             }
         });*/
 
+/*
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new MyClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -245,7 +246,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
             }
         }));
-
+*/
 
         //---------- Camera
 //        imgbtnScan.setOnClickListener(new View.OnClickListener() {

@@ -1588,7 +1588,8 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-
+                    if(!ChatActivity.appStatus)
+                        return;
                     try {
                         Gson gson = new Gson();
                         Message message = gson.fromJson(args[0].toString(), Message.class);
