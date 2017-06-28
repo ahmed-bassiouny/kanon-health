@@ -1,6 +1,8 @@
 package com.germanitlab.kanonhealth.interfaces;
 
 
+import com.germanitlab.kanonhealth.httpchat.MessageRequest;
+import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Forward;
 import com.germanitlab.kanonhealth.models.Login;
@@ -157,5 +159,8 @@ public interface ApiInterface {
 
     @POST("/clinics/edit")
     Call<JsonObject> editClinic(@Body User user);
+
+    @POST("/messages")
+    Call<MessageResponse> loadChat(@Body MessageRequest messageRequest);
 }
 

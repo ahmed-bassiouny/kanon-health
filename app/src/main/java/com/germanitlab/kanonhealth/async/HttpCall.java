@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.httpchat.MessageRequest;
+import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.germanitlab.kanonhealth.interfaces.ApiInterface;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -1046,5 +1048,32 @@ public class HttpCall {
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void loadChat(MessageRequest messageRequest){
+        try{
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<MessageResponse> connection = service.loadChat(messageRequest);
+            connection.enqueue(new Callback<MessageResponse>() {
+                @Override
+                public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                    if(response.body().getStatus()==1)
+                        apiResponse.onSuccess(response.body().getMessage());
+                    else
+                        onFailure(call,new Exception(context.getString(R.string.error_loading_data)));
+                }
+
+                @Override
+                public void onFailure(Call<MessageResponse> call, Throwable t) {
+                    Log.e("Httpcall", "loadChat: ",t);
+                    Crashlytics.logException(t);
+                    Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (Exception e){
+            Log.e("Httpcall", "loadChat: ",e);
+            Crashlytics.logException(e);
+            Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -192,6 +192,9 @@
         <activity
             android:name=".AddPractics"
             android:screenOrientation="portrait" />
+        <activity android:name=".httpchat.HttpChatActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
