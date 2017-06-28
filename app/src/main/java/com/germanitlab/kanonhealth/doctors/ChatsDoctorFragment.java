@@ -2,8 +2,6 @@ package com.germanitlab.kanonhealth.doctors;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -26,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,21 +30,14 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.interfaces.MyClickListener;
-import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
-import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +63,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     private Button doctors_list, praxis_list;
     private static ChatsDoctorFragment chatsDoctorFragment;
     Util util;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     public static ChatsDoctorFragment newInstance() {
         if (chatsDoctorFragment == null)
@@ -368,10 +357,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 util.showProgressDialog();
                 doctors_list.setBackgroundResource(R.color.gray);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    doctors_list.setTextColor(getResources().getColor(R.color.black ,null));
+                    doctors_list.setTextColor(getResources().getColor(R.color.black, null));
                     praxis_list.setTextColor(getResources().getColor(R.color.white, null));
-                }
-                else {
+                } else {
                     doctors_list.setTextColor(getResources().getColor(R.color.black));
                     praxis_list.setTextColor(getResources().getColor(R.color.white));
                 }
@@ -406,7 +394,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 doctors_list.setTextColor(getResources().getColor(R.color.white));
                 praxis_list.setBackgroundResource(R.color.gray);
                 praxis_list.setTextColor(getResources().getColor(R.color.black));
-                new HttpCall(getActivity() ,new ApiResponse() {
+                new HttpCall(getActivity(), new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
                         util.dismissProgressDialog();
@@ -452,7 +440,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             setAdapter(doctorList);
             linearLayoutContent.setVisibility(View.VISIBLE);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

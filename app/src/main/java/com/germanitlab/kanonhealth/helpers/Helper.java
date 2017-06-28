@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -22,9 +21,6 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -45,7 +41,7 @@ public class Helper {
         this.activity = activity;
     }
 
-    public void replaceFragments(Class fragmentClass, int continer , String tag) {
+    public void replaceFragments(Class fragmentClass, int continer, String tag) {
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -59,92 +55,59 @@ public class Helper {
     }
 
 
-    public void replaceFragments(Fragment fragment, int continer , String tag) {
+    public void replaceFragments(Fragment fragment, int continer, String tag) {
         FragmentManager fragmentManager = ((FragmentActivity) activity).getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(continer, fragment).addToBackStack(tag)
                 .commit();
     }
-    public static void setImage(final Context context , final String url , final ImageView imageView , final int placeholder ){
-        Picasso.with(context)
-                .load(url)
-                .networkPolicy(NetworkPolicy.OFFLINE)
-                .placeholder(placeholder).resize(500,500)
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
 
-                    }
-                    @Override
-                    public void onError() {
-                        //Try again online if cache failed
-                        Picasso.with(context)
-                                .load(url)
-                                .resize(500,500).placeholder(placeholder)
-                                .into(imageView, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
-
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                    }
-                                });
-                    }
-                });
-
-    }
-
-    public static void ImportQr(final PrefManager mPrefManager , final Activity activity )
-    {
+    public static void ImportQr(final PrefManager mPrefManager, final Activity activity) {
 
 /*        if (mPrefManager.getData(PrefManager.Image_data) != "" &&mPrefManager.getData(PrefManager.Image_data) != null) {
             Picasso.with(activity).load(Constants.CHAT_SERVER_URL
                     + "/" + mPrefManager.getData(PrefManager.Image_data))
                     .resize(80, 80).into(myQr);
         }*/
-                Dialog dialog   ;
-                dialog = new Dialog(activity);
-                dialog.setCancelable(true);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.custom_dialoge);
-                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT ,
-                        WindowManager.LayoutParams.MATCH_PARENT );
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-                if (mPrefManager.getData(PrefManager.PROFILE_QR)!= null){
-                    Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                            + "/" + mPrefManager.getData(PrefManager.PROFILE_QR) , imageView , R.drawable.qr);
-                }
-                Gson gson = new Gson();
-                Log.d("user data" , mPrefManager.getData(PrefManager.USER_KEY));
-                UserInfoResponse userInfoResponse =gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
-                TextView name = (TextView) dialog.findViewById(R.id.name);
+        Dialog dialog;
+        dialog = new Dialog(activity);
+        dialog.setCancelable(true);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialoge);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
+        if (mPrefManager.getData(PrefManager.PROFILE_QR) != null) {
+            ImageHelper.setImage(imageView, Constants.CHAT_SERVER_URL + "/" + mPrefManager.getData(PrefManager.PROFILE_QR), R.drawable.qr, activity);
+        }
+        Gson gson = new Gson();
+        Log.d("user data", mPrefManager.getData(PrefManager.USER_KEY));
+        UserInfoResponse userInfoResponse = gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
+        TextView name = (TextView) dialog.findViewById(R.id.name);
 //                TextView last_name = (TextView) dialog.findViewById(R.id.last_name);
-                TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
-                CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
+        TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
+        CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
-                if(userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "" ) {
-                    Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                            + "/" + userInfoResponse.getUser().getAvatar() , circleImageView , R.drawable.placeholder);
-                }
-                name.setText(userInfoResponse.getUser().getFirst_name().toString()+" "+userInfoResponse.getUser().getLast_name().toString());
+        if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
+            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.placeholder, activity);
+        }
+        name.setText(userInfoResponse.getUser().getFirst_name().toString() + " " + userInfoResponse.getUser().getLast_name().toString());
 //                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
-                try {
-                    Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
-                    String s = (DateUtil.formatBirthday(parseDate.getTime()));
-                    Log.d("my converted date" ,s );
-                    birthdate.setText(s);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                dialog.show();
-
+        try {
+            Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
+            String s = (DateUtil.formatBirthday(parseDate.getTime()));
+            Log.d("my converted date", s);
+            birthdate.setText(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        dialog.show();
     }
 
     public static void dismissProgressDialog(ProgressDialog progressDialog) {
         progressDialog.dismiss();
     }
-    public static void showProgressDialog(ProgressDialog progressDialog , Activity activity) {
+
+    public static void showProgressDialog(ProgressDialog progressDialog, Activity activity) {
         progressDialog = ProgressDialog.show(activity, "", activity.getResources().getString(R.string.waiting_text), true);
     }
 

@@ -37,7 +37,7 @@ public class Message implements Serializable {
     @DatabaseField
     private int seen;
     @DatabaseField
-    private int privacy ;
+    private int privacy;
     @DatabaseField(dataType = DataType.BYTE_ARRAY)
     private Bitmap locationBitmap;
     @DatabaseField
@@ -55,7 +55,6 @@ public class Message implements Serializable {
 
     @DatabaseField
     private String imageText;
-
 
 
     public Message() {
@@ -152,7 +151,6 @@ public class Message implements Serializable {
     public void setFrom_id(int from_id) {
         this.from_id = from_id;
     }
-
 
 
     public boolean isMine() {

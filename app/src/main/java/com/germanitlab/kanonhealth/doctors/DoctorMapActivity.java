@@ -30,11 +30,10 @@ public class DoctorMapActivity extends AppCompatActivity {
 
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
 
 
     }

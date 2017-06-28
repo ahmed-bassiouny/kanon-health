@@ -2,13 +2,11 @@ package com.germanitlab.kanonhealth.initialProfile;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,19 +27,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -81,10 +77,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     ProgressDialog progressDialog;
     private Uri selectedImageUri;
     PickerDialog pickerDialog;
-    String birthdate ;
-    String gender_other="Male";
-    int gender=1;
-    PrefManager prefManager ;
+    String birthdate;
+    String gender_other = "Male";
+    int gender = 1;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,10 +91,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             setContentView(R.layout.profile_details_activity);
             ButterKnife.bind(this);
             prefManager = new PrefManager(this);
-            if(savedInstanceState != null) {
+            if (savedInstanceState != null) {
                 textBirthday.setText(savedInstanceState.getString("birthdate"));
-                selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI")) ;
-                Glide.with(this).load(selectedImageUri).into(imageProfile);
+                selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI"));
+                ImageHelper.setImage(imageProfile, selectedImageUri, this);
             }
             editLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -107,7 +103,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     return true;
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -115,20 +111,20 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                switch (i){
+                switch (i) {
                     case R.id.rbmale:
-                        gender_other="Male";
-                        gender=1;
+                        gender_other = "Male";
+                        gender = 1;
                         edGender.setVisibility(View.GONE);
                         break;
                     case R.id.rbfemal:
-                        gender_other="Femal";
-                        gender=2;
+                        gender_other = "Femal";
+                        gender = 2;
                         edGender.setVisibility(View.GONE);
                         break;
                     case R.id.rbother:
-                        gender_other="";
-                        gender=3;
+                        gender_other = "";
+                        gender = 3;
                         edGender.setVisibility(View.VISIBLE);
                         break;
                 }
@@ -139,7 +135,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
     @OnClick(R.id.image_profile_edit)
     public void onAddProfileImageClicked() {
-        if(!Helper.isNetworkAvailable(this)){
+        if (!Helper.isNetworkAvailable(this)) {
             Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -160,7 +156,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                                 Manifest.permission.CAMERA},
                         Constants.GALLERY_PERMISSION_CODE);
             }
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             Toast.makeText(this, R.string.please_access_storage, Toast.LENGTH_SHORT).show();
         }
 
@@ -170,7 +166,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     protected void onSaveInstanceState(Bundle outState) {
         if (selectedImageUri != null)
             outState.putString("imageURI", selectedImageUri.toString());
-        outState.putString("birthdate" , textBirthday.getText().toString());
+        outState.putString("birthdate", textBirthday.getText().toString());
         super.onSaveInstanceState(outState);
     }
     /*    public  void dispatchOpenGalleryIntent () {
@@ -240,15 +236,15 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     @OnClick(R.id.button_submit)
     public void onSubmitClicked() {
 
-        if(!Helper.isNetworkAvailable(this)){
+        if (!Helper.isNetworkAvailable(this)) {
             Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         String firstName = editLastName.getText().toString();
         String lastName = editFirstName.getText().toString();
         String birthDate = textBirthday.getText().toString();
-        gender_other=edGender.getText().toString();
-        if(gender==3 &&gender_other.trim().isEmpty()){
+        gender_other = edGender.getText().toString();
+        if (gender == 3 && gender_other.trim().isEmpty()) {
             Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -269,25 +265,25 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-                    Log.e("Update user response :", user != null ? response.toString() : "no response found" );
+                    Log.e("Update user response :", user != null ? response.toString() : "no response found");
 
 
                     mPrefManager.put(mPrefManager.USER_KEY, response.toString());
                     Gson gson = new Gson();
-                    UserInfoResponse userInfoResponse = gson.fromJson(response.toString() , UserInfoResponse.class);
-                    Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
-                    mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
-                    mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
+                    UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
+                    Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
+                    mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
+                    mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
                     dismissProgressDialog();
-                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
-                    intent.putExtra("checkPassword" ,false);
-                    intent.putExtra("finish",false);
+                    Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
+                    intent.putExtra("checkPassword", false);
+                    intent.putExtra("finish", false);
                     startActivity(intent);
                 }
 
                 @Override
                 public void onFailed(String error) {
-                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                     dismissProgressDialog();
 
                 }
@@ -325,7 +321,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     selectedImageUri = data.getData();
                     showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(selectedImageUri).into(imageProfile);
+                    ImageHelper.setImage(imageProfile, selectedImageUri, this);
 
                     new HttpCall(this, new ApiResponse() {
                         @Override
@@ -339,15 +335,17 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         @Override
                         public void onFailed(String error) {
                             Log.e("upload image failed :", error);
-                            Toast.makeText(getApplicationContext(),"upload image failed ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "upload image failed ", Toast.LENGTH_SHORT).show();
                         }
-                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                     break;
                 case TAKE_PICTURE:
                     showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    Glide.with(this).load(selectedImageUri).into(imageProfile);
+
+                    ImageHelper.setImage(imageProfile, selectedImageUri, this);
+
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
@@ -358,9 +356,9 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
                         @Override
                         public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(),"upload image failed ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "upload image failed ", Toast.LENGTH_SHORT).show();
                         }
-                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                     break;
             }

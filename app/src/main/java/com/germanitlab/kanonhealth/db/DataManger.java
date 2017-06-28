@@ -20,7 +20,7 @@ public class DataManger {
 
 
     @Inject
-    public DataManger(@customAnotations.ApplicationContext Context context, DbHelper dbHelper){
+    public DataManger(@customAnotations.ApplicationContext Context context, DbHelper dbHelper) {
         mContext = context;
         mDbHelper = dbHelper;
     }
@@ -28,6 +28,7 @@ public class DataManger {
     public Long createMessage(Message message) throws Exception {
         return mDbHelper.insertMessage(message);
     }
+
     public Message getMessage(Integer messageId) throws Resources.NotFoundException, NullPointerException {
         return mDbHelper.getMessage(messageId);
     }

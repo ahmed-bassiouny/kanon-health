@@ -23,8 +23,6 @@
     <color name="divider">#BDBDBD</color>
 
 
-
-
     <array name="array_dot_active">
         <item>@color/colorAccent</item>
         <item>@color/colorAccent</item>

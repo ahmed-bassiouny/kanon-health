@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth.helpers;
 
 import android.app.Activity;
-import android.content.IntentSender;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -37,7 +36,7 @@ public class LocationServicesTurn {
                     try {
                         status.startResolutionForResult(
                                 requestActivity, 1000);
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         Crashlytics.logException(e);
                         Toast.makeText(requestActivity, requestActivity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                     }

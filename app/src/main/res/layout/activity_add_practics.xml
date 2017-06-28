@@ -30,575 +30,575 @@
 
     </android.support.v7.widget.Toolbar>
 
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/activity_profile"
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-
-        <TextView
-
+        <LinearLayout
+            android:id="@+id/activity_profile"
             android:layout_width="match_parent"
-
-            android:layout_height="1dp"
-
-            android:layout_marginEnd="@dimen/size_5dp"
-
-            android:layout_marginStart="@dimen/size_5dp"
-
-            android:background="@color/dark_gray"
-
-            />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            <TextView
 
-            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
+                android:layout_height="1dp"
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/img_edit_avatar"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center"
-                        android:src="@drawable/placeholder"
-                        app:civ_border_color="@color/medium_grey"
-                        app:civ_border_width="1dp" />
+                android:layout_marginEnd="@dimen/size_5dp"
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/edit_image"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignEnd="@+id/img_edit_avatar"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignRight="@+id/img_edit_avatar"
-                        android:src="@drawable/camera" />
+                android:layout_marginStart="@dimen/size_5dp"
 
-                </RelativeLayout>
+                android:background="@color/dark_gray"
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
+                />
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Name :"
-                        android:textColor="@color/black" />
-
-                    <EditText
-                        android:id="@+id/ed_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:inputType="textPersonName"
-                        android:maxLines="1"
-                        android:nextFocusForward="@+id/ed_location" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
-
-                <TextView
-                    android:id="@+id/member_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:text="Invite other doctor +"
-                    android:textColor="@android:color/background_dark" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/specilities_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:text="Specialities"
-                        android:textColor="@android:color/background_dark" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/speciality_recycleview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@+id/specilities_text"
-                        android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
-
-
-                    <ImageView
-                        android:id="@+id/edit_speciality_list"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginEnd="9dp"
-                        android:layout_marginLeft="5dp"
-                        android:rotation="180"
-                        android:src="@drawable/ic_arrow_back_black_24dp"
-                        android:textColor="@android:color/background_dark" />
-                </RelativeLayout>
-
-
-                <TextView
-                    android:id="@+id/tv_specilities"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="16dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
-
-                <LinearLayout
-                    android:id="@+id/linear_practice_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="vertical">
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/location"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_location"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/ed_street_name" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/streat"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_street_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/ed_house_number" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/house_number"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_house_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/ed_zip_code" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/zip_code"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_zip_code"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/ed_city" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/city"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_city"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/ed_province" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/province"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_province"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/ed_country" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/country"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/ed_country"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:nextFocusForward="@+id/et_telephone" />
-                    </TableRow>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content">
-
-
-                    <TextView
-                        android:id="@+id/locationonmap"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                        android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_edit_avatar"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:src="@drawable/placeholder"
+                            app:civ_border_color="@color/medium_grey"
+                            app:civ_border_width="1dp" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/edit_image"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignEnd="@+id/img_edit_avatar"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignRight="@+id/img_edit_avatar"
+                            android:src="@drawable/camera" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name :"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:id="@+id/ed_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:nextFocusForward="@+id/ed_location" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+                    <TextView
+                        android:id="@+id/member_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="Location On Map (Manual)"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/size_15sp" />
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:rotation="180"
-                        android:src="@drawable/ic_arrow_back_black_24dp"
+                        android:text="Invite other doctor +"
                         android:textColor="@android:color/background_dark" />
 
-                </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/specilities_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="Specialities"
+                            android:textColor="@android:color/background_dark" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/speciality_recycleview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toRightOf="@+id/specilities_text"
+                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+
+                        <ImageView
+                            android:id="@+id/edit_speciality_list"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="9dp"
+                            android:layout_marginLeft="5dp"
+                            android:rotation="180"
+                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:textColor="@android:color/background_dark" />
+                    </RelativeLayout>
+
 
                     <TextView
-                        android:id="@+id/language_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:text="Languages"
-                        android:textSize="@dimen/size_15sp"
-                        android:textColor="@android:color/background_dark" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/language_recycleview"
+                        android:id="@+id/tv_specilities"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="@dimen/size_5dp"
-                        android:layout_toRightOf="@+id/language_text"
-                        android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
-
-                    <TextView
-                        android:id="@+id/tv_languages"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/language_recycleview"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16dp" />
 
-                    <ImageView
-                        android:id="@+id/edit_languages_list"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignTop="@id/language_recycleview"
-                        android:rotation="180"
-                        android:src="@drawable/ic_arrow_back_black_24dp"
-                        android:textColor="@android:color/background_dark" />
-                </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
+                    <LinearLayout
+                        android:id="@+id/linear_practice_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/location"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/ed_street_name" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/streat"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_street_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/ed_house_number" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/house_number"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_house_number"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/ed_zip_code" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/zip_code"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_zip_code"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/ed_city" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/city"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_city"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/ed_province" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/province"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_province"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/ed_country" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/country"
+                                android:textColor="@color/black" />
+
+                            <EditText
+                                android:id="@+id/ed_country"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLines="1"
+                                android:nextFocusForward="@+id/et_telephone" />
+                        </TableRow>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content">
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/locationonmap"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="Location On Map (Manual)"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/size_15sp" />
 
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:rotation="180"
+                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:textColor="@android:color/background_dark" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/language_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="Languages"
+                            android:textSize="@dimen/size_15sp"
+                            android:textColor="@android:color/background_dark" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/language_recycleview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="@dimen/size_5dp"
+                            android:layout_toRightOf="@+id/language_text"
+                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+                        <TextView
+                            android:id="@+id/tv_languages"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/language_recycleview"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16dp" />
+
+                        <ImageView
+                            android:id="@+id/edit_languages_list"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignTop="@id/language_recycleview"
+                            android:rotation="180"
+                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:textColor="@android:color/background_dark" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:hint="@string/first_name"
+                            android:text="Working hours"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16sp" />
+
+
+                        <ImageView
+                            android:id="@+id/edit_time_table"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center|right"
+                            android:layout_marginLeft="8dp"
+                            android:gravity="bottom"
+                            android:src="@drawable/edit"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16dp" />
+                    </RelativeLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/no_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_no_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:padding="@dimen/size_5dp"
+                            android:text="No Time has set"
+                            android:textColor="@color/red"
+                            android:textCursorDrawable="@color/black"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TableLayout
+                        android:id="@+id/tablelayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"></TableLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:gravity="left"
+                            android:hint="@string/first_name"
+                            android:text="Tel : "
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16dp" />
+
+
+                        <EditText
+                            android:id="@+id/et_telephone"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="5"
+                            android:gravity="left"
+                            android:imeOptions="actionSend"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+
+                    <View
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@color/black" />
+
+                    <RelativeLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/documnet"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:text="Practice Documents"
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16dp" />
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/member_recycleview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@+id/documnet"
+                            android:layout_marginLeft="@dimen/size_5dp"
+                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+                        <ImageView
+                            android:id="@+id/edit_member_list"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignTop="@id/member_recycleview"
+                            android:src="@drawable/edit"
+                            android:textColor="@android:color/background_dark" />
+                    </RelativeLayout>
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:hint="@string/first_name"
-                        android:text="Working hours"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16sp" />
-
-
-                    <ImageView
-                        android:id="@+id/edit_time_table"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="center|right"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="bottom"
-                        android:src="@drawable/edit"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-                </RelativeLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/no_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_no_time"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:padding="@dimen/size_5dp"
-                        android:text="No Time has set"
-                        android:textColor="@color/red"
-                        android:textCursorDrawable="@color/black"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <TableLayout
-                    android:id="@+id/tablelayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"></TableLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
-
-                <LinearLayout
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="left"
-                        android:hint="@string/first_name"
-                        android:text="Tel : "
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-
-
-                    <EditText
-                        android:id="@+id/et_telephone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_weight="5"
-                        android:gravity="left"
-                        android:imeOptions="actionSend"
-                        android:inputType="textPersonName"
-                        android:maxLines="1"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-                </LinearLayout>
-
-                <View
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/black" />
-
-                <RelativeLayout
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/documnet"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:text="Practice Documents"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="16dp" />
-
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/member_recycleview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/documnet"
-                        android:layout_marginLeft="@dimen/size_5dp"
-                        android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
-
-                    <ImageView
-                        android:id="@+id/edit_member_list"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignTop="@id/member_recycleview"
-                        android:src="@drawable/edit"
-                        android:textColor="@android:color/background_dark" />
-                </RelativeLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
-    </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

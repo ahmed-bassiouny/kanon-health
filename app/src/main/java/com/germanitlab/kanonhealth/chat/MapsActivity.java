@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
@@ -43,7 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String jsonString;
     ProgressDialog progressDialog;
     int create;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
             create = 1;
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 
 public interface FilterCallBackClickListener {
-     void filterClick(ArrayList<User> doctor);
+    void filterClick(ArrayList<User> doctor);
 }

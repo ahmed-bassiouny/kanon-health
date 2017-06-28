@@ -28,21 +28,21 @@ public class PreRequest extends AppCompatActivity {
             ButterKnife.bind(this);
             Intent intent = getIntent();
             doctorJson = intent.getStringExtra("doctor_data");
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
 
     }
+
     @OnClick(R.id.image)
-    public void toPayment(View view)
-    {
+    public void toPayment(View view) {
         try {
-            Intent intent = new Intent(this , PaymentActivity.class);
-            intent.putExtra("doctor_data" , doctorJson);
+            Intent intent = new Intent(this, PaymentActivity.class);
+            intent.putExtra("doctor_data", doctorJson);
             startActivity(intent);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }

@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 public class User1 extends User implements Serializable {
 
 
-
     @DatabaseField
     @SerializedName("password")
     private String password;
@@ -67,11 +66,11 @@ public class User1 extends User implements Serializable {
     }
 
 
-    public  LinkedHashMap<String, String> getQuestions() {
+    public LinkedHashMap<String, String> getQuestions() {
         return questions;
     }
 
-    public void setQuestions( LinkedHashMap<String, String> questions) {
+    public void setQuestions(LinkedHashMap<String, String> questions) {
         this.questions = questions;
     }
 

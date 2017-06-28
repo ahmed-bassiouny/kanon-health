@@ -5,8 +5,8 @@ package com.germanitlab.kanonhealth.models;
  */
 
 public class Parent {
-    public int id ;
-    public String name ;
-    public String avatar ;
-    public String lastName ;
+    public int id;
+    public String name;
+    public String avatar;
+    public String lastName;
 }

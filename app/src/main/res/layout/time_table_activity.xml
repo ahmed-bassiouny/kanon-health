@@ -26,8 +26,7 @@
             android:layout_gravity="center"
             android:text="Opening Hours"
             android:textSize="18sp"
-            android:textColor="@color/black"/>
-
+            android:textColor="@color/black" />
 
 
     </android.support.v7.widget.Toolbar>
@@ -45,6 +44,7 @@
         android:background="@color/dark_gray"
 
         />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,36 +57,36 @@
             android:orientation="vertical">
 
             <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="60dp"-->
-                <!--android:background="#F9F8F8"-->
-                <!--android:orientation="horizontal">-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:background="#F9F8F8"-->
+            <!--android:orientation="horizontal">-->
 
-                <!--<ImageView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:layout_weight="0.53"-->
-                    <!--android:background="#F9F8F8"-->
-                    <!--android:gravity="center"-->
-                    <!--android:src="@drawable/ic_arrow_back_black_24dp" />-->
+            <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_weight="0.53"-->
+            <!--android:background="#F9F8F8"-->
+            <!--android:gravity="center"-->
+            <!--android:src="@drawable/ic_arrow_back_black_24dp" />-->
 
-                <!--<TextView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:layout_weight="3"-->
-                    <!--android:gravity="center"-->
-                    <!--android:text="Opening Hours"-->
-                    <!--android:textColor="@android:color/background_dark"-->
-                    <!--android:textSize="20sp" />-->
+            <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_weight="3"-->
+            <!--android:gravity="center"-->
+            <!--android:text="Opening Hours"-->
+            <!--android:textColor="@android:color/background_dark"-->
+            <!--android:textSize="20sp" />-->
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/save"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_weight=".7"-->
-                    <!--android:src="@drawable/ic_check_black_24dp"/>-->
+            <!--<ImageView-->
+            <!--android:id="@+id/save"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight=".7"-->
+            <!--android:src="@drawable/ic_check_black_24dp"/>-->
             <!--</LinearLayout>-->
 
             <LinearLayout
@@ -106,7 +106,8 @@
                     android:gravity="center_vertical"
                     android:textSize="@dimen/size_17sp"
                     android:textColor="@color/black"
-                    android:text="Schedule"/>
+                    android:text="Schedule" />
+
                 <ImageView
                     android:checked="true"
                     android:gravity="center"
@@ -115,8 +116,7 @@
                     android:layout_weight="1"
                     android:id="@+id/radio0"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 

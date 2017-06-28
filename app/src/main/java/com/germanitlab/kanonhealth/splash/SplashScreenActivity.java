@@ -11,14 +11,12 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
-import com.germanitlab.kanonhealth.main.MainActivity;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -48,7 +46,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void run() {
 
                     // to check passcode
-                    if (isLogin && !storedUser.equals("") &&prefManager.getData(PrefManager.PASSCODE).length() == 6) {
+                    if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
                         joinUser();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", true);
@@ -73,8 +71,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         intent.putExtra("finish", false);
                         startActivity(intent);
                         finish();
-                    }
-                     else {
+                    } else {
 
                         startActivity(new Intent(SplashScreenActivity.this, SignupActivity.class));
                         finish();
@@ -89,7 +86,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void joinUser() {
-        if(prefManager.getInt(PrefManager.USER_ID) == 0){
+        if (prefManager.getInt(PrefManager.USER_ID) == 0) {
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -124,7 +121,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 }
             }).joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
         }
     }

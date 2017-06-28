@@ -1,10 +1,7 @@
 package com.germanitlab.kanonhealth.async;
 
 
-import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -19,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiClient {
 
-   // public static final String BASE_URL = "http://172.16.10.12:8080/RestService/api/";
+    // public static final String BASE_URL = "http://172.16.10.12:8080/RestService/api/";
 //    public static final String BASE_URL = "http://41.33.24.57:8080/RestService/api/";
 //    public static final String restauranBanner = "https://Orderingfood.upskwt.com:6060/Restaurants/Large/";
 //    public static final String restaurantLogo = "https://Orderingfood.upskwt.com:6060/Restaurants/small/";
@@ -50,7 +47,7 @@ public class ApiClient {
                         .build();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
         }
 

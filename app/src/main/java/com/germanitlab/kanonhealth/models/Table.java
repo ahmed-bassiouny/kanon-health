@@ -6,12 +6,12 @@ import java.io.Serializable;
  * Created by Geram IT Lab on 23/05/2017.
  */
 
-public class Table implements Serializable{
+public class Table implements Serializable {
     private String id;
     private String type;
     private String from;
     private String to;
-    private String dayweek ;
+    private String dayweek;
 
     public String getId() {
         return id;

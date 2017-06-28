@@ -8,10 +8,10 @@ import java.util.List;
  */
 
 public class Forward implements Serializable {
-    private String user_id ;
-    private String password ;
-    private List<Integer> msg_id ;
-    private List<Integer> to_id ;
+    private String user_id;
+    private String password;
+    private List<Integer> msg_id;
+    private List<Integer> to_id;
 
     public Forward(String user_id, String password, List<Integer> msg_id, List<Integer> to_id) {
         this.user_id = user_id;

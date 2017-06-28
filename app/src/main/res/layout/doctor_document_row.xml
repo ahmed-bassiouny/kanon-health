@@ -41,8 +41,7 @@
             android:gravity="right"
             android:padding="20dp"
             android:textColor="@android:color/black"
-            android:text="xzcvzxdvcxcvxdcv"
-             />
+            android:text="xzcvzxdvcxcvxdcv" />
     </LinearLayout>
 
     <RelativeLayout
@@ -114,8 +113,7 @@
                                 android:id="@+id/tv_music_duration"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/size_5dp"
-                                ></TextView>
+                                android:layout_marginRight="@dimen/size_5dp"></TextView>
 
                         </LinearLayout>
                     </LinearLayout>
@@ -123,6 +121,7 @@
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
+
         <ProgressBar
             android:id="@+id/my_progress_view"
             style="?android:attr/progressBarStyleHorizontal"

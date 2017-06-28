@@ -12,27 +12,24 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.models.doctors.*;
-import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.models.doctors.Comment;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import com.germanitlab.kanonhealth.models.doctors.Comment;
 
 /**
  * Created by Geram IT Lab on 22/04/2017.
  */
 
-public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>  {
+public class RateAdapter extends RecyclerView.Adapter<RateAdapter.MyViewHolder> {
 
     private List<Comment> commentList;
     private Activity activity;
 
-    public RateAdapter(List<Comment> rateList , Activity activity)
-    {
-        this.commentList = rateList ;
+    public RateAdapter(List<Comment> rateList, Activity activity) {
+        this.commentList = rateList;
         this.activity = activity;
     }
 
@@ -48,33 +45,30 @@ public class RateAdapter  extends RecyclerView.Adapter<RateAdapter.MyViewHolder>
     public void onBindViewHolder(RateAdapter.MyViewHolder holder, int position) {
         try {
             Comment comment = commentList.get(position);
-            holder.txt_person_name.setText(comment.getFirst_name()+" "+comment.getLast_name());
+            holder.txt_person_name.setText(comment.getFirst_name() + " " + comment.getLast_name());
             holder.txt_comment.setText(comment.getComment());
             holder.rb_person_rate.setRating(Float.valueOf(comment.getRate()));
-            if(comment.getAvatar() != null && comment.getAvatar() != "" ) {
-                Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                        + "/" + comment.getAvatar() , holder.img_person_image ,R.drawable.profile_place_holder );
+            if (comment.getAvatar() != null && comment.getAvatar() != "") {
+                ImageHelper.setImage(holder.img_person_image, Constants.CHAT_SERVER_URL + "/" + comment.getAvatar(), R.drawable.profile_place_holder, activity);
             }
-            if(comment.getCountry_flag() != null && comment.getCountry_flag() != "" ) {
-                Helper.setImage(activity , Constants.CHAT_SERVER_URL
-                        + "/" + comment.getCountry_flag() , holder.img_country_image ,R.drawable.profile_place_holder );
+            if (comment.getCountry_flag() != null && comment.getCountry_flag() != "") {
+                ImageHelper.setImage(holder.img_country_image, Constants.CHAT_SERVER_URL + "/" + comment.getCountry_flag(), R.drawable.profile_place_holder, activity);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity,activity.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.e("Rate Activity", "",e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            Log.e("Rate Activity", "", e);
         }
-
-
     }
 
     @Override
     public int getItemCount() {
         return commentList.size();
     }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView img_person_image ,img_country_image;
-        public TextView txt_person_name,txt_comment;
+        public CircleImageView img_person_image, img_country_image;
+        public TextView txt_person_name, txt_comment;
         RatingBar rb_person_rate;
 
         public MyViewHolder(View view) {

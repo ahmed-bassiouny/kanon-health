@@ -17,22 +17,22 @@ public class DoctorRequest implements Serializable {
     private String Key;
     @SerializedName("doc_id")
     private String doc_id;
-    private int entity_type ;
+    private int entity_type;
     private int is_object = 1;
 
 
-
-    public DoctorRequest(String userID, String password, String Key , int entity_type) {
+    public DoctorRequest(String userID, String password, String Key, int entity_type) {
         this.userID = userID;
         this.password = password;
         this.Key = Key;
-        this.entity_type = entity_type ;
+        this.entity_type = entity_type;
     }
-    public DoctorRequest(String userID, String password, String Key , String doc_id ) {
+
+    public DoctorRequest(String userID, String password, String Key, String doc_id) {
         this.userID = userID;
         this.password = password;
         this.Key = Key;
-        this.doc_id = doc_id ;
+        this.doc_id = doc_id;
     }
 
     public String getUserID() {

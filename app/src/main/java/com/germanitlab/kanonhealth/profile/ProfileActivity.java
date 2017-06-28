@@ -1,6 +1,5 @@
 package com.germanitlab.kanonhealth.profile;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,32 +10,26 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -47,8 +40,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
 
 public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
@@ -87,13 +78,13 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     @BindView(R.id.scrollView)
     ScrollView scrollView;
 
-    private UserInfoResponse userInfoResponse=new UserInfoResponse();
+    private UserInfoResponse userInfoResponse = new UserInfoResponse();
     private PrefManager mPrefManager;
 
     private QuestionAdapter mAdapter;
     private DoctorDocumentAdapter mAdapter2;
     LinkedHashMap<String, String> questionAnswer;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
 //    public static int indexFromIntent=0;
 
@@ -160,7 +151,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     }
 
 
-
     private void initTB() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -177,13 +167,11 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     }
 
 
-
-
-
     private void bindData() {
 
-        if(userInfoResponse.getUser().getAvatar()!=null && !userInfoResponse.getUser().getAvatar().isEmpty())
-        Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar()).into(imgAvatar);
+        if (userInfoResponse.getUser().getAvatar() != null && !userInfoResponse.getUser().getAvatar().isEmpty()) {
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar(), this);
+        }
 
         if (userInfoResponse.getUser().getIsDoc() == 1)
             is_doctor = true;

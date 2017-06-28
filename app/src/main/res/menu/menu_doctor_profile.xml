@@ -8,11 +8,11 @@
         android:icon="@drawable/edit_icon"
         android:orderInCategory="2"
         android:title="Edit"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/mi_save"
         android:icon="@drawable/ic_done_black_24dp"
         android:orderInCategory="2"
         android:title="Save"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

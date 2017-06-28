@@ -16,19 +16,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    double longi  , lat ;
+    double longi, lat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps2);
         try {
-            longi = getIntent().getDoubleExtra("long",0);
-            lat = getIntent().getDoubleExtra("lat",0);
+            longi = getIntent().getDoubleExtra("long", 0);
+            lat = getIntent().getDoubleExtra("lat", 0);
             // Obtain the SupportMapFragment and get notified when the map is ready to be used.
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.i("Maps Activity ", "" + e);
@@ -55,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng sydney = new LatLng(lat, longi);
             mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.i("Maps activity ", "" + e);

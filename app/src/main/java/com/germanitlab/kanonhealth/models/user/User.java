@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth.models.user;
 
 import com.germanitlab.kanonhealth.models.ChooseModel;
-import com.germanitlab.kanonhealth.models.SupportedLanguage;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.google.gson.annotations.SerializedName;
@@ -204,10 +203,10 @@ public class User implements Serializable {
     private Info info;
     @SerializedName("open_type")
     private int open_type;
-    private HashMap<String , String> rate_percentage=new HashMap<>();
+    private HashMap<String, String> rate_percentage = new HashMap<>();
     private float rate_avr;
-    private String country_flag ;
-    private  String is_available;
+    private String country_flag;
+    private String is_available;
 
 
     private String passcode;
@@ -216,10 +215,10 @@ public class User implements Serializable {
     private String parent_id;
 
     private int rate_count;
-    private List<Table> open_time=new ArrayList<>();
-    private List<ChooseModel> supported_lang=new ArrayList<>();
-    private List<ChooseModel> specialities=new ArrayList<>();
-    private List<ChooseModel> members_at=new ArrayList<>();
+    private List<Table> open_time = new ArrayList<>();
+    private List<ChooseModel> supported_lang = new ArrayList<>();
+    private List<ChooseModel> specialities = new ArrayList<>();
+    private List<ChooseModel> members_at = new ArrayList<>();
     private String speciality_id;
     private String speciality_title;
     private String speciality_icon;
@@ -504,6 +503,7 @@ public class User implements Serializable {
     public void setChosen(boolean chosen) {
         this.chosen = chosen;
     }
+
     public ArrayList<Message> getDocuments() {
         return documents;
     }
@@ -537,11 +537,11 @@ public class User implements Serializable {
     }
 
 
-    public  LinkedHashMap<String, String> getQuestions() {
+    public LinkedHashMap<String, String> getQuestions() {
         return questions;
     }
 
-    public void setQuestions( LinkedHashMap<String, String> questions) {
+    public void setQuestions(LinkedHashMap<String, String> questions) {
         this.questions = questions;
     }
 

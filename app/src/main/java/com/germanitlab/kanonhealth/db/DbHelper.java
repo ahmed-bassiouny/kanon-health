@@ -5,12 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
 import javax.inject.Inject;
@@ -40,8 +37,8 @@ public class DbHelper extends SQLiteOpenHelper {
     @Inject
     public DbHelper(@customAnotations.ApplicationContext Context context,
                     @customAnotations.DatabaseInfo String dbName,
-                    @customAnotations.DatabaseInfo Integer version){
-        super(context,dbName, null, version);
+                    @customAnotations.DatabaseInfo Integer version) {
+        super(context, dbName, null, version);
     }
 
     @Override
@@ -56,7 +53,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public void messagesTableCreateStatement (SQLiteDatabase database){
+    public void messagesTableCreateStatement(SQLiteDatabase database) {
         try {
             database.execSQL(
                     "CREATE TABLE IF NOT EXISTS "
@@ -79,7 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    protected Long insertMessage (Message message) throws Exception {
+    protected Long insertMessage(Message message) throws Exception {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
@@ -94,25 +91,25 @@ public class DbHelper extends SQLiteOpenHelper {
             contentValues.put(MESSAGES_COLUMN_MESSAGE_LOADING, message.isLoading());
             contentValues.put(MESSAGES_COLUMN_MESSAGE_STATUS, message.getStatus());
             contentValues.put(MESSAGES_COLUMN_MESSAGE_SEEN, message.getSeen());
-            return  db.insert(MESSAGES_TABLE_NAME, null, contentValues);
-        } catch (Exception e){
+            return db.insert(MESSAGES_TABLE_NAME, null, contentValues);
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    protected Message getMessage (Integer messageId) throws Resources.NotFoundException, NullPointerException {
+    protected Message getMessage(Integer messageId) throws Resources.NotFoundException, NullPointerException {
         Cursor cursor = null;
 
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             cursor = db.rawQuery(
                     "SELECT * FROM "
-                    + MESSAGES_TABLE_NAME
-                    + " WHERE "
-                    + MESSAGES_COLUMN_MESSAGE_ID
-                    + " = ? "
-                    ,new String[] {});
+                            + MESSAGES_TABLE_NAME
+                            + " WHERE "
+                            + MESSAGES_COLUMN_MESSAGE_ID
+                            + " = ? "
+                    , new String[]{});
 
             if (cursor.getCount() > 0) {
                 Message message = new Message();
@@ -132,7 +129,7 @@ public class DbHelper extends SQLiteOpenHelper {
             } else {
                 throw new Resources.NotFoundException("Message with id " + messageId + " doesn't exists");
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
             throw e;
         } finally {

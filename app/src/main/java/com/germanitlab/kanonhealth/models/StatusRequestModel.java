@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by halima on 07/06/17.
  */
 
-public class StatusRequestModel  {
+public class StatusRequestModel {
 
     @SerializedName("user_id")
     private String userID;
@@ -16,11 +16,10 @@ public class StatusRequestModel  {
     private String is_available;
 
 
-
     public StatusRequestModel(String userID, String password, String is_available) {
         this.userID = userID;
         this.password = password;
-        this.is_available=is_available;
+        this.is_available = is_available;
     }
 
     public String getUserID() {

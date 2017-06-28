@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -58,7 +57,7 @@ public class ForwardActivity extends AppCompatActivity {
     Boolean search;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private int entity_type;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +76,7 @@ public class ForwardActivity extends AppCompatActivity {
             ListDoctors = new ArrayList<>();
             edtDoctorListFilter = (EditText) findViewById(R.id.edt_doctor_list_filter);
             showProgressDialog();
-            new HttpCall(getApplicationContext() ,new ApiResponse() {
+            new HttpCall(getApplicationContext(), new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
                     try {
@@ -108,8 +107,8 @@ public class ForwardActivity extends AppCompatActivity {
                     tvLoadingError.setText(error);
                 else tvLoadingError.setText("Some thing went wrong");*/
                 }
-            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD));
-        }catch (Exception e) {
+            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -139,7 +138,7 @@ public class ForwardActivity extends AppCompatActivity {
                     search = false;
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -154,7 +153,7 @@ public class ForwardActivity extends AppCompatActivity {
                 sendForward();
             else
                 Toast.makeText(getApplicationContext(), "please Select", Toast.LENGTH_LONG).show();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -188,7 +187,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Log.e("Error", error);
                 Toast.makeText(ForwardActivity.this, getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
             }
-        }).forward(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), messagesForward, doctorsForward);
+        }).forward(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), messagesForward, doctorsForward);
     }
 
     private void addListener(RecyclerView recyclerView) {
@@ -234,7 +233,7 @@ public class ForwardActivity extends AppCompatActivity {
                     ChooseList.get(position).setChosen(false);
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -247,7 +246,7 @@ public class ForwardActivity extends AppCompatActivity {
                 mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3);
                 recyclerView.setAdapter(mAdapter);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -260,7 +259,7 @@ public class ForwardActivity extends AppCompatActivity {
             doctorsForward.clear();
             doctorsForward.add(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             sendForward();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -283,7 +282,7 @@ public class ForwardActivity extends AppCompatActivity {
                 //Opening the QR Scanner
                 new IntentIntegrator(this).initiateScan();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -394,7 +393,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Log.e("My error ", error.toString());
 
             }
-        }).getDoctor(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), key, entity_type);
+        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key, entity_type);
     }
 
     public void dismissProgressDialog() {

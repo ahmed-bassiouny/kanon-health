@@ -5,10 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,13 +16,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,16 +32,12 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.interfaces.MyClickListener;
-import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
-import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
@@ -54,9 +45,7 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
-import com.germanitlab.kanonhealth.profile.QuestionAdapter;
 import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
-import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -89,7 +78,7 @@ public class SettingFragment extends Fragment {
     private StatusResponse statusResponse;
     private String UserStatus;
     private PrcticiesSAdapter mAdapter;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -111,7 +100,7 @@ public class SettingFragment extends Fragment {
         prefManager = new PrefManager(getContext());
         try {
             user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         initView();
         loadData();
@@ -131,9 +120,10 @@ public class SettingFragment extends Fragment {
             rvPracticies.setLayoutManager(mLayoutManager);
             rvPracticies.setAdapter(mAdapter);
             rvPracticies.setNestedScrollingEnabled(false);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_settings, menu);
@@ -159,7 +149,7 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    private void loadData(){
+    private void loadData() {
         try {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(R.string.waiting_text);
@@ -172,12 +162,12 @@ public class SettingFragment extends Fragment {
                 public void onSuccess(Object response) {
                     if (response != null) {
                         Gson gson = new Gson();
-                        mPrefManager.put(PrefManager.USER_KEY , gson.toJson(response));
-                        user= new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY) , UserInfoResponse.class ).getUser();
+                        mPrefManager.put(PrefManager.USER_KEY, gson.toJson(response));
+                        user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
                         progressDialog.dismiss();
 
                     } else {
-                        user=new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+                        user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
                         Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
@@ -189,7 +179,7 @@ public class SettingFragment extends Fragment {
 
                 @Override
                 public void onFailed(String error) {
-                    user=new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+                    user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
                     progressDialog.dismiss();
                     Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                     initView();
@@ -200,7 +190,7 @@ public class SettingFragment extends Fragment {
             }).getProfile(userRegisterResponse);
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -231,7 +221,7 @@ public class SettingFragment extends Fragment {
             trTerms = (TableRow) view.findViewById(R.id.tr_terms);
             trHelp = (TableRow) view.findViewById(R.id.tr_help);
             trVersion = (TextView) view.findViewById(R.id.tv_version);
-            line=(View)view.findViewById(R.id.line);
+            line = (View) view.findViewById(R.id.line);
             //status doctor
             txt_status = (TextView) view.findViewById(R.id.txt_status);
             btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
@@ -291,7 +281,7 @@ public class SettingFragment extends Fragment {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(user.getIsDoc()==null ||user.getIsClinic() ==null){
+                    if (user.getIsDoc() == null || user.getIsClinic() == null) {
                         Toast.makeText(getActivity(), R.string.contact_support, Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -338,7 +328,7 @@ public class SettingFragment extends Fragment {
 
                 }
             });
-            if(user.getIsDoc()==1){
+            if (user.getIsDoc() == 1) {
                 tvAddPractice.setVisibility(View.VISIBLE);
                 line.setVisibility(View.VISIBLE);
                 txt_status.setVisibility(View.VISIBLE);
@@ -350,8 +340,7 @@ public class SettingFragment extends Fragment {
                 rvPracticies.setVisibility(View.GONE);
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getContext(), "Error while loading data", Toast.LENGTH_SHORT).show();
         }
 
@@ -377,7 +366,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onFailed(String error) {
-                Toast.makeText(getContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 Log.e("Error", error + "++");
 
             }
@@ -397,9 +386,8 @@ public class SettingFragment extends Fragment {
                     }
                 }
             });
+        } catch (Exception e) {
         }
-        catch (Exception e){}
-
 
 
     }
@@ -414,7 +402,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onFailed(String error) {
-                Toast.makeText(getContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
                 Log.e("Error", error + "++");
 
@@ -439,10 +427,10 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==13&& resultCode==getActivity().RESULT_OK){
+        if (requestCode == 13 && resultCode == getActivity().RESULT_OK) {
             Intent intent = new Intent(getActivity(), PasscodeActivty.class);
-            intent.putExtra("checkPassword" ,false);
-            intent.putExtra("finish",true);
+            intent.putExtra("checkPassword", false);
+            intent.putExtra("finish", true);
             startActivity(intent);
         }
     }

@@ -17,18 +17,18 @@ public class ChatModule {
 
     private Activity mActivity;
 
-    public ChatModule(Activity activity){
+    public ChatModule(Activity activity) {
         mActivity = activity;
     }
 
     @Provides
-    public Activity provideActivity (){
+    public Activity provideActivity() {
         return mActivity;
     }
 
     @Provides
     @customAnotations.PerActivity
-    public Context provideContext (){
+    public Context provideContext() {
         return mActivity;
     }
 }

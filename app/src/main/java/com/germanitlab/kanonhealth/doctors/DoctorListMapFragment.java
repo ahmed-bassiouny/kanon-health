@@ -21,10 +21,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.LocationServicesTurn;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
@@ -56,7 +54,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     private PrefManager mPrefManager;
     private GoogleApiClient mGoogleApiClient;
     private boolean isFirst = true;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     public DoctorListMapFragment() {
         // Required empty public constructor
@@ -143,7 +141,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
                     }
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -181,7 +179,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
             } else
                 askForPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 6);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -222,7 +220,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
             } else {
                 Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -251,7 +249,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
                 map.animateCamera(CameraUpdateFactory
                         .newCameraPosition(cameraPosition));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

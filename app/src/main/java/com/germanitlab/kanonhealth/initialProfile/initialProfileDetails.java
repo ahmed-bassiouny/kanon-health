@@ -24,15 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
@@ -53,20 +51,24 @@ import butterknife.OnClick;
 
 public class initialProfileDetails extends AppCompatActivity {
 
-    @BindView(R.id.image_profile)ImageView imageProfile;
-    @BindView(R.id.edit_first_name)EditText editFirstName;
-    @BindView(R.id.edit_last_name)EditText editLastName;
-    @BindView(R.id.edit_birthday)TextView textBirthday;
+    @BindView(R.id.image_profile)
+    ImageView imageProfile;
+    @BindView(R.id.edit_first_name)
+    EditText editFirstName;
+    @BindView(R.id.edit_last_name)
+    EditText editLastName;
+    @BindView(R.id.edit_birthday)
+    TextView textBirthday;
     PrefManager mPrefManager;
     UploadImageResponse uploadImageResponse;
     private InternetFilesOperations internetFilesOperations;
     ProgressDialog progressDialog;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         mPrefManager = new PrefManager(this);
+        mPrefManager = new PrefManager(this);
         setContentView(R.layout.profile_details_activity);
         ButterKnife.bind(this);
         prefManager = new PrefManager(this);
@@ -74,14 +76,14 @@ public class initialProfileDetails extends AppCompatActivity {
     }
 
     @OnClick(R.id.image_profile)
-    public void onAddProfileImageClicked (){
+    public void onAddProfileImageClicked() {
         dispatchOpenGalleryIntent();
     }
 
-    public  void dispatchOpenGalleryIntent () {
+    public void dispatchOpenGalleryIntent() {
         try {
-            if (ContextCompat.checkSelfPermission(this , Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 getIntent.setType("image/*");
 
@@ -93,11 +95,11 @@ public class initialProfileDetails extends AppCompatActivity {
 
                 startActivityForResult(chooserIntent, Constants.IMAGE_REQUEST);
             } else {
-                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE );
+                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -107,11 +109,11 @@ public class initialProfileDetails extends AppCompatActivity {
     }
 
     @OnClick(R.id.edit_birthday)
-    public void onEditBirthdayClicked (){
+    public void onEditBirthdayClicked() {
         try {
             View view = this.getCurrentFocus();
             if (view != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             Calendar calender = Calendar.getInstance();
@@ -130,7 +132,7 @@ public class initialProfileDetails extends AppCompatActivity {
                     calender.get(Calendar.DAY_OF_MONTH));
 
             mDialog.show();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -139,21 +141,21 @@ public class initialProfileDetails extends AppCompatActivity {
     }
 
     @OnClick(R.id.button_submit)
-    public void onSubmitClicked (){
+    public void onSubmitClicked() {
         try {
             String firstName = editLastName.getText().toString();
             String lastName = editFirstName.getText().toString();
             String birthDate = textBirthday.getText().toString();
 
 
-            if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")){
+            if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")) {
                 showProgressDialog();
                 final User user = new User();
                 user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                user.setPassword( prefManager.getData(PrefManager.USER_PASSWORD));
-                user.setName(firstName + " " +lastName);
+                user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+                user.setName(firstName + " " + lastName);
                 user.setBirthDate(birthDate);
-                if (uploadImageResponse != null){
+                if (uploadImageResponse != null) {
                     user.setAvatar(uploadImageResponse.getFile_url());
                 }
 
@@ -161,25 +163,25 @@ public class initialProfileDetails extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object response) {
                         try {
-                            Log.e("Update user response :", user != null ? response.toString() : "no response found" );
+                            Log.e("Update user response :", user != null ? response.toString() : "no response found");
 
 
                             mPrefManager.put(mPrefManager.USER_KEY, response.toString());
                             Gson gson = new Gson();
-                            UserInfoResponse userInfoResponse = gson.fromJson(response.toString() , UserInfoResponse.class);
-                            Log.e("my qr link " ,  userInfoResponse.getUser().getQr_url());
-                            mPrefManager.put(mPrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1 );
+                            UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
+                            Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
+                            mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
 
-                            mPrefManager.put(mPrefManager.PROFILE_QR , userInfoResponse.getUser().getQr_url());
+                            mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
                             dismissProgressDialog();
 //                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
 //                    intent.putExtra("status", 1);
 //                    startActivity(intent);
-                            Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
 
                             finish();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             Crashlytics.logException(e);
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                         }
@@ -196,9 +198,9 @@ public class initialProfileDetails extends AppCompatActivity {
                 Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(this,getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -217,7 +219,7 @@ public class initialProfileDetails extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            if (resultCode == RESULT_OK ){
+            if (resultCode == RESULT_OK) {
                 switch (requestCode) {
                     case Constants.IMAGE_REQUEST:
 
@@ -225,8 +227,7 @@ public class initialProfileDetails extends AppCompatActivity {
                         Uri imageUri = data.getData();
                         showProgressDialog();
                         Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
-                        Glide.with(this).load(imageUri).into(imageProfile);
-
+                        ImageHelper.setImage(imageProfile, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -245,7 +246,7 @@ public class initialProfileDetails extends AppCompatActivity {
 
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -268,8 +269,12 @@ public class initialProfileDetails extends AppCompatActivity {
     }
 
 
-    public void showProgressDialog(){progressDialog = ProgressDialog.show(this, "", "Bitte, Warten Sie...", true);}
+    public void showProgressDialog() {
+        progressDialog = ProgressDialog.show(this, "", "Bitte, Warten Sie...", true);
+    }
 
-    public void dismissProgressDialog() {progressDialog.dismiss();}
+    public void dismissProgressDialog() {
+        progressDialog.dismiss();
+    }
 
 }

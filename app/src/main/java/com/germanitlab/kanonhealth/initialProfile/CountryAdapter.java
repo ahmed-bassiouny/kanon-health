@@ -21,8 +21,8 @@ import java.util.HashMap;
  */
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHolder> {
-    HashMap<String , String> countryCode ;
-    Context context ;
+    HashMap<String, String> countryCode;
+    Context context;
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,15 +38,16 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
             String code = (new ArrayList<String>(countryCode.values())).get(position);
             holder.code.setText(code);
             holder.country.setText(country);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
-    public CountryAdapter(HashMap<String , String> countryCode , Context context){
-        this.countryCode = countryCode ;
-        this.context = context ;
+
+    public CountryAdapter(HashMap<String, String> countryCode, Context context) {
+        this.countryCode = countryCode;
+        this.context = context;
     }
 
     @Override
@@ -55,17 +56,18 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView country , code ;
-        public MyViewHolder(final View view){
+        public TextView country, code;
+
+        public MyViewHolder(final View view) {
             super(view);
             country = (TextView) view.findViewById(R.id.sdd);
-            code = (TextView)view.findViewById(R.id.code);
+            code = (TextView) view.findViewById(R.id.code);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(view.getContext() , SignupActivity.class);
-                    intent.putExtra("country" , country.getText().toString());
-                    intent.putExtra("codeC" , code.getText().toString());
+                    Intent intent = new Intent(view.getContext(), SignupActivity.class);
+                    intent.putExtra("country", country.getText().toString());
+                    intent.putExtra("codeC", code.getText().toString());
                     view.getContext().startActivity(intent);
                 }
             });

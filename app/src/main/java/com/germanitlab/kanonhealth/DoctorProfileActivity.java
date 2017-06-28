@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,7 +16,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,16 +32,14 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -72,7 +68,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks, OnMapReadyCallback {
@@ -158,7 +153,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     EditText etTelephone;
     @BindView(R.id.et_location)
     EditText et_location;
-    Boolean is_me=false;
+    Boolean is_me = false;
     @BindView(R.id.edit_speciality_list)
     ImageView ivSpecialityList;
     @BindView(R.id.edit_languages_list)
@@ -207,7 +202,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.i("Doctor Profile  ", " Activity " , e);
+            Log.i("Doctor Profile  ", " Activity ", e);
             finish();
         }
 
@@ -432,12 +427,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        if(user.getSpecialities()!=null)
-        set(adapter, user.getSpecialities(), recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
-        if(user.getSupported_lang()!=null)
-        set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
-        if(user.getMembers_at()!=null)
-        set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+        if (user.getSpecialities() != null)
+            set(adapter, user.getSpecialities(), recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+        if (user.getSupported_lang() != null)
+            set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+        if (user.getMembers_at() != null)
+            set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
         if (user.getDocuments() != null) {
             doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
             recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -468,7 +463,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         util.showProgressDialog();
                         pickerDialog.dismiss();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        Glide.with(this).load(selectedImageUri).into(civEditAvatar);
+                        ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -493,7 +488,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
                         pickerDialog.dismiss();
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        Glide.with(this).load(selectedImageUri).into(civEditAvatar);
+                        ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -522,7 +517,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             }
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.i("Doctor Profile  ", " Activity " , e);
+            Log.i("Doctor Profile  ", " Activity ", e);
         }
 
     }
@@ -531,14 +526,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void bindData() {
 
         //Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
-        if(user.getAvatar()!=null && !user.getAvatar().isEmpty())
-        Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar()).into(civEditAvatar);
+        if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+            ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), this);
+        }
+
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
-        Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), ivLocation, R.drawable.profile_place_holder);
+        ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), R.drawable.profile_place_holder, getApplicationContext());
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
@@ -560,17 +557,17 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         setAdapters();
         tvRating.setText("Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
         tvLanguages.setText("");
-        if(user.getSupported_lang()!=null)
-        for (ChooseModel lang : user.getSupported_lang()) {
-            tvLanguages.append(lang.getLang_title() + " ");
-        }
+        if (user.getSupported_lang() != null)
+            for (ChooseModel lang : user.getSupported_lang()) {
+                tvLanguages.append(lang.getLang_title() + " ");
+            }
         tvSpecilities.setText("");
-        if(user.getSpecialities()!=null)
-        for (ChooseModel speciality : user.getSpecialities()) {
-            tvSpecilities.append(speciality.getSpeciality_title() + " ");
-        }
-        if(user.getOpen_time()!=null)
-        getTimaTableData(user.getOpen_time());
+        if (user.getSpecialities() != null)
+            for (ChooseModel speciality : user.getSpecialities()) {
+                tvSpecilities.append(speciality.getSpeciality_title() + " ");
+            }
+        if (user.getOpen_time() != null)
+            getTimaTableData(user.getOpen_time());
 
         if (user.isClinic == 1) {
             llPracticeProfile.setVisibility(View.VISIBLE);
@@ -585,7 +582,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
 
         // ivEdit ahmed 12 - 6 - 2017
-        if(user.getInfo() !=null) {
+        if (user.getInfo() != null) {
             etLocation.setText(user.getAddress());
             etStreetName.setText(user.getInfo().getStreetname());
             etHouseNumber.setText(user.getInfo().getHouseNumber());
@@ -593,7 +590,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             etProvince.setText(user.getInfo().getProvinz());
             etCountry.setText(user.getInfo().getCountry());
         }
-        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))){
+        if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
             is_me = true;
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
             edAddToFavourite.setText(user.getSubTitle() + " " + user.getFirst_name());
@@ -663,35 +660,35 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (is_me)
             return;
 
-                if (user.getIs_my_doctor().equals("0")) {
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            user.setIs_my_doctor("1");
-                            checkDoctor();
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                            Log.i("Doctor Profile  ", " Activity " + error);
-                        }
-                    }).addToMyDoctor(user.get_Id() + "");
-                } else {
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            user.setIs_my_doctor("0");
-                            checkDoctor();
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                            Log.i("Doctor Profile  ", " Activity " + error);
-                        }
-                    }).removeFromMyDoctor(user.get_Id() + "");
+        if (user.getIs_my_doctor().equals("0")) {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    user.setIs_my_doctor("1");
+                    checkDoctor();
                 }
+
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                    Log.i("Doctor Profile  ", " Activity " + error);
+                }
+            }).addToMyDoctor(user.get_Id() + "");
+        } else {
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    user.setIs_my_doctor("0");
+                    checkDoctor();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                    Log.i("Doctor Profile  ", " Activity " + error);
+                }
+            }).removeFromMyDoctor(user.get_Id() + "");
+        }
 
     }
 
@@ -703,7 +700,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 edAddToFavourite.setText(getString(R.string.add_to));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));
-           } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -722,7 +719,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
                 imageView.setImageResource(R.drawable.qr);
                 if (user.getQr_url() != null && user.getQr_url() != "") {
-                    Helper.setImage(DoctorProfileActivity.this, Constants.CHAT_SERVER_URL + "/" + user.getQr_url(), imageView, R.drawable.qr);
+                    ImageHelper.setImage(imageView, Constants.CHAT_SERVER_URL + "/" + user.getQr_url(), R.drawable.qr, DoctorProfileActivity.this);
                 }
                 dialog.show();
             }
@@ -843,8 +840,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        Helper.setImage(this, Constants.CHAT_SERVER_URL
-                + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
+        ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL + "/" + user.getAvatar(), R.drawable.placeholder, this);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }

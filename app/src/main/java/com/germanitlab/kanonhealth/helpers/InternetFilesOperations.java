@@ -12,14 +12,12 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.callback.UploadListener;
 import com.germanitlab.kanonhealth.db.PrefManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -32,7 +30,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -45,7 +42,7 @@ public class InternetFilesOperations {
 
     private static InternetFilesOperations internetFilesOperations;
     private Context context;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     public static InternetFilesOperations getInstance(Context context) {
         if (internetFilesOperations != null)
@@ -394,7 +391,7 @@ public class InternetFilesOperations {
                 input.close();
 
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 Crashlytics.logException(e);
                 Toast.makeText(context, context.getResources().getText(R.string.image_not_found), Toast.LENGTH_SHORT).show();
             }

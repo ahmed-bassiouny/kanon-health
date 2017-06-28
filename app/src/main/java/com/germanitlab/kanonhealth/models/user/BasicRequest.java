@@ -1,4 +1,3 @@
-
 package com.germanitlab.kanonhealth.models.user;
 
 import com.google.gson.annotations.SerializedName;

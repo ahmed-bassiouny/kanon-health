@@ -17,6 +17,7 @@
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_centerInParent="true" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,10 +26,12 @@
             tools:ignore="ContentDescription" />
 
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#d2cfcf" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,11 +51,13 @@
             android:layout_height="1dp"
             android:background="#bcb8b8" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
+
         <RatingBar
             android:id="@+id/rb_doctor_rate"
             style="?android:attr/ratingBarStyleSmall"
@@ -63,7 +68,8 @@
             android:duplicateParentState="true"
             android:isIndicator="true"
             android:numStars="@integer/numstars"
-            android:rating="5"/>
+            android:rating="5" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -72,70 +78,82 @@
             android:layout_marginStart="15dp"
             android:text="4.9 of 5 Stars - 300 Reviews" />
     </LinearLayout>
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="vertical">
-      <TableRow
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="5dp"
-          android:weightSum="6"
-          android:orientation="horizontal">
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="5 Stars"
-              android:layout_weight=".5"
-              android:textColor="@color/black"/>
-          <FrameLayout
-              android:layout_width="match_parent"
-              android:layout_weight="5"
-              android:layout_height="wrap_content">
-              <Button
-                  android:layout_width="match_parent"
-                  android:layout_height="20dp"
-                  android:clickable="false"
-                  android:id="@+id/temp"
-                  android:background="@drawable/border" />
-              <Button
-                  android:layout_width="match_parent"
-                  android:layout_height="20dp"
-                  android:clickable="false"
-                  android:id="@+id/btn_five_stars"
-                  android:background="@color/colorPrimaryDark" />
-          </FrameLayout>
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="320"
-              android:layout_marginStart="5dp"
-              android:id="@+id/txt_five_stars"
-              android:layout_weight=".5"
-              android:textColor="@color/black"/>
-      </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:weightSum="6"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5 Stars"
+                android:layout_weight=".5"
+                android:textColor="@color/black" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_weight="5"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:clickable="false"
+                    android:id="@+id/temp"
+                    android:background="@drawable/border" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:clickable="false"
+                    android:id="@+id/btn_five_stars"
+                    android:background="@color/colorPrimaryDark" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="320"
+                android:layout_marginStart="5dp"
+                android:id="@+id/txt_five_stars"
+                android:layout_weight=".5"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:weightSum="6"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="4 Stars"
                 android:layout_weight=".5"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_weight="5"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:clickable="false"
                     android:background="@drawable/border" />
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
@@ -143,6 +161,7 @@
                     android:id="@+id/btn_four_stars"
                     android:background="@color/colorPrimaryDark" />
             </FrameLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,14 +169,16 @@
                 android:id="@+id/txt_four_stars"
                 android:layout_weight=".5"
                 android:layout_marginStart="5dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:weightSum="6"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,15 +186,18 @@
                 android:layout_weight=".5"
                 android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_weight="5"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:clickable="false"
                     android:background="@drawable/border" />
+
                 <Button
                     android:layout_width="match_parent"
                     android:clickable="false"
@@ -181,6 +205,7 @@
                     android:id="@+id/btn_three_stars"
                     android:background="@color/colorPrimaryDark" />
             </FrameLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -188,29 +213,34 @@
                 android:id="@+id/txt_three_stars"
                 android:layout_weight=".5"
                 android:layout_marginStart="5dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:weightSum="6"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="2 Stars"
                 android:layout_weight=".5"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_weight="5"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:clickable="false"
                     android:background="@drawable/border" />
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
@@ -218,6 +248,7 @@
                     android:id="@+id/btn_two_stars"
                     android:background="@color/colorPrimaryDark" />
             </FrameLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -225,37 +256,42 @@
                 android:id="@+id/txt_two_stars"
                 android:layout_marginStart="5dp"
                 android:layout_weight=".5"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:weightSum="6"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="1 Stars"
                 android:layout_weight=".5"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_weight="5"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:clickable="false"
                     android:background="@drawable/border" />
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:clickable="false"
                     android:id="@+id/btn_one_star"
-                    android:background="@color/colorPrimaryDark"
-                     />
+                    android:background="@color/colorPrimaryDark" />
             </FrameLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -263,7 +299,7 @@
                 android:layout_weight=".5"
                 android:id="@+id/txt_one_star"
                 android:layout_marginStart="5dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
         </TableRow>
     </TableLayout>
 
@@ -279,7 +315,7 @@
         android:scrollbars="vertical"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

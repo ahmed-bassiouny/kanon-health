@@ -22,14 +22,13 @@ import java.util.LinkedHashMap;
 public class EditQuestionAdapter extends RecyclerView.Adapter<EditQuestionAdapter.MyViewHolder>
 
 {
-    private Context mContext ;
+    private Context mContext;
 
-    LinkedHashMap<String , String> questionAnswer ;
+    LinkedHashMap<String, String> questionAnswer;
 
-    public EditQuestionAdapter(LinkedHashMap<String , String> questionAnswer , Context mContext)
-    {
-        this.questionAnswer = questionAnswer ;
-        this.mContext = mContext  ;
+    public EditQuestionAdapter(LinkedHashMap<String, String> questionAnswer, Context mContext) {
+        this.questionAnswer = questionAnswer;
+        this.mContext = mContext;
 
     }
 
@@ -49,16 +48,13 @@ public class EditQuestionAdapter extends RecyclerView.Adapter<EditQuestionAdapte
             holder.tv_question.setText(question);
             String answer = (new ArrayList<String>(questionAnswer.values())).get(position);
             holder.tv_answer.setText(answer);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.e("EditQuestion", "onBindViewHolder: ", e);
         }
 
     }
-
-
-
 
 
     @Override
@@ -75,8 +71,6 @@ public class EditQuestionAdapter extends RecyclerView.Adapter<EditQuestionAdapte
             tv_answer = (TextView) view.findViewById(R.id.answer);
         }
     }
-
-
 
 
 }

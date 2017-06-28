@@ -56,7 +56,7 @@ public class UntersuchungFragment extends Fragment {
         //Make sure the container activity implemented the callback interface.
         try {
             mCallback = (OnChoiceSelectedListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnChoiceSelectedListener");
         }
@@ -75,7 +75,7 @@ public class UntersuchungFragment extends Fragment {
             buttonSonstiges.setEnabled(false);
     }
 
-    @OnClick({R.id.button_koperliche, R.id.button_laboruntersuchung, R.id.button_techische ,R.id.button_sonstiges})
+    @OnClick({R.id.button_koperliche, R.id.button_laboruntersuchung, R.id.button_techische, R.id.button_sonstiges})
     public void onClickListener(View view) {
         OneQuestionFragment oneQuestionFragment = new OneQuestionFragment();
         Bundle bundle = new Bundle();
@@ -112,7 +112,7 @@ public class UntersuchungFragment extends Fragment {
         }
     }
 
-    public String getResourceString (int resource){
+    public String getResourceString(int resource) {
         return getResources().getString(resource);
     }
 

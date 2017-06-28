@@ -36,24 +36,26 @@
         android:layout_toRightOf="@+id/frame"
         android:layout_marginLeft="15dp"
         android:orientation="vertical">
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/title_gray"
-        android:textSize="@dimen/size_15sp"
-        android:textStyle="bold"
-        tools:text="fdtrdrtd" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/size_2dp"
-        android:layout_marginTop="@dimen/size_2dp"
-        android:text="Specialities"
-        android:textColor="@color/text_msg_input"
-        android:textSize="@dimen/size_15sp" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_gray"
+            android:textSize="@dimen/size_15sp"
+            android:textStyle="bold"
+            tools:text="fdtrdrtd" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_2dp"
+            android:layout_marginTop="@dimen/size_2dp"
+            android:text="Specialities"
+            android:textColor="@color/text_msg_input"
+            android:textSize="@dimen/size_15sp" />
     </LinearLayout>
+
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -32,7 +32,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -42,6 +41,7 @@ import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.helpers.Util;
@@ -49,7 +49,6 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
 import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -58,7 +57,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,7 +83,6 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
     PrefManager prefManager;
     public boolean selected = false;
     List<Integer> list = new ArrayList<>();
-
 
 
     public DocumentsAdapter(List<Message> messages, Activity context, DocumentsChatFragment chatFragment) {
@@ -234,7 +231,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
         try {
             final Message textMessage = mMessages.get(position);
             textMsgViewHolder.myMessage.setText(textMessage.getMsg());
-            setImagePrivacy(textMessage.getPrivacy() , textMsgViewHolder.privacyImage);
+            setImagePrivacy(textMessage.getPrivacy(), textMsgViewHolder.privacyImage);
 
 
             try {
@@ -281,14 +278,14 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
-                                    final int privacy ;
-                                    if(mMessages.get(position).getPrivacy() == 0)
-                                        privacy = 1 ;
-                                    else if(mMessages.get(position).getPrivacy() == 1)
-                                        privacy = 2 ;
+                                    final int privacy;
+                                    if (mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1;
+                                    else if (mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2;
                                     else
-                                        privacy = 0 ;
-                                    new HttpCall(context ,new ApiResponse() {
+                                        privacy = 0;
+                                    new HttpCall(context, new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -300,7 +297,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                         }
-                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id(), privacy);
                                 }
                             });
 
@@ -316,12 +313,10 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                     alert11.show();
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
-
 
 
     }
@@ -336,7 +331,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             final Message message = mMessages.get(position);
             imageViewHolder.tvDateMy.setText(message.getSent_at());
 
-            setImagePrivacy(message.getPrivacy() , imageViewHolder.privacy_image);
+            setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image);
 
             if (!new File(message.getMsg()).exists()) {
                 String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
@@ -349,8 +344,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             }
 
             Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-            Glide.with(context).load(imageUri).into(imageViewHolder.myMessage);
-
+            ImageHelper.setImage(imageViewHolder.myMessage, imageUri, context);
 
             if (!message.isLoaded() && !message.isLoading()) {
 
@@ -417,7 +411,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             selectItem(imageViewHolder.messageContainer, message);
                         else
                             unselectItem(imageViewHolder.messageContainer, message);
-                    }  else {
+                    } else {
 
                         File file = new File(mMessages.get(position).getMsg());
 
@@ -453,14 +447,14 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
-                                    final int privacy ;
-                                    if(mMessages.get(position).getPrivacy() == 0)
-                                        privacy = 1 ;
-                                    else if(mMessages.get(position).getPrivacy() == 1)
-                                        privacy = 2 ;
+                                    final int privacy;
+                                    if (mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1;
+                                    else if (mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2;
                                     else
-                                        privacy = 0 ;
-                                    new HttpCall(context ,new ApiResponse() {
+                                        privacy = 0;
+                                    new HttpCall(context, new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -471,7 +465,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                         public void onFailed(String error) {
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         }
-                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id(), privacy);
                                 }
                             });
 
@@ -487,7 +481,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                     alert11.show();
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -513,7 +507,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                     setVideoOnClick(videoViewHolder.myFrameVideo, file.getPath(), mediaMessage);
                 }
             }
-            setImagePrivacy(mediaMessage.getPrivacy() , videoViewHolder.privacyImage);
+            setImagePrivacy(mediaMessage.getPrivacy(), videoViewHolder.privacyImage);
 
             setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
             videoViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
@@ -528,14 +522,14 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
-                                    final int privacy ;
-                                    if(mMessages.get(position).getPrivacy() == 0)
-                                        privacy = 1 ;
-                                    else if(mMessages.get(position).getPrivacy() == 1)
-                                        privacy = 2 ;
+                                    final int privacy;
+                                    if (mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1;
+                                    else if (mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2;
                                     else
-                                        privacy = 0 ;
-                                    new HttpCall(context ,new ApiResponse() {
+                                        privacy = 0;
+                                    new HttpCall(context, new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -547,7 +541,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                         }
-                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id(), privacy);
                                 }
                             });
 
@@ -581,7 +575,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             public void run() {
 
                                 try {
-                                    if(result!=null) {
+                                    if (result != null) {
                                         JSONObject jsonObject = new JSONObject(result);
                                         if (jsonObject.has("error")) {
                                             //show dialog
@@ -617,7 +611,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             } else {
                 videoViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -636,26 +630,26 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                 return true ;
             }
         });*/
-try {
-    view.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        try {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            File file = new File(path);
-            if (file.exists())
-                Util.getInstance(context).showVideo(Uri.fromFile(file));
-            else {
-                String url = Constants.CHAT_SERVER_URL + "/" + path;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                intent.setDataAndType(Uri.parse(url), "video");
-                context.startActivity(intent);
-            }
+                    File file = new File(path);
+                    if (file.exists())
+                        Util.getInstance(context).showVideo(Uri.fromFile(file));
+                    else {
+                        String url = Constants.CHAT_SERVER_URL + "/" + path;
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        intent.setDataAndType(Uri.parse(url), "video");
+                        context.startActivity(intent);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-    });
-}catch (Exception e){
-    Crashlytics.logException(e);
-    Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-}
 
     }
 
@@ -686,7 +680,7 @@ try {
                 }
             };
 
-            setImagePrivacy(mediaMessage.getPrivacy() , audioViewHolder.privacy_image);
+            setImagePrivacy(mediaMessage.getPrivacy(), audioViewHolder.privacy_image);
 
             // Listeners
             audioViewHolder.privacy_image.setOnClickListener(new View.OnClickListener() {
@@ -701,14 +695,14 @@ try {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
-                                    final int privacy ;
-                                    if(mMessages.get(position).getPrivacy() == 0)
-                                        privacy = 1 ;
-                                    else if(mMessages.get(position).getPrivacy() == 1)
-                                        privacy = 2 ;
+                                    final int privacy;
+                                    if (mMessages.get(position).getPrivacy() == 0)
+                                        privacy = 1;
+                                    else if (mMessages.get(position).getPrivacy() == 1)
+                                        privacy = 2;
                                     else
-                                        privacy = 0 ;
-                                    new HttpCall(context ,new ApiResponse() {
+                                        privacy = 0;
+                                    new HttpCall(context, new ApiResponse() {
                                         @Override
                                         public void onSuccess(Object response) {
                                             mMessages.get(position).setPrivacy(privacy);
@@ -719,7 +713,7 @@ try {
                                         public void onFailed(String error) {
                                             Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         }
-                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
+                                    }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id(), privacy);
                                 }
                             });
 
@@ -927,7 +921,7 @@ try {
                 }
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -938,7 +932,7 @@ try {
     private void setLocationMessage(final LocationViewHolder locationViewHolder, final int position) {
         try {
             final Message locationMessage = mMessages.get(position);
-            setImagePrivacy(locationMessage.getPrivacy() , locationViewHolder.privacyImage);
+            setImagePrivacy(locationMessage.getPrivacy(), locationViewHolder.privacyImage);
 
             if (locationMessage.isMine()) {
 
@@ -988,14 +982,14 @@ try {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
-                                        final int privacy ;
-                                        if(mMessages.get(position).getPrivacy() == 0)
-                                            privacy = 1 ;
-                                        else if(mMessages.get(position).getPrivacy() == 1)
-                                            privacy = 2 ;
+                                        final int privacy;
+                                        if (mMessages.get(position).getPrivacy() == 0)
+                                            privacy = 1;
+                                        else if (mMessages.get(position).getPrivacy() == 1)
+                                            privacy = 2;
                                         else
-                                            privacy = 0 ;
-                                        new HttpCall(context,new ApiResponse() {
+                                            privacy = 0;
+                                        new HttpCall(context, new ApiResponse() {
                                             @Override
                                             public void onSuccess(Object response) {
                                                 mMessages.get(position).setPrivacy(privacy);
@@ -1007,7 +1001,7 @@ try {
                                                 Toast.makeText(context, context.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
                                             }
-                                        }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD) , mMessages.get(position).get_Id() , privacy);
+                                        }).updatePrivacy(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), mMessages.get(position).get_Id(), privacy);
                                     }
                                 });
 
@@ -1038,7 +1032,7 @@ try {
                                 double lat = jsonObject.getDouble("lat");
                                 double lng = jsonObject.getDouble("long");
 
-                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng , context));
+                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng, context));
                                 locationMessage.setLoading(false);
                                 ((Activity) context).runOnUiThread(new Runnable() {
                                     @Override
@@ -1062,7 +1056,7 @@ try {
                 }
 
             } else {
-                                //**bug number 136 in version 1.2.7 *//
+                //**bug number 136 in version 1.2.7 *//
                 //***** NULL Pointer Exception hisMessageContainer  because not found in layout *//
                 /*locationViewHolder.hisMessageContainer.setVisibility(View.VISIBLE);
                 locationViewHolder.myMessageContainer.setVisibility(View.INVISIBLE);
@@ -1114,7 +1108,7 @@ try {
                                 jsonObject = new JSONObject(msg);
                                 double lat = jsonObject.getDouble("lat");
                                 double lng = jsonObject.getDouble("long");
-                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng , context));
+                                locationMessage.setLocationBitmap(getGoogleMapThumbnail(lat, lng, context));
                                 locationMessage.setLoading(false);
                                 ((Activity) context).runOnUiThread(new Runnable() {
                                     @Override
@@ -1182,7 +1176,7 @@ try {
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1265,7 +1259,7 @@ try {
 
                 }
             });
-        } catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1359,7 +1353,7 @@ try {
 
         try {
             builderSingle.show();
-        } catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1390,7 +1384,7 @@ try {
 
             return true;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1399,7 +1393,7 @@ try {
 
 
     //===========================================================
-    public static Bitmap getGoogleMapThumbnail(double lati, double longi , Context context) {
+    public static Bitmap getGoogleMapThumbnail(double lati, double longi, Context context) {
         String URL = "http://maps.google.com/maps/api/staticmap?center=" + lati + "," + longi + "&zoom=15&size=200x200&sensor=false";
         Bitmap bmp = null;
         HttpClient httpclient = new DefaultHttpClient();
@@ -1410,7 +1404,7 @@ try {
             in = httpclient.execute(request).getEntity().getContent();
             bmp = BitmapFactory.decodeStream(in);
             in.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1422,7 +1416,7 @@ try {
     public static class TextMsgViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
         public TextView myMessage, hisMessage, tvDate, tvDateMy;
-        public ImageView imgMessageStatus , privacyImage;
+        public ImageView imgMessageStatus, privacyImage;
         public ImageButton firstPrivacyIcon, secondPrivacyIcon, thirdPrivacyIcon;
         RelativeLayout background;
 
@@ -1434,7 +1428,7 @@ try {
             secondPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_second_privacy);
             thirdPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_third_privacy);*/
             background = (RelativeLayout) itemView.findViewById(R.id.background);
-            privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
+            privacyImage = (ImageView) itemView.findViewById(R.id.privacy_image);
             myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
             hisMessageContainer = (LinearLayout) itemView.findViewById(R.id.his_message);
             myMessage = (TextView) itemView.findViewById(R.id.my_text_message);
@@ -1446,7 +1440,7 @@ try {
     }
 
     public static class ImageViewHolder extends BaseViewHolder {
-        public LinearLayout myMessageContainer, hisMessageContainer ;
+        public LinearLayout myMessageContainer, hisMessageContainer;
         public ImageView myMessage, hisMessage, privacy_image;
         public ProgressBar progressBar, progressViewDownload;
         public TextView tvDate, tvDateMy;
@@ -1478,7 +1472,7 @@ try {
 
     public static class LocationViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
-        public ImageView myMessage, hisMessage , privacyImage;
+        public ImageView myMessage, hisMessage, privacyImage;
         public ProgressBar myProgressBar, hisProgressBar;
         public RelativeLayout messageContainer;
         public TextView tvDate, tvDateMy;
@@ -1492,7 +1486,7 @@ try {
 /*            firstPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_first_privacy);
             secondPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_second_privacy);
             thirdPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_third_privacy);*/
-            privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
+            privacyImage = (ImageView) itemView.findViewById(R.id.privacy_image);
             myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
             hisMessageContainer = (LinearLayout) itemView.findViewById(R.id.his_message);
             myMessage = (ImageView) itemView.findViewById(R.id.my_image_message);
@@ -1573,7 +1567,7 @@ try {
 /*            firstPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_first_privacy);
             secondPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_second_privacy);
             thirdPrivacyIcon = (ImageButton) itemView.findViewById(R.id.icon_third_privacy);*/
-privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
+            privacyImage = (ImageView) itemView.findViewById(R.id.privacy_image);
             myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
             myMessage = (ImageView) itemView.findViewById(R.id.my_video_message);
             progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
@@ -1585,10 +1579,8 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
         }
     }
 
-    public void setImagePrivacy(int privacy , ImageView image)
-    {
-        if(privacy == 0)
-        {
+    public void setImagePrivacy(int privacy, ImageView image) {
+        if (privacy == 0) {
 //            image.setBackgroundResource(R.drawable.red);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -1598,8 +1590,7 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
             }
 
         }
-        if(privacy == 1)
-        {
+        if (privacy == 1) {
 //            image.setBackgroundResource(R.drawable.blue);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(context.getResources().getDrawable(R.drawable.blue, context.getTheme()));
@@ -1608,8 +1599,7 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
             }
 
         }
-        if(privacy == 2)
-        {
+        if (privacy == 2) {
 //            image.setBackgroundResource(R.drawable.green);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(context.getResources().getDrawable(R.drawable.green, context.getTheme()));
@@ -1620,7 +1610,7 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
         }
     }
 
-    public void updatePrivacy(final int position){
+    public void updatePrivacy(final int position) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage(R.string.change_privacy_msg);
         builder1.setCancelable(true);
@@ -1644,6 +1634,7 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
     public void changeToolbar(Boolean select) {
         try {
             selected = true;
@@ -1656,7 +1647,7 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
                 toolbar.setVisibility(View.VISIBLE);
                 toolbar1.setVisibility(View.GONE);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1676,8 +1667,6 @@ privacyImage = (ImageView)itemView.findViewById(R.id.privacy_image);
             selected = false;
         }
     }
-
-
 
 
     public static class BaseViewHolder extends RecyclerView.ViewHolder {

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,41 +32,43 @@ import java.util.ArrayList;
  */
 
 public class MultiChoiseListFragment extends DialogFragment implements ApiResponse {
-    ProgressBar progressBar ;
-    RecyclerView recyclerView ;
-    TextView error_message ;
-    MultiSelectAdapter mAdapter ;
-    Button save ;
+    ProgressBar progressBar;
+    RecyclerView recyclerView;
+    TextView error_message;
+    MultiSelectAdapter mAdapter;
+    Button save;
 
     // EDit ahmed 10 - 6 -2017
     private ArrayList<ChooseModel> chosedspecialist;
     private ArrayList<ChooseModel> allspecialist;
     int type;
+
     public MultiChoiseListFragment() {
         super();
         setStyle(STYLE_NO_TITLE, 0);
     }
+
     Message message;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.mulitchoise_list_layout, container, false);
+        View view = inflater.inflate(R.layout.mulitchoise_list_layout, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_view);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         save = (Button) view.findViewById(R.id.save);
-        error_message=(TextView)view.findViewById(R.id.error_message);
+        error_message = (TextView) view.findViewById(R.id.error_message);
         try {
             Bundle bundle = this.getArguments();
             if (bundle != null) {
-                type=bundle.getInt("Constants");
+                type = bundle.getInt("Constants");
                 chosedspecialist = (ArrayList<ChooseModel>) bundle.getSerializable(Constants.CHOSED_LIST);
             }
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    message.Response(allspecialist,type);
+                    message.Response(allspecialist, type);
                     getDialog().dismiss();
                 }
             });
@@ -75,7 +76,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new MyClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    CheckBox rbtn=(CheckBox)view.findViewById(R.id.rbtn);
+                    CheckBox rbtn = (CheckBox) view.findViewById(R.id.rbtn);
                     allspecialist.get(position).setIsMyChoise(!rbtn.isChecked());
 //                    Toast.makeText(getActivity(), !rbtn.isChecked()+"", Toast.LENGTH_SHORT).show();
                 }
@@ -90,7 +91,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
 
                 }
             }));
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             Log.i("MultiChoiselist", "Fragment" + e);
@@ -102,29 +103,29 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        message=(Message)context;
+        message = (Message) context;
     }
 
-    public void getData(){
-        switch (type){
+    public void getData() {
+        switch (type) {
             case Constants.SPECIALITIES:
-                new HttpCall(getActivity(),this).getAllSpecilaities();
+                new HttpCall(getActivity(), this).getAllSpecilaities();
                 break;
             case Constants.LANGUAUGE:
-                new HttpCall(getActivity(),this).getAllLanguage();
+                new HttpCall(getActivity(), this).getAllLanguage();
                 break;
             case Constants.MEMBERAT:
-                new HttpCall(getActivity(),this).getAllMemberAt();
+                new HttpCall(getActivity(), this).getAllMemberAt();
                 break;
             case Constants.DoctorAll:
-                new HttpCall(getActivity(),this).getDoctorAll();
+                new HttpCall(getActivity(), this).getDoctorAll();
                 break;
         }
     }
 
     @Override
     public void onSuccess(Object response) {
-        switch (type){
+        switch (type) {
             case Constants.SPECIALITIES:
                 initDataSpecialist(response);
                 break;
@@ -136,7 +137,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 initDataMemberAt(response);
                 break;
         }
-        mAdapter = new MultiSelectAdapter(getContext(),allspecialist,type);
+        mAdapter = new MultiSelectAdapter(getContext(), allspecialist, type);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
@@ -151,41 +152,44 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
         error_message.setVisibility(View.VISIBLE);
 
     }
-    private void initDataSpecialist(Object response){
-        allspecialist=(ArrayList<ChooseModel>)  response ;
+
+    private void initDataSpecialist(Object response) {
+        allspecialist = (ArrayList<ChooseModel>) response;
         // iteration on data to compare and fill data
-        for(ChooseModel choseditem :chosedspecialist){
-            for(ChooseModel item :allspecialist){
-                if(item.getSpeciality_id()==choseditem.getSpeciality_id()){
+        for (ChooseModel choseditem : chosedspecialist) {
+            for (ChooseModel item : allspecialist) {
+                if (item.getSpeciality_id() == choseditem.getSpeciality_id()) {
                     int index = allspecialist.indexOf(item);
                     item.setIsMyChoise(true);
-                    allspecialist.set(index,item);
+                    allspecialist.set(index, item);
                 }
             }
         }
     }
-    private void initDataLanguauge(Object response){
-        allspecialist=(ArrayList<ChooseModel>)  response ;
+
+    private void initDataLanguauge(Object response) {
+        allspecialist = (ArrayList<ChooseModel>) response;
         // iteration on data to compare and fill data
-        for(ChooseModel choseditem :chosedspecialist){
-            for(ChooseModel item :allspecialist){
-                if(item.getLang_id()==choseditem.getLang_id()){
+        for (ChooseModel choseditem : chosedspecialist) {
+            for (ChooseModel item : allspecialist) {
+                if (item.getLang_id() == choseditem.getLang_id()) {
                     int index = allspecialist.indexOf(item);
                     item.setIsMyChoise(true);
-                    allspecialist.set(index,item);
+                    allspecialist.set(index, item);
                 }
             }
         }
     }
-    private void initDataMemberAt(Object response){
-        allspecialist=(ArrayList<ChooseModel>)  response ;
+
+    private void initDataMemberAt(Object response) {
+        allspecialist = (ArrayList<ChooseModel>) response;
         // iteration on data to compare and fill data
-        for(ChooseModel choseditem :chosedspecialist){
-            for(ChooseModel item :allspecialist){
-                if(item.getIdMember()==choseditem.getIdMember()){
+        for (ChooseModel choseditem : chosedspecialist) {
+            for (ChooseModel item : allspecialist) {
+                if (item.getIdMember() == choseditem.getIdMember()) {
                     int index = allspecialist.indexOf(item);
                     item.setIsMyChoise(true);
-                    allspecialist.set(index,item);
+                    allspecialist.set(index, item);
                 }
             }
         }

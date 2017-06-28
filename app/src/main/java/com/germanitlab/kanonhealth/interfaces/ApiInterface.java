@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.interfaces;
 
 
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Forward;
 import com.germanitlab.kanonhealth.models.Login;
 import com.germanitlab.kanonhealth.models.Payment;
@@ -8,11 +9,9 @@ import com.germanitlab.kanonhealth.models.Questions.InqueryRequest;
 import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Speciality;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
-import com.germanitlab.kanonhealth.models.SupportedLanguage;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
@@ -128,16 +127,17 @@ public interface ApiInterface {
 
     // Edit by Ahmed 29-5-2017
     @POST("/doctors/add_to_my_doctors")
-    Call <JsonObject> addToMyDoctor(@Body DoctorRequest request);
+    Call<JsonObject> addToMyDoctor(@Body DoctorRequest request);
 
     @POST("/doctors/remove_from_my_doctors")
-    Call <JsonObject> removeFromMyDoctor(@Body DoctorRequest request);
+    Call<JsonObject> removeFromMyDoctor(@Body DoctorRequest request);
 
     //Edit by ahmed 6-6-2017
     @POST("/rate/update")
-    Call<JsonObject> rateDoctor (@Body Comment comment);
+    Call<JsonObject> rateDoctor(@Body Comment comment);
+
     @POST("request/close_session")
-    Call <JsonObject> closeSession(@Body DoctorRequest request);
+    Call<JsonObject> closeSession(@Body DoctorRequest request);
 
     //Edit by ahmed 8-6-2017
     @POST("/specialties/all")

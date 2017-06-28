@@ -13,11 +13,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.ChooseModel;
-import com.germanitlab.kanonhealth.models.SpecilaitiesModels;
-import com.germanitlab.kanonhealth.models.SupportedLanguage;
-import com.germanitlab.kanonhealth.models.user.User;
 
 import java.util.List;
 
@@ -27,13 +24,13 @@ import java.util.List;
 
 public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapter.MyViewHolder> {
 
-    Context context ;
+    Context context;
     List<ChooseModel> list;
     int type;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title ;
+        public TextView title;
         public ImageView image;
 
         public MyViewHolder(View view) {
@@ -43,10 +40,10 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         }
     }
 
-    public SpecilaitiesAdapter(List<ChooseModel> list , Context context,int type) {
-        this.context = context ;
-        this.list=list;
-        this.type=type;
+    public SpecilaitiesAdapter(List<ChooseModel> list, Context context, int type) {
+        this.context = context;
+        this.list = list;
+        this.type = type;
     }
 
     @Override
@@ -59,28 +56,28 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ChooseModel chooseModel=list.get(position);
+        ChooseModel chooseModel = list.get(position);
         try {
-            switch (type){
+            switch (type) {
                 case Constants.SPECIALITIES:
-                    Helper.setImage(context , Constants.CHAT_SERVER_URL_IMAGE + "/"+list.get(position).getSpeciality_icon() , holder.image , R.drawable.profile_place_holder);
+                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getSpeciality_icon(), R.drawable.profile_place_holder, context);
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.LANGUAUGE:
-                    Helper.setImage(context , Constants.CHAT_SERVER_URL_IMAGE + "/"+list.get(position).getLang_icon() , holder.image , R.drawable.profile_place_holder);
+                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getLang_icon(), R.drawable.profile_place_holder, context);
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.MEMBERAT:
                 case Constants.DoctorAll:
-                    holder.title.setText(chooseModel.getLast_nameMember()+" " +list.get(position).getFirst_nameMember());
-                    Helper.setImage(context , Constants.CHAT_SERVER_URL_IMAGE + "/"+list.get(position).getAvatarMember() , holder.image , R.drawable.profile_place_holder);
+                    holder.title.setText(chooseModel.getLast_nameMember() + " " + list.get(position).getFirst_nameMember());
+                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getAvatarMember(), R.drawable.profile_place_holder, context);
                     holder.title.setVisibility(View.VISIBLE);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("SpecilaitiesAdapter", "onBindViewHolder: ",e );
+            Log.e("SpecilaitiesAdapter", "onBindViewHolder: ", e);
         }
     }
 

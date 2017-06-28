@@ -7,14 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 
 import java.util.ArrayList;
@@ -33,22 +32,22 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     Context context;
 
 
-    public MultiSelectAdapter(Context context, ArrayList<ChooseModel> allspecialist,int type) {
+    public MultiSelectAdapter(Context context, ArrayList<ChooseModel> allspecialist, int type) {
         this.context = context;
         this.allspecialist = allspecialist;
-        this.type=type;
+        this.type = type;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
-        switch (type){
+        switch (type) {
             case Constants.SPECIALITIES:
             case Constants.LANGUAUGE:
-                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_select_row, parent, false);
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_select_row, parent, false);
                 break;
             case Constants.DoctorAll:
-                  itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invite_doctor, parent, false);
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invite_doctor, parent, false);
                 break;
         }
 
@@ -60,11 +59,11 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
         try {
             ChooseModel model = allspecialist.get(position);
             setDataChecked(holder.rbtn, model.getIsMyChoise());
-            switch (type){
+            switch (type) {
 
                 case Constants.SPECIALITIES:
                     holder.tv_title.setText(model.getSpeciality_title());
-                    Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), holder.img_icon, R.drawable.profile_place_holder);
+                    ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), R.drawable.profile_place_holder, context);
                     break;
                 case Constants.LANGUAUGE:
                     holder.tv_title.setText(model.getLang_title());
@@ -73,15 +72,15 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
                 case Constants.MEMBERAT:
                     break;
                 case Constants.DoctorAll:
-                    holder.tv_title.setText(model.getLast_nameMember()+" "+model.getFirst_nameMember());
-                    Helper.setImage(context, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), holder.img_icon, R.drawable.profile_place_holder);
-                    if(model.getIs_available().equals("1"))
+                    holder.tv_title.setText(model.getLast_nameMember() + " " + model.getFirst_nameMember());
+                    ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), R.drawable.profile_place_holder, context);
+                    if (model.getIs_available().equals("1"))
                         holder.status.setImageResource(R.color.green);
                     else
                         holder.status.setImageResource(R.color.gray);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             Log.i("MultiSelect", "Adapter" + e);
@@ -105,7 +104,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_title;
         public RelativeLayout relativeLayout;
-        public CircleImageView img_icon,status;
+        public CircleImageView img_icon, status;
         public CheckBox rbtn;
 
         public MyViewHolder(View view) {
@@ -114,7 +113,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
             img_icon = (CircleImageView) view.findViewById(R.id.img_icon);
             status = (CircleImageView) view.findViewById(R.id.status);
             relativeLayout = (RelativeLayout) view.findViewById(R.id.multi_choise_layout);
-            rbtn= (CheckBox) view.findViewById(R.id.rbtn);
+            rbtn = (CheckBox) view.findViewById(R.id.rbtn);
         }
     }
 }

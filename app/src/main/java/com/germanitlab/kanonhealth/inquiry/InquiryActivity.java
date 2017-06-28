@@ -29,16 +29,16 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
 
     @BindView(R.id.inquiry_container)
     FrameLayout inquiryContainer;
-    String jsonData ;
+    String jsonData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.inquiry);
-        Intent intent = getIntent() ;
+        Intent intent = getIntent();
         jsonData = intent.getStringExtra("doctor_data");
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             inquiryResult = new ArrayList<>();
             finishedFirstLevelOptions = new ArrayList<>();
             finishedSecondLevelOptions = new ArrayList<>();
@@ -58,13 +58,13 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
     @Override
     public void OnChoiceSelected(String levelName, @Nullable Fragment fragment) {
         if (fragment != null) {
-            replaceFragments( fragment);
+            replaceFragments(fragment);
         } else {
             replaceFragments(getInquiryMainFragment(levelName));
         }
     }
 
-    private void replaceFragments( Fragment fragment) {
+    private void replaceFragments(Fragment fragment) {
         this.getSupportFragmentManager().beginTransaction().
                 replace(R.id.inquiry_container, fragment)
                 .addToBackStack(null).commit();
@@ -74,18 +74,18 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
     protected void onSaveInstanceState(Bundle outState) {
         outState.putStringArrayList("finished_first_level", finishedFirstLevelOptions);
         outState.putStringArrayList("finished_second_level", finishedSecondLevelOptions);
-        outState.putSerializable("inquiry_result",  inquiryResult);
+        outState.putSerializable("inquiry_result", inquiryResult);
 
         super.onSaveInstanceState(outState);
     }
 
-    public Fragment getInquiryMainFragment (String levelName) {
+    public Fragment getInquiryMainFragment(String levelName) {
         InquiryMainFragment inquiryMainFragment = new InquiryMainFragment(jsonData);
         Bundle bundle = new Bundle();
 
         bundle.putString(getResourceString(R.string.first_level), levelName);
         inquiryMainFragment.setArguments(bundle);
-        return  inquiryMainFragment;
+        return inquiryMainFragment;
     }
 
     public String getResourceString(int resource) {

@@ -9,194 +9,199 @@
     android:background="@color/gray"
     tools:context="com.germanitlab.kanonhealth.PasscodeActivty">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:id="@+id/pass_text"
-            android:padding="20dp"
-            android:textSize="20dp"
-            android:textColor="@android:color/background_dark"
-            android:text="Enter your passcode"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/pass_text"
+        android:padding="20dp"
+        android:textSize="20dp"
+        android:textColor="@android:color/background_dark"
+        android:text="Enter your passcode" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/pass"
-            android:gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textColor="@android:color/background_dark"
-            android:background="@drawable/custom_edittext_without_border_style"
-            android:textAlignment="center"
-            android:textSize="35dp"
-            android:text=""/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pass"
+        android:gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@android:color/background_dark"
+        android:background="@drawable/custom_edittext_without_border_style"
+        android:textAlignment="center"
+        android:textSize="35dp"
+        android:text="" />
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="30dp"
         android:paddingLeft="30dp"
         android:layout_gravity="center">
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="35dp"
-        android:gravity="center">
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/one"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:src="@drawable/one"
-            android:background="?selectableItemBackgroundBorderless"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            android:layout_weight="1"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/two"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?selectableItemBackgroundBorderless"
-            android:src="@drawable/two"
-            android:layout_weight="1"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/three"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?selectableItemBackgroundBorderless"
-            android:layout_weight="1"
-            android:src="@drawable/three"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
 
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_height="match_parent"
-        android:gravity="center">
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/four"
-            android:layout_width="match_parent"
-            android:background="?selectableItemBackgroundBorderless"
-            android:layout_height="60dp"
-            android:src="@drawable/four"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            android:layout_weight="1"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/five"
-            android:layout_width="match_parent"
+        <TableRow
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/five"
-            android:background="?selectableItemBackgroundBorderless"
-            android:layout_weight="1"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/six"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/six"
-            android:background="?selectableItemBackgroundBorderless"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
+            android:layout_marginTop="35dp"
+            android:gravity="center">
 
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:gravity="center">
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/seven"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:src="@drawable/seven"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            android:layout_weight="1"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/eight"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/eight"
-            android:layout_weight="1"
-            android:background="?selectableItemBackgroundBorderless"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nine"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?selectableItemBackgroundBorderless"
-            android:src="@drawable/nine"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/one"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/one"
+                android:background="?selectableItemBackgroundBorderless"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                android:layout_weight="1"
+                app:civ_fill_color="#0099cc" />
 
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_height="match_parent"
-        android:gravity="center">
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/delete"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:src="@drawable/remove"
-            android:background="?selectableItemBackgroundBorderless"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            android:layout_weight="1"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/zero"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/zero"
-            android:layout_weight="1"
-            android:background="?selectableItemBackgroundBorderless"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/submit"
-            android:layout_width="match_parent"
-            android:background="?selectableItemBackgroundBorderless"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/sbmit"
-            app:civ_border_width="13dp"
-            app:civ_border_color="#0099cc"
-            app:civ_fill_color="#0099cc"/>
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/two"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/two"
+                android:layout_weight="1"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
 
-    </TableRow>
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/three"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_weight="1"
+                android:src="@drawable/three"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/four"
+                android:layout_width="match_parent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_height="60dp"
+                android:src="@drawable/four"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                android:layout_weight="1"
+                app:civ_fill_color="#0099cc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/five"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/five"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_weight="1"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/six"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/six"
+                android:background="?selectableItemBackgroundBorderless"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/seven"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/seven"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                android:layout_weight="1"
+                app:civ_fill_color="#0099cc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/eight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/eight"
+                android:layout_weight="1"
+                android:background="?selectableItemBackgroundBorderless"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/nine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/nine"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/delete"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/remove"
+                android:background="?selectableItemBackgroundBorderless"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                android:layout_weight="1"
+                app:civ_fill_color="#0099cc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/zero"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/zero"
+                android:layout_weight="1"
+                android:background="?selectableItemBackgroundBorderless"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/sbmit"
+                app:civ_border_width="13dp"
+                app:civ_border_color="#0099cc"
+                app:civ_fill_color="#0099cc" />
+
+        </TableRow>
     </TableLayout>
 
 

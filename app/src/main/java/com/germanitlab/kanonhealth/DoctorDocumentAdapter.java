@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
@@ -94,7 +94,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Message message = messageList.get(position);
-        if(message.getType()==null)
+        if (message.getType() == null)
             message.setType("text");
         try {
             if (message.getType().equals(Constants.TEXT)) {
@@ -107,7 +107,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
             } else if (message.getType().equals(Constants.IMAGE)) {
                 createImage(holder, position, message);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.e("Doctor Document adapter", "Doctor Document adapter", e);
@@ -117,7 +117,7 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
     private void createImage(MyViewHolder holder, int position, Message message) {
         holder.imageLayout.setVisibility(View.VISIBLE);
-        Helper.setImage(context ,Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg() , holder.imageView , R.drawable.profile_place_holder );
+        ImageHelper.setImage(holder.imageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), R.drawable.profile_place_holder, context);
     }
 
     private void createAudio(final MyViewHolder holder, int position, Message message) {

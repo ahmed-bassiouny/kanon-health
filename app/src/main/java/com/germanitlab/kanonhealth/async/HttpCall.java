@@ -6,10 +6,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiInterface;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Forward;
 import com.germanitlab.kanonhealth.models.Login;
 import com.germanitlab.kanonhealth.models.Payment;
@@ -18,7 +18,6 @@ import com.germanitlab.kanonhealth.models.Questions.InqueryRequest;
 import com.germanitlab.kanonhealth.models.Questions.SubmitQuestionRequest;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.germanitlab.kanonhealth.models.SettingResponse;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Speciality;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
@@ -56,7 +55,7 @@ public class HttpCall {
 
     private Context context;
     private ApiResponse apiResponse;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     public HttpCall(Context actcontextvity, ApiResponse apiResponse) {
 
@@ -400,7 +399,7 @@ public class HttpCall {
 
     public void getrating(String doctorID) {
         try {
-            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)),prefManager.getData(PrefManager.USER_ID), "0", doctorID);
+            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_ID), "0", doctorID);
             ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<List<Comment>> call = apiInterface.getrating(comment);
             call.enqueue(new Callback<List<Comment>>() {
@@ -812,7 +811,7 @@ public class HttpCall {
     public void removeFromMyDoctor(String doc_id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
             Call<JsonObject> connection = service.removeFromMyDoctor(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -835,7 +834,7 @@ public class HttpCall {
     public void rateDoctor(String doc_id, String txtcomment, String rate) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)),prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate);
+            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate);
             Call<JsonObject> connection = service.rateDoctor(comment);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -858,7 +857,7 @@ public class HttpCall {
     public void closeSession(String doc_id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
             Call<JsonObject> connection = service.closeSession(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -991,7 +990,7 @@ public class HttpCall {
     public void closeSessionAndOpenNewSession(final String userID, final String password, final String id, final String type) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD), "", id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "", id);
             final Call<JsonObject> connection = service.closeSession(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -1026,6 +1025,7 @@ public class HttpCall {
         }
 
     }
+
     public void editClinic(User user) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);

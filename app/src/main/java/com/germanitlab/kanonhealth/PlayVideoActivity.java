@@ -16,16 +16,16 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 
 public class PlayVideoActivity extends Activity {
     ProgressDialog pDialog;
-    VideoView videoView ;
-    String path ;
-    String doctor_data ;
+    VideoView videoView;
+    String path;
+    String doctor_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_video);
         try {
-            videoView =(VideoView) findViewById(R.id.video_view);
+            videoView = (VideoView) findViewById(R.id.video_view);
             path = getIntent().getStringExtra("video_path");
             doctor_data = getIntent().getStringExtra("doctor_id");
             videoView = (VideoView) findViewById(R.id.video_view);
@@ -48,7 +48,7 @@ public class PlayVideoActivity extends Activity {
                 mediacontroller.setAnchorView(videoView);
                 // Get the URL from String VideoURL
                 String VideoURL = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
-                Uri video = Uri.parse(Constants.CHAT_SERVER_URL + "/" + path );
+                Uri video = Uri.parse(Constants.CHAT_SERVER_URL + "/" + path);
                 videoView.setMediaController(mediacontroller);
                 videoView.setVideoURI(video);
 
@@ -59,9 +59,9 @@ public class PlayVideoActivity extends Activity {
             videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    Intent intent = new Intent(getApplicationContext() , DoctorProfile.class);
-                    intent.putExtra("doctor_data" , doctor_data);
-                    intent.putExtra("has_document" ,true);
+                    Intent intent = new Intent(getApplicationContext(), DoctorProfile.class);
+                    intent.putExtra("doctor_data", doctor_data);
+                    intent.putExtra("has_document", true);
                     startActivity(intent);
                 }
             });
@@ -69,9 +69,9 @@ public class PlayVideoActivity extends Activity {
             videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                    Intent intent = new Intent(getApplicationContext() , DoctorProfile.class);
-                    intent.putExtra("doctor_data" , doctor_data);
-                    intent.putExtra("has_document" ,true);
+                    Intent intent = new Intent(getApplicationContext(), DoctorProfile.class);
+                    intent.putExtra("doctor_data", doctor_data);
+                    intent.putExtra("has_document", true);
                     startActivity(intent);
                     return false;
                 }
@@ -85,10 +85,10 @@ public class PlayVideoActivity extends Activity {
                     videoView.start();
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_playing), Toast.LENGTH_SHORT).show();
-            Log.e("Passcode", "Activity ",e );
+            Log.e("Passcode", "Activity ", e);
         }
 
     }

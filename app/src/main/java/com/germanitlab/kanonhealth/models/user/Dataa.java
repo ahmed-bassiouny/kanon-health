@@ -5,8 +5,8 @@ package com.germanitlab.kanonhealth.models.user;
  */
 
 public class Dataa {
-    User1 user ;
-    String status ;
+    User1 user;
+    String status;
 
     public User1 getUser() {
         return user;

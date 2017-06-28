@@ -6,14 +6,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.google.gson.Gson;
 
 public class Specialities extends AppCompatActivity {
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +29,7 @@ public class Specialities extends AppCompatActivity {
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                    Log.e("Specialities","" ,e);
+                    Log.e("Specialities", "", e);
                 }
 
             }

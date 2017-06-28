@@ -26,7 +26,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "kanon.db";
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
-    private Context context ;
+    private Context context;
     // the DAO object we use to access the SimpleData table
     private Dao<User, Integer> doctorsDao = null;
     private Dao<Message, Integer> messagesDao = null;
@@ -35,7 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context ;
+        this.context = context;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Message.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_update_database), Toast.LENGTH_SHORT).show();

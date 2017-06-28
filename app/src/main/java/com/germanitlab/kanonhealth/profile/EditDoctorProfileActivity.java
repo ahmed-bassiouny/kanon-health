@@ -3,13 +3,11 @@ package com.germanitlab.kanonhealth.profile;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,32 +20,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
@@ -170,9 +164,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     private void bindData() {
 
 
-        /*Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE
-                + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);*/
-        Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" +userInfoResponse.getUser().getAvatar()).into(imgAvatar);
+        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar(), this);
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -228,7 +220,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             setUserObject();
             outState.putSerializable("userdata", userInfoResponse);
             super.onSaveInstanceState(outState);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -247,8 +239,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
-
+                        ImageHelper.setImage(imgAvatar, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -268,14 +259,14 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
                     case TAKE_PICTURE:
                         showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
+                        ImageHelper.setImage(imgAvatar, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -295,7 +286,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                             public void onFailed(String error) {
                                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
                 }
@@ -315,7 +306,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
             i.putExtra("from", false);
             startActivity(i);
             finish();
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -325,7 +316,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     @Override
     public void onFailed(String error) {
         Log.d("Update User1 failes", "on Failed");
-        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -390,7 +381,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
                     calender.get(Calendar.DAY_OF_MONTH));
 
             mDialog.show();
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -432,11 +423,10 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
         } else {
             askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE);
         }*/
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
@@ -561,11 +551,10 @@ public class EditDoctorProfileActivity extends AppCompatActivity implements Seri
     public void deleteMyImage() {
         try {
             user.setAvatar("");
-            Helper.setImage(this, Constants.CHAT_SERVER_URL
-                    + "/" + userInfoResponse.getUser().getAvatar(), imgAvatar, R.drawable.profile_place_holder);
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

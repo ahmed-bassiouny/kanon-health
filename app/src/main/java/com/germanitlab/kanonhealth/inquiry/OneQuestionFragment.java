@@ -155,15 +155,15 @@ public class OneQuestionFragment extends Fragment {
         }
     }
 
-    public void checkFinishedLevels (){
+    public void checkFinishedLevels() {
         if (InquiryActivity.finishedSecondLevelOptions.size() >= 4) {
             //Checks if all the buttons were finished and added already to the set
-                if (InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_11)) &&
-                        InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_12)) &&
-                        InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_13)) &&
-                        InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_14))) {
-                    InquiryActivity.finishedFirstLevelOptions.add(getResourceString(R.string.question_1));
-                }
+            if (InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_11)) &&
+                    InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_12)) &&
+                    InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_13)) &&
+                    InquiryActivity.finishedSecondLevelOptions.contains(getResources().getString(R.string.question_14))) {
+                InquiryActivity.finishedFirstLevelOptions.add(getResourceString(R.string.question_1));
+            }
 
             if (InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_21)) &&
                     InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_22)) &&

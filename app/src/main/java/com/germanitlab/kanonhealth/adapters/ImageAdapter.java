@@ -12,18 +12,17 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 
 /**
  * Created by Geram IT Lab on 02/03/2017.
  */
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {
-    private Context mContext ;
-    String[] images ;
+    private Context mContext;
+    String[] images;
 
-    public ImageAdapter(String[] images , Context mcontext)
-    {
+    public ImageAdapter(String[] images, Context mcontext) {
         this.images = images;
         this.mContext = mcontext;
     }
@@ -39,12 +38,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         try {
-            if(images[position] !=null)
-            {
-                Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
-                        + "/" + images[position] , holder.image , R.drawable.profile_place_holder );
+            if (images[position] != null) {
+                ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL + "/" + images[position], R.drawable.profile_place_holder, mContext);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.e("ImageAdapter", "onBindViewHolder: ", e);
@@ -54,7 +51,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-       return images.length;
+        return images.length;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

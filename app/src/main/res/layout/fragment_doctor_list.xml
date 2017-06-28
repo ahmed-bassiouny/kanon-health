@@ -12,62 +12,62 @@
         android:orientation="vertical">
 
         <!--<android.support.v7.widget.Toolbar-->
-            <!--android:visibility="gone"-->
-            <!--android:id="@+id/doctor_chat_toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/colorPrimary">-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/doctor_chat_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/colorPrimary">-->
 
 
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/img_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:src="@drawable/filter" />
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/img_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:src="@drawable/filter" />
 
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/map"
-                android:layout_width="50dp"
-                android:layout_height="31dp"
-                android:src="@drawable/map" />
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/map"
+            android:layout_width="50dp"
+            android:layout_height="31dp"
+            android:src="@drawable/map" />
 
 
-            <TextView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Contacts"
-                android:textColor="@color/black" />
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Contacts"
+            android:textColor="@color/black" />
 
-            <ImageButton
-                android:visibility="gone"
-                android:id="@+id/scan"
-                android:layout_width="@dimen/size_40dp"
-                android:layout_height="36dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:background="@null"
-                android:contentDescription=""
-                android:scaleType="fitXY"
-                android:src="@drawable/scan"
-                tools:ignore="ContentDescription,RtlHardcoded" />
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/scan"
+            android:layout_width="@dimen/size_40dp"
+            android:layout_height="36dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:background="@null"
+            android:contentDescription=""
+            android:scaleType="fitXY"
+            android:src="@drawable/scan"
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
-            <ImageButton
-                android:visibility="gone"
-                android:id="@+id/img_btn_search"
-                android:layout_width="@dimen/size_40dp"
-                android:layout_height="36dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:background="@null"
-                android:contentDescription=""
-                android:scaleType="fitXY"
-                android:src="@drawable/search"
-                android:tint="@color/black"
-                tools:ignore="ContentDescription,RtlHardcoded" />
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/img_btn_search"
+            android:layout_width="@dimen/size_40dp"
+            android:layout_height="36dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:background="@null"
+            android:contentDescription=""
+            android:scaleType="fitXY"
+            android:src="@drawable/search"
+            android:tint="@color/black"
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
 
         <!--</android.support.v7.widget.Toolbar>-->

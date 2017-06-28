@@ -11,14 +11,14 @@ public class UpdatePrivacy {
     private String userID;
     @SerializedName("password")
     private String password;
-    private int msg_id ;
-    private int privacy ;
+    private int msg_id;
+    private int privacy;
 
 
-    public UpdatePrivacy(String userID, String password , int msg_id , int privacy) {
+    public UpdatePrivacy(String userID, String password, int msg_id, int privacy) {
         this.userID = userID;
         this.password = password;
-        this.msg_id = msg_id ;
+        this.msg_id = msg_id;
         this.privacy = privacy;
     }
 

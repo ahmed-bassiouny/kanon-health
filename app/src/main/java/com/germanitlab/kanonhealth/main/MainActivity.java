@@ -1,22 +1,14 @@
 package com.germanitlab.kanonhealth.main;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -121,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -135,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         assert getSupportActionBar() != null;
         tvToolbarTitle.setText("Contacts");
     }
-
 
 
     @Override
@@ -203,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     }
 
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -211,8 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     @Override
     public void onBackPressed() {
-        if(myviewpager.getCurrentItem()!=0)
-        {
+        if (myviewpager.getCurrentItem() != 0) {
             myviewpager.setCurrentItem(0);
             return;
         }

@@ -29,7 +29,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -38,6 +37,7 @@ import com.germanitlab.kanonhealth.callback.UploadListener;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.helpers.Util;
@@ -81,7 +81,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
     public boolean selected = false;
     List<Integer> list = new ArrayList<>();
     ImageView forward;
-    private MessageRepositry mMessageRepositry ;
+    private MessageRepositry mMessageRepositry;
 
     public MessageAdapterClinic(List<Message> messages, final Activity context, User doctor) {
         try {
@@ -102,7 +102,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 }
             });
             mMessageRepositry = new MessageRepositry(context);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -164,7 +164,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
         switch (type) {
             case Constants.IMAGE:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
-                setImageMessage(imageViewHolder, position,false);
+                setImageMessage(imageViewHolder, position, false);
                 break;
             case Constants.AUDIO:
                 AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
@@ -208,7 +208,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     return Constants.LOCATION_MESSAGE;
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -326,7 +326,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 }
             });
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -336,7 +336,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
     //-----------------------------------------------------------------------------------------------------
 
 
-    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position,boolean isImgPlusText) {
+    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position, boolean isImgPlusText) {
         try {
             Log.d("date form Image ", mMessages.get(position).getSent_at().toString());
             final Message message = mMessages.get(position);
@@ -349,7 +349,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 imageViewHolder.tvMyTextImg.setText(message.getImageText());
 
 
-                if(message.getMsg()!=null) {
+                if (message.getMsg() != null) {
                     if (!new File(message.getMsg()).exists()) {
                         String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
                         File file = new File(folder, fileName);
@@ -363,8 +363,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 }
 
                 Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-                Glide.with(context).load(imageUri).into(imageViewHolder.myMessage);
-
+                ImageHelper.setImage(imageViewHolder.myMessage, imageUri, context);
 
                 if (!message.isLoaded() && !message.isLoading()) {
 
@@ -425,7 +424,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                                 selectItem(imageViewHolder.messageContainer, message);
                             else
                                 unselectItem(imageViewHolder.messageContainer, message);
-                        }  else {
+                        } else {
 
                             File file = new File(mMessages.get(position).getMsg());
 
@@ -584,11 +583,10 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
@@ -601,7 +599,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 changeToolbar(false);
                 selected = false;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -828,7 +826,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -855,7 +853,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1320,7 +1318,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1533,7 +1531,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                     }
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -1588,7 +1586,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    if(!ChatActivity.appStatus)
+                    if (!ChatActivity.appStatus)
                         return;
                     try {
                         Gson gson = new Gson();
@@ -1596,7 +1594,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
 //                        caching(message, prefManager);
                         JSONObject jsonObject = new JSONObject(args[0].toString());
                         mMessageRepositry.create(message);
-                        Log.d("count "+mMessageRepositry.count() ,"Count ");
+                        Log.d("count " + mMessageRepositry.count(), "Count ");
                         int poisition = jsonObject.getInt("position");
                         Message messageInPosition = mMessages.get(poisition);
                         messageInPosition.setStatus(Constants.SENT_STATUS);
@@ -1818,7 +1816,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
         public ImageView myMessage, hisMessage;
         public ProgressBar progressBar, progressViewDownload;
         public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy,tvMyTextImg,tvHisTextImg;
+        public TextView tvDate, tvDateMy, tvMyTextImg, tvHisTextImg;
         public ImageView imgMessageStatus;
 
 
@@ -1831,7 +1829,7 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvMyTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_my);
-            tvHisTextImg= (TextView) itemView.findViewById(R.id.tv_text_with_image_his);
+            tvHisTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_his);
             imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);

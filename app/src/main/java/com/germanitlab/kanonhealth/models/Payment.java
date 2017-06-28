@@ -18,7 +18,7 @@ public class Payment implements Serializable {
     @SerializedName("doc_id")
     private String doc_id;
 
-    public Payment(String id, String password, String doc_id , String type) {
+    public Payment(String id, String password, String doc_id, String type) {
         this.id = id;
         this.password = password;
         this.type = type;

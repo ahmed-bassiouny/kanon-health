@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,15 +26,13 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -55,7 +51,6 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -119,7 +114,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     UploadImageResponse uploadImageResponse;
     private static final int TAKE_PICTURE = 1;
     int PLACE_PICKER_REQUEST = 22;
-    String practics_id="";
+    String practics_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,13 +130,13 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         handleImoAction();
         try {
             practics_id = getIntent().getExtras().getString("PRACTICS_ID");
-        }catch (Exception e){
-            practics_id="";
+        } catch (Exception e) {
+            practics_id = "";
             Crashlytics.logException(e);
-            Log.e("AddPractics", "onCreate: ",e );
+            Log.e("AddPractics", "onCreate: ", e);
             Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
         }
-        if(practics_id!=null){
+        if (practics_id != null) {
             bindData();
         }
 
@@ -158,9 +153,10 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             public void onSuccess(Object response) {
                 try {
                     UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                    user=userInfoResponse.getUser();
-                    if(user.getAvatar()!=null && !user.getAvatar().isEmpty())
-                    Glide.with(AddPractics.this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar()).into(civImageAvatar);
+                    user = userInfoResponse.getUser();
+                    if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                        ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), AddPractics.this);
+                    }
                     etName.setText(user.getFirst_name());
                     etLocation.setText(user.getAddress());
                     etHouseNumber.setText(user.getInfo().getHouseNumber());
@@ -169,7 +165,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     etCountry.setText(user.getInfo().getCountry());
                     etTelephone.setText(user.getPhone());
                     progressDialog.dismiss();
-                }catch (Exception e){
+                } catch (Exception e) {
                     onFailed(e.getLocalizedMessage());
                 }
             }
@@ -181,7 +177,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                 progressDialog.dismiss();
                 finish();
             }
-        }).getDoctorId(prefManager.getData(PrefManager.USER_ID),prefManager.getData(PrefManager.USER_PASSWORD),practics_id);
+        }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), practics_id);
     }
 
     private void initTB() {
@@ -194,13 +190,13 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_practice, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -238,7 +234,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             user.setInfo(info);
             user.setPhone(etTelephone.getText().toString());
             user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            if(practics_id==null){
+            if (practics_id == null) {
                 user.setUserID_request(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 new HttpCall(this, new ApiResponse() {
@@ -254,7 +250,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                         Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
                     }
                 }).addClinic(user);
-            }else {
+            } else {
                 user.setUserID_request(Integer.valueOf(practics_id));
                 user.setId(Integer.valueOf(practics_id));
                 new HttpCall(this, new ApiResponse() {
@@ -271,7 +267,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     }
                 }).editClinic(user);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -287,7 +283,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             bundle.putInt("Constants", Constants.SPECIALITIES);
             bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
             showDialogFragment(bundle);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -303,7 +299,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             bundle.putInt("Constants", Constants.LANGUAUGE);
             bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
             showDialogFragment(bundle);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -322,7 +318,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             } catch (GooglePlayServicesNotAvailableException e) {
                 e.printStackTrace();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -337,7 +333,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             bundle.putInt("Constants", Constants.DoctorAll);
             bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
             showDialogFragment(bundle);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -364,12 +360,11 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 android.Manifest.permission.CAMERA},
                         Constants.GALLERY_PERMISSION_CODE);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
@@ -384,7 +379,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             Intent intent = new Intent(this, TimeTable.class);
             intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
             startActivityForResult(intent, Constants.HOURS_CODE);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -445,7 +440,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -474,7 +469,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        Glide.with(this).load(selectedImageUri).into(civImageAvatar);
+                        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
 
                         new HttpCall(this, new ApiResponse() {
                             @Override
@@ -493,7 +488,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 Log.e("upload image failed :", error);
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID)
-                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         pickerDialog.dismiss();
 
                         break;
@@ -502,7 +497,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
 
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        Glide.with(this).load(selectedImageUri).into(civImageAvatar);
+                        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -516,9 +511,10 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                             public void onFailed(String error) {
                                 util.dismissProgressDialog();
                                 Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                                Log.e("upload image failed :", error);                            }
+                                Log.e("upload image failed :", error);
+                            }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID)
-                                ,prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this,selectedImageUri));
+                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         pickerDialog.dismiss();
                         break;
                     case Constants.HOURS_CODE:
@@ -538,7 +534,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                 }
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
@@ -555,12 +551,11 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         if (list.size() > 0) {
             llNo.setVisibility(View.GONE);
             tablelayout.removeAllViews();
-            com.germanitlab.kanonhealth.helpers.TimeTable timeTable=new com.germanitlab.kanonhealth.helpers.TimeTable();
-            timeTable.creatTimeTable(list,this,tablelayout);
-        }
-        else
+            com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
+            timeTable.creatTimeTable(list, this, tablelayout);
+        } else
             llNo.setVisibility(View.VISIBLE);
-        
+
     }
 
     @Override
@@ -578,11 +573,10 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     public void deleteMyImage() {
         try {
             user.setAvatar("");
-            Helper.setImage(this, Constants.CHAT_SERVER_URL_IMAGE
-                    + "/" + user.getAvatar(), civImageAvatar, R.drawable.placeholder);
+            ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), R.drawable.placeholder, this);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

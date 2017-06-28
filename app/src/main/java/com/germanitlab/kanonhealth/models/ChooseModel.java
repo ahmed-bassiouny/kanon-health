@@ -14,7 +14,7 @@ import java.io.Serializable;
 },
 
  */
-public class ChooseModel implements Serializable{
+public class ChooseModel implements Serializable {
 
     // language
     private int lang_id;
@@ -39,7 +39,7 @@ public class ChooseModel implements Serializable{
     private int general_id;
     private String general_name;
     private String general_icon;
-    private boolean is_my_choise=false;
+    private boolean is_my_choise = false;
 
     public int getGeneral_id() {
         return general_id;
@@ -99,8 +99,6 @@ public class ChooseModel implements Serializable{
     }
 
 
-
-
     public int getLang_id() {
         return lang_id;
     }
@@ -158,16 +156,17 @@ public class ChooseModel implements Serializable{
         this.speciality_icon = speciality_icon;
     }
 
-    public boolean getIsMyChoise(){
+    public boolean getIsMyChoise() {
         return is_my_choise;
     }
-    public void setIsMyChoise(boolean is_my_choise){
-        this.is_my_choise=is_my_choise;
+
+    public void setIsMyChoise(boolean is_my_choise) {
+        this.is_my_choise = is_my_choise;
     }
 
 
     public String getIs_available() {
-        return (is_available==null)? "0":is_available;
+        return (is_available == null) ? "0" : is_available;
     }
 
     public void setIs_available(String is_available) {

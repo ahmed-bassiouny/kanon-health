@@ -6,8 +6,6 @@
     android:orientation="vertical">
 
 
-
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -25,8 +23,7 @@
             android:layout_gravity="center"
             android:text="Opening Hours"
             android:textSize="18sp"
-            android:textColor="@color/white"/>
-
+            android:textColor="@color/white" />
 
 
     </android.support.v7.widget.Toolbar>
@@ -41,6 +38,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_margin="@dimen/size_10dp"
                 android:background="@drawable/custom_edittext_without_border_style"
@@ -60,7 +58,7 @@
                     android:padding="10dp"
                     android:layoutDirection="ltr"
                     android:inputType="text"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <RadioButton
                         android:id="@+id/first"
@@ -72,7 +70,7 @@
                         android:drawablePadding="30dp"
                         android:drawableRight="@android:drawable/btn_radio"
                         android:text="Use Timetable"
-                        android:textSize="20dip"/>
+                        android:textSize="20dip" />
 
                     <RadioButton
                         android:id="@+id/second"
@@ -82,7 +80,7 @@
                         android:drawablePadding="30dp"
                         android:drawableRight="@android:drawable/btn_radio"
                         android:text="Always open"
-                        android:textSize="20dp"/>
+                        android:textSize="20dp" />
 
                     <RadioButton
                         android:id="@+id/third"
@@ -93,6 +91,7 @@
                         android:drawableRight="@android:drawable/btn_radio"
                         android:text="no hours avaliable"
                         android:textSize="20dp" />
+
                     <RadioButton
                         android:id="@+id/fourth"
                         android:layout_width="fill_parent"
@@ -106,9 +105,6 @@
 
 
             </LinearLayout>
-
-
-
 
 
             <Button

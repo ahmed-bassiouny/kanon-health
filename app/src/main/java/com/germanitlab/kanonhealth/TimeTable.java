@@ -3,7 +3,6 @@ package com.germanitlab.kanonhealth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,8 +21,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.Table;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.Serializable;
@@ -85,11 +82,12 @@ public class TimeTable extends AppCompatActivity {
     @BindView(R.id.ll_schedule)
     LinearLayout linearLayoutSchedule;
     List<Table> list;
-    int type ;
+    int type;
     public static Boolean active;
 
     public static OpeningHoursActivity instance;
     public static Activity TimetableInstance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,14 +102,13 @@ public class TimeTable extends AppCompatActivity {
             instance = new OpeningHoursActivity();
             map = new HashMap<>();
             list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
-            type = getIntent().getIntExtra("type",0);
+            type = getIntent().getIntExtra("type", 0);
             handleData(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.e("Specilaities", "onCreate" ,e);
+            Log.e("Specilaities", "onCreate", e);
         }
-
 
 
     }
@@ -222,10 +219,10 @@ public class TimeTable extends AppCompatActivity {
                     }
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("Specilaities", "checkboxToggled" ,e);
+            Log.e("Specilaities", "checkboxToggled", e);
         }
 
 
@@ -370,10 +367,10 @@ public class TimeTable extends AppCompatActivity {
             linearLayout.addView(linearLayout1);
             layout.addView(linearLayout);
             tempSwitch.setChecked(true);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("Specilaities", "addNewItem" ,e);
+            Log.e("Specilaities", "addNewItem", e);
         }
 
     }
@@ -433,11 +430,11 @@ public class TimeTable extends AppCompatActivity {
     public void schedule(View view) {
         try {
             Intent openingHoursIntent = new Intent(getApplicationContext(), OpeningHoursActivity.class);
-            openingHoursIntent.putExtra(Constants.DATA , (Serializable) list);
-            openingHoursIntent.putExtra("type",type);
+            openingHoursIntent.putExtra(Constants.DATA, (Serializable) list);
+            openingHoursIntent.putExtra("type", type);
             openingHoursIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-            startActivity(openingHoursIntent );
-        }catch (Exception e){
+            startActivity(openingHoursIntent);
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.e("TimeTable", "schedule: ", e);
@@ -446,7 +443,7 @@ public class TimeTable extends AppCompatActivity {
     }
 
 
-//    @OnClick(R.id.save)
+    //    @OnClick(R.id.save)
     public void save() {
         try {
             Intent intent = new Intent();
@@ -470,15 +467,16 @@ public class TimeTable extends AppCompatActivity {
                 }
                 key++;
             }
-            intent.putExtra(Constants.DATA , (Serializable) list);
+            intent.putExtra(Constants.DATA, (Serializable) list);
             try {
-                if (OpeningHoursActivity.active )
+                if (OpeningHoursActivity.active)
                     instance.finish();
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
 
-            setResult(RESULT_OK , intent);
+            setResult(RESULT_OK, intent);
             finish();
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -489,13 +487,13 @@ public class TimeTable extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            if(requestCode == RESULT_OK) {
+            if (requestCode == RESULT_OK) {
                 list = (List<Table>) data.getSerializableExtra(Constants.DATA);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("Specilaities", "onActivityResult" ,e);
+            Log.e("Specilaities", "onActivityResult", e);
         }
 
     }

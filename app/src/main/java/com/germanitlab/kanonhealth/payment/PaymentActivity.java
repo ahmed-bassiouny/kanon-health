@@ -4,23 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.Comment;
-import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
@@ -43,9 +38,9 @@ public class PaymentActivity extends AppCompatActivity {
 
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
-    User doctor ;
+    User doctor;
     private String type;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +52,12 @@ public class PaymentActivity extends AppCompatActivity {
         try {
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
-            doctor= (User) getIntent().getSerializableExtra("doctor_data");
+            doctor = (User) getIntent().getSerializableExtra("doctor_data");
         /*
         handel data in ui
          */
             handelUI(doctor);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -71,11 +66,10 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void handelUI(User doctorObj) {
         try {
-            if(doctorObj!=null) {
+            if (doctorObj != null) {
                 tvDoctorName.setText(doctorObj.getName());
 
-                Helper.setImage(this, Constants.CHAT_SERVER_URL
-                        + "/" + doctorObj.getAvatar(), ivDoctor, R.drawable.placeholder);
+                ImageHelper.setImage(ivDoctor, Constants.CHAT_SERVER_URL + "/" + doctorObj.getAvatar(), R.drawable.placeholder, this);
 
                 if (doctorObj.getRate() != null) {
                     ratingBar.setRating(Float.parseFloat(doctorObj.getRate()));
@@ -83,7 +77,7 @@ public class PaymentActivity extends AppCompatActivity {
                     ratingBar.setRating(0);
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -115,13 +109,12 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.next)
-    public void nextClicked (){
+    public void nextClicked() {
         try {
-            if(doctor.isClinic==1)
-            {
-                type="3";
-            }else {
-                type="2";
+            if (doctor.isClinic == 1) {
+                type = "3";
+            } else {
+                type = "2";
             }
 
             new HttpCall(PaymentActivity.this, new ApiResponse() {
@@ -141,18 +134,17 @@ public class PaymentActivity extends AppCompatActivity {
                     type);
 
 
+            final Gson gson = new Gson();
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
 
-        final Gson gson = new Gson();
-            Intent intent = new Intent(getApplicationContext() , ChatActivity.class);
-
-            if (doctor!=null) {
+            if (doctor != null) {
                 doctor.setIsOpen(1);
             }
-            intent.putExtra("doctor_data" , gson.toJson(doctor));
-            intent.putExtra("from" , true);
+            intent.putExtra("doctor_data", gson.toJson(doctor));
+            intent.putExtra("from", true);
             startActivity(intent);
             finish();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }

@@ -18,12 +18,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
@@ -172,15 +170,15 @@ public class InquiryMainFragment extends Fragment {
                                 try {
                                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                                     UserInfoResponse userInfoResponse = new UserInfoResponse();
-                                    userInfoResponse = gson.fromJson(jsonString , UserInfoResponse.class);
+                                    userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
                                     userInfoResponse.getUser().setIsOpen(1);
                                     intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                                     startActivity(intent);
                                     dismissProgressDialog();
                                     getActivity().finish();
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     Crashlytics.logException(e);
-                                    Toast.makeText(getContext(),getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                 }
 
                             }

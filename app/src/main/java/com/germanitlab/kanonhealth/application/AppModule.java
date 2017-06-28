@@ -17,30 +17,30 @@ public class AppModule {
 
     private final Application mApplication;
 
-    public AppModule(Application application){
+    public AppModule(Application application) {
         mApplication = application;
     }
 
     @Provides
     @customAnotations.ApplicationContext
-    Context provideContext(){
+    Context provideContext() {
         return mApplication;
     }
 
     @Provides
-    Application provideApplication(){
+    Application provideApplication() {
         return mApplication;
     }
 
     @Provides
     @customAnotations.DatabaseInfo
-    String provideDataBaseName(){
+    String provideDataBaseName() {
         return "praxis.db";
     }
 
     @Provides
     @customAnotations.DatabaseInfo
-    Integer provideDatabaseVersion(){
+    Integer provideDatabaseVersion() {
         return 1;
     }
 

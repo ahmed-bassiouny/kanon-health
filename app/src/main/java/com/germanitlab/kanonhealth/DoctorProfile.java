@@ -17,12 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -30,11 +30,9 @@ import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
-import com.germanitlab.kanonhealth.payment.PreRequest;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -89,10 +87,10 @@ public class DoctorProfile extends AppCompatActivity {
     @BindView(R.id.add_to_my_doctor)
     Button add_to_my_doctor;
 
-    private Util util ;
+    private Util util;
 
     public static Activity profileActivity;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +98,7 @@ public class DoctorProfile extends AppCompatActivity {
         setContentView(R.layout.doctor_profile);
         try {
             prefManager = new PrefManager(this);
-            profileActivity=this;
+            profileActivity = this;
             mPrefManager = new PrefManager(this);
             ButterKnife.bind(this);
             util = Util.getInstance(this);
@@ -123,7 +121,7 @@ public class DoctorProfile extends AppCompatActivity {
                 util.dismissProgressDialog();
                 checkDoctor();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             Log.e("Doctor Profile", "Doctor Profile ", e);
@@ -135,7 +133,7 @@ public class DoctorProfile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-                finish();
+        finish();
 
     }
 
@@ -152,7 +150,7 @@ public class DoctorProfile extends AppCompatActivity {
                     mDoctorRepository.insertDocument(doctor);
                     bindData();
                     checkDoctor();
-                }catch (Exception e){
+                } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e("Doctor Profile", "Doctor Profile ", e);
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
@@ -179,17 +177,7 @@ public class DoctorProfile extends AppCompatActivity {
         zip.setText(doctor.getInfo().getZipCode());
         provinz.setText(doctor.getInfo().getProvinz());
         country.setText(doctor.getInfo().getCountry());
-        if (doctor.getAvatar() == null || doctor.getAvatar() == "") {
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar()).placeholder(R.drawable.profile_place_holder)
-                    .resize(80, 80).into(imgAvatar);
-
-        } else {
-            Log.e("returned image :", doctor.getAvatar());
-            Picasso.with(this).load(Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar())
-                    .resize(500, 500).centerInside().into(imgAvatar);
-        }
+        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + doctor.getAvatar(), R.drawable.profile_place_holder, this);
         if (doctor.getDocuments() != null)
             createAdapter();
     }
@@ -202,9 +190,9 @@ public class DoctorProfile extends AppCompatActivity {
             intent.putExtra("from", true);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(this , PaymentActivity.class);
-            intent.putExtra("doctor_data" , doctorJson);
-            intent.putExtra("doctor_obj" , doctor);
+            Intent intent = new Intent(this, PaymentActivity.class);
+            intent.putExtra("doctor_data", doctorJson);
+            intent.putExtra("doctor_obj", doctor);
             startActivity(intent);
         }
 
@@ -231,7 +219,7 @@ public class DoctorProfile extends AppCompatActivity {
 
     @OnClick(R.id.add_to_my_doctor)
     public void addToMyDoctor() {
-        if (doctor.getIs_my_doctor()==null) {
+        if (doctor.getIs_my_doctor() == null) {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -265,11 +253,12 @@ public class DoctorProfile extends AppCompatActivity {
 
     private void checkDoctor() {
         try {
-            if (doctor.getIs_my_doctor()==null)
+            if (doctor.getIs_my_doctor() == null)
                 add_to_my_doctor.setText(getString(R.string.add_to));
             else
                 add_to_my_doctor.setText(getString(R.string.remove_from));
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 }

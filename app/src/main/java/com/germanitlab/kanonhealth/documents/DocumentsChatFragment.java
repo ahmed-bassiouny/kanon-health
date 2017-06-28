@@ -142,13 +142,13 @@ public class DocumentsChatFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        appStatus=true;
+        appStatus = true;
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        appStatus=false;
+        appStatus = false;
     }
 
     @Override
@@ -264,7 +264,7 @@ public class DocumentsChatFragment extends Fragment
             AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    if(!appStatus)
+                    if (!appStatus)
                         return;
 
                     Log.e("Message Response", args[0].toString());
@@ -1181,8 +1181,8 @@ public class DocumentsChatFragment extends Fragment
 
     public String formatDate(String date) {
         try {
-            String []time=date.split(" ");
-            if(time.length<=0)
+            String[] time = date.split(" ");
+            if (time.length <= 0)
                 return "";
             else {
                 String[] current_date = time[1].split(":");

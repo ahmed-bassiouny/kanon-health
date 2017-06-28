@@ -20,8 +20,8 @@ public class PasscodeActivty extends AppCompatActivity {
 
     boolean checkPassword; // check password if you want login or enter
     boolean finish; // finish this activity or redirect to main activity
-    String tempPasscode="";
-    String passcode="";
+    String tempPasscode = "";
+    String passcode = "";
     PrefManager prefManager;
     @BindView(R.id.pass)
     TextView pass;
@@ -40,7 +40,7 @@ public class PasscodeActivty extends AppCompatActivity {
             if (!checkPassword) {
                 passText.setText("Set your Password");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -96,10 +96,10 @@ public class PasscodeActivty extends AppCompatActivity {
                 pass.setText(temp.substring(0, pass.getText().length() - 1));
                 passcode = passcode.substring(0, passcode.length() - 1);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("Passcode", "Activity ",e );
+            Log.e("Passcode", "Activity ", e);
         }
 
     }
@@ -109,28 +109,28 @@ public class PasscodeActivty extends AppCompatActivity {
         try {
             if (passcode.length() != 6)
                 Toast.makeText(this, "wrong passcode", Toast.LENGTH_SHORT).show();
-            else if(checkPassword) {
+            else if (checkPassword) {
                 // check password to login
                 checkPasscode();
-            }else{
+            } else {
                 // enter password to save
-                if(tempPasscode.isEmpty()){
+                if (tempPasscode.isEmpty()) {
                     // enter passcode first time to save it
-                    tempPasscode=passcode;
-                    passcode="";
+                    tempPasscode = passcode;
+                    passcode = "";
                     pass.setText("");
                     passText.setText("Confirm Your Passcode");
-                }else if(tempPasscode.equals(passcode)){
+                } else if (tempPasscode.equals(passcode)) {
                     //enter passcode second time to save it
                     prefManager.put(PrefManager.PASSCODE, passcode);
                     Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
                     finishActivity();
-                }else if(!tempPasscode.equals(passcode)){
+                } else if (!tempPasscode.equals(passcode)) {
                     passText.setText("Set your Password");
                     wrongPassword();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -138,9 +138,9 @@ public class PasscodeActivty extends AppCompatActivity {
     }
 
     private void checkPasscode() {
-        if(passcode.equals(prefManager.getData(PrefManager.PASSCODE)))
+        if (passcode.equals(prefManager.getData(PrefManager.PASSCODE)))
             finishActivity();
-        else{
+        else {
             wrongPassword();
         }
     }
@@ -148,12 +148,12 @@ public class PasscodeActivty extends AppCompatActivity {
     private void wrongPassword() {
         Toast.makeText(this, "Invalid Passcode", Toast.LENGTH_SHORT).show();
         pass.setText("");
-        passcode = "" ;
-        tempPasscode="";
+        passcode = "";
+        tempPasscode = "";
     }
 
-    private void finishActivity(){
-        if(finish){
+    private void finishActivity() {
+        if (finish) {
             this.setResult(RESULT_OK);
             finish();
         } else {

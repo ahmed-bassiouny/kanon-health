@@ -29,7 +29,6 @@ import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -49,13 +48,13 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     String country, code;
     Constants constants;
     public SignupActivity signupActivity;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        signupActivity=this;
+        signupActivity = this;
         try {
             Intent intent = getIntent();
             Constants.COUNTRY_CODES.clear();
@@ -119,12 +118,12 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
-        if(savedInstanceState !=null)
+        if (savedInstanceState != null)
             etMobileNumber.setText(savedInstanceState.getString("phone"));
     }
 
@@ -184,12 +183,12 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
             Log.d("Response", response.toString());
             UserRegisterResponse registerResponse = (UserRegisterResponse) response;
-            if(String.valueOf(registerResponse.getUser_id()).isEmpty() || registerResponse.getUser_id() == 0 || String.valueOf(registerResponse.getUser_id()).equals(null)) {
+            if (String.valueOf(registerResponse.getUser_id()).isEmpty() || registerResponse.getUser_id() == 0 || String.valueOf(registerResponse.getUser_id()).equals(null)) {
                 Toast.makeText(this, getResources().getText(R.string.error_in_registeration), Toast.LENGTH_SHORT).show();
                 System.exit(0);
             }
-            prefManager.put(PrefManager.USER_ID ,String.valueOf(registerResponse.getUser_id()));
-            prefManager.put(PrefManager.USER_PASSWORD ,String.valueOf(registerResponse.getPassword()));
+            prefManager.put(PrefManager.USER_ID, String.valueOf(registerResponse.getUser_id()));
+            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(registerResponse.getPassword()));
             JSONObject jsonObject = null;
             Boolean oldUser = false;
             if (registerResponse.is_exist()) {
@@ -245,13 +244,13 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putString("phone",etMobileNumber.getText().toString());
+        outState.putString("phone", etMobileNumber.getText().toString());
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("phone",etMobileNumber.getText().toString());
+        outState.putString("phone", etMobileNumber.getText().toString());
         super.onSaveInstanceState(outState);
     }
 }

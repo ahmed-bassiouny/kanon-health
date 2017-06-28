@@ -86,9 +86,10 @@
                 android:imeOptions="actionSend"
                 android:inputType="phone"
                 android:paddingLeft="5dp"
-                android:digits="0123456789+"/>
+                android:digits="0123456789+" />
 
         </TableRow>
+
         <Button
             android:id="@+id/btn_signup_mobile_continue"
             android:layout_width="match_parent"

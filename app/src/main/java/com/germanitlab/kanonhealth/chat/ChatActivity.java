@@ -61,7 +61,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Comment;
-import com.germanitlab.kanonhealth.DoctorProfile;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
@@ -72,6 +71,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PopupHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
@@ -87,7 +87,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -359,8 +358,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 checkSessionOpen();
             }
 
-            Helper.setImage(this, Constants.CHAT_SERVER_URL
-                    + "/" + doctor.getAvatar(), imageUser, R.drawable.placeholder);
+            ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL + "/" + doctor.getAvatar(), R.drawable.placeholder, this);
 
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
@@ -528,7 +526,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
-                        if(!appStatus)
+                        if (!appStatus)
                             return;
                         Log.e("Message Response", args[0].toString());
                         Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
@@ -553,7 +551,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                             try {
 
                                 int poisition = jsonObject.getInt("position");
-                                if(position>=mMessages.size())
+                                if (position >= mMessages.size())
                                     return;
                                 Message messageInPosition = mMessages.get(poisition);
                                 messageInPosition.setStatus(Constants.SENT_STATUS);
@@ -682,7 +680,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private Emitter.Listener isSeen = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if(doctor==null) {
+            if (doctor == null) {
                 return;
             }
             try {
@@ -1042,7 +1040,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(permissions.length<=0)
+        if (permissions.length <= 0)
             return;
         if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
 
@@ -1069,9 +1067,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
             } else if (requestCode == PICK_IMAGE) {
-                if (grantResults.length > 0 )
-                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    pickImage();
+                if (grantResults.length > 0)
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                        pickImage();
 
             }
         }
@@ -1928,12 +1926,11 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void checkSessionOpen() {
 
-        if(doctor.getIsClinic()==1){
+        if (doctor.getIsClinic() == 1) {
             chat_bar.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
             imageButtonAttach.setVisibility(View.VISIBLE);
-        }
-        else if (doctor.getIsOpen() == 0) {
+        } else if (doctor.getIsOpen() == 0) {
             chat_bar.setVisibility(View.GONE);
             open_chat_session.setVisibility(View.VISIBLE);
             imageButtonAttach.setVisibility(View.GONE);

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.FilterAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
@@ -40,8 +39,8 @@ public class SpecialitiesFragment extends Fragment {
     TypeToken<List<Speciality>> token;
     private LinearLayout toolbar;
     private Boolean from;
-    private int type ;
-    PrefManager prefManager ;
+    private int type;
+    PrefManager prefManager;
 
 
     public SpecialitiesFragment() {
@@ -71,7 +70,7 @@ public class SpecialitiesFragment extends Fragment {
             getView().setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                    if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK){
+                    if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
 
                         new Helper(getActivity()).replaceFragments(new DoctorListFragment(),
                                 R.id.doctor_list_continer, "doctorList");
@@ -82,10 +81,10 @@ public class SpecialitiesFragment extends Fragment {
                     return false;
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.e("SpecialitiesFragment","onResume",e);
+            Log.e("SpecialitiesFragment", "onResume", e);
         }
 
     }
@@ -121,8 +120,7 @@ public class SpecialitiesFragment extends Fragment {
                         String json = gson.toJson(response);
                         specialityList = (List<Speciality>) response;
                         createAdapter(specialityList, view, from);
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Crashlytics.logException(e);
                         Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                         Log.e("SpecialitiesFragment", "onSuccess: ", e);
@@ -134,20 +132,20 @@ public class SpecialitiesFragment extends Fragment {
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                    Log.e("SpecialitiesFragment",error);
+                    Log.e("SpecialitiesFragment", error);
                 }
             }).getSpecialities(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("SpecialitiesFragment","onFailed",e);
+            Log.e("SpecialitiesFragment", "onFailed", e);
         }
         return view;
     }
 
     public void createAdapter(List<Speciality> specialityList, View view, Boolean from) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mAdapter = new FilterAdapter(specialityList, getActivity(), from , type);
+        mAdapter = new FilterAdapter(specialityList, getActivity(), from, type);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

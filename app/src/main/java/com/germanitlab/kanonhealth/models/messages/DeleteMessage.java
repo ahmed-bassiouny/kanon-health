@@ -17,6 +17,7 @@ public class DeleteMessage implements Serializable {
     private String password;
     @SerializedName("message_id")
     private String withId;
+
     public DeleteMessage(int userID, String password, String withId) {
         this.userID = userID;
         this.password = password;

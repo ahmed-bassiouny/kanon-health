@@ -19,23 +19,22 @@ public class Information extends AppCompatActivity {
         setContentView(R.layout.activity_information);
         ButterKnife.bind(this);
     }
-    @OnClick({R.id.list, R.id.document , R.id.chat  , R.id.setting})
-    public void click(View view)
-    {
-        Intent intent = new Intent(this , MainActivity.class);
-        switch (view.getId())
-        {
-            case (R.id.list ):
-                intent.putExtra("from" , 0);
+
+    @OnClick({R.id.list, R.id.document, R.id.chat, R.id.setting})
+    public void click(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        switch (view.getId()) {
+            case (R.id.list):
+                intent.putExtra("from", 0);
                 break;
             case (R.id.document):
-                intent.putExtra("from" , 1);
+                intent.putExtra("from", 1);
                 break;
             case (R.id.chat):
-                intent.putExtra("from" , 2);
+                intent.putExtra("from", 2);
                 break;
             case (R.id.setting):
-                intent.putExtra("from" , 4);
+                intent.putExtra("from", 4);
                 break;
         }
         startActivity(intent);

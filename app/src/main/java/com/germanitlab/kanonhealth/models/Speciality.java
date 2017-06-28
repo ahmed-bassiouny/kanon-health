@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 
 public class Speciality implements Serializable {
-    private int speciality_id  ;
-    private String speciality_title , speciality_icon ;
+    private int speciality_id;
+    private String speciality_title, speciality_icon;
 
     public int getSpeciality_id() {
         return speciality_id;

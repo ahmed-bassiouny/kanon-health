@@ -3,7 +3,6 @@ package com.germanitlab.kanonhealth.profile;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,21 +31,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.initialProfile.initialProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
@@ -146,9 +142,9 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
             if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
                 String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-                Helper.setImage(this, path, imgAvatar, R.drawable.profile_place_holder);
+                ImageHelper.setImage(imgAvatar, path, R.drawable.profile_place_holder, this);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -180,18 +176,17 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     private void bindData() {
 
 
-        Helper.setImage(this,Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar , R.drawable.profile_place_holder );
+        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
         etCountryCode.setText(userInfoResponse.getUser().getCountryCOde());
         birthdate = userInfoResponse.getUser().getBirth_date();
         etPhone.setText(userInfoResponse.getUser().getPhone());
-         try {
+        try {
             Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
             String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            Log.d("my converted date" ,s );
+            Log.d("my converted date", s);
             etBirthday.setText(s);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -206,7 +201,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 submit(null);
-                return true ;
+                return true;
             }
         });
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -236,7 +231,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
             setUserObject();
             outState.putSerializable("userdata", userInfoResponse);
             super.onSaveInstanceState(outState);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -255,8 +250,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
-
+                        ImageHelper.setImage(imgAvatar, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -264,13 +258,13 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                                 uploadImageResponse = (UploadImageResponse) response;
                                 user.setAvatar(uploadImageResponse.getFile_url());
                                 Log.e("After Casting", uploadImageResponse.getFile_url());
-                                prefManager.put(PrefManager.PROFILE_IMAGE , uploadImageResponse.getFile_url());
+                                prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
                             }
 
                             @Override
                             public void onFailed(String error) {
                                 Log.e("upload image failed :", error);
-                                Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
 
@@ -282,7 +276,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                     decodeFile(selectedImageUri.toString());
 */
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        Glide.with(this).load(selectedImageUri).into(imgAvatar);
+                        ImageHelper.setImage(imgAvatar, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -295,14 +289,14 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                             @Override
                             public void onFailed(String error) {
                                 Log.e("upload image failed :", error);
-                                Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
 
                         break;
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -332,7 +326,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     @Override
     public void onFailed(String error) {
         Log.d("Update User1 failes", "on Failed");
-        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -478,7 +472,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         user.setPlatform("3");
         user.setPhone(etPhone.getText().toString());
         user.setBirthDate(birthdate);
-        Log.d("my birthdate format" ,etBirthday.getText().toString() );
+        Log.d("my birthdate format", etBirthday.getText().toString());
         info.setStreetname(etStreet.getText().toString());
         info.setZipCode(etZip.getText().toString());
         info.setHouseNumber(etHousePhone.getText().toString());
@@ -493,6 +487,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
         user.setInfo(info);
     }
+
     public void decodeFile(String filePath) {
 
         // Decode image size
@@ -518,7 +513,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         Bitmap b1 = BitmapFactory.decodeFile(filePath, o2);
-        Bitmap b= ExifUtils.rotateBitmap(filePath, b1);
+        Bitmap b = ExifUtils.rotateBitmap(filePath, b1);
 
         // image.setImageBitmap(bitmap);
     }
@@ -546,8 +541,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        Helper.setImage(this ,Constants.CHAT_SERVER_URL
-                + "/" + userInfoResponse.getUser().getAvatar() , imgAvatar , R.drawable.profile_place_holder );
+        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
 

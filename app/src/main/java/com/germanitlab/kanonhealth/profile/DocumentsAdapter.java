@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
 import java.util.ArrayList;
@@ -21,11 +21,10 @@ import java.util.ArrayList;
  */
 
 public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.MyViewHolder> {
-    private Context mContext ;
+    private Context mContext;
     ArrayList<Message> documnents;
 
-    public DocumentsAdapter(ArrayList<Message> documnents, Context mcontext)
-    {
+    public DocumentsAdapter(ArrayList<Message> documnents, Context mcontext) {
         this.documnents = documnents;
         this.mContext = mcontext;
     }
@@ -41,12 +40,10 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         try {
-            if(documnents.get(position) !=null)
-            {
-                Helper.setImage(mContext ,Constants.CHAT_SERVER_URL
-                        + "/" + documnents.get(position) , holder.image , R.drawable.profile_place_holder );
+            if (documnents.get(position) != null) {
+                ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL + "/" + documnents.get(position), R.drawable.profile_place_holder, mContext);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

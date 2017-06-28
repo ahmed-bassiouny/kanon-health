@@ -61,7 +61,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:thumb="@drawable/thumb"
-                            android:progressDrawable="@drawable/progress"                            android:layout_marginLeft="5px"
+                            android:progressDrawable="@drawable/progress"
+                            android:layout_marginLeft="5px"
                             android:layout_weight="1"></SeekBar>
 
                         <TextView
@@ -73,6 +74,7 @@
 
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

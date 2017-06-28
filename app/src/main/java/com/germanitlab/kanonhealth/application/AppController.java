@@ -10,21 +10,13 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
-import com.google.gson.Gson;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
-
-import io.fabric.sdk.android.Fabric;
 
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -39,8 +31,8 @@ public class AppController extends Application {
     private SocketCall socketCall;
 
     private static AppController mInstance;
- //   private UserRegisterResponse clientInfo;
-    PrefManager prefManager ;
+    //   private UserRegisterResponse clientInfo;
+    PrefManager prefManager;
     protected AppComponent appComponent;
 
 
@@ -116,13 +108,6 @@ public class AppController extends Application {
                 }
             }*/
 
-            //Picasso configration
-            Picasso.Builder builder = new Picasso.Builder(this);
-            builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
-            Picasso built = builder.build();
-            built.setIndicatorsEnabled(true);
-            built.setLoggingEnabled(true);
-            Picasso.setSingletonInstance(built);
         } catch (URISyntaxException e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

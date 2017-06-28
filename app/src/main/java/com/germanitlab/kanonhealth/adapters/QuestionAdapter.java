@@ -22,14 +22,13 @@ import java.util.LinkedHashMap;
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyViewHolder>
 
 {
-    private Context mContext ;
+    private Context mContext;
 
-    LinkedHashMap<String , String> questionAnswer ;
+    LinkedHashMap<String, String> questionAnswer;
 
-    public QuestionAdapter(LinkedHashMap<String , String> questionAnswer , Context mContext)
-    {
-        this.questionAnswer = questionAnswer ;
-        this.mContext = mContext  ;
+    public QuestionAdapter(LinkedHashMap<String, String> questionAnswer, Context mContext) {
+        this.questionAnswer = questionAnswer;
+        this.mContext = mContext;
 
     }
 
@@ -43,17 +42,16 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(QuestionAdapter.MyViewHolder holder, int position)
-    {
+    public void onBindViewHolder(QuestionAdapter.MyViewHolder holder, int position) {
         try {
             String question = (new ArrayList<String>(questionAnswer.keySet())).get(position);
             holder.tv_question.setText(question);
             String answer = (new ArrayList<String>(questionAnswer.values())).get(position);
             holder.tv_answer.setText(answer);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(mContext, mContext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("QuestionAdapter", "onBindViewHolder: ",e );
+            Log.e("QuestionAdapter", "onBindViewHolder: ", e);
         }
 
     }

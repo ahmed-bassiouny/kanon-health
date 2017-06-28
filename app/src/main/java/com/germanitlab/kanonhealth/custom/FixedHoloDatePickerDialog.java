@@ -2,23 +2,18 @@ package com.germanitlab.kanonhealth.custom;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.icu.text.DateFormat;
-import android.os.Build;
-import android.widget.DatePicker;
-import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.TimePicker;
+import android.widget.DatePicker;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+
 /**
  * Created by halima on 01/06/17.
  */
 
-public final  class FixedHoloDatePickerDialog extends DatePickerDialog {
+public final class FixedHoloDatePickerDialog extends DatePickerDialog {
     public FixedHoloDatePickerDialog(Context context, OnDateSetListener callBack,
                                      int year, int monthOfYear, int dayOfMonth) {
         super(context, callBack, year, monthOfYear, dayOfMonth);

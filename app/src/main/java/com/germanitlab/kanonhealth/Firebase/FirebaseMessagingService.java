@@ -30,24 +30,25 @@ import org.json.JSONObject;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
-    int id=0;
+    int id = 0;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Object obj = remoteMessage.getData().get("from_id");
         if (obj != null) {
             try {
-                if(obj.toString().trim().isEmpty())
+                if (obj.toString().trim().isEmpty())
                     return;
                 JSONObject sendSeen = new JSONObject();
                 sendSeen.put("id", id);
                 sendSeen.put("is_seen", 1);
                 AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
             } catch (JSONException e) {
-                Log.e("FirebaseMessaging", "onMessageReceived: ",e );
+                Log.e("FirebaseMessaging", "onMessageReceived: ", e);
                 Crashlytics.logException(e);
             }
-            if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id ) && ChatActivity.appStatus != true)
+            if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id) && ChatActivity.appStatus != true)
                 showNotification(remoteMessage.getData().get("msg"), 1, id);
 
         }
@@ -81,7 +82,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 2, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT |PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(contentIntent);
 
         // Add as notification

@@ -16,15 +16,14 @@ public class RequsetToken implements Serializable {
     @SerializedName("is_array")
     private int isArray;
     @SerializedName("token")
-    private String token ;
+    private String token;
 
 
-    public RequsetToken(String userID , String password , int isArray , String token)
-    {
-        this.userID = userID ;
-        this.password = password ;
-        this.isArray = isArray ;
-        this.token = token ;
+    public RequsetToken(String userID, String password, int isArray, String token) {
+        this.userID = userID;
+        this.password = password;
+        this.isArray = isArray;
+        this.token = token;
     }
 
     public String getUserID() {

@@ -70,8 +70,8 @@ public class RadiusOverlayView extends LinearLayout {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT)); // A out B http://en.wikipedia.org/wiki/File:Alpha_compositing.svg
         float centerX = getWidth() / 2;
         float centerY = getHeight() / 2;
-        float radius = Math.min(getWidth(), getHeight()) / 2 ;
-        osCanvas.drawOval(0 , 0 , getWidth() , getHeight() , paint);
+        float radius = Math.min(getWidth(), getHeight()) / 2;
+        osCanvas.drawOval(0, 0, getWidth(), getHeight(), paint);
     }
 
     @Override

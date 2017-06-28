@@ -1,6 +1,5 @@
 package com.germanitlab.kanonhealth.db;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -15,11 +14,11 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 public class PrefManager {
 
 
-    public static final String IS_DOCTOR ="is_doctor" ;
-    public static final String PASSCODE ="pass_code" ;
+    public static final String IS_DOCTOR = "is_doctor";
+    public static final String PASSCODE = "pass_code";
     public static final String CHAT_LIST = "chat_list";
-    public static final String DOCTOR_LIST = "doctor_list" ;
-    public static final String DOCUMENT_HISTORY ="document_history" ;
+    public static final String DOCTOR_LIST = "doctor_list";
+    public static final String DOCUMENT_HISTORY = "document_history";
     public static final String HISTORY = "history";
     public static final String TIME_TYPE = "time_type";
     public static final String USER_ID = "user_id";
@@ -74,12 +73,13 @@ public class PrefManager {
         editor.putString(key, value);
         editor.commit();
     }
-    public void put (String key, boolean value){
+
+    public void put(String key, boolean value) {
         editor.putBoolean(key, value);
         editor.commit();
     }
 
-    public boolean get(String key){
+    public boolean get(String key) {
         return pref.getBoolean(key, false);
     }
 
@@ -89,17 +89,12 @@ public class PrefManager {
 
     public int getInt(String key) {
         String result = getData(key);
-        if(TextUtils.isEmpty(result))
-        {
+        if (TextUtils.isEmpty(result)) {
             return 0;
-        }
-        else
-        {
-            try{
+        } else {
+            try {
                 return Integer.parseInt(result);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return 0;
             }
         }

@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <Button
             android:text="@string/rp"
             android:layout_width="match_parent"
@@ -25,12 +25,13 @@
             android:textAllCaps="false"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <Button
             android:text="@string/uberweisung"
             android:layout_width="match_parent"
@@ -42,12 +43,12 @@
             android:textAllCaps="false"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        >
+        android:gravity="center">
 
         <Button
             android:text="@string/krankenhaus_einweisung"
@@ -61,12 +62,12 @@
             android:textStyle="bold" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        >
+        android:gravity="center">
 
         <Button
             android:text="@string/au"
@@ -79,12 +80,13 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <Button
             android:text="@string/attest"
             android:layout_width="match_parent"
@@ -101,8 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        >
+        android:gravity="center">
 
     </LinearLayout>
 

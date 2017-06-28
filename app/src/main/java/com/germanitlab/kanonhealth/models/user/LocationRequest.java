@@ -1,4 +1,3 @@
-
 package com.germanitlab.kanonhealth.models.user;
 
 import com.google.gson.annotations.SerializedName;
@@ -15,15 +14,15 @@ public class LocationRequest implements Serializable {
     private String userID;
     @SerializedName("password")
     private String password;
-    private int specialty_id ;
-    private int type ;
-    private int is_array = 1 ;
+    private int specialty_id;
+    private int type;
+    private int is_array = 1;
 
 
-    public LocationRequest(String userID, String password , int specialty_id , int type) {
+    public LocationRequest(String userID, String password, int specialty_id, int type) {
         this.userID = userID;
         this.password = password;
-        this.specialty_id = specialty_id ;
+        this.specialty_id = specialty_id;
         this.type = type;
     }
 

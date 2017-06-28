@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="0"
-    android:pivotX="0%"
-    android:pivotY="0%"
-    android:toDegrees="0">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:fromDegrees="0"
+    android:pivotX="0%" android:pivotY="0%" android:toDegrees="0">
     <item android:id="@android:id/background">
-        <shape
-            android:angle="0"
-            android:innerRadiusRatio="2.4"
-            android:shape="ring"
-            android:thicknessRatio="15.0"
-            android:type="sweep"
-            android:useLevel="false">
+        <shape android:angle="0" android:innerRadiusRatio="2.4" android:shape="ring"
+            android:thicknessRatio="15.0" android:type="sweep" android:useLevel="false">
             <solid android:color="@android:color/white" />
         </shape>
 
     </item>
     <item android:id="@android:id/progress">
-        <rotate
-            android:fromDegrees="0"
-            android:toDegrees="0">
-            <shape
-                android:angle="0"
-                android:innerRadiusRatio="2.4"
-                android:shape="ring"
-                android:thicknessRatio="15.0"
-                android:type="sweep">
+        <rotate android:fromDegrees="0" android:toDegrees="0">
+            <shape android:angle="0" android:innerRadiusRatio="2.4" android:shape="ring"
+                android:thicknessRatio="15.0" android:type="sweep">
                 <solid android:color="@android:color/holo_green_dark" />
             </shape>
         </rotate>

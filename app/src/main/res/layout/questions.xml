@@ -17,6 +17,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center">
+
         <TextView
             android:text="@string/main_question"
             android:layout_width="wrap_content"
@@ -25,8 +26,7 @@
             android:textStyle="normal|bold|italic"
             android:textSize="24dp"
             android:textAlignment="center"
-            android:textColor="@android:color/background_dark"
-            />
+            android:textColor="@android:color/background_dark" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,6 +52,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center">
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,8 +63,7 @@
             android:textAllCaps="false"
             android:background="@drawable/round"
             android:textColor="@android:color/white"
-            android:onClick="addMyQuestionsAnswer"
-            />
+            android:onClick="addMyQuestionsAnswer" />
 
     </LinearLayout>
 
@@ -72,6 +72,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center">
+
         <Button
             android:text="@string/beratung"
             android:layout_width="match_parent"
@@ -86,12 +87,12 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center">
+
         <Button
             android:text="@string/ich"
             android:layout_width="match_parent"
@@ -111,14 +112,12 @@
         android:layout_weight="1"
         android:gravity="center">
 
-        <android.support.design.widget.FloatingActionButton
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
             android:text="Fertig"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_submit"
             android:src="@drawable/checkmark"
-            app:backgroundTint="@color/blue"
-            />
+            app:backgroundTint="@color/blue" />
     </LinearLayout>
 </LinearLayout>

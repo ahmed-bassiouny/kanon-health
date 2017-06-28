@@ -17,58 +17,65 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:textColor="@android:color/background_dark"
-        android:text="Total Cost : 6.00 UERO"/>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
+        android:text="Total Cost : 6.00 UERO" />
 
-    <RadioButton
-        android:id="@+id/radio0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:drawableRight="@drawable/paypal_logo"
-        android:enabled="false" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
-    <RadioButton
-        android:drawableRight="@drawable/sofo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:layout_margin="10dp"/>
-    <RadioButton
-        android:drawableRight="@drawable/credit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:layout_margin="10dp" />
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:checked="true"
-        android:text="Free Beta"/>
-</LinearLayout>
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:drawableRight="@drawable/paypal_logo"
+            android:enabled="false" />
+
+        <RadioButton
+            android:drawableRight="@drawable/sofo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_margin="10dp" />
+
+        <RadioButton
+            android:drawableRight="@drawable/credit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_margin="10dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:checked="true"
+            android:text="Free Beta" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:id="@+id/next"
             android:layout_height="match_parent"
-            android:text="Next"/>
+            android:text="Next" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"></LinearLayout>
+
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:id="@+id/cancel"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:text="Cancel"/>
+            android:text="Cancel" />
     </LinearLayout>
 </LinearLayout>

@@ -49,7 +49,7 @@ public class SpinnerCustomAdapter extends BaseAdapter {
 
             TextView names = (TextView) view.findViewById(R.id.tv_spinner_layout_county_title);
             names.setText(countryNames[i]);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

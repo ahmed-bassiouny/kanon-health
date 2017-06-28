@@ -24,19 +24,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -44,8 +40,6 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
-import com.germanitlab.kanonhealth.interfaces.MyClickListener;
-import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
@@ -97,7 +91,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         if (doctorListFragment == null) {
             doctorListFragment = new DoctorListFragment();
             doctorListFragment.setArguments(bundle);
-        }else{
+        } else {
             doctorListFragment.getArguments().putAll(bundle);
         }
         return doctorListFragment;
@@ -278,7 +272,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             @Override
             public void onFailed(String error) {
                 util.dismissProgressDialog();
-               Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                 speciality_id, type);

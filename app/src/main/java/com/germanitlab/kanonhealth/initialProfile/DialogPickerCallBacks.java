@@ -8,6 +8,7 @@ import android.content.Intent;
 
 public interface DialogPickerCallBacks {
     public void onGalleryClicked(Intent intent);
+
     public void onCameraClicked();
 
     public void deleteMyImage();

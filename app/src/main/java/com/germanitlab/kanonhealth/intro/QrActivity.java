@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -110,7 +109,7 @@ public class QrActivity extends AppCompatActivity {
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -134,7 +133,7 @@ public class QrActivity extends AppCompatActivity {
                     finish();
                     DismissProgressDialog();
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
@@ -165,7 +164,7 @@ public class QrActivity extends AppCompatActivity {
             } else {
                 new IntentIntegrator(this).initiateScan();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -185,7 +184,7 @@ public class QrActivity extends AppCompatActivity {
                 new IntentIntegrator(this).initiateScan();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -225,7 +224,7 @@ public class QrActivity extends AppCompatActivity {
                 // other 'case' lines to check for other
                 // permissions this app might request
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

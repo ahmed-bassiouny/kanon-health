@@ -13,12 +13,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.FilterAdapter;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.Speciality;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class Specilaities extends AppCompatActivity {
     private LinearLayout toolbar;
     private Boolean from;
     private int type;
-    PrefManager prefManager ;
+    PrefManager prefManager;
 
 
     @Override
@@ -81,7 +79,7 @@ public class Specilaities extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                Log.e("Specilaities",  error);
+                Log.e("Specilaities", error);
             }
         }).getSpecialities(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
     }

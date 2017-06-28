@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -29,12 +28,10 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -56,8 +53,8 @@ public class VerificationActivity extends AppCompatActivity {
 
     @BindView(R.id.verification_Code)
     EditText verification_Code;
-    Boolean oldUser ;
-    PrefManager prefManager ;
+    Boolean oldUser;
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +66,7 @@ public class VerificationActivity extends AppCompatActivity {
             number = intent.getStringExtra("number");
             code = intent.getStringExtra("codeNumber");
             mPrefManager = new PrefManager(this);
-            oldUser = intent.getBooleanExtra("oldUser" , false);
+            oldUser = intent.getBooleanExtra("oldUser", false);
             tv_toolbar_mobile_number = (TextView) findViewById(R.id.tv_toolbar_mobile_number);
             tv_toolbar_mobile_number.append("  " + code + " " + number);
             ButterKnife.bind(this);
@@ -83,19 +80,18 @@ public class VerificationActivity extends AppCompatActivity {
 
             initView();
             handelEvent();
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
-
     }
 
     @OnClick(R.id.btn_verification_verify_code)
-    public void verify(){
+    public void verify() {
         try {
-            if (verification_Code.getText().toString().length() == 0 ) {
+            if (verification_Code.getText().toString().length() == 0) {
                 Toast.makeText(getApplicationContext(), "Geben Sie den richtigen Code ein", Toast.LENGTH_LONG).show();
                 return;
             } else {
@@ -113,8 +109,8 @@ public class VerificationActivity extends AppCompatActivity {
                         jsonObject = new JSONObject(response.toString());
                         if (jsonObject.has("status") && jsonObject.getInt("active") == 1) {
                             prefManager.setLogin(true);
-                            prefManager.put(PrefManager.USER_ID , String.valueOf(registerResponse.getUser_id()));
-                            prefManager.put(PrefManager.USER_PASSWORD , registerResponse.getPassword());
+                            prefManager.put(PrefManager.USER_ID, String.valueOf(registerResponse.getUser_id()));
+                            prefManager.put(PrefManager.USER_PASSWORD, registerResponse.getPassword());
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -129,7 +125,7 @@ public class VerificationActivity extends AppCompatActivity {
                             CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, registerResponse);
                             joinUser();
                             dismissProgressDialog();
-                            if(oldUser) {
+                            if (oldUser) {
                                 User user = new User();
                                 user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                                 user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
@@ -153,12 +149,11 @@ public class VerificationActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailed(String error) {
-                                        Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
 
                                     }
                                 }).editProfile(user);
-                            }
-                            else {
+                            } else {
                                 Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
                                 //i.putExtra("isfirst", "true");
                                 //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -172,7 +167,7 @@ public class VerificationActivity extends AppCompatActivity {
                             snackbar.show();
 
                         }
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         Crashlytics.logException(e);
                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                     }
@@ -182,10 +177,10 @@ public class VerificationActivity extends AppCompatActivity {
                 @Override
                 public void onFailed(String error) {
                     dismissProgressDialog();
-                    Toast.makeText(getApplicationContext(),getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 }
             }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }

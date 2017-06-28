@@ -5,8 +5,8 @@ package com.germanitlab.kanonhealth.models;
  */
 
 public class SpecilaitiesModels {
-    private int id ;
-    private String name ;
+    private int id;
+    private String name;
     private String speciality_icon;
 
     public int getId() {
@@ -32,10 +32,6 @@ public class SpecilaitiesModels {
     public void setSpeciality_icon(String speciality_icon) {
         this.speciality_icon = speciality_icon;
     }
-
-
-
-
 
 
 }

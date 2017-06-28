@@ -121,7 +121,7 @@ public class TwoQuestionsFragment extends Fragment {
                         InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_22)) &&
                         InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_23)) &&
                         InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_24)) &&
-                        InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_25))){
+                        InquiryActivity.finishedSecondLevelOptions.contains(getResourceString(R.string.question_25))) {
                     InquiryActivity.finishedFirstLevelOptions.add(mFirstLevelName);
                 }
             }

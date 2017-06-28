@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth.ormLite;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -28,11 +27,12 @@ import java.util.Map;
 public class UserRepository {
     private DatabaseHelper db;
     Dao<User, Integer> doctorsDao;
-    private Context context ;
-    public UserRepository(Context context){
+    private Context context;
+
+    public UserRepository(Context context) {
         DatabaseManager databaseManager = new DatabaseManager();
         db = databaseManager.getHelper(context);
-        this.context = context ;
+        this.context = context;
         try {
             doctorsDao = db.getUsersDao();
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class UserRepository {
         }
     }
 
-    public int create(User doctor){
+    public int create(User doctor) {
         try {
             doctor.setJsonInfo(new Gson().toJson(doctor.getInfo()));
             return doctorsDao.create(doctor);
@@ -51,7 +51,7 @@ public class UserRepository {
         return 0;
     }
 
-    public int update(User doctor){
+    public int update(User doctor) {
         try {
             return doctorsDao.update(doctor);
         } catch (SQLException e) {
@@ -59,7 +59,8 @@ public class UserRepository {
         }
         return 0;
     }
-    public int updateColoumn(User doctor){
+
+    public int updateColoumn(User doctor) {
         try {
             doctorsDao.delete(doctor);
             doctor.setJsonInfo(new Gson().toJson(doctor.getInfo()));
@@ -79,7 +80,7 @@ public class UserRepository {
     }
 
 
-    public int insertDocument(User doctor){
+    public int insertDocument(User doctor) {
         UpdateBuilder<User, Integer> updateBuilder = doctorsDao.updateBuilder();
         try {
             // set the criteria like you would a QueryBuilder
@@ -88,13 +89,14 @@ public class UserRepository {
 // update the value of your field(s)
             updateBuilder.updateColumnValue("jsonDocument" /* column */, json/* value */);
             updateBuilder.update();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
         }
         return 0;
 
     }
-    public int delete(User doctor){
+
+    public int delete(User doctor) {
         try {
             return doctorsDao.delete(doctor);
         } catch (Exception e) {
@@ -102,7 +104,8 @@ public class UserRepository {
         }
         return 0;
     }
-    public void deleteAll(){
+
+    public void deleteAll() {
         try {
             DeleteBuilder<User, Integer> db = doctorsDao.deleteBuilder();
             db.delete();
@@ -112,7 +115,7 @@ public class UserRepository {
     }
 
 
-    public double count(){
+    public double count() {
         try {
             return doctorsDao.countOf();
         } catch (Exception e) {
@@ -121,27 +124,27 @@ public class UserRepository {
         return 0;
     }
 
-    public List<User> getAll(int type){
+    public List<User> getAll(int type) {
         try {
-            switch (type){
+            switch (type) {
                 case 2:
-                    return doctorsDao.queryForEq("isDoc",1);
+                    return doctorsDao.queryForEq("isDoc", 1);
                 case 3:
-                    return doctorsDao.queryForEq("isClinic",1);
+                    return doctorsDao.queryForEq("isClinic", 1);
                 default:
-                    Map<String,Object> whereCondition=new HashMap<>();
-                    whereCondition.put("isDoc",0);
-                    whereCondition.put("is_clinic",0);
+                    Map<String, Object> whereCondition = new HashMap<>();
+                    whereCondition.put("isDoc", 0);
+                    whereCondition.put("is_clinic", 0);
                     return doctorsDao.queryForFieldValues(whereCondition);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
-        return null ;
+        return null;
     }
 
-    public User getDoctor(User doctor){
+    public User getDoctor(User doctor) {
         try {
 
             QueryBuilder<User, Integer> queryBuilder =
@@ -152,28 +155,30 @@ public class UserRepository {
             PreparedQuery<User> preparedQuery = queryBuilder.prepare();
 // query for all accounts that have "qwerty" as a password
             List<User> accountList = doctorsDao.query(preparedQuery);
-            if(accountList.size() == 1)
+            if (accountList.size() == 1)
                 return accountList.get(0);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
-        return null ;
+        return null;
     }
-    public boolean isExist(User doctor){
+
+    public boolean isExist(User doctor) {
         try {
             return doctorsDao.idExists(doctor.get_Id());
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
-        return false ;
+        return false;
     }
-    public ArrayList<Message> getDocument(User doctor){
+
+    public ArrayList<Message> getDocument(User doctor) {
         QueryBuilder<User, Integer> queryBuilder = doctorsDao.queryBuilder();
         try {
             queryBuilder.where().eq("id", doctor.get_Id());
             List<User> doctorsList = queryBuilder.query();
-            if(doctorsList.size() == 1)
+            if (doctorsList.size() == 1)
                 return doctorsList.get(0).getDocuments();
         } catch (Exception e) {
             Crashlytics.logException(e);

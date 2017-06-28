@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    >
+    android:layout_margin="@dimen/activity_horizontal_margin">
 
     <TextView
         android:layout_width="match_parent"
@@ -11,8 +11,7 @@
         android:text="@string/profile_detail_header"
         android:textAlignment="center"
         android:textSize="24sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,6 +71,7 @@
                 android:hint="@string/title"
                 android:textSize="16dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,74 +133,84 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_event_black_24dp" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_gravity="bottom"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/edit_birthday"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="8dp"
-        android:hint="@string/birthday"
-        android:textSize="16dp" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1.5dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginRight="4dp"
-        android:background="@android:color/darker_gray"></LinearLayout>
-</LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/edit_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="8dp"
+                    android:hint="@string/birthday"
+                    android:textSize="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@android:color/darker_gray"></LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_margin="10dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/rggender"
-        android:weightSum="4">
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:text="Gender"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/rbmale"
-            android:text="Male"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/rbfemal"
-            android:text="Female"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/rbother"
-            android:text="Other"/>
-    </RadioGroup>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:id="@+id/edgender"
-        android:hint="Gender"/>
-</LinearLayout>
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/rggender"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text="Gender" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/rbmale"
+                    android:text="Male" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/rbfemal"
+                    android:text="Female" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/rbother"
+                    android:text="Other" />
+            </RadioGroup>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/edgender"
+                android:hint="Gender" />
+        </LinearLayout>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -209,8 +219,7 @@
             android:drawableLeft="@drawable/ic_done_all_white_24dp"
             android:text="@string/fertig"
             android:textColor="#FFFFFF"
-            android:background="@drawable/round"
-            />
+            android:background="@drawable/round" />
 
-        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

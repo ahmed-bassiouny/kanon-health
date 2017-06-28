@@ -10,7 +10,7 @@ import dagger.Component;
  */
 
 @customAnotations.PerActivity
-@Component(dependencies = AppComponent.class , modules = ChatModule.class)
+@Component(dependencies = AppComponent.class, modules = ChatModule.class)
 public interface ChatComponent {
 
     void inject(ChatActivity chatActivity);

@@ -56,8 +56,7 @@ public class DateUtil {
         }
     }
 
-    public static String formatBirthday(long date)
-    {
+    public static String formatBirthday(long date) {
         SimpleDateFormat form = new SimpleDateFormat("dd.MMM.yyyy");
         return form.format(date);
 

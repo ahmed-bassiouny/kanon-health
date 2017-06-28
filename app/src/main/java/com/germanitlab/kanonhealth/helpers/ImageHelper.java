@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +22,7 @@ import com.germanitlab.kanonhealth.R;
 
 public class ImageHelper {
 
-
+    // image string url
     public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
         setImage(iv, imageFullUrl, R.drawable.placeholder, ctx);
     }
@@ -39,6 +39,21 @@ public class ImageHelper {
                     .skipMemoryCache(true)
                     .into(iv);
         }
+    }
+
+    // image uri
+    public static void setImage(ImageView iv, Uri imageUri, Context ctx) {
+        setImage(iv, imageUri, R.drawable.placeholder, ctx);
+    }
+
+    public static void setImage(ImageView iv, Uri imageUri, int placeHolder, Context ctx) {
+        Glide.with(ctx)
+                .load(imageUri)
+                .fitCenter()
+                .placeholder(placeHolder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(true)
+                .into(iv);
     }
 
     public static void setBackground(final View v, String imageFullUrl, Context ctx) {
