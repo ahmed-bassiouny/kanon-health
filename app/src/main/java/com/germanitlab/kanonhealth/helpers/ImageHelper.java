@@ -27,17 +27,26 @@ public class ImageHelper {
         setImage(iv, imageFullUrl, R.drawable.placeholder, ctx);
     }
 
-    public static void setImage(ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
+    public static void setImage(final ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
         if (TextUtils.isEmpty(imageFullUrl)) {
             iv.setImageResource(placeHolder);
         } else {
             Glide.with(ctx)
                     .load(imageFullUrl)
+                    .asBitmap()
                     .fitCenter()
                     .placeholder(placeHolder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)
-                    .into(iv);
+                    //.into(iv);
+                    .dontAnimate()
+                    .into(new SimpleTarget<Bitmap>() {
+
+                        @Override
+                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                            iv.setImageBitmap(arg0);
+                        }
+                    });
         }
     }
 
@@ -46,14 +55,23 @@ public class ImageHelper {
         setImage(iv, imageUri, R.drawable.placeholder, ctx);
     }
 
-    public static void setImage(ImageView iv, Uri imageUri, int placeHolder, Context ctx) {
+    public static void setImage(final ImageView iv, Uri imageUri, int placeHolder, Context ctx) {
         Glide.with(ctx)
                 .load(imageUri)
+                .asBitmap()
                 .fitCenter()
                 .placeholder(placeHolder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(true)
-                .into(iv);
+                //.into(iv);
+                .dontAnimate()
+                .into(new SimpleTarget<Bitmap>() {
+
+                    @Override
+                    public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                        iv.setImageBitmap(arg0);
+                    }
+                });
     }
 
     public static void setBackground(final View v, String imageFullUrl, Context ctx) {
