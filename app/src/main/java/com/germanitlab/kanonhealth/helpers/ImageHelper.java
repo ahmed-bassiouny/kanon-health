@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,48 +28,61 @@ public class ImageHelper {
     }
 
     public static void setImage(ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
-        Glide.with(ctx)
-                .load(imageFullUrl)
-                .fitCenter()
-                .placeholder(placeHolder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .skipMemoryCache(true)
-                .into(iv);
+        if (TextUtils.isEmpty(imageFullUrl)) {
+            iv.setImageResource(placeHolder);
+        } else {
+            Glide.with(ctx)
+                    .load(imageFullUrl)
+                    .fitCenter()
+                    .placeholder(placeHolder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
+                    .into(iv);
+        }
     }
 
     public static void setBackground(final View v, String imageFullUrl, Context ctx) {
 
-        int width = v.getWidth();
-        int height = v.getHeight();
+        setBackground(v, imageFullUrl, R.drawable.appbackground, ctx);
+    }
 
-        if (width <= 0) {
-            width = v.getMeasuredWidth();
-        }
-        if (height <= 0) {
-            height = v.getMeasuredHeight();
-        }
+    public static void setBackground(final View v, String imageFullUrl, int placeHolder, Context ctx) {
 
-        if (width <= 0 && v.getLayoutParams() != null) {
-            width = v.getLayoutParams().width;
-        }
-        if (height <= 0 && v.getLayoutParams() != null) {
-            height = v.getLayoutParams().height;
-        }
+        v.setBackgroundResource(placeHolder);
+
+        if (!TextUtils.isEmpty(imageFullUrl)) {
+            int width = v.getWidth();
+            int height = v.getHeight();
+
+            if (width <= 0) {
+                width = v.getMeasuredWidth();
+            }
+            if (height <= 0) {
+                height = v.getMeasuredHeight();
+            }
+
+            if (width <= 0 && v.getLayoutParams() != null) {
+                width = v.getLayoutParams().width;
+            }
+            if (height <= 0 && v.getLayoutParams() != null) {
+                height = v.getLayoutParams().height;
+            }
 
 
-        Glide.with(ctx)
-                .load(imageFullUrl)
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>(width, height) {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        Drawable drawable = new BitmapDrawable(resource);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            v.setBackground(drawable);
-                        } else {
-                            v.setBackgroundDrawable(drawable);
+            Glide.with(ctx)
+                    .load(imageFullUrl)
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>(width, height) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            Drawable drawable = new BitmapDrawable(resource);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                v.setBackground(drawable);
+                            } else {
+                                v.setBackgroundDrawable(drawable);
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 }
