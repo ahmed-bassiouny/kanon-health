@@ -18,6 +18,7 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
@@ -122,6 +123,21 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 holder.tvUnreadMessage.setVisibility(View.INVISIBLE);
             }
             holder.tvSubtitle.setText(doctor.getSubTitle());
+            holder.tvPractice.setText("");
+            if (doctor.getIsDoc() == 1 && doctor.getMembers_at() != null && doctor.getMembers_at().size() > 0) {
+                holder.tvPractice.setVisibility(View.VISIBLE);
+                boolean isFirst = true;
+                for (ChooseModel practice : doctor.getMembers_at()) {
+                    if (isFirst) {
+                        holder.tvPractice.setText(practice.getFirst_nameMember() + " " + practice.getLast_nameMember());
+                        isFirst = false;
+                    } else {
+                        holder.tvPractice.append("," + practice.getFirst_nameMember() + " " + practice.getLast_nameMember());
+                    }
+                }
+            } else {
+                holder.tvPractice.setVisibility(View.INVISIBLE);
+            }
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
@@ -171,7 +187,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgPage, imgStatus;
-        TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage, tvSpecialist;
+        TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage, tvSpecialist, tvPractice;
         LinearLayout background, linearLayoutSpecialist;
 
 
@@ -181,6 +197,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar_cell);
             imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
             background = (LinearLayout) itemView.findViewById(R.id.background);
+            tvPractice = (TextView) itemView.findViewById(R.id.tv_practice);
             tvDoctorName = (TextView) itemView.findViewById(R.id.tv_doctor_name_cell);
             tvDate = (TextView) itemView.findViewById(R.id.tv_doctor_date_cell);
             tvSubtitle = (TextView) itemView.findViewById(R.id.tv_sub_title_cell);

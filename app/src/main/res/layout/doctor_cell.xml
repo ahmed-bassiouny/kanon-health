@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/size_15dp"
+    android:layout_marginStart="@dimen/size_15dp"
+    android:layout_marginTop="@dimen/size_10dp"
     android:background="@color/white"
     android:orientation="horizontal"
-    android:layout_marginStart="@dimen/size_15dp"
-    android:layout_marginEnd="@dimen/size_15dp"
-    android:layout_marginTop="@dimen/size_10dp"
     android:padding="@dimen/size_5dp">
 
     <LinearLayout
@@ -52,10 +52,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAllCaps="true"
                     android:textColor="@color/title_gray"
                     android:textSize="@dimen/size_15sp"
                     android:textStyle="bold"
-                    android:textAllCaps="true"
                     tools:text="fdtrdrtd" />
 
                 <TextView
@@ -74,15 +74,37 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/tv_practice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/size_2dp"
+                    android:gravity="left"
+                    android:layout_marginTop="@dimen/size_2dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:visibility="invisible"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textColor="@color/title_gray"
+                    android:textSize="@dimen/size_15sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
                     android:id="@+id/tv_specialities"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginTop="@dimen/size_2dp"
-                    android:maxLines="1"
-                    android:lines="1"
-                    android:ellipsize="end"
                     android:layout_marginBottom="@dimen/size_2dp"
+                    android:layout_marginTop="@dimen/size_2dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:maxLines="1"
                     android:text="Doctor specialities"
                     android:textColor="@color/text_msg_input"
                     android:textSize="@dimen/size_15sp" />
