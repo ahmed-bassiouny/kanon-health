@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.splash;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +12,15 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
+import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+import com.google.gson.Gson;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -48,12 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // to check passcode
                     if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
                         joinUser();
-                        Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                        intent.putExtra("checkPassword", true);
-                        intent.putExtra("finish", false);
-                        startActivity(intent);
-                        finish();
-
+                        loadData();
 
                     } // registered but not filled my data
                     else if (isLogin && storedUser.equals("")) {
@@ -124,6 +123,54 @@ public class SplashScreenActivity extends AppCompatActivity {
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
+    }
+    private void loadData() {
+        try {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle(R.string.waiting_text);
+            progressDialog.setCancelable(false);
+            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+            progressDialog.show();
+            if(!Helper.isNetworkAvailable(this)){
+                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    if (response != null) {
+                        Gson gson = new Gson();
+                        new PrefManager(SplashScreenActivity.this).put(PrefManager.USER_KEY, gson.toJson(response));
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                        intent.putExtra("checkPassword", true);
+                        intent.putExtra("finish", false);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        onFailed("response is null");
+
+                    }
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.e("Splash", error );
+                    progressDialog.dismiss();
+                    finish();
+                }
+            }).getProfile(userRegisterResponse);
+
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.contact_support), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
     }
 
 }

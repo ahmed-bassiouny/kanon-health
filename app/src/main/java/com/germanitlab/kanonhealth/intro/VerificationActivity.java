@@ -111,6 +111,7 @@ public class VerificationActivity extends AppCompatActivity {
                             prefManager.setLogin(true);
                             prefManager.put(PrefManager.USER_ID, String.valueOf(registerResponse.getUser_id()));
                             prefManager.put(PrefManager.USER_PASSWORD, registerResponse.getPassword());
+                            //prefManager.put(prefManager.IS_DOC,registerResponse.get);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {

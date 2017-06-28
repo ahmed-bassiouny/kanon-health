@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,12 +17,15 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -40,16 +44,18 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     private boolean onBind;
     List<Message> list;
     int tabPosition;
-
-
+    boolean is_doc=false;
+    boolean is_clinic=false;
     public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
         try {
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
             this.visibility = visibility;
             tabPosition = i;
-
             mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
+            is_doc = new Gson().fromJson(new PrefManager(activity).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc()==1;
+            is_clinic = new Gson().fromJson(new PrefManager(activity).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic()==1;
+
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -142,6 +148,12 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+                if(doctor.getIsOpen()!=1)
+                    holder.imgAvatar.setBorderColor(Color.GRAY);
+                else if(is_clinic ||is_doc)
+                    holder.imgAvatar.setBorderColor(Color.GREEN);
+                else
+                    holder.imgAvatar.setBorderColor(Color.BLUE);
             }
 
             if (tabPosition != 3 && doctor.getSpecialities() != null) {

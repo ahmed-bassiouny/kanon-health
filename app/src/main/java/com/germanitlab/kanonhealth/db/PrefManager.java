@@ -33,6 +33,8 @@ public class PrefManager {
     public static String DOCTOR_KEY = "doctor";
     public static String USER_KEY = "user";
     public static String USER_STATUS = "userStatus";
+    public static String IS_DOC="is_doc";
+    public static String IS_CLINIC="is_clinic";
 /*
     public static String Image_data = "imagedata";
 */
