@@ -129,10 +129,10 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 boolean isFirst = true;
                 for (ChooseModel practice : doctor.getMembers_at()) {
                     if (isFirst) {
-                        holder.tvPractice.setText(practice.getFirst_nameMember() + " " + practice.getLast_nameMember());
+                        holder.tvPractice.setText(practice.getFirst_nameMember());
                         isFirst = false;
                     } else {
-                        holder.tvPractice.append("," + practice.getFirst_nameMember() + " " + practice.getLast_nameMember());
+                        holder.tvPractice.append(", " + practice.getFirst_nameMember());
                     }
                 }
             } else {
