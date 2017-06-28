@@ -13,6 +13,8 @@ public class CountriesCodes implements Serializable {
     private String name;
     @SerializedName("dial_code")
     private String dial_code;
+    @SerializedName("code")
+    private String code;
 
 
     public String getName() {
@@ -29,5 +31,13 @@ public class CountriesCodes implements Serializable {
 
     public void setDial_code(String dial_code) {
         this.dial_code = dial_code;
+    }
+
+    public String getCode() {
+        return code.toLowerCase();
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

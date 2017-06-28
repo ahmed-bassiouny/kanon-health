@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,6 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.germanitlab.kanonhealth.R;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by Milad Metias on 6/28/17.
@@ -116,6 +119,35 @@ public class ImageHelper {
                             }
                         }
                     });
+        }
+    }
+
+
+    public static void setLanguageImage(final ImageView iv, String langCode) {
+        if (!TextUtils.isEmpty(langCode)) {
+
+//            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
+            int resourceId = getResourceIdByName("ic_lang_" + langCode);
+
+            if (resourceId != -1) {
+                iv.setImageResource(resourceId);
+            } else {
+                iv.setImageDrawable(null);
+            }
+        }
+    }
+
+
+    private static int getResourceIdByName(String name) {
+        int drawableId = -1;
+        try {
+            Class res = R.drawable.class;
+            Field field = res.getField(name);
+            drawableId = field.getInt(null);
+        } catch (Exception e) {
+            Log.e("MyTag", "Failure to get drawable id. with name : " + name, e);
+        } finally {
+            return drawableId;
         }
     }
 }

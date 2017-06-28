@@ -50,24 +50,24 @@ public class CountryActivty extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    HashMap<String, String> search = new HashMap<String, String>();
+                    HashMap<String, CountriesCodes> search = new HashMap<String, CountriesCodes>();
                     try {
                         String temp = search_bar.getText().toString().replaceAll(Pattern.quote("+"), "");
                         if (temp == "") {
                         } else {
                             int number = Integer.parseInt(temp);
                         }
-                        for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
-                            if (e.getValue().toLowerCase().startsWith("+" + temp)) {
-                                search.put(e.getKey().toString(), e.getValue().toString());
+                        for (Map.Entry<String, CountriesCodes> e : Constants.COUNTRY_CODES.entrySet()) {
+                            if (e.getValue().getDial_code().toLowerCase().startsWith("+" + temp)) {
+                                search.put(e.getKey().toString(), e.getValue());
 
                             }
                         }
                     } catch (Exception w) {
-                        for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
+                        for (Map.Entry<String, CountriesCodes> e : Constants.COUNTRY_CODES.entrySet()) {
                             Log.d(e.getKey().toLowerCase().toString(), e.getValue().toString());
                             if (e.getKey().toLowerCase().startsWith(search_bar.getText().toString().toLowerCase())) {
-                                search.put(e.getKey().toString(), e.getValue().toString());
+                                search.put(e.getKey().toString(), e.getValue());
 
                             }
                         }

@@ -65,7 +65,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             }.getType());
             found = true;
             for (CountriesCodes countriescooed : codess) {
-                Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed.getDial_code());
+                Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed);
 
             }
             initView();
@@ -102,8 +102,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
                     String temp = etPostelCode.getText().toString().replaceAll(Pattern.quote("+"), "");
 
-                    for (Map.Entry<String, String> e : Constants.COUNTRY_CODES.entrySet()) {
-                        if (e.getValue().toLowerCase().equals("+" + temp)) {
+                    for (Map.Entry<String, CountriesCodes> e : Constants.COUNTRY_CODES.entrySet()) {
+                        if (e.getValue().getDial_code().toLowerCase().equals("+" + temp)) {
                             select_country.setText(e.getKey().toString());
                             country = e.getKey().toString();
                             code = e.getValue().toString();
