@@ -56,6 +56,47 @@ public class Message implements Serializable {
     @DatabaseField
     private String imageText;
 
+    //New Attribute
+    @DatabaseField
+    private String is_document;
+    @DatabaseField
+    private int is_forward;
+    @DatabaseField
+    private int is_delivered;
+    @DatabaseField
+    private String group_id;
+
+    public String getIs_document() {
+        return is_document;
+    }
+
+    public void setIs_document(String is_document) {
+        this.is_document = is_document;
+    }
+
+    public int getIs_forward() {
+        return is_forward;
+    }
+
+    public void setIs_forward(int is_forward) {
+        this.is_forward = is_forward;
+    }
+
+    public int getIs_delivered() {
+        return is_delivered;
+    }
+
+    public void setIs_delivered(int is_delivered) {
+        this.is_delivered = is_delivered;
+    }
+
+    public String getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(String group_id) {
+        this.group_id = group_id;
+    }
 
     public Message() {
     }
