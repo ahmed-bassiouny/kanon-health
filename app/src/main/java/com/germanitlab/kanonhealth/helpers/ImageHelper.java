@@ -23,10 +23,14 @@ public class ImageHelper {
 
 
     public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
+        setImage(iv, imageFullUrl, R.drawable.placeholder, ctx);
+    }
+
+    public static void setImage(ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
         Glide.with(ctx)
                 .load(imageFullUrl)
                 .fitCenter()
-                .placeholder(R.drawable.placeholder)
+                .placeholder(placeHolder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(true)
                 .into(iv);
