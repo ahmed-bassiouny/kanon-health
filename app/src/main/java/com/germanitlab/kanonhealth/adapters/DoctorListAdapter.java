@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
@@ -147,13 +148,14 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
-                if(doctor.getIsOpen()!=1)
-                    holder.imgAvatar.setBorderColor(Color.GRAY);
-                else if(is_clinic ||is_doc)
-                    holder.imgAvatar.setBorderColor(Color.GREEN);
-                else
+                Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
+                if(doctor.getIsOpen()!=1){
+                    holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
+                }else if(is_doc||is_clinic) {
                     holder.imgAvatar.setBorderColor(Color.BLUE);
+                }else {
+                    holder.imgAvatar.setBorderColor(Color.GREEN);
+                }
             }
 
             if (tabPosition != 3 && doctor.getSpecialities() != null) {
