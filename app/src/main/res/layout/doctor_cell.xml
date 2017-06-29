@@ -28,6 +28,13 @@
                 app:civ_border_width="@dimen/size_3dp"
                 android:layout_height="@dimen/size_70dp"
                 android:src="@drawable/placeholder" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/status"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="3dp"
+                android:src="@color/medium_grey" />
 
         </FrameLayout>
 

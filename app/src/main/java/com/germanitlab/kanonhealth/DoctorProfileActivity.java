@@ -313,7 +313,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Log.e("error", e.toString());
+            Log.e("Doctor Profile Activity", e.toString());
+            Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
         }
     }
 

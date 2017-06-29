@@ -292,7 +292,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), View.VISIBLE, 1);
+            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), View.VISIBLE, 1,0);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }

@@ -423,7 +423,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
-            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), view.VISIBLE, 3);
+            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), view.VISIBLE, 3,2);
             recyclerView.setAdapter(doctorListAdapter);
         }
     }
