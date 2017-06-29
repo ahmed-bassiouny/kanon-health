@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -256,8 +257,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 tvOnline.setText(user.getSubTitle());
                 edAddToFavourite.setText(user.getFirst_name());
                 tvContact.setText(user.getLast_name());
+                /*android:gravity="left|center_vertical"
+                                android:paddingLeft="5dp"*/
+                changeGravity(tvOnline,true);
+                changeGravity(edAddToFavourite,true);
+                changeGravity(tvContact,true);
                 break;
             case R.id.mi_save:
+                changeGravity(tvOnline,false);
+                changeGravity(edAddToFavourite,false);
+                changeGravity(tvContact,false);
                 handleNewData();
                 bindData();
                 menu.findItem(R.id.mi_edit).setVisible(true);
@@ -877,5 +886,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+    private void changeGravity(TextView textView,boolean editable){
+        if(editable) {
+            textView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            textView.setPadding(5, 0, 0, 0);
+        }else{
+            textView.setGravity(Gravity.CENTER);
+            textView.setPadding(0, 0, 0, 0);
+        }
     }
 }
