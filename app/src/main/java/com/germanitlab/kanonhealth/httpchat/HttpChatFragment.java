@@ -85,7 +85,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadChat(3,2);
+        loadChat(3,3);
         initData();
 
     }
@@ -115,7 +115,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
     @Override
     public void onSuccess(Object response) {
         ArrayList<Message> messages=(ArrayList<Message>)response;
-        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity());
+        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity(),true);
         recyclerView.setAdapter(chatAdapter);
     }
 

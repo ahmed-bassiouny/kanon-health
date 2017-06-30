@@ -1,9 +1,12 @@
 package com.germanitlab.kanonhealth.httpchat;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,10 +26,11 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.chat.MessageAdapterClinic;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
 import java.util.ArrayList;
@@ -39,16 +42,25 @@ import static com.germanitlab.kanonhealth.R.id.progress_view_download;
  * Created by bassiouny on 28/06/17.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder>{
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder> implements View.OnClickListener, View.OnLongClickListener {
 
     private List<Message> mMessages;
-    private Context mcontext;
+    private Activity activity;
     private int userID;
-    public ChatAdapter(List<Message> messages, Context context) {
+    private String passowrd;
+    List<Integer> list = new ArrayList<>();
+    private boolean selected = false;
+    private boolean show_privacy = false;
+    private PrefManager prefManager;
+
+    public ChatAdapter(List<Message> messages, Activity activity, boolean show_privacy) {
         this.mMessages = messages;
-        this.mcontext=context;
-        userID=new PrefManager(context).getInt(PrefManager.USER_ID);
-        userID=3;
+        this.activity = activity;
+        this.show_privacy = show_privacy;
+        prefManager = new PrefManager(activity);
+        userID = prefManager.getInt(PrefManager.USER_ID);
+        passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
+        userID = 3;
     }
 
     @Override
@@ -94,7 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 //setAudioMessage(audioViewHolder, position);
                 break;
             case Constants.VIDEO:
-               // VideoViewHolder videoViewHolder = (VideoViewHolder) baseViewHolder;
+                // VideoViewHolder videoViewHolder = (VideoViewHolder) baseViewHolder;
                 //setVideoMessage(videoViewHolder, position);
                 break;
             case Constants.LOCATION:
@@ -107,6 +119,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 setTextMessage(textMsgViewHolder, position);
         }
     }
+
     @Override
     public int getItemViewType(int position) {
         try {
@@ -126,17 +139,28 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     return Constants.LOCATION_MESSAGE;
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(mcontext, mcontext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
 
         return -1;
     }
+
     @Override
     public int getItemCount() {
         return mMessages.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -162,6 +186,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
 
     }
+
     public static class BaseViewHolder extends RecyclerView.ViewHolder {
 
         public Toolbar toolbar;
@@ -172,14 +197,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     }
 
     /*------------------------------this code just copied from old code :( --------------------------------------*/
+
     /***** declare layout ****/
     // Image
-    public  class ImageViewHolder extends BaseViewHolder {
+    public class ImageViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
         public ImageView myMessage, hisMessage;
         public ProgressBar progressBar, progressViewDownload;
         public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy,tvMyTextImg,tvHisTextImg;
+        public TextView tvDate, tvDateMy, tvMyTextImg, tvHisTextImg;
         public ImageView imgMessageStatus;
 
 
@@ -192,7 +218,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvMyTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_my);
-            tvHisTextImg= (TextView) itemView.findViewById(R.id.tv_text_with_image_his);
+            tvHisTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_his);
             imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);
@@ -207,8 +233,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             });
         }
     }
+
     // Audio
-    public  class AudioViewHolder extends BaseViewHolder {
+    public class AudioViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
         public ImageButton hisPlayPauseButton, playPauseButton;
         public ProgressBar myProgressBar, progressViewDownload;
@@ -248,8 +275,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             seekBarMusic = (SeekBar) itemView.findViewById(R.id.seek_bar_music);
         }
     }
+
     // Video
-    public  class VideoViewHolder extends BaseViewHolder {
+    public class VideoViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
         public ImageView myMessage, hisMessage;
         public FrameLayout myFrameVideo, hisFrameVideo;
@@ -274,6 +302,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             hisFrameVideo = (FrameLayout) itemView.findViewById(R.id.his_frame_video);
         }
     }
+
     //Location
     public class LocationViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
@@ -299,11 +328,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
         }
     }
+
     // Text
     public static class TextMsgViewHolder extends BaseViewHolder {
         public LinearLayout messageContainer;
         public TextView message, date;
-        public ImageView status;
+        public ImageView status, privacy_image;
         RelativeLayout background;
 
         public TextMsgViewHolder(View itemView) {
@@ -313,6 +343,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             message = (TextView) itemView.findViewById(R.id.message);
             date = (TextView) itemView.findViewById(R.id.date);
             status = (ImageView) itemView.findViewById(R.id.status);
+            privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
         }
     }
 
@@ -321,7 +352,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     // finished edit
     private void setTextMessage(final TextMsgViewHolder textMsgViewHolder, final int position) {
         try {
-             Message textMessage = mMessages.get(position);
+            final Message textMessage = mMessages.get(position);
+            if (show_privacy) {
+                setImagePrivacy(textMessage.getPrivacy(), textMsgViewHolder.privacy_image);
+                changePrivacy(textMsgViewHolder.privacy_image, position);
+                textMsgViewHolder.privacy_image.setVisibility(View.VISIBLE);
+            } else {
+                textMsgViewHolder.privacy_image.setVisibility(View.GONE);
+            }
             if (mMessages.get(position).getFrom_id() == userID) {
                 textMsgViewHolder.background.setGravity(Gravity.RIGHT);
                 textMsgViewHolder.messageContainer.setBackgroundResource(R.drawable.bubble_in);
@@ -335,57 +373,177 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     textMsgViewHolder.status.setImageResource(R.drawable.sent);
                 } else
                     textMsgViewHolder.status.setImageResource(R.drawable.pending);
-            }else {
+            } else {
                 textMsgViewHolder.background.setGravity(Gravity.LEFT);
                 textMsgViewHolder.messageContainer.setBackgroundResource(R.drawable.bubble_out);
                 textMsgViewHolder.status.setVisibility(View.GONE);
 
             }
-                textMsgViewHolder.message.setText(textMessage.getMsg());
+            textMsgViewHolder.message.setText(textMessage.getMsg());
 
-                try {
-                    String[] split = textMessage.getSent_at().split(" ")[1].split(":");
-                    textMsgViewHolder.date.setText(split[0] + " " + split[1] );
-                } catch (Exception ex) {
-                    textMsgViewHolder.date.setText(textMessage.getSent_at());
-                }
-
-
+            try {
+                String[] split = textMessage.getSent_at().split(" ")[1].split(":");
+                textMsgViewHolder.date.setText(split[0] + " " + split[1]);
+            } catch (Exception ex) {
+                textMsgViewHolder.date.setText(textMessage.getSent_at());
+            }
 
 
-            /*
             textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (!selected) {
-                        changeToolbar(true);
-                    }
-                    if (!list.contains(textMessage.get_Id()))
-                        selectItem(textMsgViewHolder.background, textMessage);
-                    else {
-                        unselectItem(textMsgViewHolder.background, textMessage);
-                    }
+                    longClick(textMessage, textMsgViewHolder.background);
                     return true;
                 }
             });
             textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (selected) {
-                        if (!list.contains(textMessage.get_Id()))
-                            selectItem(textMsgViewHolder.background, textMessage);
-                        else {
-                            unselectItem(textMsgViewHolder.background, textMessage);
-                        }
-                    }
+                    onclick(textMessage, textMsgViewHolder.background);
                 }
-            });*/
+            });
 
-        }catch (Exception e) {
-            //Crashlytics.logException(e);
-            Log.e("Chat Adapter", "setTextMessage: ",e );
-            Toast.makeText(mcontext, mcontext.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e("Chat Adapter", "setTextMessage: ", e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
+
+    //***************** Additional important Methods
+
+    public void selectItem(RelativeLayout messageContainer, Message message) {
+        messageContainer.setBackgroundResource(R.color.gray_black);
+        list.add(message.get_Id());
+        Toast.makeText(activity, "", Toast.LENGTH_SHORT).show();
+    }
+
+    public void changeToolbar(Boolean select) {
+        selected = true;
+        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        Toolbar toolbar1 = (Toolbar) activity.findViewById(R.id.toolbar2);
+        if (select) {
+            toolbar.setVisibility(View.GONE);
+            toolbar1.setVisibility(View.VISIBLE);
+        } else {
+            toolbar.setVisibility(View.VISIBLE);
+            toolbar1.setVisibility(View.GONE);
+        }
+    }
+
+    private void unselectItem(RelativeLayout messageContainer, Message message) {
+        try {
+            messageContainer.setBackgroundResource(0);
+            list.remove(list.indexOf(message.get_Id()));
+            if (list.size() == 0) {
+                changeToolbar(false);
+                selected = false;
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void longClick(Message textMessage, RelativeLayout background) {
+        if (!selected) {
+            changeToolbar(true);
+        }
+        if (!list.contains(textMessage.get_Id()))
+            selectItem(background, textMessage);
+        else
+            unselectItem(background, textMessage);
+    }
+
+    private void onclick(Message textMessage, RelativeLayout background) {
+        if (selected) {
+            if (!list.contains(textMessage.get_Id()))
+                selectItem(background, textMessage);
+            else {
+                unselectItem(background, textMessage);
+            }
+        }
+    }
+
+    public void setImagePrivacy(int privacy, ImageView image) {
+        if (privacy == 0) {
+//            image.setBackgroundResource(R.drawable.red);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red, activity.getTheme()));
+            } else {
+                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red));
+            }
+
+        }
+        if (privacy == 1) {
+//            image.setBackgroundResource(R.drawable.blue);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue, activity.getTheme()));
+            } else {
+                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue));
+            }
+
+        }
+        if (privacy == 2) {
+//            image.setBackgroundResource(R.drawable.green);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green, activity.getTheme()));
+            } else {
+                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green));
+            }
+
+        }
+    }
+
+    private void changePrivacy(ImageView imagePrivacy, final int pos) {
+        imagePrivacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                builder1.setMessage(R.string.change_privacy_msg);
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Ja",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, final int position) {
+                                dialog.cancel();
+                                new HttpCall(activity, new ApiResponse() {
+                                    @Override
+                                    public void onSuccess(Object response) {
+                                        if (mMessages.get(pos).getPrivacy() == 0)
+                                            mMessages.get(pos).setPrivacy(1);
+                                        else if (mMessages.get(pos).getPrivacy() == 1)
+                                            mMessages.get(pos).setPrivacy(2);
+                                        else
+                                            mMessages.get(pos).setPrivacy(0);
+                                        notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onFailed(String error) {
+                                        Toast.makeText(activity, activity.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }).updatePrivacy(String.valueOf(userID), passowrd, mMessages.get(pos).get_Id(), (mMessages.get(pos).getPrivacy() + 1));
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "Nein",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            }
+        });
+    }
 }
+
