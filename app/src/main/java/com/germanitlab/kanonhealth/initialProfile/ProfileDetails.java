@@ -41,6 +41,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
 
@@ -275,10 +276,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
                     mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
                     dismissProgressDialog();
-                    Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
-                    intent.putExtra("checkPassword", false);
-                    intent.putExtra("finish", false);
-                    startActivity(intent);
+                    loadData();
+
                 }
 
                 @Override
@@ -386,6 +385,54 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
     @Override
     public void deleteMyImage() {
+
+    }
+    private void loadData() {
+        try {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle(R.string.waiting_text);
+            progressDialog.setCancelable(false);
+            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+            progressDialog.show();
+            if(!Helper.isNetworkAvailable(this)){
+                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    if (response != null) {
+                        Gson gson = new Gson();
+                        new PrefManager(ProfileDetails.this).put(PrefManager.USER_KEY, gson.toJson(response));
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
+                        intent.putExtra("checkPassword", false);
+                        intent.putExtra("finish", false);
+                        startActivity(intent);
+
+
+                    } else {
+                        onFailed("response is null");
+
+                    }
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Log.e("ProfileDetails", error );
+                    progressDialog.dismiss();
+                    finish();
+                }
+            }).getProfile(userRegisterResponse);
+
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.contact_support), Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
     }
 }
