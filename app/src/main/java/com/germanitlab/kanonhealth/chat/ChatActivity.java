@@ -59,6 +59,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
@@ -358,7 +359,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 checkSessionOpen();
             }
 
-            ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL + "/" + doctor.getAvatar(), R.drawable.placeholder, this);
+            //ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), R.drawable.placeholder, this);
+            Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(imageUser);
 
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
