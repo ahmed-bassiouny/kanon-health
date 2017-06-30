@@ -125,6 +125,7 @@ public class DocumentsChatFragment extends Fragment
     public boolean appStatus = false;
 
     private int mUserId;
+    ImageButton imgbtn_add_picture;
 
     private static DocumentsChatFragment documentsChatFragment;
 
@@ -226,6 +227,27 @@ public class DocumentsChatFragment extends Fragment
         relativeAudio = (RelativeLayout) view.findViewById(R.id.relative_record);
 
         tvRecordTimer = (TextView) view.findViewById(R.id.timer);
+        imgbtn_add_picture= (ImageButton) view.findViewById(R.id.imgbtn_add_picture);
+        imgbtn_add_picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent();
+                        intent.setType("image/* video/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent,
+                                "Select Picture"), 100);
+                    } else
+                        askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
+                } else {
+                    Intent intent = new Intent();
+                    intent.setType("image/* video/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+                }
+            }
+        });
     }
 
 
@@ -1199,6 +1221,25 @@ public class DocumentsChatFragment extends Fragment
         }
 
     }
+
+    /*
+    *                     if (Build.VERSION.SDK_INT >= 23) {
+                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            Intent intent = new Intent();
+                            intent.setType("image/* video/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent,
+                                    "Select Picture"), 100);
+                        } else
+                            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setType("image/* video/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+                    }
+
+*/
 
 
 }

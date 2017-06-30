@@ -70,6 +70,14 @@
             android:paddingRight="@dimen/size_5dp">
 
 
+            <ImageButton
+                android:id="@+id/imgbtn_add_picture"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/size_2dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/galary" />
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
