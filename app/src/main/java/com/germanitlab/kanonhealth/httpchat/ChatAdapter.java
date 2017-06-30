@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,19 +26,33 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.callback.UploadListener;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.germanitlab.kanonhealth.R.id.progress_view_download;
+import static com.germanitlab.kanonhealth.helpers.Constants.folder;
 
 /**
  * Created by bassiouny on 28/06/17.
@@ -52,6 +68,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private boolean selected = false;
     private boolean show_privacy = false;
     private PrefManager prefManager;
+    private InternetFilesOperations internetFilesOperations;
 
     public ChatAdapter(List<Message> messages, Activity activity, boolean show_privacy) {
         this.mMessages = messages;
@@ -61,14 +78,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         userID = prefManager.getInt(PrefManager.USER_ID);
         passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
         userID = 3;
+        internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
-        ViewGroup chatTextMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_text_message, parent, false);
-        TextMsgViewHolder chatTextMessageViewHolder = new TextMsgViewHolder(chatTextMessage);
-        return chatTextMessageViewHolder;
+
+        switch (type) {
+            case Constants.IMAGE_MESSAGE:
+                ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
+                ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
+                return imageMessageViewHolder;
+            default:
+                ViewGroup chatTextMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_text_message, parent, false);
+                TextMsgViewHolder chatTextMessageViewHolder = new TextMsgViewHolder(chatTextMessage);
+                return chatTextMessageViewHolder;
+        }
         /*switch (type) {
             case Constants.IMAGE_MESSAGE:
                 ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.chat_image_message_cell, parent, false);
@@ -98,8 +124,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position) {
         switch (mMessages.get(position).getType()) {
             case Constants.IMAGE:
-                //ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
-                //setImageMessage(imageViewHolder, position,false);
+                ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
+                setImageMessage(imageViewHolder, position);
                 break;
             case Constants.AUDIO:
                 //AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
@@ -201,36 +227,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     /***** declare layout ****/
     // Image
     public class ImageViewHolder extends BaseViewHolder {
-        public LinearLayout myMessageContainer, hisMessageContainer;
-        public ImageView myMessage, hisMessage;
-        public ProgressBar progressBar, progressViewDownload;
-        public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy, tvMyTextImg, tvHisTextImg;
-        public ImageView imgMessageStatus;
-
+        public ImageView image_message;
+        public TextView message, date;
+        public ImageView status, privacy_image;
+        public RelativeLayout background;
+        public LinearLayout messageContainer;
+        public ProgressBar progress_view_download;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
-            myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
-            hisMessageContainer = (LinearLayout) itemView.findViewById(R.id.his_message);
-            myMessage = (ImageView) itemView.findViewById(R.id.my_image_message);
-            hisMessage = (ImageView) itemView.findViewById(R.id.his_image_message);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
-            tvDate = (TextView) itemView.findViewById(R.id.tv_date);
-            tvMyTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_my);
-            tvHisTextImg = (TextView) itemView.findViewById(R.id.tv_text_with_image_his);
-            imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
-            tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
-            progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);
-            messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
+            background = (RelativeLayout) itemView.findViewById(R.id.message_container);
+            messageContainer = (LinearLayout) itemView.findViewById(R.id.message_container);
+            message = (TextView) itemView.findViewById(R.id.message);
+            date = (TextView) itemView.findViewById(R.id.date);
+            status = (ImageView) itemView.findViewById(R.id.status);
+            privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    myMessageContainer.setBackgroundResource(R.color.gray_black);
-                    return false;
-                }
-            });
+            image_message = (ImageView) itemView.findViewById(R.id.image_message);
+            progress_view_download = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
+
+
         }
     }
 
@@ -256,7 +272,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
             hisMessageContainer = (LinearLayout) itemView.findViewById(R.id.his_message);
             myProgressBar = (ProgressBar) itemView.findViewById(R.id.my_progress_view);
-            progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);
+            progressViewDownload = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
             messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
@@ -293,7 +309,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             myMessage = (ImageView) itemView.findViewById(R.id.my_video_message);
             hisMessage = (ImageView) itemView.findViewById(R.id.his_video_message);
             progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
-            progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);
+            progressViewDownload = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
             messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
@@ -347,9 +363,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
-    /*******processing layout*******/
+                /*--------------processing layout---------------*/
     //---------------------------------------------------------------------------
-    // finished edit
+
     private void setTextMessage(final TextMsgViewHolder textMsgViewHolder, final int position) {
         try {
             final Message textMessage = mMessages.get(position);
@@ -411,7 +427,130 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    //***************** Additional important Methods
+    private void setImageMessage(final ImageViewHolder imageViewHolder, final int position) {
+        try {
+
+            final Message message = mMessages.get(position);
+
+            try {
+                String[] split = message.getSent_at().split(" ")[1].split(":");
+                imageViewHolder.date.setText(split[0] + " " + split[1]);
+            } catch (Exception ex) {
+                imageViewHolder.date.setText(message.getSent_at());
+            }
+            imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+            Uri imageUri = Uri.fromFile(new File(message.getMsg()));
+            Glide.with(activity).load(imageUri).listener(new RequestListener<Uri, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    imageViewHolder.progress_view_download.setVisibility(View.INVISIBLE);
+                    return false;
+                }
+            }).into(imageViewHolder.image_message);
+            //imageViewHolder.date.setText(message.getSent_at());
+            //setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image);
+
+            /*if (!new File(message.getMsg()).exists()) {
+                String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
+                File file = new File(folder, fileName);
+                if (file.exists()) {
+                    message.setMsg(file.getPath());
+                    message.setLoaded(true);
+                    message.setLoading(false);
+                }
+            }*/
+
+
+            //ImageHelper.setImage(imageViewHolder.image_message, imageUri, activity);
+
+            /*if (!message.isLoaded() && !message.isLoading()) {
+
+                message.setLoading(true);
+
+                imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+                internetFilesOperations.uploadFileWithProgress(imageViewHolder.progress_view_download, Constants.UPLOAD_URL, message.getMsg(), new UploadListener() {
+                    @Override
+                    public void onUploadFinish(final String result) {
+                        (activity).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                message.setLoading(false);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(result);
+                                    if (jsonObject.has("error")) {
+                                        message.setLoaded(true);
+                                        showAlerDialog(Constants.UPLOAD_URL, Html.fromHtml(jsonObject.getString("error")).toString());
+                                    } else {
+                                        if (!folder.exists()) folder.mkdirs();
+                                        String source = message.getMsg();
+                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
+                                        if (moveFile(new File(source), destination)) {
+                                            message.setMsg(destination.getPath());
+                                        }
+                                        message.setLoaded(true);
+                                        sendMessage(jsonObject.getString("file_url"), Constants.IMAGE);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                imageViewHolder.progress_view_download.setVisibility(View.INVISIBLE);
+            }
+*/
+            imageViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    File file = new File(mMessages.get(position).getMsg());
+
+                    if (file.exists())
+                        Util.getInstance(activity).showPhoto(Uri.fromFile(file));
+                }
+            });
+            imageViewHolder.background.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected) {
+                        if (!list.contains(message.get_Id()))
+                            selectItem(imageViewHolder.background, message);
+                        else
+                            unselectItem(imageViewHolder.background, message);
+                    } else {
+
+                        File file = new File(mMessages.get(position).getMsg());
+
+                        if (file.exists())
+                            Util.getInstance(activity).showPhoto(Uri.fromFile(file));
+                    }
+                }
+            });
+            imageViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    longClick(message, imageViewHolder.background);
+                    return true;
+                }
+            });
+
+
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Log.e("Chat Adapter", "setTextMessage: ", e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+                /*-------------------------- Additional important Methods------------*/
 
     public void selectItem(RelativeLayout messageContainer, Message message) {
         messageContainer.setBackgroundResource(R.color.gray_black);
@@ -545,5 +684,58 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             }
         });
     }
+    public void showAlerDialog(String title, String message) {
+
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(activity);
+        builder.setCancelable(false);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+
+        try {
+            builder.create().show();
+        } catch (Exception ex) {
+        }
+
+    }
+    public boolean moveFile(File source, File destination) {
+
+        try {
+            FileInputStream inStream = new FileInputStream(source);
+            FileOutputStream outStream = new FileOutputStream(destination);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+            //copy the file content in bytes
+            while ((length = inStream.read(buffer)) > 0) {
+
+                outStream.write(buffer, 0, length);
+
+            }
+
+            inStream.close();
+            outStream.close();
+
+            //delete the original file
+            source.delete();
+
+
+            return true;
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
 }
 
