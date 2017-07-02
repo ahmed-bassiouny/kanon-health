@@ -121,6 +121,21 @@ public class ImageHelper {
     }
 
 
+    public static void setLanguageImageRound(final ImageView iv, String langCode) {
+        if (!TextUtils.isEmpty(langCode)) {
+
+//            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
+            int resourceId = getResourceIdByName("ic_lang_round_" + langCode);
+
+            if (resourceId != -1) {
+                iv.setImageResource(resourceId);
+            } else {
+                iv.setImageDrawable(null);
+            }
+        }
+    }
+
+
     private static int getResourceIdByName(String name) {
         int drawableId = -1;
         try {
