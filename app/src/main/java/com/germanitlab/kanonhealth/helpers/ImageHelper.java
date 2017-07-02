@@ -27,13 +27,20 @@ public class ImageHelper {
 
     // image string url
     public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
-        setImage(iv, imageFullUrl, R.drawable.placeholder, ctx);
+        setImage(iv, imageFullUrl, -1, ctx);
     }
 
     public static void setImage(final ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
         if (TextUtils.isEmpty(imageFullUrl)) {
             iv.setImageResource(placeHolder);
-        } else {
+        }else if(placeHolder == -1) {
+            Glide.with(ctx)
+                    .load(imageFullUrl)
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
+                    .into(iv);
+        }else {
             Glide.with(ctx)
                     .load(imageFullUrl)
                     .fitCenter()

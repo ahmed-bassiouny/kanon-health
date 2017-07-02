@@ -59,7 +59,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
@@ -1710,7 +1709,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
         endSession = menu.findItem(R.id.end_session);
         startSession = menu.findItem(R.id.start_session);
-
+/*
         if (doctor != null) {
 
             if (doctor.getIsOpen() == 1) {
@@ -1738,7 +1737,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         endSession.setVisible(false);
                 }
             }
-        }
+        }*/
 
         return true;
     }
@@ -1747,7 +1746,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.start_session:
-
+/*
                 try {
                     if (doctor.getIsClinic() == 1) {
                         Intent intent = new Intent(ChatActivity.this, InquiryActivity.class);
@@ -1760,72 +1759,78 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         if (doctor.getIsOpen() == 1) {
                             Toast.makeText(this, "Session Already opened ! ", Toast.LENGTH_SHORT).show();
                         } else {
-                            openPayment();
+                            new HttpCall(this, new ApiResponse() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                    doctor.setIsOpen(0);
+                                    checkSessionOpen();
+                                    openPayment();
+                                }
+
+                                @Override
+                                public void onFailed(String error) {
+
+                                }
+                            }).closeSession(String.valueOf(doctor.getId()));
                         }
 
-                        //startActivity(new Intent(this, Comment.class));
-//                        AlertDialog.Builder adb_start = new AlertDialog.Builder(this);
-//                        adb_start.setTitle(R.string.close_conversation);
-//                        adb_start.setCancelable(false);
-//                        adb_start.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                new HttpCall(ChatActivity.this, new ApiResponse() {
-//                                    @Override
-//                                    public void onSuccess(Object response) {
-//                                        try {
-//                                            doctor.setIsOpen(0);
-//                                            checkSessionOpen();
-//                                            Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
-//                                            AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
-//                                            adb.setTitle(R.string.rate_conversation);
-//                                            adb.setCancelable(true);
-//                                            adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                                    new HttpCall(ChatActivity.this, new ApiResponse() {
-//                                                        @Override
-//                                                        public void onSuccess(Object response) {
-//                                                            Intent intent = new Intent(ChatActivity.this, Comment.class);
-//                                                            intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-//                                                            startActivity(intent);
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onFailed(String error) {
-//                                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-//                                                        }
-//                                                    }).closeSession(String.valueOf(doctor.getId()));
-//                                                }
-//                                            });
-//                                            adb.show();
-//                                        } catch (Exception e) {
-//                                            Crashlytics.logException(e);
-//                                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-//                                        }
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailed(String error) {
-//                                        Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }).closeSession(String.valueOf(doctor.getId()));
-//                            }
-//                        });
-//                        adb_start.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                            }
-//                        });
-//                        adb_start.show();
                     }
 
 
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }*/
+                try {
+                    AlertDialog.Builder adb_end = new AlertDialog.Builder(this);
+                    adb_end.setTitle(R.string.close_conversation);
+                    adb_end.setCancelable(false);
+                    adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            new HttpCall(ChatActivity.this, new ApiResponse() {
+                                @Override
+                                public void onSuccess(Object response) {
+
+
+                                    Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                    doctor.setIsOpen(0);
+                                    checkSessionOpen();
+                                    if (doctor.isClinic == 1) {
+                                        Intent intent = new Intent(ChatActivity.this, InquiryActivity.class);
+                                        UserInfoResponse userInfoResponse = new UserInfoResponse();
+                                        userInfoResponse.setUser(doctor);
+                                        Gson gson = new Gson();
+                                        intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                        startActivity(intent);
+                                    } else if (doctor.getIsDoc() == 1) {
+                                        openPayment();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(String error) {
+                                    Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                                }
+                            }).closeSession(String.valueOf(doctor.getId()));
+                        }
+
+                    });
+                    adb_end.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    adb_end.show();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
+
                 break;
 
             case R.id.end_session:
