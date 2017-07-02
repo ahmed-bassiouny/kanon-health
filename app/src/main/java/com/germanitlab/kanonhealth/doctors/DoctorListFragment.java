@@ -152,7 +152,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
-        getBySpeciality();
+        loadData();
     }
 
     public void requestPermissionForCamera() {

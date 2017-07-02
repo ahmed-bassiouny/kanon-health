@@ -150,6 +150,8 @@ public class SettingFragment extends Fragment {
     }
 
     private void loadData() {
+        if(!Helper.isNetworkAvailable(getActivity()))
+            return;
         try {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(R.string.waiting_text);
