@@ -17,8 +17,7 @@ public class DateUtil {
 
     public static SimpleDateFormat getFormat() {
 
-        SimpleDateFormat format = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return format;
@@ -71,6 +70,46 @@ public class DateUtil {
         int days = (int) (difference / (24 * 60 * 60 * 1000));
         return days;
 
+    }
+
+    static String reformatDateFromString(String dateString) {
+        String result = dateString;
+        SimpleDateFormat displayFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat from1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        try {
+            Date date1 = from1.parse(dateString);
+            result = displayFormat.format(date1);
+            return result;
+        } catch (Exception e) {
+            SimpleDateFormat from2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            try {
+                Date date2 = from2.parse(dateString);
+                result = displayFormat.format(date2);
+                return result;
+            } catch (Exception e2) {
+                return result;
+            }
+        }
+    }
+
+    static String reformatDateTimeFromString(String dateString) {
+        String result = dateString;
+        SimpleDateFormat displayFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat from1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        try {
+            Date date1 = from1.parse(dateString);
+            result = displayFormat.format(date1);
+            return result;
+        } catch (Exception e) {
+            SimpleDateFormat from2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            try {
+                Date date2 = from2.parse(dateString);
+                result = displayFormat.format(date2);
+                return result;
+            } catch (Exception e2) {
+                return result;
+            }
+        }
     }
 
 
