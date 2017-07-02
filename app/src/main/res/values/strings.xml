@@ -273,6 +273,9 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="save_success">Save Success</string>
     <string name="edit_practics">Pracits Edit</string>
     <string name="image_not_found">Sorry Image not found</string>
+    <string name="private_status">private</string>
+    <string name="public_status">public</string>
+    <string name="doctor_status">doctor</string>
 
 
 </resources>

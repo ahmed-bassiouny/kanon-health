@@ -251,7 +251,6 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
                         @Override
                         public void run() {
 
-                            String msg = "{" + message.getMsg() + "}";
                             JSONObject jsonObject = null;
                             try {
                                 jsonObject = new JSONObject(message.getMsg());

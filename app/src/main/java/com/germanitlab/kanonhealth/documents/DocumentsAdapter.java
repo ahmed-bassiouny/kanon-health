@@ -231,7 +231,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
         try {
             final Message textMessage = mMessages.get(position);
             textMsgViewHolder.myMessage.setText(textMessage.getMsg());
-            setImagePrivacy(textMessage.getPrivacy(), textMsgViewHolder.privacyImage);
+            setImagePrivacy(textMessage.getPrivacy(), textMsgViewHolder.privacyImage,textMsgViewHolder.privacy_txt);
 
 
             try {
@@ -331,7 +331,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             final Message message = mMessages.get(position);
             imageViewHolder.tvDateMy.setText(message.getSent_at());
 
-            setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image);
+            setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image,imageViewHolder.privacy_txt);
 
             if (!new File(message.getMsg()).exists()) {
                 String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
@@ -507,7 +507,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                     setVideoOnClick(videoViewHolder.myFrameVideo, file.getPath(), mediaMessage);
                 }
             }
-            setImagePrivacy(mediaMessage.getPrivacy(), videoViewHolder.privacyImage);
+            setImagePrivacy(mediaMessage.getPrivacy(), videoViewHolder.privacyImage,videoViewHolder.privacy_txt);
 
             setVideoOnClick(videoViewHolder.myFrameVideo, mediaMessage.getMsg(), mediaMessage);
             videoViewHolder.privacyImage.setOnClickListener(new View.OnClickListener() {
@@ -680,7 +680,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                 }
             };
 
-            setImagePrivacy(mediaMessage.getPrivacy(), audioViewHolder.privacy_image);
+            setImagePrivacy(mediaMessage.getPrivacy(), audioViewHolder.privacy_image,audioViewHolder.privacy_txt);
 
             // Listeners
             audioViewHolder.privacy_image.setOnClickListener(new View.OnClickListener() {
@@ -932,7 +932,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
     private void setLocationMessage(final LocationViewHolder locationViewHolder, final int position) {
         try {
             final Message locationMessage = mMessages.get(position);
-            setImagePrivacy(locationMessage.getPrivacy(), locationViewHolder.privacyImage);
+            setImagePrivacy(locationMessage.getPrivacy(), locationViewHolder.privacyImage,locationViewHolder.privacy_txt);
 
             if (locationMessage.isMine()) {
 
@@ -1415,7 +1415,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
     public static class TextMsgViewHolder extends BaseViewHolder {
         public LinearLayout myMessageContainer, hisMessageContainer;
-        public TextView myMessage, hisMessage, tvDate, tvDateMy;
+        public TextView myMessage, hisMessage, tvDate, tvDateMy,privacy_txt;
         public ImageView imgMessageStatus, privacyImage;
         public ImageButton firstPrivacyIcon, secondPrivacyIcon, thirdPrivacyIcon;
         RelativeLayout background;
@@ -1436,6 +1436,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
+            privacy_txt=(TextView) itemView.findViewById(R.id.privacy_txt);
         }
     }
 
@@ -1443,7 +1444,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
         public LinearLayout myMessageContainer, hisMessageContainer;
         public ImageView myMessage, hisMessage, privacy_image;
         public ProgressBar progressBar, progressViewDownload;
-        public TextView tvDate, tvDateMy;
+        public TextView tvDate, tvDateMy,privacy_txt;
         public RelativeLayout messageContainer;
 
 /*
@@ -1466,6 +1467,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             progressViewDownload = (ProgressBar) itemView.findViewById(progress_view_download);
+            privacy_txt=(TextView) itemView.findViewById(R.id.privacy_txt);
         }
     }
 
@@ -1475,7 +1477,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
         public ImageView myMessage, hisMessage, privacyImage;
         public ProgressBar myProgressBar, hisProgressBar;
         public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy;
+        public TextView tvDate, tvDateMy,privacy_txt;
 /*
         public ImageButton firstPrivacyIcon, secondPrivacyIcon, thirdPrivacyIcon;
 */
@@ -1496,6 +1498,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
+            privacy_txt=(TextView) itemView.findViewById(R.id.privacy_txt);
         }
     }
 
@@ -1506,7 +1509,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
         public ImageButton hisPlayPauseButton, playPauseButton;
         public ProgressBar myProgressBar, progressViewDownload;
         public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy, tvHisMusicCurrentLoc, tvMusicCurrentLoc, tvMusicDuration, tvHisMusicDuration;
+        public TextView tvDate, tvDateMy, tvHisMusicCurrentLoc, tvMusicCurrentLoc, tvMusicDuration, tvHisMusicDuration,privacy_txt;
         public SeekBar seekBarHisMusic, seekBarMusic;
         public ImageView privacy_image;
 /*
@@ -1546,7 +1549,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
 
             seekBarHisMusic = (SeekBar) itemView.findViewById(R.id.seek_bar_his_music);
             seekBarMusic = (SeekBar) itemView.findViewById(R.id.seek_bar_music);
-
+            privacy_txt=(TextView) itemView.findViewById(R.id.privacy_txt);
         }
     }
 
@@ -1557,7 +1560,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
         public FrameLayout myFrameVideo;
         public ProgressBar progressBar, progressViewDownload;
         public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy;
+        public TextView tvDate, tvDateMy,privacy_txt;
 /*
         public ImageButton firstPrivacyIcon, secondPrivacyIcon, thirdPrivacyIcon;
 */
@@ -1576,10 +1579,11 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
             myFrameVideo = (FrameLayout) itemView.findViewById(R.id.my_frame_video);
+            privacy_txt=(TextView) itemView.findViewById(R.id.privacy_txt);
         }
     }
 
-    public void setImagePrivacy(int privacy, ImageView image) {
+    public void setImagePrivacy(int privacy, ImageView image,TextView textView) {
         if (privacy == 0) {
 //            image.setBackgroundResource(R.drawable.red);
 
@@ -1588,7 +1592,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             } else {
                 image.setImageDrawable(context.getResources().getDrawable(R.drawable.red));
             }
-
+            textView.setText(R.string.private_status);
         }
         if (privacy == 1) {
 //            image.setBackgroundResource(R.drawable.blue);
@@ -1597,7 +1601,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             } else {
                 image.setImageDrawable(context.getResources().getDrawable(R.drawable.blue));
             }
-
+            textView.setText(R.string.doctor_status);
         }
         if (privacy == 2) {
 //            image.setBackgroundResource(R.drawable.green);
@@ -1606,7 +1610,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             } else {
                 image.setImageDrawable(context.getResources().getDrawable(R.drawable.green));
             }
-
+            textView.setText(R.string.public_status);
         }
     }
 
