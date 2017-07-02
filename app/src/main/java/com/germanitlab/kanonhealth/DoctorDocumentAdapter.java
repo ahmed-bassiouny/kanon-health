@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,12 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
+
+import static com.germanitlab.kanonhealth.documents.DocumentsAdapter.getGoogleMapThumbnail;
 
 
 /**
@@ -106,6 +112,8 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
                 createAudio(holder, position, message);
             } else if (message.getType().equals(Constants.IMAGE)) {
                 createImage(holder, position, message);
+            } else if (message.getType().equals(Constants.LOCATION)) {
+                createLocation(holder, position, message);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -231,6 +239,55 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
         });
     }
+
+    private void createLocation(final MyViewHolder holder, int position, final Message message) {
+        try {
+
+                if (message.getLocationBitmap() == null && !message.isLoading()) {
+                    holder.imageLayout.setVisibility(View.VISIBLE);
+                    message.setLoading(true);
+
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            String msg = "{" + message.getMsg() + "}";
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(message.getMsg());
+                                double lat = jsonObject.getDouble("lat");
+                                double lng = jsonObject.getDouble("long");
+
+                                message.setLocationBitmap(getGoogleMapThumbnail(lat, lng, activity));
+                                message.setLoading(false);
+                                (activity).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        holder.imageView.setImageBitmap(message.getLocationBitmap());
+                                        message.setLoaded(true);
+
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+
+//                    new Thread().start();
+                }
+
+
+
+
+
+        } catch (Exception ee) {
+            Crashlytics.logException(ee);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+}
 
     @Override
     public int getItemCount() {
