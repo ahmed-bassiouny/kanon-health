@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.germanitlab.kanonhealth.R;
+import com.mukesh.countrypicker.Country;
 
 import java.lang.reflect.Field;
 
@@ -106,11 +107,14 @@ public class ImageHelper {
     }
 
 
-    public static void setLanguageImage(final ImageView iv, String langCode) {
+    public static void setLanguageImage(final ImageView iv, String langCode, Context ctx) {
         if (!TextUtils.isEmpty(langCode)) {
 
-//            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
-            int resourceId = getResourceIdByName("ic_lang_" + langCode);
+            Country c = new Country();
+            c.setCode(langCode);
+            c.loadFlagByCode(ctx);
+
+            int resourceId = c.getFlag();
 
             if (resourceId != -1) {
                 iv.setImageResource(resourceId);
@@ -121,31 +125,31 @@ public class ImageHelper {
     }
 
 
-    public static void setLanguageImageRound(final ImageView iv, String langCode) {
-        if (!TextUtils.isEmpty(langCode)) {
+//    public static void setLanguageImageRound(final ImageView iv, String langCode) {
+//        if (!TextUtils.isEmpty(langCode)) {
+//
+////            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
+//            int resourceId = getResourceIdByName("ic_lang_round_" + langCode);
+//
+//            if (resourceId != -1) {
+//                iv.setImageResource(resourceId);
+//            } else {
+//                iv.setImageDrawable(null);
+//            }
+//        }
+//    }
 
-//            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
-            int resourceId = getResourceIdByName("ic_lang_round_" + langCode);
 
-            if (resourceId != -1) {
-                iv.setImageResource(resourceId);
-            } else {
-                iv.setImageDrawable(null);
-            }
-        }
-    }
-
-
-    private static int getResourceIdByName(String name) {
-        int drawableId = -1;
-        try {
-            Class res = R.drawable.class;
-            Field field = res.getField(name);
-            drawableId = field.getInt(null);
-        } catch (Exception e) {
-            Log.e("MyTag", "Failure to get drawable id. with name : " + name, e);
-        } finally {
-            return drawableId;
-        }
-    }
+//    private static int getResourceIdByName(String name) {
+//        int drawableId = -1;
+//        try {
+//            Class res = R.drawable.class;
+//            Field field = res.getField(name);
+//            drawableId = field.getInt(null);
+//        } catch (Exception e) {
+//            Log.e("MyTag", "Failure to get drawable id. with name : " + name, e);
+//        } finally {
+//            return drawableId;
+//        }
+//    }
 }
