@@ -36,20 +36,11 @@ public class ImageHelper {
         } else {
             Glide.with(ctx)
                     .load(imageFullUrl)
-                    .asBitmap()
                     .fitCenter()
                     .placeholder(placeHolder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)
-                    //.into(iv);
-                    .dontAnimate()
-                    .into(new SimpleTarget<Bitmap>() {
-
-                        @Override
-                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                            iv.setImageBitmap(arg0);
-                        }
-                    });
+                    .into(iv);
         }
     }
 
@@ -66,15 +57,7 @@ public class ImageHelper {
                 .placeholder(placeHolder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(true)
-                //.into(iv);
-                .dontAnimate()
-                .into(new SimpleTarget<Bitmap>() {
-
-                    @Override
-                    public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                        iv.setImageBitmap(arg0);
-                    }
-                });
+                .into(iv);
     }
 
     public static void setBackground(final View v, String imageFullUrl, Context ctx) {
