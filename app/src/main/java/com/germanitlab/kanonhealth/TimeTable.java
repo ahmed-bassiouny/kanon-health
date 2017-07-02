@@ -163,59 +163,59 @@ public class TimeTable extends AppCompatActivity {
             switch (buttonView.getId()) {
                 case R.id.monday_switch:
                     if (isChecked) {
-                        if (checkKeys(1))
-                            addNewItem(monday_layout, 1, monadaySwitch, null, null, monday_from_to);
+                        if (checkKeys(0))
+                            addNewItem(monday_layout, 0, monadaySwitch, null, null, monday_from_to);
                     } else {
-                        removeAll(1, monday_layout, monday_from_to);
+                        removeAll(0, monday_layout, monday_from_to);
 
                     }
                     break;
                 case R.id.tuesday_switch:
                     if (isChecked) {
-                        if (checkKeys(2))
-                            addNewItem(tuesday_layout, 2, tuesdaySwitch, null, null, tuesday_from_to);
+                        if (checkKeys(1))
+                            addNewItem(tuesday_layout, 1, tuesdaySwitch, null, null, tuesday_from_to);
                     } else {
-                        removeAll(2, tuesday_layout, tuesday_from_to);
+                        removeAll(1, tuesday_layout, tuesday_from_to);
                     }
                     break;
                 case R.id.wednesday_switch:
                     if (isChecked) {
-                        if (checkKeys(3))
-                            addNewItem(wendesday_layout, 3, wednesdaySwitch, null, null, wednesday_from_to);
+                        if (checkKeys(2))
+                            addNewItem(wendesday_layout, 2, wednesdaySwitch, null, null, wednesday_from_to);
                     } else {
-                        removeAll(3, wendesday_layout, wednesday_from_to);
+                        removeAll(2, wendesday_layout, wednesday_from_to);
                     }
                     break;
                 case R.id.thursday_switch:
                     if (isChecked) {
-                        if (checkKeys(4))
-                            addNewItem(thurday_layout, 4, thursdaySwitch, null, null, thurday_from_to);
+                        if (checkKeys(3))
+                            addNewItem(thurday_layout, 3, thursdaySwitch, null, null, thurday_from_to);
                     } else {
-                        removeAll(4, thurday_layout, thurday_from_to);
+                        removeAll(3, thurday_layout, thurday_from_to);
                     }
                     break;
                 case R.id.friday_switch:
                     if (isChecked) {
-                        if (checkKeys(5))
-                            addNewItem(friday_layout, 5, fridaySwitch, null, null, friday_from_to);
+                        if (checkKeys(4))
+                            addNewItem(friday_layout, 4, fridaySwitch, null, null, friday_from_to);
                     } else {
-                        removeAll(5, friday_layout, friday_from_to);
+                        removeAll(4, friday_layout, friday_from_to);
                     }
                     break;
                 case R.id.saturday_switch:
                     if (isChecked) {
-                        if (checkKeys(6))
-                            addNewItem(saturday_layout, 6, saturdaySwitch, null, null, saturday_from_to);
+                        if (checkKeys(5))
+                            addNewItem(saturday_layout, 5, saturdaySwitch, null, null, saturday_from_to);
                     } else {
-                        removeAll(6, saturday_layout, saturday_from_to);
+                        removeAll(5, saturday_layout, saturday_from_to);
                     }
                     break;
                 case R.id.sunday_switch:
                     if (isChecked) {
-                        if (checkKeys(7))
-                            addNewItem(sunday_layout, 7, sundaySwitch, null, null, sunday_from_to);
+                        if (checkKeys(6))
+                            addNewItem(sunday_layout, 6, sundaySwitch, null, null, sunday_from_to);
                     } else {
-                        removeAll(7, sunday_layout, sunday_from_to);
+                        removeAll(6, sunday_layout, sunday_from_to);
                     }
                     break;
             }
@@ -500,20 +500,20 @@ public class TimeTable extends AppCompatActivity {
 
     public void handleData(List<Table> list) {
         for (Table table : list) {
-            if (table.getDayweek().equals("1"))
-                addNewItem(monday_layout, 1, monadaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+            if (table.getDayweek().equals("0"))
+                addNewItem(monday_layout, 0, monadaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+            else if (table.getDayweek().equals("1"))
+                addNewItem(tuesday_layout, 1, tuesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
             else if (table.getDayweek().equals("2"))
-                addNewItem(tuesday_layout, 2, tuesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+                addNewItem(wendesday_layout, 2, wednesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
             else if (table.getDayweek().equals("3"))
-                addNewItem(wendesday_layout, 3, wednesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+                addNewItem(thurday_layout, 3, thursdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
             else if (table.getDayweek().equals("4"))
-                addNewItem(thurday_layout, 4, thursdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+                addNewItem(friday_layout, 4, fridaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
             else if (table.getDayweek().equals("5"))
-                addNewItem(friday_layout, 5, fridaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+                addNewItem(saturday_layout, 5, saturdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
             else if (table.getDayweek().equals("6"))
-                addNewItem(saturday_layout, 6, saturdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("7"))
-                addNewItem(sunday_layout, 7, sundaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
+                addNewItem(sunday_layout, 6, sundaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
         }
     }
 }

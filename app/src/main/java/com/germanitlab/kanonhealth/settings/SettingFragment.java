@@ -144,9 +144,15 @@ public class SettingFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null && isVisibleToUser) {
-            loadData();
-            getSetting();
         }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+        getSetting();
     }
 
     private void loadData() {

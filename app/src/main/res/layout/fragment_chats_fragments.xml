@@ -73,10 +73,11 @@
             <ImageButton
                 android:id="@+id/imgbtn_add_picture"
                 android:layout_width="30dp"
+                android:layout_margin="3dp"
+                android:scaleType="fitXY"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:padding="@dimen/size_2dp"
-                android:scaleType="fitXY"
                 android:src="@drawable/galary" />
             <FrameLayout
                 android:layout_width="0dp"
@@ -142,10 +143,8 @@
             <ImageButton
                 android:id="@+id/imgbtn_chat_autio_send"
                 android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:padding="@dimen/size_2dp"
-                android:scaleType="fitXY"
                 android:src="@drawable/mic" />
 
 
