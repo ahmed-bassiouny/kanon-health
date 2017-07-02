@@ -155,6 +155,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+               // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
                 if (doctor.getIsOpen() != 1) {
                     holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
                 } else if (is_doc || is_clinic) {

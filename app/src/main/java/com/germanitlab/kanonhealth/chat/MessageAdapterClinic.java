@@ -273,11 +273,11 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                 if (status == Constants.PENDING_STATUS) {
                     textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.pending);
                 } else if (status == Constants.SENT_STATUS) {
-                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.sent);
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.sentnew);
                 } else if (status == Constants.DELIVER_STATUS) {
-                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.receive);
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.receivenew);
                 } else if (status == Constants.SEEN_STATUS)
-                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.read);
+                    textMsgViewHolder.imgMessageStatus.setImageResource(R.drawable.readnew);
 
 
             } else {
