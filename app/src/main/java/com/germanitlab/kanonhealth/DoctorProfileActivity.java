@@ -547,7 +547,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
-        ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), R.drawable.profile_place_holder, getApplicationContext());
+        ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
