@@ -182,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         tvName.setText(userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
         tvPhone.setText(userInfoResponse.getUser().getCountryCOde() + userInfoResponse.getUser().getPhone());
         try {
-            userInfoResponse.getUser().setBirthDate(userInfoResponse.getUser().getBirth_date().toString().split("T")[0]);
+            userInfoResponse.getUser().setBirthDate(userInfoResponse.getUser().getBirth_date().toString());
         } catch (Exception e) {
 
         }

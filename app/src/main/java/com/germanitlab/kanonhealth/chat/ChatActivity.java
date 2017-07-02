@@ -359,8 +359,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 checkSessionOpen();
             }
 
-            //ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), R.drawable.placeholder, this);
-            Glide.with(this).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(imageUser);
+            ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), R.drawable.placeholder, this);
 
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
