@@ -69,7 +69,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
                     break;
                 case Constants.MEMBERAT:
                 case Constants.DoctorAll:
-                    holder.title.setText(chooseModel.getLast_nameMember() + " " + list.get(position).getFirst_nameMember());
+                    holder.title.setText(list.get(position).getFirst_nameMember());
                     ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getAvatarMember(), context);
                     holder.title.setVisibility(View.VISIBLE);
                     break;
