@@ -71,7 +71,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks, OnMapReadyCallback {
+public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks {
 
     @BindView(R.id.speciality_recycleview)
     RecyclerView rvSpeciliaty;
@@ -128,8 +128,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.border)
     View vBorder;
 
-    @BindView(R.id.rl_map)
-    RelativeLayout rlMap;
 
 
     @BindView(R.id.ed_location)
@@ -165,14 +163,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     ImageView iSave;
     @BindView(R.id.edit_image)
     CircleImageView civEditImage;
+    @BindView(R.id.location_img)
+    ImageView location_img;
+    @BindView(R.id.mapContanier)
+    RelativeLayout mapContanier;
     private DoctorDocumentAdapter doctorDocumentAdapter;
     PrefManager prefManager;
     PickerDialog pickerDialog;
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
-    private GoogleMap googleMap;
     private Menu menu;
-    private SupportMapFragment mapFragment;
 
 
     @Override
@@ -182,9 +182,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         ButterKnife.bind(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initTB();
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
         handleImeActions();
 
         // check if doctor or clinic
@@ -539,13 +537,17 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
             ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), this);
         }
+        if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty())
+            ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
+        else
+            mapContanier.setVisibility(View.GONE);
 
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
-        ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), R.drawable.profile_place_holder, getApplicationContext());
+        ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
@@ -582,12 +584,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.isClinic == 1) {
             llPracticeProfile.setVisibility(View.VISIBLE);
             vBorder.setVisibility(View.VISIBLE);
-            rlMap.setVisibility(View.VISIBLE);
+            mapContanier.setVisibility(View.VISIBLE);
 
         } else {
             llPracticeProfile.setVisibility(View.GONE);
             vBorder.setVisibility(View.GONE);
-            rlMap.setVisibility(View.GONE);
+            mapContanier.setVisibility(View.GONE);
 
         }
 
@@ -864,25 +866,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
-        LatLng sydney = new LatLng(user.getLocation_lat(), user.getLocation_long());
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title(user.getFirst_name()));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                intent.putExtra("long", user.getLocation_long());
-                intent.putExtra("lat", user.getLocation_lat());
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
@@ -895,5 +878,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             textView.setGravity(Gravity.CENTER);
             textView.setPadding(0, 0, 0, 0);
         }
+    }
+    @OnClick(R.id.location_img)
+    public void openMap(){
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        intent.putExtra("long", user.getLocation_long());
+        intent.putExtra("lat", user.getLocation_lat());
+        startActivity(intent);
     }
 }

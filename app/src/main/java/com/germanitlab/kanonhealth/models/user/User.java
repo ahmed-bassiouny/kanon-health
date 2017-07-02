@@ -207,7 +207,17 @@ public class User implements Serializable {
     private float rate_avr;
     private String country_flag;
     private String is_available;
+    @SerializedName("location_img")
+    private String location_img;
 
+
+    public String getLocation_img() {
+        return location_img;
+    }
+
+    public void setLocation_img(String location_img) {
+        this.location_img = location_img;
+    }
 
     private String passcode;
     private String code;
