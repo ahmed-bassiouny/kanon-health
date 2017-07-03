@@ -220,7 +220,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.e("Docot in chat data", prefManager.getData("doctor"));
             try {
                 Intent intent = getIntent();
-                String doctorJson = intent.getStringExtra("doctor_data");
+                String doctorJson =prefManager.getData(PrefManager.USER_INTENT);
+                //String doctorJson = intent.getStringExtra("doctor_data");
 
 
                 prefManager.put("doctor", doctorJson);

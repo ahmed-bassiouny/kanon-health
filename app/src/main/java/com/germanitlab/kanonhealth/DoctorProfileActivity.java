@@ -313,8 +313,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 startActivity(intent);
             } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
                 Intent intent = new Intent(this, ChatActivity.class);
-                String userstring=gson.toJson(user);
-                intent.putExtra("doctor_data",userstring);
+                /*String userstring=gson.toJson(user);
+                intent.putExtra("doctor_data",userstring);*/
+                prefManager.put(prefManager.USER_INTENT,gson.toJson(user));
                 intent.putExtra("from", true);
                 startActivity(intent);
             } else {

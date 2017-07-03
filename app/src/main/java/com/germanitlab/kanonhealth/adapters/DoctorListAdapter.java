@@ -203,7 +203,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                             activity.startActivity(intent);
                         } else if (doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
                             Intent intent = new Intent(activity, ChatActivity.class);
-                            intent.putExtra("doctor_data", gson.toJson(doctor));
+                            //intent.putExtra("doctor_data", gson.toJson(doctor));
+                            PrefManager prefManager = new PrefManager(activity);
+                            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                             intent.putExtra("from", true);
                             activity.startActivity(intent);
                         } else {

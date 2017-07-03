@@ -140,7 +140,8 @@ public class PaymentActivity extends AppCompatActivity {
             if (doctor != null) {
                 doctor.setIsOpen(1);
             }
-            intent.putExtra("doctor_data", gson.toJson(doctor));
+            //intent.putExtra("doctor_data", gson.toJson(doctor));
+            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
             intent.putExtra("from", true);
             startActivity(intent);
             finish();

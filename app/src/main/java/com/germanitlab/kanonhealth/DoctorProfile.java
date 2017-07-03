@@ -186,7 +186,8 @@ public class DoctorProfile extends AppCompatActivity {
     public void contactClick(View v) {
         if (mPrefManager.get(mPrefManager.IS_DOCTOR) || doctor.getIsOpen() == 1) {
             Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("doctor_data", doctorJson);
+            //intent.putExtra("doctor_data", doctorJson);
+            prefManager.put(prefManager.USER_INTENT,doctorJson);
             intent.putExtra("from", true);
             startActivity(intent);
         } else {

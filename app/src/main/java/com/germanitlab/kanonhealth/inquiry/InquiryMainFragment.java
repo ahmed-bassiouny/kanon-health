@@ -172,7 +172,8 @@ public class InquiryMainFragment extends Fragment {
                                     UserInfoResponse userInfoResponse = new UserInfoResponse();
                                     userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
                                     userInfoResponse.getUser().setIsOpen(1);
-                                    intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                    //intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                    prefManager.put(prefManager.USER_INTENT,gson.toJson(userInfoResponse));
                                     startActivity(intent);
                                     dismissProgressDialog();
                                     getActivity().finish();
