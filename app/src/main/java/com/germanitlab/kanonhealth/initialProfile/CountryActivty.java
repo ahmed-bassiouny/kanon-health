@@ -53,12 +53,11 @@ public class CountryActivty extends AppCompatActivity {
                     List<Country> search = new ArrayList<Country>();
                     try {
                         String temp = search_bar.getText().toString().replaceAll(Pattern.quote("+"), "");
-                        if (temp == "") {
-                        } else {
-                            int number = Integer.parseInt(temp);
-                        }
                         for (Country e : Country.getAllCountries()) {
                             if (e.getDialCode().toLowerCase().startsWith("+" + temp)) {
+                                search.add(e);
+                            }
+                            if (e.getName().toLowerCase().startsWith(temp)) {
                                 search.add(e);
                             }
                         }
