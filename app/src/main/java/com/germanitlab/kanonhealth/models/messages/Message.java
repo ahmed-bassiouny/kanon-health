@@ -63,8 +63,6 @@ public class Message implements Serializable {
     private int is_forward;
     @DatabaseField
     private int is_delivered;
-    @DatabaseField
-    private String group_id;
 
     public String getIs_document() {
         return is_document;
@@ -90,13 +88,7 @@ public class Message implements Serializable {
         this.is_delivered = is_delivered;
     }
 
-    public String getGroup_id() {
-        return group_id;
-    }
 
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
-    }
 
     public Message() {
     }
