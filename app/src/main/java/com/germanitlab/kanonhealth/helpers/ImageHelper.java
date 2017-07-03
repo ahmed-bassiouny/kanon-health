@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.germanitlab.kanonhealth.R;
+import com.mukesh.countrypicker.Country;
 
 import java.lang.reflect.Field;
 
@@ -122,7 +123,13 @@ public class ImageHelper {
             if (resourceId != -1) {
                 iv.setImageResource(resourceId);
             } else {
-                iv.setImageDrawable(null);
+//                iv.setImageDrawable(null);
+                Country temp = Country.getCountryByISO(langCode);
+                if (temp != null) {
+                    iv.setImageResource(temp.getFlag());
+                } else {
+                    iv.setImageDrawable(null);
+                }
             }
         }
     }
@@ -144,6 +151,7 @@ public class ImageHelper {
 
 
     private static int getResourceIdByName(String name) {
+        name = name.toLowerCase();
         int drawableId = -1;
         try {
             Class res = R.drawable.class;

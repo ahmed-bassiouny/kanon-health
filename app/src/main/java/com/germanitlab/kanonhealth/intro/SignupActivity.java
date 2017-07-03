@@ -22,12 +22,12 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.initialProfile.CountriesCodes;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mukesh.countrypicker.Country;
 
 import org.json.JSONObject;
 
@@ -57,17 +57,10 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         signupActivity = this;
         try {
             Intent intent = getIntent();
-            Constants.COUNTRY_CODES.clear();
             Gson gson = new Gson();
             constants = new Constants();
             prefManager = new PrefManager(this);
-            List<CountriesCodes> codess = gson.fromJson(constants.CountryCode, new TypeToken<List<CountriesCodes>>() {
-            }.getType());
             found = true;
-            for (CountriesCodes countriescooed : codess) {
-                Constants.COUNTRY_CODES.put(countriescooed.getName(), countriescooed);
-
-            }
             initView();
             handelEvent();
             try {
@@ -102,11 +95,11 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
                     String temp = etPostelCode.getText().toString().replaceAll(Pattern.quote("+"), "");
 
-                    for (Map.Entry<String, CountriesCodes> e : Constants.COUNTRY_CODES.entrySet()) {
-                        if (e.getValue().getDial_code().toLowerCase().equals("+" + temp)) {
-                            select_country.setText(e.getKey().toString());
-                            country = e.getKey().toString();
-                            code = e.getValue().toString();
+                    for (Country c : Country.getAllCountries()) {
+                        if (c.getDialCode().toLowerCase().equals("+" + temp)) {
+                            select_country.setText(c.getName());
+                            country = c.getName();
+                            code = c.getDialCode();
                             found = true;
                         }
                     }

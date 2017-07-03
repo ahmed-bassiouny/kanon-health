@@ -14,16 +14,18 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
+import com.mukesh.countrypicker.Country;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Geram IT Lab on 05/04/2017.
  */
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHolder> {
-    HashMap<String, CountriesCodes> countryCode;
+    List<Country> countryList;
     Context context;
 
     @Override
@@ -36,9 +38,9 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(CountryAdapter.MyViewHolder holder, int position) {
         try {
-            CountriesCodes currentCountry = countryCode.get((new ArrayList<String>(countryCode.keySet())).get(position));
+            Country currentCountry = countryList.get(position);
             String country = currentCountry.getName();
-            String code = currentCountry.getDial_code();
+            String code = currentCountry.getDialCode();
             holder.code.setText(code);
             holder.country.setText(country);
             ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode());
@@ -49,14 +51,14 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
 
     }
 
-    public CountryAdapter(HashMap<String, CountriesCodes> countryCode, Context context) {
-        this.countryCode = countryCode;
+    public CountryAdapter(List<Country> countryList, Context context) {
+        this.countryList = countryList;
         this.context = context;
     }
 
     @Override
     public int getItemCount() {
-        return countryCode.size();
+        return countryList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
