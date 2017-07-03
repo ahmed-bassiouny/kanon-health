@@ -2,11 +2,13 @@ package com.germanitlab.kanonhealth.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by Geram IT Lab on 25/04/2017.
  */
 
-public class UpdatePrivacy {
+public class UpdatePrivacy implements Serializable{
     @SerializedName("user_id")
     private String userID;
     @SerializedName("password")

@@ -202,7 +202,7 @@ public class DoctorProfile extends AppCompatActivity {
     public void rateClick(View v) {
         Intent intent = new Intent(this, RateActivity.class);
         intent.putExtra("id", doctor.get_Id());
-        intent.putExtra("name", doctor.getName());
+        intent.putExtra("name", doctor.getLast_name()+", "+doctor.getFirst_name());
         intent.putExtra("avater", doctor.getAvatar());
         startActivity(intent);
     }

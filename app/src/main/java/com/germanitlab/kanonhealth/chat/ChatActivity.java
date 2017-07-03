@@ -533,15 +533,15 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                         Log.e("my uri from here ", imageUri.toString());
 
                         try {
-                            if (prefManager.getData(PrefManager.HISTORY) != "") {
-                                String history = prefManager.getData(PrefManager.HISTORY);
-                                history = history.substring(0, history.length() - 1);
-                                history = history + " , " + args[0].toString() + "]";
-                                prefManager.put(PrefManager.HISTORY, history);
-                                Log.d("history after ", prefManager.getData(PrefManager.HISTORY));
-                            } else {
-                                prefManager.put(PrefManager.HISTORY, "[" + args[0] + "]");
-                            }
+//                            if (prefManager.getData(PrefManager.HISTORY) != "") {
+//                                String history = prefManager.getData(PrefManager.HISTORY);
+//                                history = history.substring(0, history.length() - 1);
+//                                history = history + " , " + args[0].toString() + "]";
+//                                prefManager.put(PrefManager.HISTORY, history);
+//                                Log.d("history after ", prefManager.getData(PrefManager.HISTORY));
+//                            } else {
+//                                prefManager.put(PrefManager.HISTORY, "[" + args[0] + "]");
+//                            }
 
                             JSONObject jsonObject = new JSONObject(args[0].toString());
 
@@ -769,7 +769,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
         if (user_id != 1) {
 
-            tvUserName.setText(doctor.getName());
+            tvUserName.setText(doctor.getLast_name()+", "+doctor.getFirst_name());
         }
 //            Log.e("returned image :", doctor.getAvatar());
 //            Helper.setImage(this , Constants.CHAT_SERVER_URL
@@ -1298,9 +1298,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
                             if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
-                                sendMessage(getPathFromURI(selectedUri), Constants.IMAGE, "");
+                                sendMessage(getPath( getApplicationContext(),selectedUri), Constants.IMAGE, "");
                             } else {
-                                sendMessage(getPath(this, selectedUri), Constants.VIDEO, "");
+                                sendMessage(getPath( getApplicationContext() ,selectedUri), Constants.VIDEO, "");
                             }
 
                         } else {
@@ -1340,7 +1340,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
+/*    public String getPathFromURI(Uri contentUri) {
         String path;
         Cursor cursor = this.getContentResolver().query(contentUri, null, null, null, null);
         if (cursor == null) { // Source is Dropbox or other similar local file path
@@ -1352,7 +1352,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             cursor.close();
         }
         return path;
-    }
+    }*/
 
 
     private final static String FOLDER_NAME = "YourAppName/Image/";

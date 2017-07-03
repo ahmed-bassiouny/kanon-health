@@ -86,9 +86,6 @@ public class User implements Serializable {
     @DatabaseField
     private String jsonInfo;
     @DatabaseField
-    @SerializedName("name")
-    private String name;
-    @DatabaseField
     @SerializedName("first_name")
     private String first_name;
     @DatabaseField
@@ -276,14 +273,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getAvatar() {
         return avatar;
     }
@@ -459,7 +448,6 @@ public class User implements Serializable {
         return "DoctorResponse{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", subTitle='" + subTitle + '\'' +
                 ", lastLogin='" + lastLogin + '\'' +

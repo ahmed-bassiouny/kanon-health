@@ -121,6 +121,8 @@ public class SettingFragment extends Fragment {
             rvPracticies.setAdapter(mAdapter);
             rvPracticies.setNestedScrollingEnabled(false);
         } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getContext(), "error while loading clinics", Toast.LENGTH_SHORT).show();
         }
     }
 

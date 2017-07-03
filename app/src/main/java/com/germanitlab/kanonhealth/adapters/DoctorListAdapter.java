@@ -124,7 +124,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
                 }
             }
-            holder.tvDoctorName.setText(doctor.getName());
+            holder.tvDoctorName.setText(doctor.getLast_name()+", "+doctor.getFirst_name());
             holder.tvAbout.setText(doctor.getAbout());
             if (doctor.isChosen())
                 holder.background.setBackgroundResource(R.color.dark_gray);

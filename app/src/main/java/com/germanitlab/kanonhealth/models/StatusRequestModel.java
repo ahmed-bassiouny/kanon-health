@@ -2,11 +2,13 @@ package com.germanitlab.kanonhealth.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by halima on 07/06/17.
  */
 
-public class StatusRequestModel {
+public class StatusRequestModel implements Serializable{
 
     @SerializedName("user_id")
     private String userID;
