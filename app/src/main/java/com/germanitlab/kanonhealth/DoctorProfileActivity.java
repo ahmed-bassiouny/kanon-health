@@ -353,6 +353,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         user.setAddress(et_location.getText().toString());
         tvTelephone.setText(etTelephone.getText().toString());
         user.setPhone(etTelephone.getText().toString());
+        user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+        user.setUserID_request(user.get_Id());
         // Edit ahmed 12 - 6-2017
         /**
 
@@ -548,6 +550,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
         ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
+
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
