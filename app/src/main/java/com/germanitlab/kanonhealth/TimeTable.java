@@ -448,7 +448,7 @@ public class TimeTable extends AppCompatActivity {
         try {
             Intent intent = new Intent();
             intent.putExtra("type", 0);
-            int key = 1;
+            int key = 0;
             List<Table> list = new ArrayList<>();
             while (key < 8) {
                 if (map.containsKey(key)) {
