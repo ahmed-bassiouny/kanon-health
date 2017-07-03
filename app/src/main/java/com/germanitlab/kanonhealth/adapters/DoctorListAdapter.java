@@ -210,7 +210,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                             activity.startActivity(intent);
                         } else {
                             Intent intent = new Intent(activity, PaymentActivity.class);
-                            intent.putExtra("doctor_data", doctor);
+                            PrefManager prefManager = new PrefManager(activity);
+                            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                             activity.startActivity(intent);
                         }
                     }else{

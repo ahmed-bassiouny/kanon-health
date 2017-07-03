@@ -192,7 +192,7 @@ public class DoctorProfile extends AppCompatActivity {
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, PaymentActivity.class);
-            intent.putExtra("doctor_data", doctorJson);
+            prefManager.put(prefManager.USER_INTENT,doctorJson);
             intent.putExtra("doctor_obj", doctor);
             startActivity(intent);
         }

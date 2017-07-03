@@ -320,7 +320,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                intent.putExtra("doctor_data", user);
+                prefManager.put(prefManager.USER_INTENT,gson.toJson(user));
                 startActivity(intent);
             }
 
