@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
     TextView error_message;
     MultiSelectAdapter mAdapter;
     Button save;
+    LinearLayout ll_view;
 
     // EDit ahmed 10 - 6 -2017
     private ArrayList<ChooseModel> chosedspecialist;
@@ -59,6 +61,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         save = (Button) view.findViewById(R.id.save);
         error_message = (TextView) view.findViewById(R.id.error_message);
+        ll_view= (LinearLayout) view.findViewById(R.id.ll_view);
         try {
             Bundle bundle = this.getArguments();
             if (bundle != null) {
@@ -150,6 +153,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
     public void onFailed(String error) {
         progressBar.setVisibility(View.GONE);
         error_message.setVisibility(View.VISIBLE);
+        ll_view.setVisibility(View.GONE);
 
     }
 
