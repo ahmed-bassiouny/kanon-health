@@ -41,7 +41,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
             String code = currentCountry.getDial_code();
             holder.code.setText(code);
             holder.country.setText(country);
-            ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode(), context);
+            ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
