@@ -4,16 +4,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,7 +122,17 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
+
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        boolean touchesAllowed = true ;
+        if (touchesAllowed) {
+            return super.onTouchEvent(event);
+        } else {
+            return MotionEventCompat.getActionMasked(event) != MotionEvent.ACTION_MOVE && super.onTouchEvent(event);
+        }    }
 
     private void initTB() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);

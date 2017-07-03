@@ -144,7 +144,7 @@
             android:layout_margin="8dp"
             android:gravity="center"
             android:id="@+id/chat_bar"
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="horizontal">
 
 

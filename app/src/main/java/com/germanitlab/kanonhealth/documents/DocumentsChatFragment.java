@@ -207,6 +207,7 @@ public class DocumentsChatFragment extends Fragment
         return view;
     }
 
+
     private void initView() {
 
 //        imgbtnAttach = (ImageButton) view.findViewById(R.id.imgbtn_chat_attach);
