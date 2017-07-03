@@ -52,7 +52,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // to check passcode
                     if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
                         joinUser();
+                        if(Helper.isNetworkAvailable(SplashScreenActivity.this))
                         loadData();
+                        else {
+                            Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                            intent.putExtra("checkPassword", true);
+                            intent.putExtra("finish", false);
+                            startActivity(intent);
+                            finish();
+                        }
 
                     } // registered but not filled my data
                     else if (isLogin && storedUser.equals("")) {

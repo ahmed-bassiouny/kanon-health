@@ -104,6 +104,17 @@ public class UserRepository {
         }
         return 0;
     }
+    public void deletetype(int type) {
+        try {
+            if(type==2)
+                 doctorsDao.delete(doctorsDao.queryForEq("isDoc", 1));
+            else if(type==3)
+                 doctorsDao.delete(doctorsDao.queryForEq("isClinic", 1));
+            else {}
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+    }
 
     public void deleteAll() {
         try {
