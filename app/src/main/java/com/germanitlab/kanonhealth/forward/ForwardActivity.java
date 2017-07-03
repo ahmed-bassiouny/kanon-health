@@ -124,7 +124,7 @@ public class ForwardActivity extends AppCompatActivity {
                 if (charSequence.toString().trim().length() > 0) {
                     for (int j = 0; j < ListDoctors.size(); j++) {
 
-                        String name = ListDoctors.get(j).getName();
+                        String name = ListDoctors.get(j).getLast_name()+", "+ListDoctors.get(j).getFirst_name();
 
                         if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 

@@ -152,6 +152,10 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
+        doctor_list.setBackgroundResource(R.color.blue);
+        doctor_list.setTextColor(getResources().getColor(R.color.white));
+        praxis_list.setBackgroundResource(R.color.gray);
+        praxis_list.setTextColor(getResources().getColor(R.color.black));
         loadData();
     }
 
@@ -243,20 +247,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     }
 
+
     private void getBySpeciality() {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    if (type == 2) {
-                        doctor_list.setBackgroundResource(R.color.blue);
-                        doctor_list.setTextColor(getResources().getColor(R.color.white));
-                        praxis_list.setBackgroundResource(R.color.gray);
-                        praxis_list.setTextColor(getResources().getColor(R.color.black));
-                    }
                     jsonString = gson.toJson(response);
                     prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
                     doctorList = (List<User>) response;
+                    mDoctorRepository.deletetype(type);
                     saveInDB(doctorList);
                     setAdapter(doctorList);
                     util.dismissProgressDialog();
@@ -358,7 +358,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                         List<User> fileDoctorResponses = new ArrayList<>();
                         for (int j = 0; j < doctorList.size(); j++) {
 
-                            String name = doctorList.get(j).getName();
+                            String name = doctorList.get(j).getLast_name()+", "+doctorList.get(j).getFirst_name();
 
                             if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
@@ -476,7 +476,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     type = 2;
                     util.showProgressDialog();
                     loadData();
-                    getBySpeciality();
                 }
             }
         });

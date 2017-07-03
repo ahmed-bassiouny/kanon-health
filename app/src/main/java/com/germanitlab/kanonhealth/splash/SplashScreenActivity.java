@@ -52,7 +52,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // to check passcode
                     if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
                         joinUser();
+                        if(Helper.isNetworkAvailable(SplashScreenActivity.this))
                         loadData();
+                        else {
+                            Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                            intent.putExtra("checkPassword", true);
+                            intent.putExtra("finish", false);
+                            startActivity(intent);
+                            finish();
+                        }
 
                     } // registered but not filled my data
                     else if (isLogin && storedUser.equals("")) {
@@ -126,13 +134,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
     private void loadData() {
         try {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle(R.string.waiting_text);
-            progressDialog.setCancelable(false);
             UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
             userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            progressDialog.show();
             if(!Helper.isNetworkAvailable(this)){
                 Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
                 return;
@@ -143,7 +147,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (response != null) {
                         Gson gson = new Gson();
                         new PrefManager(SplashScreenActivity.this).put(PrefManager.USER_KEY, gson.toJson(response));
-                        progressDialog.dismiss();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", true);
                         intent.putExtra("finish", false);
@@ -159,7 +162,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 @Override
                 public void onFailed(String error) {
                     Log.e("Splash", error );
-                    progressDialog.dismiss();
                     finish();
                 }
             }).getProfile(userRegisterResponse);

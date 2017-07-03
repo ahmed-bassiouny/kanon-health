@@ -268,7 +268,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                         List<User> fileDoctorResponses = new ArrayList<>();
                         for (int j = 0; j < doctorList.size(); j++) {
 
-                            String name = doctorList.get(j).getName();
+                            String name = doctorList.get(j).getLast_name()+", "+doctorList.get(j).getFirst_name();
 
                             if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 

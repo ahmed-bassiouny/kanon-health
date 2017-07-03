@@ -24,7 +24,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
-        versionName '1.2.7.1'
+        versionName '1.2.8'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -92,10 +92,11 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.46'
     compile 'gun0912.ted:tedbottompicker:1.0.3'
     compile 'me.biubiubiu.justifytext:library:1.1'
-    compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     provided 'javax.annotation:jsr250-api:1.0'
+    compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
+
 }
 apply plugin: 'com.google.gms.google-services'

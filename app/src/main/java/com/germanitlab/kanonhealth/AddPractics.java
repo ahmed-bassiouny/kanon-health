@@ -102,6 +102,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @BindView(R.id.tv_languages)
     TextView tvLanguages;
+    @BindView(R.id.location_img)
+    ImageView location_img;
 
     // additional data
     User user;
@@ -164,6 +166,10 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     etProvince.setText(user.getInfo().getProvinz());
                     etCountry.setText(user.getInfo().getCountry());
                     etTelephone.setText(user.getPhone());
+                    if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty()) {
+                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), AddPractics.this);
+                        location_img.setVisibility(View.VISIBLE);
+                    }
                     progressDialog.dismiss();
                 } catch (Exception e) {
                     onFailed(e.getLocalizedMessage());
@@ -528,7 +534,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                 }
             } else if (requestCode == PLACE_PICKER_REQUEST) {
                 if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace(data, this);
+                    Place place = PlacePicker.getPlace( this,data);
                     user.setLocation_lat(place.getLatLng().latitude);
                     user.setLocation_long(place.getLatLng().longitude);
                 }
@@ -619,5 +625,11 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         } else
             return true;
     }
-
+    @OnClick(R.id.location_img)
+    public void openMap(){
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        intent.putExtra("long", user.getLocation_long());
+        intent.putExtra("lat", user.getLocation_lat());
+        startActivity(intent);
+    }
 }

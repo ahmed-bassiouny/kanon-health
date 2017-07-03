@@ -135,7 +135,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
                             double lat = doctorResponse.getLocation_lat();
                             double lng = doctorResponse.getLocation_long();
 
-                            map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getName()));
+                            map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getLast_name()+", "+doctorResponse.getFirst_name()));
                         }
 
                     }
@@ -276,7 +276,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
                     double lat = doctorResponse.getLocation_lat();
                     double lng = doctorResponse.getLocation_long();
 
-                    map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getName()));
+                    map.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(doctorResponse.getLast_name()+", "+doctorResponse.getFirst_name()));
                 }
 
             }

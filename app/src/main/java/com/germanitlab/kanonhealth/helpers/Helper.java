@@ -21,9 +21,14 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -140,6 +145,22 @@ public class Helper {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static List<Language> getAllLanguages(Context ctx) {
+        List<Language> result = new ArrayList<>();
+        try {
+            Gson gson = new Gson();
+            JsonParser jsonParser = new JsonParser();
+            JsonArray jsonArray = (JsonArray) jsonParser.parse(ctx.getString(R.string.languages_json));
+            for (JsonElement jsonElement : jsonArray) {
+                result.add(gson.fromJson(jsonElement, Language.class));
+            }
+        } catch (Exception e) {
+            Log.e("langList", e.getMessage());
+        } finally {
+            return result;
+        }
     }
 }
 

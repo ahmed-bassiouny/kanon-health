@@ -186,12 +186,13 @@ public class DoctorProfile extends AppCompatActivity {
     public void contactClick(View v) {
         if (mPrefManager.get(mPrefManager.IS_DOCTOR) || doctor.getIsOpen() == 1) {
             Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("doctor_data", doctorJson);
+            //intent.putExtra("doctor_data", doctorJson);
+            prefManager.put(prefManager.USER_INTENT,doctorJson);
             intent.putExtra("from", true);
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, PaymentActivity.class);
-            intent.putExtra("doctor_data", doctorJson);
+            prefManager.put(prefManager.USER_INTENT,doctorJson);
             intent.putExtra("doctor_obj", doctor);
             startActivity(intent);
         }
@@ -202,7 +203,7 @@ public class DoctorProfile extends AppCompatActivity {
     public void rateClick(View v) {
         Intent intent = new Intent(this, RateActivity.class);
         intent.putExtra("id", doctor.get_Id());
-        intent.putExtra("name", doctor.getName());
+        intent.putExtra("name", doctor.getLast_name()+", "+doctor.getFirst_name());
         intent.putExtra("avater", doctor.getAvatar());
         startActivity(intent);
     }

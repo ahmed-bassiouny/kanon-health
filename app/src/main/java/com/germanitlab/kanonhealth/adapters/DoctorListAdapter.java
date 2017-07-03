@@ -124,7 +124,13 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
                 }
             }
-            holder.tvDoctorName.setText(doctor.getName());
+            if (doctor.isClinic == 1) {
+                holder.tvDoctorName.setText(doctor.getFirst_name());
+                holder.tvPractice.setVisibility(View.GONE);
+            }
+            else
+                holder.tvDoctorName.setText(doctor.getLast_name() + ", " + doctor.getFirst_name());
+
             holder.tvAbout.setText(doctor.getAbout());
             if (doctor.isChosen())
                 holder.background.setBackgroundResource(R.color.dark_gray);
@@ -149,7 +155,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     }
                 }
             } else {
-                holder.tvPractice.setVisibility(View.INVISIBLE);
+                holder.tvPractice.setVisibility(View.GONE);
             }
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
 
@@ -197,12 +203,15 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                             activity.startActivity(intent);
                         } else if (doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
                             Intent intent = new Intent(activity, ChatActivity.class);
-                            intent.putExtra("doctor_data", gson.toJson(doctor));
+                            //intent.putExtra("doctor_data", gson.toJson(doctor));
+                            PrefManager prefManager = new PrefManager(activity);
+                            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                             intent.putExtra("from", true);
                             activity.startActivity(intent);
                         } else {
                             Intent intent = new Intent(activity, PaymentActivity.class);
-                            intent.putExtra("doctor_data", doctor);
+                            PrefManager prefManager = new PrefManager(activity);
+                            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                             activity.startActivity(intent);
                         }
                     }else{

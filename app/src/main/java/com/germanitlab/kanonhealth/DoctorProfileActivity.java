@@ -54,6 +54,10 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -129,7 +133,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     View vBorder;
 
 
-
     @BindView(R.id.ed_location)
     EditText etLocation;
     @BindView(R.id.ed_street_name)
@@ -172,6 +175,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     PickerDialog pickerDialog;
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
+    int PLACE_PICKER_REQUEST = 7;
     private Menu menu;
 
 
@@ -309,12 +313,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 startActivity(intent);
             } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
                 Intent intent = new Intent(this, ChatActivity.class);
-                intent.putExtra("doctor_data", gson.toJson(user));
+                /*String userstring=gson.toJson(user);
+                intent.putExtra("doctor_data",userstring);*/
+                prefManager.put(prefManager.USER_INTENT,gson.toJson(user));
                 intent.putExtra("from", true);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                intent.putExtra("doctor_data", user);
+                prefManager.put(prefManager.USER_INTENT,gson.toJson(user));
                 startActivity(intent);
             }
 
@@ -353,6 +359,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         user.setAddress(et_location.getText().toString());
         tvTelephone.setText(etTelephone.getText().toString());
         user.setPhone(etTelephone.getText().toString());
+        user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+        user.setUserID_request(user.get_Id());
         // Edit ahmed 12 - 6-2017
         /**
 
@@ -394,7 +402,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         civEditImage.setVisibility(notvisibility);
         if (user.isClinic == 1)
             ivMemberList.setVisibility(notvisibility);
-
         //Edit ahmed 12-6-2017
         boolean editable = (visiblitiy == View.GONE) ? true : false;
         etLocation.setEnabled(editable);
@@ -422,7 +429,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
         if (user.getOpen_Type() == 0) {
-            Intent intent = new Intent(this, TimeTable.class);
+            Intent intent = new Intent(this,  TimeTable.class);
             intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
             startActivityForResult(intent, Constants.HOURS_CODE);
         } else {
@@ -521,13 +528,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         break;
                     case Constants.HOURS_TYPE_CODE:
                         user.setOpen_Type(data.getIntExtra("type", 0));
+                        break;
+                }
+                if(requestCode == PLACE_PICKER_REQUEST){
+                    Place place = PlacePicker.getPlace(this,data );
+                    user.setLocation_lat(place.getLatLng().latitude);
+                    user.setLocation_long(place.getLatLng().longitude);
                 }
             }
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             Log.i("Doctor Profile  ", " Activity ", e);
         }
-
     }
 
 
@@ -537,17 +549,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
             ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), this);
         }
-        if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty())
-            ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
-        else
-            mapContanier.setVisibility(View.GONE);
+
 
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
-        ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
+        //ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
+        ImageHelper.setCountryImage(ivLocation,user.getCountry_flag());
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
@@ -584,8 +594,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.isClinic == 1) {
             llPracticeProfile.setVisibility(View.VISIBLE);
             vBorder.setVisibility(View.VISIBLE);
-            mapContanier.setVisibility(View.VISIBLE);
-
+            if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty()) {
+                mapContanier.setVisibility(View.VISIBLE);
+                ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
+            }
+            else
+                mapContanier.setVisibility(View.GONE);
         } else {
             llPracticeProfile.setVisibility(View.GONE);
             vBorder.setVisibility(View.GONE);

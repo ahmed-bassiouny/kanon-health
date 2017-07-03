@@ -153,7 +153,8 @@ public class initialProfileDetails extends AppCompatActivity {
                 final User user = new User();
                 user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-                user.setName(firstName + " " + lastName);
+                user.setLast_name(lastName);
+                user.setFirst_name(firstName);
                 user.setBirthDate(birthDate);
                 if (uploadImageResponse != null) {
                     user.setAvatar(uploadImageResponse.getFile_url());

@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.helpers.Constants;
+import com.mukesh.countrypicker.Country;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CountryActivty extends AppCompatActivity {
@@ -32,7 +32,7 @@ public class CountryActivty extends AppCompatActivity {
             search_bar = (EditText) findViewById(R.id.search_bar);
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-            mAdapter = new CountryAdapter(Constants.COUNTRY_CODES, getApplicationContext());
+            mAdapter = new CountryAdapter(Country.getAllCountries(), getApplicationContext());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -50,25 +50,22 @@ public class CountryActivty extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    HashMap<String, CountriesCodes> search = new HashMap<String, CountriesCodes>();
+                    List<Country> search = new ArrayList<Country>();
                     try {
                         String temp = search_bar.getText().toString().replaceAll(Pattern.quote("+"), "");
-                        if (temp == "") {
-                        } else {
-                            int number = Integer.parseInt(temp);
-                        }
-                        for (Map.Entry<String, CountriesCodes> e : Constants.COUNTRY_CODES.entrySet()) {
-                            if (e.getValue().getDial_code().toLowerCase().startsWith("+" + temp)) {
-                                search.put(e.getKey().toString(), e.getValue());
-
+                        for (Country e : Country.getAllCountries()) {
+                            if (e.getDialCode().toLowerCase().startsWith("+" + temp)) {
+                                search.add(e);
+                            }
+                            if (e.getName().toLowerCase().startsWith(temp)) {
+                                search.add(e);
                             }
                         }
                     } catch (Exception w) {
-                        for (Map.Entry<String, CountriesCodes> e : Constants.COUNTRY_CODES.entrySet()) {
-                            Log.d(e.getKey().toLowerCase().toString(), e.getValue().toString());
-                            if (e.getKey().toLowerCase().startsWith(search_bar.getText().toString().toLowerCase())) {
-                                search.put(e.getKey().toString(), e.getValue());
-
+                        for (Country e : Country.getAllCountries()) {
+                            Log.d(e.getName(), e.getDialCode());
+                            if (e.getName().startsWith(search_bar.getText().toString().toLowerCase())) {
+                                search.add(e);
                             }
                         }
                     }

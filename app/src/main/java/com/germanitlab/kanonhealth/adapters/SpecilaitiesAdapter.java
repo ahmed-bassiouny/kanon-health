@@ -56,7 +56,6 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ChooseModel chooseModel = list.get(position);
         try {
             switch (type) {
                 case Constants.SPECIALITIES:
@@ -64,7 +63,8 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.LANGUAUGE:
-                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getLang_icon(), context);
+                   // ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getLang_icon(), context);
+                    ImageHelper.setLanguageImage(holder.image,list.get(position).getLong_short());
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.MEMBERAT:

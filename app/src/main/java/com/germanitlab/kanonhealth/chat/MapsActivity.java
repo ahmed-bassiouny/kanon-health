@@ -138,7 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         ) {
 
                     LatLng sydney = new LatLng(doctor.getLocation_lat(), doctor.getLocation_long());
-                    mMap.addMarker(new MarkerOptions().position(sydney).title(doctor.getName()));
+                    mMap.addMarker(new MarkerOptions().position(sydney).title(doctor.getLast_name()+", "+doctor.getFirst_name()));
                 }
             } else {
                 // Add a marker in Sydney and move the camera
