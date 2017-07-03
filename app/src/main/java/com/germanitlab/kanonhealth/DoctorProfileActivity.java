@@ -132,8 +132,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.border)
     View vBorder;
 
-    @BindView(R.id.txt_setup_location)
-    TextView txtSetupLocation;
 
     @BindView(R.id.ed_location)
     EditText etLocation;
@@ -315,7 +313,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 startActivity(intent);
             } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
                 Intent intent = new Intent(this, ChatActivity.class);
-                intent.putExtra("doctor_data", gson.toJson(user));
+                String userstring=gson.toJson(user);
+                intent.putExtra("doctor_data",userstring);
                 intent.putExtra("from", true);
                 startActivity(intent);
             } else {
@@ -402,7 +401,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         civEditImage.setVisibility(notvisibility);
         if (user.isClinic == 1)
             ivMemberList.setVisibility(notvisibility);
-        txtSetupLocation.setVisibility(notvisibility);
         //Edit ahmed 12-6-2017
         boolean editable = (visiblitiy == View.GONE) ? true : false;
         etLocation.setEnabled(editable);
@@ -550,10 +548,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
             ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), this);
         }
-        if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty())
-            ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
-        else
-            mapContanier.setVisibility(View.GONE);
+
 
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
@@ -598,8 +593,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.isClinic == 1) {
             llPracticeProfile.setVisibility(View.VISIBLE);
             vBorder.setVisibility(View.VISIBLE);
-            mapContanier.setVisibility(View.VISIBLE);
-
+            if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty()) {
+                mapContanier.setVisibility(View.VISIBLE);
+                ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
+            }
+            else
+                mapContanier.setVisibility(View.GONE);
         } else {
             llPracticeProfile.setVisibility(View.GONE);
             vBorder.setVisibility(View.GONE);
@@ -899,18 +898,5 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         intent.putExtra("long", user.getLocation_long());
         intent.putExtra("lat", user.getLocation_lat());
         startActivity(intent);
-    }
-    @OnClick(R.id.txt_setup_location)
-    public void setupLocation(){
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        try {
-            startActivityForResult(builder.build(DoctorProfileActivity.this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
     }
 }
