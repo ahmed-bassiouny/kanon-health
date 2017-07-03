@@ -589,7 +589,15 @@
                             android:layout_height="match_parent"
                             android:id="@+id/location_img"/>
                     </RelativeLayout>
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_setup_location"
+                        android:layout_margin="5dp"
+                        android:visibility="gone"
+                        android:textColor="@color/black"
+                        android:drawableRight="@drawable/ic_arrow_forward_black_24dp"
+                        android:text="setup location manually"/>
 
                     <View
                         android:layout_width="match_parent"
