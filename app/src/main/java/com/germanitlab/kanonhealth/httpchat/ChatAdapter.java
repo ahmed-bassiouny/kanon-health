@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.httpchat;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -10,12 +11,12 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,15 +27,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.callback.UploadListener;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -44,13 +40,15 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
-import org.json.JSONException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +87,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
         switch (type) {
             case Constants.IMAGE_MESSAGE:
+            case Constants.LOCATION_MESSAGE:
                 ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
                 ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
                 return imageMessageViewHolder;
@@ -142,8 +141,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 //setVideoMessage(videoViewHolder, position);
                 break;
             case Constants.LOCATION:
-                //LocationViewHolder locationViewHolder = (LocationViewHolder) baseViewHolder;
-                //setLocationMessage(locationViewHolder, position);
+                ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
+                setLocationMessage(locationViewHolder, position);
                 break;
             default:
                 //for text message
@@ -234,11 +233,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     // Image
     public class ImageViewHolder extends BaseViewHolder {
         public ImageView image_message;
-        public TextView message, date,privacy_txt;
+        public TextView message, date, privacy_txt;
         public ImageView status, privacy_image;
         public RelativeLayout background;
         public LinearLayout messageContainer;
-        public ProgressBar progress_view_download,pbar_loading;
+        public ProgressBar progress_view_download, pbar_loading;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -252,7 +251,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
             image_message = (ImageView) itemView.findViewById(R.id.image_message);
             progress_view_download = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
-            pbar_loading= (ProgressBar) itemView.findViewById(R.id.pbar_loading);
+            pbar_loading = (ProgressBar) itemView.findViewById(R.id.pbar_loading);
 
         }
     }
@@ -263,9 +262,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         public LinearLayout message_container;
         public RelativeLayout background;
         public ImageButton btn_play_pause;
-        public TextView tv_music_current_loc,tv_music_duration,date,privacy_txt;
-        public ImageView privacy_image,status;
-        public ProgressBar progress_view_download,pbar_loading;
+        public TextView tv_music_current_loc, tv_music_duration, date, privacy_txt;
+        public ImageView privacy_image, status;
+        public ProgressBar progress_view_download, pbar_loading;
         public SeekBar seek_bar_music;
 
         private MediaPlayer mp;
@@ -287,9 +286,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             date = (TextView) itemView.findViewById(R.id.date);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
-            status=(ImageView)itemView.findViewById(R.id.status);
-            ll_play=(LinearLayout)itemView.findViewById(R.id.ll_play);
-            pbar_loading= (ProgressBar) itemView.findViewById(R.id.pbar_loading);
+            status = (ImageView) itemView.findViewById(R.id.status);
+            ll_play = (LinearLayout) itemView.findViewById(R.id.ll_play);
+            pbar_loading = (ProgressBar) itemView.findViewById(R.id.pbar_loading);
         }
     }
 
@@ -349,7 +348,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     // Text
     public static class TextMsgViewHolder extends BaseViewHolder {
         public LinearLayout messageContainer;
-        public TextView message, date,privacy_txt;
+        public TextView message, date, privacy_txt;
         public ImageView status, privacy_image;
         public RelativeLayout background;
         public ProgressBar pbar_loading;
@@ -364,7 +363,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             status = (ImageView) itemView.findViewById(R.id.status);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
-            pbar_loading= (ProgressBar) itemView.findViewById(R.id.pbar_loading);
+            pbar_loading = (ProgressBar) itemView.findViewById(R.id.pbar_loading);
         }
     }
 
@@ -374,8 +373,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private void setTextMessage(final TextMsgViewHolder textMsgViewHolder, final int position) {
         try {
             final Message textMessage = mMessages.get(position);
-            showLayout_Privacy(textMessage,position,textMsgViewHolder.privacy_image,textMsgViewHolder.messageContainer,textMsgViewHolder.background,
-                    textMsgViewHolder.status,textMsgViewHolder.privacy_txt,textMsgViewHolder.date,textMsgViewHolder.pbar_loading);
+            showLayout_Privacy(textMessage, position, textMsgViewHolder.privacy_image, textMsgViewHolder.messageContainer, textMsgViewHolder.background,
+                    textMsgViewHolder.status, textMsgViewHolder.privacy_txt, textMsgViewHolder.date, textMsgViewHolder.pbar_loading);
             textMsgViewHolder.message.setText(textMessage.getMsg());
 
 
@@ -400,30 +399,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
 
     }
+
     private void setImageMessage(final ImageViewHolder imageViewHolder, final int position) {
         try {
 
             final Message message = mMessages.get(position);
-            showLayout_Privacy(message,position,imageViewHolder.privacy_image,imageViewHolder.messageContainer,imageViewHolder.background
-                    ,imageViewHolder.status,imageViewHolder.privacy_txt,imageViewHolder.date,imageViewHolder.pbar_loading);
-
+            showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
+                    , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
 
 
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            ImageHelper.setImage(imageViewHolder.image_message,Constants.CHAT_SERVER_URL_IMAGE+"/"+message.getMsg(),imageViewHolder.progress_view_download,activity);
-            Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-            Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE+"/"+message.getMsg()).listener(new RequestListener<String, GlideDrawable>() {
-                @Override
-                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                    return false;
-                }
+            ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download, activity);
 
-                @Override
-                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                    imageViewHolder.progress_view_download.setVisibility(View.INVISIBLE);
-                    return false;
-                }
-            }).into(imageViewHolder.image_message);
             //imageViewHolder.date.setText(message.getSent_at());
             //setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image);
 
@@ -513,172 +500,114 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             });
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Chat Adapter", "setTextMessage: ", e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void setAudioMessage(final AudioViewHolder audioViewHolder, final int position) {
         try {
             final Message mediaMessage = mMessages.get(position);
             //int totalDuration = audioViewHolder.mp.getDuration();
 
-            showLayout_Privacy(mediaMessage,position,audioViewHolder.privacy_image,audioViewHolder.message_container,audioViewHolder.background,
-                    audioViewHolder.status,audioViewHolder.privacy_txt,audioViewHolder.date,audioViewHolder.pbar_loading);
+            showLayout_Privacy(mediaMessage, position, audioViewHolder.privacy_image, audioViewHolder.message_container, audioViewHolder.background,
+                    audioViewHolder.status, audioViewHolder.privacy_txt, audioViewHolder.date, audioViewHolder.pbar_loading);
 
 
+            // Mediaplayer
+            audioViewHolder.mp = new MediaPlayer();
+            audioViewHolder.utils = new MediaUtilities();
+
+            final Runnable mUpdateTimeTask = new Runnable() {
+                public void run() {
+                    long totalDuration = audioViewHolder.mp.getDuration();
+                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                    // Displaying Total Duration time
+                    // Displaying time completed playing
+                    // Updating progress bar
+                    audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+                    int progress = (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
+                    audioViewHolder.seek_bar_music.setProgress(progress);
+
+                    // Running this thread after 100 milliseconds
+                    audioViewHolder.mHandler.postDelayed(this, 30);
+                }
+            };
+            // Listeners
+
+            audioViewHolder.seek_bar_music.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                    audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
 
 
-                // Mediaplayer
-                audioViewHolder.mp = new MediaPlayer();
-                audioViewHolder.utils = new MediaUtilities();
+                }
 
-                final Runnable mUpdateTimeTask = new Runnable() {
-                    public void run() {
-                        long totalDuration = audioViewHolder.mp.getDuration();
-                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                        // Displaying Total Duration time
-                        // Displaying time completed playing
-                        // Updating progress bar
-                        audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-                        int progress =  (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
-                        audioViewHolder.seek_bar_music.setProgress(progress);
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                    int totalDuration = audioViewHolder.mp.getDuration();
+                    int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
+                    audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
+                    // forward or backward to certain seconds
+                    audioViewHolder.mp.seekTo(currentPosition);
 
-                        // Running this thread after 100 milliseconds
-                        audioViewHolder.mHandler.postDelayed(this, 30);
-                    }
-                };
-                // Listeners
+                    // update timer progress again
+                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
 
-                audioViewHolder.seek_bar_music.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                        audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                        audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
+                }
+            }); // Important
+            audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    audioViewHolder.btn_play_pause.setImageResource(R.drawable.ic_music_play);
+                    audioViewHolder.seek_bar_music.setProgress(0);
+                }
+            }); // Important
 
 
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        audioViewHolder.mHandler.removeCallbacks(mUpdateTimeTask);
-                        int totalDuration = audioViewHolder.mp.getDuration();
-                        int currentPosition = audioViewHolder.utils.progressToTimer(seekBar.getProgress(), totalDuration);
-                        audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
-                        // forward or backward to certain seconds
-                        audioViewHolder.mp.seekTo(currentPosition);
-
-                        // update timer progress again
-                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-
-                    }
-                }); // Important
-                audioViewHolder.mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        audioViewHolder.btn_play_pause.setImageResource(R.drawable.ic_music_play);
-                        audioViewHolder.seek_bar_music.setProgress(0);
-                    }
-                }); // Important
-
-
-                audioViewHolder.btn_play_pause.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (audioViewHolder.mp.isPlaying()) {
-                            if (audioViewHolder.mp != null) {
-                                audioViewHolder.mp.pause();
-                                // Changing button image to play button
-                                audioViewHolder.btn_play_pause.setImageResource(R.drawable.ic_music_play);
-                            }
-                        } else {
-                            // Resume song
-                            if (audioViewHolder.mp != null) {
-                                audioViewHolder.mp.start();
-                                // Changing button image to pause button
-                                audioViewHolder.btn_play_pause.setImageResource(R.drawable.ic_music_pause);
-                            }
+            audioViewHolder.btn_play_pause.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (audioViewHolder.mp.isPlaying()) {
+                        if (audioViewHolder.mp != null) {
+                            audioViewHolder.mp.pause();
+                            // Changing button image to play button
+                            audioViewHolder.btn_play_pause.setImageResource(R.drawable.ic_music_play);
+                        }
+                    } else {
+                        // Resume song
+                        if (audioViewHolder.mp != null) {
+                            audioViewHolder.mp.start();
+                            // Changing button image to pause button
+                            audioViewHolder.btn_play_pause.setImageResource(R.drawable.ic_music_pause);
                         }
                     }
-                });
-                if (!new File(mediaMessage.getMsg()).exists()) {
-                    String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
-                    File file = new File(folder, fileName);
+                }
+            });
+            if (!new File(mediaMessage.getMsg()).exists()) {
+                String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
+                File file = new File(folder, fileName);
 
-                    if (file.exists()) {
-                        audioViewHolder.ll_play.setVisibility(View.VISIBLE);
-                        mediaMessage.setMsg(file.getPath());
-                        mediaMessage.setLoaded(true);
-                        mediaMessage.setLoading(false);
-
-                        try {
-                            audioViewHolder.mp.reset();
-                            audioViewHolder.mp.setDataSource(file.getPath());
-                            audioViewHolder.mp.prepare();
-                            audioViewHolder.seek_bar_music.setProgress(0);
-                            audioViewHolder.seek_bar_music.setMax(100);
-
-                            // Updating progress bar
-                            audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                        } catch (IllegalStateException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }else {
-                        internetFilesOperations.downloadUrlWithProgress(audioViewHolder.progress_view_download, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
-                            @Override
-                            public void onDownloadFinish(final String pathOFDownloadedFile) {
-                                activity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mediaMessage.setMsg(pathOFDownloadedFile);
-                                        mediaMessage.setLoaded(true);
-
-                                        try {
-                                            audioViewHolder.mp.reset();
-                                            audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
-                                            audioViewHolder.mp.prepare();
-                                            long currentDuration = audioViewHolder.mp.getCurrentPosition();
-                                            audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
-                                            audioViewHolder.seek_bar_music.setProgress(0);
-                                            audioViewHolder.seek_bar_music.setMax(100);
-                                            Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
-                                            mediaMessage.setMsg(uri.toString());
-                                            audioViewHolder.ll_play.setVisibility(View.VISIBLE);
-                                            // Updating progress bar
-                                            audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
-                                        } catch (IllegalArgumentException e) {
-                                            e.printStackTrace();
-                                        } catch (IllegalStateException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                } else {
+                if (file.exists()) {
+                    audioViewHolder.ll_play.setVisibility(View.VISIBLE);
+                    mediaMessage.setMsg(file.getPath());
+                    mediaMessage.setLoaded(true);
+                    mediaMessage.setLoading(false);
 
                     try {
                         audioViewHolder.mp.reset();
-                        audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
+                        audioViewHolder.mp.setDataSource(file.getPath());
                         audioViewHolder.mp.prepare();
-
-                        // set Progress bar values
                         audioViewHolder.seek_bar_music.setProgress(0);
                         audioViewHolder.seek_bar_music.setMax(100);
 
@@ -691,8 +620,65 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    internetFilesOperations.downloadUrlWithProgress(audioViewHolder.progress_view_download, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
+                        @Override
+                        public void onDownloadFinish(final String pathOFDownloadedFile) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mediaMessage.setMsg(pathOFDownloadedFile);
+                                    mediaMessage.setLoaded(true);
 
+                                    try {
+                                        audioViewHolder.mp.reset();
+                                        audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
+                                        audioViewHolder.mp.prepare();
+                                        long currentDuration = audioViewHolder.mp.getCurrentPosition();
+                                        audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(currentDuration));
+                                        audioViewHolder.seek_bar_music.setProgress(0);
+                                        audioViewHolder.seek_bar_music.setMax(100);
+                                        Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
+                                        mediaMessage.setMsg(uri.toString());
+                                        audioViewHolder.ll_play.setVisibility(View.VISIBLE);
+                                        // Updating progress bar
+                                        audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                                    } catch (IllegalArgumentException e) {
+                                        e.printStackTrace();
+                                    } catch (IllegalStateException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            });
+                        }
+                    });
                 }
+
+            } else {
+
+                try {
+                    audioViewHolder.mp.reset();
+                    audioViewHolder.mp.setDataSource(mediaMessage.getMsg());
+                    audioViewHolder.mp.prepare();
+
+                    // set Progress bar values
+                    audioViewHolder.seek_bar_music.setProgress(0);
+                    audioViewHolder.seek_bar_music.setMax(100);
+
+                    // Updating progress bar
+                    audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
 
 
@@ -735,6 +721,76 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
+    private void setLocationMessage(final ImageViewHolder imageViewHolder, final int position) {
+        try {
+
+            final Message locationMessage = mMessages.get(position);
+
+            showLayout_Privacy(locationMessage, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
+                    , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
+
+           /* imageViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            Intent intent = new Intent(activity, MapsActivity.class);
+                            intent.putExtra("lat", jsonObject.getString("lat"));
+                            intent.putExtra("long", jsonObject.getString("long"));
+
+                            Toast.makeText(activity, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
+                            activity.startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });*/
+
+         /*   imageViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String msg = "{" + locationMessage.getMsg() + "}";
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("long"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    }
+                });*/
+
+            JSONObject jsonObject = new JSONObject(locationMessage.getMsg());
+            double lat = jsonObject.getDouble("lat");
+            double lng = jsonObject.getDouble("long");
+            String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(lat) + "," + String.valueOf(lng) + "&zoom=15&size=200x200&sensor=false";
+            ImageHelper.setImage(imageViewHolder.image_message, URL, imageViewHolder.progress_view_download, activity);
+
+
+           /* locationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String msg = "{" + locationMessage.getMsg() + "}";
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(msg);
+                        double lat = jsonObject.getDouble("lat");
+                        double lng = jsonObject.getDouble("long");
+                        Util.getInstance(context).showLocation(lat, lng);
+                    } catch (JSONException e) {
+                        Log.e("ex", e.getMessage());
+                    }
+                }
+            });
+*/
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
 
                 /*-------------------------- Additional important Methods------------*/
@@ -792,7 +848,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
-    public void setImagePrivacy(int privacy, ImageView image,TextView txtPrivacy) {
+    public void setImagePrivacy(int privacy, ImageView image, TextView txtPrivacy) {
         if (privacy == 0) {
 //            image.setBackgroundResource(R.drawable.red);
 
@@ -802,8 +858,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red));
             }
             txtPrivacy.setText("Private");
-        }
-        else if (privacy == 1) {
+        } else if (privacy == 1) {
 //            image.setBackgroundResource(R.drawable.blue);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue, activity.getTheme()));
@@ -811,8 +866,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue));
             }
             txtPrivacy.setText("Doctor");
-        }
-        else if (privacy == 2) {
+        } else if (privacy == 2) {
 //            image.setBackgroundResource(R.drawable.green);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green, activity.getTheme()));
@@ -849,7 +903,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                                         else
                                             mMessages.get(pos).setPrivacy(0);
                                         progressBar.setVisibility(View.GONE);
-                                        setImagePrivacy(mMessages.get(pos).getPrivacy(),imagePrivacy,txtPrivacy);
+                                        setImagePrivacy(mMessages.get(pos).getPrivacy(), imagePrivacy, txtPrivacy);
                                         notifyDataSetChanged();
                                     }
 
@@ -877,10 +931,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         });
     }
 
-    private void showLayout_Privacy(Message message,int position,ImageView imagePrivacy,LinearLayout messageContainer,RelativeLayout background,ImageView status,TextView txtPrivacy,TextView date,ProgressBar progressBar){
+    private void showLayout_Privacy(Message message, int position, ImageView imagePrivacy, LinearLayout messageContainer, RelativeLayout background, ImageView status, TextView txtPrivacy, TextView date, ProgressBar progressBar) {
         if (show_privacy) {
-            setImagePrivacy(message.getPrivacy(), imagePrivacy,txtPrivacy);
-            changePrivacy(imagePrivacy, position,txtPrivacy,progressBar);
+            setImagePrivacy(message.getPrivacy(), imagePrivacy, txtPrivacy);
+            changePrivacy(imagePrivacy, position, txtPrivacy, progressBar);
             imagePrivacy.setVisibility(View.VISIBLE);
             imagePrivacy.setVisibility(View.VISIBLE);
         } else {
@@ -912,6 +966,72 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         } catch (Exception ex) {
             date.setText(message.getSent_at());
         }
+    }
+
+    private void showLocationOptions(String title, final int position, String lat, String lng) {
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(activity);
+        builderSingle.setTitle(title);
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(activity, R.layout.listitem, R.id.textview);
+        arrayAdapter.add("Share");
+        arrayAdapter.add("Forward");
+        arrayAdapter.add("Delete");
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+                if (which == 0) {
+
+                } else if (which == 1) {
+//                    startChatUsersActivity(position);
+                } else if (which == 2) {
+
+//                    int messageId = ((LocationMessage) messageArrayList.get(position).getMessageObject()).get_Id();
+//                    deleteMessage(position, messageId);
+                }
+            }
+        });
+
+        try {
+            builderSingle.show();
+        } catch (Exception ex) {
+        }
+
+    }
+
+    public static Bitmap getGoogleMapThumbnail(double lati, double longi) {
+        String URL = "http://maps.google.com/maps/api/staticmap?center=" + lati + "," + longi + "&zoom=15&size=200x200&sensor=false";
+        Bitmap bmp = null;
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet request = new HttpGet(URL);
+
+        InputStream in = null;
+        try {
+            in = httpclient.execute(request).getEntity().getContent();
+            bmp = BitmapFactory.decodeStream(in);
+            in.close();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return bmp;
     }
 }
 
