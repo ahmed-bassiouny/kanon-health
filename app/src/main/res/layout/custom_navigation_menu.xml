@@ -82,6 +82,7 @@
             android:id="@+id/log_out"
             android:layout_width="@dimen/img_view_video_w"
             android:layout_height="@dimen/img_view_video_h"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_margin="@dimen/size_10dp"
             android:background="@drawable/location" />
