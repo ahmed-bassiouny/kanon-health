@@ -146,22 +146,6 @@ public class Helper {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-    public static List<Language> getAllLanguages(Context ctx) {
-        List<Language> result = new ArrayList<>();
-        try {
-            Gson gson = new Gson();
-            JsonParser jsonParser = new JsonParser();
-            JsonArray jsonArray = (JsonArray) jsonParser.parse(ctx.getString(R.string.languages_json));
-            for (JsonElement jsonElement : jsonArray) {
-                result.add(gson.fromJson(jsonElement, Language.class));
-            }
-        } catch (Exception e) {
-            Log.e("langList", e.getMessage());
-        } finally {
-            return result;
-        }
-    }
 }
 
 
