@@ -1,9 +1,13 @@
 package com.germanitlab.kanonhealth.httpchat;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +71,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
     LinearLayout open_chat_session;
     //
     int userID,userPassword,doctorID;
+    ArrayList<Message> messages;
     PrefManager prefManager;
     public HttpChatFragment() {
         // Required empty public constructor
@@ -114,13 +119,39 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
 
     @Override
     public void onSuccess(Object response) {
-        ArrayList<Message> messages=(ArrayList<Message>)response;
-        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity(),true);
-        recyclerView.setAdapter(chatAdapter);
+         messages=(ArrayList<Message>)response;
+        isStoragePermissionGranted();
     }
 
     @Override
     public void onFailed(String error) {
         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+    }
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                setData();
+                return true;
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            setData();
+            return true;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            //resume tasks needing this permission
+            setData();
+        }
+    }
+    private void setData(){
+        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity(),true);
+        recyclerView.setAdapter(chatAdapter);
     }
 }

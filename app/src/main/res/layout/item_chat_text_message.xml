@@ -66,6 +66,14 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
+        android:layout_marginStart="5dp"
         android:id="@+id/privacy_image" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginStart="5dp"
+        android:layout_below="@+id/privacy_image"
+        android:id="@+id/privacy_txt"/>
 
 </RelativeLayout>
