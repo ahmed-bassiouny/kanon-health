@@ -51,6 +51,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,11 +98,12 @@ public class DocumentsChatFragment extends Fragment
 
     private ImageButton imgbtnAttach;
     private CircleImageView imageView;
-    private ImageButton imgbtnSend;
+    private SeekBar imageButtonSend;
     private TextView tvUserName, tvRecordTimer;
     private EditText etMessage;
     private RecyclerView recyclerView;
     private View view;
+    private ImageButton imgbtn_autio_send ;
 
     private LinearLayout linearTextMsg;
     private RelativeLayout relativeAudio;
@@ -211,10 +213,11 @@ public class DocumentsChatFragment extends Fragment
     private void initView() {
 
 //        imgbtnAttach = (ImageButton) view.findViewById(R.id.imgbtn_chat_attach);
-        imgbtnSend = (ImageButton) view.findViewById(R.id.imgbtn_chat_autio_send);
+        imageButtonSend = (SeekBar) view.findViewById(R.id.imgbtn_chat_autio_send);
         imageView = (CircleImageView) view.findViewById(R.id.img_chat_user_avatar);
 //        tvUserName = (TextView) view.findViewById(R.id.tv_chat_user_name);
         etMessage = (EditText) view.findViewById(R.id.et_chat_message);
+        imgbtn_autio_send = (ImageButton)view.findViewById(R.id.imgbtn_autio_send);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_chat_messages);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -499,26 +502,27 @@ public class DocumentsChatFragment extends Fragment
 
     private void handelEvent() {
         try {
-            imgbtnSend.setOnTouchListener(new View.OnTouchListener() {
+            imageButtonSend.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     // TODO Auto-generated method stub
 
-                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         switch (event.getAction()) {
+
                             case MotionEvent.ACTION_MOVE:
                                 view.getParent().requestDisallowInterceptTouchEvent(true);
+                                imgbtn_add_picture.setVisibility(View.GONE);
                                 break;
-                            case MotionEvent.ACTION_DOWN:
 
+                            case MotionEvent.ACTION_DOWN:
                                 linearTextMsg.setVisibility(View.GONE);
                                 relativeAudio.setVisibility(View.VISIBLE);
-
+                                imageButtonSend.setBackgroundResource(0);
                                 Log.e("Start Recording", "start");
-
-
                                 startRecording();
+                                imgbtn_add_picture.setVisibility(View.GONE);
 
                                 break;
                             case MotionEvent.ACTION_UP:
@@ -526,15 +530,22 @@ public class DocumentsChatFragment extends Fragment
                                 view.getParent().requestDisallowInterceptTouchEvent(false);
 
                                 Log.e("stop Recording", "stop");
-                                stopRecording(true);
-                                long diff = endTimeForRecording - startTimeForRecording;
-                                Log.e("Difference", String.valueOf(diff));
-                                if (diff > 1000) {
-                                    Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                    sendMessage(mOutputFile.getPath(), Constants.AUDIO);
-                                }
-                                setButtonToTextMsg(true);
+                                imgbtn_add_picture.setVisibility(View.VISIBLE);
 
+                                if (imageButtonSend.getProgress() < 30) {
+                                    Toast.makeText(getContext(), "You cancel record", Toast.LENGTH_SHORT).show();
+                                    stopRecording(true);
+                                    setButtonToTextMsg(true);
+                                } else {
+                                    stopRecording(true);
+                                    long diff = endTimeForRecording - startTimeForRecording;
+                                    Log.e("Difference", String.valueOf(diff));
+                                    if (diff > 1000) {
+                                        Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+                                        sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                    }
+                                    setButtonToTextMsg(true);
+                                }
                                 break;
                         }
                     } else {
@@ -562,43 +573,47 @@ public class DocumentsChatFragment extends Fragment
                     if (editable.toString().trim().length() > 0) {
 
                         setButtonToTextMsg(false);
+                        imgbtn_autio_send.setVisibility(View.VISIBLE);
+                        imageButtonSend.setVisibility(View.GONE);
 
                     } else {
-
-                        imgbtnSend.setImageResource(R.drawable.mic);
-                        imgbtnSend.setOnClickListener(null);
-                        imgbtnSend.setOnTouchListener(new View.OnTouchListener() {
+                        imgbtn_autio_send.setVisibility(View.GONE);
+                        imageButtonSend.setVisibility(View.VISIBLE);
+                        imageButtonSend.setBackgroundResource(R.drawable.ic_mic_black_24dp);
+                        imageButtonSend.setOnClickListener(null);
+                        imageButtonSend.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
                                 switch (event.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
+                                    case MotionEvent.ACTION_MOVE:
 
+                                        //handle drag action here   Milad :D
+                                        break;
+
+                                    case MotionEvent.ACTION_DOWN:
                                         linearTextMsg.setVisibility(View.GONE);
                                         relativeAudio.setVisibility(View.VISIBLE);
-
+                                        imageButtonSend.setBackgroundResource(0);
                                         Log.e("Start Recording", "start");
-
                                         startRecording();
 
                                         break;
                                     case MotionEvent.ACTION_UP:
-
                                         Log.e("stop Recording", "stop");
-                                        stopRecording(true);
-
-
-                                        long diff = endTimeForRecording - startTimeForRecording;
-                                        Log.e("Difference", String.valueOf(diff));
-                                        if (diff > 1000) {
-
-                                            Log.e("file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                            sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                        if (imageButtonSend.getProgress() < 30) {
+                                            Toast.makeText(getContext(), "You cancel record", Toast.LENGTH_SHORT).show();
+                                            stopRecording(true);
+                                            setButtonToTextMsg(true);
+                                        } else {
+                                            stopRecording(true);
+                                            long diff = endTimeForRecording - startTimeForRecording;
+                                            Log.e("Difference", String.valueOf(diff));
+                                            if (diff > 1000) {
+                                                Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+                                                sendMessage(mOutputFile.getPath(), Constants.AUDIO);
+                                            }
+                                            setButtonToTextMsg(true);
                                         }
-
-                                        setButtonToTextMsg(true);
-                                        imgbtnSend.setImageResource(R.drawable.mic);
-
-
                                         break;
                                 }
                                 return false;
@@ -606,6 +621,7 @@ public class DocumentsChatFragment extends Fragment
                         });
 
                     }
+
 
 
                 }
@@ -628,13 +644,13 @@ public class DocumentsChatFragment extends Fragment
     private void setButtonToTextMsg(Boolean comingFromVoiceRecording) {
 
         if (!comingFromVoiceRecording) {
-            imgbtnSend.setImageResource(android.R.drawable.ic_menu_send);
-            imgbtnSend.setOnTouchListener(null);
+            imageButtonSend.setBackgroundResource(android.R.drawable.ic_menu_send);
+            imageButtonSend.setOnTouchListener(null);
         }
 
         linearTextMsg.setVisibility(View.VISIBLE);
         relativeAudio.setVisibility(View.GONE);
-        imgbtnSend.setOnClickListener(new View.OnClickListener() {
+        imgbtn_autio_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessage();
