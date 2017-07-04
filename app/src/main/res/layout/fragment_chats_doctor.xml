@@ -71,7 +71,7 @@
                     <Button
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:text="Doctor / clients"
+                        android:text="DoctorS"
                         android:id="@+id/doctor_list"
                         android:layout_height="match_parent" />
 

@@ -261,14 +261,14 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 tvContact.setText(user.getLast_name());
                 /*android:gravity="left|center_vertical"
                                 android:paddingLeft="5dp"*/
-                changeGravity(tvOnline,true);
-                changeGravity(edAddToFavourite,true);
-                changeGravity(tvContact,true);
+                changeGravity(tvOnline, true);
+                changeGravity(edAddToFavourite, true);
+                changeGravity(tvContact, true);
                 break;
             case R.id.mi_save:
-                changeGravity(tvOnline,false);
-                changeGravity(edAddToFavourite,false);
-                changeGravity(tvContact,false);
+                changeGravity(tvOnline, false);
+                changeGravity(edAddToFavourite, false);
+                changeGravity(tvContact, false);
                 handleNewData();
                 bindData();
                 menu.findItem(R.id.mi_edit).setVisible(true);
@@ -315,12 +315,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 Intent intent = new Intent(this, ChatActivity.class);
                 /*String userstring=gson.toJson(user);
                 intent.putExtra("doctor_data",userstring);*/
-                prefManager.put(prefManager.USER_INTENT,gson.toJson(user));
+                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 intent.putExtra("from", true);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                prefManager.put(prefManager.USER_INTENT,gson.toJson(user));
+                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 startActivity(intent);
             }
 
@@ -429,7 +429,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
         if (user.getOpen_Type() == 0) {
-            Intent intent = new Intent(this,  TimeTable.class);
+            Intent intent = new Intent(this, TimeTable.class);
             intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
             startActivityForResult(intent, Constants.HOURS_CODE);
         } else {
@@ -530,8 +530,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         user.setOpen_Type(data.getIntExtra("type", 0));
                         break;
                 }
-                if(requestCode == PLACE_PICKER_REQUEST){
-                    Place place = PlacePicker.getPlace(this,data );
+                if (requestCode == PLACE_PICKER_REQUEST) {
+                    Place place = PlacePicker.getPlace(this, data);
                     user.setLocation_lat(place.getLatLng().latitude);
                     user.setLocation_long(place.getLatLng().longitude);
                 }
@@ -557,7 +557,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tvLocation.setText(user.getAddress());
         tvLocations.setText(user.getAddress());
         //ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
-        ImageHelper.setCountryImage(ivLocation,user.getCountry_flag());
+        ImageHelper.setCountryImage(ivLocation, user.getCountry_flag());
 
         if (user.getIs_available() != null && user.getIs_available().equals("1"))
             tvOnline.setText(R.string.status_online);
@@ -594,11 +594,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.isClinic == 1) {
             llPracticeProfile.setVisibility(View.VISIBLE);
             vBorder.setVisibility(View.VISIBLE);
-            if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty()) {
+            if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
                 mapContanier.setVisibility(View.VISIBLE);
                 ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
-            }
-            else
+            } else
                 mapContanier.setVisibility(View.GONE);
         } else {
             llPracticeProfile.setVisibility(View.GONE);
@@ -624,7 +623,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         } else {
             is_me = false;
-            tvToolbarName.setText(user.getLast_name() + " " + user.getFirst_name());
+            if (user.isClinic == 1)
+                tvToolbarName.setText(user.getFirst_name());
+            else
+                tvToolbarName.setText(user.getLast_name() + ", " + user.getFirst_name());
             edAddToFavourite.setText(R.string.add_to);
             tvContact.setText(R.string.contact_by_chat);
         }
@@ -884,17 +886,19 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         super.onBackPressed();
         finish();
     }
-    private void changeGravity(TextView textView,boolean editable){
-        if(editable) {
+
+    private void changeGravity(TextView textView, boolean editable) {
+        if (editable) {
             textView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
             textView.setPadding(5, 0, 0, 0);
-        }else{
+        } else {
             textView.setGravity(Gravity.CENTER);
             textView.setPadding(0, 0, 0, 0);
         }
     }
+
     @OnClick(R.id.location_img)
-    public void openMap(){
+    public void openMap() {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         intent.putExtra("long", user.getLocation_long());
         intent.putExtra("lat", user.getLocation_lat());
