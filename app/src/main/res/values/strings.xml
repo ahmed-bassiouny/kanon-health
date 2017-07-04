@@ -276,4 +276,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="private_status">private</string>
     <string name="public_status">public</string>
     <string name="doctor_status">doctor</string>
+    <string name="cany_play_video">Sorry , erro with video</string>
+    <string name="cant_find_location">Sorry , Can\'t Find Location</string>
 </resources>

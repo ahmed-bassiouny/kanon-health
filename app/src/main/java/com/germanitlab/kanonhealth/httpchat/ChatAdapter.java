@@ -1,13 +1,17 @@
 package com.germanitlab.kanonhealth.httpchat;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +20,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -31,6 +36,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
+import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -44,6 +50,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -88,6 +95,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         switch (type) {
             case Constants.IMAGE_MESSAGE:
             case Constants.LOCATION_MESSAGE:
+            case Constants.VIDEO_MESSAGE:
                 ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
                 ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
                 return imageMessageViewHolder;
@@ -137,8 +145,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 setAudioMessage(audioViewHolder, position);
                 break;
             case Constants.VIDEO:
-                // VideoViewHolder videoViewHolder = (VideoViewHolder) baseViewHolder;
-                //setVideoMessage(videoViewHolder, position);
+                ImageViewHolder VideoViewHolder = (ImageViewHolder) baseViewHolder;
+                setVideoMessage(VideoViewHolder,position);
                 break;
             case Constants.LOCATION:
                 ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
@@ -410,7 +418,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download, activity);
-
+            imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(imageViewHolder.progress_view_download.getVisibility()==View.VISIBLE)
+                        return;
+                    Dialog dialog = new Dialog(activity);
+                    dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
+                    ImageView img = (ImageView) dialog.findViewById(R.id.img);
+                    ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
+                    ImageHelper.setImage(img, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), pbar, activity);
+                    dialog.show();
+                }
+            });
             //imageViewHolder.date.setText(message.getSent_at());
             //setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image);
 
@@ -600,6 +621,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
                 if (file.exists()) {
                     audioViewHolder.ll_play.setVisibility(View.VISIBLE);
+                    audioViewHolder.progress_view_download.setVisibility(View.GONE);
                     mediaMessage.setMsg(file.getPath());
                     mediaMessage.setLoaded(true);
                     mediaMessage.setLoading(false);
@@ -725,27 +747,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         try {
 
             final Message locationMessage = mMessages.get(position);
-
+            imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             showLayout_Privacy(locationMessage, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
-
-           /* imageViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String msg = "{" + locationMessage.getMsg() + "}";
-                        try {
-                            JSONObject jsonObject = new JSONObject(msg);
-                            Intent intent = new Intent(activity, MapsActivity.class);
-                            intent.putExtra("lat", jsonObject.getString("lat"));
-                            intent.putExtra("long", jsonObject.getString("long"));
-
-                            Toast.makeText(activity, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
-                            activity.startActivity(intent);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+            imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(locationMessage.getMsg());
+                        Intent intent = new Intent(activity, MapsActivity.class);
+                        intent.putExtra("lat", jsonObject.getString("lat"));
+                        intent.putExtra("long", jsonObject.getString("long"));
+                        activity.startActivity(intent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        Toast.makeText(activity, R.string.cant_find_location, Toast.LENGTH_SHORT).show();
                     }
-                });*/
+                }
+            });
 
          /*   imageViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -792,7 +812,68 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
+    private void setVideoMessage(final ImageViewHolder imageViewHolder, final int position){
 
+        try {
+            final Message message = mMessages.get(position);
+            showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
+                    , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
+
+
+            imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+
+            if (!new File(message.getMsg()).exists()) {
+                final String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
+                final File file = new File(folder, fileName);
+
+                if (file.exists()) {
+                    message.setLoaded(true);
+                    message.setLoading(false);
+                    message.setMsg(file.getPath());
+
+
+                    Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
+                            MediaStore.Video.Thumbnails.MICRO_KIND);
+
+                    imageViewHolder.image_message.setImageBitmap(videoThumbnail);
+
+
+                    playViedo(imageViewHolder.messageContainer, file.getPath());
+
+                } else {
+                    internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progress_view_download, message.getType(), message.getMsg(), new DownloadListener() {
+                        @Override
+                        public void onDownloadFinish(final String pathOFDownloadedFile) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    message.setMsg(pathOFDownloadedFile);
+                                    message.setLoaded(true);
+                                    imageViewHolder.image_message.setImageBitmap(ThumbnailUtils.createVideoThumbnail(message.getMsg(),
+                                            MediaStore.Video.Thumbnails.MICRO_KIND));
+
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            notifyDataSetChanged();
+                                        }
+                                    });
+                                    Uri uri = Uri.fromFile(new File(message.getMsg()));
+                                    message.setMsg(uri.toString());
+
+                                    playViedo(imageViewHolder.messageContainer, message.getMsg());
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }catch (Exception e){
+            Toast.makeText(activity, R.string.error_message, Toast.LENGTH_SHORT).show();
+            Log.e("Chat Adapter", "setVideoMessage: ",e );
+            Crashlytics.logException(e);
+        }
+    }
                 /*-------------------------- Additional important Methods------------*/
 
     public void selectItem(RelativeLayout messageContainer, Message message) {
@@ -1009,29 +1090,40 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    public static Bitmap getGoogleMapThumbnail(double lati, double longi) {
-        String URL = "http://maps.google.com/maps/api/staticmap?center=" + lati + "," + longi + "&zoom=15&size=200x200&sensor=false";
-        Bitmap bmp = null;
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpGet request = new HttpGet(URL);
-
-        InputStream in = null;
+    public void playViedo(View view, final String path) {
         try {
-            in = httpclient.execute(request).getEntity().getContent();
-            bmp = BitmapFactory.decodeStream(in);
-            in.close();
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    File file = new File(path);
+                    if (file.exists())
+                        Util.getInstance(activity).showVideo(Uri.fromFile(file));
+                    else {
+                        String url = Constants.CHAT_SERVER_URL + "/" + path;
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        intent.setDataAndType(Uri.parse(url), "video/*");
+                        activity.startActivity(intent);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.cany_play_video), Toast.LENGTH_SHORT).show();
         }
 
-        return bmp;
     }
+
+    private void showImageDialog(String url){
+        Dialog dialog = new Dialog(activity);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
+        ImageView img = (ImageView) dialog.findViewById(R.id.img);
+        ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
+        ImageHelper.setImage(img, url, pbar, activity);
+        dialog.show();
+    }
+
 }
 
