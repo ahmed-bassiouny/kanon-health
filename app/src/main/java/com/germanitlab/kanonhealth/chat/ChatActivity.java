@@ -221,7 +221,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.e("Docot in chat data", prefManager.getData("doctor"));
             try {
                 Intent intent = getIntent();
-                String doctorJson =prefManager.getData(PrefManager.USER_INTENT);
+                String doctorJson = prefManager.getData(PrefManager.USER_INTENT);
                 //String doctorJson = intent.getStringExtra("doctor_data");
 
 
@@ -260,16 +260,16 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 } else if (from) {
 //                    UserInfoResponse userInfoResponse = gson.fromJson(doctorJson, UserInfoResponse.class);
 //                    doctor = userInfoResponse.getUser();
-                    doctor = gson.fromJson(prefManager.getData("doctor"), User.class);
+                    doctor = gson.fromJson(prefManager.USER_INTENT, User.class);
                     handleMyData();
                 } else {
-                    UserInfoResponse userInfoResponse = gson.fromJson(intent.getStringExtra("doctor_data"), UserInfoResponse.class);
+                    UserInfoResponse userInfoResponse = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), UserInfoResponse.class);
                     doctor = userInfoResponse.getUser();
                     handleMyData();
                 }
 
             } catch (Exception e) {
-                doctor = gson.fromJson(prefManager.getData("doctor"), User.class);
+                doctor = gson.fromJson(prefManager.getData(PrefManager.USER_INTENT), User.class);
                 handleMyData();
             }
 
@@ -474,8 +474,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 finish();
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                Gson gson=new Gson();
-                prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
+                Gson gson = new Gson();
+                prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
                 intent.putExtra("doctor_obj", doctor);
 
                 startActivity(intent);
@@ -770,14 +770,12 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
     private void assignViews() {
 
         if (user_id != 1) {
+            if (doctor.isClinic == 1)
+                tvUserName.setText(doctor.getFirst_name());
+            else
+                tvUserName.setText(doctor.getLast_name() + ", " + doctor.getFirst_name());
 
-            tvUserName.setText(doctor.getLast_name()+", "+doctor.getFirst_name());
         }
-//            Log.e("returned image :", doctor.getAvatar());
-//            Helper.setImage(this , Constants.CHAT_SERVER_URL
-//                    + "/" + doctor.getAvatar() , imageUser , R.drawable.profile_place_holder);
-//
-
     }
 
 
@@ -1290,9 +1288,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ChatFragment", "Result");
         if (resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                switch (requestCode) {
-                    case 100:
+            switch (requestCode) {
+                case 100:
+                    if (data != null) {
                         selectedUri = data.getData();
                         String mimeType = getMimeType(data.getData().getPath());
 
@@ -1300,9 +1298,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
                             if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
-                                sendMessage(ImageFilePath.getPath( getApplicationContext(),selectedUri), Constants.IMAGE, "");
+                                sendMessage(ImageFilePath.getPath(getApplicationContext(), selectedUri), Constants.IMAGE, "");
                             } else {
-                                sendMessage(ImageFilePath.getPath( getApplicationContext() ,selectedUri), Constants.VIDEO, "");
+                                sendMessage(ImageFilePath.getPath(getApplicationContext(), selectedUri), Constants.VIDEO, "");
                             }
 
                         } else {
@@ -1317,20 +1315,25 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 sendMessage(ImageFilePath.getPath(this, selectedUri), Constants.VIDEO, "");
                             }
                         }
-                        break;
-                    case 200://for video
+                    }
+                    break;
+                case 200://for video
+                    if (data != null) {
                         Uri uriVideo = data.getData();
                         sendMessage(ImageFilePath.getPath(this, uriVideo), Constants.VIDEO, "");
-                        break;
-                    case 300:
+                    }
+                    break;
+                case 300:
+                    if (data != null) {
                         Uri savedUri = data.getData();
                         sendMessage(getPath(this, savedUri), Constants.AUDIO, "");
-                        break;
-                    case TAKE_PICTURE:
-                        File finalFile = new File(getRealPathFromURI(selectedImageUri));
-                        sendMessage(finalFile.getPath(), Constants.IMAGE, "");
-                        break;
-                }
+                    }
+                    break;
+                case TAKE_PICTURE:
+                    File finalFile = new File(getRealPathFromURI(selectedImageUri));
+                    sendMessage(finalFile.getPath(), Constants.IMAGE, "");
+                    break;
+
             }
         }
 
