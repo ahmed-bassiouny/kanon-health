@@ -52,7 +52,7 @@ public class PaymentActivity extends AppCompatActivity {
         try {
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
-            doctor = (User) getIntent().getSerializableExtra("doctor_data");
+            doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT),User.class);
         /*
         handel data in ui
          */
@@ -111,11 +111,6 @@ public class PaymentActivity extends AppCompatActivity {
     @OnClick(R.id.next)
     public void nextClicked() {
         try {
-            if (doctor.isClinic == 1) {
-                type = "3";
-            } else {
-                type = "2";
-            }
 
             new HttpCall(PaymentActivity.this, new ApiResponse() {
                 @Override
@@ -123,6 +118,18 @@ public class PaymentActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(PaymentActivity.this, Comment.class);
 //                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
 //                    startActivity(intent);
+
+                    final Gson gson = new Gson();
+                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+
+                    if (doctor != null) {
+                        doctor.setIsOpen(1);
+                    }
+                    //intent.putExtra("doctor_data", gson.toJson(doctor));
+                    prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
+                    intent.putExtra("from", true);
+                    startActivity(intent);
+                    finish();
                 }
 
                 @Override
@@ -130,20 +137,9 @@ public class PaymentActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
             }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
-                    String.valueOf(doctor.getId()),
-                    type);
+                    String.valueOf(doctor.getId()), "2");
 
 
-            final Gson gson = new Gson();
-            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-
-            if (doctor != null) {
-                doctor.setIsOpen(1);
-            }
-            intent.putExtra("doctor_data", gson.toJson(doctor));
-            intent.putExtra("from", true);
-            startActivity(intent);
-            finish();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();

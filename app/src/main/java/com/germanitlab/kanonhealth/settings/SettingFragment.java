@@ -146,9 +146,10 @@ public class SettingFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null && isVisibleToUser) {
+            loadData();
+            getSetting();
         }
     }
-
 
     @Override
     public void onResume() {
@@ -367,10 +368,12 @@ public class SettingFragment extends Fragment {
                 if (statusResponse.getIs_available().equals("1")) {
                     txt_status.setText(R.string.youareonline);
                     btn_change_status.setText(R.string.go_offline);
+                    user.setIs_available("1");
 
                 } else {
                     txt_status.setText(R.string.youareoffline);
                     btn_change_status.setText(R.string.go_online);
+                    user.setIs_available("0");
                 }
             }
 
@@ -444,4 +447,5 @@ public class SettingFragment extends Fragment {
             startActivity(intent);
         }
     }
+
 }

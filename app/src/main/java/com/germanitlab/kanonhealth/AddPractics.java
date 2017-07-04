@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
+import com.germanitlab.kanonhealth.settings.SettingFragment;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -141,7 +143,6 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         if (practics_id != null) {
             bindData();
         }
-
     }
 
     private void bindData() {

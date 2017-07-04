@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.db.PrefManager;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,6 +42,8 @@ public class PreRequest extends AppCompatActivity {
         try {
             Intent intent = new Intent(this, PaymentActivity.class);
             intent.putExtra("doctor_data", doctorJson);
+            PrefManager prefManager = new PrefManager(this);
+            prefManager.put(prefManager.USER_INTENT,doctorJson);
             startActivity(intent);
         } catch (Exception e) {
             Crashlytics.logException(e);

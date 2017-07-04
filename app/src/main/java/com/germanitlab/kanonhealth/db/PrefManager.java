@@ -32,6 +32,7 @@ public class PrefManager {
     //Keys
     public static String DOCTOR_KEY = "doctor";
     public static String USER_KEY = "user";
+    public static final String USER_INTENT= "user_intent";
     public static String USER_STATUS = "userStatus";
     public static String IS_DOC="is_doc";
     public static String IS_CLINIC="is_clinic";

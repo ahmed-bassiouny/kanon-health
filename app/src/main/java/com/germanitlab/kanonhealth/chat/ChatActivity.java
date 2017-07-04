@@ -82,6 +82,7 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
+import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -220,7 +221,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.e("Docot in chat data", prefManager.getData("doctor"));
             try {
                 Intent intent = getIntent();
-                String doctorJson = intent.getStringExtra("doctor_data");
+                String doctorJson =prefManager.getData(PrefManager.USER_INTENT);
+                //String doctorJson = intent.getStringExtra("doctor_data");
 
 
                 prefManager.put("doctor", doctorJson);
@@ -290,7 +292,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             // set the custom dialog components - text, image and button
             final EditText etText = (EditText) dialog.findViewById(R.id.text);
             ImageView image = (ImageView) dialog.findViewById(R.id.image);
-            Toast.makeText(this, "file:/" + filePath, Toast.LENGTH_SHORT).show();
             Uri imageUri = Uri.fromFile(new File(getPath(getApplicationContext(), selectedUri)));
 
             image.setImageURI(Uri.parse(imgPath));
@@ -358,7 +359,7 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 checkSessionOpen();
             }
 
-            ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), R.drawable.placeholder, this);
+            ImageHelper.setImage(imageUser, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), this);
 
             mAdapter = new MessageAdapterClinic(mMessages, this, doctor);
 
@@ -473,7 +474,8 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 finish();
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
-                intent.putExtra("doctor_data", doctor);
+                Gson gson=new Gson();
+                prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                 intent.putExtra("doctor_obj", doctor);
 
                 startActivity(intent);
@@ -1298,9 +1300,9 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
                             if (mimeType.equalsIgnoreCase("image/jpg") || mimeType.equalsIgnoreCase("image/png") || mimeType.equalsIgnoreCase("image/jpeg") || mimeType.equalsIgnoreCase("image/GIF")) {
-                                sendMessage(getPath( getApplicationContext(),selectedUri), Constants.IMAGE, "");
+                                sendMessage(ImageFilePath.getPath( getApplicationContext(),selectedUri), Constants.IMAGE, "");
                             } else {
-                                sendMessage(getPath( getApplicationContext() ,selectedUri), Constants.VIDEO, "");
+                                sendMessage(ImageFilePath.getPath( getApplicationContext() ,selectedUri), Constants.VIDEO, "");
                             }
 
                         } else {
@@ -1312,27 +1314,22 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
                             } else {
-                                sendMessage(getPath(this, selectedUri), Constants.VIDEO, "");
+                                sendMessage(ImageFilePath.getPath(this, selectedUri), Constants.VIDEO, "");
                             }
                         }
                         break;
                     case 200://for video
                         Uri uriVideo = data.getData();
-                        sendMessage(getPath(this, uriVideo), Constants.VIDEO, "");
+                        sendMessage(ImageFilePath.getPath(this, uriVideo), Constants.VIDEO, "");
                         break;
                     case 300:
                         Uri savedUri = data.getData();
                         sendMessage(getPath(this, savedUri), Constants.AUDIO, "");
                         break;
-                }
-            } else {
-                if (requestCode == TAKE_PICTURE) {
-                    try {
+                    case TAKE_PICTURE:
                         File finalFile = new File(getRealPathFromURI(selectedImageUri));
                         sendMessage(finalFile.getPath(), Constants.IMAGE, "");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                        break;
                 }
             }
         }
