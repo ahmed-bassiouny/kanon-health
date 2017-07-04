@@ -11,17 +11,17 @@
         android:id="@+id/message_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
+        android:background="@drawable/bubble_out"
         android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bubble_in">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="150dp"
@@ -110,6 +110,26 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginStart="5dp"
         android:layout_alignParentLeft="true"
         android:id="@+id/privacy_image" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/privacy_image"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/privacy_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black" />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_marginStart="2dp"
+            android:visibility="gone"
+            android:id="@+id/pbar_loading"/>
+    </LinearLayout>
 </RelativeLayout>
