@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -69,6 +70,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
     LinearLayout chat_bar;
     @BindView(R.id.open_chat_session)
     LinearLayout open_chat_session;
+    @BindView(R.id.pbar_loading)
+    ProgressBar pbar_loading;
     //
     int userID,userPassword,doctorID;
     ArrayList<Message> messages;
@@ -119,13 +122,15 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
 
     @Override
     public void onSuccess(Object response) {
-         messages=(ArrayList<Message>)response;
+        messages=(ArrayList<Message>)response;
+        pbar_loading.setVisibility(View.GONE);
         isStoragePermissionGranted();
     }
 
     @Override
     public void onFailed(String error) {
         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        pbar_loading.setVisibility(View.GONE);
     }
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {

@@ -238,7 +238,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         public ImageView status, privacy_image;
         public RelativeLayout background;
         public LinearLayout messageContainer;
-        public ProgressBar progress_view_download;
+        public ProgressBar progress_view_download,pbar_loading;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -252,7 +252,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
             image_message = (ImageView) itemView.findViewById(R.id.image_message);
             progress_view_download = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
-
+            pbar_loading= (ProgressBar) itemView.findViewById(R.id.pbar_loading);
 
         }
     }
@@ -265,7 +265,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         public ImageButton btn_play_pause;
         public TextView tv_music_current_loc,tv_music_duration,date,privacy_txt;
         public ImageView privacy_image,status;
-        public ProgressBar progress_view_download;
+        public ProgressBar progress_view_download,pbar_loading;
         public SeekBar seek_bar_music;
 
         private MediaPlayer mp;
@@ -289,6 +289,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
             status=(ImageView)itemView.findViewById(R.id.status);
             ll_play=(LinearLayout)itemView.findViewById(R.id.ll_play);
+            pbar_loading= (ProgressBar) itemView.findViewById(R.id.pbar_loading);
         }
     }
 
@@ -350,7 +351,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         public LinearLayout messageContainer;
         public TextView message, date,privacy_txt;
         public ImageView status, privacy_image;
-        RelativeLayout background;
+        public RelativeLayout background;
+        public ProgressBar pbar_loading;
+
 
         public TextMsgViewHolder(View itemView) {
             super(itemView);
@@ -361,6 +364,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             status = (ImageView) itemView.findViewById(R.id.status);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
+            pbar_loading= (ProgressBar) itemView.findViewById(R.id.pbar_loading);
         }
     }
 
@@ -370,7 +374,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private void setTextMessage(final TextMsgViewHolder textMsgViewHolder, final int position) {
         try {
             final Message textMessage = mMessages.get(position);
-            showLayout_Privacy(textMessage,position,textMsgViewHolder.privacy_image,textMsgViewHolder.messageContainer,textMsgViewHolder.background,textMsgViewHolder.status,textMsgViewHolder.privacy_txt,textMsgViewHolder.date);
+            showLayout_Privacy(textMessage,position,textMsgViewHolder.privacy_image,textMsgViewHolder.messageContainer,textMsgViewHolder.background,
+                    textMsgViewHolder.status,textMsgViewHolder.privacy_txt,textMsgViewHolder.date,textMsgViewHolder.pbar_loading);
             textMsgViewHolder.message.setText(textMessage.getMsg());
 
 
@@ -399,7 +404,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         try {
 
             final Message message = mMessages.get(position);
-            showLayout_Privacy(message,position,imageViewHolder.privacy_image,imageViewHolder.messageContainer,imageViewHolder.background,imageViewHolder.status,imageViewHolder.privacy_txt,imageViewHolder.date);
+            showLayout_Privacy(message,position,imageViewHolder.privacy_image,imageViewHolder.messageContainer,imageViewHolder.background
+                    ,imageViewHolder.status,imageViewHolder.privacy_txt,imageViewHolder.date,imageViewHolder.pbar_loading);
 
 
 
@@ -518,7 +524,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             final Message mediaMessage = mMessages.get(position);
             //int totalDuration = audioViewHolder.mp.getDuration();
 
-            showLayout_Privacy(mediaMessage,position,audioViewHolder.privacy_image,audioViewHolder.message_container,audioViewHolder.background,audioViewHolder.status,audioViewHolder.privacy_txt,audioViewHolder.date);
+            showLayout_Privacy(mediaMessage,position,audioViewHolder.privacy_image,audioViewHolder.message_container,audioViewHolder.background,
+                    audioViewHolder.status,audioViewHolder.privacy_txt,audioViewHolder.date,audioViewHolder.pbar_loading);
 
 
 
@@ -816,7 +823,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
-    private void changePrivacy(final ImageView imagePrivacy, final int pos, final TextView txtPrivacy) {
+    private void changePrivacy(final ImageView imagePrivacy, final int pos, final TextView txtPrivacy, final ProgressBar progressBar) {
         imagePrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -829,6 +836,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, final int position) {
                                 dialog.cancel();
+                                progressBar.setVisibility(View.VISIBLE);
                                 new HttpCall(activity, new ApiResponse() {
                                     @Override
                                     public void onSuccess(Object response) {
@@ -840,6 +848,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
                                         else
                                             mMessages.get(pos).setPrivacy(0);
+                                        progressBar.setVisibility(View.GONE);
                                         setImagePrivacy(mMessages.get(pos).getPrivacy(),imagePrivacy,txtPrivacy);
                                         notifyDataSetChanged();
                                     }
@@ -847,6 +856,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                                     @Override
                                     public void onFailed(String error) {
                                         Toast.makeText(activity, activity.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                        progressBar.setVisibility(View.GONE);
 
                                     }
                                 }).updatePrivacy(String.valueOf(userID), passowrd, mMessages.get(pos).get_Id(), (mMessages.get(pos).getPrivacy() + 1));
@@ -866,63 +876,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             }
         });
     }
-    public void showAlerDialog(String title, String message) {
 
-        final AlertDialog.Builder builder =
-                new AlertDialog.Builder(activity);
-        builder.setCancelable(false);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.cancel();
-            }
-        });
-
-        try {
-            builder.create().show();
-        } catch (Exception ex) {
-        }
-
-    }
-    public boolean moveFile(File source, File destination) {
-
-        try {
-            FileInputStream inStream = new FileInputStream(source);
-            FileOutputStream outStream = new FileOutputStream(destination);
-
-            byte[] buffer = new byte[1024];
-
-            int length;
-            //copy the file content in bytes
-            while ((length = inStream.read(buffer)) > 0) {
-
-                outStream.write(buffer, 0, length);
-
-            }
-
-            inStream.close();
-            outStream.close();
-
-            //delete the original file
-            source.delete();
-
-
-            return true;
-
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
-
-    private void showLayout_Privacy(Message message,int position,ImageView imagePrivacy,LinearLayout messageContainer,RelativeLayout background,ImageView status,TextView txtPrivacy,TextView date){
+    private void showLayout_Privacy(Message message,int position,ImageView imagePrivacy,LinearLayout messageContainer,RelativeLayout background,ImageView status,TextView txtPrivacy,TextView date,ProgressBar progressBar){
         if (show_privacy) {
             setImagePrivacy(message.getPrivacy(), imagePrivacy,txtPrivacy);
-            changePrivacy(imagePrivacy, position,txtPrivacy);
+            changePrivacy(imagePrivacy, position,txtPrivacy,progressBar);
             imagePrivacy.setVisibility(View.VISIBLE);
             imagePrivacy.setVisibility(View.VISIBLE);
         } else {
