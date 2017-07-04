@@ -97,6 +97,7 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 
 }
 apply plugin: 'com.google.gms.google-services'
