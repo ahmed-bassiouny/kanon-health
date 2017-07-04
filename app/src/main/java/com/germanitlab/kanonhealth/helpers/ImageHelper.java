@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,47 +28,126 @@ import java.lang.reflect.Field;
 public class ImageHelper {
 
     // image string url
+
     public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
-        setImage(iv, imageFullUrl, -1, ctx);
+        setImage(iv, imageFullUrl, -1, null, ctx);
     }
 
-    public static void setImage(final ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
+    public static void setImage(ImageView iv, String imageFullUrl, ProgressBar progressBar, Context ctx) {
+        setImage(iv, imageFullUrl, -1, progressBar, ctx);
+    }
+
+    public static void setImage(ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
+        setImage(iv, imageFullUrl, placeHolder, null, ctx);
+    }
+
+    public static void setImage(final ImageView iv, String imageFullUrl, int placeHolder, final ProgressBar progressBar, Context ctx) {
         if (TextUtils.isEmpty(imageFullUrl)) {
             iv.setImageResource(placeHolder);
         } else if (placeHolder == -1) {
             Glide.with(ctx)
                     .load(imageFullUrl)
+                    .asBitmap()
                     .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)
-                    .into(iv);
+//                    .into(iv);
+                    .dontAnimate()
+                    .into(new SimpleTarget<Bitmap>() {
+
+                        @Override
+                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                            // TODO Auto-generated method stub
+                            iv.setImageBitmap(arg0);
+                            if (progressBar != null) {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+                    });
         } else {
             Glide.with(ctx)
                     .load(imageFullUrl)
+                    .asBitmap()
                     .fitCenter()
                     .placeholder(placeHolder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)
-                    .into(iv);
+//                    .into(iv);
+                    .dontAnimate()
+                    .into(new SimpleTarget<Bitmap>() {
+
+                        @Override
+                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                            // TODO Auto-generated method stub
+                            iv.setImageBitmap(arg0);
+                            if (progressBar != null) {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+                    });
         }
     }
 
-    // image uri
-    public static void setImage(ImageView iv, Uri imageUri, Context ctx) {
-        setImage(iv, imageUri, R.drawable.placeholder, ctx);
+// image string url
+
+    public static void setImage(ImageView iv, Uri imageFullUri, Context ctx) {
+        setImage(iv, imageFullUri, -1, null, ctx);
     }
 
-    public static void setImage(final ImageView iv, Uri imageUri, int placeHolder, Context ctx) {
-        Glide.with(ctx)
-                .load(imageUri)
-                .asBitmap()
-                .fitCenter()
-                .placeholder(placeHolder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .skipMemoryCache(true)
-                .into(iv);
+    public static void setImage(ImageView iv, Uri imageFullUri, ProgressBar progressBar, Context ctx) {
+        setImage(iv, imageFullUri, -1, progressBar, ctx);
     }
 
+    public static void setImage(ImageView iv, Uri imageFullUri, int placeHolder, Context ctx) {
+        setImage(iv, imageFullUri, placeHolder, null, ctx);
+    }
+
+    public static void setImage(final ImageView iv, Uri imageFullUri, int placeHolder, final ProgressBar progressBar, Context ctx) {
+        if (placeHolder == -1) {
+            Glide.with(ctx)
+                    .load(imageFullUri)
+                    .asBitmap()
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
+//                    .into(iv);
+                    .dontAnimate()
+                    .into(new SimpleTarget<Bitmap>() {
+
+                        @Override
+                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                            // TODO Auto-generated method stub
+                            iv.setImageBitmap(arg0);
+                            if (progressBar != null) {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+        } else {
+            Glide.with(ctx)
+                    .load(imageFullUri)
+                    .asBitmap()
+                    .fitCenter()
+                    .placeholder(placeHolder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
+//                    .into(iv);
+                    .dontAnimate()
+                    .into(new SimpleTarget<Bitmap>() {
+
+                        @Override
+                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                            // TODO Auto-generated method stub
+                            iv.setImageBitmap(arg0);
+                            if (progressBar != null) {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+        }
+    }
+
+    //background
     public static void setBackground(final View v, String imageFullUrl, Context ctx) {
 
         setBackground(v, imageFullUrl, R.drawable.appbackground, ctx);
