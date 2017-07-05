@@ -27,15 +27,24 @@ import android.widget.Toast;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.interfaces.ApiInterface;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -43,42 +52,25 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class HttpChatFragment extends Fragment implements ApiResponse{
 
-    @BindView(R.id.imgbtn_chat_attach)
-    ImageButton imageButtonAttach;
-    @BindView(R.id.img_chat_user_avatar)
-    CircleImageView imageUser;
-    @BindView(R.id.imgbtn_chat_autio_send)
-    SeekBar imageButtonSend;
-    @BindView(R.id.tv_chat_user_name)
-    TextView tvUserName;
-    @BindView(R.id.imgbtn_autio_send)
-    ImageButton imgbtn_autio_send;
+
+    // Declare UI
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
     @BindView(R.id.et_chat_message)
     EditText etMessage;
-    @BindView(R.id.relative_record)
-    RelativeLayout relativeAudio;
-    @BindView(R.id.toolbar)
-    public Toolbar ttoolbar;
-    @BindView(R.id.linear_txt_msg)
-    LinearLayout linearTextMsg;
-    @BindView(R.id.timer)
-    TextView tvRecordTimer;
-    ProgressDialog progressDialog;
-    @BindView(R.id.chat_bar)
-    LinearLayout chat_bar;
-    @BindView(R.id.open_chat_session)
-    LinearLayout open_chat_session;
+    @BindView(R.id.img_send_audio)
+    SeekBar img_send_audio;
+    @BindView(R.id.img_send_txt)
+    ImageButton img_send_txt;
     @BindView(R.id.pbar_loading)
     ProgressBar pbar_loading;
-    //
-    int userID,userPassword,doctorID;
+    // loca variable
+    int userID=3;int userPassword=0;int doctorID=3;
     ArrayList<Message> messages;
     PrefManager prefManager;
-    public HttpChatFragment() {
-        // Required empty public constructor
-    }
+    ChatAdapter chatAdapter;
+    HashMap<UUID,Message> uuidMessageHashMap=new HashMap<>();
+
 
 
     @Override
@@ -93,7 +85,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadChat(3,3);
+        loadChat(userID,doctorID);
         initData();
 
     }
@@ -123,8 +115,15 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
     @Override
     public void onSuccess(Object response) {
         messages=(ArrayList<Message>)response;
-        pbar_loading.setVisibility(View.GONE);
-        isStoragePermissionGranted();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayListMessageToHashmap();
+                isStoragePermissionGranted();
+            }
+        });
+
+
     }
 
     @Override
@@ -156,7 +155,78 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
         }
     }
     private void setData(){
-        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity(),false);
+        ArrayList<Message> temp =new ArrayList<>();
+        temp.addAll(uuidMessageHashMap.values());
+        chatAdapter = new ChatAdapter(temp,getActivity(),false);
         recyclerView.setAdapter(chatAdapter);
+        pbar_loading.setVisibility(View.GONE);
+        recyclerView.scrollToPosition(uuidMessageHashMap.size()-1);
+    }
+
+    // init text input
+    @OnTextChanged(R.id.et_chat_message)
+    public void changeText(){
+
+        if(etMessage.getText().toString().trim().length()>0){
+            img_send_audio.setVisibility(View.GONE);
+            img_send_txt.setVisibility(View.VISIBLE);
+        }else{
+            img_send_audio.setVisibility(View.VISIBLE);
+            img_send_txt.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.img_send_txt)
+    public void img_send_txt(){
+        // declare object and set attribute
+        Message message = new Message();
+        final UUID key = UUID.randomUUID();
+        message.setUser_id(userID);
+        message.setFrom_id(userID);
+        message.setTo(doctorID);
+        message.setMsg(etMessage.getText().toString());
+        message.setType(Constants.TEXT);
+        message.setIs_forward(1);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        message.setSent_at(dateFormat.format(cal.getTime()).toString());
+        etMessage.setText("");
+
+        addChangeItemChat(key,message);
+
+
+        //request
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                Message temp=uuidMessageHashMap.get(key);
+                temp.setIs_forward(0);
+                uuidMessageHashMap.put(key,temp);
+                addChangeItemChat(key,temp);
+            }
+
+            @Override
+            public void onFailed(String error) {
+
+            }
+        }).sendMessage(message);
+    }
+            //----- additional Method
+    private void ArrayListMessageToHashmap(){
+        for(Message message:messages)
+            uuidMessageHashMap.put(UUID.randomUUID(),message);
+    }
+    private void addChangeItemChat(final UUID key, final Message message){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                uuidMessageHashMap.put(key,message);
+                ArrayList<Message> temp =new ArrayList<>();
+                temp.addAll(uuidMessageHashMap.values());
+                chatAdapter.setList(temp);
+                chatAdapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(uuidMessageHashMap.size()-1);
+            }
+        });
     }
 }

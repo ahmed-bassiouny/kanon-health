@@ -57,6 +57,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.germanitlab.kanonhealth.helpers.Constants.folder;
@@ -78,7 +80,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private InternetFilesOperations internetFilesOperations;
 
     public ChatAdapter(List<Message> messages, Activity activity, boolean show_privacy) {
-        this.mMessages = messages;
         this.activity = activity;
         this.show_privacy = show_privacy;
         prefManager = new PrefManager(activity);
@@ -86,6 +87,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
         userID = 3;
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
+        setList(messages);
     }
 
     @Override
@@ -981,9 +983,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 status.setImageResource(R.drawable.readnew);
             } else if (mMessages.get(position).getIs_delivered() == 1) {
                 status.setImageResource(R.drawable.receivenew);
-            } else if (mMessages.get(position).getIs_forward() == 1) {
+            } else if (mMessages.get(position).getIs_forward() == 0) {
                 status.setImageResource(R.drawable.sentnew);
-            } else
+            } else if (mMessages.get(position).getIs_forward() == 1)
                 status.setImageResource(R.drawable.pending);
         } else {
             background.setGravity(Gravity.LEFT);
@@ -1063,6 +1065,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             Toast.makeText(activity, activity.getResources().getText(R.string.cany_play_video), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void setList(List<Message> messages){
+        this.mMessages=messages;
+        Collections.sort(messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message message2, Message message1)
+            {
+
+                return  message2.getSent_at().compareTo(message1.getSent_at());
+            }
+        });
     }
 
 

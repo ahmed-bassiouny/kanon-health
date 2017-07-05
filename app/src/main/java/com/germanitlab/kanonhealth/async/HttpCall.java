@@ -27,6 +27,7 @@ import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
 import com.germanitlab.kanonhealth.models.user.BasicRequest;
 import com.germanitlab.kanonhealth.models.user.LocationRequest;
@@ -1074,6 +1075,30 @@ public class HttpCall {
             Log.e("Httpcall", "loadChat: ",e);
             Crashlytics.logException(e);
             Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sendMessage(Message message){
+        try {
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<MessageResponse> connection = service.sendMessage(message);
+            connection.enqueue(new Callback<MessageResponse>() {
+                @Override
+                public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                    if(response.body().getStatus()==1)
+                        apiResponse.onSuccess(response.body().getMessage());
+                    else
+                        onFailure(call,new Exception());
+                }
+
+                @Override
+                public void onFailure(Call<MessageResponse> call, Throwable t) {
+
+                }
+            });
+        }catch (Exception e){
+            Log.e("Httpcall", "sendMessage: ",e);
+            Crashlytics.logException(e);
         }
     }
 }
