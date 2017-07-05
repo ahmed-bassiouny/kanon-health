@@ -281,6 +281,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse {
                     }).uploadMedia(new File(getRealPathFromURI(selectedImageUri)).getPath());
                     break;
                 case SELECT_PICTURE:
+                case RECORD_VIDEO:
                     String filepath = new File(getRealPathFromURI(data.getData())).getPath();
                     String ext1 = filepath.substring(filepath.lastIndexOf(".")); // Extension with dot .jpg, .png
                     final String type;
