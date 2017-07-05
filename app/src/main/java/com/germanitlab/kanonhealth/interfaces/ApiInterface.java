@@ -18,6 +18,7 @@ import com.germanitlab.kanonhealth.models.UpdatePrivacy;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
+import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.ActivateAccountRequest;
 import com.germanitlab.kanonhealth.models.user.BasicRequest;
 import com.germanitlab.kanonhealth.models.user.LocationRequest;
@@ -162,5 +163,9 @@ public interface ApiInterface {
 
     @POST("/messages")
     Call<MessageResponse> loadChat(@Body MessageRequest messageRequest);
+
+    @POST("/messages/send")
+    Call<MessageResponse> sendMessage(@Body Message message);
+
 }
 

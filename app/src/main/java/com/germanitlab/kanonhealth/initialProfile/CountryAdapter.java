@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
+import com.github.siyamed.shapeimageview.HeartImageView;
 import com.mukesh.countrypicker.Country;
 
 import java.util.List;
@@ -41,7 +42,8 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
             String code = currentCountry.getDialCode();
             holder.code.setText(code);
             holder.country.setText(country);
-            ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode());
+            holder.flag.setImageResource(currentCountry.getFlag());
+//            ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -61,11 +63,11 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView country, code;
-        public ImageView flag;
+        public HeartImageView flag;
 
         public MyViewHolder(final View view) {
             super(view);
-            flag = (ImageView) view.findViewById(R.id.iv_flag);
+            flag = (HeartImageView) view.findViewById(R.id.iv_flag);
             country = (TextView) view.findViewById(R.id.sdd);
             code = (TextView) view.findViewById(R.id.code);
             view.setOnClickListener(new View.OnClickListener() {

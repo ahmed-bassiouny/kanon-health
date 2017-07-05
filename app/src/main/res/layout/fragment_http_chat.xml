@@ -108,15 +108,20 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_chat_messages"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
-
-        </android.support.v7.widget.RecyclerView>
-
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_chat_messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/pbar_loading" />
+        </FrameLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -135,6 +140,7 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:text="@string/open_session_again" />
         </LinearLayout>
         <LinearLayout
@@ -143,7 +149,6 @@
             android:layout_margin="8dp"
             android:gravity="center"
             android:id="@+id/chat_bar"
-            android:visibility="gone"
             android:orientation="horizontal">
 
 
@@ -218,7 +223,7 @@
 
 
             <SeekBar
-                android:id="@+id/imgbtn_chat_autio_send"
+                android:id="@+id/img_send_audio"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".1"
@@ -232,7 +237,7 @@
 
 
             <ImageButton
-                android:id="@+id/imgbtn_autio_send"
+                android:id="@+id/img_send_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"

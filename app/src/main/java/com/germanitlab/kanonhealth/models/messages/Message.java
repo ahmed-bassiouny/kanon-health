@@ -14,6 +14,25 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "message")
 public class Message implements Serializable {
 
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    private int user_id;
+
+    public int getTo() {
+        return to;
+    }
+
+    public void setTo(int to) {
+        this.to = to;
+    }
+
+    private int to;
     @DatabaseField
     public static final int TYPE_MESSAGE = 0;
     @DatabaseField
