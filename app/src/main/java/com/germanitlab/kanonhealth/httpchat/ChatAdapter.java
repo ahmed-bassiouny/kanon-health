@@ -98,7 +98,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             case Constants.IMAGE_MESSAGE:
             case Constants.LOCATION_MESSAGE:
             case Constants.VIDEO_MESSAGE:
-            case Constants.UNDEFINED_MESSAGE:
                 ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
                 ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
                 return imageMessageViewHolder;
@@ -106,6 +105,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 ViewGroup audioMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_audio_message, parent, false);
                 AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
                 return audioMessageViewHolder;
+            case Constants.UNDEFINED_MESSAGE:
+                ViewGroup undefined= (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
+                ImageViewHolder undefinedViewHolder = new ImageViewHolder(undefined);
+                return undefinedViewHolder;
             default:
                 ViewGroup chatTextMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_text_message, parent, false);
                 TextMsgViewHolder chatTextMessageViewHolder = new TextMsgViewHolder(chatTextMessage);
@@ -782,6 +785,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
         try {
             final Message message = mMessages.get(position);
+            message.setMsg(message.getMsg()+".mp4");
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
             imageViewHolder.message.setVisibility(View.GONE);
@@ -1080,7 +1084,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    public void setList(List<Message> messages){
+    public void setList(List<Message> messages ){
         this.mMessages=messages;
         Collections.sort(messages, new Comparator<Message>() {
             @Override
