@@ -156,7 +156,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse{
         }
     }
     private void setData(){
-        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity(),true);
+        ChatAdapter chatAdapter = new ChatAdapter(messages,getActivity(),false);
         recyclerView.setAdapter(chatAdapter);
     }
 }

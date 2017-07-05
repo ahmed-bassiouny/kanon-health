@@ -300,59 +300,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
-    // Video
-    public class VideoViewHolder extends BaseViewHolder {
-        public LinearLayout myMessageContainer, hisMessageContainer;
-        public ImageView myMessage, hisMessage;
-        public FrameLayout myFrameVideo, hisFrameVideo;
-        public ProgressBar progressBar, progressViewDownload;
-        public RelativeLayout messageContainer;
-        public TextView tvDate, tvDateMy;
-        public ImageView imgMessageStatus;
-
-        public VideoViewHolder(View itemView) {
-            super(itemView);
-            myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
-            hisMessageContainer = (LinearLayout) itemView.findViewById(R.id.his_message);
-            myMessage = (ImageView) itemView.findViewById(R.id.my_video_message);
-            hisMessage = (ImageView) itemView.findViewById(R.id.his_video_message);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_view);
-            progressViewDownload = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
-            messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
-            tvDate = (TextView) itemView.findViewById(R.id.tv_date);
-            tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
-            imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
-            myFrameVideo = (FrameLayout) itemView.findViewById(R.id.my_frame_video);
-            hisFrameVideo = (FrameLayout) itemView.findViewById(R.id.his_frame_video);
-        }
-    }
-
-    //Location
-    public class LocationViewHolder extends BaseViewHolder {
-        public LinearLayout myMessageContainer, hisMessageContainer;
-        public ImageView myMessage, hisMessage;
-        public ProgressBar myProgressBar, hisProgressBar;
-        public RelativeLayout messageContainer;
-        public ImageView imgMessageStatus;
-        public TextView tvDate, tvDateMy;
-
-
-        public LocationViewHolder(View itemView) {
-            super(itemView);
-            myMessageContainer = (LinearLayout) itemView.findViewById(R.id.my_message);
-            hisMessageContainer = (LinearLayout) itemView.findViewById(R.id.his_message);
-            imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
-            myMessage = (ImageView) itemView.findViewById(R.id.my_image_message);
-            hisMessage = (ImageView) itemView.findViewById(R.id.his_image_message);
-            myProgressBar = (ProgressBar) itemView.findViewById(R.id.my_progress_view);
-            hisProgressBar = (ProgressBar) itemView.findViewById(R.id.his_progress_view);
-            tvDate = (TextView) itemView.findViewById(R.id.tv_date);
-            imgMessageStatus = (ImageView) itemView.findViewById(R.id.my_message_status);
-            tvDateMy = (TextView) itemView.findViewById(R.id.tv_date_my);
-            messageContainer = (RelativeLayout) itemView.findViewById(R.id.message_container);
-        }
-    }
-
     // Text
     public static class TextMsgViewHolder extends BaseViewHolder {
         public LinearLayout messageContainer;
@@ -414,8 +361,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             final Message message = mMessages.get(position);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
-
-
+            if(message.getImageText()!=null){
+                imageViewHolder.message.setText(message.getImageText());
+                imageViewHolder.message.setVisibility(View.VISIBLE);
+            }else
+                imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download, activity);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
@@ -750,6 +700,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             showLayout_Privacy(locationMessage, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
+            imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -818,9 +769,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             final Message message = mMessages.get(position);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
-
-
-            imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+            imageViewHolder.message.setVisibility(View.GONE);
 
             if (!new File(message.getMsg()).exists()) {
                 final String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
@@ -830,7 +779,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     message.setLoaded(true);
                     message.setLoading(false);
                     message.setMsg(file.getPath());
-
+                    imageViewHolder.progress_view_download.setVisibility(View.GONE);
 
                     Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
                             MediaStore.Video.Thumbnails.MICRO_KIND);
@@ -841,6 +790,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     playViedo(imageViewHolder.messageContainer, file.getPath());
 
                 } else {
+                    imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
                     internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progress_view_download, message.getType(), message.getMsg(), new DownloadListener() {
                         @Override
                         public void onDownloadFinish(final String pathOFDownloadedFile) {
@@ -1115,15 +1065,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    private void showImageDialog(String url){
-        Dialog dialog = new Dialog(activity);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
-        ImageView img = (ImageView) dialog.findViewById(R.id.img);
-        ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
-        ImageHelper.setImage(img, url, pbar, activity);
-        dialog.show();
-    }
 
 }
 
