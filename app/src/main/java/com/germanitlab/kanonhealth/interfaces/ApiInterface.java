@@ -167,5 +167,9 @@ public interface ApiInterface {
     @POST("/messages/send")
     Call<MessageResponse> sendMessage(@Body Message message);
 
+    @Multipart
+    @POST("/upload")
+    Call<UploadImageResponse> uploadMedia( @Part MultipartBody.Part image);
+
 }
 

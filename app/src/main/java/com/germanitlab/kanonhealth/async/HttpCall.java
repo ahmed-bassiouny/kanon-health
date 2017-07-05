@@ -1101,4 +1101,45 @@ public class HttpCall {
             Crashlytics.logException(e);
         }
     }
+    public void uploadMedia(String imagePath) {
+        try {
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+
+            //File creating from selected path
+            File file = new File(imagePath);
+
+            // create RequestBody instance from file
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
+
+
+            Call<UploadImageResponse> connection = service.uploadMedia(body);
+
+            connection.enqueue(new Callback<UploadImageResponse>() {
+                @Override
+                public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
+                    if(response.body().getStatus()==1)
+                        apiResponse.onSuccess(response.body().getFile_url());
+                    else
+                        onFailure(call,new Exception("status not equal 1"));
+
+                }
+
+                @Override
+                public void onFailure(Call<UploadImageResponse> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.e("httpcall", "uploadMedia: ", t);
+                    Toast.makeText(context, context.getResources().getText(R.string.cantupload), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e("httpcall", "uploadMedia: ", e);
+            Toast.makeText(context, context.getResources().getText(R.string.cantupload), Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 }
