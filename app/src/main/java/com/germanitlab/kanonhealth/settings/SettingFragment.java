@@ -99,6 +99,7 @@ public class SettingFragment extends Fragment {
         mPrefManager = new PrefManager(getActivity());
         prefManager = new PrefManager(getContext());
         try {
+            String s = mPrefManager.getData(PrefManager.USER_KEY);
             user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
         } catch (Exception e) {
         }
@@ -111,10 +112,7 @@ public class SettingFragment extends Fragment {
         try {
 
             UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
-
             List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
-
-
             mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             rvPracticies.setLayoutManager(mLayoutManager);

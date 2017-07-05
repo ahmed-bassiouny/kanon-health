@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,9 @@ public class PaymentActivity extends AppCompatActivity {
 
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
+
+    @BindView(R.id.rg_payment)
+    RadioGroup rgPayment ;
     User doctor;
     private String type;
     PrefManager prefManager;
@@ -111,6 +115,10 @@ public class PaymentActivity extends AppCompatActivity {
     @OnClick(R.id.next)
     public void nextClicked() {
         try {
+            if(rgPayment.getCheckedRadioButtonId() == -1){
+                Toast.makeText(this, "please choose one of the methods", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             new HttpCall(PaymentActivity.this, new ApiResponse() {
                 @Override

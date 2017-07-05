@@ -29,8 +29,12 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
+import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -127,15 +131,16 @@ public class VerificationActivity extends AppCompatActivity {
                             joinUser();
                             dismissProgressDialog();
                             if (oldUser) {
-                                User user = new User();
-                                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                                user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+                                UserRegisterResponse userRegisterResponse = new UserRegisterResponse( );
+                                userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+                                userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                                 new HttpCall(VerificationActivity.this, new ApiResponse() {
                                     @Override
                                     public void onSuccess(Object response) {
-
-
-                                        mPrefManager.put(mPrefManager.USER_KEY, response.toString());
+                                        mPrefManager.put(mPrefManager.USER_KEY,new Gson().toJson(response));
+                                        UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+                                        mPrefManager.put(PrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1);
+                                        Log.d("json" , mPrefManager.getData(PrefManager.USER_KEY));
 
                                         /*Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -153,7 +158,7 @@ public class VerificationActivity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
 
                                     }
-                                }).editProfile(user);
+                                }).getProfile(userRegisterResponse);
                             } else {
                                 Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
                                 //i.putExtra("isfirst", "true");

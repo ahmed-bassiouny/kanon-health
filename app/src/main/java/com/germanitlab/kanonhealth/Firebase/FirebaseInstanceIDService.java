@@ -42,7 +42,6 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
             @Override
             public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
 
             }
         }).updateToken(requsetToken);

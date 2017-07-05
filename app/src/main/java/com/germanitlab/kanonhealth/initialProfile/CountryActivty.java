@@ -32,7 +32,7 @@ public class CountryActivty extends AppCompatActivity {
             search_bar = (EditText) findViewById(R.id.search_bar);
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-            mAdapter = new CountryAdapter(Country.getAllCountries(), getApplicationContext());
+            mAdapter = new CountryAdapter(Country.getAllCountries(), this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -69,7 +69,7 @@ public class CountryActivty extends AppCompatActivity {
                             }
                         }
                     }
-                    mAdapter = new CountryAdapter(search, getApplicationContext());
+                    mAdapter = new CountryAdapter(search, CountryActivty.this);
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
 

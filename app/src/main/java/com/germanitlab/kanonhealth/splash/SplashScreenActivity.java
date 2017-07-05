@@ -19,6 +19,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 
@@ -35,6 +36,10 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean("EXIT", false)) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_splash_screen);
         try {
             prefManager = new PrefManager(this);
@@ -52,8 +57,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // to check passcode
                     if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
                         joinUser();
-                        if(Helper.isNetworkAvailable(SplashScreenActivity.this))
-                        loadData();
+                        if (Helper.isNetworkAvailable(SplashScreenActivity.this))
+                            loadData();
                         else {
                             Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                             intent.putExtra("checkPassword", true);
@@ -79,7 +84,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-
                         startActivity(new Intent(SplashScreenActivity.this, SignupActivity.class));
                         finish();
                     }
@@ -94,7 +98,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     public void joinUser() {
         if (prefManager.getInt(PrefManager.USER_ID) == 0) {
-            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -132,12 +135,13 @@ public class SplashScreenActivity extends AppCompatActivity {
             Crashlytics.logException(e);
         }
     }
+
     private void loadData() {
         try {
             UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
             userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            if(!Helper.isNetworkAvailable(this)){
+            if (!Helper.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -147,6 +151,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (response != null) {
                         Gson gson = new Gson();
                         new PrefManager(SplashScreenActivity.this).put(PrefManager.USER_KEY, gson.toJson(response));
+                        UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+                        new PrefManager(SplashScreenActivity.this).put(PrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", true);
                         intent.putExtra("finish", false);
@@ -161,7 +167,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
-                    Log.e("Splash", error );
+                    Log.e("Splash", error);
                     finish();
                 }
             }).getProfile(userRegisterResponse);

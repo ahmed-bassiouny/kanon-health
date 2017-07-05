@@ -1,5 +1,7 @@
 package com.germanitlab.kanonhealth.intro;
 
+import android.app.Activity;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
+import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mukesh.countrypicker.Country;
@@ -49,6 +52,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     Constants constants;
     public SignupActivity signupActivity;
     PrefManager prefManager;
+    final int REQUEST_CODE = 10 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +68,6 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             initView();
             handelEvent();
             try {
-                code = intent.getStringExtra("codeC");
-                etPostelCode.setText(code);
-                country = intent.getStringExtra("country");
-                select_country.setText(intent.getStringExtra("country"));
                 if (code == null || select_country == null) {
                     code = "+49";
                     etPostelCode.setText("+49");
@@ -131,7 +131,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), CountryActivty.class);
-                startActivity(intent);
+                startActivityForResult(intent , REQUEST_CODE );
             }
         });
         etMobileNumber.requestFocus();
@@ -154,6 +154,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         });
 
     }
+
 
     private void sendData() {
         if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 9)
@@ -214,6 +215,12 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            code = data.getStringExtra("codeC");
+            etPostelCode.setText(code);
+            country = data.getStringExtra("country");
+            select_country.setText(data.getStringExtra("country"));
+        }
     }
 
     @Override
@@ -245,5 +252,11 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("phone", etMobileNumber.getText().toString());
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        moveTaskToBack(true);
     }
 }

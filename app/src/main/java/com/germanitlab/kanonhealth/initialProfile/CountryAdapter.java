@@ -1,6 +1,6 @@
 package com.germanitlab.kanonhealth.initialProfile;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,8 +16,6 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
 import com.mukesh.countrypicker.Country;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ import java.util.List;
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHolder> {
     List<Country> countryList;
-    Context context;
+    Activity activity;
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,14 +44,14 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
             ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode());
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public CountryAdapter(List<Country> countryList, Context context) {
+    public CountryAdapter(List<Country> countryList, Activity activity) {
         this.countryList = countryList;
-        this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -76,7 +74,8 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
                     Intent intent = new Intent(view.getContext(), SignupActivity.class);
                     intent.putExtra("country", country.getText().toString());
                     intent.putExtra("codeC", code.getText().toString());
-                    view.getContext().startActivity(intent);
+                    activity.setResult(Activity.RESULT_OK,intent);
+                    activity.finish();
                 }
             });
         }

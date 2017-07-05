@@ -111,6 +111,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             util.showProgressDialog();
             if (type == 0)
                 type = 2;
+            doctorList = new ArrayList<>();
             mDoctorRepository = new UserRepository(getContext());
             loadData();
         } catch (Exception e) {
@@ -272,6 +273,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             @Override
             public void onFailed(String error) {
                 util.dismissProgressDialog();
+                doctorList.clear();
+                setAdapter(doctorList);
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
