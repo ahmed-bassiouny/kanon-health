@@ -236,6 +236,7 @@
                 android:thumb="@drawable/mic" />
 
 
+
             <ImageButton
                 android:id="@+id/img_send_txt"
                 android:layout_width="wrap_content"
