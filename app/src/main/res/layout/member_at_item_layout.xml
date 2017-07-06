@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.github.siyamed.shapeimageview.CircularImageView
+        android:id="@+id/civ_avatar"
+        android:layout_width="0dp"
+        app:layout_widthPercent="50%"
+        app:layout_heightPercent="80%"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_praxis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="bottom"
+        android:layout_toRightOf="@id/civ_avatar"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark" />
+
+</android.support.percent.PercentRelativeLayout>

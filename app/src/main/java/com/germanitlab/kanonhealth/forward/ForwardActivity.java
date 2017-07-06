@@ -243,7 +243,7 @@ public class ForwardActivity extends AppCompatActivity {
     private void setAdapter(List<User> DoctorList) {
         try {
             if (DoctorList != null) {
-                mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3,0);
+                mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3);
                 recyclerView.setAdapter(mAdapter);
             }
         } catch (Exception e) {

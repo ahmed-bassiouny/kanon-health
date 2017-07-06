@@ -165,10 +165,10 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/custom_edittext_without_border_style"
                                 android:ellipsize="end"
-                                android:gravity="center"
-                                android:inputType="textPersonName"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
+                                android:gravity="center"
+                                android:inputType="textPersonName"
                                 android:lines="1"
                                 android:maxLines="1"
                                 android:text="@string/status_online"
@@ -184,11 +184,11 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/custom_edittext_without_border_style"
                                 android:clickable="true"
-                                android:inputType="textPersonName"
+                                android:ellipsize="end"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
-                                android:ellipsize="end"
                                 android:gravity="center"
+                                android:inputType="textPersonName"
                                 android:lines="1"
                                 android:maxLines="1"
                                 android:text="@string/add_to"
@@ -204,10 +204,10 @@
                                 android:background="@drawable/custom_edittext_without_border_style"
                                 android:clickable="true"
                                 android:ellipsize="end"
-                                android:inputType="textPersonName"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
                                 android:gravity="center"
+                                android:inputType="textPersonName"
                                 android:lines="1"
                                 android:maxLines="1"
                                 android:text="@string/contact_by_chat"
@@ -289,14 +289,17 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <android.support.v7.widget.RecyclerView
+                        <org.apmem.tools.layouts.FlowLayout
+                            xmlns:f="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/speciality_recycleview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/specilities_text"
-                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+                            android:background="@android:color/white"
+                            f:layout_newLine="true">
+                            </org.apmem.tools.layouts.FlowLayout>
 
 
                         <ImageView
@@ -347,9 +350,9 @@
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
                                 android:inputType="textPersonName"
-                                android:textColor="@color/black"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_street_name"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -373,9 +376,9 @@
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
                                 android:inputType="textPersonName"
-                                android:textColor="@color/black"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_house_number"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -399,10 +402,10 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
-                                android:textColor="@color/black"
                                 android:inputType="number"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_zip_code"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -426,10 +429,10 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
-                                android:textColor="@color/black"
                                 android:inputType="number"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_city"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -454,10 +457,10 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
-                                android:textColor="@color/black"
                                 android:inputType="textPersonName"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_province"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -482,10 +485,10 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
-                                android:textColor="@color/black"
                                 android:inputType="textPersonName"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_country"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -509,9 +512,9 @@
                                 android:enabled="false"
                                 android:imeOptions="actionNext"
                                 android:inputType="textPersonName"
-                                android:textColor="@color/black"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/et_telephone"
+                                android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </TableRow>
@@ -572,8 +575,8 @@
 
 
                     <RelativeLayout
-                        android:layout_width="343dp"
                         android:id="@+id/mapContanier"
+                        android:layout_width="343dp"
                         android:layout_height="150dp"
                         android:orientation="vertical">
                         <!--loading map in container-->
@@ -585,9 +588,9 @@
                             android:layout_height="match_parent"
                             tools:context=".DoctorProfileActivity" />-->
                         <ImageView
+                            android:id="@+id/location_img"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/location_img"/>
+                            android:layout_height="match_parent" />
                     </RelativeLayout>
 
                     <View
@@ -622,22 +625,19 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/language_recycleview"
+                        <org.apmem.tools.layouts.FlowLayout
+                            xmlns:f="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/fl_language"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="@dimen/size_5dp"
                             android:layout_toRightOf="@+id/language_text"
-                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+                            android:orientation="horizontal"
+                            f:layout_newLine="true">
 
-                        <TextView
-                            android:id="@+id/tv_languages"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/language_recycleview"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="16dp" />
+                        </org.apmem.tools.layouts.FlowLayout>
+
 
                         <ImageView
                             android:id="@+id/edit_languages_list"
@@ -941,10 +941,10 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/doc" />
+                        android:src="@drawable/doc"
+                        android:visibility="gone" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>

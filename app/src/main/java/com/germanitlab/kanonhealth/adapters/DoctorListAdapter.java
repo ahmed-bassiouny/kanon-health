@@ -24,12 +24,15 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.models.ChooseModel;
+import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
+
+import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.List;
 
@@ -50,15 +53,13 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     int tabPosition;
     boolean is_doc = false;
     boolean is_clinic = false;
-    int fragment_number=0;
 
-    public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i,int fragment_number) {
+    public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
         try {
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
             this.visibility = visibility;
             tabPosition = i;
-            this.fragment_number=fragment_number;
             mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
             is_doc = new Gson().fromJson(new PrefManager(activity).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
             is_clinic = new Gson().fromJson(new PrefManager(activity).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
@@ -127,8 +128,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             if (doctor.isClinic == 1) {
                 holder.tvDoctorName.setText(doctor.getFirst_name());
                 holder.tvPractice.setVisibility(View.GONE);
-            }
-            else
+            } else
                 holder.tvDoctorName.setText(doctor.getLast_name() + ", " + doctor.getFirst_name());
 
             holder.tvAbout.setText(doctor.getAbout());
@@ -158,18 +158,26 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 holder.tvPractice.setVisibility(View.GONE);
             }
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
-
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
-               // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
-                if (doctor.getIsOpen() != 1) {
-                    holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
-                } else if (is_doc || is_clinic) {
-                    holder.imgAvatar.setBorderColor(Color.BLUE);
-                } else {
-                    holder.imgAvatar.setBorderColor(Color.GREEN);
-                }
+                //   ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
             }
+                if (tabPosition == 3) {
+                    // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
+                    if (doctor.getIsOpen() != 1) {
+                        holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
+                    } else if (is_doc) {
+                        holder.imgAvatar.setBorderColor(Color.BLUE);
+                    } else if (is_clinic) {
+                        holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
+                    } else {
+                        holder.imgAvatar.setBorderColor(Color.GREEN);
+                    }
+                }
+                else {
+                    holder.imgAvatar.setBorderWidth(0);
+                    holder.imgAvatar.setBorderOverlay(false);
+                }
+
 
             if (tabPosition != 3 && doctor.getSpecialities() != null) {
                 for (int x = 0; x < doctor.getSpecialities().size(); x++) {
@@ -193,7 +201,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 @Override
                 public void onClick(View view) {
                     /****** jira task number 208 **************************/
-                    if(fragment_number==2) {
+                    if (tabPosition == 3) {
                         Gson gson = new Gson();
                         if (doctor.isClinic == 1) {
                             Intent intent = new Intent(activity, InquiryActivity.class);
@@ -205,16 +213,34 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                             Intent intent = new Intent(activity, ChatActivity.class);
                             //intent.putExtra("doctor_data", gson.toJson(doctor));
                             PrefManager prefManager = new PrefManager(activity);
-                            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
+                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
                             intent.putExtra("from", true);
                             activity.startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(activity, PaymentActivity.class);
+                        }else if(is_doc && doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
+                            Intent intent = new Intent(activity, ChatActivity.class);
+                            //intent.putExtra("doctor_data", gson.toJson(doctor));
                             PrefManager prefManager = new PrefManager(activity);
-                            prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
+                            doctor.setIsOpen(1);
+                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
+                            intent.putExtra("from", true);
                             activity.startActivity(intent);
                         }
-                    }else{
+                        else if(is_doc && doctor.getIsDoc() == 1 ) {
+                            Intent intent = new Intent(activity, PaymentActivity.class);
+                            //intent.putExtra("doctor_data", gson.toJson(doctor));
+                            PrefManager prefManager = new PrefManager(activity);
+                            doctor.setIsOpen(1);
+                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
+                            intent.putExtra("from", true);
+                            activity.startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(activity, PaymentActivity.class);
+                            PrefManager prefManager = new PrefManager(activity);
+                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
+                            activity.startActivity(intent);
+                        }
+                    } else {
                         Intent intent = new Intent(activity, DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", doctor);
                         intent.putExtra("tab", "");
@@ -239,7 +265,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgPage, imgStatus;
         TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage, tvSpecialist, tvPractice;
-        LinearLayout background, linearLayoutSpecialist;
+        LinearLayout background;
+        FlowLayout linearLayoutSpecialist;
 
 
         public ItemView(View itemView) {
@@ -256,7 +283,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             tvUnreadMessage = (TextView) itemView.findViewById(R.id.tv_unread_message_cell);
             tvSpecialist = (TextView) itemView.findViewById(R.id.tv_specialities);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
-            linearLayoutSpecialist = (LinearLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
+            linearLayoutSpecialist = (FlowLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
         }
     }
 }

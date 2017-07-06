@@ -167,6 +167,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
+                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                    intent.putExtra("checkPassword", true);
+                    intent.putExtra("finish", false);
+                    startActivity(intent);
                     Log.e("Splash", error);
                     finish();
                 }

@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,17 +56,14 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.github.siyamed.shapeimageview.CircularImageView;
+import com.github.siyamed.shapeimageview.HeartImageView;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.mukesh.countrypicker.Country;
+
+import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks {
 
     @BindView(R.id.speciality_recycleview)
-    RecyclerView rvSpeciliaty;
+    FlowLayout flSpeciliaty;
     SpecilaitiesAdapter adapter;
 
     @BindView(R.id.no_time)
@@ -113,8 +112,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     RecyclerView recyclerViewDocument;
     @BindView(R.id.tv_specilities)
     TextView tvSpecilities;
-    @BindView(R.id.tv_languages)
-    TextView tvLanguages;
     @BindView(R.id.image_star)
     ImageView ivStar;
     @BindView(R.id.iv_location)
@@ -177,7 +174,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private static final int TAKE_PICTURE = 1;
     int PLACE_PICKER_REQUEST = 7;
     private Menu menu;
-
+    @BindView(R.id.fl_language)
+    FlowLayout flLanguages;
+    boolean is_doc ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +191,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         // check if doctor or clinic
 
         try {
+            is_doc = new PrefManager(this).get(PrefManager.IS_DOCTOR);
 
             util = Util.getInstance(this);
             user = new User();
@@ -311,12 +311,16 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 userInfoResponse.setUser(user);
                 intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                 startActivity(intent);
-            } else if (user.getIsDoc() == 1 || user.getIsOpen() == 1) {
+            } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
                 Intent intent = new Intent(this, ChatActivity.class);
                 /*String userstring=gson.toJson(user);
                 intent.putExtra("doctor_data",userstring);*/
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 intent.putExtra("from", true);
+                startActivity(intent);
+            }else if(is_doc && user.getIsDoc() == 1 ) {
+                Intent intent = new Intent(this, PaymentActivity.class);
+                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(this, PaymentActivity.class);
@@ -443,9 +447,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
         if (user.getSpecialities() != null)
-            set(adapter, user.getSpecialities(), recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+             setImage(user.getSpecialities(), flSpeciliaty, 1);
         if (user.getSupported_lang() != null)
-            set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+            setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
             set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
         if (user.getDocuments() != null) {
@@ -454,6 +458,37 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
             recyclerViewDocument.setAdapter(doctorDocumentAdapter);
         }
+    }
+
+    private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
+        flowLayout.removeAllViews();
+        for (ChooseModel chooseModel : supported_lang) {
+            if (i == 0) {
+                String country_code = chooseModel.getCountry_code();
+                Country country = Country.getCountryByISO(country_code);
+                if (country != null)
+                    flowLayout.addView(setImageHeart(country.getFlag()));
+            } else if (i == 1) {
+                flowLayout.addView(setImageCircle(chooseModel.getSpeciality_icon()));
+            }
+
+        }
+    }
+
+
+    private View setImageCircle(String speciality_icon) {
+        CircularImageView circularImageView = new CircularImageView(this);
+        ImageHelper.setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1 , getApplicationContext());
+        return circularImageView;
+    }
+
+    private View setImageHeart(int src) {
+        View view;
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.heart_item_layout, null);
+        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
+        item.setImageResource(src);
+        return view;
     }
 
     public void set(RecyclerView.Adapter adapter, List<ChooseModel> list, RecyclerView recyclerVie, int id, int linearLayoutManager, int type) {
@@ -578,11 +613,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         }
         setAdapters();
         tvRating.setText("Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
-        tvLanguages.setText("");
-        if (user.getSupported_lang() != null)
-            for (ChooseModel lang : user.getSupported_lang()) {
-                tvLanguages.append(lang.getLang_title() + " ");
-            }
+
         tvSpecilities.setText("");
         if (user.getSpecialities() != null)
             for (ChooseModel speciality : user.getSpecialities()) {
@@ -803,7 +834,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setSpecialities(templist);
-                set(adapter, user.getSpecialities(), recyclerView, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+                setImage(user.getSpecialities(), flSpeciliaty, 1);
                 tvSpecilities.setText("");
                 for (ChooseModel speciality : user.getSpecialities()) {
                     tvSpecilities.append(speciality.getSpeciality_title() + " ");
@@ -816,11 +847,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setSupported_lang(templist);
-                set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
-                tvLanguages.setText("");
-                for (ChooseModel lang : user.getSupported_lang()) {
-                    tvLanguages.append(lang.getLang_title() + " ");
-                }
+                setImage(user.getSupported_lang(), flLanguages, 0);
+                // set(adapter, user.getSupported_lang(), recyclerView, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
                 break;
             case Constants.DoctorAll:
                 user.getMembers_at().clear();

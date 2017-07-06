@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -40,6 +42,9 @@ public class PaymentActivity extends AppCompatActivity {
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
 
+    @BindView(R.id.rb_free)
+    RadioButton rbFree ;
+
     @BindView(R.id.rg_payment)
     RadioGroup rgPayment ;
     User doctor;
@@ -57,6 +62,10 @@ public class PaymentActivity extends AppCompatActivity {
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
             doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT),User.class);
+            if(doctor.getIsDoc() == 1)
+                rbFree.setVisibility(View.VISIBLE);
+            else
+                rbFree.setVisibility(View.GONE);
         /*
         handel data in ui
          */

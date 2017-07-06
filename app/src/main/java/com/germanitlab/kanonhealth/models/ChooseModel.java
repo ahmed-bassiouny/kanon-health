@@ -21,6 +21,7 @@ public class ChooseModel implements Serializable {
     private String lang_title;
     private String lang_icon;
     private String long_short;
+    private String country_code ;
 
     // Specialist
     private int speciality_id;
@@ -171,5 +172,13 @@ public class ChooseModel implements Serializable {
 
     public void setIs_available(String is_available) {
         this.is_available = is_available;
+    }
+
+    public String getCountry_code() {
+        return country_code;
+    }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
     }
 }

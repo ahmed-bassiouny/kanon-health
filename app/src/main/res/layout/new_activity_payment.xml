@@ -264,8 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
-                        android:drawableRight="@drawable/paypal_new"
-                        android:enabled="false" />
+                        android:drawableRight="@drawable/paypal_new" />
 
                     <RadioButton
                         android:layout_weight="1"
@@ -273,12 +272,10 @@
                         android:drawableRight="@drawable/sofo"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:enabled="false"
                         android:layout_margin="10dp" />
 
                     <RadioButton
                         android:layout_weight="1"
-                        android:enabled="false"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
@@ -289,6 +286,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
+                        android:id="@+id/rb_free"
                         android:textColor="@color/colorPrimaryDark"
                         android:text="Consult a colleague \n (lets keep it free to consult colleagues)" />
 
