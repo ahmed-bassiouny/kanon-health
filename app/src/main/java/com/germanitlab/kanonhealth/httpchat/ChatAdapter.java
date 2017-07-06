@@ -106,7 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
                 return audioMessageViewHolder;
             case Constants.UNDEFINED_MESSAGE:
-                ViewGroup undefined= (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
+                ViewGroup undefined= (ViewGroup) mInflater.inflate(R.layout.item_chat_undefined_message, parent, false);
                 ImageViewHolder undefinedViewHolder = new ImageViewHolder(undefined);
                 return undefinedViewHolder;
             default:
@@ -785,7 +785,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
         try {
             final Message message = mMessages.get(position);
-            message.setMsg(message.getMsg()+".mp4");
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
             imageViewHolder.message.setVisibility(View.GONE);

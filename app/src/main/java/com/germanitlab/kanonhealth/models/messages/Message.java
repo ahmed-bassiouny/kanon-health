@@ -75,6 +75,16 @@ public class Message implements Serializable {
     @DatabaseField
     private String imageText;
 
+    public int getIs_url() {
+        return is_url;
+    }
+
+    public void setIs_url(int is_url) {
+        this.is_url = is_url;
+    }
+
+    private int is_url;
+
     //New Attribute
     @DatabaseField
     private String is_document;
