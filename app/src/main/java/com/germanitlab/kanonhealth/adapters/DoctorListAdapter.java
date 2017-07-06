@@ -159,7 +159,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             }
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                //   ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+                   ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
             }
                 if (tabPosition == 3) {
                     // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
