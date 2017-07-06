@@ -45,6 +45,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
@@ -313,12 +314,20 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                 startActivity(intent);
             } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
-                Intent intent = new Intent(this, ChatActivity.class);
                 /*String userstring=gson.toJson(user);
                 intent.putExtra("doctor_data",userstring);*/
+
+                /*Intent intent = new Intent(this, ChatActivity.class);
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 intent.putExtra("from", true);
+                startActivity(intent);*/
+                //edit ahmed
+                Intent intent= new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
+                intent.putExtra("doctorID", user.get_Id());
+                intent.putExtra("doctorName", user.getLast_name()+" "+user.getFirst_name());
+                intent.putExtra("doctorUrl", user.getAvatar());
                 startActivity(intent);
+
             }else if(is_doc && user.getIsDoc() == 1 ) {
                 Intent intent = new Intent(this, PaymentActivity.class);
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));

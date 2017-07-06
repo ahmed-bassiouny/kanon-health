@@ -37,6 +37,7 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
@@ -264,9 +265,16 @@ public class SettingFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    /*Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("from_notification", 1);
                     intent.putExtra("from_id", 1);
+                    startActivity(intent);*/
+
+                    //Edit ahmed
+                    Intent intent= new Intent(getActivity(), HttpChatActivity.class);
+                    intent.putExtra("doctorID", 1);
+                    intent.putExtra("doctorName", "Support");
+                    intent.putExtra("doctorUrl", "");
                     startActivity(intent);
 
                 }

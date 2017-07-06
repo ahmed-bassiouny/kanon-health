@@ -1085,16 +1085,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     public void setList(List<Message> messages ){
         this.mMessages=messages;
-        Collections.sort(messages, new Comparator<Message>() {
-            @Override
-            public int compare(Message message2, Message message1)
-            {
 
-                return  message2.getSent_at().compareTo(message1.getSent_at());
-            }
-        });
     }
 
-
+    public void setItem(Message item) {
+        this.mMessages.add(item);
+    }
 }
 

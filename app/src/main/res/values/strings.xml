@@ -279,4 +279,5 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="cany_play_video">Sorry , erro with video</string>
     <string name="cant_find_location">Sorry , Can\'t Find Location</string>
     <string name="cantupload">Sorry , Media not upload</string>
+    <string name="support">Support</string>
 </resources>

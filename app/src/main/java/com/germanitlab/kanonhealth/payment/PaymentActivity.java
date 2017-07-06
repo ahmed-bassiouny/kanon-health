@@ -19,6 +19,7 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
@@ -136,6 +137,8 @@ public class PaymentActivity extends AppCompatActivity {
 //                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
 //                    startActivity(intent);
 
+                    // last code
+                    /*
                     final Gson gson = new Gson();
                     Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
 
@@ -145,6 +148,13 @@ public class PaymentActivity extends AppCompatActivity {
                     //intent.putExtra("doctor_data", gson.toJson(doctor));
                     prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                     intent.putExtra("from", true);
+                    startActivity(intent);*/
+                    // edit ahmed
+                    //Edit ahmed
+                    Intent intent= new Intent(PaymentActivity.this, HttpChatActivity.class);
+                    intent.putExtra("doctorID", doctor.get_Id());
+                    intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
+                    intent.putExtra("doctorUrl", doctor.getAvatar());
                     startActivity(intent);
                     finish();
                 }

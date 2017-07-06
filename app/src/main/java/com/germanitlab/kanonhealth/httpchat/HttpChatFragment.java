@@ -28,6 +28,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,15 +36,18 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PopupHelper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -73,7 +77,7 @@ import im.delight.android.location.SimpleLocation;
 public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
-
+    private static final int ACCESS_FINE_LOCATION =51 ;
     // Declare UI
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
@@ -85,15 +89,27 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     ImageButton img_send_txt;
     @BindView(R.id.pbar_loading)
     ProgressBar pbar_loading;
+    @BindView(R.id.tv_chat_user_name)
+    TextView tv_chat_user_name;
+
+    @BindView(R.id.img_chat_user_avatar)
+    ImageView img_chat_user_avatar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     // loca variable
-    int userID = 3;
+    int userID ;
     int userPassword = 0;
-    int doctorID = 10;
+    int doctorID ;
+    String doctorName="";
+    String doctorUrl="";
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
     private static final int RECORD_VIDEO =3 ;
     private Uri selectedImageUri = null;
+    private boolean show_privacy = false;
+
+    private final static int WRITE_EXTERNAL_STORAGE=50;
 
     ArrayList<Message> messages;
     PrefManager prefManager;
@@ -101,6 +117,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     HashMap<UUID, Message> uuidMessageHashMap = new HashMap<>();
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
+    static HttpChatFragment httpChatFragment;
 
 
     @Override
@@ -110,17 +127,32 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
         ButterKnife.bind(this, view);
         buildGoogleApiClient();
-
         return view;
     }
+    public static HttpChatFragment newInstance(int doctorID,String doctorUrl) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("doctorID", doctorID);
+        bundle.putString("doctorName", "My Documents");
+        bundle.putString("doctorUrl", doctorUrl);
+        if (httpChatFragment == null) {
+            httpChatFragment = new HttpChatFragment();
+            httpChatFragment.setArguments(bundle);
+        } else {
+            httpChatFragment.getArguments().putAll(bundle);
+        }
+        return httpChatFragment;
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadChat(userID, doctorID);
+        initObjects();
         initData();
+        loadChat(userID, doctorID);
 
     }
+
 
     // declare objects in this fragment
     private void initObjects() {
@@ -130,13 +162,21 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
     // set data in object
     private void initData() {
-        //userID=prefManager.getInt(PrefManager.USER_ID);
-        //doctorID=getArguments().getInt("doctorID");
-
+        userID=prefManager.getInt(PrefManager.USER_ID);
+        doctorID=getArguments().getInt("doctorID");
+        doctorName=getArguments().getString("doctorName");
+        doctorUrl=getArguments().getString("doctorUrl");
+        if(!doctorUrl.isEmpty())
+        ImageHelper.setImage(img_chat_user_avatar,Constants.CHAT_SERVER_URL_IMAGE+"/"+doctorUrl,getActivity());
+        tv_chat_user_name.setText(doctorName);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+        if(userID==doctorID) {
+            show_privacy = true;
+            toolbar.setVisibility(View.GONE);
+        }
     }
 
     private void loadChat(int userID, int doctorID) {
@@ -147,20 +187,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     @Override
     public void onSuccess(Object response) {
         messages = (ArrayList<Message>) response;
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayListMessageToHashmap();
-                isStoragePermissionGranted();
-            }
-        });
-
+        isStoragePermissionGranted();
 
     }
 
     @Override
     public void onFailed(String error) {
-        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
         pbar_loading.setVisibility(View.GONE);
     }
 
@@ -170,10 +203,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                 setData();
                 return true;
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
                 return false;
             }
-        } else { //permission is automatically granted on sdk<23 upon installation
+        } else {
             setData();
             return true;
         }
@@ -182,19 +215,17 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&requestCode==WRITE_EXTERNAL_STORAGE) {
             //resume tasks needing this permission
             setData();
         }
     }
 
     private void setData() {
-        ArrayList<Message> temp = new ArrayList<>();
-        temp.addAll(uuidMessageHashMap.values());
-        chatAdapter = new ChatAdapter(temp, getActivity(), false);
+        chatAdapter = new ChatAdapter(messages, getActivity(), show_privacy);
         recyclerView.setAdapter(chatAdapter);
         pbar_loading.setVisibility(View.GONE);
-        recyclerView.scrollToPosition(uuidMessageHashMap.size() - 1);
+        recyclerView.scrollToPosition(messages.size() - 1);
     }
 
     // init text input
@@ -214,27 +245,31 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     public void img_send_txt() {
         // declare object and set attribute
         Message message = new Message();
-        final UUID key = UUID.randomUUID();
         message.setUser_id(userID);
         message.setFrom_id(userID);
         message.setTo(doctorID);
         message.setMsg(etMessage.getText().toString());
         message.setType(Constants.TEXT);
         message.setIs_forward(1);
-        message.setSent_at(getDateTimeNow());
         etMessage.setText("");
-
-        addChangeItemChat(key, message);
+        messages.add(message);
+        chatAdapter.setList(messages);
+        chatAdapter.notifyDataSetChanged();
+        final int index=messages.size()-1;
+        recyclerView.scrollToPosition(index);
 
 
         //request
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
-                Message temp = uuidMessageHashMap.get(key);
+                Message temp = messages.get(index);
                 temp.setIs_forward(0);
-                uuidMessageHashMap.put(key, temp);
-                addChangeItemChat(key, temp);
+                messages.set(index,temp);
+                chatAdapter.setList(messages);
+                chatAdapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(messages.size()-1);
+
             }
 
             @Override
@@ -256,40 +291,40 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             switch (requestCode) {
                 case TAKE_PICTURE:
                     messages.add(creatDummyMessage());
+                    final int index=messages.size()-1;
                     chatAdapter.setList(messages);
                     chatAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(messages.size()-1);
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
 
-                            Message message = new Message();
-                            final UUID key = UUID.randomUUID();
+                            final Message message = new Message();
                             message.setUser_id(userID);
                             message.setFrom_id(userID);
                             message.setTo(doctorID);
                             message.setIs_url(1);
                             message.setMsg((String) response);
                             message.setType(Constants.IMAGE);
-                            message.setIs_forward(1);
+                            message.setIs_forward(0);
                             message.setSent_at(getDateTimeNow());
-                            etMessage.setText("");
-
-                            addChangeItemChat(key, message);
 
 
                             //request
                             new HttpCall(getActivity(), new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
-                                    Message temp = uuidMessageHashMap.get(key);
-                                    temp.setIs_forward(0);
-                                    uuidMessageHashMap.put(key, temp);
-                                    addChangeItemChat(key, temp);
+                                    messages.remove(index);
+                                    messages.add(message);
+                                    chatAdapter.setList(messages);
+                                    chatAdapter.notifyDataSetChanged();
+                                    recyclerView.scrollToPosition(messages.size()-1);
                                 }
 
                                 @Override
                                 public void onFailed(String error) {
-
+                                    messages.remove(index);
+                                    Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
                                 }
                             }).sendMessage(message);
                         }
@@ -313,39 +348,40 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                         Toast.makeText(getActivity(), "don't support this file", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    final UUID key = UUID.randomUUID();
-                    addChangeItemChat(key,creatDummyMessage());
+                    messages.add(creatDummyMessage());
+                    final int index2=messages.size()-1;
+                    chatAdapter.setList(messages);
+                    chatAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(messages.size()-1);
 
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            Message message = new Message();
+                            final Message message = new Message();
                             message.setUser_id(userID);
                             message.setFrom_id(userID);
                             message.setTo(doctorID);
+                            message.setIs_url(1);
                             message.setMsg((String) response);
                             message.setType(type);
-                            message.setIs_url(1);
-                            message.setIs_forward(1);
+                            message.setIs_forward(0);
                             message.setSent_at(getDateTimeNow());
-                            etMessage.setText("");
-
-                            addChangeItemChat(key, message);
-
-
 
                             //request
                             new HttpCall(getActivity(), new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
-                                    Message temp = uuidMessageHashMap.get(key);
-                                    temp.setIs_forward(0);
-                                    addChangeItemChat(key, temp);
+                                    messages.remove(index2);
+                                    messages.add(message);
+                                    chatAdapter.setList(messages);
+                                    chatAdapter.notifyDataSetChanged();
+                                    recyclerView.scrollToPosition(messages.size()-1);
                                 }
 
                                 @Override
                                 public void onFailed(String error) {
-
+                                    messages.remove(index2);
+                                    Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
                                 }
                             }).sendMessage(message);
                         }
@@ -362,11 +398,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
 
 
-    //----- additional Method
-    private void ArrayListMessageToHashmap() {
-        for (Message message : messages)
-            uuidMessageHashMap.put(UUID.randomUUID(), message);
-    }
 
     private void addChangeItemChat(final UUID key, final Message message) {
         getActivity().runOnUiThread(new Runnable() {
@@ -408,7 +439,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                     if (getActivity().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         pickImage();
                     } else
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
+                        requestPermissions( new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
                 } else {
                     pickImage();
                 }
@@ -427,7 +458,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                         recordVideo();
 
                     } else
-                        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
+                        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
                 } else {
                     recordVideo();
                 }
@@ -445,7 +476,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                        ActivityCompat.requestPermissions(getActivity(),permission, Constants.LAST_LOCATION_PERMISSION_CODE);
+                        requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
                     } else {
                         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                                 mGoogleApiClient);
@@ -457,9 +488,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                     //sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
                     //create dummy message
                     messages.add(creatDummyMessage());
+                    final int index2=messages.size()-1;
                     chatAdapter.setList(messages);
                     chatAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(messages.size() - 1);
+                    recyclerView.scrollToPosition(messages.size()-1);
 
                     final Message message = new Message();
                     message.setUser_id(userID);
@@ -475,7 +507,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            messages.remove(messages.size()-1);
+                            messages.remove(index2);
                             messages.add(message);
                             chatAdapter.setList(messages);
                             chatAdapter.notifyDataSetChanged();
@@ -484,7 +516,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
                         @Override
                         public void onFailed(String error) {
-
+                            messages.remove(index2);
+                            Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
                         }
                     }).sendMessage(message);
 
@@ -581,7 +614,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                ActivityCompat.requestPermissions(getActivity(),permission, Constants.LAST_LOCATION_PERMISSION_CODE);
+                requestPermissions(permission, ACCESS_FINE_LOCATION);
 
             } else {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -604,8 +637,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     public void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
-                new IntentFilter("MyData")
-        );
+                new IntentFilter("MyData"));
+        if(userID==doctorID)
+            show_privacy=true;
     }
 
     @Override
@@ -618,10 +652,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         @Override
         public void onReceive(Context context, Intent intent) {
             Message message=(Message) intent.getSerializableExtra("extra");
+            if(message.getFrom_id()!=doctorID)
+                return;
             messages.add(message);
             chatAdapter.setList(messages);
             chatAdapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(messages.size() - 1);
+
         }
     };
 

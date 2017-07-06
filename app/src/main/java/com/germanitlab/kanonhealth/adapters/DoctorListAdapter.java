@@ -22,6 +22,7 @@ import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Payment;
@@ -210,19 +211,32 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                             intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                             activity.startActivity(intent);
                         } else if (doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
-                            Intent intent = new Intent(activity, ChatActivity.class);
+                            /*Intent intent = new Intent(activity, ChatActivity.class);
                             //intent.putExtra("doctor_data", gson.toJson(doctor));
                             PrefManager prefManager = new PrefManager(activity);
                             prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
                             intent.putExtra("from", true);
+                            activity.startActivity(intent);*/
+
+                            //Edit ahmed
+                            Intent intent= new Intent(activity, HttpChatActivity.class);
+                            intent.putExtra("doctorID", doctor.get_Id());
+                            intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
+                            intent.putExtra("doctorUrl", doctor.getAvatar());
                             activity.startActivity(intent);
                         }else if(is_doc && doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
-                            Intent intent = new Intent(activity, ChatActivity.class);
+                            /*Intent intent = new Intent(activity, ChatActivity.class);
                             //intent.putExtra("doctor_data", gson.toJson(doctor));
                             PrefManager prefManager = new PrefManager(activity);
                             doctor.setIsOpen(1);
                             prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
                             intent.putExtra("from", true);
+                            activity.startActivity(intent);*/
+                            //Edit ahmed
+                            Intent intent= new Intent(activity, HttpChatActivity.class);
+                            intent.putExtra("doctorID", doctor.get_Id());
+                            intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
+                            intent.putExtra("doctorUrl", doctor.getAvatar());
                             activity.startActivity(intent);
                         }
                         else if(is_doc && doctor.getIsDoc() == 1 ) {
