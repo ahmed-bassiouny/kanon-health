@@ -15,54 +15,82 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PopupHelper;
+import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.messages.Message;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -108,6 +136,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     private static final int RECORD_VIDEO =3 ;
     private Uri selectedImageUri = null;
     private boolean show_privacy = false;
+    User doctor=new User();
 
     private final static int WRITE_EXTERNAL_STORAGE=50;
 
@@ -119,6 +148,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     Location mLastLocation;
     static HttpChatFragment httpChatFragment;
 
+    // not fixed
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,6 +159,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
         ButterKnife.bind(this, view);
         buildGoogleApiClient();
+        setHasOptionsMenu(true);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         return view;
     }
     public static HttpChatFragment newInstance(int doctorID,String doctorUrl) {
@@ -150,6 +184,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         initObjects();
         initData();
         loadChat(userID, doctorID);
+        handelEvent();
 
     }
 
@@ -177,6 +212,15 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
         }
+        Gson gson=new Gson();
+        try {
+
+            User user = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
+            doctor = user;
+        }catch (Exception e){
+            Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void loadChat(int userID, int doctorID) {
@@ -661,5 +705,327 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
         }
     };
+
+    //* noy fixed
+    private void handelEvent() {
+
+        img_send_audio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    switch (event.getAction()) {
+
+                        case MotionEvent.ACTION_MOVE:
+
+                            //handle drag action here   Milad :D
+                            break;
+
+                        case MotionEvent.ACTION_DOWN:
+                            linearTextMsg.setVisibility(View.GONE);
+                            imgbtn_chat_attach.setVisibility(View.GONE);
+                            relativeAudio.setVisibility(View.VISIBLE);
+                            img_send_audio.setBackgroundResource(0);
+                            Log.e("Start Recording", "start");
+                            startRecording();
+
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            Log.e("stop Recording", "stop");
+
+                            if (img_send_audio.getProgress() < 30) {
+                                Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
+                                stopRecording(true);
+                                setButtonToTextMsg(true);
+                            } else {
+                                stopRecording(true);
+                                long diff = endTimeForRecording - startTimeForRecording;
+                                Log.e("Difference", String.valueOf(diff));
+                                if (diff > 1000) {
+                                    Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+
+
+
+
+                                    /**send to server**/
+                                    messages.add(creatDummyMessage());
+                                    final int index2=messages.size()-1;
+                                    chatAdapter.setList(messages);
+                                    chatAdapter.notifyDataSetChanged();
+                                    recyclerView.scrollToPosition(messages.size()-1);
+
+                                    new HttpCall(getActivity(), new ApiResponse() {
+                                        @Override
+                                        public void onSuccess(Object response) {
+                                            final Message message = new Message();
+                                            message.setUser_id(userID);
+                                            message.setFrom_id(userID);
+                                            message.setTo(doctorID);
+                                            message.setIs_url(1);
+                                            message.setMsg((String) response);
+                                            message.setType(Constants.AUDIO);
+                                            message.setIs_forward(0);
+                                            message.setSent_at(getDateTimeNow());
+
+                                            //request
+                                            new HttpCall(getActivity(), new ApiResponse() {
+                                                @Override
+                                                public void onSuccess(Object response) {
+                                                    messages.remove(index2);
+                                                    messages.add(message);
+                                                    chatAdapter.setList(messages);
+                                                    chatAdapter.notifyDataSetChanged();
+                                                    recyclerView.scrollToPosition(messages.size()-1);
+                                                }
+
+                                                @Override
+                                                public void onFailed(String error) {
+                                                    messages.remove(index2);
+                                                    Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }).sendMessage(message);
+                                        }
+
+                                        @Override
+                                        public void onFailed(String error) {
+                                            Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).uploadMedia(mOutputFile.getPath());
+
+
+
+
+
+                                }
+                                setButtonToTextMsg(true);
+                            }
+                            break;
+                    }
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
+                }
+                return false;
+            }
+        });
+
+
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (editable.toString().trim().length() > 0) {
+
+                    setButtonToTextMsg(false);
+                    img_send_audio.setVisibility(View.GONE);
+
+                } else {
+                    img_send_audio.setVisibility(View.GONE);
+                    img_send_audio.setVisibility(View.VISIBLE);
+                    img_send_audio.setBackgroundResource(R.drawable.ic_mic_black_24dp);
+                    img_send_audio.setOnClickListener(null);
+                    img_send_audio.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_MOVE:
+
+                                    //handle drag action here   Milad :D
+                                    break;
+
+                                case MotionEvent.ACTION_DOWN:
+                                    linearTextMsg.setVisibility(View.GONE);
+                                    relativeAudio.setVisibility(View.VISIBLE);
+                                    img_send_audio.setBackgroundResource(0);
+                                    Log.e("Start Recording", "start");
+                                    startRecording();
+
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                    Log.e("stop Recording", "stop");
+                                    if (img_send_audio.getProgress() < 30) {
+                                        Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
+                                        stopRecording(true);
+                                        setButtonToTextMsg(true);
+                                    } else {
+                                        stopRecording(true);
+                                        long diff = endTimeForRecording - startTimeForRecording;
+                                        Log.e("Difference", String.valueOf(diff));
+                                        if (diff > 1000) {
+                                            Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+                                        }
+                                        setButtonToTextMsg(true);
+                                    }
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+
+                }
+
+
+            }
+        });
+
+    }
+    private MediaRecorder mRecorder;
+    private File mOutputFile;
+    private long startTimeForRecording = 0, endTimeForRecording = 0;
+    private Handler mHandler = new Handler();
+    private long mStartTime = 0;
+    @BindView(R.id.timer)
+    TextView tvRecordTimer;
+    private int[] amplitudes = new int[100];
+    private int i = 0;
+    @BindView(R.id.linear_txt_msg)
+    LinearLayout linearTextMsg;
+    @BindView(R.id.relative_record)
+    RelativeLayout relativeAudio;
+    @BindView(R.id.imgbtn_chat_attach)
+    ImageButton imgbtn_chat_attach;
+
+    private void startRecording() {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        startTimeForRecording = cal.getTimeInMillis();
+        mRecorder = new MediaRecorder();
+        tvRecordTimer.setText("0:00");
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+            mRecorder.setAudioEncodingBitRate(48000);
+        } else {
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mRecorder.setAudioEncodingBitRate(64000);
+        }
+        mRecorder.setAudioSamplingRate(16000);
+        mOutputFile = getOutputFile();
+        mOutputFile.getParentFile().mkdirs();
+        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+
+        try {
+            mRecorder.prepare();
+            mRecorder.start();
+            mStartTime = SystemClock.elapsedRealtime();
+            mHandler.postDelayed(mTickExecutor, 100);
+            Log.d("Voice Recorder", "started recording to " + mOutputFile.getAbsolutePath());
+        } catch (IOException e) {
+            Log.e("Voice Recorder", "prepare() failed " + e.getMessage());
+        }
+    }
+    private File getOutputFile() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
+        return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                + "/RECORDING_"
+                + dateFormat.format(new Date())
+                + ".m4a");
+    }
+    private Runnable mTickExecutor = new Runnable() {
+        @Override
+        public void run() {
+            tick();
+            mHandler.postDelayed(mTickExecutor, 100);
+        }
+    };
+
+    private void tick() {
+        long time = (mStartTime < 0) ? 0 : (SystemClock.elapsedRealtime() - mStartTime);
+        int minutes = (int) (time / 60000);
+        int seconds = (int) (time / 1000) % 60;
+        if (seconds > 0)
+            tvRecordTimer.setText(minutes + ":" + (seconds < 10 ? "0" + seconds : seconds));
+        if (mRecorder != null) {
+            amplitudes[i] = mRecorder.getMaxAmplitude();
+            //Log.d("Voice Recorder","amplitude: "+(amplitudes[i] * 100 / 32767));
+            if (i >= amplitudes.length - 1) {
+                i = 0;
+            } else {
+                ++i;
+            }
+        }
+    }
+
+
+    protected void stopRecording(boolean saveFile) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        endTimeForRecording = cal.getTimeInMillis();
+
+        try {
+            mRecorder.stop();
+        } catch (RuntimeException stopException) {
+            //handle cleanup here
+        }
+
+        mRecorder.release();
+        mRecorder = null;
+        mStartTime = 0;
+        mHandler.removeCallbacks(mTickExecutor);
+        if (!saveFile && mOutputFile != null) {
+            mOutputFile.delete();
+        }
+    }
+    private void setButtonToTextMsg(Boolean comingFromVoiceRecording) {
+
+        if (!comingFromVoiceRecording) {
+            img_send_audio.setBackgroundResource(R.drawable.ic_send_black_24dp);
+            img_send_audio.setOnTouchListener(null);
+        }
+
+        linearTextMsg.setVisibility(View.VISIBLE);
+        imgbtn_chat_attach.setVisibility(View.VISIBLE);
+        relativeAudio.setVisibility(View.GONE);
+    }
+
+
+
+    //////////// start close session
+    @BindView(R.id.chat_bar)
+     LinearLayout chat_bar;
+    private MenuItem endSession;
+    private MenuItem startSession;
+    @BindView(R.id.open_chat_session)
+     LinearLayout open_chat_session;
+    @BindView(R.id.button2)
+    Button button2;
+
+    @OnClick(R.id.button2)
+    public void openPayment() {
+        try {
+            if (doctor.isClinic == null)
+                doctor.setIsClinic(0);
+
+            if (doctor.isClinic == 1) {
+                Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+                intent.putExtra("doctor_data", doctor);
+                startActivity(intent);
+                getActivity().finish();
+            } else {
+                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                Gson gson = new Gson();
+                prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
+                intent.putExtra("doctor_obj", doctor);
+
+                startActivity(intent);
+                getActivity().finish();
+            }
+
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+            Toast.makeText(getActivity(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

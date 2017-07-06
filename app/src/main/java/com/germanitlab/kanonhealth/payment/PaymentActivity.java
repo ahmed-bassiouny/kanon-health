@@ -153,6 +153,9 @@ public class PaymentActivity extends AppCompatActivity {
                     //Edit ahmed
                     Intent intent= new Intent(PaymentActivity.this, HttpChatActivity.class);
                     intent.putExtra("doctorID", doctor.get_Id());
+                    Gson gson=new Gson();
+                    intent.putExtra("doctor_data", gson.toJson(doctor));
+                    prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                     intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
                     intent.putExtra("doctorUrl", doctor.getAvatar());
                     startActivity(intent);
