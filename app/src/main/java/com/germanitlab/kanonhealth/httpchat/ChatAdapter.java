@@ -105,34 +105,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 ViewGroup audioMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_audio_message, parent, false);
                 AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
                 return audioMessageViewHolder;
+            case Constants.UNDEFINED_MESSAGE:
+                ViewGroup undefined= (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
+                ImageViewHolder undefinedViewHolder = new ImageViewHolder(undefined);
+                return undefinedViewHolder;
             default:
                 ViewGroup chatTextMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_text_message, parent, false);
                 TextMsgViewHolder chatTextMessageViewHolder = new TextMsgViewHolder(chatTextMessage);
                 return chatTextMessageViewHolder;
         }
-        /*switch (type) {
-            case Constants.IMAGE_MESSAGE:
-                ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.chat_image_message_cell, parent, false);
-                ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
-                return imageMessageViewHolder;
-            case Constants.AUDIO_MESSAGE:
-                ViewGroup audioMessage = (ViewGroup) mInflater.inflate(R.layout.chat_audio_message_cell, parent, false);
-                AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
-                return audioMessageViewHolder;
-            case Constants.VIDEO_MESSAGE:
-                ViewGroup videoMessage = (ViewGroup) mInflater.inflate(R.layout.chat_video_message_cell, parent, false);
-                VideoViewHolder videoMessageViewHolder = new VideoViewHolder(videoMessage);
-                return videoMessageViewHolder;
-            case Constants.LOCATION_MESSAGE:
-                ViewGroup locationMessage = (ViewGroup) mInflater.inflate(R.layout.chat_location_message_cell, parent, false);
-                LocationViewHolder locationViewHolder = new LocationViewHolder(locationMessage);
-                return locationViewHolder;
-            default:
-                //for text message
-                ViewGroup chatTextMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_text_message, parent, false);
-                TextMsgViewHolder chatTextMessageViewHolder = new TextMsgViewHolder(chatTextMessage);
-                return chatTextMessageViewHolder;
-        }*/
     }
 
     @Override
@@ -153,6 +134,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             case Constants.LOCATION:
                 ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
                 setLocationMessage(locationViewHolder, position);
+                break;
+            case Constants.UNDEFINED:
+                ImageViewHolder undefinedViewHolder = (ImageViewHolder) baseViewHolder;
+                setUndefinedMessage(undefinedViewHolder, position);
                 break;
             default:
                 //for text message
@@ -178,6 +163,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     return Constants.IMAGE_MESSAGE;
                 case Constants.LOCATION:
                     return Constants.LOCATION_MESSAGE;
+                case Constants.UNDEFINED:
+                    return Constants.UNDEFINED_MESSAGE;
             }
 
         } catch (Exception e) {
@@ -480,6 +467,35 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
+    private void setUndefinedMessage(final ImageViewHolder imageViewHolder, final int position) {
+        try {
+
+            final Message message = mMessages.get(position);
+
+
+            try {
+                String[] split = message.getSent_at().split(" ")[1].split(":");
+                imageViewHolder.date.setText(split[0] + " " + split[1]);
+            } catch (Exception ex) {
+                imageViewHolder.date.setText(message.getSent_at());
+            }
+
+            imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+            if(message.getImageText()!=null){
+                imageViewHolder.message.setText(message.getImageText());
+                imageViewHolder.message.setVisibility(View.VISIBLE);
+            }else
+                imageViewHolder.message.setVisibility(View.GONE);
+            imageViewHolder.status.setImageResource(R.drawable.pending);
+
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e("Chat Adapter", "setTextMessage: ", e);
+            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void setAudioMessage(final AudioViewHolder audioViewHolder, final int position) {
         try {
             final Message mediaMessage = mMessages.get(position);
@@ -769,6 +785,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
         try {
             final Message message = mMessages.get(position);
+            message.setMsg(message.getMsg()+".mp4");
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
             imageViewHolder.message.setVisibility(View.GONE);
@@ -1067,7 +1084,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    public void setList(List<Message> messages){
+    public void setList(List<Message> messages ){
         this.mMessages=messages;
         Collections.sort(messages, new Comparator<Message>() {
             @Override

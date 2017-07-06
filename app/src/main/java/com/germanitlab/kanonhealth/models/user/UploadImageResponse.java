@@ -13,9 +13,11 @@ public class UploadImageResponse implements Serializable {
     @SerializedName("file_url")
     private String file_url;
 
-    @SerializedName("Status")
+    @SerializedName("status")
     private int status;
 
+    @SerializedName("y")
+    public int y;
 
     public int getStatus() {
         return status;
