@@ -45,46 +45,63 @@ public class ImageHelper {
         if (TextUtils.isEmpty(imageFullUrl)) {
             iv.setImageResource(placeHolder);
         } else if (placeHolder == -1) {
-            Glide.with(ctx)
-                    .load(imageFullUrl)
-                    .asBitmap()
-                    .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .skipMemoryCache(true)
+            if (progressBar != null) {
+                Glide.with(ctx.getApplicationContext())
+                        .load(imageFullUrl)
+                        .asBitmap()
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(true)
 //                    .into(iv);
-                    .dontAnimate()
-                    .into(new SimpleTarget<Bitmap>() {
+                        .dontAnimate()
+                        .into(new SimpleTarget<Bitmap>() {
 
-                        @Override
-                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                            // TODO Auto-generated method stub
-                            iv.setImageBitmap(arg0);
-                            if (progressBar != null) {
+                            @Override
+                            public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                                // TODO Auto-generated method stub
+                                iv.setImageBitmap(arg0);
                                 progressBar.setVisibility(View.GONE);
                             }
-                        }
-                    });
+                        });
+            } else {
+                Glide.with(ctx.getApplicationContext())
+                        .load(imageFullUrl)
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(true)
+                        .into(iv);
+            }
         } else {
-            Glide.with(ctx)
-                    .load(imageFullUrl)
-                    .asBitmap()
-                    .fitCenter()
-                    .placeholder(placeHolder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .skipMemoryCache(true)
+            if (progressBar != null) {
+                Glide.with(ctx.getApplicationContext())
+                        .load(imageFullUrl)
+                        .asBitmap()
+                        .fitCenter()
+                        .placeholder(placeHolder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(true)
 //                    .into(iv);
-                    .dontAnimate()
-                    .into(new SimpleTarget<Bitmap>() {
+                        .dontAnimate()
+                        .into(new SimpleTarget<Bitmap>() {
 
-                        @Override
-                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                            // TODO Auto-generated method stub
-                            iv.setImageBitmap(arg0);
-                            if (progressBar != null) {
+                            @Override
+                            public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                                // TODO Auto-generated method stub
+                                iv.setImageBitmap(arg0);
                                 progressBar.setVisibility(View.GONE);
+
                             }
-                        }
-                    });
+                        });
+            } else {
+                Glide.with(ctx.getApplicationContext())
+                        .load(imageFullUrl)
+                        .fitCenter()
+                        .placeholder(placeHolder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(true)
+                        .into(iv);
+
+            }
         }
     }
 
@@ -104,7 +121,7 @@ public class ImageHelper {
 
     public static void setImage(final ImageView iv, Uri imageFullUri, int placeHolder, final ProgressBar progressBar, Context ctx) {
         if (placeHolder == -1) {
-            Glide.with(ctx)
+            Glide.with(ctx.getApplicationContext())
                     .load(imageFullUri)
                     .asBitmap()
                     .fitCenter()
@@ -124,7 +141,7 @@ public class ImageHelper {
                         }
                     });
         } else {
-            Glide.with(ctx)
+            Glide.with(ctx.getApplicationContext())
                     .load(imageFullUri)
                     .asBitmap()
                     .fitCenter()
@@ -176,7 +193,7 @@ public class ImageHelper {
             }
 
 
-            Glide.with(ctx)
+            Glide.with(ctx.getApplicationContext())
                     .load(imageFullUrl)
                     .asBitmap()
                     .into(new SimpleTarget<Bitmap>(width, height) {
