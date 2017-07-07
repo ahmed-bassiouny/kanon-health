@@ -85,7 +85,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         prefManager = new PrefManager(activity);
         userID = prefManager.getInt(PrefManager.USER_ID);
         passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
-        userID = 3;
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(messages);
     }

@@ -263,10 +263,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&requestCode==WRITE_EXTERNAL_STORAGE) {
-            //resume tasks needing this permission
-            setData();
-        }
+        if(grantResults.length>0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == WRITE_EXTERNAL_STORAGE) {
+                //resume tasks needing this permission
+                setData();
+            }else
+                getActivity().finish();
+        }else
+            getActivity().finish();
     }
 
     private void setData() {
