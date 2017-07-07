@@ -133,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
+            android:visibility="gone"
             android:id="@+id/open_chat_session"
             android:orientation="horizontal">
 
@@ -141,7 +142,6 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
                 android:text="@string/open_session_again" />
         </LinearLayout>
         <LinearLayout
@@ -189,8 +189,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:gravity="center"
-                android:layout_margin="5dp">
+                android:gravity="center">
 
                 <ImageButton
                     android:id="@+id/imgbtn_chat_attach"
@@ -198,8 +197,7 @@
                     android:layout_height="@dimen/size_20dp"
                     android:rotation="270"
                     android:layout_gravity="right|center"
-                    android:background="@drawable/attach_file"
-                    android:duplicateParentState="true" />
+                    android:background="@drawable/attach_file"/>
             </LinearLayout>
 
 

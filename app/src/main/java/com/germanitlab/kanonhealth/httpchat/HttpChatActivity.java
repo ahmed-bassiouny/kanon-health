@@ -35,54 +35,46 @@ public class HttpChatActivity extends AppCompatActivity {
     int doctorID;
     User doctor;
     PrefManager prefManager;
-    private MenuItem endSession;
-    private MenuItem startSession;
+    HttpChatFragment fr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_chat);
          doctorID = getIntent().getIntExtra("doctorID",0);
-        String doctorName = getIntent().getStringExtra("doctorName");
-        String doctorUrl = getIntent().getStringExtra("doctorUrl");
+         doctorName = getIntent().getStringExtra("doctorName");
+         doctorUrl = getIntent().getStringExtra("doctorUrl");
         if (doctorID==0)
             finish();
+
 
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
         bundle.putString("doctorName",doctorName);
         bundle.putString("doctorUrl",doctorUrl);
 
-        HttpChatFragment fr = new HttpChatFragment();
+         fr = new HttpChatFragment();
         fr.setArguments(bundle);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main, fr).commit();
-        Gson gson=new Gson();
-        try {
-            prefManager = new PrefManager(this);
-
-            User user = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
-            doctor = user;
-        }catch (Exception e){
-            Toast.makeText(HttpChatActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-        }
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //setSupportActionBar(fr.gettoolbar());
+    }
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-
-        endSession = menu.findItem(R.id.end_session);
-        startSession = menu.findItem(R.id.start_session);
-
 
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        /*switch (item.getItemId()) {
             case R.id.start_session:
                 try {
                     AlertDialog.Builder adb_end = new AlertDialog.Builder(this);
@@ -91,22 +83,23 @@ public class HttpChatActivity extends AppCompatActivity {
                     adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            new HttpCall(HttpChatActivity.this, new ApiResponse() {
+                            new HttpCall(ChatActivity.this, new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
 
 
-                                    Toast.makeText(HttpChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
                                     doctor.setIsOpen(0);
+                                    checkSessionOpen();
                                     if (doctor.isClinic == 1) {
-                                        Intent intent = new Intent(HttpChatActivity.this, InquiryActivity.class);
+                                        Intent intent = new Intent(ChatActivity.this, InquiryActivity.class);
                                         UserInfoResponse userInfoResponse = new UserInfoResponse();
                                         userInfoResponse.setUser(doctor);
                                         Gson gson = new Gson();
                                         intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                                         startActivity(intent);
                                     } else if (doctor.getIsDoc() == 1) {
-                                        openpayment();
+                                        openPayment();
                                     } else {
                                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
 
@@ -115,7 +108,7 @@ public class HttpChatActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailed(String error) {
-                                    Toast.makeText(HttpChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
                                 }
                             }).closeSession(String.valueOf(doctor.getId()));
                         }
@@ -142,25 +135,26 @@ public class HttpChatActivity extends AppCompatActivity {
                     adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            new HttpCall(HttpChatActivity.this, new ApiResponse() {
+                            new HttpCall(ChatActivity.this, new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
                                     try {
 
-                                        Toast.makeText(HttpChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ChatActivity.this, R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
+                                        checkSessionOpen();
                                         if (doctor.isClinic == 1) {
-                                            AlertDialog.Builder adb = new AlertDialog.Builder(HttpChatActivity.this);
+                                            AlertDialog.Builder adb = new AlertDialog.Builder(ChatActivity.this);
                                             adb.setTitle(R.string.rate_conversation);
                                             adb.setCancelable(true);
                                             adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    new HttpCall(HttpChatActivity.this, new ApiResponse() {
+                                                    new HttpCall(ChatActivity.this, new ApiResponse() {
                                                         @Override
                                                         public void onSuccess(Object response) {
-                                                            Intent intent = new Intent(HttpChatActivity.this, Comment.class);
-                                                            intent.putExtra("doc_id", doctorID);
+                                                            Intent intent = new Intent(ChatActivity.this, Comment.class);
+                                                            intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
                                                             startActivity(intent);
                                                         }
 
@@ -168,7 +162,7 @@ public class HttpChatActivity extends AppCompatActivity {
                                                         public void onFailed(String error) {
                                                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                                                         }
-                                                    }).closeSession(doctorID+"");
+                                                    }).closeSession(String.valueOf(doctor.getId()));
                                                 }
                                             });
                                             adb.show();
@@ -182,9 +176,9 @@ public class HttpChatActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailed(String error) {
-                                    Toast.makeText(HttpChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
                                 }
-                            }).closeSession(doctorID+"");
+                            }).closeSession(String.valueOf(doctor.getId()));
                         }
 
                     });
@@ -204,33 +198,5 @@ public class HttpChatActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void openpayment(){
-        try {
-            if (doctor.isClinic == null)
-                doctor.setIsClinic(0);
-
-            if (doctor.isClinic == 1) {
-                Intent intent = new Intent(this, DoctorProfileActivity.class);
-                intent.putExtra("doctor_data", doctor);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent intent = new Intent(this, PaymentActivity.class);
-                Gson gson = new Gson();
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                intent.putExtra("doctor_obj", doctor);
-
-                startActivity(intent);
-                finish();
-            }
-
-        } catch (
-                Exception e)
-
-        {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-    }
-
+*/
 }
