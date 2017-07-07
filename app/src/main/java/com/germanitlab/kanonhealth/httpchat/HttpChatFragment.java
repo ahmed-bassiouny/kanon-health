@@ -162,7 +162,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         ButterKnife.bind(this, view);
         buildGoogleApiClient();
         setHasOptionsMenu(true);
-        getLocation();
         return view;
     }
     public static HttpChatFragment newInstance(int doctorID,String doctorUrl) {
@@ -1171,17 +1170,5 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             Toast.makeText(getActivity(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
-    }
-    private void getLocation(){
-        LocationManager locationManager = (LocationManager)getActivity().getSystemService(LOCATION_SERVICE);
-
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
-
-            Log.d("old","lat :  "+location.getLatitude());
-            Toast.makeText(getActivity(), location.getLatitude()+"", Toast.LENGTH_SHORT).show();
-            Log.d("old","long :  "+location.getLongitude());
-
-        }
     }
 }
