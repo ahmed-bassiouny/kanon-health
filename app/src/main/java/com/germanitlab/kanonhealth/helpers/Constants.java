@@ -61,7 +61,8 @@ public class Constants {
     public static final int VIDEO_PERMISSION_CODE = 2;
     public static final int LAST_LOCATION_PERMISSION_CODE = 3;
     public static final int READ_EXTERNAL_STORARE_PERMISSION_CODE = 4;
-    public static final int AUDIO_PERMISSION_CODE = 5;
+    public static final int WRITE_EXTERNAL_STORAGE=6;
+    public static final int AUDIO_PERMISSION_CODE = 7;
     public static final int GET_LAST_LOCATION_PERMISSION_CODE = 5;
     public static final String DATA = "data";
     public static final int HOURS_CODE = 11;

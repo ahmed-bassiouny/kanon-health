@@ -77,6 +77,8 @@ import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
@@ -107,7 +109,7 @@ import static android.content.Context.LOCATION_SERVICE;
 public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
-    private static final int ACCESS_FINE_LOCATION =51 ;
+
     // Declare UI
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
@@ -138,14 +140,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     private static final int RECORD_VIDEO =3 ;
     private Uri selectedImageUri = null;
     private boolean show_privacy = false;
-    User doctor=new User();
+    User doctor;
 
-    private final static int WRITE_EXTERNAL_STORAGE=50;
 
     ArrayList<Message> messages;
     PrefManager prefManager;
     ChatAdapter chatAdapter;
-    HashMap<UUID, Message> uuidMessageHashMap = new HashMap<>();
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     static HttpChatFragment httpChatFragment;
@@ -193,7 +193,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     // declare objects in this fragment
     private void initObjects() {
         prefManager = new PrefManager(getActivity());
-
+        doctor=new User();
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        recyclerView.setHasFixedSize(false);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
     }
 
     // set data in object
@@ -205,26 +210,18 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         if(!doctorUrl.isEmpty())
         ImageHelper.setImage(img_chat_user_avatar,Constants.CHAT_SERVER_URL_IMAGE+"/"+doctorUrl,getActivity());
         tv_chat_user_name.setText(doctorName);
-        recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
         if(userID==doctorID) {
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
         }
         Gson gson=new Gson();
         try {
-
-            User user = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
-            doctor = user;
+            doctor= gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
             if(doctor!=null)
             checkSessionOpen();
         }catch (Exception e){
             Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
     }
 
     private void loadChat(int userID, int doctorID) {
@@ -251,7 +248,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                 setData();
                 return true;
             } else {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.WRITE_EXTERNAL_STORAGE);
                 return false;
             }
         } else {
@@ -263,14 +260,17 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length>0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == WRITE_EXTERNAL_STORAGE) {
-                //resume tasks needing this permission
-                setData();
-            }else
-                getActivity().finish();
-        }else
-            getActivity().finish();
+        if(grantResults.length>0){
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                //resume tasks needing this
+                switch (requestCode){
+                    case Constants.WRITE_EXTERNAL_STORAGE:setData();break;
+                    case Constants.CAMERA_PERMISSION_CODE:takePhoto();break;
+                    case Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE:pickImage();break;
+                    case Constants.VIDEO_PERMISSION_CODE:recordVideo();break;
+                }
+            }
+        }
     }
 
     private void setData() {
@@ -396,11 +396,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                             chatAdapter.notifyDataSetChanged();
                             recyclerView.scrollToPosition(messages.size()-1);
                         }
-                    }).uploadMedia(new File(getRealPathFromURI(selectedImageUri)).getPath());
+                    }).uploadMedia(new File(ImageFilePath.getPath(getActivity(),selectedImageUri)).getPath());
                     break;
                 case SELECT_PICTURE:
                 case RECORD_VIDEO:
-                    String filepath = new File(getRealPathFromURI(data.getData())).getPath();
+                    String filepath = new File(ImageFilePath.getPath(getActivity(),data.getData())).getPath();
                     String ext1 = filepath.substring(filepath.lastIndexOf(".")); // Extension with dot .jpg, .png
                     final String type;
                     if(ext1.equals(".mp4"))
@@ -460,7 +460,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                             chatAdapter.notifyDataSetChanged();
                             recyclerView.scrollToPosition(messages.size()-1);
                         }
-                    }).uploadMedia(new File(getRealPathFromURI(data.getData())).getPath());
+                    }).uploadMedia(new File(ImageFilePath.getPath(getActivity(),data.getData())).getPath());
                     break;
             }
         }
@@ -479,11 +479,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                            getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         takePhoto();
                     } else
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.CAMERA_PERMISSION_CODE);
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
                 } else takePhoto();
 
                 showPopup.dismiss();
@@ -535,61 +534,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
                         requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
                     } else {
-                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                                mGoogleApiClient);
+                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                        getLocationandSend();
                     }
-                } else mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
-
-                if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
-                    //sendMessage("long:" + mLastLocation.getLongitude() + ",lat:" + mLastLocation.getLatitude(), Constants.LOCATION);
-                    //create dummy message
-                    messages.add(creatDummyMessage());
-                    final int index2=messages.size()-1;
-                    chatAdapter.setList(messages);
-                    chatAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(messages.size()-1);
-
-                    final Message message = new Message();
-                    message.setUser_id(userID);
-                    message.setFrom_id(userID);
-                    message.setTo(doctorID);
-                    message.setSent_at(getDateTimeNow());
-                    message.setMsg("{\"long\":"+mLastLocation.getLongitude()+",\"lat\":"+mLastLocation.getLatitude()+"}");
-                    message.setType(Constants.LOCATION);
-
-
-
-                    //request
-                    new HttpCall(getActivity(), new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            messages.remove(index2);
-                            messages.add(message);
-                            chatAdapter.setList(messages);
-                            chatAdapter.notifyDataSetChanged();
-                            recyclerView.scrollToPosition(messages.size() - 1);
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            messages.remove(index2);
-                            Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
-                            chatAdapter.setList(messages);
-                            chatAdapter.notifyDataSetChanged();
-                            recyclerView.scrollToPosition(messages.size()-1);
-                        }
-                    }).sendMessage(message);
-
-
                 } else {
-
-                    if (mLastLocation == null || mLastLocation.getLatitude() == 0) {
-                        Toast.makeText(getActivity(), "Can't get your location", Toast.LENGTH_LONG).show();
-                        mGoogleApiClient.reconnect();
-                        return;
-                    }
+                    mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    getLocationandSend();
                 }
+
             }
         });
 
@@ -621,13 +573,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
         startActivityForResult(intent, TAKE_PICTURE);
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
     }
 
     private Message creatDummyMessage() {
@@ -674,7 +619,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                requestPermissions(permission, ACCESS_FINE_LOCATION);
+                requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
 
             } else {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -895,6 +840,57 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             }
         });
 
+    }
+
+    private void getLocationandSend(){
+        if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
+            //create dummy message
+            messages.add(creatDummyMessage());
+            final int index2=messages.size()-1;
+            chatAdapter.setList(messages);
+            chatAdapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(messages.size()-1);
+
+            final Message message = new Message();
+            message.setUser_id(userID);
+            message.setFrom_id(userID);
+            message.setTo(doctorID);
+            message.setSent_at(getDateTimeNow());
+            message.setMsg("{\"long\":"+mLastLocation.getLongitude()+",\"lat\":"+mLastLocation.getLatitude()+"}");
+            message.setType(Constants.LOCATION);
+
+
+
+            //request
+            new HttpCall(getActivity(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    messages.remove(index2);
+                    messages.add(message);
+                    chatAdapter.setList(messages);
+                    chatAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(messages.size() - 1);
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    messages.remove(index2);
+                    Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                    chatAdapter.setList(messages);
+                    chatAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(messages.size()-1);
+                }
+            }).sendMessage(message);
+
+
+        } else {
+
+            if (mLastLocation == null || mLastLocation.getLatitude() == 0) {
+                Toast.makeText(getActivity(), "Can't get your location", Toast.LENGTH_LONG).show();
+                mGoogleApiClient.reconnect();
+                return;
+            }
+        }
     }
     private MediaRecorder mRecorder;
     private File mOutputFile;
