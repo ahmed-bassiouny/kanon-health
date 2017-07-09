@@ -16,7 +16,6 @@ public class PrefManager {
 
     public static final String IS_DOCTOR = "is_doctor";
     public static final String PASSCODE = "pass_code";
-    public static final String CHAT_LIST = "chat_list";
     public static final String DOCTOR_LIST = "doctor_list";
     public static final String DOCUMENT_HISTORY = "document_history";
     public static final String HISTORY = "history";
@@ -25,6 +24,7 @@ public class PrefManager {
     public static final String USER_PASSWORD = "user_password";
     public static String PROFILE_IMAGE = "profileImage";
     public static String PROFILE_QR = "profileQr";
+    public static String IS_OLD = "is_new";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context _context;

@@ -1404,11 +1404,11 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             in = httpclient.execute(request).getEntity().getContent();
             bmp = BitmapFactory.decodeStream(in);
             in.close();
+            return bmp;
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        return bmp;
+        return  null ;
     }
 
     //===============================================================

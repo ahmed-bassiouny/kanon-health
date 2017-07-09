@@ -1,5 +1,8 @@
 package com.germanitlab.kanonhealth.models;
 
+import com.germanitlab.kanonhealth.models.user.User;
+import com.j256.ormlite.field.DatabaseField;
+
 import java.io.Serializable;
 
 /**
@@ -12,6 +15,9 @@ public class Table implements Serializable {
     private String from;
     private String to;
     private String dayweek;
+
+    @DatabaseField(foreign = true, foreignAutoRefresh = true ,columnName = "id")
+    private User uid ;
 
     public String getId() {
         return id;
@@ -37,6 +43,13 @@ public class Table implements Serializable {
         this.dayweek = dayweek;
     }
 
+    public User getUid() {
+        return uid;
+    }
+
+    public void setUid(User uid) {
+        this.uid = uid;
+    }
 
     public String getFrom() {
         return from;

@@ -314,13 +314,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                 startActivity(intent);
             } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
-                /*String userstring=gson.toJson(user);
-                intent.putExtra("doctor_data",userstring);*/
 
-                /*Intent intent = new Intent(this, ChatActivity.class);
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
-                intent.putExtra("from", true);
-                startActivity(intent);*/
                 //edit ahmed
                 Intent intent= new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
                 intent.putExtra("doctorID", user.get_Id());
@@ -464,12 +458,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
             set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-        if (user.getDocuments() != null) {
-            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
-            recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-            recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
-            recyclerViewDocument.setAdapter(doctorDocumentAdapter);
-        }
+//        if (user.getDocuments() != null) {
+//            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
+//            recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//            recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
+//            recyclerViewDocument.setAdapter(doctorDocumentAdapter);
+//        }
     }
 
     private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {

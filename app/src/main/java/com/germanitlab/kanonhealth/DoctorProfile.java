@@ -82,7 +82,6 @@ public class DoctorProfile extends AppCompatActivity {
         LinearLayout video_layout;*/
     @BindView(R.id.profile_layout)
     ScrollView profile_layout;
-    private UserRepository mDoctorRepository;
 
     @BindView(R.id.add_to_my_doctor)
     Button add_to_my_doctor;
@@ -105,13 +104,11 @@ public class DoctorProfile extends AppCompatActivity {
             util.showProgressDialog();
             Intent intent = getIntent();
             Gson gson = new Gson();
-            mDoctorRepository = new UserRepository(getApplicationContext());
             doctorJson = intent.getStringExtra("doctor_data");
             doctor = gson.fromJson(intent.getStringExtra("doctor_data"), User.class);
             if (Helper.isNetworkAvailable(getApplicationContext())) {
                 getDoctorData();
             } else {
-                doctor = mDoctorRepository.getDoctor(doctor);
                 doctor.setInfo(gson.fromJson(doctor.getJsonInfo(), Info.class));
                 ArrayList<Message> dos = gson.fromJson(doctor.getJsonDocument(), new TypeToken<ArrayList<Message>>() {
                 }.getType());
@@ -147,7 +144,6 @@ public class DoctorProfile extends AppCompatActivity {
                     UserInfoResponse userInfoResponse = (UserInfoResponse) response;
                     doctor = userInfoResponse.getUser();
                     util.dismissProgressDialog();
-                    mDoctorRepository.insertDocument(doctor);
                     bindData();
                     checkDoctor();
                 } catch (Exception e) {

@@ -146,7 +146,9 @@ public class SettingFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null && isVisibleToUser) {
             loadData();
-            getSetting();
+            if (Helper.isNetworkAvailable(getContext())) {
+                getSetting();
+            }
         }
     }
 
@@ -154,7 +156,9 @@ public class SettingFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadData();
-        getSetting();
+        if (Helper.isNetworkAvailable(getContext())) {
+            getSetting();
+        }
     }
 
     private void loadData() {
@@ -334,14 +338,18 @@ public class SettingFragment extends Fragment {
             btn_change_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
-                    if (UserStatus.equals("1")) {
-                        changStatusService("0");
+                    if (Helper.isNetworkAvailable(getContext())) {
+                        UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+                        if (UserStatus.equals("1")) {
+                            changStatusService("0");
 
-                    } else {
+                        } else {
 
-                        changStatusService("1");
+                            changStatusService("1");
+                        }
                     }
+                    else
+                        Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
                 }
             });

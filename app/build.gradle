@@ -92,7 +92,7 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.46'
     compile 'gun0912.ted:tedbottompicker:1.0.3'
     compile 'me.biubiubiu.justifytext:library:1.1'
-    compile 'com.android.support:percent:22.2.0'
+    compile 'com.android.support:percent:25.3.1'
     compile 'org.apmem.tools:layouts:1.10@aar'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'

@@ -80,6 +80,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     static DoctorListFragment doctorListFragment;
     private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
+    public Boolean is_doctor_data, is_clinic_data;
 
     public DoctorListFragment() {
     }
@@ -108,17 +109,27 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             util = Util.getInstance(getActivity());
             initView();
             gson = new Gson();
-            util.showProgressDialog();
             if (type == 0)
                 type = 2;
             doctorList = new ArrayList<>();
             mDoctorRepository = new UserRepository(getContext());
-            loadData();
+            if (!prefManager.get(PrefManager.IS_OLD))
+                loadFirstTime();
+            else
+                loadData();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
         return view;
+    }
+
+    private void loadFirstTime() {
+        util.showProgressDialog();
+        type = 3;
+        getBySpeciality(true, 3);
+        type = 2;
+        getBySpeciality(true, 2);
     }
 
     @Override
@@ -249,7 +260,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
 
-    private void getBySpeciality() {
+    private void getBySpeciality(final boolean b, final int typeNumber) {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -257,10 +268,18 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     jsonString = gson.toJson(response);
                     prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
                     doctorList = (List<User>) response;
-                    mDoctorRepository.deletetype(type);
-                    saveInDB(doctorList);
-                    setAdapter(doctorList);
-                    util.dismissProgressDialog();
+                    updateDatabase(doctorList);
+                    if (b) {
+                        if (typeNumber == 2)
+                            is_doctor_data = true;
+                        else if (typeNumber == 3)
+                            is_clinic_data = true;
+                        if (is_clinic_data && is_doctor_data) {
+                            util.dismissProgressDialog();
+                            prefManager.put(PrefManager.IS_OLD, true);
+                        }
+                    } else
+                        setAdapter(doctorList);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e("tag about Exception", "msg about Exception ", e);
@@ -272,7 +291,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             @Override
             public void onFailed(String error) {
-                util.dismissProgressDialog();
+                if (b)
+                    util.dismissProgressDialog();
                 doctorList.clear();
                 setAdapter(doctorList);
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -281,17 +301,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 speciality_id, type);
     }
 
-    private void saveInDB(List<User> doctorList) {
-        for (User user : doctorList
-                ) {
-            if (mDoctorRepository.getDoctor(user) == null) {
-                mDoctorRepository.create(user);
-            } else {
-                if (mDoctorRepository.getDoctor(user).getJsonDocument() == null || mDoctorRepository.getDoctor(user).getJsonDocument() == "")
-                    mDoctorRepository.updateColoumn(user);
+    private void updateDatabase(List<User> doctorList) {
+        for (User user : doctorList) {
+            User temp = mDoctorRepository.getDoctor(user);
+            if (temp != null) {
+                user.setIs_chat(temp.getIs_chat());
             }
+            mDoctorRepository.create(user);
         }
     }
+
 
     private void setAdapter(List<User> doctorList) {
         if (doctorList != null) {
@@ -305,6 +324,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     public void onSuccess(Object response) {
         try {
             doctorList = (List<User>) response;
+            updateDatabase(doctorList);
             setAdapter(doctorList);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -318,13 +338,10 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
     private void loadData() {
+        doctorList = mDoctorRepository.getAll(type);
+        setAdapter(doctorList);
         if (Helper.isNetworkAvailable(getContext())) {
-            getBySpeciality();
-        } else {
-            //clinic 3 doctor 2
-            doctorList = mDoctorRepository.getAll(type);
-            setAdapter(doctorList);
-            util.dismissProgressDialog();
+            getBySpeciality(false, 0);
         }
     }
 
@@ -361,7 +378,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                         List<User> fileDoctorResponses = new ArrayList<>();
                         for (int j = 0; j < doctorList.size(); j++) {
 
-                            String name = doctorList.get(j).getLast_name()+", "+doctorList.get(j).getFirst_name();
+                            String name = doctorList.get(j).getLast_name() + ", " + doctorList.get(j).getFirst_name();
 
                             if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
@@ -462,7 +479,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 doctor_list.setTextColor(getResources().getColor(R.color.black));
                 if (type != 3) {
                     type = 3;
-                    util.showProgressDialog();
                     loadData();
                 }
 
@@ -477,7 +493,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 doctor_list.setTextColor(getResources().getColor(R.color.white));
                 if (type != 2) {
                     type = 2;
-                    util.showProgressDialog();
                     loadData();
                 }
             }

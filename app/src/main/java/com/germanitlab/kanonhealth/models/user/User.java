@@ -66,15 +66,6 @@ public class User implements Serializable {
     @DatabaseField(id = true)
     @SerializedName("id")
     private Integer id;
-
-    public Integer getUserID_request() {
-        return userID_request;
-    }
-
-    public void setUserID_request(Integer userID_request) {
-        this.userID_request = userID_request;
-    }
-
     @DatabaseField
     @SerializedName("user_id")
     private Integer userID_request = id; // user id must be to make request
@@ -94,23 +85,6 @@ public class User implements Serializable {
     @DatabaseField
     @SerializedName("gender")
     private int gender;
-
-    public int getGender() {
-        return gender;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public String getGender_other() {
-        return gender_other;
-    }
-
-    public void setGender_other(String gender_other) {
-        this.gender_other = gender_other;
-    }
-
     @DatabaseField
     @SerializedName("gender_other")
     private String gender_other;
@@ -194,19 +168,79 @@ public class User implements Serializable {
     private String comment;
     @DatabaseField
     private boolean chosen;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @SerializedName("questions")
     private LinkedHashMap<String, String> questions;
+
+    private String json_questions ;
+
+
     @SerializedName("info")
     private Info info;
+
+
+
+
+    @DatabaseField
     @SerializedName("open_type")
     private int open_type;
     private HashMap<String, String> rate_percentage = new HashMap<>();
+    private String json_rate_percentage ;
+    @DatabaseField
+    @SerializedName("rate_avr")
     private float rate_avr;
+    @DatabaseField
+    @SerializedName("country_flag")
     private String country_flag;
+    @DatabaseField
+    @SerializedName("is_available")
     private String is_available;
+    @DatabaseField
     @SerializedName("location_img")
     private String location_img;
+    @DatabaseField
+    @SerializedName("passcode")
+    private String passcode;
+    @DatabaseField
+    @SerializedName("code")
+    private String code;
+    @DatabaseField
+    @SerializedName("request_type")
+    private String request_type;
+    @DatabaseField
+    @SerializedName("parent_id")
+    private String parent_id;
+    @DatabaseField
+    @SerializedName("rate_count")
+    private int rate_count;
+    private List<Table> open_time = new ArrayList<>();
+    private List<ChooseModel> supported_lang = new ArrayList<>();
+    private List<ChooseModel> specialities = new ArrayList<>();
+    private List<ChooseModel> members_at = new ArrayList<>();
+    @DatabaseField
+    @SerializedName("json_open_time")
+    private String json_open_time ;
+    @DatabaseField
+    @SerializedName("json_supported_lang")
+    private String json_supported_lang ;
+    @DatabaseField
+    @SerializedName("json_specialities")
+    private String json_specialities ;
+    @DatabaseField
+    @SerializedName("json_members_at")
+    private String json_members_at ;
 
+    @DatabaseField
+    @SerializedName("speciality_id")
+    private String speciality_id;
+    @DatabaseField
+    @SerializedName("speciality_title")
+    private String speciality_title;
+    @DatabaseField
+    @SerializedName("speciality_icon")
+    private String speciality_icon;
+    @DatabaseField
+    private int is_chat ;
 
     public String getLocation_img() {
         return location_img;
@@ -215,25 +249,6 @@ public class User implements Serializable {
     public void setLocation_img(String location_img) {
         this.location_img = location_img;
     }
-
-    private String passcode;
-    private String code;
-    private String request_type;
-    private String parent_id;
-
-    private int rate_count;
-    private List<Table> open_time = new ArrayList<>();
-    private List<ChooseModel> supported_lang = new ArrayList<>();
-    private List<ChooseModel> specialities = new ArrayList<>();
-    private List<ChooseModel> members_at = new ArrayList<>();
-    private String speciality_id;
-    private String speciality_title;
-    private String speciality_icon;
-//
-/*
-    @ForeignCollectionField(eager = true , foreignColumnName = "document")
-*/
-
 
     public void setOpen_type(int open_type) {
         this.open_type = open_type;
@@ -249,6 +264,14 @@ public class User implements Serializable {
 
     public String getBirthDate() {
         return birthDate;
+    }
+
+    public int getIs_chat() {
+        return is_chat;
+    }
+
+    public void setIs_chat(int is_chat) {
+        this.is_chat = is_chat;
     }
 
     public String getIs_available() {
@@ -441,7 +464,12 @@ public class User implements Serializable {
     public String getComment() {
         return comment;
     }
-
+    public Integer getUserID_request() {
+        return userID_request;
+    }
+    public void setUserID_request(Integer userID_request) {
+        this.userID_request = userID_request;
+    }
 
     @Override
     public String toString() {
@@ -701,6 +729,83 @@ public class User implements Serializable {
 
     public void setOpen_Type(int open_type) {
         this.open_type = open_type;
+    }
+
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
+    public String getGender_other() {
+        return gender_other;
+    }
+
+    public void setGender_other(String gender_other) {
+        this.gender_other = gender_other;
+    }
+
+    public String getJson_open_time() {
+        return json_open_time;
+    }
+
+    public void setJson_open_time(String json_open_time) {
+        this.json_open_time = json_open_time;
+    }
+
+    public String getJson_supported_lang() {
+        return json_supported_lang;
+    }
+
+    public void setJson_supported_lang(String json_supported_lang) {
+        this.json_supported_lang = json_supported_lang;
+    }
+
+    public String getJson_specialities() {
+        return json_specialities;
+    }
+
+    public void setJson_specialities(String json_specialities) {
+        this.json_specialities = json_specialities;
+    }
+
+    public String getJson_members_at() {
+        return json_members_at;
+    }
+
+    public void setJson_members_at(String json_members_at) {
+        this.json_members_at = json_members_at;
+    }
+
+    public void setIsDoc(Integer isDoc) {
+        this.isDoc = isDoc;
+    }
+
+    public void setIsClinic(Integer isClinic) {
+        this.isClinic = isClinic;
+    }
+
+    public String getJson_questions() {
+        return json_questions;
+    }
+
+    public void setJson_questions(String json_questions) {
+        this.json_questions = json_questions;
+    }
+
+    public int getOpen_type() {
+        return open_type;
+    }
+
+    public String getJson_rate_percentage() {
+        return json_rate_percentage;
+    }
+
+    public void setJson_rate_percentage(String json_rate_percentage) {
+        this.json_rate_percentage = json_rate_percentage;
     }
 }
 

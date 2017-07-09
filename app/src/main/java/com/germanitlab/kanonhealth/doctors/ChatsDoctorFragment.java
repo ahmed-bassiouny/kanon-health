@@ -36,6 +36,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -58,6 +59,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     private LinearLayout chat_layout;
     private PrefManager mPrefManager;
     Gson gson;
+    private UserRepository mDoctorRepository;
+
 
     private EditText edtFilter;
     private Button doctors_list, praxis_list;
@@ -85,7 +88,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 } else {
                     TypeToken<List<User>> token = new TypeToken<List<User>>() {
                     };
-                    doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST), token.getType());
+                    doctorList = mDoctorRepository.getChat(1);
                     setAdapter(doctorList);
                 }
             }
@@ -97,31 +100,25 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     }
 
 
+
     @Override
     public void onResume() {
         super.onResume();
         try {
             prefManager = new PrefManager(getContext());
             if (Helper.isNetworkAvailable(getContext())) {
-                util.showProgressDialog();
+                doctorList = mDoctorRepository.getChat(1);
+                setAdapter(doctorList);
                 new HttpCall(getActivity(), this).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
             } else {
-                TypeToken<List<User>> token = new TypeToken<List<User>>() {
-                };
-                doctorList = gson.fromJson(mPrefManager.getData(PrefManager.CHAT_LIST), token.getType());
-                ;
+                doctorList = mDoctorRepository.getChat(1);
                 setAdapter(doctorList);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        doctors_list.setBackgroundResource(R.color.blue);
-        doctors_list.setTextColor(getResources().getColor(R.color.white));
-        praxis_list.setBackgroundResource(R.color.gray);
-        praxis_list.setTextColor(getResources().getColor(R.color.black));
-
-
+        changeColors(R.color.blue ,R.color.white ,  R.color.gray , R.color.black , doctors_list , praxis_list );
     }
 
     @Override
@@ -136,20 +133,15 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
                     parent.removeView(view);
                 }
-
                 return view;
-
             }
             util = Util.getInstance(getActivity());
             gson = new Gson();
             mPrefManager = new PrefManager(getActivity());
-
-
+            mDoctorRepository = new UserRepository(getContext());
             view = inflater.inflate(R.layout.fragment_chats_doctor, container, false);
-
             initView();
             handelEvent();
-
             setHasOptionsMenu(true);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -186,65 +178,6 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
 
     private void handelEvent() {
-
-
-/*        myQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                onImgDoctorListMapClick.OnImgDoctorListMapClick();
-//                Intent intent = new Intent(getActivity(), DoctorMapActivity.class);
-//                startActivity(intent);
-            }
-        });*/
-
-/*
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new MyClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                try {
-                    PrefManager prefManager = new PrefManager(getActivity());
-                    Gson gson = new Gson();
-                    prefManager.put(PrefManager.DOCTOR_KEY, gson.toJson(doctorList.get(position)));
-//                    if (mPrefManager.get(mPrefManager.IS_DOCTOR) || doctorList.get(position).getIsOpen() == 1) {
-                        Intent intent = new Intent(getActivity(), ChatActivity.class);
-                        intent.putExtra("doctor_data", gson.toJson(doctorList.get(position)));
-                        intent.putExtra("from", true);
-                        startActivity(intent);
-//                    } else {
-//                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
-//
-//                        intent.putExtra("doctor_data", doctorList.get(position));
-//                        startActivity(intent);
-//                    }
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-
-            @Override
-            public void onClick(Object object) {
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-*/
-
-        //---------- Camera
-//        imgbtnScan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(getActivity(), StartQrScan.class));
-//            }
-//        });
-
         edtFilter.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -268,7 +201,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                         List<User> fileDoctorResponses = new ArrayList<>();
                         for (int j = 0; j < doctorList.size(); j++) {
 
-                            String name = doctorList.get(j).getLast_name()+", "+doctorList.get(j).getFirst_name();
+                            String name = doctorList.get(j).getLast_name() + ", " + doctorList.get(j).getFirst_name();
 
                             if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
@@ -354,69 +287,78 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         praxis_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                util.showProgressDialog();
-                doctors_list.setBackgroundResource(R.color.gray);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    doctors_list.setTextColor(getResources().getColor(R.color.black, null));
-                    praxis_list.setTextColor(getResources().getColor(R.color.white, null));
-                } else {
-                    doctors_list.setTextColor(getResources().getColor(R.color.black));
-                    praxis_list.setTextColor(getResources().getColor(R.color.white));
-                }
-                praxis_list.setBackgroundResource(R.color.blue);
-                new HttpCall(getActivity(), new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        util.dismissProgressDialog();
-                        doctorList = (List<User>) response;
-                        setAdapter(doctorList);
-                        chat_layout.setVisibility(View.VISIBLE);
-                        tvLoadingError.setVisibility(View.GONE);
-                    }
+                changeColors(R.color.blue ,R.color.white ,  R.color.gray , R.color.black , praxis_list , doctors_list );
+                if (Helper.isNetworkAvailable(getContext())) {
+                    util.showProgressDialog();
+                    new HttpCall(getActivity(), new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            doctorList = (List<User>) response;
+                            setAdapter(doctorList);
+                            updateDataBase(doctorList);
+                            chat_layout.setVisibility(View.VISIBLE);
+                            tvLoadingError.setVisibility(View.GONE);
+                        }
 
-                    @Override
-                    public void onFailed(String error) {
-                        tvLoadingError.setVisibility(View.VISIBLE);
-                        util.dismissProgressDialog();
-                        if (error != null && error.length() > 0)
-                            tvLoadingError.setText(error);
-                        else tvLoadingError.setText("Some thing went wrong");
-                        chat_layout.setVisibility(View.GONE);
-                    }
-                }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                        @Override
+                        public void onFailed(String error) {
+                            tvLoadingError.setVisibility(View.VISIBLE);
+                            if (error != null && error.length() > 0)
+                                tvLoadingError.setText(error);
+                            else tvLoadingError.setText("Some thing went wrong");
+                            chat_layout.setVisibility(View.GONE);
+                        }
+                    }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                } else {
+                    doctorList = mDoctorRepository.getChat(2);
+                    setAdapter(doctorList);
+                }
             }
         });
         doctors_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                util.showProgressDialog();
-                doctors_list.setBackgroundResource(R.color.blue);
-                doctors_list.setTextColor(getResources().getColor(R.color.white));
-                praxis_list.setBackgroundResource(R.color.gray);
-                praxis_list.setTextColor(getResources().getColor(R.color.black));
-                new HttpCall(getActivity(), new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        util.dismissProgressDialog();
-                        doctorList = (List<User>) response;
-                        Gson gson = new Gson();
-                        String chat_list = gson.toJson(doctorList);
-                        setAdapter(doctorList);
-                        linearLayoutContent.setVisibility(View.VISIBLE);
-                    }
+                changeColors(R.color.blue ,R.color.white ,  R.color.gray , R.color.black , doctors_list , praxis_list );
+                if (Helper.isNetworkAvailable(getContext())) {
+                    new HttpCall(getActivity(), new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            util.dismissProgressDialog();
+                            doctorList = (List<User>) response;
+                            updateDataBase(doctorList);
+                            setAdapter(doctorList);
+                            linearLayoutContent.setVisibility(View.VISIBLE);
+                        }
 
-                    @Override
-                    public void onFailed(String error) {
-                        util.dismissProgressDialog();
-                        tvLoadingError.setVisibility(View.VISIBLE);
-                        if (error != null && error.length() > 0)
-                            tvLoadingError.setText(error);
-                        else tvLoadingError.setText("Some thing went wrong");
-                    }
-                }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                        @Override
+                        public void onFailed(String error) {
+                            util.dismissProgressDialog();
+                            tvLoadingError.setVisibility(View.VISIBLE);
+                            if (error != null && error.length() > 0)
+                                tvLoadingError.setText(error);
+                            else tvLoadingError.setText("Some thing went wrong");
+                        }
+                    }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                }
+                else {
+                    doctorList = mDoctorRepository.getChat(1);
+                    setAdapter(doctorList);
+                }
             }
         });
 
+
+    }
+    public void changeColors(int backColorSelected, int textSelected, int backColorUnSelected, int textUnSelected, Button btnSelected, Button btnUnSelected){
+        btnUnSelected.setBackgroundResource(backColorUnSelected);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            btnUnSelected.setTextColor(getResources().getColor(textUnSelected, null));
+            btnSelected.setTextColor(getResources().getColor(textSelected, null));
+        } else {
+            btnUnSelected.setTextColor(getResources().getColor(textUnSelected));
+            btnSelected.setTextColor(getResources().getColor(textSelected));
+        }
+        btnSelected.setBackgroundResource(backColorSelected);
     }
 
     DoctorListAdapter doctorListAdapter;
@@ -435,8 +377,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             util.dismissProgressDialog();
             doctorList = (List<User>) response;
             Gson gson = new Gson();
-            String jsonData = gson.toJson(response);
-            mPrefManager.put(PrefManager.CHAT_LIST, jsonData);
+            updateDataBase(doctorList);
             setAdapter(doctorList);
             linearLayoutContent.setVisibility(View.VISIBLE);
 
@@ -444,8 +385,13 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+    }
 
-
+    private void updateDataBase(List<User> doctorList) {
+        for (User user : doctorList) {
+            user.setIs_chat(1);
+                mDoctorRepository.create(user);
+        }
     }
 
     @Override

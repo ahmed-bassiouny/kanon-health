@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -29,6 +30,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Context context;
     // the DAO object we use to access the SimpleData table
     private Dao<User, Integer> doctorsDao = null;
+    private Dao<Table, Integer> tablesDao = null;
     private Dao<Message, Integer> messagesDao = null;
     private RuntimeExceptionDao<User, Integer> doctorsRuntimeDao = null;
     private RuntimeExceptionDao<Message, Integer> messagesRuntimeDao = null;
@@ -81,6 +83,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             doctorsDao = getDao(User.class);
         }
         return doctorsDao;
+    }
+
+    public Dao<Table, Integer> getTablesDao() throws SQLException {
+        if (tablesDao == null) {
+            tablesDao = getDao(Table.class);
+        }
+        return tablesDao;
     }
 
     public Dao<Message, Integer> getMessagesDao() throws SQLException {

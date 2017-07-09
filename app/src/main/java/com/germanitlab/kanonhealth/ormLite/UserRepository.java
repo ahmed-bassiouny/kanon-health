@@ -5,9 +5,13 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.models.ChooseModel;
+import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
+import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -17,6 +21,7 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,15 +45,23 @@ public class UserRepository {
         }
     }
 
-    public int create(User doctor) {
+    public Dao.CreateOrUpdateStatus create(User user) {
         try {
-            doctor.setJsonInfo(new Gson().toJson(doctor.getInfo()));
-            return doctorsDao.create(doctor);
+            Gson gson = new Gson();
+            user.setJsonInfo(gson.toJson(user.getInfo()));
+            user.setJson_members_at(gson.toJson(user.getMembers_at()));
+            user.setJson_open_time(gson.toJson(user.getOpen_time()));
+            user.setJson_specialities(gson.toJson(user.getSpecialities()));
+            user.setJson_supported_lang(gson.toJson(user.getSupported_lang()));
+            user.setJsonDocument(gson.toJson(user.getDocuments()));
+            user.setJson_questions(gson.toJson(user.getQuestions()));
+            user.setJson_rate_percentage(gson.toJson(user.getRate_percentage()));
+            return doctorsDao.createOrUpdate(user);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_create_database), Toast.LENGTH_SHORT).show();
         }
-        return 0;
+        return null;
     }
 
     public int update(User doctor) {
@@ -58,6 +71,21 @@ public class UserRepository {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public List<User> getChat(int type) {
+        Map<String, Object> whereCondition = new HashMap<>();
+        whereCondition.put("is_chat", 1);
+        if (type == 1)
+            whereCondition.put("isDoc", 1);
+        else
+            whereCondition.put("isClinic", 1);
+        try {
+            return doctorsDao.queryForFieldValues(whereCondition);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int updateColoumn(User doctor) {
@@ -104,13 +132,15 @@ public class UserRepository {
         }
         return 0;
     }
+
     public void deletetype(int type) {
         try {
-            if(type==2)
-                 doctorsDao.delete(doctorsDao.queryForEq("isDoc", 1));
-            else if(type==3)
-                 doctorsDao.delete(doctorsDao.queryForEq("isClinic", 1));
-            else {}
+            if (type == 2)
+                doctorsDao.delete(doctorsDao.queryForEq("isDoc", 1));
+            else if (type == 3)
+                doctorsDao.delete(doctorsDao.queryForEq("isClinic", 1));
+            else {
+            }
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
@@ -137,22 +167,44 @@ public class UserRepository {
 
     public List<User> getAll(int type) {
         try {
+            List<User> userList;
             switch (type) {
                 case 2:
-                    return doctorsDao.queryForEq("isDoc", 1);
+                    userList = doctorsDao.queryForEq("isDoc", 1);
+                    setJsonData(userList);
+                    return userList ;
                 case 3:
-                    return doctorsDao.queryForEq("isClinic", 1);
+                    userList = doctorsDao.queryForEq("isClinic", 1);
+                    setJsonData(userList);
+                    return userList ;
                 default:
                     Map<String, Object> whereCondition = new HashMap<>();
                     whereCondition.put("isDoc", 0);
-                    whereCondition.put("is_clinic", 0);
-                    return doctorsDao.queryForFieldValues(whereCondition);
+                    whereCondition.put("isClinic", 0);
+                    userList = doctorsDao.queryForFieldValues(whereCondition);
+                    setJsonData(userList);
+                    return userList ;
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
         return null;
+    }
+
+    private void setJsonData(List<User> userList) {
+        Gson gson = new Gson();
+        for (User user : userList
+                ) {
+            user.setInfo(gson.fromJson(user.getJsonInfo()  , Info.class));
+            user.setMembers_at((List<ChooseModel>) gson.fromJson(user.getJson_members_at() , new TypeToken<List<ChooseModel>>(){}.getType()));
+            user.setSupported_lang((List<ChooseModel>) gson.fromJson(user.getJson_supported_lang() , new TypeToken<List<ChooseModel>>(){}.getType()));
+            user.setSpecialities((List<ChooseModel>) gson.fromJson(user.getJson_specialities() , new TypeToken<List<ChooseModel>>(){}.getType()));
+            user.setOpen_time((List<Table>) gson.fromJson(user.getJson_open_time() ,  new TypeToken<List<Table>>(){}.getType()));
+            user.setDocuments((ArrayList<Message>) gson.fromJson(user.getJsonDocument() ,  new TypeToken<ArrayList<Message>>(){}.getType()));
+            user.setQuestions((LinkedHashMap<String, String>) gson.fromJson(user.getJson_questions() , new TypeToken<HashMap<String , String>>(){}.getType()));
+            user.setRate_percentage((HashMap<String, String>) gson.fromJson(user.getJson_rate_percentage() , new TypeToken<HashMap<String, String>>(){}.getType()));
+        }
     }
 
     public User getDoctor(User doctor) {
