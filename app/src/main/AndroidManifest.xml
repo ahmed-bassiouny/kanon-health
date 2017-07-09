@@ -201,7 +201,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".httpchat.HttpChatActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:label="">
         </activity>
 
         <receiver

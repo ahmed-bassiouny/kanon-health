@@ -102,10 +102,15 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
             if (tabPosition == 3) {
                 list = mMessageRepositry.getAll(doctorContactsList.get(position).get_Id());
-
                 if (list.size() > 0) {
-//                        Toast.makeText(activity, "" + list.get(list.size() - 1).getMsg(), Toast.LENGTH_SHORT).show();
-                    holder.tvSpecialist.setText(list.get(list.size() - 1).getMsg() + "");
+                    int index=list.size()-1;
+                    switch (list.get(index).getType()){
+                        case Constants.IMAGE:holder.tvSpecialist.setText("Image");break;
+                        case Constants.AUDIO:holder.tvSpecialist.setText("Audio");break;
+                        case Constants.VIDEO:holder.tvSpecialist.setText("Video");break;
+                        case Constants.LOCATION:holder.tvSpecialist.setText("Location");break;
+                        case Constants.TEXT:holder.tvSpecialist.setText(list.get(index).getMsg());break;
+                    }
                 } else {
                     holder.tvSpecialist.setText("");
                 }
