@@ -215,6 +215,12 @@
                 android:paddingTop="5dp"
                 android:progressDrawable="@android:color/transparent"
                 android:thumb="@drawable/mic" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mic"
+                android:id="@+id/img_requestpermission"
+                android:visibility="gone"/>
 
 
 

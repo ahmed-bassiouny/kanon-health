@@ -313,24 +313,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 userInfoResponse.setUser(user);
                 intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
                 startActivity(intent);
-            } else if (user.getIsDoc() == 1 && user.getIsOpen() == 1) {
-
-                //edit ahmed
-                Intent intent= new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
+            } else {
+                Intent intent = new Intent(this, HttpChatActivity.class);
                 intent.putExtra("doctorID", user.get_Id());
                 PrefManager prefManager = new PrefManager(this);
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
-                intent.putExtra("doctorName", user.getLast_name()+" "+user.getFirst_name());
+                intent.putExtra("doctorName", user.getLast_name() + " " + user.getFirst_name());
                 intent.putExtra("doctorUrl", user.getAvatar());
-                startActivity(intent);
-
-            }else if(is_doc && user.getIsDoc() == 1 ) {
-                Intent intent = new Intent(this, PaymentActivity.class);
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(this, PaymentActivity.class);
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 startActivity(intent);
             }
 

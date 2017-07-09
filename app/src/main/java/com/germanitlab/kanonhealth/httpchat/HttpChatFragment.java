@@ -10,11 +10,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
@@ -23,7 +21,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -46,7 +43,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -79,8 +75,6 @@ import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
@@ -91,25 +85,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import im.delight.android.location.SimpleLocation;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
+public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     // Declare UI
@@ -130,18 +117,20 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     ImageView img_chat_user_avatar;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-     @BindView(R.id.button2)
-     Button button2;
+    @BindView(R.id.button2)
+    Button button2;
+    @BindView(R.id.img_requestpermission)
+    ImageView img_requestpermission;
 
     // loca variable
-    int userID ;
+    int userID;
     int userPassword = 0;
-    int doctorID ;
-    String doctorName="";
-    String doctorUrl="";
+    int doctorID;
+    String doctorName = "";
+    String doctorUrl = "";
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
-    private static final int RECORD_VIDEO =3 ;
+    private static final int RECORD_VIDEO = 3;
     private Uri selectedImageUri = null;
     private boolean show_privacy = false;
     User doctor;
@@ -158,7 +147,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     // not fixed
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -169,7 +157,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         setHasOptionsMenu(true);
         return view;
     }
-    public static HttpChatFragment newInstance(int doctorID,String doctorUrl) {
+
+    public static HttpChatFragment newInstance(int doctorID, String doctorUrl) {
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
         bundle.putString("doctorName", "My Documents");
@@ -188,6 +177,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initObjects();
+        checkAudioPermission();
         initData();
         checkMode();
         handelEvent();
@@ -198,35 +188,35 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     // declare objects in this fragment
     private void initObjects() {
         prefManager = new PrefManager(getContext());
-        doctor=new User();
+        doctor = new User();
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        messageRepositry=new MessageRepositry(getActivity());
-        messages=new ArrayList<>();
+        messageRepositry = new MessageRepositry(getActivity());
+        messages = new ArrayList<>();
     }
 
     // set data in object
     private void initData() {
-        userID=prefManager.getInt(PrefManager.USER_ID);
-        doctorID=getArguments().getInt("doctorID");
-        doctorName=getArguments().getString("doctorName");
-        doctorUrl=getArguments().getString("doctorUrl");
-        if(!doctorUrl.isEmpty())
-        ImageHelper.setImage(img_chat_user_avatar,Constants.CHAT_SERVER_URL_IMAGE+"/"+doctorUrl,getActivity());
+        userID = prefManager.getInt(PrefManager.USER_ID);
+        doctorID = getArguments().getInt("doctorID");
+        doctorName = getArguments().getString("doctorName");
+        doctorUrl = getArguments().getString("doctorUrl");
+        if (!doctorUrl.isEmpty())
+            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctorUrl, getActivity());
         tv_chat_user_name.setText(doctorName);
-        if(userID==doctorID) {
+        if (userID == doctorID) {
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
         }
-        Gson gson=new Gson();
+        Gson gson = new Gson();
         try {
-            doctor= gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
-            if(doctor!=null)
-            checkSessionOpen();
-        }catch (Exception e){
+            doctor = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
+            if (doctor != null)
+                checkSessionOpen();
+        } catch (Exception e) {
             Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -235,12 +225,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         MessageRequest messageRequest = new MessageRequest(userID, doctorID);
         new HttpCall(getActivity(), this).loadChat(messageRequest);
     }
-    private void loadChatOffline(final int doctorID){
+
+    private void loadChatOffline(final int doctorID) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                messages=(ArrayList)messageRepositry.getAll(doctorID);
+                messages = (ArrayList) messageRepositry.getAll(doctorID);
                 isStoragePermissionGranted();
                 pbar_loading.setVisibility(View.GONE);
             }
@@ -262,12 +253,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (getContext().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                    getContext().checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            if (getContext().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 setData();
                 return true;
             } else {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO}, Constants.WRITE_EXTERNAL_STORAGE);
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.WRITE_EXTERNAL_STORAGE);
                 return false;
             }
         } else {
@@ -279,14 +269,25 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length>0){
-            if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+        if (grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //resume tasks needing this
-                switch (requestCode){
-                    case Constants.WRITE_EXTERNAL_STORAGE:setData();break;
-                    case Constants.CAMERA_PERMISSION_CODE:takePhoto();break;
-                    case Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE:pickImage();break;
-                    case Constants.VIDEO_PERMISSION_CODE:recordVideo();break;
+                switch (requestCode) {
+                    case Constants.WRITE_EXTERNAL_STORAGE:
+                        setData();
+                        break;
+                    case Constants.CAMERA_PERMISSION_CODE:
+                        takePhoto();
+                        break;
+                    case Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE:
+                        pickImage();
+                        break;
+                    case Constants.VIDEO_PERMISSION_CODE:
+                        recordVideo();
+                        break;
+                    case Constants.AUDIO_PERMISSION_CODE:
+                        checkAudioPermission();
+                        break;
                 }
             }
         }
@@ -326,7 +327,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         messages.add(message);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
-        final int index=messages.size()-1;
+        final int index = messages.size() - 1;
         recyclerView.scrollToPosition(index);
 
 
@@ -336,23 +337,23 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             public void onSuccess(Object response) {
                 Message temp = messages.get(index);
                 temp.setIs_forward(0);
-                messages.set(index,temp);
+                messages.set(index, temp);
                 chatAdapter.setList(messages);
                 chatAdapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(messages.size()-1);
-                messageRepositry.create((Message)response);
+                recyclerView.scrollToPosition(messages.size() - 1);
+                messageRepositry.create((Message) response);
 
             }
 
             @Override
             public void onFailed(String error) {
                 Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
-               removeDummyMessage(index);
+                removeDummyMessage(index);
             }
         }).sendMessage(message);
     }
 
-    @OnClick({R.id.imgbtn_chat_attach,R.id.layout_chat_attach})
+    @OnClick({R.id.imgbtn_chat_attach, R.id.layout_chat_attach})
     public void showDialogMedia() {
         showPopup(getView());
     }
@@ -363,7 +364,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case TAKE_PICTURE:
-                    final int index=creatDummyMessage();
+                    final int index = creatDummyMessage();
                     new HttpCall(getContext(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
@@ -383,7 +384,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                             new HttpCall(getContext(), new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
-                                    creatRealMessage((Message)response,index);
+                                    creatRealMessage((Message) response, index);
                                 }
 
                                 @Override
@@ -399,22 +400,22 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                             Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
                             removeDummyMessage(index);
                         }
-                    }).uploadMedia(new File(ImageFilePath.getPath(getActivity(),selectedImageUri)).getPath());
+                    }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), selectedImageUri)).getPath());
                     break;
                 case SELECT_PICTURE:
                 case RECORD_VIDEO:
-                    String filepath = new File(ImageFilePath.getPath(getActivity(),data.getData())).getPath();
+                    String filepath = new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath();
                     String ext1 = filepath.substring(filepath.lastIndexOf(".")); // Extension with dot .jpg, .png
                     final String type;
-                    if(ext1.equals(".mp4"))
-                        type=Constants.VIDEO;
-                    else if (ext1.equals(".jpg")||ext1.equals(".png")||ext1.equals(".jpeg"))
-                        type=Constants.IMAGE;
+                    if (ext1.equals(".mp4"))
+                        type = Constants.VIDEO;
+                    else if (ext1.equals(".jpg") || ext1.equals(".png") || ext1.equals(".jpeg"))
+                        type = Constants.IMAGE;
                     else {
                         Toast.makeText(getActivity(), "don't support this file", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    final int index2=creatDummyMessage();
+                    final int index2 = creatDummyMessage();
 
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
@@ -433,7 +434,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                             new HttpCall(getActivity(), new ApiResponse() {
                                 @Override
                                 public void onSuccess(Object response) {
-                                    creatRealMessage((Message)response,index2);
+                                    creatRealMessage((Message) response, index2);
                                 }
 
                                 @Override
@@ -449,14 +450,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                             Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
                             removeDummyMessage(index2);
                         }
-                    }).uploadMedia(new File(ImageFilePath.getPath(getActivity(),data.getData())).getPath());
+                    }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath());
                     break;
             }
         }
     }
-
-
-
 
 
     private void showPopup(View view) {
@@ -484,7 +482,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                     if (getActivity().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         pickImage();
                     } else
-                        requestPermissions( new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
                 } else {
                     pickImage();
                 }
@@ -497,8 +495,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
 
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if (getActivity().checkSelfPermission( android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                            getActivity().checkSelfPermission( android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                            getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                         recordVideo();
 
@@ -571,10 +569,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         message.setFrom_id(userID);
         message.setIs_forward(1);
         messages.add(message);
-        int index=messages.size()-1;
+        int index = messages.size() - 1;
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(messages.size()-1);
+        recyclerView.scrollToPosition(messages.size() - 1);
         return index;
     }
 
@@ -591,11 +589,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         startActivityForResult(intent, SELECT_PICTURE);
 
     }
-    private void recordVideo(){
+
+    private void recordVideo() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
         startActivityForResult(intent, RECORD_VIDEO);
     }
+
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addConnectionCallbacks(this)
@@ -632,13 +632,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
                 new IntentFilter("MyData"));
-        if(userID==doctorID)
-            show_privacy=true;
+        if (userID == doctorID)
+            show_privacy = true;
     }
 
     @Override
@@ -650,10 +651,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Message message=(Message) intent.getSerializableExtra("extra");
-            if(message.getFrom_id()!=doctorID)
+            Message message = (Message) intent.getSerializableExtra("extra");
+            if (message.getFrom_id() != doctorID)
                 return;
-            creatRealMessage(message,0);
+            creatRealMessage(message, 0);
 
         }
     };
@@ -661,98 +662,91 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     //* noy fixed
     private void handelEvent() {
 
-        img_send_audio.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
+           img_send_audio.setOnTouchListener(new View.OnTouchListener() {
+               @Override
+               public boolean onTouch(View v, MotionEvent event) {
 
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    switch (event.getAction()) {
+                       switch (event.getAction()) {
 
-                        case MotionEvent.ACTION_MOVE:
+                           case MotionEvent.ACTION_MOVE:
 
-                            //handle drag action here   Milad :D
-                            break;
+                               //handle drag action here   Milad :D
+                               break;
 
-                        case MotionEvent.ACTION_DOWN:
-                            linearTextMsg.setVisibility(View.GONE);
-                            imgbtn_chat_attach.setVisibility(View.GONE);
-                            relativeAudio.setVisibility(View.VISIBLE);
-                            img_send_audio.setBackgroundResource(0);
-                            Log.e("Start Recording", "start");
-                            startRecording();
+                           case MotionEvent.ACTION_DOWN:
+                               linearTextMsg.setVisibility(View.GONE);
+                               imgbtn_chat_attach.setVisibility(View.GONE);
+                               relativeAudio.setVisibility(View.VISIBLE);
+                               img_send_audio.setBackgroundResource(0);
+                               Log.e("Start Recording", "start");
+                               startRecording();
 
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            Log.e("stop Recording", "stop");
+                               break;
+                           case MotionEvent.ACTION_UP:
+                               Log.e("stop Recording", "stop");
 
-                            if (img_send_audio.getProgress() < 30) {
-                                Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
-                                stopRecording(true);
-                                setButtonToTextMsg(true);
-                            } else {
-                                stopRecording(true);
-                                long diff = endTimeForRecording - startTimeForRecording;
-                                Log.e("Difference", String.valueOf(diff));
-                                if (diff > 1000) {
-                                    Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
+                               if (img_send_audio.getProgress() < 30) {
+                                   Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
+                                   stopRecording(true);
+                                   setButtonToTextMsg(true);
+                               } else {
+                                   stopRecording(true);
+                                   long diff = endTimeForRecording - startTimeForRecording;
+                                   Log.e("Difference", String.valueOf(diff));
+                                   if (diff > 1000) {
+                                       Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
 
 
+                                       /**send to server**/
+                                       final int index2 = creatDummyMessage();
+
+                                       new HttpCall(getActivity(), new ApiResponse() {
+                                           @Override
+                                           public void onSuccess(Object response) {
+                                               final Message message = new Message();
+                                               message.setUser_id(userID);
+                                               message.setFrom_id(userID);
+                                               message.setTo(doctorID);
+                                               message.setIs_url(1);
+                                               message.setMsg((String) response);
+                                               message.setType(Constants.AUDIO);
+                                               message.setIs_forward(0);
+                                               message.setSent_at(getDateTimeNow());
+
+                                               //request
+                                               new HttpCall(getActivity(), new ApiResponse() {
+                                                   @Override
+                                                   public void onSuccess(Object response) {
+                                                       creatRealMessage((Message) response, index2);
+                                                   }
+
+                                                   @Override
+                                                   public void onFailed(String error) {
+                                                       removeDummyMessage(index2);
+                                                       Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                                                   }
+                                               }).sendMessage(message);
+                                           }
+
+                                           @Override
+                                           public void onFailed(String error) {
+                                               Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                           }
+                                       }).uploadMedia(mOutputFile.getPath());
 
 
-                                    /**send to server**/
-                                    final int index2=creatDummyMessage();
+                                   }
+                                   setButtonToTextMsg(true);
+                               }
+                               break;
+                       }
 
-                                    new HttpCall(getActivity(), new ApiResponse() {
-                                        @Override
-                                        public void onSuccess(Object response) {
-                                            final Message message = new Message();
-                                            message.setUser_id(userID);
-                                            message.setFrom_id(userID);
-                                            message.setTo(doctorID);
-                                            message.setIs_url(1);
-                                            message.setMsg((String) response);
-                                            message.setType(Constants.AUDIO);
-                                            message.setIs_forward(0);
-                                            message.setSent_at(getDateTimeNow());
-
-                                            //request
-                                            new HttpCall(getActivity(), new ApiResponse() {
-                                                @Override
-                                                public void onSuccess(Object response) {
-                                                    creatRealMessage((Message)response,index2);
-                                                }
-
-                                                @Override
-                                                public void onFailed(String error) {
-                                                    removeDummyMessage(index2);
-                                                    Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }).sendMessage(message);
-                                        }
-
-                                        @Override
-                                        public void onFailed(String error) {
-                                            Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).uploadMedia(mOutputFile.getPath());
+                   return false;
+               }
 
 
+           });
 
-
-
-                                }
-                                setButtonToTextMsg(true);
-                            }
-                            break;
-                    }
-                } else {
-                    requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
-                }
-                return false;
-            }
-        });
 
 
         etMessage.addTextChangedListener(new TextWatcher() {
@@ -825,25 +819,24 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
     }
 
-    private void getLocationandSend(){
+    private void getLocationandSend() {
         if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
             //create dummy message
-            final int index2=creatDummyMessage();
+            final int index2 = creatDummyMessage();
             final Message message = new Message();
             message.setUser_id(userID);
             message.setFrom_id(userID);
             message.setTo(doctorID);
             message.setSent_at(getDateTimeNow());
-            message.setMsg("{\"long\":"+mLastLocation.getLongitude()+",\"lat\":"+mLastLocation.getLatitude()+"}");
+            message.setMsg("{\"long\":" + mLastLocation.getLongitude() + ",\"lat\":" + mLastLocation.getLatitude() + "}");
             message.setType(Constants.LOCATION);
-
 
 
             //request
             new HttpCall(getActivity(), new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
-                    creatRealMessage((Message)response,index2);
+                    creatRealMessage((Message) response, index2);
                 }
 
                 @Override
@@ -863,6 +856,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             }
         }
     }
+
     private MediaRecorder mRecorder;
     private File mOutputFile;
     private long startTimeForRecording = 0, endTimeForRecording = 0;
@@ -908,6 +902,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             Log.e("Voice Recorder", "prepare() failed " + e.getMessage());
         }
     }
+
     private File getOutputFile() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
         return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
@@ -915,6 +910,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
                 + dateFormat.format(new Date())
                 + ".m4a");
     }
+
     private Runnable mTickExecutor = new Runnable() {
         @Override
         public void run() {
@@ -959,6 +955,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             mOutputFile.delete();
         }
     }
+
     private void setButtonToTextMsg(Boolean comingFromVoiceRecording) {
 
         if (!comingFromVoiceRecording) {
@@ -970,6 +967,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         imgbtn_chat_attach.setVisibility(View.VISIBLE);
         relativeAudio.setVisibility(View.GONE);
     }
+
     @BindView(R.id.open_chat_session)
     LinearLayout open_chat_session;
     @BindView(R.id.chat_bar)
@@ -988,13 +986,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
             open_chat_session.setVisibility(View.GONE);
         }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if(Helper.isNetworkAvailable(getContext())){
+        if (Helper.isNetworkAvailable(getContext())) {
             menu.getItem(0).setEnabled(true);
             menu.getItem(1).setEnabled(true);
-        }else{
+        } else {
             menu.getItem(0).setEnabled(false);
             menu.getItem(1).setEnabled(false);
         }
@@ -1004,54 +1003,55 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.start_session:try {
-                AlertDialog.Builder adb_end = new AlertDialog.Builder(getActivity());
-                adb_end.setTitle(R.string.close_conversation);
-                adb_end.setCancelable(false);
-                adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
+            case R.id.start_session:
+                try {
+                    AlertDialog.Builder adb_end = new AlertDialog.Builder(getActivity());
+                    adb_end.setTitle(R.string.close_conversation);
+                    adb_end.setCancelable(false);
+                    adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            new HttpCall(getActivity(), new ApiResponse() {
+                                @Override
+                                public void onSuccess(Object response) {
 
 
-                                Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                doctor.setIsOpen(0);
-                                checkSessionOpen();
-                                if (doctor.isClinic == 1) {
-                                    Intent intent = new Intent(getActivity(), InquiryActivity.class);
-                                    UserInfoResponse userInfoResponse = new UserInfoResponse();
-                                    userInfoResponse.setUser(doctor);
-                                    Gson gson = new Gson();
-                                    intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
-                                    startActivity(intent);
-                                } else if (doctor.getIsDoc() == 1) {
-                                    openPayment();
-                                } else {
-                                    Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                    doctor.setIsOpen(0);
+                                    checkSessionOpen();
+                                    if (doctor.isClinic == 1) {
+                                        Intent intent = new Intent(getActivity(), InquiryActivity.class);
+                                        UserInfoResponse userInfoResponse = new UserInfoResponse();
+                                        userInfoResponse.setUser(doctor);
+                                        Gson gson = new Gson();
+                                        intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                        startActivity(intent);
+                                    } else if (doctor.getIsDoc() == 1) {
+                                        openPayment();
+                                    } else {
+                                        Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
 
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
-                            }
-                        }).closeSession(String.valueOf(doctor.getId()));
-                    }
+                                @Override
+                                public void onFailed(String error) {
+                                    Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
+                                }
+                            }).closeSession(String.valueOf(doctor.getId()));
+                        }
 
-                });
-                adb_end.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                adb_end.show();
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            }
+                    });
+                    adb_end.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    adb_end.show();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                }
 
                 break;
 
@@ -1158,18 +1158,30 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
 
     }
 
-    private void checkMode(){
-        if(Helper.isNetworkAvailable(getContext())){
+    private void checkMode() {
+        if (Helper.isNetworkAvailable(getContext())) {
             loadChatOnline(userID, doctorID);
-            imgbtn_chat_attach.setEnabled(true);etMessage.setEnabled(true);img_send_audio.setEnabled(true);img_send_txt.setEnabled(true);button2.setEnabled(true);
-        }else{
+            imgbtn_chat_attach.setEnabled(true);
+            etMessage.setEnabled(true);
+            img_send_audio.setEnabled(true);
+            img_send_txt.setEnabled(true);
+            button2.setEnabled(true);
+            button2.setText(R.string.open_session_again);
+            etMessage.setHint("Nachricht schreiben");
+        } else {
             loadChatOffline(doctorID);
-            imgbtn_chat_attach.setEnabled(false);etMessage.setEnabled(false);img_send_audio.setEnabled(false);img_send_txt.setEnabled(false);button2.setEnabled(false);
+            imgbtn_chat_attach.setEnabled(false);
+            etMessage.setEnabled(false);
+            img_send_audio.setEnabled(false);
+            img_send_txt.setEnabled(false);
+            button2.setEnabled(false);
+            button2.setText("Offline mode , can't contact with doctor");
+            etMessage.setHint("Offline mode , can't contact with doctor");
         }
     }
 
-    private void creatRealMessage(Message message,int index){
-        if(index>0)
+    private void creatRealMessage(Message message, int index) {
+        if (index > 0)
             messages.remove(index);
         messages.add(message);
         chatAdapter.setList(messages);
@@ -1177,11 +1189,27 @@ public class HttpChatFragment extends Fragment implements ApiResponse ,GoogleApi
         recyclerView.scrollToPosition(messages.size() - 1);
         messageRepositry.create(message);
     }
-    private void removeDummyMessage(int index){
+
+    private void removeDummyMessage(int index) {
         messages.remove(index);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(messages.size()-1);
+        recyclerView.scrollToPosition(messages.size() - 1);
     }
 
+    private void checkAudioPermission(){
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            img_requestpermission.setVisibility(View.GONE);
+            img_send_audio.setVisibility(View.VISIBLE);
+        }
+            else{
+            img_requestpermission.setVisibility(View.VISIBLE);
+            img_send_audio.setVisibility(View.GONE);
+        }
+    }
+    @OnClick(R.id.img_requestpermission)
+    public void requestAudioPermission(){
+        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
+    }
 }

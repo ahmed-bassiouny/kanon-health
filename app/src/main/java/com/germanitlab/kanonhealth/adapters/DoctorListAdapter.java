@@ -14,23 +14,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.models.ChooseModel;
-import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
-import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.google.gson.Gson;
 
 import org.apmem.tools.layouts.FlowLayout;
@@ -103,23 +99,34 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             if (tabPosition == 3) {
                 list = mMessageRepositry.getAll(doctorContactsList.get(position).get_Id());
                 if (list.size() > 0) {
-                    int index=list.size()-1;
-                    switch (list.get(index).getType()){
-                        case Constants.IMAGE:holder.tvSpecialist.setText("Image");break;
-                        case Constants.AUDIO:holder.tvSpecialist.setText("Audio");break;
-                        case Constants.VIDEO:holder.tvSpecialist.setText("Video");break;
-                        case Constants.LOCATION:holder.tvSpecialist.setText("Location");break;
-                        case Constants.TEXT:holder.tvSpecialist.setText(list.get(index).getMsg());break;
+                    int index = list.size() - 1;
+                    switch (list.get(index).getType()) {
+                        case Constants.IMAGE:
+                            holder.tvSpecialist.setText("Image");
+                            break;
+                        case Constants.AUDIO:
+                            holder.tvSpecialist.setText("Audio");
+                            break;
+                        case Constants.VIDEO:
+                            holder.tvSpecialist.setText("Video");
+                            break;
+                        case Constants.LOCATION:
+                            holder.tvSpecialist.setText("Location");
+                            break;
+                        case Constants.TEXT:
+                            holder.tvSpecialist.setText(list.get(index).getMsg());
+                            break;
                     }
                 } else {
                     holder.tvSpecialist.setText("");
                 }
+                holder.imgStatus.setVisibility(View.GONE);
             }
 
 
             final User doctor = doctorContactsList.get(position);
             String lasseen = (doctor.getLastOnline() != "null" && doctor.getLastOnline() != null) ? doctor.getLastOnline() : "";
-            if (doctor.getIs_available() != null) {
+            if (doctor.getIs_available() != null && tabPosition != 3) {
                 if (doctor.getIs_available().equals("0")) {
                     final int newColor = activity.getResources().getColor(R.color.medium_grey);
                     holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
@@ -165,24 +172,23 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             }
 //        holder.imgPage.setImageResource(R.drawable.doctor_icon);
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                   ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
             }
-                if (tabPosition == 3) {
-                    // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
-                    if (doctor.getIsOpen() != 1) {
-                        holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
-                    } else if (is_doc) {
-                        holder.imgAvatar.setBorderColor(Color.BLUE);
-                    } else if (is_clinic) {
-                        holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
-                    } else {
-                        holder.imgAvatar.setBorderColor(Color.GREEN);
-                    }
+            if (tabPosition == 3) {
+                // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
+                if (doctor.getIsOpen() != 1) {
+                    holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
+                } else if (is_doc) {
+                    holder.imgAvatar.setBorderColor(Color.BLUE);
+                } else if (is_clinic) {
+                    holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
+                } else {
+                    holder.imgAvatar.setBorderColor(Color.GREEN);
                 }
-                else {
-                    holder.imgAvatar.setBorderWidth(0);
-                    holder.imgAvatar.setBorderOverlay(false);
-                }
+            } else {
+                holder.imgAvatar.setBorderWidth(0);
+                holder.imgAvatar.setBorderOverlay(false);
+            }
 
 
             if (tabPosition != 3 && doctor.getSpecialities() != null) {
@@ -209,60 +215,36 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     /****** jira task number 208 **************************/
                     if (tabPosition == 3) {
                         Gson gson = new Gson();
-                        if (doctor.isClinic == 1) {
-                            Intent intent = new Intent(activity, InquiryActivity.class);
-                            UserInfoResponse userInfoResponse = new UserInfoResponse();
-                            userInfoResponse.setUser(doctor);
-                            intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
-                            activity.startActivity(intent);
-                        } else if (doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
-                            /*Intent intent = new Intent(activity, ChatActivity.class);
-                            //intent.putExtra("doctor_data", gson.toJson(doctor));
+                        if (is_doc) {
+                            Intent intent = new Intent(activity, HttpChatActivity.class);
+                            intent.putExtra("doctorID", doctor.get_Id());
                             PrefManager prefManager = new PrefManager(activity);
                             prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            intent.putExtra("from", true);
-                            activity.startActivity(intent);*/
+                            intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
+                            intent.putExtra("doctorUrl", doctor.getAvatar());
+                            activity.startActivity(intent);
 
-                            //Edit ahmed
-                            Intent intent= new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("doctorID", doctor.get_Id());
-                            PrefManager prefManager = new PrefManager(activity);
-                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
-                            intent.putExtra("doctorUrl", doctor.getAvatar());
-                            activity.startActivity(intent);
-                        }else if(is_doc && doctor.getIsDoc() == 1 && doctor.getIsOpen() == 1) {
-                            /*Intent intent = new Intent(activity, ChatActivity.class);
-                            //intent.putExtra("doctor_data", gson.toJson(doctor));
-                            PrefManager prefManager = new PrefManager(activity);
-                            doctor.setIsOpen(1);
-                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            intent.putExtra("from", true);
-                            activity.startActivity(intent);*/
-                            //Edit ahmed
-                            Intent intent= new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("doctorID", doctor.get_Id());
-                            PrefManager prefManager = new PrefManager(activity);
-                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
-                            intent.putExtra("doctorUrl", doctor.getAvatar());
-                            activity.startActivity(intent);
+
+                        } else if (is_clinic) {
+
+                        } else {
+                            if (doctor.getIsDoc() == 1) {
+                                Intent intent = new Intent(activity, HttpChatActivity.class);
+                                intent.putExtra("doctorID", doctor.get_Id());
+                                PrefManager prefManager = new PrefManager(activity);
+                                prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
+                                intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
+                                intent.putExtra("doctorUrl", doctor.getAvatar());
+                                activity.startActivity(intent);
+                            } else if (doctor.isClinic == 1) {
+                                Intent intent = new Intent(activity, InquiryActivity.class);
+                                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                                userInfoResponse.setUser(doctor);
+                                intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                activity.startActivity(intent);
+                            }
                         }
-                        else if(is_doc && doctor.getIsDoc() == 1 ) {
-                            Intent intent = new Intent(activity, PaymentActivity.class);
-                            //intent.putExtra("doctor_data", gson.toJson(doctor));
-                            PrefManager prefManager = new PrefManager(activity);
-                            doctor.setIsOpen(1);
-                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            intent.putExtra("from", true);
-                            activity.startActivity(intent);
-                        }
-                        else {
-                            Intent intent = new Intent(activity, PaymentActivity.class);
-                            PrefManager prefManager = new PrefManager(activity);
-                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            activity.startActivity(intent);
-                        }
+
                     } else {
                         Intent intent = new Intent(activity, DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", doctor);
