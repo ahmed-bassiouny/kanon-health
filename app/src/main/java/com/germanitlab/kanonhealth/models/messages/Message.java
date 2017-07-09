@@ -14,24 +14,9 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "message")
 public class Message implements Serializable {
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
+    @DatabaseField
     private int user_id;
-
-    public int getTo() {
-        return to;
-    }
-
-    public void setTo(int to) {
-        this.to = to;
-    }
-
+    @DatabaseField
     private int to;
     @DatabaseField
     public static final int TYPE_MESSAGE = 0;
@@ -71,10 +56,32 @@ public class Message implements Serializable {
     private String comment;
     @DatabaseField
     private String date;
-
     @DatabaseField
     private String imageText;
+    @DatabaseField
+    private int is_url;
+    @DatabaseField
+    private String is_document;
+    @DatabaseField
+    private int is_forward;
+    @DatabaseField
+    private int is_delivered;
 
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+    public int getTo() {
+        return to;
+    }
+
+    public void setTo(int to) {
+        this.to = to;
+    }
     public int getIs_url() {
         return is_url;
     }
@@ -83,15 +90,6 @@ public class Message implements Serializable {
         this.is_url = is_url;
     }
 
-    private int is_url;
-
-    //New Attribute
-    @DatabaseField
-    private String is_document;
-    @DatabaseField
-    private int is_forward;
-    @DatabaseField
-    private int is_delivered;
 
     public String getIs_document() {
         return is_document;
