@@ -14,6 +14,16 @@ public class MessageResponse {
 
     private List<Message> messages;
 
+    public Message getMsg() {
+        return msg;
+    }
+
+    public void setMsg(Message msg) {
+        this.msg = msg;
+    }
+
+    private Message msg;
+
     public List<Message> getMessage() {
         return messages;
     }

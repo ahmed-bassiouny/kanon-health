@@ -1086,7 +1086,7 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                     if(response.body().getStatus()==1)
-                        apiResponse.onSuccess(response.body().getMessage());
+                        apiResponse.onSuccess(response.body().getMsg());
                     else
                         onFailure(call,new Exception());
                 }
