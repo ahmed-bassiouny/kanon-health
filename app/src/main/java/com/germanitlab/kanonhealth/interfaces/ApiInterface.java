@@ -168,7 +168,7 @@ public interface ApiInterface {
     @POST("/messages/send")
     Call<MessageResponse> sendMessage(@Body Message message);
 
-    @POST("/qr/login")
+    @POST("/qr/join_web")
     Call<JsonObject> webLoginQrCode(@Body WebLogin code);
 
     @Multipart
