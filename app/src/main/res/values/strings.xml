@@ -281,4 +281,5 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="cantupload">Sorry , Media not upload</string>
     <string name="support">Support</string>
     <string name="cant_insert_message">Can\'t Save Message in Database</string>
+    <string name="send_fail">Error while connecting to server</string>
 </resources>

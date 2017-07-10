@@ -17,6 +17,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
+import com.germanitlab.kanonhealth.models.WebLogin;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -47,6 +48,8 @@ public class StartQrScan extends AppCompatActivity {
 //                }
                     finish();
 
+                } else if (result.getContents().startsWith("WEBLOGIN_")) {
+                    sendQrCode(result.getContents().replace("WEBLOGIN_", ""));
                 } else {
                     Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                     final String key = result.getContents();
@@ -132,5 +135,31 @@ public class StartQrScan extends AppCompatActivity {
 
     public void DismissProgressDialog() {
         progressDialog.dismiss();
+    }
+
+    public void sendQrCode(String qrCode) {
+        try {
+
+            WebLogin webLogin = new WebLogin();
+            webLogin.setUser_id(prefManager.getData(PrefManager.USER_ID));
+            webLogin.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+            webLogin.setCode_qr(qrCode);
+
+            new HttpCall(StartQrScan.this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    StartQrScan.this.finish();
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(StartQrScan.this, "Message not send", Toast.LENGTH_SHORT).show();
+                }
+            }).sendQrCode(webLogin);
+
+        } catch (Exception e) {
+            Log.e("Httpcall", "sen web login : ", e);
+            Crashlytics.logException(e);
+        }
     }
 }
