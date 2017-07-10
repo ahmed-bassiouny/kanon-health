@@ -11,66 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-        android:visibility="visible"
-        android:id="@+id/doctor_chat_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
-
-
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/img_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:src="@drawable/filter" />
-
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/map"
-            android:layout_width="50dp"
-            android:layout_height="31dp"
-            android:src="@drawable/map" />
-
-
-        <TextView
-            android:visibility="visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Contacts"
-            android:textColor="@color/black" />
-
-        <ImageButton
-            android:visibility="gone"
-            android:id="@+id/scan"
-            android:layout_width="@dimen/size_40dp"
-            android:layout_height="36dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/size_15dp"
-            android:background="@null"
-            android:contentDescription=""
-            android:scaleType="fitXY"
-            android:src="@drawable/scan"
-            tools:ignore="ContentDescription,RtlHardcoded" />
-
-        <ImageButton
-            android:visibility="gone"
-            android:id="@+id/img_btn_search"
-            android:layout_width="@dimen/size_40dp"
-            android:layout_height="36dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/size_15dp"
-            android:background="@null"
-            android:contentDescription=""
-            android:scaleType="fitXY"
-            android:src="@drawable/search"
-            android:tint="@color/black"
-            tools:ignore="ContentDescription,RtlHardcoded" />
-
-
-        </android.support.v7.widget.Toolbar>
 
         <!--        <TextView
                     android:id="@+id/filter_to_list"
@@ -93,49 +33,49 @@
             android:orientation="horizontal">
 
             <Button
-                android:background="@color/gray"
                 android:id="@+id/doctor_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textAllCaps="false"
-                android:text="Doctors" />
+                android:background="@color/gray"
+                android:text="Doctors"
+                android:textAllCaps="false" />
 
             <Button
-                android:background="@color/gray"
                 android:id="@+id/praxis_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textAllCaps="false"
-                android:text="Practice" />
+                android:background="@color/gray"
+                android:text="Practice"
+                android:textAllCaps="false" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/edt_doctor_list_filter"
             android:layout_width="match_parent"
-            android:textCursorDrawable="@color/blue"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/size_10dp"
             android:background="@drawable/custom_edittext_without_border_style"
             android:drawableLeft="@drawable/search"
             android:gravity="center"
+            android:hint="@string/search"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:singleLine="true"
-            android:hint="@string/search"
             android:paddingBottom="@dimen/size_5dp"
             android:paddingLeft="@dimen/size_20dp"
             android:paddingRight="@dimen/size_5dp"
             android:paddingTop="@dimen/size_5dp"
-            android:textColor="@color/gray_black" />
+            android:singleLine="true"
+            android:textColor="@color/gray_black"
+            android:textCursorDrawable="@color/blue" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_doctor_chat"
-            android:paddingTop="@dimen/size_10dp"
-            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:paddingTop="@dimen/size_10dp" />
     </LinearLayout>
 
 </FrameLayout>

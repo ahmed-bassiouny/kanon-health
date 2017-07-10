@@ -1,13 +1,17 @@
 package com.germanitlab.kanonhealth.doctors;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +39,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -61,6 +66,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     Gson gson;
     private UserRepository mDoctorRepository;
     LinearLayoutManager llm;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
 
 
     private EditText edtFilter;
@@ -166,12 +172,35 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                     edtFilter.setVisibility(View.GONE);
                 break;
             case R.id.mi_scan:
-                Helper.ImportQr(mPrefManager, getActivity());
-                break;
+                if (!checkPermissionForCamera()) {
+                    requestPermissionForCamera();
+                } else {
+                    startActivity(new Intent(getActivity(), StartQrScan.class));
+                }                break;
         }
         return super.onOptionsItemSelected(item);
 
     }
+
+    public void requestPermissionForCamera() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+            Toast.makeText(getContext().getApplicationContext(), "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+            startActivity(new Intent(getActivity(), StartQrScan.class));
+        }
+    }
+
+
+    public boolean checkPermissionForCamera() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
     private void handelEvent() {

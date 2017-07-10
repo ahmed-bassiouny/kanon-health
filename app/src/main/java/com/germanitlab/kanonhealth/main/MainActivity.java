@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             myviewpager = (ViewPager) findViewById(R.id.myviewpager);
             appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
+            toolbar.inflateMenu(R.menu.contacts_menu);
 
             myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
@@ -93,7 +94,16 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 public void onPageSelected(int position) {
                     mytablayout.getTabAt(position).getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
                     mytablayout.getTabAt(position).select();
+                    toolbar.getMenu().clear();
                     invalidateOptionsMenu();
+                    if(position == 0)
+                        toolbar.inflateMenu(R.menu.contacts_menu);
+                    else if(position == 1)
+                        toolbar.inflateMenu(R.menu.menu_document);
+                    else if(position == 2)
+                        toolbar.inflateMenu(R.menu.contacts_menu);
+                    else if(position == 3)
+                        toolbar.inflateMenu(R.menu.menu_settings);
                 }
 
                 @Override

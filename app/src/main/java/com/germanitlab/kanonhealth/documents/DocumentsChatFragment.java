@@ -400,9 +400,9 @@ public class DocumentsChatFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.mi_attach:
-                showPopup(view);
-                break;
+//            case R.id.mi_attach:
+//                showPopup(view);
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }

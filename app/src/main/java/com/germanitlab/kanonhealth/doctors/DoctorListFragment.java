@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,7 +42,6 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -63,9 +61,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private View view;
     private RecyclerView recyclerView;
-    private Toolbar toolbar;
-    private ImageButton imgScan;
-    private ImageView filter, map, ImgBtnSearch;
+    //    private ImageButton imgScan;
 
     /*
     private TextView filter_to_list;
@@ -84,7 +80,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public Boolean is_doctor_data, is_clinic_data;
-    LinearLayoutManager llm;
+    LinearLayoutManager llm ;
 
     public DoctorListFragment() {
     }
@@ -112,7 +108,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             prefManager = new PrefManager(getActivity());
             util = Util.getInstance(getActivity());
             initView();
-            ((MainActivity)getActivity()).appBarLayout.setVisibility(View.GONE);
             gson = new Gson();
             if (type == 0)
                 type = 2;
@@ -272,7 +267,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 try {
                     jsonString = gson.toJson(response);
                     prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
-                    int index = getScrolled();
+                    int index = getScrolled() ;
                     doctorList = (List<User>) response;
                     updateDatabase(doctorList);
                     if (b) {
@@ -305,7 +300,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                 speciality_id, type);
     }
-
     private void scrollToPosition(int mScrollPosition) {
         try {
             recyclerView.scrollToPosition(mScrollPosition);
@@ -313,7 +307,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }
 
     }
-
     private void updateDatabase(List<User> doctorList) {
         for (User user : doctorList) {
             User temp = mDoctorRepository.getDoctor(user);
@@ -362,7 +355,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         edtDoctorListFilter = (EditText) view.findViewById(R.id.edt_doctor_list_filter);
         doctor_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
-        ImgBtnSearch = (ImageView) view.findViewById(R.id.img_btn_search);
 
         if (type == 2) {
             doctor_list.setBackgroundResource(R.color.blue);
@@ -421,14 +413,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 /*
         filter_to_list = (TextView) view.findViewById(R.id.filter_to_list);
 */
-        map = (ImageView) view.findViewById(R.id.map);
-        filter = (ImageView) view.findViewById(R.id.img_filter);
-        toolbar = (Toolbar) view.findViewById(R.id.doctor_chat_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         doctor_list = (Button) view.findViewById(R.id.doctor_list);
         praxis_list = (Button) view.findViewById(R.id.praxis_list);
-        imgScan = (ImageButton) toolbar.findViewById(R.id.scan);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_chat);
         recyclerView.setHasFixedSize(true);
@@ -450,39 +436,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         });*/
 
         edtDoctorListFilter.setVisibility(View.GONE);
-        ImgBtnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                if (edtDoctorListFilter.getVisibility() == View.GONE)
-                    edtDoctorListFilter.setVisibility(View.VISIBLE);
-                else if (edtDoctorListFilter.getVisibility() == View.VISIBLE)
-                    edtDoctorListFilter.setVisibility(View.GONE);
-
-            }
-        });
-
-
-        filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), Specilaities.class);
-                intent.putExtra("from", false);
-                intent.putExtra("type", type);
-                startActivity(intent);
-
-            }
-        });
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*getBySpeciality(speciality_id);*/
-                Intent intent = new Intent(getActivity(), MapsActivity.class);
-                intent.putExtra("from", true);
-                intent.putExtra("Location", jsonString);
-                getActivity().startActivity(intent);
-            }
-        });
         praxis_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -511,7 +465,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             }
         });
     }
-
     private int getScrolled() {
         if (llm != null && llm instanceof LinearLayoutManager) {
             try {
