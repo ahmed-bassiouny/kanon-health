@@ -20,6 +20,8 @@ import java.util.List;
 
 public class User implements Serializable {
 
+    public static final String COLUMN_ID = "dfgdf";
+
     /*
 
 "open_time":[{"id": "0", "to": "01:15", "from": "17:12", "type": "no",…],

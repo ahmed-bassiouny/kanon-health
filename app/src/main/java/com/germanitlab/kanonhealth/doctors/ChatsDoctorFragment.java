@@ -60,6 +60,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     private PrefManager mPrefManager;
     Gson gson;
     private UserRepository mDoctorRepository;
+    LinearLayoutManager llm;
 
 
     private EditText edtFilter;
@@ -83,11 +84,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         try {
             if (getView() != null && isVisibleToUser) {
                 if (Helper.isNetworkAvailable(getContext())) {
-                    util.showProgressDialog();
                     new HttpCall(getActivity(), this).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
                 } else {
-                    TypeToken<List<User>> token = new TypeToken<List<User>>() {
-                    };
                     doctorList = mDoctorRepository.getChat(1);
                     setAdapter(doctorList);
                 }
@@ -98,7 +96,6 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         }
 
     }
-
 
 
     @Override
@@ -118,7 +115,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        changeColors(R.color.blue ,R.color.white ,  R.color.gray , R.color.black , doctors_list , praxis_list );
+        changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, doctors_list, praxis_list);
     }
 
     @Override
@@ -273,7 +270,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //        Helper.ImportQr(mPrefManager, getActivity(), myQr);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_list);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
@@ -287,14 +284,17 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         praxis_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeColors(R.color.blue ,R.color.white ,  R.color.gray , R.color.black , praxis_list , doctors_list );
+                doctorList = mDoctorRepository.getChat(2);
+                setAdapter(doctorList);
+                changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, praxis_list, doctors_list);
                 if (Helper.isNetworkAvailable(getContext())) {
-                    util.showProgressDialog();
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
                             doctorList = (List<User>) response;
+                            int m = getScrolled();
                             setAdapter(doctorList);
+                            scrollToPosition(m);
                             updateDataBase(doctorList);
                             chat_layout.setVisibility(View.VISIBLE);
                             tvLoadingError.setVisibility(View.GONE);
@@ -302,54 +302,51 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
                         @Override
                         public void onFailed(String error) {
-                            tvLoadingError.setVisibility(View.VISIBLE);
-                            if (error != null && error.length() > 0)
-                                tvLoadingError.setText(error);
-                            else tvLoadingError.setText("Some thing went wrong");
-                            chat_layout.setVisibility(View.GONE);
+//                            tvLoadingError.setVisibility(View.VISIBLE);
+//                            if (error != null && error.length() > 0)
+//                                tvLoadingError.setText(error);
+//                            else tvLoadingError.setText("Some thing went wrong");
+//                            chat_layout.setVisibility(View.GONE);
                         }
                     }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
-                } else {
-                    doctorList = mDoctorRepository.getChat(2);
-                    setAdapter(doctorList);
                 }
             }
         });
         doctors_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeColors(R.color.blue ,R.color.white ,  R.color.gray , R.color.black , doctors_list , praxis_list );
+                doctorList = mDoctorRepository.getChat(1);
+                setAdapter(doctorList);
+                changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, doctors_list, praxis_list);
                 if (Helper.isNetworkAvailable(getContext())) {
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            util.dismissProgressDialog();
                             doctorList = (List<User>) response;
                             updateDataBase(doctorList);
+                            int m = getScrolled();
                             setAdapter(doctorList);
+                            scrollToPosition(m);
                             linearLayoutContent.setVisibility(View.VISIBLE);
                         }
 
                         @Override
                         public void onFailed(String error) {
-                            util.dismissProgressDialog();
-                            tvLoadingError.setVisibility(View.VISIBLE);
-                            if (error != null && error.length() > 0)
-                                tvLoadingError.setText(error);
-                            else tvLoadingError.setText("Some thing went wrong");
+//                            tvLoadingError.setVisibility(View.VISIBLE);
+//                            if (error != null && error.length() > 0)
+//                                tvLoadingError.setText(error);
+//                            else tvLoadingError.setText("Some thing went wrong");
                         }
                     }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
                 }
-                else {
-                    doctorList = mDoctorRepository.getChat(1);
-                    setAdapter(doctorList);
-                }
+
             }
         });
 
 
     }
-    public void changeColors(int backColorSelected, int textSelected, int backColorUnSelected, int textUnSelected, Button btnSelected, Button btnUnSelected){
+
+    public void changeColors(int backColorSelected, int textSelected, int backColorUnSelected, int textUnSelected, Button btnSelected, Button btnUnSelected) {
         btnUnSelected.setBackgroundResource(backColorUnSelected);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             btnUnSelected.setTextColor(getResources().getColor(textUnSelected, null));
@@ -374,11 +371,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     @Override
     public void onSuccess(Object response) {
         try {
-            util.dismissProgressDialog();
             doctorList = (List<User>) response;
             Gson gson = new Gson();
             updateDataBase(doctorList);
+            int m = getScrolled();
             setAdapter(doctorList);
+            scrollToPosition(m);
             linearLayoutContent.setVisibility(View.VISIBLE);
 
         } catch (Exception e) {
@@ -387,22 +385,41 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         }
     }
 
+    private int getScrolled() {
+        if (llm != null && llm instanceof LinearLayoutManager) {
+            try {
+                return llm.findFirstVisibleItemPosition();
+            } catch (Exception e) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+
+    }
+
+    private void scrollToPosition(int mScrollPosition) {
+        try {
+            recyclerView.scrollToPosition(mScrollPosition);
+        } catch (Exception e) {
+        }
+
+    }
+
     private void updateDataBase(List<User> doctorList) {
         for (User user : doctorList) {
             user.setIs_chat(1);
-                mDoctorRepository.create(user);
+            mDoctorRepository.create(user);
         }
     }
 
     @Override
     public void onFailed(String error) {
-        util.dismissProgressDialog();
-//        util.dismissProgressDialog();
-        linearLayoutContent.setVisibility(View.GONE);
-        tvLoadingError.setVisibility(View.VISIBLE);
-        if (error != null && error.length() > 0)
-            tvLoadingError.setText(error);
-        else tvLoadingError.setText("Some thing went wrong");
+//        linearLayoutContent.setVisibility(View.GONE);
+//        tvLoadingError.setVisibility(View.VISIBLE);
+//        if (error != null && error.length() > 0)
+//            tvLoadingError.setText(error);
+//        else tvLoadingError.setText("Some thing went wrong");
     }
 
 }

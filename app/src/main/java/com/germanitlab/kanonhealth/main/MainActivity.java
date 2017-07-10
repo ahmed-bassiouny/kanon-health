@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     Intent intent;
     private Toolbar toolbar;
     private TextView tvToolbarTitle;
+    public AppBarLayout appBarLayout ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             initTB();
             mytablayout = (TabLayout) findViewById(R.id.mytablayout);
             myviewpager = (ViewPager) findViewById(R.id.myviewpager);
+            appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
 
             myviewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));

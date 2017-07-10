@@ -74,14 +74,17 @@ public class UserRepository {
     }
 
     public List<User> getChat(int type) {
-        Map<String, Object> whereCondition = new HashMap<>();
-        whereCondition.put("is_chat", 1);
-        if (type == 1)
-            whereCondition.put("isDoc", 1);
-        else
-            whereCondition.put("isClinic", 1);
         try {
-            return doctorsDao.queryForFieldValues(whereCondition);
+            String typeColumn = "";
+            if (type == 1)
+                typeColumn = "isDoc";
+            else
+                typeColumn = "isClinic";
+            if (type == 2)
+                return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq(typeColumn, 1).query();
+            else
+                return doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("is_chat", 1).and().eq(typeColumn, 1).query();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -170,21 +173,17 @@ public class UserRepository {
             List<User> userList;
             switch (type) {
                 case 2:
-                    userList = doctorsDao.queryForEq("isDoc", 1);
-                    setJsonData(userList);
-                    return userList ;
+                    userList = doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("isDoc", 1).query();
+                    break;
                 case 3:
-                    userList = doctorsDao.queryForEq("isClinic", 1);
-                    setJsonData(userList);
-                    return userList ;
+                    userList = doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("isClinic", 1).query();
+                    break;
                 default:
-                    Map<String, Object> whereCondition = new HashMap<>();
-                    whereCondition.put("isDoc", 0);
-                    whereCondition.put("isClinic", 0);
-                    userList = doctorsDao.queryForFieldValues(whereCondition);
-                    setJsonData(userList);
-                    return userList ;
+                    userList = doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("isDoc", 1).query();
+                    break;
             }
+            setJsonData(userList);
+            return userList;
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
@@ -196,14 +195,21 @@ public class UserRepository {
         Gson gson = new Gson();
         for (User user : userList
                 ) {
-            user.setInfo(gson.fromJson(user.getJsonInfo()  , Info.class));
-            user.setMembers_at((List<ChooseModel>) gson.fromJson(user.getJson_members_at() , new TypeToken<List<ChooseModel>>(){}.getType()));
-            user.setSupported_lang((List<ChooseModel>) gson.fromJson(user.getJson_supported_lang() , new TypeToken<List<ChooseModel>>(){}.getType()));
-            user.setSpecialities((List<ChooseModel>) gson.fromJson(user.getJson_specialities() , new TypeToken<List<ChooseModel>>(){}.getType()));
-            user.setOpen_time((List<Table>) gson.fromJson(user.getJson_open_time() ,  new TypeToken<List<Table>>(){}.getType()));
-            user.setDocuments((ArrayList<Message>) gson.fromJson(user.getJsonDocument() ,  new TypeToken<ArrayList<Message>>(){}.getType()));
-            user.setQuestions((LinkedHashMap<String, String>) gson.fromJson(user.getJson_questions() , new TypeToken<HashMap<String , String>>(){}.getType()));
-            user.setRate_percentage((HashMap<String, String>) gson.fromJson(user.getJson_rate_percentage() , new TypeToken<HashMap<String, String>>(){}.getType()));
+            user.setInfo(gson.fromJson(user.getJsonInfo(), Info.class));
+            user.setMembers_at((List<ChooseModel>) gson.fromJson(user.getJson_members_at(), new TypeToken<List<ChooseModel>>() {
+            }.getType()));
+            user.setSupported_lang((List<ChooseModel>) gson.fromJson(user.getJson_supported_lang(), new TypeToken<List<ChooseModel>>() {
+            }.getType()));
+            user.setSpecialities((List<ChooseModel>) gson.fromJson(user.getJson_specialities(), new TypeToken<List<ChooseModel>>() {
+            }.getType()));
+            user.setOpen_time((List<Table>) gson.fromJson(user.getJson_open_time(), new TypeToken<List<Table>>() {
+            }.getType()));
+            user.setDocuments((ArrayList<Message>) gson.fromJson(user.getJsonDocument(), new TypeToken<ArrayList<Message>>() {
+            }.getType()));
+            user.setQuestions((LinkedHashMap<String, String>) gson.fromJson(user.getJson_questions(), new TypeToken<HashMap<String, String>>() {
+            }.getType()));
+            user.setRate_percentage((HashMap<String, String>) gson.fromJson(user.getJson_rate_percentage(), new TypeToken<HashMap<String, String>>() {
+            }.getType()));
         }
     }
 
