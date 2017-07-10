@@ -24,6 +24,7 @@ import com.germanitlab.kanonhealth.models.Speciality;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
+import com.germanitlab.kanonhealth.models.WebLogin;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
@@ -1051,44 +1052,44 @@ public class HttpCall {
 
     }
 
-    public void loadChat(MessageRequest messageRequest){
-        try{
+    public void loadChat(MessageRequest messageRequest) {
+        try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<MessageResponse> connection = service.loadChat(messageRequest);
             connection.enqueue(new Callback<MessageResponse>() {
                 @Override
                 public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                    if(response.body().getStatus()==1)
+                    if (response.body().getStatus() == 1)
                         apiResponse.onSuccess(response.body().getMessage());
                     else
-                        onFailure(call,new Exception(context.getString(R.string.error_loading_data)));
+                        onFailure(call, new Exception(context.getString(R.string.error_loading_data)));
                 }
 
                 @Override
                 public void onFailure(Call<MessageResponse> call, Throwable t) {
-                    Log.e("Httpcall", "loadChat: ",t);
+                    Log.e("Httpcall", "loadChat: ", t);
                     Crashlytics.logException(t);
                     Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
                 }
             });
-        }catch (Exception e){
-            Log.e("Httpcall", "loadChat: ",e);
+        } catch (Exception e) {
+            Log.e("Httpcall", "loadChat: ", e);
             Crashlytics.logException(e);
             Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<MessageResponse> connection = service.sendMessage(message);
             connection.enqueue(new Callback<MessageResponse>() {
                 @Override
                 public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                    if(response.body().getStatus()==1)
+                    if (response.body().getStatus() == 1)
                         apiResponse.onSuccess(response.body().getMsg());
                     else
-                        onFailure(call,new Exception());
+                        onFailure(call, new Exception());
                 }
 
                 @Override
@@ -1096,11 +1097,12 @@ public class HttpCall {
 
                 }
             });
-        }catch (Exception e){
-            Log.e("Httpcall", "sendMessage: ",e);
+        } catch (Exception e) {
+            Log.e("Httpcall", "sendMessage: ", e);
             Crashlytics.logException(e);
         }
     }
+
     public void uploadMedia(String imagePath) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
@@ -1120,10 +1122,10 @@ public class HttpCall {
             connection.enqueue(new Callback<UploadImageResponse>() {
                 @Override
                 public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
-                    if(response.body().getStatus()==1)
+                    if (response.body().getStatus() == 1)
                         apiResponse.onSuccess(response.body().getFile_url());
                     else
-                        onFailure(call,new Exception("status not equal 1"));
+                        onFailure(call, new Exception("status not equal 1"));
 
                 }
 
@@ -1141,5 +1143,28 @@ public class HttpCall {
         }
 
 
+    }
+
+
+    public void sendQrCode(WebLogin webLogin) {
+        try {
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<JsonObject> connection = service.webLoginQrCode(webLogin);
+            connection.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    apiResponse.onSuccess(response);
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
+                    apiResponse.onFailed(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.e("Httpcall", "sendMessage: ", e);
+            Crashlytics.logException(e);
+        }
     }
 }

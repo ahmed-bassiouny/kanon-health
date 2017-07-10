@@ -51,17 +51,14 @@ public class DownloadHelper {
             while (downloadQueue.size() > 0) {
                 currentDownload = downloadQueue.remove(0);
                 URL url = new URL(currentDownload.getUrl());
-
                 HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
                 int responseCode = httpConn.getResponseCode();
-
                 // always check HTTP response code first
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     String fileName = "";
                     String disposition = httpConn.getHeaderField("Content-Disposition");
                     String contentType = httpConn.getContentType();
                     int contentLength = httpConn.getContentLength();
-
                     if (disposition != null) {
                         // extracts file name from header field
                         int index = disposition.indexOf("filename=");
@@ -73,33 +70,26 @@ public class DownloadHelper {
                         // extracts file name from URL
                         fileName = currentDownload.getUrl().substring(currentDownload.getUrl().lastIndexOf("/") + 1, currentDownload.getUrl().length());
                     }
-
                     System.out.println("Content-Type = " + contentType);
                     System.out.println("Content-Disposition = " + disposition);
                     System.out.println("Content-Length = " + contentLength);
                     System.out.println("fileName = " + fileName);
-
                     // opens input stream from the HTTP connection
                     InputStream inputStream = httpConn.getInputStream();
                     File f = new File(ctx.getCacheDir(), fileName);
-
                     // opens an output stream to save into file
                     FileOutputStream outputStream = new FileOutputStream(f);
-
                     int bytesRead = -1;
                     byte[] buffer = new byte[BUFFER_SIZE];
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         outputStream.write(buffer, 0, bytesRead);
                     }
-
                     outputStream.close();
                     inputStream.close();
-
                     System.out.println("File downloaded");
                     if (currentDownload.getCallback() != null) {
                         currentDownload.getCallback().run();
                     }
-
                 } else {
                     System.out.println("No file to download. Server replied HTTP code: " + responseCode);
                 }

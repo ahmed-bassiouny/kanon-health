@@ -15,6 +15,7 @@ import com.germanitlab.kanonhealth.models.Speciality;
 import com.germanitlab.kanonhealth.models.StatusRequestModel;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.models.UpdatePrivacy;
+import com.germanitlab.kanonhealth.models.WebLogin;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.doctors.DoctorRequest;
 import com.germanitlab.kanonhealth.models.messages.DeleteMessage;
@@ -166,6 +167,9 @@ public interface ApiInterface {
 
     @POST("/messages/send")
     Call<MessageResponse> sendMessage(@Body Message message);
+
+    @POST("/qr/login")
+    Call<JsonObject> webLoginQrCode(@Body WebLogin code);
 
     @Multipart
     @POST("/upload")
