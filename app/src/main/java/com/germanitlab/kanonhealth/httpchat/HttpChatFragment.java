@@ -144,7 +144,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     static HttpChatFragment httpChatFragment;
     MessageRepositry messageRepositry;
 
-    int userType=0; // get user type if doctor =2 or clinic =3 or client =1
+    int userType = 0; // get user type if doctor =2 or clinic =3 or client =1
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -157,7 +157,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         return view;
     }
 
-    public static HttpChatFragment newInstance(int doctorID, String doctorUrl,int userType) {
+    public static HttpChatFragment newInstance(int doctorID, String doctorUrl, int userType) {
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
         bundle.putString("doctorName", "My Documents");
@@ -204,7 +204,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         doctorID = getArguments().getInt("doctorID");
         doctorName = getArguments().getString("doctorName");
         doctorUrl = getArguments().getString("doctorUrl");
-        userType=getArguments().getInt("userType",0);
+        userType = getArguments().getInt("userType", 0);
         if (!doctorUrl.isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctorUrl, getActivity());
         tv_chat_user_name.setText(doctorName);
@@ -663,91 +663,90 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     //* noy fixed
     private void handelEvent() {
 
-           img_send_audio.setOnTouchListener(new View.OnTouchListener() {
-               @Override
-               public boolean onTouch(View v, MotionEvent event) {
+        img_send_audio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
 
-                       switch (event.getAction()) {
+                switch (event.getAction()) {
 
-                           case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_MOVE:
 
-                               //handle drag action here   Milad :D
-                               break;
+                        //handle drag action here   Milad :D
+                        break;
 
-                           case MotionEvent.ACTION_DOWN:
-                               linearTextMsg.setVisibility(View.GONE);
-                               imgbtn_chat_attach.setVisibility(View.GONE);
-                               relativeAudio.setVisibility(View.VISIBLE);
-                               img_send_audio.setBackgroundResource(0);
-                               Log.e("Start Recording", "start");
-                               startRecording();
+                    case MotionEvent.ACTION_DOWN:
+                        linearTextMsg.setVisibility(View.GONE);
+                        imgbtn_chat_attach.setVisibility(View.GONE);
+                        relativeAudio.setVisibility(View.VISIBLE);
+                        img_send_audio.setBackgroundResource(0);
+                        Log.e("Start Recording", "start");
+                        startRecording();
 
-                               break;
-                           case MotionEvent.ACTION_UP:
-                               Log.e("stop Recording", "stop");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.e("stop Recording", "stop");
 
-                               if (img_send_audio.getProgress() < 30) {
-                                   Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
-                                   stopRecording(true);
-                                   setButtonToTextMsg(true);
-                               } else {
-                                   stopRecording(true);
-                                   long diff = endTimeForRecording - startTimeForRecording;
-                                   Log.e("Difference", String.valueOf(diff));
-                                   if (diff > 1000) {
-                                       Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-
-
-                                       /**send to server**/
-                                       final int index2 = creatDummyMessage();
-
-                                       new HttpCall(getActivity(), new ApiResponse() {
-                                           @Override
-                                           public void onSuccess(Object response) {
-                                               final Message message = new Message();
-                                               message.setUser_id(userID);
-                                               message.setFrom_id(userID);
-                                               message.setTo(doctorID);
-                                               message.setIs_url(1);
-                                               message.setMsg((String) response);
-                                               message.setType(Constants.AUDIO);
-                                               message.setIs_forward(0);
-                                               message.setSent_at(getDateTimeNow());
-
-                                               //request
-                                               new HttpCall(getActivity(), new ApiResponse() {
-                                                   @Override
-                                                   public void onSuccess(Object response) {
-                                                       creatRealMessage((Message) response, index2);
-                                                   }
-
-                                                   @Override
-                                                   public void onFailed(String error) {
-                                                       removeDummyMessage(index2);
-                                                       Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
-                                                   }
-                                               }).sendMessage(message);
-                                           }
-
-                                           @Override
-                                           public void onFailed(String error) {
-                                               Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
-                                           }
-                                       }).uploadMedia(mOutputFile.getPath());
+                        if (img_send_audio.getProgress() < 30) {
+                            Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
+                            stopRecording(true);
+                            setButtonToTextMsg(true);
+                        } else {
+                            stopRecording(true);
+                            long diff = endTimeForRecording - startTimeForRecording;
+                            Log.e("Difference", String.valueOf(diff));
+                            if (diff > 1000) {
+                                Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
 
 
-                                   }
-                                   setButtonToTextMsg(true);
-                               }
-                               break;
-                       }
+                                /**send to server**/
+                                final int index2 = creatDummyMessage();
 
-                   return false;
-               }
+                                new HttpCall(getActivity(), new ApiResponse() {
+                                    @Override
+                                    public void onSuccess(Object response) {
+                                        final Message message = new Message();
+                                        message.setUser_id(userID);
+                                        message.setFrom_id(userID);
+                                        message.setTo(doctorID);
+                                        message.setIs_url(1);
+                                        message.setMsg((String) response);
+                                        message.setType(Constants.AUDIO);
+                                        message.setIs_forward(0);
+                                        message.setSent_at(getDateTimeNow());
+
+                                        //request
+                                        new HttpCall(getActivity(), new ApiResponse() {
+                                            @Override
+                                            public void onSuccess(Object response) {
+                                                creatRealMessage((Message) response, index2);
+                                            }
+
+                                            @Override
+                                            public void onFailed(String error) {
+                                                removeDummyMessage(index2);
+                                                Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }).sendMessage(message);
+                                    }
+
+                                    @Override
+                                    public void onFailed(String error) {
+                                        Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                    }
+                                }).uploadMedia(mOutputFile.getPath());
 
 
-           });
+                            }
+                            setButtonToTextMsg(true);
+                        }
+                        break;
+                }
 
+                return false;
+            }
+
+
+        });
 
 
         etMessage.addTextChangedListener(new TextWatcher() {
@@ -974,18 +973,70 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @BindView(R.id.chat_bar)
     LinearLayout chat_bar;
 
-    private void checkSessionOpen(int userType) {
+    private void checkSessionOpen(final int userType) {
 
-        if (doctor.getIsClinic() == 1) {
-            chat_bar.setVisibility(View.VISIBLE);
-            open_chat_session.setVisibility(View.GONE);
-        } else if (doctor.getIsOpen() == 0) {
-            chat_bar.setVisibility(View.GONE);
-            open_chat_session.setVisibility(View.VISIBLE);
-        } else {
-            chat_bar.setVisibility(View.VISIBLE);
-            open_chat_session.setVisibility(View.GONE);
+        switch (userType) {
+            case 1: // 1 => client use app
+                if (doctor.getIsClinic() == 1) {
+                    // client chat with clinics
+                    chat_bar.setVisibility(View.VISIBLE);
+                    open_chat_session.setVisibility(View.GONE);
+                } else if ( doctor.getIsOpen() == 0) {
+                    // client chat with doctor and session closed
+                    chat_bar.setVisibility(View.GONE);
+                    open_chat_session.setVisibility(View.VISIBLE);
+                } else {
+                    // client chat with doctor and session opened
+                    chat_bar.setVisibility(View.VISIBLE);
+                    open_chat_session.setVisibility(View.GONE);
+                }
+                break;
+            case 2: // 2 doctor user app
+                if (doctor.getIsClinic() == 1) {
+                    // i chat with clinic
+                    chat_bar.setVisibility(View.VISIBLE);
+                    open_chat_session.setVisibility(View.GONE);
+                }else if (doctor.getIsClinic()==0 &&doctor.getIsDoc()==0){
+                    // i chat with client and sssion closed
+                    chat_bar.setVisibility(View.VISIBLE);
+                    open_chat_session.setVisibility(View.GONE);
+                    if(doctor.getIsOpen()==0){
+                        imgbtn_chat_attach.setEnabled(false);
+                        img_send_audio.setEnabled(false);
+                        img_requestpermission.setEnabled(false);
+                        etMessage.setHint("Session is Close , Type message to open it");
+
+                        new HttpCall(getActivity(), new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                imgbtn_chat_attach.setEnabled(true);
+                                img_send_audio.setEnabled(true);
+                                img_requestpermission.setEnabled(true);
+                                etMessage.setHint("Nachricht schreiben");
+                                checkSessionOpen(userType);
+                                doctor.setIsOpen(1);
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(getContext(), "Sorry Session still Closed", Toast.LENGTH_SHORT).show();
+                            }
+                        }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
+                                String.valueOf(doctor.getId()), "2");
+                    }
+                }
+                else if (doctor.getIsOpen() == 0) {
+                    // i chat with doctor and session closed
+                    chat_bar.setVisibility(View.GONE);
+                    open_chat_session.setVisibility(View.VISIBLE);
+                } else {
+                    // i chat with doctor and session opened
+                    chat_bar.setVisibility(View.VISIBLE);
+                    open_chat_session.setVisibility(View.GONE);
+                }
+                break;
         }
+
     }
 
     @Override
@@ -1198,19 +1249,19 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         recyclerView.scrollToPosition(messages.size() - 1);
     }
 
-    private void checkAudioPermission(){
+    private void checkAudioPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             img_requestpermission.setVisibility(View.GONE);
             img_send_audio.setVisibility(View.VISIBLE);
-        }
-            else{
+        } else {
             img_requestpermission.setVisibility(View.VISIBLE);
             img_send_audio.setVisibility(View.GONE);
         }
     }
+
     @OnClick(R.id.img_requestpermission)
-    public void requestAudioPermission(){
+    public void requestAudioPermission() {
         requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
     }
 }
