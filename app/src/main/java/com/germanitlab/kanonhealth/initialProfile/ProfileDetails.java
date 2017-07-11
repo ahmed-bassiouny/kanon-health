@@ -328,7 +328,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                             dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
                             Log.e("After Casting", uploadImageResponse.getFile_url());
-                            Toast.makeText(ProfileDetails.this, "onSuccess", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileDetails.this, "Upload Success", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

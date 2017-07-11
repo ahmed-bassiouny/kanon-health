@@ -1343,8 +1343,6 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                             Intent intent = new Intent(context, MapsActivity.class);
                             intent.putExtra("lat", jsonObject.getString("lat"));
                             intent.putExtra("long", jsonObject.getString("long"));
-
-                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
                             context.startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1417,8 +1415,6 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
                             Intent intent = new Intent(context, MapsActivity.class);
                             intent.putExtra("lat", jsonObject.getString("lat"));
                             intent.putExtra("long", jsonObject.getString("long"));
-
-                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
                             context.startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1956,7 +1952,6 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
     public void selectItem(RelativeLayout messageContainer, Message message) {
         messageContainer.setBackgroundResource(R.color.gray_black);
         list.add(message.get_Id());
-        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
     }
 
     public void changeToolbar(Boolean select) {
