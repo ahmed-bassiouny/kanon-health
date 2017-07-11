@@ -144,8 +144,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     static HttpChatFragment httpChatFragment;
     MessageRepositry messageRepositry;
 
-    // not fixed
-
+    int userType=0; // get user type if doctor =2 or clinic =3 or client =1
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -158,11 +157,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         return view;
     }
 
-    public static HttpChatFragment newInstance(int doctorID, String doctorUrl) {
+    public static HttpChatFragment newInstance(int doctorID, String doctorUrl,int userType) {
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
         bundle.putString("doctorName", "My Documents");
         bundle.putString("doctorUrl", doctorUrl);
+        bundle.putInt("userType", userType);
         if (httpChatFragment == null) {
             httpChatFragment = new HttpChatFragment();
             httpChatFragment.setArguments(bundle);
@@ -204,6 +204,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         doctorID = getArguments().getInt("doctorID");
         doctorName = getArguments().getString("doctorName");
         doctorUrl = getArguments().getString("doctorUrl");
+        userType=getArguments().getInt("userType",0);
         if (!doctorUrl.isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctorUrl, getActivity());
         tv_chat_user_name.setText(doctorName);
@@ -215,7 +216,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         try {
             doctor = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
             if (doctor != null)
-                checkSessionOpen();
+                checkSessionOpen(userType);
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -973,7 +974,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @BindView(R.id.chat_bar)
     LinearLayout chat_bar;
 
-    private void checkSessionOpen() {
+    private void checkSessionOpen(int userType) {
 
         if (doctor.getIsClinic() == 1) {
             chat_bar.setVisibility(View.VISIBLE);
@@ -1018,7 +1019,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
                                     Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                     doctor.setIsOpen(0);
-                                    checkSessionOpen();
+                                    checkSessionOpen(userType);
                                     if (doctor.isClinic == 1) {
                                         Intent intent = new Intent(getActivity(), InquiryActivity.class);
                                         UserInfoResponse userInfoResponse = new UserInfoResponse();
@@ -1070,7 +1071,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
                                         Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
-                                        checkSessionOpen();
+                                        checkSessionOpen(userType);
                                         if (doctor.isClinic == 1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                                             adb.setTitle(R.string.rate_conversation);
