@@ -92,10 +92,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("notificationtype", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
         broadcaster.sendBroadcast(intent);
 
-
-        String b = remoteMessage.getFrom();
-        //  String y=remoteMessage.getNotification().getBody();
-
         if (obj != null) {
             try {
                 if (obj.toString().trim().isEmpty())

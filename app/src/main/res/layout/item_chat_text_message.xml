@@ -17,7 +17,7 @@
         android:id="@+id/message_container"
         android:layout_weight="1"
         android:paddingLeft="7dp"
-        android:background="@drawable/bubble_out"
+        android:background="@drawable/bubble_out_doc"
         android:orientation="vertical">
 
 

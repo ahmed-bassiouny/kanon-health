@@ -203,12 +203,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     /****** jira task number 208 **************************/
                     if (tabPosition == 3) {
                         if (is_doc) {
-                            if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
-                                //  go to chat and open it if session closed
-                                gotoChat(doctor);
-                            } else {
-                                //  go to chat and open it by typing
-                            }
+                            gotoChat(doctor);
 
                         } else if (is_clinic) {
 
@@ -270,12 +265,10 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
         intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
         intent.putExtra("doctorUrl", doctor.getAvatar());
-        if (doctor.isClinic == 1)
-            intent.putExtra("userType", 3);
-        else if (doctor.getIsDoc() == 1)
-            intent.putExtra("userType", 2);
+        if (is_doc)
+            intent.putExtra("iamDoctor", true);
         else
-            intent.putExtra("userType", 1);
+            intent.putExtra("iamDoctor", false);
         activity.startActivity(intent);
     }
 }

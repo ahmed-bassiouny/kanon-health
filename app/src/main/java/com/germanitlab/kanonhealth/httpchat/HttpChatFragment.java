@@ -144,7 +144,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     static HttpChatFragment httpChatFragment;
     MessageRepositry messageRepositry;
 
-    int userType = 0; // get user type if doctor =2 or clinic =3 or client =1
+    boolean iamDoctor = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -157,12 +157,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         return view;
     }
 
-    public static HttpChatFragment newInstance(int doctorID, String doctorUrl, int userType) {
+    public static HttpChatFragment newInstance(int doctorID, String doctorUrl, boolean iamDoctor) {
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
         bundle.putString("doctorName", "My Documents");
         bundle.putString("doctorUrl", doctorUrl);
-        bundle.putInt("userType", userType);
+        bundle.putBoolean("iamDoctor", iamDoctor);
         if (httpChatFragment == null) {
             httpChatFragment = new HttpChatFragment();
             httpChatFragment.setArguments(bundle);
@@ -176,14 +176,18 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         initObjects();
         checkAudioPermission();
         initData();
-        checkMode();
         handelEvent();
-
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkMode();
+    }
 
     // declare objects in this fragment
     private void initObjects() {
@@ -204,7 +208,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         doctorID = getArguments().getInt("doctorID");
         doctorName = getArguments().getString("doctorName");
         doctorUrl = getArguments().getString("doctorUrl");
-        userType = getArguments().getInt("userType", 0);
+        iamDoctor = getArguments().getBoolean("iamDoctor", false);
         if (!doctorUrl.isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctorUrl, getActivity());
         tv_chat_user_name.setText(doctorName);
@@ -216,7 +220,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         try {
             doctor = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
             if (doctor != null)
-                checkSessionOpen(userType);
+                checkSessionOpen(iamDoctor);
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -242,6 +246,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onSuccess(Object response) {
         messages = (ArrayList<Message>) response;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (Message message:messages) {
+                    messageRepositry.createOrUpate(message);
+                }
+            }
+        }).start();
         isStoragePermissionGranted();
 
     }
@@ -306,11 +318,32 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     public void changeText() {
 
         if (etMessage.getText().toString().trim().length() > 0) {
-            img_send_audio.setVisibility(View.GONE);
+            if(iamDoctor&&doctor.getIsDoc()==0&&doctor.isClinic==0&&doctor.getIsOpen()==0){
+                    new HttpCall(getActivity(), new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            imgbtn_chat_attach.setEnabled(true);
+                            img_send_audio.setEnabled(true);
+                            img_requestpermission.setEnabled(true);
+                            etMessage.setHint("Nachricht schreiben");
+                            doctor.setIsOpen(1);
+                            checkSessionOpen(iamDoctor);
+                        }
+
+                        @Override
+                        public void onFailed(String error) {
+                            Toast.makeText(getContext(), "Sorry Session still Closed", Toast.LENGTH_SHORT).show();
+                        }
+                    }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
+                            String.valueOf(doctor.getId()), "2");
+            }
+            checkAudioPermission();
             img_send_txt.setVisibility(View.VISIBLE);
+
         } else {
             img_send_audio.setVisibility(View.VISIBLE);
             img_send_txt.setVisibility(View.GONE);
+            img_requestpermission.setVisibility(View.GONE);
         }
     }
 
@@ -661,12 +694,26 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                 creatRealMessage(message, 0);
             }
             else if(notificationType == 4){
-                doctor.setIsOpen(0);
-                checkSessionOpen(userType);
-                Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
+               // doctor.setIsOpen(0);
+               // checkSessionOpen(iamDoctor);
+              //  Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
             }
             else if(notificationType == 3){
                 //handle Deliverd Message here /// Andy
+                final Message msg = (Message) intent.getSerializableExtra("extra");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(Message message:messages){
+                            if(message.getId()==msg.getId()){
+                                int index=messages.indexOf(message);
+                                messages.set(index,msg);
+                                chatAdapter.setList(messages);
+                                chatAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }).start();
             }
 
         }
@@ -985,70 +1032,31 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @BindView(R.id.chat_bar)
     LinearLayout chat_bar;
 
-    private void checkSessionOpen(final int userType) {
+    private void checkSessionOpen(final boolean iamDoctor) {
 
-        switch (userType) {
-            case 1: // 1 => client use app
-                if (doctor.getIsClinic() == 1) {
-                    // client chat with clinics
-                    chat_bar.setVisibility(View.VISIBLE);
-                    open_chat_session.setVisibility(View.GONE);
-                } else if ( doctor.getIsOpen() == 0) {
-                    // client chat with doctor and session closed
-                    chat_bar.setVisibility(View.GONE);
-                    open_chat_session.setVisibility(View.VISIBLE);
-                } else {
-                    // client chat with doctor and session opened
-                    chat_bar.setVisibility(View.VISIBLE);
-                    open_chat_session.setVisibility(View.GONE);
-                }
-                break;
-            case 2: // 2 doctor user app
-                if (doctor.getIsClinic() == 1) {
-                    // i chat with clinic
-                    chat_bar.setVisibility(View.VISIBLE);
-                    open_chat_session.setVisibility(View.GONE);
-                }else if (doctor.getIsClinic()==0 &&doctor.getIsDoc()==0){
-                    // i chat with client and sssion closed
-                    chat_bar.setVisibility(View.VISIBLE);
-                    open_chat_session.setVisibility(View.GONE);
-                    if(doctor.getIsOpen()==0){
-                        imgbtn_chat_attach.setEnabled(false);
-                        img_send_audio.setEnabled(false);
-                        img_requestpermission.setEnabled(false);
-                        etMessage.setHint("Session is Close , Type message to open it");
-
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                imgbtn_chat_attach.setEnabled(true);
-                                img_send_audio.setEnabled(true);
-                                img_requestpermission.setEnabled(true);
-                                etMessage.setHint("Nachricht schreiben");
-                                checkSessionOpen(userType);
-                                doctor.setIsOpen(1);
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getContext(), "Sorry Session still Closed", Toast.LENGTH_SHORT).show();
-                            }
-                        }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
-                                String.valueOf(doctor.getId()), "2");
-                    }
-                }
-                else if (doctor.getIsOpen() == 0) {
-                    // i chat with doctor and session closed
-                    chat_bar.setVisibility(View.GONE);
-                    open_chat_session.setVisibility(View.VISIBLE);
-                } else {
-                    // i chat with doctor and session opened
-                    chat_bar.setVisibility(View.VISIBLE);
-                    open_chat_session.setVisibility(View.GONE);
-                }
-                break;
+        if(iamDoctor && doctor.isClinic==0&&doctor.getIsDoc()==0){
+            // i chat with client and sssion closed
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
+            if(doctor.getIsOpen()==0){
+                imgbtn_chat_attach.setEnabled(false);
+                img_send_audio.setEnabled(false);
+                img_requestpermission.setEnabled(false);
+                etMessage.setHint("Session is Close , Type message to open it");
+            }
+        }else if (doctor.getIsClinic() == 1) {
+            // client chat with clinics
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
+        } else if ( doctor.getIsOpen() == 0) {
+            // client chat with doctor and session closed
+            chat_bar.setVisibility(View.GONE);
+            open_chat_session.setVisibility(View.VISIBLE);
+        } else {
+            // client chat with doctor and session opened
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -1082,7 +1090,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
                                     Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                     doctor.setIsOpen(0);
-                                    checkSessionOpen(userType);
+                                    checkSessionOpen(iamDoctor);
                                     if (doctor.isClinic == 1) {
                                         Intent intent = new Intent(getActivity(), InquiryActivity.class);
                                         UserInfoResponse userInfoResponse = new UserInfoResponse();
@@ -1134,7 +1142,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
                                         Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
-                                        checkSessionOpen(userType);
+                                        checkSessionOpen(iamDoctor);
                                         if (doctor.isClinic == 1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                                             adb.setTitle(R.string.rate_conversation);
@@ -1211,9 +1219,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                 getActivity().finish();
             }
 
-        } catch (
-                Exception e)
-
+        } catch (Exception e)
         {
             Crashlytics.logException(e);
             Toast.makeText(getActivity(), getText(R.string.error_message), Toast.LENGTH_SHORT).show();

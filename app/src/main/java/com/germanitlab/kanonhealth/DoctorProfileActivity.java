@@ -319,7 +319,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 PrefManager prefManager = new PrefManager(this);
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 intent.putExtra("doctorName", user.getLast_name() + " " + user.getFirst_name());
-                intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
+                intent.putExtra("iamDoctor", false);
                 intent.putExtra("doctorUrl", user.getAvatar());
                 startActivity(intent);
             }
@@ -452,6 +452,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
             recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             recyclerViewDocument.setAdapter(doctorDocumentAdapter);
+            recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
         }
     }
 

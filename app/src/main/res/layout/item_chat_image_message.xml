@@ -14,9 +14,9 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:background="@drawable/bubble_out"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bubble_out_doc"
         android:visibility="visible">
 
         <RelativeLayout
