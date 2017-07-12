@@ -243,7 +243,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     }
 
     public class ItemView extends RecyclerView.ViewHolder {
-        CircleImageView imgAvatar, imgPage, imgStatus;
+        CircleImageView imgAvatar, imgStatus;
         TextView tvDoctorName, tvDate, tvSpecialist, tvPractice;
         FlowLayout linearLayoutSpecialist;
 
@@ -252,7 +252,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             super(itemView);
 
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar_cell);
-            imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
+//            imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
             tvPractice = (TextView) itemView.findViewById(R.id.tv_practice);
             tvDoctorName = (TextView) itemView.findViewById(R.id.tv_doctor_name_cell);
             tvDate = (TextView) itemView.findViewById(R.id.tv_doctor_date_cell);

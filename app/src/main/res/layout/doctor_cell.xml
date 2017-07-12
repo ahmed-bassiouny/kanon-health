@@ -10,7 +10,8 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_avatar_cell"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        app:layout_marginTopPercent="4%"
         android:src="@drawable/placeholder"
         app:civ_border_color="#cfcdcd"
         app:civ_border_width="@dimen/size_3dp"
@@ -32,6 +33,7 @@
 
     <TextView
         android:id="@+id/tv_doctor_name_cell"
+        android:layout_toEndOf="@+id/img_avatar_cell"
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"
@@ -42,8 +44,7 @@
         app:layout_heightPercent="20%"
         app:layout_marginTopPercent="4%"
         app:layout_widthPercent="50%"
-        tools:text="fdtrdfgf,kuhnyikubvujyfrvyhrtd"
-        android:layout_toEndOf="@+id/img_avatar_cell" />
+        tools:text="fdtrdfgf,kuhnyikubvujyfrvyhrtd" />
 
     <TextView
         android:id="@+id/tv_doctor_date_cell"
@@ -102,20 +103,12 @@
         android:layout_toEndOf="@id/img_avatar_cell"
         android:orientation="horizontal"
         app:layout_heightPercent="20%"
+        app:layout_marginBottomPercent="4%"
         app:layout_marginEndPercent="3%"
         app:layout_marginTopPercent="4%"
-        app:layout_marginBottomPercent="4%"
         f:layout_newLine="true">
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_lable_cell"
-            android:layout_width="15dp"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/size_3dp"
-            android:paddingRight="@dimen/size_3dp"
-            android:src="@drawable/doctor_icon"
-            android:visibility="visible" />
     </org.apmem.tools.layouts.FlowLayout>
 
 
