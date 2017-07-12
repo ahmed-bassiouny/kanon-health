@@ -652,17 +652,21 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Message message = (Message) intent.getSerializableExtra("extra");
-            // notificationType == 0 for getting new message , 1 for close session
+            // notificationType ==  1 for new messagee ,2 for login , 3 for deliver message , 4 for close session   Andy
             int notificationType = intent.getIntExtra("notificationtype" ,0);
-            if(notificationType == 0) {
+            if(notificationType == 1) {
+                Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFrom_id() != doctorID)
                     return;
                 creatRealMessage(message, 0);
             }
-            else if(notificationType == 1){
+            else if(notificationType == 4){
                 doctor.setIsOpen(0);
                 checkSessionOpen(userType);
+                Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
+            }
+            else if(notificationType == 3){
+                //handle Deliverd Message here /// Andy
             }
 
         }
@@ -1203,7 +1207,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                 Gson gson = new Gson();
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
                 intent.putExtra("doctor_obj", doctor);
-
                 startActivity(intent);
                 getActivity().finish();
             }

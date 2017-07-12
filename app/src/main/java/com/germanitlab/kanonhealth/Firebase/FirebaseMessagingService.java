@@ -24,8 +24,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-
 /**
  * Created by Geram IT Lab on 20/04/2017.
  */
@@ -65,11 +63,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 case 3:
                     getDeliverMessage(remoteMessage);
                     break;
+                case 4:
+                    getCloseChat(remoteMessage);
 
             }
         } catch (Exception e) {
         }
 
+    }
+
+    private void getCloseChat(RemoteMessage remoteMessage) {
+        Intent intent = new Intent("MyData");
+        intent.putExtra("notificationtype", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
+        broadcaster.sendBroadcast(intent);
     }
 
     private void getNewMessage(RemoteMessage remoteMessage) {
@@ -103,12 +109,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 Crashlytics.logException(e);
             }
             if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id) && ChatActivity.appStatus != true)
-                showNotificationForNewMessage(remoteMessage.getData().get("msg"), 1, id);
+                showNotification(remoteMessage.getData().get("msg"),"Neue Nachricht", 1, id, true);
 
         }
     }
 
     private void getLogin(RemoteMessage remoteMessage) {
+        showNotification(remoteMessage.getData().get("body") , remoteMessage.getData().get("title") , 0 , 0 , false);
     }
 
     private void getDeliverMessage(RemoteMessage remoteMessage) {
@@ -122,16 +129,16 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent intent = new Intent("MyData");
         intent.putExtra("extra", message);
-        intent.putExtra("notificationtype", 0);
+        intent.putExtra("notificationtype", remoteMessage.getData().get("notificationtype"));
         broadcaster.sendBroadcast(intent);
 
     }
 
-    private void showNotificationForNewMessage(String message, int type, int from_id) {
+    private void showNotification(String message,String title ,  int type, int from_id , Boolean hasAction) {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        .setContentTitle("Neue Nachricht")
+                        .setContentTitle(title)
                         .setSound(uri)
                         .setAutoCancel(true)
                         .setContentText(message);
@@ -143,20 +150,22 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             builder.setSmallIcon(R.drawable.stethoscope)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo64));
         }
+        if(hasAction) {
 
+            Intent notificationIntent = new Intent(this, ChatActivity.class);
+            notificationIntent.putExtra("message", message);
+            notificationIntent.putExtra("type", type);
+            notificationIntent.putExtra("from_id", from_id);
+            notificationIntent.putExtra("from_notification", 1);
+            notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 2, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+            builder.setContentIntent(contentIntent);
 
-        Intent notificationIntent = new Intent(this, ChatActivity.class);
-        notificationIntent.putExtra("message", message);
-        notificationIntent.putExtra("type", type);
-        notificationIntent.putExtra("from_id", from_id);
-        notificationIntent.putExtra("from_notification", 1);
-        notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 2, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
-        builder.setContentIntent(contentIntent);
+            // Add as notification
 
-        // Add as notification
+        }
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(2, builder.build());
 
