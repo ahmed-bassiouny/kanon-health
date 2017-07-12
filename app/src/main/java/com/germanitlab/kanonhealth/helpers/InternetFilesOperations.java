@@ -354,8 +354,9 @@ public class InternetFilesOperations {
         @Override
         protected String doInBackground(String... f_url) {
             int count;
+            URL url;
             try {
-                URL url = new URL(Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);
+                url = new URL(Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);
                 URLConnection conection = url.openConnection();
                 conection.connect();
                 // this will be useful so that you can show a tipical 0-100% progress bar
@@ -363,7 +364,6 @@ public class InternetFilesOperations {
 
                 // download the file
                 InputStream input = new BufferedInputStream(url.openStream(), 8192);
-
 
                 //this will be used to write the downloaded data into the file we created
                 FileOutputStream output = new FileOutputStream(file);
@@ -392,8 +392,8 @@ public class InternetFilesOperations {
 
 
             } catch (Exception e) {
+                Crashlytics.setString("request file url", Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);
                 Crashlytics.logException(e);
-                Toast.makeText(context, context.getResources().getText(R.string.image_not_found), Toast.LENGTH_SHORT).show();
             }
 
             return null;

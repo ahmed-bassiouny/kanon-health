@@ -21,7 +21,6 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -44,8 +43,6 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     private List<User> doctorContactsList;
     Activity activity;
     int visibility;
-    private boolean settedAdapter = false;
-    private boolean onBind;
     List<Message> list;
     int tabPosition;
     boolean is_doc = false;
@@ -88,8 +85,6 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     @Override
     public void onBindViewHolder(final ItemView holder, final int position) {
-        onBind = true;
-
         try {
             holder.setIsRecyclable(false);
 
@@ -141,20 +136,21 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             if (doctor.isClinic == 1) {
                 holder.tvDoctorName.setText(doctor.getFirst_name());
                 holder.tvPractice.setVisibility(View.GONE);
-            } else
+            } else {
                 holder.tvDoctorName.setText(doctor.getLast_name() + ", " + doctor.getFirst_name());
+            }
 
-            holder.tvAbout.setText(doctor.getAbout());
-            if (doctor.isChosen())
-                holder.background.setBackgroundResource(R.color.dark_gray);
+//            holder.tvAbout.setText(doctor.getAbout());
+//            if (doctor.isChosen())
+//                holder.background.setBackgroundResource(R.color.dark_gray);
             holder.tvDate.setText(doctor.getLastOnline());
             if (doctor.getUnreadedMesCount() > 0) {
-                holder.tvUnreadMessage.setVisibility(View.VISIBLE);
-                holder.tvUnreadMessage.setText(doctor.getUnreadedMesCount());
+//                holder.tvUnreadMessage.setVisibility(View.VISIBLE);
+//                holder.tvUnreadMessage.setText(doctor.getUnreadedMesCount());
             } else {
-                holder.tvUnreadMessage.setVisibility(View.INVISIBLE);
+//                holder.tvUnreadMessage.setVisibility(View.INVISIBLE);
             }
-            holder.tvSubtitle.setText(doctor.getSubTitle());
+//            holder.tvSubtitle.setText(doctor.getSubTitle());
             holder.tvPractice.setText("");
             if (doctor.getIsDoc() == 1 && doctor.getMembers_at() != null && doctor.getMembers_at().size() > 0) {
                 holder.tvPractice.setVisibility(View.VISIBLE);
@@ -188,44 +184,36 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             } else {
                 holder.imgAvatar.setBorderWidth(0);
                 holder.imgAvatar.setBorderOverlay(false);
-            }
-
-
-            if (tabPosition != 3 && doctor.getSpecialities() != null) {
-                for (int x = 0; x < doctor.getSpecialities().size(); x++) {
-                    ImageView image = new ImageView(activity);
+                if (doctor.getSpecialities() != null && doctor.getSpecialities().size() > 0) {
+                    for (int x = 0; x < doctor.getSpecialities().size(); x++) {
+                        ImageView image = new ImageView(activity);
 //                image.setBackgroundResource(R.drawable.doctor_icon);
-                    int width = 60;
-                    int height = 60;
-
-                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getSpecialities().get(x).getSpeciality_icon(), R.drawable.doctor_icon, activity);
-
-                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
-                    image.setLayoutParams(parms);
-                    holder.linearLayoutSpecialist.addView(image);
+                        int width = 60;
+                        int height = 60;
+                        ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getSpecialities().get(x).getSpeciality_icon(), R.drawable.doctor_icon, activity);
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
+                        image.setLayoutParams(parms);
+                        holder.linearLayoutSpecialist.addView(image);
+                    }
                 }
-            } else {
-
             }
-            onBind = false;
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     /****** jira task number 208 **************************/
                     if (tabPosition == 3) {
                         if (is_doc) {
-                            if(doctor.isClinic==1||doctor.getIsDoc()==1) {
+                            if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
                                 //  go to chat and open it if session closed
                                 gotoChat(doctor);
-                            }else{
+                            } else {
                                 //  go to chat and open it by typing
                             }
 
                         } else if (is_clinic) {
 
                         } else {
-                            if (doctor.isClinic==1||doctor.getIsDoc()==1) {
+                            if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
                                 gotoChat(doctor);
                             } else {
                                 //direct chat no optional to open or close it
@@ -256,8 +244,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgPage, imgStatus;
-        TextView tvDoctorName, tvDate, tvAbout, tvSubtitle, tvUnreadMessage, tvSpecialist, tvPractice;
-        LinearLayout background;
+        TextView tvDoctorName, tvDate, tvSpecialist, tvPractice;
         FlowLayout linearLayoutSpecialist;
 
 
@@ -266,20 +253,16 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar_cell);
             imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
-            background = (LinearLayout) itemView.findViewById(R.id.background);
             tvPractice = (TextView) itemView.findViewById(R.id.tv_practice);
             tvDoctorName = (TextView) itemView.findViewById(R.id.tv_doctor_name_cell);
             tvDate = (TextView) itemView.findViewById(R.id.tv_doctor_date_cell);
-            tvSubtitle = (TextView) itemView.findViewById(R.id.tv_sub_title_cell);
-            tvAbout = (TextView) itemView.findViewById(R.id.tv_about_doctor_cell);
-            tvUnreadMessage = (TextView) itemView.findViewById(R.id.tv_unread_message_cell);
             tvSpecialist = (TextView) itemView.findViewById(R.id.tv_specialities);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
             linearLayoutSpecialist = (FlowLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
         }
     }
 
-    private void gotoChat(User doctor){
+    private void gotoChat(User doctor) {
         Gson gson = new Gson();
         Intent intent = new Intent(activity, HttpChatActivity.class);
         intent.putExtra("doctorID", doctor.get_Id());
@@ -287,9 +270,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
         intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
         intent.putExtra("doctorUrl", doctor.getAvatar());
-        if(doctor.isClinic==1)
+        if (doctor.isClinic == 1)
             intent.putExtra("userType", 3);
-        else if (doctor.getIsDoc()==1)
+        else if (doctor.getIsDoc() == 1)
             intent.putExtra("userType", 2);
         else
             intent.putExtra("userType", 1);

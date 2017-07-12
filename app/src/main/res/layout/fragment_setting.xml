@@ -111,6 +111,34 @@
 
 
             <TableRow
+                android:id="@+id/setting_weblogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_10sp"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/size_20dp"
+                    android:text="KanonHealth Web"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_3dp"
+                android:background="@color/gray_black" />
+
+
+            <TableRow
                 android:id="@+id/dr_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

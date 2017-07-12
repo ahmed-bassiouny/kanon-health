@@ -64,6 +64,8 @@ public class Util {
     }
 
     public void dismissProgressDialog() {
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }
