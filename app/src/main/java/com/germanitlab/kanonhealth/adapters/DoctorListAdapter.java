@@ -214,34 +214,21 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 public void onClick(View view) {
                     /****** jira task number 208 **************************/
                     if (tabPosition == 3) {
-                        Gson gson = new Gson();
                         if (is_doc) {
-                            Intent intent = new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("doctorID", doctor.get_Id());
-                            PrefManager prefManager = new PrefManager(activity);
-                            prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                            intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
-                            intent.putExtra("doctorUrl", doctor.getAvatar());
-                            activity.startActivity(intent);
-
+                            if(doctor.isClinic==1||doctor.getIsDoc()==1) {
+                                //  go to chat and open it if session closed
+                                gotoChat(doctor);
+                            }else{
+                                //  go to chat and open it by typing
+                            }
 
                         } else if (is_clinic) {
 
                         } else {
-                            if (doctor.getIsDoc() == 1) {
-                                Intent intent = new Intent(activity, HttpChatActivity.class);
-                                intent.putExtra("doctorID", doctor.get_Id());
-                                PrefManager prefManager = new PrefManager(activity);
-                                prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                                intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
-                                intent.putExtra("doctorUrl", doctor.getAvatar());
-                                activity.startActivity(intent);
-                            } else if (doctor.isClinic == 1) {
-                                Intent intent = new Intent(activity, InquiryActivity.class);
-                                UserInfoResponse userInfoResponse = new UserInfoResponse();
-                                userInfoResponse.setUser(doctor);
-                                intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
-                                activity.startActivity(intent);
+                            if (doctor.isClinic==1||doctor.getIsDoc()==1) {
+                                gotoChat(doctor);
+                            } else {
+                                //direct chat no optional to open or close it
                             }
                         }
 
@@ -290,5 +277,22 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
             linearLayoutSpecialist = (FlowLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
         }
+    }
+
+    private void gotoChat(User doctor){
+        Gson gson = new Gson();
+        Intent intent = new Intent(activity, HttpChatActivity.class);
+        intent.putExtra("doctorID", doctor.get_Id());
+        PrefManager prefManager = new PrefManager(activity);
+        prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
+        intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
+        intent.putExtra("doctorUrl", doctor.getAvatar());
+        if(doctor.isClinic==1)
+            intent.putExtra("userType", 3);
+        else if (doctor.getIsDoc()==1)
+            intent.putExtra("userType", 2);
+        else
+            intent.putExtra("userType", 1);
+        activity.startActivity(intent);
     }
 }

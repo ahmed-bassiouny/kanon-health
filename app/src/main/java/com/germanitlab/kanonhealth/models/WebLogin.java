@@ -9,14 +9,14 @@ public class WebLogin implements Serializable {
 
     private String user_id;
     private String password;
-    private String code_qr;
+    private String code;
 
     @Override
     public String toString() {
         return "WebLogin{" +
                 "user_id='" + getUser_id() + '\'' +
                 ", password=" + getPassword() +
-                ", code_qr='" + getCode_qr() + '\'' +
+                ", code='" + getCode() + '\'' +
                 '}';
     }
 
@@ -36,11 +36,11 @@ public class WebLogin implements Serializable {
         this.password = password;
     }
 
-    public String getCode_qr() {
-        return code_qr;
+    public String getCode() {
+        return code;
     }
 
-    public void setCode_qr(String code_qr) {
-        this.code_qr = code_qr;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

@@ -143,7 +143,7 @@ public class StartQrScan extends AppCompatActivity {
             WebLogin webLogin = new WebLogin();
             webLogin.setUser_id(prefManager.getData(PrefManager.USER_ID));
             webLogin.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            webLogin.setCode_qr(qrCode);
+            webLogin.setCode(qrCode);
 
             new HttpCall(StartQrScan.this, new ApiResponse() {
                 @Override

@@ -946,8 +946,6 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
                             Intent intent = new Intent(context, MapsActivity.class);
                             intent.putExtra("lat", jsonObject.getString("lat"));
                             intent.putExtra("long", jsonObject.getString("long"));
-
-                            Toast.makeText(context, jsonObject.getString("lat") + jsonObject.getString("long"), Toast.LENGTH_LONG).show();
                             context.startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
