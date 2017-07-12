@@ -415,8 +415,6 @@ public class SettingFragment extends Fragment {
             });
         } catch (Exception e) {
         }
-
-
     }
 
     private void getSetting() {

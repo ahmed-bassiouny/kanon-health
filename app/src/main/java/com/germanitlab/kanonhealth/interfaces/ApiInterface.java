@@ -113,7 +113,7 @@ public interface ApiInterface {
     @POST("/doctors/change_status")
     Call<StatusResponse> goOnline(@Body StatusRequestModel request);
 
-    @POST("/users/update")
+    @POST("/users/update_token")
     Call<JsonObject> updateToken(@Body RequsetToken request);
 
     @POST("/messages/update_privacy")

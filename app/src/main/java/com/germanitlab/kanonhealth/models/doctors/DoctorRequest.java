@@ -17,6 +17,8 @@ public class DoctorRequest implements Serializable {
     private String Key;
     @SerializedName("doc_id")
     private String doc_id;
+    @SerializedName("id")
+    private String id;
     private int entity_type;
     private int is_object = 1;
 
@@ -33,6 +35,13 @@ public class DoctorRequest implements Serializable {
         this.password = password;
         this.Key = Key;
         this.doc_id = doc_id;
+    }
+    public DoctorRequest(String userID, String password, String Key, String doc_id , String id) {
+        this.userID = userID;
+        this.password = password;
+        this.Key = Key;
+        this.doc_id = doc_id;
+        this.id = id ;
     }
 
     public String getUserID() {

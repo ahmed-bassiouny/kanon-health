@@ -79,7 +79,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     static DoctorListFragment doctorListFragment;
     private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
-    public Boolean is_doctor_data, is_clinic_data;
+    public Boolean is_doctor_data = false, is_clinic_data = false;
     LinearLayoutManager llm ;
 
     public DoctorListFragment() {

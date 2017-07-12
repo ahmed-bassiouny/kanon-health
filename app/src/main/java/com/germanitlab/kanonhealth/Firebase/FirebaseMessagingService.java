@@ -24,6 +24,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by Geram IT Lab on 20/04/2017.
  */
@@ -34,6 +36,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     int id = 0;
     private LocalBroadcastManager broadcaster;
+    Object obj;
 
     @Override
     public void onCreate() {
@@ -45,12 +48,38 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Object obj = remoteMessage.getData().get("from_id");
+        obj = remoteMessage.getData().get("from_id");
         /*
         *
         * */
+        for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+        }
+
+        try {
+            int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
+            switch (notificationType) {
+                case 1:
+                    getNewMessage(remoteMessage);
+                    break;
+                case 2:
+                    getLogin(remoteMessage);
+                    break;
+                case 3:
+                    getDeliverMessage(remoteMessage);
+                    break;
+
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
+    private void getNewMessage(RemoteMessage remoteMessage) {
         Message message = new Message();
-        message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
+        if (remoteMessage.getData().get("from_id") != null)
+            message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
         message.setTo(Integer.valueOf(remoteMessage.getData().get("to_id")));
         message.setMsg(remoteMessage.getData().get("msg"));
         message.setType(remoteMessage.getData().get("type"));
@@ -60,8 +89,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("extra", message);
         broadcaster.sendBroadcast(intent);
 
-        String b =remoteMessage.getFrom();
-      //  String y=remoteMessage.getNotification().getBody();
+
+        String b = remoteMessage.getFrom();
+        //  String y=remoteMessage.getNotification().getBody();
 
         if (obj != null) {
             try {
@@ -76,14 +106,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 Crashlytics.logException(e);
             }
             if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id) && ChatActivity.appStatus != true)
-                showNotification(remoteMessage.getData().get("msg"), 1, id);
+                showNotificationForNewMessage(remoteMessage.getData().get("msg"), 1, id);
 
         }
     }
 
-    private void showNotification(String message, int type, int from_id) {
+    private void getLogin(RemoteMessage remoteMessage) {
+    }
 
+    private void getDeliverMessage(RemoteMessage remoteMessage) {
 
+    }
+
+    private void showNotificationForNewMessage(String message, int type, int from_id) {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)

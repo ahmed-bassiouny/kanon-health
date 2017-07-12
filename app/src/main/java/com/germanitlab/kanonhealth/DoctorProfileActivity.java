@@ -447,12 +447,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
             set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-//        if (user.getDocuments() != null) {
-//            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
-//            recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//            recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
-//            recyclerViewDocument.setAdapter(doctorDocumentAdapter);
-//        }
+        if (user.getDocuments() != null) {
+            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
+            recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewDocument.setAdapter(doctorDocumentAdapter);
+        }
     }
 
     private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {

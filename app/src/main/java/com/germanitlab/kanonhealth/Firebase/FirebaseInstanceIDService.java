@@ -33,7 +33,7 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(String token) {
         PrefManager prefManager = new PrefManager(getApplicationContext());
-        RequsetToken requsetToken = new RequsetToken("3", prefManager.getData(PrefManager.USER_PASSWORD), 1, token);
+        RequsetToken requsetToken = new RequsetToken(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), 1, token);
         new HttpCall(getApplicationContext(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {

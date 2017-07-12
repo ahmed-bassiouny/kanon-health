@@ -63,7 +63,7 @@ public class PaymentActivity extends AppCompatActivity {
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
             doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT),User.class);
-            if(doctor.getIsDoc() == 1)
+            if(doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR))
                 rbFree.setVisibility(View.VISIBLE);
             else
                 rbFree.setVisibility(View.GONE);

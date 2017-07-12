@@ -858,10 +858,10 @@ public class HttpCall {
 
     }
 
-    public void closeSession(String doc_id) {
+    public void closeSession(String id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "", doc_id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "","0", id);
             Call<JsonObject> connection = service.closeSession(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override

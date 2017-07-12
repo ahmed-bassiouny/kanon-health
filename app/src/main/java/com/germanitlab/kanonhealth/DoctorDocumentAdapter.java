@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -242,7 +243,6 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
     private void createLocation(final MyViewHolder holder, int position, final Message message) {
         try {
-
                 if (message.getLocationBitmap() == null && !message.isLoading()) {
                     holder.imageLayout.setVisibility(View.VISIBLE);
                     message.setLoading(true);
@@ -273,14 +273,8 @@ public class DoctorDocumentAdapter extends RecyclerView.Adapter<DoctorDocumentAd
 
                         }
                     });
-
-//                    new Thread().start();
+//                   new Thread().start();
                 }
-
-
-
-
-
         } catch (Exception ee) {
             Crashlytics.logException(ee);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

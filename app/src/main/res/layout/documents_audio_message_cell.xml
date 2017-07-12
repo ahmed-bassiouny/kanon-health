@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/document_background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -24,7 +25,7 @@
                 android:id="@+id/message_container_audio"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bubble_in">
+                android:background="@drawable/bubble_in_doc">
 
                 <LinearLayout
                     android:layout_width="150dp"

@@ -56,6 +56,7 @@
     //Privacy Colors
     <color name="red">#f44336</color>
     <color name="green">#4CAF50</color>
+    <color name="document_background">#e0e0e0</color>
 
 
 </resources>
