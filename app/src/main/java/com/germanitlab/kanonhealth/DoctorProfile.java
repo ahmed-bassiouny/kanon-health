@@ -207,7 +207,7 @@ public class DoctorProfile extends AppCompatActivity {
     private void createAdapter() {
         Gson gson = new Gson();
         ArrayList<Message> messages = doctor.getDocuments();
-        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, getApplicationContext(), this);
+        doctorDocumentAdapter = new DoctorDocumentAdapter(messages, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -515,7 +515,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     // Displaying Total Duration time
                     // Displaying time completed playing
                     // Updating progress bar
-                    audioViewHolder.tv_music_duration.setText("" + audioViewHolder.utils.milliSecondsToTimer(totalDuration));
                     int progress = (audioViewHolder.utils.getProgressPercentage(currentDuration, totalDuration));
                     audioViewHolder.seek_bar_music.setProgress(progress);
 
