@@ -448,9 +448,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getMembers_at() != null)
             set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
         if (user.getDocuments() != null) {
-            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), getApplicationContext(), this);
+            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
             recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-            recyclerViewDocument.setItemAnimator(new DefaultItemAnimator());
             recyclerViewDocument.setAdapter(doctorDocumentAdapter);
         }
     }

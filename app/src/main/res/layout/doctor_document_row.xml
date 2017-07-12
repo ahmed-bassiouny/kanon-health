@@ -6,7 +6,6 @@
     android:layout_gravity="right"
     android:gravity="center"
     android:layout_margin="5dp"
-    android:background="@color/document_background"
     android:orientation="vertical"
     app:layout_anchorGravity="right">
 
@@ -15,7 +14,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="left"
-        android:background="@drawable/bubble_out_doc"
+        android:background="@drawable/bubble_out"
         android:visibility="gone">
 
         <ImageView
@@ -50,7 +49,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:background="@drawable/bubble_out_doc"
+        android:background="@drawable/bubble_out"
         android:visibility="gone">
 
         <LinearLayout
