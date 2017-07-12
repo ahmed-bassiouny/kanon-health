@@ -279,6 +279,7 @@ public class SettingFragment extends Fragment {
                     intent.putExtra("doctorID", 1);
                     intent.putExtra("doctorName", "Support");
                     intent.putExtra("doctorUrl", "");
+                    intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
                     startActivity(intent);
 
                 }

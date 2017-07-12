@@ -178,7 +178,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private Menu menu;
     @BindView(R.id.fl_language)
     FlowLayout flLanguages;
-    boolean is_doc ;
+    boolean is_doc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,6 +319,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 PrefManager prefManager = new PrefManager(this);
                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
                 intent.putExtra("doctorName", user.getLast_name() + " " + user.getFirst_name());
+                intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
                 intent.putExtra("doctorUrl", user.getAvatar());
                 startActivity(intent);
             }
@@ -442,7 +443,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void setAdapters() {
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
         if (user.getSpecialities() != null)
-             setImage(user.getSpecialities(), flSpeciliaty, 1);
+            setImage(user.getSpecialities(), flSpeciliaty, 1);
         if (user.getSupported_lang() != null)
             setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
@@ -473,7 +474,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private View setImageCircle(String speciality_icon) {
         CircularImageView circularImageView = new CircularImageView(this);
-        ImageHelper.setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1 , getApplicationContext());
+        ImageHelper.setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, getApplicationContext());
         return circularImageView;
     }
 

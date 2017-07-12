@@ -158,6 +158,7 @@ public class PaymentActivity extends AppCompatActivity {
                     intent.putExtra("doctor_data", gson.toJson(doctor));
                     prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
                     intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
+                    intent.putExtra("userType", doctor.isClinic == 1 ? 3 : doctor.getIsDoc() == 1 ? 2 : 1);
                     intent.putExtra("doctorUrl", doctor.getAvatar());
                     startActivity(intent);
                     finish();

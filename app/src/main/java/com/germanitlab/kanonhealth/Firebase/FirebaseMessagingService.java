@@ -52,10 +52,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         /*
         *
         * */
-        for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-        }
 
         try {
             int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
@@ -87,6 +83,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent intent = new Intent("MyData");
         intent.putExtra("extra", message);
+        intent.putExtra("notificationtype", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
         broadcaster.sendBroadcast(intent);
 
 
@@ -115,6 +112,18 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     private void getDeliverMessage(RemoteMessage remoteMessage) {
+        Message message = new Message();
+        if (remoteMessage.getData().get("from_id") != null)
+            message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
+        message.setTo(Integer.valueOf(remoteMessage.getData().get("to_id")));
+        message.setMsg(remoteMessage.getData().get("msg"));
+        message.setType(remoteMessage.getData().get("type"));
+        message.setSent_at(remoteMessage.getData().get("sent_at"));
+
+        Intent intent = new Intent("MyData");
+        intent.putExtra("extra", message);
+        intent.putExtra("notificationtype", 0);
+        broadcaster.sendBroadcast(intent);
 
     }
 

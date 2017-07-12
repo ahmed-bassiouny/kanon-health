@@ -653,9 +653,17 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         @Override
         public void onReceive(Context context, Intent intent) {
             Message message = (Message) intent.getSerializableExtra("extra");
-            if (message.getFrom_id() != doctorID)
-                return;
-            creatRealMessage(message, 0);
+            // notificationType == 0 for getting new message , 1 for close session
+            int notificationType = intent.getIntExtra("notificationtype" ,0);
+            if(notificationType == 0) {
+                if (message.getFrom_id() != doctorID)
+                    return;
+                creatRealMessage(message, 0);
+            }
+            else if(notificationType == 1){
+                doctor.setIsOpen(0);
+                checkSessionOpen(userType);
+            }
 
         }
     };
