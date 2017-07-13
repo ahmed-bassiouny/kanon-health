@@ -11,18 +11,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.google.firebase.messaging.RemoteMessage;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Geram IT Lab on 20/04/2017.
@@ -56,13 +51,17 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
             switch (notificationType) {
                 case 1:
-                    getNewMessage(remoteMessage);
-                    break;
+                    if (HttpChatFragment.chatRunning)
+                        getMessage(remoteMessage);
+                    else
+                        // notify
+                        break;
                 case 2:
                     getLogin(remoteMessage);
                     break;
                 case 3:
-                    getDeliverMessage(remoteMessage);
+                    if (HttpChatFragment.chatRunning)
+                        getMessage(remoteMessage);
                     break;
                 case 4:
                     getCloseChat(remoteMessage);
@@ -80,7 +79,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         broadcaster.sendBroadcast(intent);
     }
 
-    private void getNewMessage(RemoteMessage remoteMessage) {
+   /* private void getNewMessage(RemoteMessage remoteMessage) {
         Message message = new Message();
         if (remoteMessage.getData().get("from_id") != null)
             message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
@@ -88,12 +87,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         message.setMsg(remoteMessage.getData().get("msg"));
         message.setType(remoteMessage.getData().get("type"));
         message.setSent_at(remoteMessage.getData().get("sent_at"));
-
         Intent intent = new Intent("MyData");
         intent.putExtra("extra", message);
         intent.putExtra("notificationtype", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
         broadcaster.sendBroadcast(intent);
-
         /*if (obj != null) {
             try {
                 if (obj.toString().trim().isEmpty())
@@ -108,14 +105,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id) && ChatActivity.appStatus != true)
                 showNotification(remoteMessage.getData().get("msg"),"Neue Nachricht", 1, id, true);
 
-        }*/
-    }
+        }
+    }*/
 
     private void getLogin(RemoteMessage remoteMessage) {
-        showNotification(remoteMessage.getData().get("body") , remoteMessage.getData().get("title") , 0 , 0 , false);
+        showNotification(remoteMessage.getData().get("body"), remoteMessage.getData().get("title"), 0, 0, false);
     }
 
-    private void getDeliverMessage(RemoteMessage remoteMessage) {
+    private void getMessage(RemoteMessage remoteMessage) {
         Message message = new Message();
         if (remoteMessage.getData().get("from_id") != null)
             message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
@@ -123,15 +120,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         message.setMsg(remoteMessage.getData().get("msg"));
         message.setType(remoteMessage.getData().get("type"));
         message.setSent_at(remoteMessage.getData().get("sent_at"));
-
         Intent intent = new Intent("MyData");
         intent.putExtra("extra", message);
         intent.putExtra("notificationtype", remoteMessage.getData().get("notificationtype"));
         broadcaster.sendBroadcast(intent);
-
     }
 
-    private void showNotification(String message,String title ,  int type, int from_id , Boolean hasAction) {
+    private void showNotification(String message, String title, int type, int from_id, Boolean hasAction) {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
@@ -147,7 +142,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             builder.setSmallIcon(R.drawable.stethoscope)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo64));
         }
-        if(hasAction) {
+        if (hasAction) {
 
             Intent notificationIntent = new Intent(this, ChatActivity.class);
             notificationIntent.putExtra("message", message);

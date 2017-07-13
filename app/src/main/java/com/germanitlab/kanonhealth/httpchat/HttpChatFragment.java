@@ -146,6 +146,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     MessageRepositry messageRepositry;
 
     boolean iamDoctor = false;
+    public static boolean chatRunning=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -235,6 +236,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     private void loadChatOnline(int userID, int doctorID) {
         MessageRequest messageRequest = new MessageRequest(userID, doctorID);
         new HttpCall(getActivity(), this).loadChat(messageRequest);
+        // request seen all msg
     }
 
     private void loadChatOffline(final int doctorID) {
@@ -338,6 +340,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
                         @Override
                         public void onFailed(String error) {
+                            imgbtn_chat_attach.setEnabled(false);
+                            img_send_audio.setEnabled(false);
+                            img_requestpermission.setEnabled(false);
+                            etMessage.setHint("");
+                            etMessage.setHint("Session is Close , Type message to open it");
                             Toast.makeText(getContext(), "Sorry Session still Closed", Toast.LENGTH_SHORT).show();
                         }
                     }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
@@ -676,6 +683,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onStart() {
         super.onStart();
+        chatRunning=true;
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
                 new IntentFilter("MyData"));
         if (userID == doctorID)
@@ -685,6 +693,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onStop() {
         super.onStop();
+        chatRunning=false;
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
@@ -695,9 +704,15 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
             int notificationType = intent.getIntExtra("notificationtype" ,0);
             if(notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
-                if (message.getFrom_id() != doctorID)
-                    return;
-                creatRealMessage(message, 0);
+                if (message.getFrom_id() == doctorID) {
+                    creatRealMessage(message, 0);
+                    // seen request for specific msg
+                }
+                else{
+                    // show notification
+                    // deliverd request for specific msg
+                }
+
             }
             else if(notificationType == 4){
                // doctor.setIsOpen(0);
@@ -716,6 +731,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                                 messages.set(index,msg);
                                 chatAdapter.setList(messages);
                                 chatAdapter.notifyDataSetChanged();
+                                messageRepositry.createOrUpate(message);
                             }
                         }
                     }
@@ -1068,6 +1084,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
+        if(doctorID==1) {
+            menu.getItem(0).setVisible(false);
+            menu.getItem(1).setVisible(false);
+        }else{
+            menu.getItem(0).setVisible(true);
+            menu.getItem(1).setVisible(true);
+        }
         if (Helper.isNetworkAvailable(getContext())) {
             menu.getItem(0).setEnabled(true);
             menu.getItem(1).setEnabled(true);

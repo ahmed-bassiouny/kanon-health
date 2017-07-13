@@ -92,6 +92,8 @@ public class PrefManager {
     }
 
     public String getData(String key) {
+        if(pref==null || key == null || key.isEmpty())
+            return "";
         return pref.getString(key, "");
     }
 
