@@ -383,9 +383,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             recyclerView.setLayoutManager(llm);
 
             recyclerView.setAdapter(mAdapter);
-            AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
-            AppController.getInstance().getSocket().on("IsSeen", isSeen);
-            AppController.getInstance().getSocket().on("IsDeliver", isDeliver);
             sendIsSeen();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -522,68 +519,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                 sendText.put("position", position);
                 sendText.put("from_id", prefManager.getData(PrefManager.USER_ID));
 
-                Log.d("Message ", sendText.toString());
-
-                AppController.getInstance().getSocket().emit("ChatMessageSend", sendText);
-                AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
-                    @Override
-                    public void call(Object... args) {
-                        if (!appStatus)
-                            return;
-                        Log.e("Message Response", args[0].toString());
-                        Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
-                        Log.e("my uri from here ", imageUri.toString());
-
-                        try {
-//                            if (prefManager.getData(PrefManager.HISTORY) != "") {
-//                                String history = prefManager.getData(PrefManager.HISTORY);
-//                                history = history.substring(0, history.length() - 1);
-//                                history = history + " , " + args[0].toString() + "]";
-//                                prefManager.put(PrefManager.HISTORY, history);
-//                                Log.d("history after ", prefManager.getData(PrefManager.HISTORY));
-//                            } else {
-//                                prefManager.put(PrefManager.HISTORY, "[" + args[0] + "]");
-//                            }
-
-                            JSONObject jsonObject = new JSONObject(args[0].toString());
-
-                            if (jsonObject.getString("type").equals(Constants.IMAGE)) {
-                                Log.d("I'm inside the image", jsonObject.getString("msg"));
-                            }
-                            try {
-
-                                int poisition = jsonObject.getInt("position");
-                                if (position >= mMessages.size())
-                                    return;
-                                Message messageInPosition = mMessages.get(poisition);
-                                messageInPosition.setStatus(Constants.SENT_STATUS);
-                                messageInPosition.setId(jsonObject.getInt("id"));
-                                mMessageRepositry.create(messageInPosition);
-                                Log.d("count " + mMessageRepositry.count(), "Count ");
-                                Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
-                                messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mAdapter.notifyItemChanged(position);
-                                    recyclerView.setAdapter(mAdapter);
-                                    scrollToUp();
-                                    scrollToBottom();
-                                }
-
-
-                            });
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                });
             } catch (JSONException e) {
 
                 Log.e("Ex", e.getLocalizedMessage());
@@ -630,7 +565,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
                                 sendSeen.put("id", doctor.get_Id());
                             }
                             sendSeen.put("is_seen", 1);
-                            AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -667,7 +601,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
             try {
                 sendSeen.put("id", doctor.get_Id());
                 sendSeen.put("is_seen", 1);
-                AppController.getInstance().getSocket().emit("IsSeen", sendSeen);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1685,7 +1618,6 @@ public class ChatActivity extends AppCompatActivity implements GoogleApiClient.C
         try {
             sendSeen.put("id", doctor.get_Id());
             sendSeen.put("is_seen", 1);
-            AppController.getInstance().getSocket().emit("IsSeen", sendSeen);
         } catch (JSONException e) {
             e.printStackTrace();
         }

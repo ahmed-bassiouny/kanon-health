@@ -177,10 +177,15 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initObjects();
-        checkAudioPermission();
-        initData();
-        handelEvent();
+        try {
+            initObjects();
+            checkAudioPermission();
+            initData();
+            handelEvent();
+        }catch (Exception e){
+            Toast.makeText(getContext(), "Please Open chat again", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
     }
 
     @Override
@@ -209,7 +214,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         doctorName = getArguments().getString("doctorName");
         doctorUrl = getArguments().getString("doctorUrl");
         iamDoctor = getArguments().getBoolean("iamDoctor", false);
-        if (!doctorUrl.isEmpty())
+        if (doctorUrl!=null &&!doctorUrl.isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctorUrl, getActivity());
         tv_chat_user_name.setText(doctorName);
         if (userID == doctorID) {

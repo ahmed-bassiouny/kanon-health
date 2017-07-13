@@ -283,58 +283,6 @@ public class DocumentsChatFragment extends Fragment
             sendText.put("position", position);
             sendText.put("from_id", prefManager.getData(PrefManager.USER_ID));
 
-
-            Log.d("Message ", sendText.toString());
-
-            AppController.getInstance().getSocket().emit("ChatMessageSend", sendText);
-            AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    if (!appStatus)
-                        return;
-
-                    Log.e("Message Response", args[0].toString());
-                    Uri imageUri = Uri.fromFile(new File(msg.getMsg()));
-                    Log.e("my uri from here ", imageUri.toString());
-
-                    try {
-                        Gson gson = new Gson();
-//                        Message message = gson.fromJson(args[0].toString() , Message.class);
-//                        caching(message, prefManager);
-                        JSONObject jsonObject = new JSONObject(args[0].toString());
-                        Log.d("my type", jsonObject.getString("type"));
-                        Log.d("my type", jsonObject.getString("type"));
-                        if (jsonObject.getString("type").equals(Constants.IMAGE))
-
-                        {
-                            Log.d("I'm inside the image", jsonObject.getString("msg"));
-
-                        }
-                        try {
-
-                            int poisition = jsonObject.getInt("position");
-                            Message messageInPosition = mMessages.get(poisition);
-                            messageInPosition.setStatus(Constants.SENT_STATUS);
-                            messageInPosition.setId(jsonObject.getInt("id"));
-                            Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
-                            messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            });
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

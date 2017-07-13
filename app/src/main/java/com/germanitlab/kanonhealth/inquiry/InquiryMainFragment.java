@@ -21,6 +21,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
@@ -168,12 +169,19 @@ public class InquiryMainFragment extends Fragment {
                             @Override
                             public void onSuccess(Object response) {
                                 try {
-                                    Intent intent = new Intent(getActivity(), ChatActivity.class);
-                                    UserInfoResponse userInfoResponse = new UserInfoResponse();
+                                    UserInfoResponse userInfoResponse;
                                     userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
                                     userInfoResponse.getUser().setIsOpen(1);
-                                    prefManager.put(prefManager.USER_INTENT,gson.toJson(userInfoResponse));
+                                    ///////
+                                    Intent intent = new Intent(getActivity(), HttpChatActivity.class);
+                                    intent.putExtra("doctorID", userInfoResponse.getUser().get_Id());
+                                    prefManager.put(prefManager.USER_INTENT, gson.toJson(userInfoResponse.getUser()));
+                                    intent.putExtra("doctorName", userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
+                                                                    // if doctor user app or another
+                                    intent.putExtra("iamDoctor",new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1);
+                                    intent.putExtra("doctorUrl", userInfoResponse.getUser().getAvatar());
                                     startActivity(intent);
+                                    ///////
                                     dismissProgressDialog();
                                     getActivity().finish();
                                 } catch (Exception e) {

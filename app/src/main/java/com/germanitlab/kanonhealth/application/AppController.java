@@ -27,8 +27,6 @@ import io.socket.emitter.Emitter;
 
 public class AppController extends Application {
 
-    private Socket mSocket;
-    private SocketCall socketCall;
 
     private static AppController mInstance;
     //   private UserRegisterResponse clientInfo;
@@ -47,7 +45,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        try {
+
             prefManager = new PrefManager(this);
             Fabric.with(this, new Crashlytics());
             StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
@@ -59,38 +57,6 @@ public class AppController extends Application {
             appComponent.inject(this);
             mInstance = this;
 
-            mSocket = IO.socket(Constants.CHAT_SERVER_URL);
-            mSocket.connect();
-            mSocket.on(mSocket.EVENT_CONNECT, new Emitter.Listener() {
-
-                @Override
-                public void call(Object... args) {
-
-                    try {
-                        JSONObject request = null;
-                        request = new JSONObject();
-                        request.put("id", prefManager.getData(PrefManager.USER_ID));
-                        Log.d("Join user", request.toString());
-                        AppController.getInstance().getSocket().emit("JoinUser", request);
-                        mSocket.emit("JoinUser", prefManager.getData(PrefManager.USER_ID));
-
-
-                    } catch (Exception e) {
-
-                        Log.d("EX ", e.toString());
-                    }
-
-
-                }
-
-            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-
-                @Override
-                public void call(Object... args) {
-                }
-
-            });
-            Log.d("Socket", " " + mSocket.connected());
 
 /*            if (clientInfo == null) {
                 if (CacheJson.fileExists(mInstance, Constants.REGISER_RESPONSE)) {
@@ -108,11 +74,7 @@ public class AppController extends Application {
                 }
             }*/
 
-        } catch (URISyntaxException e) {
-            Crashlytics.logException(e);
-            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.d("Ex", e.getLocalizedMessage());
-        }
+
 
     }
 
@@ -121,26 +83,6 @@ public class AppController extends Application {
     }
 
 
-    public Socket getSocket() {
-        try {
-            if (mSocket.connected()) {
-                return mSocket;
-            } else {
-                mSocket.connect();
-                try {
-                    socketCall.joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                } catch (Exception e) {
-
-                }
-            }
-            Log.d("Soket ", " " + mSocket.connected());
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-        return mSocket;
-    }
 
   /*  public UserRegisterResponse getClientInfo() {
 

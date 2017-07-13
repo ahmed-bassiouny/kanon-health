@@ -1576,46 +1576,6 @@ public class MessageAdapterClinic extends RecyclerView.Adapter<MessageAdapterCli
             }
             if (!type.equals(Constants.LOCATION))
                 sendText.put("is_url", 1);
-
-            Log.d("Message ", sendText.toString());
-            AppController.getInstance().getSocket().emit("ChatMessageSend", sendText);
-            AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    if (!ChatActivity.appStatus)
-                        return;
-                    try {
-                        Gson gson = new Gson();
-                        Message message = gson.fromJson(args[0].toString(), Message.class);
-//                        caching(message, prefManager);
-                        JSONObject jsonObject = new JSONObject(args[0].toString());
-                        mMessageRepositry.create(message);
-                        Log.d("count " + mMessageRepositry.count(), "Count ");
-                        int poisition = jsonObject.getInt("position");
-                        Message messageInPosition = mMessages.get(poisition);
-                        messageInPosition.setStatus(Constants.SENT_STATUS);
-                        messageInPosition.setId(jsonObject.getInt("id"));
-                        try {
-                            Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
-                            messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        } catch (java.text.ParseException e) {
-                            e.printStackTrace();
-                        }
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                notifyDataSetChanged();
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
         } catch (JSONException e) {
 
             Log.e("Ex", e.getLocalizedMessage());

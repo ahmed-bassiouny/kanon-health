@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
-            AppController.getInstance().getSocket().on("ChatMessageReceive", handleIncomingMessages);
             tvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
             initTB();
             mytablayout = (TabLayout) findViewById(R.id.mytablayout);

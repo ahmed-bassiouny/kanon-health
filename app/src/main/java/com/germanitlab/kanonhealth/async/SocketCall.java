@@ -50,26 +50,6 @@ public class SocketCall {
 
             Log.d("EX ", e.getLocalizedMessage());
         }
-
-        Log.d("DoctorsListRequest", request.toString());
-        AppController.getInstance().getSocket().emit("DoctorsList", request);
-        AppController.getInstance().getSocket().on("UpdateUsersList", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-
-                Log.d("Responce : ", args[0].toString());
-//                JSONObject response = (JSONObject) args[0];
-//
-//                String mJsonString = response.toString();
-//                Gson gson = new Gson();
-//
-//                JsonParser parser = new JsonParser();
-//                JsonElement mJson = parser.parse(mJsonString);
-//                UserRegisterResponse object = gson.fromJson(mJson, UserRegisterResponse.class);
-//
-                apiResponse.onSuccess(args[0].toString());
-            }
-        });
     }
 
     public void joinUser(int userID) {
@@ -84,27 +64,6 @@ public class SocketCall {
 
             Log.d("EX ", e.getLocalizedMessage());
         }
-
-        Log.d("Join user", request.toString());
-        AppController.getInstance().getSocket().emit("JoinUser", request);
-        AppController.getInstance().getSocket().on("UpdateOnlineusers", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-
-                Log.d("Join user Responce : ", args[0].toString());
-//                JSONObject response = (JSONObject) args[0];
-//
-//                String mJsonString = response.toString();
-//                Gson gson = new Gson();
-//
-//                JsonParser parser = new JsonParser();
-//                JsonElement mJson = parser.parse(mJsonString);
-//                UserRegisterResponse object = gson.fromJson(mJson, UserRegisterResponse.class);
-//
-                apiResponse.onSuccess(args[0].toString());
-            }
-        });
-
 
     }
 
@@ -123,25 +82,6 @@ public class SocketCall {
             Log.d("EX ", e.getLocalizedMessage());
         }
 
-        Log.d(emitKey, request.toString());
-        AppController.getInstance().getSocket().emit(emitKey, request);
-        AppController.getInstance().getSocket().on(emitKey + "Return", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-
-                Log.d("chatWithStatusResponse", args[0].toString());
-//                JSONObject response = (JSONObject) args[0];
-//
-//                String mJsonString = response.toString();
-//                Gson gson = new Gson();
-//
-//                JsonParser parser = new JsonParser();
-//                JsonElement mJson = parser.parse(mJsonString);
-//                UserRegisterResponse object = gson.fromJson(mJson, UserRegisterResponse.class);
-//
-                //  apiResponse.onSuccess(args[0].toString());
-            }
-        });
     }
 
 
@@ -162,76 +102,7 @@ public class SocketCall {
         }
 
 
-        AppController.getInstance().getSocket().emit("getMessages", request);
-        AppController.getInstance().getSocket().on("FetchMsgs", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-
-                Log.d("Responce : ", args[0].toString());
-//                JSONObject response = (JSONObject) args[0];
-//
-//                String mJsonString = response.toString();
-//                Gson gson = new Gson();
-//
-//                JsonParser parser = new JsonParser();
-//                JsonElement mJson = parser.parse(mJsonString);
-//                UserRegisterResponse object = gson.fromJson(mJson, UserRegisterResponse.class);
-//
-                apiResponse.onSuccess(args[0].toString());
-            }
-        });
-
-        Log.d(" After Socket", " " + AppController.getInstance().getSocket().connected());
-
     }
 
-    public void setNewMessage(String to_id, String msg, String type) {
-        try {
-            JSONObject request = null;
-            try {
-
-                request = new JSONObject();
-                request.put("to_id", to_id);
-                request.put("msg", msg);
-                request.put("type", type);
-
-            } catch (JSONException e) {
-
-                Log.d("EX ", e.getLocalizedMessage());
-            }
-
-            AppController.getInstance().getSocket().emit("ChatMessage", request);
-            Log.d("Before request", " " + AppController.getInstance().getSocket().connected());
-            AppController.getInstance().getSocket().on("ChatMessage", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-
-                    Log.d("New Message response : ", args[0].toString());
-//                JSONObject response = (JSONObject) args[0];
-//
-//                String mJsonString = response.toString();
-//                Gson gson = new Gson();
-//
-//                JsonParser parser = new JsonParser();
-//                JsonElement mJson = parser.parse(mJsonString);
-//                UserRegisterResponse object = gson.fromJson(mJson, UserRegisterResponse.class);
-//
-                    apiResponse.onSuccess(args[0].toString());
-                }
-            }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-
-                    apiResponse.onFailed(args[0].toString());
-                }
-            });
-
-            Log.d(" After Socket", " " + AppController.getInstance().getSocket().connected());
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-        }
-
-
-    }
 
 }

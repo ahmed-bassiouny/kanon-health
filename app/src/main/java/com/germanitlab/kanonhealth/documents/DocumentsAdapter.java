@@ -1223,40 +1223,6 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.Base
             if (!type.equals(Constants.LOCATION))
                 sendText.put("is_url", 1);
 
-            Log.d("Message ", sendText.toString());
-            AppController.getInstance().getSocket().emit("ChatMessageSend", sendText);
-            AppController.getInstance().getSocket().on("ChatMessageSendReturn", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-
-                    try {
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(args[0].toString());
-                            int poisition = jsonObject.getInt("position");
-                            Message messageInPosition = mMessages.get(poisition);
-                            messageInPosition.setStatus(Constants.SENT_STATUS);
-                            messageInPosition.setId(jsonObject.getInt("id"));
-                            Date parseDate = DateUtil.getFormat().parse(jsonObject.getString("sent_at"));
-                            messageInPosition.setSent_at(DateUtil.formatDate(parseDate.getTime()));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        } catch (java.text.ParseException e) {
-                            e.printStackTrace();
-                        }
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                notifyDataSetChanged();
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

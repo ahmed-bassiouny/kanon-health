@@ -34,7 +34,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     int id = 0;
     private LocalBroadcastManager broadcaster;
-    Object obj;
+    //Object obj;
 
     @Override
     public void onCreate() {
@@ -46,7 +46,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        obj = remoteMessage.getData().get("from_id");
+        //obj = remoteMessage.getData().get("from_id");
         /*
         *
         * */
@@ -93,14 +93,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("notificationtype", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
         broadcaster.sendBroadcast(intent);
 
-        if (obj != null) {
+        /*if (obj != null) {
             try {
                 if (obj.toString().trim().isEmpty())
                     return;
                 JSONObject sendSeen = new JSONObject();
                 sendSeen.put("id", id);
                 sendSeen.put("is_seen", 1);
-                AppController.getInstance().getSocket().emit("IsDeliver", sendSeen);
             } catch (JSONException e) {
                 Log.e("FirebaseMessaging", "onMessageReceived: ", e);
                 Crashlytics.logException(e);
@@ -108,7 +107,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             if (remoteMessage.getData().get("from_id") != String.valueOf(ChatActivity.user_id) && ChatActivity.appStatus != true)
                 showNotification(remoteMessage.getData().get("msg"),"Neue Nachricht", 1, id, true);
 
-        }
+        }*/
     }
 
     private void getLogin(RemoteMessage remoteMessage) {
