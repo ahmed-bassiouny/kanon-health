@@ -80,6 +80,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,7 +97,7 @@ import butterknife.OnTextChanged;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener ,Serializable{
 
 
     // Declare UI
@@ -251,14 +252,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onSuccess(Object response) {
         messages = (ArrayList<Message>) response;
-        new Thread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for (Message message:messages) {
+                for (Message message : messages) {
                     messageRepositry.createOrUpate(message);
                 }
             }
-        }).start();
+        });
         isStoragePermissionGranted();
 
     }

@@ -133,7 +133,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     @Override
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position) {
-        switch (mMessages.get(position).getType()) {
+        String type="";
+        if (mMessages.get(position).getType()!=null)
+            type=mMessages.get(position).getType();
+        switch (type) {
             case Constants.IMAGE:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
                 setImageMessage(imageViewHolder, position);
@@ -164,12 +167,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     @Override
     public int getItemViewType(int position) {
         try {
-            String type = mMessages.get(position).getType();
-
+            String type="";
+            if(mMessages.get(position).getType() !=null)
+                type = mMessages.get(position).getType();
             switch (type) {
-
-                case Constants.TEXT:
-                    return Constants.TEXT_MESSAGE;
                 case Constants.AUDIO:
                     return Constants.AUDIO_MESSAGE;
                 case Constants.VIDEO:
@@ -180,6 +181,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     return Constants.LOCATION_MESSAGE;
                 case Constants.UNDEFINED:
                     return Constants.UNDEFINED_MESSAGE;
+                default:
+                    return Constants.TEXT_MESSAGE;
             }
 
         } catch (Exception e) {
