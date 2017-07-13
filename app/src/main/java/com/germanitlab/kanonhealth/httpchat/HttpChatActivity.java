@@ -32,7 +32,8 @@ public class HttpChatActivity extends AppCompatActivity {
 
     String doctorName = "";
     String doctorUrl = "";
-    int doctorID, userType;
+    int doctorID;
+    boolean iamDoctor;
     User doctor;
     PrefManager prefManager;
     HttpChatFragment fr;
@@ -44,7 +45,7 @@ public class HttpChatActivity extends AppCompatActivity {
         doctorID = getIntent().getIntExtra("doctorID", 0);
         doctorName = getIntent().getStringExtra("doctorName");
         doctorUrl = getIntent().getStringExtra("doctorUrl");
-        userType = getIntent().getIntExtra("userType", 0);
+        iamDoctor = getIntent().getBooleanExtra("iamDoctor", false);
 
         if (doctorID == 0)
             finish();
@@ -54,7 +55,7 @@ public class HttpChatActivity extends AppCompatActivity {
         bundle.putInt("doctorID", doctorID);
         bundle.putString("doctorName", doctorName);
         bundle.putString("doctorUrl", doctorUrl);
-        bundle.putInt("userType", userType);
+        bundle.putBoolean("iamDoctor", iamDoctor);
 
         fr = new HttpChatFragment();
         fr.setArguments(bundle);

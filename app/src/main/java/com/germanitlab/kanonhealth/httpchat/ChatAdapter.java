@@ -38,6 +38,7 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
@@ -79,7 +80,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
 
-    public ChatAdapter(List<Message> messages, Activity activity, boolean show_privacy) {
+    public ChatAdapter(List<Message> messages, final Activity activity, boolean show_privacy) {
         this.activity = activity;
         this.show_privacy = show_privacy;
         prefManager = new PrefManager(activity);
@@ -87,6 +88,21 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(messages);
+        ImageView forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
+
+        forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (list.size() == 0)
+                    Toast.makeText(activity, "Please Select Messages", Toast.LENGTH_LONG).show();
+                else {
+                    Intent intent = new Intent(activity, ForwardActivity.class);
+                    intent.putExtra("list", (ArrayList<Integer>) list);
+                    intent.putExtra("chat_doctor_id", userID);
+                    activity.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -370,60 +386,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     dialog.show();
                 }
             });
-            //imageViewHolder.date.setText(message.getSent_at());
-            //setImagePrivacy(message.getPrivacy(), imageViewHolder.privacy_image);
 
-            /*if (!new File(message.getMsg()).exists()) {
-                String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
-                File file = new File(folder, fileName);
-                if (file.exists()) {
-                    message.setMsg(file.getPath());
-                    message.setLoaded(true);
-                    message.setLoading(false);
-                }
-            }*/
-
-
-            //ImageHelper.setImage(imageViewHolder.image_message, imageUri, activity);
-
-            /*if (!message.isLoaded() && !message.isLoading()) {
-
-                message.setLoading(true);
-
-                imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-                internetFilesOperations.uploadFileWithProgress(imageViewHolder.progress_view_download, Constants.UPLOAD_URL, message.getMsg(), new UploadListener() {
-                    @Override
-                    public void onUploadFinish(final String result) {
-                        (activity).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                message.setLoading(false);
-                                try {
-                                    JSONObject jsonObject = new JSONObject(result);
-                                    if (jsonObject.has("error")) {
-                                        message.setLoaded(true);
-                                        showAlerDialog(Constants.UPLOAD_URL, Html.fromHtml(jsonObject.getString("error")).toString());
-                                    } else {
-                                        if (!folder.exists()) folder.mkdirs();
-                                        String source = message.getMsg();
-                                        File destination = new File(folder, jsonObject.getString("file_url").substring(jsonObject.getString("file_url").lastIndexOf("/") + 1));
-                                        if (moveFile(new File(source), destination)) {
-                                            message.setMsg(destination.getPath());
-                                        }
-                                        message.setLoaded(true);
-                                        sendMessage(jsonObject.getString("file_url"), Constants.IMAGE);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                });
-            } else {
-                imageViewHolder.progress_view_download.setVisibility(View.INVISIBLE);
-            }
-*/
             imageViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -672,36 +635,36 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
 
 
-            /*
-            audioViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+
+            audioViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (!selected) {
                         changeToolbar(true);
                     }
                     if (!list.contains(mediaMessage.get_Id()))
-                        selectItem(audioViewHolder.messageContainer, mediaMessage);
+                        selectItem(audioViewHolder.background, mediaMessage);
                     else {
-                        unselectItem(audioViewHolder.messageContainer, mediaMessage);
+                        unselectItem(audioViewHolder.background, mediaMessage);
                     }
 
                     return true;
                 }
             });
-            audioViewHolder.messageContainer.setOnClickListener(new View.OnClickListener() {
+            audioViewHolder.background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (selected)
                         if (!list.contains(mediaMessage.get_Id()))
-                            selectItem(audioViewHolder.messageContainer, mediaMessage);
+                            selectItem(audioViewHolder.background, mediaMessage);
                         else {
-                            unselectItem(audioViewHolder.messageContainer, mediaMessage);
+                            unselectItem(audioViewHolder.background, mediaMessage);
                         }
                     else {
 
                     }
                 }
-            });*/
+            });
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -733,20 +696,30 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     }
                 }
             });
+            imageViewHolder.background.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected) {
+                        if (!list.contains(locationMessage.get_Id()))
+                            selectItem(imageViewHolder.background, locationMessage);
+                        else
+                            unselectItem(imageViewHolder.background, locationMessage);
+                    } else {
 
-         /*   imageViewHolder.messageContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        String msg = "{" + locationMessage.getMsg() + "}";
-                        try {
-                            JSONObject jsonObject = new JSONObject(msg);
-                            showLocationOptions("Location", position, jsonObject.getString("lat"), jsonObject.getString("long"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        return false;
+                        File file = new File(mMessages.get(position).getMsg());
+
+                        if (file.exists())
+                            Util.getInstance(activity).showPhoto(Uri.fromFile(file));
                     }
-                });*/
+                }
+            });
+            imageViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    longClick(locationMessage, imageViewHolder.background);
+                    return true;
+                }
+            });
 
             JSONObject jsonObject = new JSONObject(locationMessage.getMsg());
             double lat = jsonObject.getDouble("lat");
@@ -754,24 +727,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(lat) + "," + String.valueOf(lng) + "&zoom=15&size=200x200&sensor=false";
             ImageHelper.setImage(imageViewHolder.image_message, URL, imageViewHolder.progress_view_download, activity);
 
-
-           /* locationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    String msg = "{" + locationMessage.getMsg() + "}";
-                    JSONObject jsonObject = null;
-                    try {
-                        jsonObject = new JSONObject(msg);
-                        double lat = jsonObject.getDouble("lat");
-                        double lng = jsonObject.getDouble("long");
-                        Util.getInstance(context).showLocation(lat, lng);
-                    } catch (JSONException e) {
-                        Log.e("ex", e.getMessage());
-                    }
-                }
-            });
-*/
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -834,6 +789,30 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     });
                 }
             }
+            imageViewHolder.background.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selected) {
+                        if (!list.contains(message.get_Id()))
+                            selectItem(imageViewHolder.background, message);
+                        else
+                            unselectItem(imageViewHolder.background, message);
+                    } else {
+
+                        File file = new File(mMessages.get(position).getMsg());
+
+                        if (file.exists())
+                            Util.getInstance(activity).showPhoto(Uri.fromFile(file));
+                    }
+                }
+            });
+            imageViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    longClick(message, imageViewHolder.background);
+                    return true;
+                }
+            });
         }catch (Exception e){
             Toast.makeText(activity, R.string.error_message, Toast.LENGTH_SHORT).show();
             Log.e("Chat Adapter", "setVideoMessage: ",e );
@@ -990,7 +969,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
         if (mMessages.get(position).getFrom_id() == userID) {
             background.setGravity(Gravity.RIGHT);
-            messageContainer.setBackgroundResource(R.drawable.bubble_in);
+            messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
             status.setVisibility(View.VISIBLE);
 
             if (mMessages.get(position).getSeen() == 1) {
@@ -1003,7 +982,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 status.setImageResource(R.drawable.pending);
         } else {
             background.setGravity(Gravity.LEFT);
-            messageContainer.setBackgroundResource(R.drawable.bubble_out);
+            messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
             status.setVisibility(View.GONE);
 
         }

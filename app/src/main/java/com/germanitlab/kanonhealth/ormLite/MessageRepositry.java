@@ -42,8 +42,16 @@ public class MessageRepositry {
             Crashlytics.logException(e);
             Toast.makeText(context, context.getResources().getText(R.string.erre_database_insert), Toast.LENGTH_SHORT).show();
         }
-        }
+    }
 
+    public void createOrUpate(Message message){
+        try {
+            messagesDao.createOrUpdate(message);
+        } catch (SQLException e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.erre_database_insert), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public double count() {
         try {

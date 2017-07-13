@@ -11,13 +11,13 @@ public class Forward implements Serializable {
     private String user_id;
     private String password;
     private List<Integer> msg_id;
-    private List<Integer> to_id;
+    private List<Integer> to;
 
     public Forward(String user_id, String password, List<Integer> msg_id, List<Integer> to_id) {
         this.user_id = user_id;
         this.password = password;
         this.msg_id = msg_id;
-        this.to_id = to_id;
+        this.to = to_id;
     }
 
     public String getUser_id() {
@@ -45,10 +45,10 @@ public class Forward implements Serializable {
     }
 
     public List<Integer> getTo_id() {
-        return to_id;
+        return to;
     }
 
     public void setTo_id(List<Integer> to_id) {
-        this.to_id = to_id;
+        this.to = to_id;
     }
 }

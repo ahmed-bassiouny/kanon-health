@@ -12,11 +12,11 @@
             android:id="@+id/message_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bubble_out"
+            android:background="@drawable/bubble_out_doc"
 
             android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:visibility="visible">
 
 

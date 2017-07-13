@@ -33,12 +33,12 @@ import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
@@ -64,7 +64,7 @@ public class SettingFragment extends Fragment {
     private ImageView imgQr;
     private ImageButton imgScan;
     private VideoView videoView;
-    private TableRow profile, trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend, trHelp, trDrStatus;
+    private TableRow profile, trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend, trHelp, trDrStatus, trWeblogin;
     private SettingResponse settingResponse;
     private PrefManager mPrefManager;
     private User user;
@@ -162,7 +162,7 @@ public class SettingFragment extends Fragment {
     }
 
     private void loadData() {
-        if(!Helper.isNetworkAvailable(getActivity()))
+        if (!Helper.isNetworkAvailable(getActivity()))
             return;
         try {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -215,6 +215,7 @@ public class SettingFragment extends Fragment {
         try {
             tvAddPractice = (TextView) view.findViewById(R.id.tv_add_practice);
             rvPracticies = (RecyclerView) view.findViewById(R.id.recycler_view);
+            trWeblogin = (TableRow) view.findViewById(R.id.setting_weblogin);
             trSupport = (TableRow) view.findViewById(R.id.tr_support);
             profile = (TableRow) view.findViewById(R.id.my_profile);
             trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
@@ -265,6 +266,13 @@ public class SettingFragment extends Fragment {
                 }
             });
 
+            trWeblogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), StartQrScan.class));
+                }
+            });
+
             trDrStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -275,7 +283,7 @@ public class SettingFragment extends Fragment {
                     startActivity(intent);*/
 
                     //Edit ahmed
-                    Intent intent= new Intent(getActivity(), HttpChatActivity.class);
+                    Intent intent = new Intent(getActivity(), HttpChatActivity.class);
                     intent.putExtra("doctorID", 1);
                     intent.putExtra("doctorName", "Support");
                     intent.putExtra("doctorUrl", "");
@@ -348,8 +356,7 @@ public class SettingFragment extends Fragment {
 
                             changStatusService("1");
                         }
-                    }
-                    else
+                    } else
                         Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
                 }

@@ -58,18 +58,12 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
     private List<Message> mMessages;
     private Activity activity;
-    private int userID;
-    private String passowrd;
-    List<Integer> list = new ArrayList<>();
-    private boolean selected = false;
     private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
 
     public DoctorDocumentAdapter(List<Message> messages, Activity activity) {
         this.activity = activity;
         prefManager = new PrefManager(activity);
-        userID = prefManager.getInt(PrefManager.USER_ID);
-        passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(messages);
     }

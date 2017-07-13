@@ -27,11 +27,13 @@ import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -53,11 +55,11 @@ public class ForwardActivity extends AppCompatActivity {
     ArrayList<Integer> doctorsForward, messagesForward;
     @BindView(R.id.btn_forward_document)
     Button foward_document;
-    private User user;
     Boolean search;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private int entity_type;
     PrefManager prefManager;
+    int chat_doctor_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +70,12 @@ public class ForwardActivity extends AppCompatActivity {
             doctorsForward = new ArrayList<>();
             messagesForward = new ArrayList<>();
             ButterKnife.bind(this);
-            user = new User();
             search = false;
-            user = (User) getIntent().getSerializableExtra("chat_doctor");
+            chat_doctor_id = getIntent().getIntExtra("chat_doctor_id",0);
+            if(chat_doctor_id==0) {
+                finish();
+                Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
+            }
             messagesForward = getIntent().getIntegerArrayListExtra("list");
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             ListDoctors = new ArrayList<>();
@@ -165,15 +170,26 @@ public class ForwardActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    Log.e("Update user response :", "no response found");
-                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                    intent.putExtra("from_notification", 1);
                     if (doctorsForward.size() > 1) {
-                        intent.putExtra("from_id", user.get_Id());
+                        Toast.makeText(ForwardActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
+                        finish();
                     } else {
-                        intent.putExtra("from_id", doctorsForward.get(0));
+                        for(User user:ListDoctors){
+                            if(user.getId()==doctorsForward.get(0)){
+                                Intent intent = new Intent(ForwardActivity.this, HttpChatActivity.class);
+                                Gson gson = new Gson();
+                                intent.putExtra("doctorID", user.get_Id());
+                                PrefManager prefManager = new PrefManager(ForwardActivity.this);
+                                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
+                                intent.putExtra("doctorName", user.getLast_name() + " " + user.getFirst_name());
+                                intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
+                                intent.putExtra("doctorUrl", user.getAvatar());
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+
                     }
-                    startActivity(intent);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

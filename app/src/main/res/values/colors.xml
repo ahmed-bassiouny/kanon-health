@@ -59,4 +59,7 @@
     <color name="document_background">#e0e0e0</color>
 
 
+    //chat color
+    <color name="chatbackground_gray">#e0e0e0</color>
+    <color name="chatbackground_white">#ffffff</color>
 </resources>

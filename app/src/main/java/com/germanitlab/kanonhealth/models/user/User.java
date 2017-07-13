@@ -20,6 +20,10 @@ import java.util.List;
 
 public class User implements Serializable {
 
+    public static final int USER_TYPE_CLIENT = 1;
+    public static final int USER_TYPE_DOCTORS = 2;
+    public static final int USER_TYPE_PRACTIC = 3;
+
     public static final String COLUMN_ID = "dfgdf";
     public static final int DOCTOR_TYPE = 2 ;
     public static final int CLINICS_TYPE = 3 ;
