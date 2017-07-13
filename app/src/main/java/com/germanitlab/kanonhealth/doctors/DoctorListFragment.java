@@ -77,8 +77,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     public Boolean is_doctor_data = false, is_clinic_data = false;
     LinearLayoutManager llm;
     boolean is_doc;
-    private int firstVisibleItemPositionForRightTab;
-    private int firstVisibleItemPositionForLeftTab;
+    private static int firstVisibleItemPositionForRightTab = 0;
+    private static int firstVisibleItemPositionForLeftTab = 0;
 
     public DoctorListFragment() {
     }
@@ -111,16 +111,12 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             if (is_doc) {
                 btnLeftList.setText("Clients");
                 btnRightList.setText("others");
-                if (type == 0)
-                    type = User.DOCTOR_TYPE;
+                type = User.CLIENT_TYPE;
             } else {
                 btnLeftList.setText("Doctors");
                 btnRightList.setText("practices");
-                if (type == 0)
-                    type = User.CLIENT_TYPE;
+                type = User.DOCTOR_TYPE;
             }
-            firstVisibleItemPositionForLeftTab = 0;
-            firstVisibleItemPositionForRightTab = 0;
 
             doctorList = new ArrayList<>();
             mDoctorRepository = new UserRepository(getContext());
@@ -149,6 +145,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             getBySpeciality(true, type);
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -212,7 +209,6 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         speciality_id = getArguments().getInt("speciality_id");
-        type = getArguments().getInt("type");
     }
 
     @Override
@@ -333,8 +329,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private void CheckTabToScrollTo() {
         if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE) {
             scrollToPosition(firstVisibleItemPositionForLeftTab);
-        }
-        else {
+        } else {
             scrollToPosition(firstVisibleItemPositionForRightTab);
         }
     }
@@ -381,6 +376,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onFailed(String error) {
 
+    }
+
+    @Override
+    public void onPause() {
+        if (type == User.DOCTOR_TYPE || type == User.CLIENT_TYPE) {
+            firstVisibleItemPositionForLeftTab = getScrolled();
+        } else {
+            firstVisibleItemPositionForRightTab = getScrolled();
+        }
+        super.onPause();
     }
 
     private void loadData() {

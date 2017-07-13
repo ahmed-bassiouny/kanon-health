@@ -90,30 +90,33 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
                 /* data base
          */
-
             if (tabPosition == 3) {
                 list = mMessageRepositry.getAll(doctorContactsList.get(position).get_Id());
-                if (list.size() > 0) {
-                    int index = list.size() - 1;
-                    switch (list.get(index).getType()) {
-                        case Constants.IMAGE:
-                            holder.tvSpecialist.setText("Image");
-                            break;
-                        case Constants.AUDIO:
-                            holder.tvSpecialist.setText("Audio");
-                            break;
-                        case Constants.VIDEO:
-                            holder.tvSpecialist.setText("Video");
-                            break;
-                        case Constants.LOCATION:
-                            holder.tvSpecialist.setText("Location");
-                            break;
-                        case Constants.TEXT:
-                            holder.tvSpecialist.setText(list.get(index).getMsg());
-                            break;
+                if (list != null) {
+                    if (list.size() > 0) {
+                        int index = list.size() - 1;
+                        if (holder.tvSpecialist != null) {
+                            switch (list.get(index).getType()) {
+                                case Constants.IMAGE:
+                                    holder.tvSpecialist.setText("Image");
+                                    break;
+                                case Constants.AUDIO:
+                                    holder.tvSpecialist.setText("Audio");
+                                    break;
+                                case Constants.VIDEO:
+                                    holder.tvSpecialist.setText("Video");
+                                    break;
+                                case Constants.LOCATION:
+                                    holder.tvSpecialist.setText("Location");
+                                    break;
+                                case Constants.TEXT:
+                                    holder.tvSpecialist.setText(list.get(index).getMsg());
+                                    break;
+                            }
+                        }
+                    } else {
+                        holder.tvSpecialist.setText("");
                     }
-                } else {
-                    holder.tvSpecialist.setText("");
                 }
                 holder.imgStatus.setVisibility(View.GONE);
             }
@@ -174,9 +177,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
                 if (doctor.getIsOpen() != 1) {
                     holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
-                } else if (doctor.getIsDoc()==1) {
+                } else if (doctor.getIsDoc() == 1) {
                     holder.imgAvatar.setBorderColor(Color.BLUE);
-                } else if (doctor.getIsClinic() ==1) {
+                } else if (doctor.getIsClinic() == 1) {
                     holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
                 } else {
                     holder.imgAvatar.setBorderColor(Color.GREEN);

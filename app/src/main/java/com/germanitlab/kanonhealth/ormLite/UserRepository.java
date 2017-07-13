@@ -84,7 +84,7 @@ public class UserRepository {
                 case User.CLIENT_TYPE :
                     return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isClinic", 0).and().eq("isDoc", 0).query();
                 case User.DOCTOR_AND_CLINICS_TYPE:
-                    return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isClinic", 1).and().eq("isDoc", 1).query();
+                    return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isClinic", 1).or().eq("isDoc", 1).query();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -182,7 +182,7 @@ public class UserRepository {
                 case User.CLIENT_TYPE:
                     ////////////////start handle from here the query of the user
                     /// handle full scenario of the database from start of the app and the progress dialoge
-                    userList = doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("isDoc", 0).and().eq("isClinic", 0).query();
+                    userList = doctorsDao.queryBuilder().orderBy("first_name", true).orderBy("first_name", true).where().eq("isDoc", 0).and().eq("isClinic", 0).query();
                     break;
                 case User.DOCTOR_AND_CLINICS_TYPE:
                     userList = doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("isDoc", 1).or().eq("isClinic", 1).query();

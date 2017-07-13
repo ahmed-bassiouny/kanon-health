@@ -72,8 +72,10 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
     private Button btnLeftList, btnRightList;
     private static ChatsDoctorFragment chatsDoctorFragment;
     Util util;
-    PrefManager prefManager;
     boolean is_doc;
+    private static int firstVisibleItemPositionForRightTab;
+    private static int firstVisibleItemPositionForLeftTab;
+    int type;
 
     public static ChatsDoctorFragment newInstance() {
         if (chatsDoctorFragment == null)
@@ -89,12 +91,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         super.setUserVisibleHint(isVisibleToUser);
         try {
             if (getView() != null && isVisibleToUser) {
-                if (Helper.isNetworkAvailable(getContext())) {
-                    new HttpCall(getActivity(), this).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
-                } else {
-                    doctorList = mDoctorRepository.getChat(1);
-                    setAdapter(doctorList);
-                }
+                gettingData();
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -103,25 +100,45 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     }
 
+    @Override
+    public void onPause() {
+        if(type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE)
+            firstVisibleItemPositionForLeftTab = getScrolled() ;
+        else
+            firstVisibleItemPositionForRightTab = getScrolled();
+        super.onPause();
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         try {
-            prefManager = new PrefManager(getContext());
-            if (Helper.isNetworkAvailable(getContext())) {
-                doctorList = mDoctorRepository.getChat(1);
-                setAdapter(doctorList);
-                new HttpCall(getActivity(), this).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
-            } else {
-                doctorList = mDoctorRepository.getChat(1);
-                setAdapter(doctorList);
-            }
+            mPrefManager = new PrefManager(getContext());
+            gettingData();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
         changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnLeftList, btnRightList);
+    }
+
+    private void gettingData() {
+        if (!is_doc) {
+            doctorList = mDoctorRepository.getChat(User.DOCTOR_TYPE);
+            setAdapter(doctorList);
+            checkTabToScrollTo();
+            if (Helper.isNetworkAvailable(getContext())) {
+                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+            }
+        } else {
+            doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
+            setAdapter(doctorList);
+            checkTabToScrollTo();
+            if (Helper.isNetworkAvailable(getContext())) {
+                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+            }
+        }
+        scrollToPosition(firstVisibleItemPositionForLeftTab);
     }
 
     @Override
@@ -138,6 +155,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                 }
                 return view;
             }
+            firstVisibleItemPositionForLeftTab = 0;
+            firstVisibleItemPositionForRightTab = 0;
 
             util = Util.getInstance(getActivity());
             gson = new Gson();
@@ -145,13 +164,15 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             mDoctorRepository = new UserRepository(getContext());
             view = inflater.inflate(R.layout.fragment_chats_doctor, container, false);
             initView();
-            is_doc = prefManager.get(PrefManager.IS_DOCTOR);
+            is_doc = mPrefManager.get(PrefManager.IS_DOCTOR);
             if (!is_doc) {
-                btnLeftList.setText("Clients");
-                btnRightList.setText("others");
-            } else {
                 btnLeftList.setText("Doctors");
                 btnRightList.setText("practices");
+                type = User.CLIENT_TYPE;
+            } else {
+                btnLeftList.setText("Clients");
+                btnRightList.setText("others");
+                type = User.DOCTOR_TYPE;
             }
             handelEvent();
             setHasOptionsMenu(true);
@@ -322,9 +343,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         btnRightList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                firstVisibleItemPositionForLeftTab = getScrolled();
                 if (!is_doc) {
                     doctorList = mDoctorRepository.getChat(User.CLINICS_TYPE);
                     setAdapter(doctorList);
+                    type = User.CLINICS_TYPE;
+                    checkTabToScrollTo();
                     changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnRightList, btnLeftList);
                     if (Helper.isNetworkAvailable(getContext())) {
                         new HttpCall(getActivity(), new ApiResponse() {
@@ -333,10 +357,10 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                                 doctorList = (List<User>) response;
                                 int m = getScrolled();
                                 setAdapter(doctorList);
-                                scrollToPosition(m);
                                 updateDataBase(doctorList);
                                 chat_layout.setVisibility(View.VISIBLE);
                                 tvLoadingError.setVisibility(View.GONE);
+                                checkTabToScrollTo();
                             }
 
                             @Override
@@ -347,12 +371,13 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
                             }
-                        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
                     }
-                }
-                else {
+                } else {
                     doctorList = mDoctorRepository.getChat(User.DOCTOR_AND_CLINICS_TYPE);
                     setAdapter(doctorList);
+                    type = User.DOCTOR_AND_CLINICS_TYPE;
+                    checkTabToScrollTo();
                     changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnRightList, btnLeftList);
                     if (Helper.isNetworkAvailable(getContext())) {
                         new HttpCall(getActivity(), new ApiResponse() {
@@ -361,10 +386,10 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                                 doctorList = (List<User>) response;
                                 int m = getScrolled();
                                 setAdapter(doctorList);
-                                scrollToPosition(m);
                                 updateDataBase(doctorList);
                                 chat_layout.setVisibility(View.VISIBLE);
                                 tvLoadingError.setVisibility(View.GONE);
+                                checkTabToScrollTo();
                             }
 
                             @Override
@@ -375,7 +400,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
                             }
-                        }).getChatDoctorAndClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatDoctorAndClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
                     }
                 }
             }
@@ -383,9 +408,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         btnLeftList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!is_doc) {
+                firstVisibleItemPositionForRightTab = getScrolled();
+                if (!is_doc) {
                     doctorList = mDoctorRepository.getChat(User.DOCTOR_TYPE);
                     setAdapter(doctorList);
+                    type = User.DOCTOR_TYPE;
+                    checkTabToScrollTo();
                     changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnLeftList, btnRightList);
                     if (Helper.isNetworkAvailable(getContext())) {
                         new HttpCall(getActivity(), new ApiResponse() {
@@ -393,10 +421,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                             public void onSuccess(Object response) {
                                 doctorList = (List<User>) response;
                                 updateDataBase(doctorList);
-                                int m = getScrolled();
                                 setAdapter(doctorList);
-                                scrollToPosition(m);
                                 linearLayoutContent.setVisibility(View.VISIBLE);
+                                checkTabToScrollTo();
                             }
 
                             @Override
@@ -406,12 +433,13 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
                             }
-                        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
                     }
-                }
-                else {
+                } else {
                     doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
                     setAdapter(doctorList);
+                    type = User.CLIENT_TYPE;
+                    checkTabToScrollTo();
                     changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnLeftList, btnRightList);
                     if (Helper.isNetworkAvailable(getContext())) {
                         new HttpCall(getActivity(), new ApiResponse() {
@@ -419,10 +447,9 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
                             public void onSuccess(Object response) {
                                 doctorList = (List<User>) response;
                                 updateDataBase(doctorList);
-                                int m = getScrolled();
                                 setAdapter(doctorList);
-                                scrollToPosition(m);
                                 linearLayoutContent.setVisibility(View.VISIBLE);
+                                checkTabToScrollTo();
                             }
 
                             @Override
@@ -432,7 +459,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
                             }
-                        }).getChatClient(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
                     }
                 }
 
@@ -440,6 +467,14 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
         });
 
 
+    }
+
+    private void checkTabToScrollTo() {
+        if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE) {
+            scrollToPosition(firstVisibleItemPositionForLeftTab);
+        } else {
+            scrollToPosition(firstVisibleItemPositionForRightTab);
+        }
     }
 
     public void changeColors(int backColorSelected, int textSelected, int backColorUnSelected, int textUnSelected, Button btnSelected, Button btnUnSelected) {
@@ -470,9 +505,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             doctorList = (List<User>) response;
             Gson gson = new Gson();
             updateDataBase(doctorList);
-            int m = getScrolled();
             setAdapter(doctorList);
-            scrollToPosition(m);
+            checkTabToScrollTo();
             linearLayoutContent.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             Crashlytics.logException(e);
