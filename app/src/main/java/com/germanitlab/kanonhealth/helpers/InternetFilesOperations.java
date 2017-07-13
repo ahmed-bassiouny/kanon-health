@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
@@ -86,7 +85,6 @@ public class InternetFilesOperations {
                     Log.e("log_tag ******", "good connection");
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -332,7 +330,7 @@ public class InternetFilesOperations {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -357,39 +355,42 @@ public class InternetFilesOperations {
             URL url;
             try {
                 url = new URL(Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);
-                URLConnection conection = url.openConnection();
-                conection.connect();
-                // this will be useful so that you can show a tipical 0-100% progress bar
-                int lenghtOfFile = conection.getContentLength();
+                if (Helper.isNetworkAvailable(context)) {
+                    if (file != null && file.exists()) {
+                        URLConnection conection = url.openConnection();
+                        conection.connect();
+                        // this will be useful so that you can show a tipical 0-100% progress bar
+                        int lenghtOfFile = conection.getContentLength();
 
-                // download the file
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                        // download the file
+                        InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
-                //this will be used to write the downloaded data into the file we created
-                FileOutputStream output = new FileOutputStream(file);
+                        //this will be used to write the downloaded data into the file we created
+                        FileOutputStream output = new FileOutputStream(file);
 
 
-                byte data[] = new byte[1024];
+                        byte data[] = new byte[1024];
 
-                long total = 0;
+                        long total = 0;
 
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    // publishing the progress....
-                    // After this onProgressUpdate will be called
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                        while ((count = input.read(data)) != -1) {
+                            total += count;
+                            // publishing the progress....
+                            // After this onProgressUpdate will be called
+                            publishProgress("" + (int) ((total * 100) / lenghtOfFile));
 
-                    // writing data to file
-                    output.write(data, 0, count);
+                            // writing data to file
+                            output.write(data, 0, count);
+                        }
+
+                        // flushing output
+                        output.flush();
+
+                        // closing streams
+                        output.close();
+                        input.close();
+                    }
                 }
-
-                // flushing output
-                output.flush();
-
-                // closing streams
-                output.close();
-                input.close();
-
 
             } catch (Exception e) {
                 Crashlytics.setString("request file url", Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);

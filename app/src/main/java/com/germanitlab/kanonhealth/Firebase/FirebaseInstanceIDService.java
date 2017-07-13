@@ -24,7 +24,9 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         // TODO: Implement this method to send any registration to your app's servers.
         try {
-            sendRegistrationToServer(refreshedToken);
+            if (refreshedToken != null) {
+                sendRegistrationToServer(refreshedToken);
+            }
         } catch (Exception e) {
             Crashlytics.logException(e);
         }

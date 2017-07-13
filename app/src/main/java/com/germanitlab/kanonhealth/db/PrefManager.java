@@ -32,10 +32,10 @@ public class PrefManager {
     //Keys
     public static String DOCTOR_KEY = "doctor";
     public static String USER_KEY = "user";
-    public static final String USER_INTENT= "user_intent";
+    public static final String USER_INTENT = "user_intent";
     public static String USER_STATUS = "userStatus";
-    public static String IS_DOC="is_doc";
-    public static String IS_CLINIC="is_clinic";
+    public static String IS_DOC = "is_doc";
+    public static String IS_CLINIC = "is_clinic";
 /*
     public static String Image_data = "imagedata";
 */
@@ -49,7 +49,7 @@ public class PrefManager {
     private static final String IS_FIRST_TIME_LAUNCH = Constants.IS_FIRST_LAUNCH;
 
     public PrefManager(Context context) {
-        if(context != null ) {
+        if (context != null) {
             this._context = context;
             pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
             editor = pref.edit();
@@ -85,7 +85,10 @@ public class PrefManager {
     }
 
     public boolean get(String key) {
-        return pref.getBoolean(key, false);
+        if (pref != null && key != null)
+            return pref.getBoolean(key, false);
+        else
+            return false;
     }
 
     public String getData(String key) {
@@ -93,15 +96,17 @@ public class PrefManager {
     }
 
     public int getInt(String key) {
-        String result = getData(key);
-        if (TextUtils.isEmpty(result)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(result);
-            } catch (Exception e) {
+        if(pref != null && key != null) {
+            String result = getData(key);
+            if (TextUtils.isEmpty(result)) {
                 return 0;
+            } else {
+                try {
+                    return Integer.parseInt(result);
+                } catch (Exception e) {
+                    return 0;
+                }
             }
-        }
+        }else return 0 ;
     }
 }
