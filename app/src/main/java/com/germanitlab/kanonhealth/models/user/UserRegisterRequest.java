@@ -13,13 +13,13 @@ public class UserRegisterRequest implements Serializable {
     @SerializedName("phone")
     private String phone;
     @SerializedName("country_code")
-    private String countryCode;
+    private String country_code;
     @SerializedName("platform")
     private String platform;
 
     public UserRegisterRequest(String phone, String countryCode, String platform) {
         this.phone = phone;
-        this.countryCode = countryCode;
+        this.country_code = countryCode;
         this.platform = platform;
     }
 
@@ -32,11 +32,11 @@ public class UserRegisterRequest implements Serializable {
     }
 
     public String getCountryCode() {
-        return countryCode;
+        return country_code;
     }
 
     public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+        this.country_code = countryCode;
     }
 
     public String getPlatform() {

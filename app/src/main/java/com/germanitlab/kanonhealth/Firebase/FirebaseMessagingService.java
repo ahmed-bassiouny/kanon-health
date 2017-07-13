@@ -51,6 +51,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         *
         * */
 
+
         try {
             int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
             switch (notificationType) {
