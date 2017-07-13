@@ -49,9 +49,11 @@ public class PrefManager {
     private static final String IS_FIRST_TIME_LAUNCH = Constants.IS_FIRST_LAUNCH;
 
     public PrefManager(Context context) {
-        this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
+        if(context != null ) {
+            this._context = context;
+            pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+            editor = pref.edit();
+        }
     }
 
     public void setFirstTimeLaunch(boolean isFirstTime) {

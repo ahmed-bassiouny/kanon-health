@@ -107,6 +107,12 @@ public interface ApiInterface {
     @POST("/clinics/all")
     Call<List<User>> getMyClinics(@Body BasicRequest request);
 
+    @POST("/clients/all")
+    Call<List<User>> getMyClients(@Body BasicRequest request);
+
+    @POST("/another/all")
+    Call<List<User>> getMyDoctorsAndClients(@Body BasicRequest request);
+
     @POST("/rate/list")
     Call<List<Comment>> getrating(@Body Comment comment);
 

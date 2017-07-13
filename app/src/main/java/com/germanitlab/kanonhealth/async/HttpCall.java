@@ -243,6 +243,64 @@ public class HttpCall {
 
     }
 
+    public void getChatClient(String userID, String password) {
+        try {
+            BasicRequest request = new BasicRequest(userID, password, 1);
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<List<User>> connection = service.getMyClients(request);
+
+            connection.enqueue(new Callback<List<User>>() {
+                @Override
+                public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+
+                    Log.d("My User ", response.body().toString());
+                    apiResponse.onSuccess(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<User>> call, Throwable t) {
+
+                    Log.e("My User ", " " + t.getLocalizedMessage());
+                    apiResponse.onFailed(t.getLocalizedMessage());
+                }
+            });
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void getChatDoctorAndClinics(String userID, String password) {
+        try {
+            BasicRequest request = new BasicRequest(userID, password, 1);
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<List<User>> connection = service.getMyDoctorsAndClients(request);
+
+            connection.enqueue(new Callback<List<User>>() {
+                @Override
+                public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+
+                    Log.d("My User ", response.body().toString());
+                    apiResponse.onSuccess(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<User>> call, Throwable t) {
+
+                    Log.e("My User ", " " + t.getLocalizedMessage());
+                    apiResponse.onFailed(t.getLocalizedMessage());
+                }
+            });
+
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public void getSpecialities(String userID, String password) {
         try {
             BasicRequest basicRequest = new BasicRequest(userID, password);

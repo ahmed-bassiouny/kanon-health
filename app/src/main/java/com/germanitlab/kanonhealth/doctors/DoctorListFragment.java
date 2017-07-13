@@ -10,10 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,15 +25,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
@@ -67,7 +62,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private TextView filter_to_list;
 */
     List<User> doctorList;
-    private Button doctor_list, praxis_list;
+    private Button btnLeftList, btnRightList;
     int speciality_id;
     String jsonString;
     int type;
@@ -80,7 +75,10 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public Boolean is_doctor_data = false, is_clinic_data = false;
-    LinearLayoutManager llm ;
+    LinearLayoutManager llm;
+    boolean is_doc;
+    private int firstVisibleItemPositionForRightTab;
+    private int firstVisibleItemPositionForLeftTab;
 
     public DoctorListFragment() {
     }
@@ -108,9 +106,22 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             prefManager = new PrefManager(getActivity());
             util = Util.getInstance(getActivity());
             initView();
+            is_doc = prefManager.get(PrefManager.IS_DOCTOR);
             gson = new Gson();
-            if (type == 0)
-                type = 2;
+            if (is_doc) {
+                btnLeftList.setText("Clients");
+                btnRightList.setText("others");
+                if (type == 0)
+                    type = User.DOCTOR_TYPE;
+            } else {
+                btnLeftList.setText("Doctors");
+                btnRightList.setText("practices");
+                if (type == 0)
+                    type = User.CLIENT_TYPE;
+            }
+            firstVisibleItemPositionForLeftTab = 0;
+            firstVisibleItemPositionForRightTab = 0;
+
             doctorList = new ArrayList<>();
             mDoctorRepository = new UserRepository(getContext());
             if (!prefManager.get(PrefManager.IS_OLD))
@@ -126,10 +137,17 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void loadFirstTime() {
         util.showProgressDialog();
-        type = 3;
-        getBySpeciality(true, 3);
-        type = 2;
-        getBySpeciality(true, 2);
+        if (!is_doc) {
+            type = User.CLINICS_TYPE;
+            getBySpeciality(true, type);
+            type = User.DOCTOR_TYPE;
+            getBySpeciality(true, type);
+        } else {
+            type = User.CLIENT_TYPE;
+            getBySpeciality(true, type);
+            type = User.DOCTOR_AND_CLINICS_TYPE;
+            getBySpeciality(true, type);
+        }
     }
 
     @Override
@@ -164,10 +182,10 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     @Override
     public void onResume() {
         super.onResume();
-        doctor_list.setBackgroundResource(R.color.blue);
-        doctor_list.setTextColor(getResources().getColor(R.color.white));
-        praxis_list.setBackgroundResource(R.color.gray);
-        praxis_list.setTextColor(getResources().getColor(R.color.black));
+        btnLeftList.setBackgroundResource(R.color.blue);
+        btnLeftList.setTextColor(getResources().getColor(R.color.white));
+        btnRightList.setBackgroundResource(R.color.gray);
+        btnRightList.setTextColor(getResources().getColor(R.color.black));
         loadData();
     }
 
@@ -267,21 +285,32 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 try {
                     jsonString = gson.toJson(response);
                     prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
-                    int index = getScrolled() ;
                     doctorList = (List<User>) response;
                     updateDatabase(doctorList);
                     if (b) {
-                        if (typeNumber == 2)
-                            is_doctor_data = true;
-                        else if (typeNumber == 3)
-                            is_clinic_data = true;
-                        if (is_clinic_data && is_doctor_data) {
-                            util.dismissProgressDialog();
-                            prefManager.put(PrefManager.IS_OLD, true);
+                        if (!is_doc) {
+                            if (typeNumber == User.DOCTOR_TYPE)
+                                is_doctor_data = true;
+                            else if (typeNumber == User.CLINICS_TYPE)
+                                is_clinic_data = true;
+                            if (is_clinic_data && is_doctor_data) {
+                                util.dismissProgressDialog();
+                                prefManager.put(PrefManager.IS_OLD, true);
+                            }
+                        } else {
+                            if (typeNumber == User.CLIENT_TYPE)
+                                is_doctor_data = true;
+                            else if (typeNumber == User.DOCTOR_AND_CLINICS_TYPE)
+                                is_clinic_data = true;
+                            if (is_clinic_data && is_doctor_data) {
+                                util.dismissProgressDialog();
+                                prefManager.put(PrefManager.IS_OLD, true);
+                            }
                         }
-                    } else
+                    } else {
                         setAdapter(doctorList);
-                    scrollToPosition(index);
+                        CheckTabToScrollTo();
+                    }
 
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -300,6 +329,16 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                 speciality_id, type);
     }
+
+    private void CheckTabToScrollTo() {
+        if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE) {
+            scrollToPosition(firstVisibleItemPositionForLeftTab);
+        }
+        else {
+            scrollToPosition(firstVisibleItemPositionForRightTab);
+        }
+    }
+
     private void scrollToPosition(int mScrollPosition) {
         try {
             recyclerView.scrollToPosition(mScrollPosition);
@@ -307,6 +346,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }
 
     }
+
     private void updateDatabase(List<User> doctorList) {
         for (User user : doctorList) {
             User temp = mDoctorRepository.getDoctor(user);
@@ -346,6 +386,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     private void loadData() {
         doctorList = mDoctorRepository.getAll(type);
         setAdapter(doctorList);
+        CheckTabToScrollTo();
         if (Helper.isNetworkAvailable(getContext())) {
             getBySpeciality(false, 0);
         }
@@ -353,20 +394,20 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void initView() {
         edtDoctorListFilter = (EditText) view.findViewById(R.id.edt_doctor_list_filter);
-        doctor_list = (Button) view.findViewById(R.id.doctor_list);
-        praxis_list = (Button) view.findViewById(R.id.praxis_list);
+        btnLeftList = (Button) view.findViewById(R.id.doctor_list);
+        btnRightList = (Button) view.findViewById(R.id.praxis_list);
 
-        if (type == 2) {
-            doctor_list.setBackgroundResource(R.color.blue);
-            doctor_list.setTextColor(getResources().getColor(R.color.white));
-            praxis_list.setBackgroundResource(R.color.gray);
-            praxis_list.setTextColor(getResources().getColor(R.color.black));
+        if (type == User.DOCTOR_TYPE || type == User.CLIENT_TYPE) {
+            btnLeftList.setBackgroundResource(R.color.blue);
+            btnLeftList.setTextColor(getResources().getColor(R.color.white));
+            btnRightList.setBackgroundResource(R.color.gray);
+            btnRightList.setTextColor(getResources().getColor(R.color.black));
         }
-        if (type == 3) {
-            doctor_list.setBackgroundResource(R.color.gray);
-            doctor_list.setTextColor(getResources().getColor(R.color.black));
-            praxis_list.setBackgroundResource(R.color.blue);
-            praxis_list.setTextColor(getResources().getColor(R.color.white));
+        if (type == User.CLINICS_TYPE || type == User.DOCTOR_AND_CLINICS_TYPE) {
+            btnLeftList.setBackgroundResource(R.color.gray);
+            btnLeftList.setTextColor(getResources().getColor(R.color.black));
+            btnRightList.setBackgroundResource(R.color.blue);
+            btnRightList.setTextColor(getResources().getColor(R.color.white));
         }
 
         edtDoctorListFilter.addTextChangedListener(new TextWatcher() {
@@ -413,8 +454,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 /*
         filter_to_list = (TextView) view.findViewById(R.id.filter_to_list);
 */
-        doctor_list = (Button) view.findViewById(R.id.doctor_list);
-        praxis_list = (Button) view.findViewById(R.id.praxis_list);
+        btnLeftList = (Button) view.findViewById(R.id.doctor_list);
+        btnRightList = (Button) view.findViewById(R.id.praxis_list);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_chat);
         recyclerView.setHasFixedSize(true);
@@ -437,34 +478,53 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
         edtDoctorListFilter.setVisibility(View.GONE);
 
-        praxis_list.setOnClickListener(new View.OnClickListener() {
+        btnRightList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                praxis_list.setBackgroundResource(R.color.blue);
-                praxis_list.setTextColor(getResources().getColor(R.color.white));
-                doctor_list.setBackgroundResource(R.color.gray);
-                doctor_list.setTextColor(getResources().getColor(R.color.black));
-                if (type != 3) {
-                    type = 3;
-                    loadData();
+                btnRightList.setBackgroundResource(R.color.blue);
+                btnRightList.setTextColor(getResources().getColor(R.color.white));
+                btnLeftList.setBackgroundResource(R.color.gray);
+                btnLeftList.setTextColor(getResources().getColor(R.color.black));
+                firstVisibleItemPositionForLeftTab = getScrolled();
+                if (!is_doc) {
+                    if (type != User.CLINICS_TYPE) {
+                        type = User.CLINICS_TYPE;
+                        loadData();
+
+
+                    }
+                } else {
+                    if (type != User.DOCTOR_AND_CLINICS_TYPE) {
+                        type = User.DOCTOR_AND_CLINICS_TYPE;
+                        loadData();
+                    }
                 }
 
             }
         });
-        doctor_list.setOnClickListener(new View.OnClickListener() {
+        btnLeftList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                praxis_list.setBackgroundResource(R.color.gray);
-                praxis_list.setTextColor(getResources().getColor(R.color.black));
-                doctor_list.setBackgroundResource(R.color.blue);
-                doctor_list.setTextColor(getResources().getColor(R.color.white));
-                if (type != 2) {
-                    type = 2;
-                    loadData();
+                btnRightList.setBackgroundResource(R.color.gray);
+                btnRightList.setTextColor(getResources().getColor(R.color.black));
+                btnLeftList.setBackgroundResource(R.color.blue);
+                btnLeftList.setTextColor(getResources().getColor(R.color.white));
+                firstVisibleItemPositionForRightTab = getScrolled();
+                if (!is_doc) {
+                    if (type != User.DOCTOR_TYPE) {
+                        type = User.DOCTOR_TYPE;
+                        loadData();
+                    }
+                } else {
+                    if (type != User.CLIENT_TYPE) {
+                        type = User.CLIENT_TYPE;
+                        loadData();
+                    }
                 }
             }
         });
     }
+
     private int getScrolled() {
         if (llm != null && llm instanceof LinearLayoutManager) {
             try {

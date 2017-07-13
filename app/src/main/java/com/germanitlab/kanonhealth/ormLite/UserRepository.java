@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.ormLite;
 
 import android.content.Context;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -75,16 +76,16 @@ public class UserRepository {
 
     public List<User> getChat(int type) {
         try {
-            String typeColumn = "";
-            if (type == 1)
-                typeColumn = "isDoc";
-            else
-                typeColumn = "isClinic";
-            if (type == 2)
-                return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq(typeColumn, 1).query();
-            else
-                return doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("is_chat", 1).and().eq(typeColumn, 1).query();
-
+            switch (type) {
+                case User.DOCTOR_TYPE:
+                    return doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isDoc", 1).query();
+                case User.CLINICS_TYPE:
+                    return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isClinic", 1).query();
+                case User.CLIENT_TYPE :
+                    return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isClinic", 0).and().eq("isDoc", 0).query();
+                case User.DOCTOR_AND_CLINICS_TYPE:
+                    return doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("is_chat", 1).and().eq("isClinic", 1).and().eq("isDoc", 1).query();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -172,11 +173,19 @@ public class UserRepository {
         try {
             List<User> userList;
             switch (type) {
-                case 2:
+                case User.DOCTOR_TYPE:
                     userList = doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("isDoc", 1).query();
                     break;
-                case 3:
+                case User.CLINICS_TYPE:
                     userList = doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("isClinic", 1).query();
+                    break;
+                case User.CLIENT_TYPE:
+                    ////////////////start handle from here the query of the user
+                    /// handle full scenario of the database from start of the app and the progress dialoge
+                    userList = doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("isDoc", 0).and().eq("isClinic", 0).query();
+                    break;
+                case User.DOCTOR_AND_CLINICS_TYPE:
+                    userList = doctorsDao.queryBuilder().orderBy("first_name", true).where().eq("isDoc", 1).or().eq("isClinic", 1).query();
                     break;
                 default:
                     userList = doctorsDao.queryBuilder().orderBy("last_name", true).orderBy("first_name", true).where().eq("isDoc", 1).query();

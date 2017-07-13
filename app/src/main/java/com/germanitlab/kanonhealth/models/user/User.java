@@ -21,6 +21,11 @@ import java.util.List;
 public class User implements Serializable {
 
     public static final String COLUMN_ID = "dfgdf";
+    public static final int DOCTOR_TYPE = 2 ;
+    public static final int CLINICS_TYPE = 3 ;
+    public static final int CLIENT_TYPE = 1 ;
+    public static final int DOCTOR_AND_CLINICS_TYPE = 4 ;
+
 
     /*
 

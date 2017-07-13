@@ -75,6 +75,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     private void getCloseChat(RemoteMessage remoteMessage) {
         Intent intent = new Intent("MyData");
         intent.putExtra("notificationtype", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
+        intent.putExtra("to_id", Integer.parseInt(remoteMessage.getData().get("notificationtype")));
         broadcaster.sendBroadcast(intent);
     }
 

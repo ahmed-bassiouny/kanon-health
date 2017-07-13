@@ -178,9 +178,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
                 if (doctor.getIsOpen() != 1) {
                     holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
-                } else if (is_doc) {
+                } else if (doctor.getIsDoc()==1) {
                     holder.imgAvatar.setBorderColor(Color.BLUE);
-                } else if (is_clinic) {
+                } else if (doctor.getIsClinic() ==1) {
                     holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
                 } else {
                     holder.imgAvatar.setBorderColor(Color.GREEN);
