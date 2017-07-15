@@ -184,16 +184,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
             checkAudioPermission();
             initData();
             handelEvent();
+            checkMode();
         }catch (Exception e){
             Toast.makeText(getContext(), "Please Open chat again", Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkMode();
     }
 
     // declare objects in this fragment
@@ -825,78 +820,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                 return false;
             }
 
-
         });
-
-
-    /*    etMessage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                if (editable.toString().trim().length() > 0) {
-
-                    setButtonToTextMsg(false);
-                    img_send_audio.setVisibility(View.GONE);
-
-                } else {
-                    img_send_audio.setVisibility(View.GONE);
-                    img_send_audio.setVisibility(View.VISIBLE);
-                    img_send_audio.setBackgroundResource(R.drawable.ic_mic_black_24dp);
-                    img_send_audio.setOnClickListener(null);
-                    img_send_audio.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            switch (event.getAction()) {
-                                case MotionEvent.ACTION_MOVE:
-
-                                    //handle drag action here   Milad :D
-                                    break;
-
-                                case MotionEvent.ACTION_DOWN:
-                                    linearTextMsg.setVisibility(View.GONE);
-                                    relativeAudio.setVisibility(View.VISIBLE);
-                                    img_send_audio.setBackgroundResource(0);
-                                    Log.e("Start Recording", "start");
-                                    startRecording();
-
-                                    break;
-                                case MotionEvent.ACTION_UP:
-                                    Log.e("stop Recording", "stop");
-                                    if (img_send_audio.getProgress() < 30) {
-                                        Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
-                                        stopRecording(true);
-                                        setButtonToTextMsg(true);
-                                    } else {
-                                        stopRecording(true);
-                                        long diff = endTimeForRecording - startTimeForRecording;
-                                        Log.e("Difference", String.valueOf(diff));
-                                        if (diff > 1000) {
-                                            Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-                                        }
-                                        setButtonToTextMsg(true);
-                                    }
-                                    break;
-                            }
-                            return false;
-                        }
-                    });
-
-                }
-
-
-            }
-        });*/
-
     }
 
     private void getLocationandSend() {

@@ -95,7 +95,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 if (list != null) {
                     if (list.size() > 0) {
                         int index = list.size() - 1;
-                        if (holder.tvSpecialist != null) {
+                        if (holder.tvSpecialist != null &&list.get(index).getType() !=null) {
                             switch (list.get(index).getType()) {
                                 case Constants.IMAGE:
                                     holder.tvSpecialist.setText("Image");
