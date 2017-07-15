@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,19 +45,12 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.germanitlab.kanonhealth.helpers.Constants.folder;
@@ -68,7 +59,7 @@ import static com.germanitlab.kanonhealth.helpers.Constants.folder;
  * Created by bassiouny on 28/06/17.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder> implements View.OnClickListener, View.OnLongClickListener {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder> implements  View.OnLongClickListener {
 
     private List<Message> mMessages;
     private Activity activity;
@@ -121,7 +112,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
                 return audioMessageViewHolder;
             case Constants.UNDEFINED_MESSAGE:
-                ViewGroup undefined= (ViewGroup) mInflater.inflate(R.layout.item_chat_undefined_message, parent, false);
+                ViewGroup undefined = (ViewGroup) mInflater.inflate(R.layout.item_chat_undefined_message, parent, false);
                 ImageViewHolder undefinedViewHolder = new ImageViewHolder(undefined);
                 return undefinedViewHolder;
             default:
@@ -133,10 +124,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     @Override
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position) {
-        String type="";
-        if (mMessages.get(position).getType()!=null)
-            type=mMessages.get(position).getType();
-        switch (type) {
+        if (mMessages.get(position).getType() != null)
+        switch (mMessages.get(position).getType()) {
             case Constants.IMAGE:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
                 setImageMessage(imageViewHolder, position);
@@ -147,7 +136,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 break;
             case Constants.VIDEO:
                 ImageViewHolder VideoViewHolder = (ImageViewHolder) baseViewHolder;
-                setVideoMessage(VideoViewHolder,position);
+                setVideoMessage(VideoViewHolder, position);
                 break;
             case Constants.LOCATION:
                 ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
@@ -166,11 +155,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        try {
-            String type="";
-            if(mMessages.get(position).getType() !=null)
-                type = mMessages.get(position).getType();
-            switch (type) {
+        if (mMessages.get(position).getType() != null) {
+            switch (mMessages.get(position).getType()) {
                 case Constants.AUDIO:
                     return Constants.AUDIO_MESSAGE;
                 case Constants.VIDEO:
@@ -184,24 +170,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 default:
                     return Constants.TEXT_MESSAGE;
             }
-
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        } else {
+            return -1;
         }
-
-
-        return -1;
     }
 
     @Override
     public int getItemCount() {
         return mMessages.size();
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 
     @Override
@@ -368,17 +344,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             final Message message = mMessages.get(position);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
-            if(message.getImageText()!=null){
+            if (message.getImageText() != null) {
                 imageViewHolder.message.setText(message.getImageText());
                 imageViewHolder.message.setVisibility(View.VISIBLE);
-            }else
+            } else
                 imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download, activity);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(imageViewHolder.progress_view_download.getVisibility()==View.VISIBLE)
+                    if (imageViewHolder.progress_view_download.getVisibility() == View.VISIBLE)
                         return;
                     Dialog dialog = new Dialog(activity);
                     dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -446,10 +422,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             }
 
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            if(message.getImageText()!=null){
+            if (message.getImageText() != null) {
                 imageViewHolder.message.setText(message.getImageText());
                 imageViewHolder.message.setVisibility(View.VISIBLE);
-            }else
+            } else
                 imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.status.setImageResource(R.drawable.pending);
 
@@ -635,10 +611,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             }
 
 
-
-
-
-
             audioViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -737,7 +709,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    private void setVideoMessage(final ImageViewHolder imageViewHolder, final int position){
+    private void setVideoMessage(final ImageViewHolder imageViewHolder, final int position) {
 
         try {
             final Message message = mMessages.get(position);
@@ -816,9 +788,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     return true;
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(activity, R.string.error_message, Toast.LENGTH_SHORT).show();
-            Log.e("Chat Adapter", "setVideoMessage: ",e );
+            Log.e("Chat Adapter", "setVideoMessage: ", e);
             Crashlytics.logException(e);
         }
     }
@@ -979,9 +951,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 status.setImageResource(R.drawable.readnew);
             } else if (mMessages.get(position).getIs_delivered() == 1) {
                 status.setImageResource(R.drawable.receivenew);
-            } else if (mMessages.get(position).getIs_forward() == 0) {
+            } else if (mMessages.get(position).getIs_send()) {
                 status.setImageResource(R.drawable.sentnew);
-            } else if (mMessages.get(position).getIs_forward() == 1)
+            } else
                 status.setImageResource(R.drawable.pending);
         } else {
             background.setGravity(Gravity.LEFT);
@@ -1063,13 +1035,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    public void setList(List<Message> messages ){
-        this.mMessages=messages;
+    public void setList(List<Message> messages) {
+        this.mMessages = messages;
 
     }
 
-    public void setItem(Message item) {
-        this.mMessages.add(item);
-    }
 }
 

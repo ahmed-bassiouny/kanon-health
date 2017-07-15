@@ -66,6 +66,9 @@ public class Message implements Serializable {
     private int is_forward;
     @DatabaseField
     private int is_delivered;
+    @DatabaseField
+    private boolean is_send=true;
+
 
 
     public int getUser_id() {
@@ -309,4 +312,11 @@ public class Message implements Serializable {
         this.privacy = privacy;
     }
 
+    public boolean getIs_send() {
+        return is_send;
+    }
+
+    public void setIs_send(boolean is_send) {
+        this.is_send = is_send;
+    }
 }
