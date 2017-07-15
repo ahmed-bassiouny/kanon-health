@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -165,7 +166,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 break;
             case R.id.mi_scan:
 
-                if (!checkPermissionForCamera()) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA )!=PackageManager.PERMISSION_GRANTED) {
                     requestPermissionForCamera();
                 } else {
                     startActivity(new Intent(getActivity(), StartQrScan.class));
@@ -187,14 +188,17 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
     public void requestPermissionForCamera() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-            Toast.makeText(getContext().getApplicationContext(), "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
-        } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
-            startActivity(new Intent(getActivity(), StartQrScan.class));
-        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==CAMERA_PERMISSION_REQUEST_CODE && permissions.length>0){
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+                startActivity(new Intent(getActivity(), StartQrScan.class));
+        }
+    }
 
     public boolean checkPermissionForCamera() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);

@@ -1,12 +1,16 @@
 package com.germanitlab.kanonhealth.settings;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,6 +73,7 @@ public class SettingFragment extends Fragment {
     private PrefManager mPrefManager;
     private User user;
     private RecyclerView rvPracticies;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
 
     //status doctor
     private TextView txt_status, tvAddPractice;
@@ -269,18 +274,17 @@ public class SettingFragment extends Fragment {
             trWeblogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getActivity(), StartQrScan.class));
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA )!=PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+                    } else {
+                        startActivity(new Intent(getActivity(), StartQrScan.class));
+                    }
                 }
             });
 
             trDrStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    /*Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra("from_notification", 1);
-                    intent.putExtra("from_id", 1);
-                    startActivity(intent);*/
 
                     //Edit ahmed
                     Intent intent = new Intent(getActivity(), HttpChatActivity.class);
@@ -468,4 +472,12 @@ public class SettingFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==CAMERA_PERMISSION_REQUEST_CODE && permissions.length>0){
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+                startActivity(new Intent(getActivity(), StartQrScan.class));
+        }
+    }
 }
