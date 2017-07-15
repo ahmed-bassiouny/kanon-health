@@ -254,6 +254,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onSuccess(Object response) {
         messages = (ArrayList<Message>) response;
+        isStoragePermissionGranted();
+
+        if(getActivity() !=null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -262,8 +265,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                 }
             }
         });
-        isStoragePermissionGranted();
-
     }
 
     @Override
