@@ -330,7 +330,6 @@ public class InternetFilesOperations {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-//                Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
 
         }

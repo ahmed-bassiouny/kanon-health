@@ -13,7 +13,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.chat.ChatActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -144,16 +143,16 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
         if (hasAction) {
 
-            Intent notificationIntent = new Intent(this, ChatActivity.class);
-            notificationIntent.putExtra("message", message);
-            notificationIntent.putExtra("type", type);
-            notificationIntent.putExtra("from_id", from_id);
-            notificationIntent.putExtra("from_notification", 1);
-            notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 2, notificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
-            builder.setContentIntent(contentIntent);
+//            Intent notificationIntent = new Intent(this, ChatActivity.class);
+//            notificationIntent.putExtra("message", message);
+//            notificationIntent.putExtra("type", type);
+//            notificationIntent.putExtra("from_id", from_id);
+//            notificationIntent.putExtra("from_notification", 1);
+//            notificationIntent.putExtra("notification_type", Constants.OPEN_CHAT);
+//            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            PendingIntent contentIntent = PendingIntent.getActivity(this, 2, notificationIntent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+//            builder.setContentIntent(contentIntent);
 
             // Add as notification
 

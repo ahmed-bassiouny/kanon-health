@@ -29,7 +29,6 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.doctors.ChatsDoctorFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListMapFragment;
-import com.germanitlab.kanonhealth.documents.DocumentsChatFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
@@ -43,7 +42,6 @@ import org.json.JSONObject;
 
 import io.socket.emitter.Emitter;
 
-import static com.germanitlab.kanonhealth.chat.ChatActivity.indexFromIntent;
 
 public class MainActivity extends AppCompatActivity implements OnImgDoctorListMapClick {
 
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             setupTabIcons();
             intent = getIntent();
 
-            myviewpager.setCurrentItem(indexFromIntent);
+            myviewpager.setCurrentItem(0);
 
             speciality_id = intent.getIntExtra("speciality_id", 0);
             type = intent.getIntExtra("type", 2);
