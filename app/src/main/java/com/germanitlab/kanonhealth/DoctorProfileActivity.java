@@ -593,10 +593,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         //ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
         ImageHelper.setCountryImage(ivLocation, user.getCountry_flag());
 
-        if (user.getIs_available() != null && user.getIs_available().equals("1"))
-            tvOnline.setText(R.string.status_online);
-        else
-            tvOnline.setText(R.string.status_offline);
 
 //        loadQRCode(tv_qr_code);
         tvTelephone.setText(user.getPhone());
@@ -648,8 +644,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.get_Id() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID))) {
             is_me = true;
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
-            edAddToFavourite.setText(user.getSubTitle() + " " + user.getFirst_name());
+            edAddToFavourite.setText(user.getFirst_name());
             tvContact.setText(user.getLast_name());
+            tvOnline.setText(user.getSubTitle());
 
         } else {
             is_me = false;
@@ -659,6 +656,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 tvToolbarName.setText(user.getLast_name() + ", " + user.getFirst_name());
             edAddToFavourite.setText(R.string.add_to);
             tvContact.setText(R.string.contact_by_chat);
+            if (user.getIs_available() != null && user.getIs_available().equals("1"))
+                tvOnline.setText(R.string.status_online);
+            else
+                tvOnline.setText(R.string.status_offline);
         }
         chechEditPermission();
         checkDoctor();

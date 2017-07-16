@@ -35,7 +35,6 @@
                     android:layout_height="150dp"
                     android:minHeight="150dp"
                     android:minWidth="150dp"
-                    android:scaleType="fitXY"
                     android:adjustViewBounds="true"
                     android:maxWidth="250dp"
                     android:maxHeight="250dp"
