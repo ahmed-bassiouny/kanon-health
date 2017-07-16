@@ -22,7 +22,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_margin="15dp"
-            android:background="@drawable/camera_dialong" />
+            android:background="@drawable/camera_dialong2" />
 
         <ImageView
             android:id="@+id/img_view_gallery"
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_margin="15dp"
-            android:background="@drawable/video_dialog" />
+            android:background="@drawable/video_dialog2" />
 
 
         <ImageView
