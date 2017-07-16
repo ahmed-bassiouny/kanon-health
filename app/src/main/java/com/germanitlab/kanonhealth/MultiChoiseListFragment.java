@@ -61,7 +61,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         save = (Button) view.findViewById(R.id.save);
         error_message = (TextView) view.findViewById(R.id.error_message);
-        ll_view= (LinearLayout) view.findViewById(R.id.ll_view);
+        ll_view = (LinearLayout) view.findViewById(R.id.ll_view);
         try {
             Bundle bundle = this.getArguments();
             if (bundle != null) {
@@ -160,12 +160,14 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
     private void initDataSpecialist(Object response) {
         allspecialist = (ArrayList<ChooseModel>) response;
         // iteration on data to compare and fill data
-        for (ChooseModel choseditem : chosedspecialist) {
-            for (ChooseModel item : allspecialist) {
-                if (item.getSpeciality_id() == choseditem.getSpeciality_id()) {
-                    int index = allspecialist.indexOf(item);
-                    item.setIsMyChoise(true);
-                    allspecialist.set(index, item);
+        if (allspecialist.size() > 0) {
+            for (ChooseModel choseditem : chosedspecialist) {
+                for (ChooseModel item : allspecialist) {
+                    if (item.getSpeciality_id() == choseditem.getSpeciality_id()) {
+                        int index = allspecialist.indexOf(item);
+                        item.setIsMyChoise(true);
+                        allspecialist.set(index, item);
+                    }
                 }
             }
         }

@@ -188,7 +188,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
     public void requestPermissionForCamera() {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+            requestPermissions( new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     @Override

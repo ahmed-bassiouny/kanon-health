@@ -892,6 +892,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                             public void onClick(DialogInterface dialog, final int position) {
                                 dialog.cancel();
                                 progressBar.setVisibility(View.VISIBLE);
+                                imagePrivacy.setVisibility(View.GONE);
                                 new HttpCall(activity, new ApiResponse() {
                                     @Override
                                     public void onSuccess(Object response) {
@@ -912,6 +913,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                                     public void onFailed(String error) {
                                         Toast.makeText(activity, activity.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         progressBar.setVisibility(View.GONE);
+                                        imagePrivacy.setVisibility(View.VISIBLE);
 
                                     }
                                 }).updatePrivacy(String.valueOf(userID), passowrd, mMessages.get(pos).get_Id(), (mMessages.get(pos).getPrivacy() + 1));
