@@ -27,9 +27,12 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
     public static ArrayList<String> finishedFirstLevelOptions;
     public static ArrayList<String> finishedSecondLevelOptions;
 
+    private int fragmentFlag=0;
+
     @BindView(R.id.inquiry_container)
     FrameLayout inquiryContainer;
     String jsonData;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,13 +45,14 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
             inquiryResult = new ArrayList<>();
             finishedFirstLevelOptions = new ArrayList<>();
             finishedSecondLevelOptions = new ArrayList<>();
+            fragmentFlag=0;
             getSupportFragmentManager().beginTransaction().add(R.id.inquiry_container, getInquiryMainFragment("firstTime"))
                     .addToBackStack(null).commit();
         } else {
             finishedFirstLevelOptions = savedInstanceState.getStringArrayList("finished_first_level");
             finishedSecondLevelOptions = savedInstanceState.getStringArrayList("finished_second_level");
             inquiryResult = (ArrayList<HashMap<String, String>>) savedInstanceState.getSerializable("inquiry_result");
-
+            fragmentFlag=1;
             getSupportFragmentManager().beginTransaction().replace(R.id.inquiry_container, getInquiryMainFragment("comingFromSaveState"))
                     .addToBackStack(null).commit();
         }
@@ -94,7 +98,13 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        }else
+        {
+            super.onBackPressed();
+        }
     }
+
+
 }
