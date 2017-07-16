@@ -461,9 +461,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         for (ChooseModel chooseModel : supported_lang) {
             if (i == 0) {
                 String country_code = chooseModel.getCountry_code();
-                Country country = Country.getCountryByISO(country_code);
-                if (country != null)
-                    flowLayout.addView(setImageHeart(country.getFlag()));
+                if(!TextUtils.isEmpty(country_code)) {
+                    Country country = Country.getCountryByISO(country_code);
+                    if (country != null) {
+                        flowLayout.addView(setImageHeart(country.getFlag()));
+                    }
+                }
             } else if (i == 1) {
                 flowLayout.addView(setImageCircle(chooseModel.getSpeciality_icon()));
             }

@@ -7,8 +7,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_gravity="center"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:weightSum="4"
         android:orientation="horizontal">
 
@@ -19,8 +21,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_margin="@dimen/size_10dp"
-            android:background="@drawable/camera" />
+            android:layout_margin="15dp"
+            android:background="@drawable/camera_dialong" />
 
         <ImageView
             android:id="@+id/img_view_gallery"
@@ -28,8 +30,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/size_10dp"
-            android:background="@drawable/galary" />
+            android:layout_margin="15dp"
+            android:background="@drawable/gallary_dialog" />
 
 
         <ImageView
@@ -38,8 +40,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/size_10dp"
-            android:background="@drawable/video" />
+            android:layout_margin="15dp"
+            android:background="@drawable/video_dialog" />
 
 
         <ImageView
@@ -48,7 +50,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_margin="@dimen/size_10dp"
-            android:background="@drawable/location" />
+            android:layout_margin="15dp"
+            android:background="@drawable/location_dialog" />
     </LinearLayout>
 </LinearLayout>

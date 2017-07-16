@@ -275,7 +275,7 @@ public class SettingFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA )!=PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+                        requestPermissions( new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
                     } else {
                         startActivity(new Intent(getActivity(), StartQrScan.class));
                     }
