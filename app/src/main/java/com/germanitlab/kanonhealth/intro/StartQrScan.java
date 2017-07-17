@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -18,6 +19,8 @@ import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.WebLogin;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -107,11 +110,11 @@ public class StartQrScan extends AppCompatActivity {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    Gson gson = new Gson();
-                    String json = gson.toJson(response);
-                    Intent i = new Intent(getApplicationContext(), InquiryActivity.class);
-                    i.putExtra("doctor_data", json);
-                    startActivity(i);
+                    UserInfoResponse userInfoResponse=(UserInfoResponse)response;
+                    Intent intent = new Intent(StartQrScan.this, DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data", userInfoResponse.getUser());
+                    intent.putExtra("tab", "");
+                    startActivity(intent);
                     finish();
                     DismissProgressDialog();
                 } catch (Exception e) {
