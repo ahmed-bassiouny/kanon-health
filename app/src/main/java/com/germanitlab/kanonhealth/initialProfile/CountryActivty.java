@@ -59,10 +59,13 @@ public class CountryActivty extends AppCompatActivity {
                             if (e.getDialCode().toLowerCase().startsWith("+" + temp)) {
                                 search.add(e);
                             }
-                            if (e.getName().toLowerCase().startsWith(temp)) {
+                            if (e.getName().trim().toLowerCase().startsWith(temp)) {
+
                                 search.add(e);
                             }
+
                         }
+
                     } catch (Exception w) {
                         for (Country e : Country.getAllCountries()) {
                             Log.d(e.getName(), e.getDialCode());
@@ -71,7 +74,12 @@ public class CountryActivty extends AppCompatActivity {
                             }
                         }
                     }
-                    mAdapter = new CountryAdapter(search, CountryActivty.this);
+                    if(s.toString().equals(""))
+                    {
+                        mAdapter = new CountryAdapter(Country.getAllCountries(), CountryActivty.this);
+                    }else {
+                        mAdapter = new CountryAdapter(search, CountryActivty.this);
+                    }
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
 
