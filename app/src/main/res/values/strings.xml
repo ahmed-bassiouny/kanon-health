@@ -286,4 +286,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="msg_not_send">Sorry Message not Send</string>
     <string name="attach_not_show">Sorry Soemthing Happened in Attachment</string>
     <string name="error_in_getting_default_country">unable to get the default country</string>
+    <string name="no_country_data">Sorry, no data found</string>
+
 </resources>

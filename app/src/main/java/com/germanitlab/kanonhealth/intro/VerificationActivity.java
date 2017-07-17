@@ -261,4 +261,9 @@ public class VerificationActivity extends AppCompatActivity {
     public void dismissProgressDialog() {
         progressDialog.dismiss();
     }
+
+    @Override
+    public void onBackPressed() {
+        System.out.println("no action");
+    }
 }

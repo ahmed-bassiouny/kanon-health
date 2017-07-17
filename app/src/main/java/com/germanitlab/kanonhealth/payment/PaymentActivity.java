@@ -45,6 +45,9 @@ public class PaymentActivity extends AppCompatActivity {
     @BindView(R.id.rb_free)
     RadioButton rbFree ;
 
+    @BindView(R.id.rb_free_text)
+    TextView rbFreeText ;
+
     @BindView(R.id.rg_payment)
     RadioGroup rgPayment ;
     User doctor;
@@ -62,10 +65,14 @@ public class PaymentActivity extends AppCompatActivity {
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
 
             doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT),User.class);
-            if(doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR))
+            if(doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR)) {
                 rbFree.setVisibility(View.VISIBLE);
-            else
+                rbFreeText.setVisibility(View.VISIBLE);
+            }
+            else {
                 rbFree.setVisibility(View.GONE);
+                rbFreeText.setVisibility(View.GONE);
+            }
         /*
         handel data in ui
          */

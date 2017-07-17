@@ -38,6 +38,8 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_15sp"
                 android:textStyle="bold" />
+
+
         </android.support.v7.widget.Toolbar>
 
         <View

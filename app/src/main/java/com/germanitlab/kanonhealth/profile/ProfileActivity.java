@@ -78,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     @BindView(R.id.scrollView)
     ScrollView scrollView;
 
+
     private UserInfoResponse userInfoResponse = new UserInfoResponse();
     private PrefManager mPrefManager;
 
@@ -100,12 +101,9 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         ButterKnife.bind(this);
         initTB();
         prefManager = new PrefManager(this);
+
         try {
-            if (Helper.isNetworkAvailable(getApplicationContext())) {
-                tvEdit.setVisibility(View.VISIBLE);
-            } else {
-                tvEdit.setVisibility(View.GONE);
-            }
+
 
             mPrefManager = new PrefManager(this);
             Intent intent = getIntent();
@@ -117,11 +115,19 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
                 bindData();
                 progressBar.setVisibility(View.GONE);
                 linearProfileContent.setVisibility(View.VISIBLE);
+
             } else {
-                UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-                userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-                new HttpCall(this, this).getProfile(userRegisterResponse);
+                tvEdit.setVisibility(View.GONE);
+                if (Helper.isNetworkAvailable(getApplicationContext())) {
+                    UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+                    userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+                    userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+                    new HttpCall(this, this).getProfile(userRegisterResponse);
+                } else {
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+
+                }
+
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -221,7 +227,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @OnClick(R.id.tv_profile_edit)
     public void editProfileOnClicked() {
-
+        tvEdit.setVisibility(View.VISIBLE);
         Intent i = new Intent(getApplicationContext(), EditUserProfileActivity.class);
         i.putExtra("userInfoResponse", userInfoResponse);
         startActivity(i);
@@ -230,6 +236,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onSuccess(Object response) {
+
 
         try {
             progressBar.setVisibility(View.GONE);
@@ -242,6 +249,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
                 bindData();
 
                 linearProfileContent.setVisibility(View.VISIBLE);
+                tvEdit.setVisibility(View.VISIBLE);
 
             } else {
                 tvLoadingError.setVisibility(View.VISIBLE);
@@ -256,6 +264,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
+        tvEdit.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         tvLoadingError.setVisibility(View.VISIBLE);
         if (error != null && error.length() > 0)

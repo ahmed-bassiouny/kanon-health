@@ -328,7 +328,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
             i.putExtra("from", false);
             startActivity(i);
             finish();
-            finish();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

@@ -246,52 +246,91 @@
                 </LinearLayout>
 
             </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:weightSum="4"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:weightSum="4"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:id="@+id/rg_payment"
+            android:layout_height="match_parent">
 
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:id="@+id/rg_payment"
-                    android:layout_height="match_parent">
+                <RadioButton
+                    android:layout_weight="1"
+                    android:id="@+id/radio0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
 
-                    <RadioButton
-                        android:layout_weight="1"
-                        android:id="@+id/radio0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:drawableRight="@drawable/paypal_new" />
+                    />
 
-                    <RadioButton
-                        android:layout_weight="1"
+                <RadioButton
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp" />
 
-                        android:drawableRight="@drawable/sofo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp" />
 
-                    <RadioButton
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:text="Voucher code" />
+            <RadioButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_margin="10dp" />
 
-                    <RadioButton
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:id="@+id/rb_free"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="Consult a colleague \n (lets keep it free to consult colleagues)" />
+            <RadioButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/rb_free"
 
-                </RadioGroup>
-            </LinearLayout>
+               />
+
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:src="@drawable/paypal_new"
+            android:paddingBottom="@dimen/size_5dp"/>
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sofo"
+            android:paddingTop="@dimen/size_5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Voucher code"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="@dimen/size_10dp"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/rb_free_text"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="@dimen/size_10dp"
+            android:gravity="center_vertical"
+            android:text="Consult a colleague \n (lets keep it free to consult colleagues)" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
 
             <Button
                 android:id="@+id/next"

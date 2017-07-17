@@ -8,12 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.mukesh.countrypicker.Country;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +28,7 @@ import java.util.regex.Pattern;
 public class CountryActivty extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CountryAdapter mAdapter;
+    private TextView noCountryData;
     EditText search_bar;
 
     @Override
@@ -33,8 +38,12 @@ public class CountryActivty extends AppCompatActivity {
         try {
             search_bar = (EditText) findViewById(R.id.search_bar);
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+            noCountryData=(TextView) findViewById(R.id.no_country_data) ;
+
             sortList();
             mAdapter = new CountryAdapter(Country.getAllCountries(), this);
+
+            noCountryData.setVisibility(View.GONE);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -63,7 +72,6 @@ public class CountryActivty extends AppCompatActivity {
 
                                 search.add(e);
                             }
-
                         }
 
                     } catch (Exception w) {
@@ -74,9 +82,19 @@ public class CountryActivty extends AppCompatActivity {
                             }
                         }
                     }
+
+                    if(search.size()==0&&!s.toString().equals(""))
+                    {
+                        noCountryData.setVisibility(View.VISIBLE);
+                    }else
+                    {
+                        noCountryData.setVisibility(View.GONE);
+                    }
+
                     if(s.toString().equals(""))
                     {
                         mAdapter = new CountryAdapter(Country.getAllCountries(), CountryActivty.this);
+                        noCountryData.setVisibility(View.GONE);
                     }else {
                         mAdapter = new CountryAdapter(search, CountryActivty.this);
                     }
