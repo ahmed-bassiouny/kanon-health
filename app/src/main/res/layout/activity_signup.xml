@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/mobile_toolbar"
@@ -83,6 +85,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:maxLines="1"
+                android:maxLength="15"
                 android:imeOptions="actionSend"
                 android:inputType="phone"
                 android:paddingLeft="5dp"

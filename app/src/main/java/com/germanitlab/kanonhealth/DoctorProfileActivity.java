@@ -58,15 +58,14 @@ import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.github.siyamed.shapeimageview.CircularImageView;
-import com.github.siyamed.shapeimageview.DiamondImageView;
 import com.github.siyamed.shapeimageview.HeartImageView;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
+import com.nex3z.flowlayout.FlowLayout;
 
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -180,6 +179,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.fl_language)
     FlowLayout flLanguages;
     boolean is_doc;
+    @BindView(R.id.txt_language_names)
+    TextView txtLanguageNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -459,10 +460,17 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
         flowLayout.removeAllViews();
+        txtLanguageNames.setText("");
+        int size = 0 ;
         for (ChooseModel chooseModel : supported_lang) {
             if (i == 0) {
                 String country_code = chooseModel.getCountry_code();
-                if(!TextUtils.isEmpty(country_code)) {
+                if (!TextUtils.isEmpty(country_code)) {
+                    txtLanguageNames.append(chooseModel.getLang_title());
+                    if (supported_lang.size() > size + 1) {
+                        txtLanguageNames.append(" , ");
+                        size ++;
+                    }
                     Country country = Country.getCountryByISO(country_code);
                     if (country != null) {
                         flowLayout.addView(setImageHeart(country.getFlag()));
@@ -471,7 +479,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             } else if (i == 1) {
                 flowLayout.addView(setImageCircle(chooseModel.getSpeciality_icon()));
             }
-
         }
     }
 
@@ -486,8 +493,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         View view;
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.heart_item_layout, null);
-        CircleImageView item = (CircleImageView) view.findViewById(R.id.hiv_heart);
-        item.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
         item.setImageResource(src);
         return view;
     }
@@ -721,7 +727,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (is_me)
             return;
 
-        if (user.getIs_my_doctor().equals("0") && user.getId()!= null) {
+        if (user.getIs_my_doctor().equals("0")) {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -735,7 +741,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     Log.i("Doctor Profile  ", " Activity " + error);
                 }
             }).addToMyDoctor(user.get_Id() + "");
-        } else if(user.getId()!= null){
+        } else {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {

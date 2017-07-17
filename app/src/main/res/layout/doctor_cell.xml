@@ -94,7 +94,7 @@
         app:layout_marginTopPercent="4%" />
 
 
-    <org.apmem.tools.layouts.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
+    <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ll_dynamic_specialist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
         f:layout_newLine="true">
 
 
-    </org.apmem.tools.layouts.FlowLayout>
+    </com.nex3z.flowlayout.FlowLayout>
 
 
 </android.support.percent.PercentRelativeLayout>

@@ -16,6 +16,8 @@ import com.germanitlab.kanonhealth.R;
 import com.mukesh.countrypicker.Country;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,7 +33,7 @@ public class CountryActivty extends AppCompatActivity {
         try {
             search_bar = (EditText) findViewById(R.id.search_bar);
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
+            sortList();
             mAdapter = new CountryAdapter(Country.getAllCountries(), this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
@@ -57,10 +59,13 @@ public class CountryActivty extends AppCompatActivity {
                             if (e.getDialCode().toLowerCase().startsWith("+" + temp)) {
                                 search.add(e);
                             }
-                            if (e.getName().toLowerCase().startsWith(temp)) {
+                            if (e.getName().trim().toLowerCase().startsWith(temp)) {
+
                                 search.add(e);
                             }
+
                         }
+
                     } catch (Exception w) {
                         for (Country e : Country.getAllCountries()) {
                             Log.d(e.getName(), e.getDialCode());
@@ -69,7 +74,12 @@ public class CountryActivty extends AppCompatActivity {
                             }
                         }
                     }
-                    mAdapter = new CountryAdapter(search, CountryActivty.this);
+                    if(s.toString().equals(""))
+                    {
+                        mAdapter = new CountryAdapter(Country.getAllCountries(), CountryActivty.this);
+                    }else {
+                        mAdapter = new CountryAdapter(search, CountryActivty.this);
+                    }
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
 
@@ -80,5 +90,16 @@ public class CountryActivty extends AppCompatActivity {
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void sortList() {
+        Collections.sort(Country.getAllCountries(), new Comparator<Country>()
+        {
+            @Override
+            public int compare(Country country , Country country2)
+            {
+                return country.getName().trim().compareToIgnoreCase(country2.getName().trim());
+            }
+        });
     }
 }

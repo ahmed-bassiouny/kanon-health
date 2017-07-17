@@ -24,6 +24,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
@@ -53,11 +54,14 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     public SignupActivity signupActivity;
     PrefManager prefManager;
     final int REQUEST_CODE = 10 ;
+    Util util ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        util = Util.getInstance(this);
+        util.setupUI(findViewById(R.id.signup_layout), this);
         signupActivity = this;
         try {
             Intent intent = getIntent();
@@ -157,7 +161,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
 
     private void sendData() {
-        if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 9)
+        if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15)
             registerUser(etMobileNumber.getText().toString(), code.toString());
         else
             Toast.makeText(SignupActivity.this, getResources().getText(R.string.Invalid_country), Toast.LENGTH_SHORT).show();
