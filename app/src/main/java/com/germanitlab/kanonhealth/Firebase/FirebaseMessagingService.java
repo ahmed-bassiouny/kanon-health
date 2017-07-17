@@ -51,7 +51,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             switch (notificationType) {
                 case 1:
                     if (HttpChatFragment.chatRunning)
-                        getMessage(remoteMessage);
+                        getMessage(remoteMessage,notificationType);
                     else
                         // notify
                         break;
@@ -60,7 +60,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     break;
                 case 3:
                     if (HttpChatFragment.chatRunning)
-                        getMessage(remoteMessage);
+                        getMessage(remoteMessage,notificationType);
                     break;
                 case 4:
                     getCloseChat(remoteMessage);
@@ -111,7 +111,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         showNotification(remoteMessage.getData().get("body"), remoteMessage.getData().get("title"), 0, 0, false);
     }
 
-    private void getMessage(RemoteMessage remoteMessage) {
+    private void getMessage(RemoteMessage remoteMessage,int notificationtype) {
         Message message = new Message();
         if (remoteMessage.getData().get("from_id") != null)
             message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
@@ -121,7 +121,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         message.setSent_at(remoteMessage.getData().get("sent_at"));
         Intent intent = new Intent("MyData");
         intent.putExtra("extra", message);
-        intent.putExtra("notificationtype", remoteMessage.getData().get("notificationtype"));
+        intent.putExtra("notificationtype", notificationtype);
         broadcaster.sendBroadcast(intent);
     }
 

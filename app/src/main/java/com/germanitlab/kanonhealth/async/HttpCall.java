@@ -1225,4 +1225,25 @@ public class HttpCall {
             Crashlytics.logException(e);
         }
     }
+    public void messagesSeen(MessageRequest messageRequest){
+        try {
+            ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+            Call<JsonObject> connection = service.messagesSeen(messageRequest);
+            connection.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    apiResponse.onSuccess(response);
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
+                    apiResponse.onFailed(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.e("Httpcall", "sendMessage: ", e);
+            Crashlytics.logException(e);
+        }
+    }
 }

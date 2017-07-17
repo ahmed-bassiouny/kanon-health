@@ -123,7 +123,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
     // loca variable
     int userID;
-    int userPassword = 0;
+    String userPassword ;
     int doctorID;
     String doctorName = "";
     String doctorUrl = "";
@@ -205,6 +205,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     // set data in object
     private void initData() {
         userID = prefManager.getInt(PrefManager.USER_ID);
+        userPassword=prefManager.getData(prefManager.USER_PASSWORD);
         doctorID = getArguments().getInt("doctorID");
         doctorName = getArguments().getString("doctorName");
         doctorUrl = getArguments().getString("doctorUrl");
@@ -698,18 +699,23 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @Override
     public void onStart() {
         super.onStart();
-        chatRunning = true;
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
-                new IntentFilter("MyData"));
+        if(userID != doctorID) {
+            chatRunning = true;
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
+                    new IntentFilter("MyData"));
+        }
         if (userID == doctorID)
             show_privacy = true;
     }
 
+
     @Override
     public void onStop() {
         super.onStop();
-        chatRunning = false;
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        if(userID != doctorID) {
+            chatRunning = false;
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        }
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -721,6 +727,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFrom_id() == doctorID) {
                     creatRealMessage(message, 0);
+                    messageSeen();
                     // seen request for specific msg
                 } else {
                     // show notification
@@ -1206,6 +1213,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
             button2.setEnabled(true);
             button2.setText(R.string.open_session_again);
             etMessage.setHint("Nachricht schreiben");
+            messageSeen();
         } else {
             loadChatOffline(doctorID);
             imgbtn_chat_attach.setEnabled(false);
@@ -1259,5 +1267,24 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     @OnClick(R.id.img_requestpermission)
     public void requestAudioPermission() {
         requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
+    }
+    private void messageSeen(){
+        // i sent request to make my msg seen
+        MessageRequest messageRequest = new MessageRequest(userID,userPassword,doctorID);
+        try {
+            new HttpCall(getActivity(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                }
+
+                @Override
+                public void onFailed(String error) {
+
+                }
+            }).messagesSeen(messageRequest);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Log.e("messageSeen", "messageSeen: ", e);
+        }
     }
 }
