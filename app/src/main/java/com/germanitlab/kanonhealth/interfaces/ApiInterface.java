@@ -181,5 +181,8 @@ public interface ApiInterface {
     @POST("/upload")
     Call<UploadImageResponse> uploadMedia( @Part MultipartBody.Part image);
 
+    @POST("/messages/seen")
+    Call<JsonObject> messagesSeen(@Body MessageRequest messageRequest);
+
 }
 
