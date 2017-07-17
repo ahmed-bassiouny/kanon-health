@@ -1,9 +1,11 @@
 package com.germanitlab.kanonhealth;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +17,8 @@ import com.germanitlab.kanonhealth.main.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PasscodeActivty extends AppCompatActivity {
 
@@ -46,6 +50,26 @@ public class PasscodeActivty extends AppCompatActivity {
         }
 
     }
+
+    @OnTouch({R.id.one, R.id.two, R.id.three, R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine, R.id.zero})
+    public boolean hoverEffect(View view, MotionEvent motionEvent) {
+
+        if (view != null && view instanceof CircleImageView) {
+            CircleImageView iv = (CircleImageView) view;
+            if (motionEvent != null) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    iv.setBorderColor(Color.GRAY);
+                    iv.setFillColor(Color.GRAY);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    iv.setFillColor(Color.parseColor("#0099cc"));
+                    iv.setBorderColor(Color.parseColor("#0099cc"));
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     @OnClick({R.id.one, R.id.two, R.id.three, R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine, R.id.zero})
     public void enterPass(View view) {
