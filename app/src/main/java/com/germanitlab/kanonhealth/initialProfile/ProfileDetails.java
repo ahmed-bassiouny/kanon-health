@@ -74,6 +74,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     @BindView(R.id.edit_birthday)
     TextView textBirthday;
     PrefManager mPrefManager;
+    @BindView(R.id.et_title)
+    EditText et_title;
     UploadImageResponse uploadImageResponse;
     ProgressDialog progressDialog;
     private Uri selectedImageUri;
@@ -170,23 +172,6 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         outState.putString("birthdate", textBirthday.getText().toString());
         super.onSaveInstanceState(outState);
     }
-    /*    public  void dispatchOpenGalleryIntent () {
-        if (ContextCompat.checkSelfPermission(this , Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            getIntent.setType("image*//*");
-
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickIntent.setType("image*//*");
-
-            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-            startActivityForResult(chooserIntent, Constants.IMAGE_REQUEST);
-        } else {
-            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE );
-        }
-    }*/
 
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
@@ -256,6 +241,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             user.setFirst_name(firstName);
             user.setLast_name(lastName);
+            user.setSubTitle(et_title.getText().toString());
             user.setBirthDate(birthdate);
             user.setGender(gender);
             user.setGender_other(gender_other);

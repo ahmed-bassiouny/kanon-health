@@ -140,7 +140,7 @@ public class SettingFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mi_qr_code:
-                Helper.ImportQr(mPrefManager, getActivity());
+                new Helper(getActivity()).ImportQr(mPrefManager);
                 break;
         }
         return super.onOptionsItemSelected(item);

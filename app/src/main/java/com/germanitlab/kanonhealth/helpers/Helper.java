@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -25,6 +28,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import net.glxn.qrgen.android.QRCode;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +73,7 @@ public class Helper {
                 .commit();
     }
 
-    public static void ImportQr(final PrefManager mPrefManager, final Activity activity) {
+    public void ImportQr(final PrefManager mPrefManager) {
 
 /*        if (mPrefManager.getData(PrefManager.Image_data) != "" &&mPrefManager.getData(PrefManager.Image_data) != null) {
             Picasso.with(activity).load(Constants.CHAT_SERVER_URL
@@ -81,15 +88,23 @@ public class Helper {
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT);
         ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-        if (mPrefManager.getData(PrefManager.PROFILE_QR) != null) {
+        /*if (mPrefManager.getData(PrefManager.PROFILE_QR) != null) {
             ImageHelper.setImage(imageView, Constants.CHAT_SERVER_URL + "/" + mPrefManager.getData(PrefManager.PROFILE_QR), R.drawable.qr, activity);
-        }
+        }*/
         Gson gson = new Gson();
         Log.d("user data", mPrefManager.getData(PrefManager.USER_KEY));
         UserInfoResponse userInfoResponse = gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
         TextView name = (TextView) dialog.findViewById(R.id.name);
 //                TextView last_name = (TextView) dialog.findViewById(R.id.last_name);
         TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
+
+        String idEncrypt=getMd5(String.valueOf(userInfoResponse.getUser().getId()));
+        Log.i("ID: ", String.valueOf(userInfoResponse.getUser().getId()));
+        Log.i( "ImportQr: ",idEncrypt);
+        if(!idEncrypt.isEmpty()) {
+            Bitmap myBitmap = QRCode.from(userInfoResponse.getUser().getId()+":"+idEncrypt).bitmap();
+            imageView.setImageBitmap(myBitmap);
+        }
         CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
         if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
@@ -98,12 +113,14 @@ public class Helper {
         name.setText(userInfoResponse.getUser().getFirst_name().toString() + " " + userInfoResponse.getUser().getLast_name().toString());
 //                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
         try {
-            Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
-            String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            Log.d("my converted date", s);
+            Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirthDate().toString());
+            String s="";
+            if(!userInfoResponse.getUser().getBirthDate().toString().equals("0000-00-00"))
+                s= (DateUtil.formatBirthday(parseDate.getTime()));
             birthdate.setText(s);
         } catch (ParseException e) {
             e.printStackTrace();
+            birthdate.setText("");
         }
         dialog.show();
     }
@@ -145,6 +162,27 @@ public class Helper {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public String getMd5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+            Toast.makeText(activity, R.string.generate_qrcode, Toast.LENGTH_SHORT).show();
+        }
+        return "";
     }
 }
 

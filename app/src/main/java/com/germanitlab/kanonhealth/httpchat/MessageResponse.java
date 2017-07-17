@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MessageResponse {
 
-    private int status;
+    private Integer status;
 
     private List<Message> messages;
 
@@ -32,11 +32,11 @@ public class MessageResponse {
         this.messages = message;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
