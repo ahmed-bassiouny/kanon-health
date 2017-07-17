@@ -109,16 +109,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             initView();
             is_doc = prefManager.get(PrefManager.IS_DOCTOR);
             gson = new Gson();
-            if (is_doc) {
-                btnLeftList.setText("Clients");
-                btnRightList.setText("others");
-                type = User.CLIENT_TYPE;
-            } else {
-                btnLeftList.setText("Doctors");
-                btnRightList.setText("practices");
-                type = User.DOCTOR_TYPE;
-            }
-
+            btnLeftList.setText("Doctors");
+            btnRightList.setText("practices");
+            type = User.DOCTOR_TYPE;
             doctorList = new ArrayList<>();
             mDoctorRepository = new UserRepository(getContext());
             if (!prefManager.get(PrefManager.IS_OLD))
@@ -134,17 +127,10 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     private void loadFirstTime() {
         util.showProgressDialog();
-        if (!is_doc) {
-            type = User.CLINICS_TYPE;
-            getBySpeciality(true, type);
-            type = User.DOCTOR_TYPE;
-            getBySpeciality(true, type);
-        } else {
-            type = User.CLIENT_TYPE;
-            getBySpeciality(true, type);
-            type = User.DOCTOR_AND_CLINICS_TYPE;
-            getBySpeciality(true, type);
-        }
+        type = User.CLINICS_TYPE;
+        getBySpeciality(true, type);
+        type = User.DOCTOR_TYPE;
+        getBySpeciality(true, type);
     }
 
 
@@ -166,7 +152,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 break;
             case R.id.mi_scan:
 
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA )!=PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissionForCamera();
                 } else {
                     startActivity(new Intent(getActivity(), StartQrScan.class));
@@ -188,14 +174,14 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
     public void requestPermissionForCamera() {
-            requestPermissions( new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==CAMERA_PERMISSION_REQUEST_CODE && permissions.length>0){
-            if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && permissions.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 startActivity(new Intent(getActivity(), StartQrScan.class));
         }
     }
@@ -288,25 +274,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     doctorList = (List<User>) response;
                     updateDatabase(doctorList);
                     if (b) {
-                        if (!is_doc) {
-                            if (typeNumber == User.DOCTOR_TYPE)
-                                is_doctor_data = true;
-                            else if (typeNumber == User.CLINICS_TYPE)
-                                is_clinic_data = true;
-                            if (is_clinic_data && is_doctor_data) {
-                                util.dismissProgressDialog();
-                                prefManager.put(PrefManager.IS_OLD, true);
-                            }
-                        } else {
-                            if (typeNumber == User.CLIENT_TYPE)
-                                is_doctor_data = true;
-                            else if (typeNumber == User.DOCTOR_AND_CLINICS_TYPE)
-                                is_clinic_data = true;
-                            if (is_clinic_data && is_doctor_data) {
-                                util.dismissProgressDialog();
-                                prefManager.put(PrefManager.IS_OLD, true);
-                            }
+                        if (typeNumber == User.DOCTOR_TYPE)
+                            is_doctor_data = true;
+                        else if (typeNumber == User.CLINICS_TYPE)
+                            is_clinic_data = true;
+                        if (is_clinic_data && is_doctor_data) {
+                            util.dismissProgressDialog();
+                            prefManager.put(PrefManager.IS_OLD, true);
                         }
+
                     } else {
                         setAdapter(doctorList);
                         CheckTabToScrollTo();
@@ -331,7 +307,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
     private void CheckTabToScrollTo() {
-        if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE) {
+        if (type == User.DOCTOR_TYPE) {
             scrollToPosition(firstVisibleItemPositionForLeftTab);
         } else {
             scrollToPosition(firstVisibleItemPositionForRightTab);
@@ -384,7 +360,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onPause() {
-        if (type == User.DOCTOR_TYPE || type == User.CLIENT_TYPE) {
+        if (type == User.DOCTOR_TYPE) {
             firstVisibleItemPositionForLeftTab = getScrolled();
         } else {
             firstVisibleItemPositionForRightTab = getScrolled();
@@ -406,13 +382,13 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         btnLeftList = (Button) view.findViewById(R.id.doctor_list);
         btnRightList = (Button) view.findViewById(R.id.praxis_list);
 
-        if (type == User.DOCTOR_TYPE || type == User.CLIENT_TYPE) {
+        if (type == User.DOCTOR_TYPE) {
             btnLeftList.setBackgroundResource(R.color.blue);
             btnLeftList.setTextColor(getResources().getColor(R.color.white));
             btnRightList.setBackgroundResource(R.color.gray);
             btnRightList.setTextColor(getResources().getColor(R.color.black));
         }
-        if (type == User.CLINICS_TYPE || type == User.DOCTOR_AND_CLINICS_TYPE) {
+        if (type == User.CLINICS_TYPE) {
             btnLeftList.setBackgroundResource(R.color.gray);
             btnLeftList.setTextColor(getResources().getColor(R.color.black));
             btnRightList.setBackgroundResource(R.color.blue);
@@ -495,20 +471,12 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
                 firstVisibleItemPositionForLeftTab = getScrolled();
-                if (!is_doc) {
-                    if (type != User.CLINICS_TYPE) {
-                        type = User.CLINICS_TYPE;
-                        loadData();
+                if (type != User.CLINICS_TYPE) {
+                    type = User.CLINICS_TYPE;
+                    loadData();
 
 
-                    }
-                } else {
-                    if (type != User.DOCTOR_AND_CLINICS_TYPE) {
-                        type = User.DOCTOR_AND_CLINICS_TYPE;
-                        loadData();
-                    }
                 }
-
             }
         });
         btnLeftList.setOnClickListener(new View.OnClickListener() {
@@ -519,16 +487,11 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
                 firstVisibleItemPositionForRightTab = getScrolled();
-                if (!is_doc) {
-                    if (type != User.DOCTOR_TYPE) {
-                        type = User.DOCTOR_TYPE;
-                        loadData();
-                    }
-                } else {
-                    if (type != User.CLIENT_TYPE) {
-                        type = User.CLIENT_TYPE;
-                        loadData();
-                    }
+
+                if (type != User.DOCTOR_TYPE) {
+                    type = User.DOCTOR_TYPE;
+                    loadData();
+
                 }
             }
         });

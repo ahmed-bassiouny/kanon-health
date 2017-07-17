@@ -1,4 +1,6 @@
-<com.github.siyamed.shapeimageview.HeartImageView android:layout_width="wrap_content"
+<de.hdodenhof.circleimageview.CircleImageView android:layout_width="wrap_content"
     android:id="@+id/hiv_heart"
-    android:layout_height="match_parent"
+    android:padding="@dimen/size_2dp"
+    android:layout_height="wrap_content"
+    android:scaleType="fitCenter"
     xmlns:android="http://schemas.android.com/apk/res/android" />

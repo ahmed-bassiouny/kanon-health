@@ -58,7 +58,9 @@ import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.github.siyamed.shapeimageview.CircularImageView;
+import com.github.siyamed.shapeimageview.DiamondImageView;
 import com.github.siyamed.shapeimageview.HeartImageView;
+import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
@@ -484,7 +486,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         View view;
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.heart_item_layout, null);
-        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
+        CircleImageView item = (CircleImageView) view.findViewById(R.id.hiv_heart);
+        item.setScaleType(ImageView.ScaleType.FIT_CENTER);
         item.setImageResource(src);
         return view;
     }
