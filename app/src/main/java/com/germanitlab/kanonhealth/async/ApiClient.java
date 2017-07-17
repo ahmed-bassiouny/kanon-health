@@ -36,9 +36,9 @@ public class ApiClient {
                 loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient.Builder httpClient = new OkHttpClient
                         .Builder()
-                        .readTimeout(60, TimeUnit.SECONDS)
-                        .writeTimeout(60, TimeUnit.SECONDS)
-                        .connectTimeout(60, TimeUnit.SECONDS);
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .connectTimeout(10, TimeUnit.SECONDS);
                 httpClient.addInterceptor(loggingInterceptor);  // <-- this is the important line!
                 retrofit = new Retrofit.Builder()
                         .baseUrl(Constants.CHAT_SERVER_URL)

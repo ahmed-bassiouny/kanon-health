@@ -26,6 +26,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -59,11 +60,14 @@ public class VerificationActivity extends AppCompatActivity {
     EditText verification_Code;
     Boolean oldUser;
     PrefManager prefManager;
+    Util util ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
+        util = Util.getInstance(this);
+        util.setupUI(findViewById(R.id.verifiction_layout) , this);
         try {
             prefManager = new PrefManager(VerificationActivity.this);
             Intent intent = getIntent();
@@ -187,6 +191,7 @@ public class VerificationActivity extends AppCompatActivity {
                 }
             }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
         } catch (Exception e) {
+            dismissProgressDialog();
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -198,7 +203,7 @@ public class VerificationActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.verifiction_layout)
+    @OnClick(R.id.verification_Code)
     public void verificationLayoutClick(View view) {
         if (verification_Code.getText().length() == 0) {
             verification_Code.requestFocus();
