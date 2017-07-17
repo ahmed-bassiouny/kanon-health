@@ -1,4 +1,6 @@
-<com.github.siyamed.shapeimageview.HeartImageView android:layout_width="wrap_content"
+<com.github.siyamed.shapeimageview.HeartImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:id="@+id/hiv_heart"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:padding="@dimen/size_2dp"
+    android:layout_height="wrap_content"/>

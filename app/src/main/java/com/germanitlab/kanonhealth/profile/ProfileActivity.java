@@ -271,4 +271,9 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     public void onBackPressed() {
         finish();
     }
+
+    @OnClick(R.id.img_profile_qr)
+    public void qrcode(){
+        new Helper(this).ImportQr(mPrefManager);
+    }
 }

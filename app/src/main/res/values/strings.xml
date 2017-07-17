@@ -71,8 +71,8 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="start">Got It</string>
-    <string name="sign_up">Verifizieren deine Nummer</string>
-    <string name="signup">SignUp</string>
+    <string name="sign_up">Verifiziere deine Nummer</string>
+    <string name="signup">Sign Up</string>
     <string name="enter_verification_code">Enter your verification number</string>
     <string name="verify_code">Verify</string>
     <string name="resend">Resend</string>
@@ -282,4 +282,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="support">Support</string>
     <string name="cant_insert_message">Can\'t Save Message in Database</string>
     <string name="send_fail">Error while connecting to server</string>
+    <string name="generate_qrcode">Sorry Can\'t Generate QrCode</string>
+    <string name="msg_not_send">Sorry Message not Send</string>
+    <string name="attach_not_show">Sorry Soemthing Happened in Attachment</string>
 </resources>
