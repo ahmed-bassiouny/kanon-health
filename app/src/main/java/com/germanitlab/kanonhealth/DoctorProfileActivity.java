@@ -469,7 +469,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     txtLanguageNames.append(chooseModel.getLang_title());
                     if (supported_lang.size() > size + 1) {
                         txtLanguageNames.append(" , ");
-                        size ++ ;
+                        size ++;
                     }
                     Country country = Country.getCountryByISO(country_code);
                     if (country != null) {
