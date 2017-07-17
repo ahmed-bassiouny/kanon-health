@@ -222,7 +222,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     @OnClick(R.id.tv_profile_edit)
     public void editProfileOnClicked() {
 
-        Intent i = new Intent(getApplicationContext(), EditDoctorProfileActivity.class);
+        Intent i = new Intent(getApplicationContext(), EditUserProfileActivity.class);
         i.putExtra("userInfoResponse", userInfoResponse);
         startActivity(i);
         finish();

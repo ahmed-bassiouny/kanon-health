@@ -8,7 +8,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -67,7 +66,7 @@ import butterknife.OnClick;
  * Created by Geram IT Lab on 21/02/2017.
  */
 
-public class EditProfileActivity extends AppCompatActivity implements Serializable, ApiResponse, DialogPickerCallBacks {
+public class EditUserProfileActivity extends AppCompatActivity implements Serializable, ApiResponse, DialogPickerCallBacks {
 
     private UserInfoResponse userInfoResponse;
 
@@ -119,7 +118,7 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_edit_profile);
+        setContentView(R.layout.doctor_edit_profile);
         try {
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
@@ -127,28 +126,17 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
             etFirstName.setSelected(false);
             Intent i = getIntent();
             userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
-            bindData();
-/*        if (savedInstanceState != null) {
-            etFirstName.setSelected(false);
-            imageUri = Uri.parse(savedInstanceState.getString("imageURI"));
-            Picasso.with(this).load(imageUri).into(imgAvatar);
-            userInfoResponse = (UserInfoResponse) savedInstanceState.getSerializable("userdata");
 
-        }*/
             user = userInfoResponse.getUser();
             Log.e("My user ", String.valueOf(user.get_Id()));
             info = user.getInfo();
+            bindData();
             createAdapter();
 
-            if (prefManager.getData(PrefManager.PROFILE_IMAGE) != null && prefManager.getData(PrefManager.PROFILE_IMAGE) != "") {
-                String path = prefManager.getData(PrefManager.PROFILE_IMAGE);
-                ImageHelper.setImage(imgAvatar, path, R.drawable.profile_place_holder, this);
-            }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
-
 
     }
 
@@ -176,7 +164,15 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     private void bindData() {
 
 
-        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
+        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar(), this);
+
+        etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                etBirthday.performClick();
+                return true;
+            }
+        });
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
@@ -197,20 +193,13 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         etProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
         etCountry.setText(userInfoResponse.getUser().getInfo().getCountry());
         questionAnswer = userInfoResponse.getUser().getQuestions();
-        etCountryCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etCountry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                submit(null);
+                submit();
                 return true;
             }
         });
-        etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                return true;
-            }
-        });
-        etBirthday.performClick();
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
@@ -254,44 +243,50 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
-                                dismissProgressDialog();
-                                uploadImageResponse = (UploadImageResponse) response;
-                                user.setAvatar(uploadImageResponse.getFile_url());
-                                Log.e("After Casting", uploadImageResponse.getFile_url());
-                                prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
+                                try {
+                                    dismissProgressDialog();
+                                    uploadImageResponse = (UploadImageResponse) response;
+                                    user.setAvatar(uploadImageResponse.getFile_url());
+                                    Log.e("After Casting", uploadImageResponse.getFile_url());
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                }
+
                             }
 
                             @Override
                             public void onFailed(String error) {
-                                Log.e("upload image failed :", error);
-                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
                     case TAKE_PICTURE:
                         showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-/*
-                    decodeFile(selectedImageUri.toString());
-*/
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         ImageHelper.setImage(imgAvatar, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
-                                dismissProgressDialog();
-                                uploadImageResponse = (UploadImageResponse) response;
-                                user.setAvatar(uploadImageResponse.getFile_url());
-                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                                try {
+                                    dismissProgressDialog();
+                                    uploadImageResponse = (UploadImageResponse) response;
+                                    user.setAvatar(uploadImageResponse.getFile_url());
+                                    Log.e("After Casting", uploadImageResponse.getFile_url());
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                }
+
                             }
 
                             @Override
                             public void onFailed(String error) {
-                                Log.e("upload image failed :", error);
-                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(selectedImageUri));
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
                 }
@@ -300,38 +295,45 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String path;
-        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            path = contentUri.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            path = cursor.getString(idx);
-            cursor.close();
-        }
-        return path;
-    }
 
     @Override
     public void onSuccess(Object response) {
-        Log.d("Update User1 Success", "on response");
+        try {
+            Intent i = new Intent(this, ProfileActivity.class);
+            i.putExtra("userInfoResponse", userInfoResponse);
+            i.putExtra("from", false);
+            startActivity(i);
+            finish();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
     public void onFailed(String error) {
         Log.d("Update User1 failes", "on Failed");
         Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onBackPressed() {
-        finish();
+        try {
+            Intent i = new Intent(this, ProfileActivity.class);
+            i.putExtra("userInfoResponse", userInfoResponse);
+            i.putExtra("from", false);
+            startActivity(i);
+            finish();
+            finish();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -352,55 +354,60 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
 
     @OnClick(R.id.et_edit_birthday)
     public void viewBirthdate(View v) {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        try {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            Calendar calender = Calendar.getInstance();
+       /* Dialog mDialog = new DatePickerDialog(EditUserProfileActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog,
+                mDateSetListener, calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH), calender
+                .get(Calendar.DAY_OF_MONTH));
+
+        mDialog.show();*/
+            final Context themedContext = new ContextThemeWrapper(
+                    EditUserProfileActivity.this,
+                    android.R.style.Theme_Holo_Light_Dialog
+            );
+
+            final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
+                    themedContext,
+                    mDateSetListener,
+                    calender.get(Calendar.YEAR),
+                    calender.get(Calendar.MONTH),
+                    calender.get(Calendar.DAY_OF_MONTH));
+
+            mDialog.show();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-        Calendar calender = Calendar.getInstance();
-//        Dialog mDialog = new DatePickerDialog(EditProfileActivity.this,
-//                android.R.style.Theme_Holo_Light_Dialog,
-//                mDateSetListener, calender.get(Calendar.YEAR),
-//                calender.get(Calendar.MONTH), calender
-//                .get(Calendar.DAY_OF_MONTH));
-//
-//        mDialog.show();
 
-        final Context themedContext = new ContextThemeWrapper(
-                EditProfileActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog
-        );
-
-        final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
-                themedContext,
-                mDateSetListener,
-                calender.get(Calendar.YEAR),
-                calender.get(Calendar.MONTH),
-                calender.get(Calendar.DAY_OF_MONTH));
-
-        mDialog.show();
 
     }
 
-
     @OnClick(R.id.img_edit_avatar)
     public void onEditProfileImageClicked() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                ) {
+        try {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    ) {
 
 
-            pickerDialog.show(getFragmentManager(), "imagePickerDialog");
-        } else {
-            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.CAMERA},
-                    Constants.GALLERY_PERMISSION_CODE);
-        }
+                pickerDialog.show(getFragmentManager(), "imagePickerDialog");
+            } else {
+                askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        Constants.GALLERY_PERMISSION_CODE);
+            }
 /*        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -416,6 +423,10 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         } else {
             askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE);
         }*/
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -454,16 +465,15 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
     }
 
     @OnClick(R.id.btn_edit_save)
-    public void submit(View v) {
-        setUserObject();
+    public void submit() {
+        try {
+            setUserObject();
+            new HttpCall(this, this).editProfile(user);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
 
-        new HttpCall(this, this).editProfile(user);
-
-        Intent i = new Intent(this, ProfileActivity.class);
-        userInfoResponse.setUser(user);
-        i.putExtra("userInfoResponse", userInfoResponse);
-        i.putExtra("from", false);
-        startActivity(i);
     }
 
     private void setUserObject() {
@@ -537,13 +547,16 @@ public class EditProfileActivity extends AppCompatActivity implements Serializab
         takeImageWithCamera();
     }
 
-
     @Override
     public void deleteMyImage() {
-        user.setAvatar("");
-        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
-        prefManager.put(PrefManager.PROFILE_IMAGE, "");
-        pickerDialog.dismiss();
-
+        try {
+            user.setAvatar("");
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
+            prefManager.put(PrefManager.PROFILE_IMAGE, "");
+            pickerDialog.dismiss();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
     }
 }
