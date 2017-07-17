@@ -62,8 +62,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     if (HttpChatFragment.chatRunning)
                         getMessage(remoteMessage,notificationType);
                     break;
-                case 4:
-                    getCloseChat(remoteMessage);
+                case 4: // for closeing session
+                    if(HttpChatFragment.chatRunning)
+                        getMessage(remoteMessage,notificationType);
 
             }
         } catch (Exception e) {

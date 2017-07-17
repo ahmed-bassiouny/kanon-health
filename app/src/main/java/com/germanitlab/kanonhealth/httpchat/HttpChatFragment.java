@@ -267,7 +267,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
     public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (getContext()!= null &&Build.VERSION.SDK_INT >= 23) {
             if (getContext().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 setData();
                 return true;
@@ -715,7 +715,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -758,6 +757,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 // doctor.setIsOpen(0);
                 // checkSessionOpen(iamDoctor);
                 //  Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
+                Message message = (Message) intent.getSerializableExtra("extra");
+                if((message.getFrom_id()==userID||message.getFrom_id()==doctorID)&&(message.getTo()==userID||message.getTo()==doctorID)){
+                    doctor.setIsOpen(0);
+                    checkSessionOpen(iamDoctor);
+                    getActivity().invalidateOptionsMenu();
+
+                }
             } else if (notificationType == 3) {
                 //handle Deliverd Message here /// Andy
                 final Message msg = (Message) intent.getSerializableExtra("extra");
@@ -1013,7 +1019,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private void checkSessionOpen(final boolean iamDoctor) {
 
-        if (iamDoctor && doctor.isClinic == 0 && doctor.getIsDoc() == 0) {
+        if(doctorID==userID){
+            // i talk with my self in document
+            chat_bar.setVisibility(View.VISIBLE);
+            open_chat_session.setVisibility(View.GONE);
+        } else if (iamDoctor && doctor.isClinic == 0 && doctor.getIsDoc() == 0) {
             // i chat with client and sssion closed
             chat_bar.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
