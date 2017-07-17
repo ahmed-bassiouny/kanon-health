@@ -41,7 +41,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
             String country = currentCountry.getName();
             String code = currentCountry.getDialCode();
             holder.code.setText(code);
-            holder.country.setText(country);
+            holder.country.setText(country.trim());
             holder.flag.setImageResource(currentCountry.getFlag());
 //            ImageHelper.setLanguageImage(holder.flag, currentCountry.getCode());
         } catch (Exception e) {

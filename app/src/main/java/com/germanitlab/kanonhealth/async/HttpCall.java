@@ -1144,6 +1144,7 @@ public class HttpCall {
             connection.enqueue(new Callback<MessageResponse>() {
                 @Override
                 public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+
                     if (response.body().getStatus() == 1)
                         apiResponse.onSuccess(response.body().getMsg());
                     else
@@ -1152,6 +1153,7 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<MessageResponse> call, Throwable t) {
+                    t.printStackTrace();
 
                 }
             });
