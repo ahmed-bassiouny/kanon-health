@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +22,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -71,9 +71,7 @@ import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -84,6 +82,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -95,7 +94,7 @@ import butterknife.OnTextChanged;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, Serializable {
+public class HttpChatFragment extends Fragment implements ApiResponse, Serializable {
 
 
     // Declare UI
@@ -123,7 +122,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
 
     // loca variable
     int userID;
-    String userPassword ;
+    String userPassword;
     int doctorID;
     String doctorName = "";
     String doctorUrl = "";
@@ -139,12 +138,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     PrefManager prefManager;
     ChatAdapter chatAdapter;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
     static HttpChatFragment httpChatFragment;
     MessageRepositry messageRepositry;
 
     boolean iamDoctor = false;
     public static boolean chatRunning = false;
+    LocationManager mLocationManager;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -152,7 +152,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
         ButterKnife.bind(this, view);
-        buildGoogleApiClient();
         setHasOptionsMenu(true);
         return view;
     }
@@ -205,7 +204,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     // set data in object
     private void initData() {
         userID = prefManager.getInt(PrefManager.USER_ID);
-        userPassword=prefManager.getData(prefManager.USER_PASSWORD);
+        userPassword = prefManager.getData(prefManager.USER_PASSWORD);
         doctorID = getArguments().getInt("doctorID");
         doctorName = getArguments().getString("doctorName");
         doctorUrl = getArguments().getString("doctorUrl");
@@ -303,6 +302,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                         break;
                     case Constants.AUDIO_PERMISSION_CODE:
                         checkAudioPermission();
+                        break;
+                    case Constants.LAST_LOCATION_PERMISSION_CODE:
+                        getMyLocation();
                         break;
                 }
             }
@@ -406,7 +408,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
     public void showDialogMedia() {
         try {
             showPopup(getView());
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getContext(), R.string.attach_not_show, Toast.LENGTH_SHORT).show();
         }
 
@@ -584,12 +586,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
                         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
                         requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
                     } else {
-                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                        getLocationandSend();
+                        getMyLocation();
                     }
                 } else {
-                    mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                    getLocationandSend();
+                    getMyLocation();
                 }
 
             }
@@ -612,6 +612,61 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         // Removes default background.
         showPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+    }
+
+    public void getMyLocation() {
+        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            askForLocationPermission();
+            return;
+        }
+        Location location = getLastKnownLocation();
+        if (location != null) {
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            getLocationandSend(longitude, latitude);
+        }
+
+    }
+
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                askForLocationPermission();
+                return null;
+            }
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
+    }
+
+    private void askForLocationPermission() {
+        String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
     }
 
     public void takePhoto() {
@@ -659,42 +714,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         startActivityForResult(intent, RECORD_VIDEO);
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
 
-        mGoogleApiClient.connect();
-    }
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
-
-            } else {
-                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                        mGoogleApiClient);
-            }
-        } else mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     @Override
     public void onStart() {
@@ -848,42 +868,31 @@ public class HttpChatFragment extends Fragment implements ApiResponse, GoogleApi
         });
     }
 
-    private void getLocationandSend() {
-        if (mLastLocation != null && mLastLocation.getLongitude() != 0) {
-            //create dummy message
-            final int index2 = creatDummyMessage();
-            final Message message = new Message();
-            message.setUser_id(userID);
-            message.setFrom_id(userID);
-            message.setTo(doctorID);
-            message.setSent_at(getDateTimeNow());
-            message.setMsg("{\"long\":" + mLastLocation.getLongitude() + ",\"lat\":" + mLastLocation.getLatitude() + "}");
-            message.setType(Constants.LOCATION);
+    private void getLocationandSend(double longitude, double latitude) {
+        //create dummy message
+        final int index2 = creatDummyMessage();
+        final Message message = new Message();
+        message.setUser_id(userID);
+        message.setFrom_id(userID);
+        message.setTo(doctorID);
+        message.setSent_at(getDateTimeNow());
+        message.setMsg("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
+        message.setType(Constants.LOCATION);
 
 
-            //request
-            new HttpCall(getActivity(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    creatRealMessage((Message) response, index2);
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
-                    removeDummyMessage(index2);
-                }
-            }).sendMessage(message);
-
-
-        } else {
-
-            if (mLastLocation == null || mLastLocation.getLatitude() == 0) {
-                Toast.makeText(getActivity(), "Can't get your location", Toast.LENGTH_LONG).show();
-                mGoogleApiClient.reconnect();
-                return;
+        //request
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                creatRealMessage((Message) response, index2);
             }
-        }
+
+            @Override
+            public void onFailed(String error) {
+                Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                removeDummyMessage(index2);
+            }
+        }).sendMessage(message);
     }
 
     private MediaRecorder mRecorder;

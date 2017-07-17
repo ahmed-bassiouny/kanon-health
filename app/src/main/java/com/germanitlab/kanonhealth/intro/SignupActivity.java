@@ -53,8 +53,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     Constants constants;
     public SignupActivity signupActivity;
     PrefManager prefManager;
-    final int REQUEST_CODE = 10 ;
-    Util util ;
+    final int REQUEST_CODE = 10;
+    Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +71,18 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             found = true;
             initView();
             handelEvent();
+            String locale = getResources().getConfiguration().locale.getCountry();
+
             try {
-                if (code == null || select_country == null) {
-                    code = "+49";
-                    etPostelCode.setText("+49");
-                    select_country.setText("Germany");
+                Country country = Country.getCountryByISO(locale);
+                if (country != null) {
+                    etPostelCode.setText(country.getDialCode());
+                    select_country.setText(country.getName());
                     found = true;
+
                 }
             } catch (Exception e) {
-                etPostelCode.setText("+49");
-                select_country.setText("Germany");
+                Toast.makeText(signupActivity, R.string.error_in_getting_default_country, Toast.LENGTH_SHORT).show();
             }
             etPostelCode.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -135,7 +137,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), CountryActivty.class);
-                startActivityForResult(intent , REQUEST_CODE );
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         etMobileNumber.requestFocus();
@@ -219,7 +221,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             code = data.getStringExtra("codeC");
             etPostelCode.setText(code);
             country = data.getStringExtra("country");
