@@ -718,7 +718,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (is_me)
             return;
 
-        if (user.getIs_my_doctor().equals("0")) {
+        if (user.getIs_my_doctor().equals("0") && user.getId()!= null) {
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -732,7 +732,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     Log.i("Doctor Profile  ", " Activity " + error);
                 }
             }).addToMyDoctor(user.get_Id() + "");
-        } else {
+        } else if(user.getId()!= null){
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
