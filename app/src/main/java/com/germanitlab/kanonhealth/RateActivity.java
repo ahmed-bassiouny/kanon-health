@@ -15,8 +15,12 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
+import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.ormLite.UserRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,29 +73,32 @@ public class RateActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     RecyclerView recycler_view;
 
+    @BindView(R.id.img_chat_user_avatar)
+    ImageView img_chat_user_avatar;
+
+
     String doc_id = "14";
     RateAdapter rateAdapter;
     private HashMap<String, Integer> rate_percentages;
     int height, width, sum_rate_number;
     float sum_rate_result, rate_result;
 
+    UserRepository userRepository;
+    User doctor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
-
+        userRepository=new UserRepository(getApplicationContext());
+         doctor = new User();
 
         ivBack.setOnClickListener(new View.OnClickListener() {
-
             @Override
-
             public void onClick(View view) {
-
                 finish();
-
             }
-
         });
 
 
@@ -105,9 +112,26 @@ public class RateActivity extends AppCompatActivity {
             rate_percentages.put("r5", 18);
 
             doc_id = getIntent().getStringExtra("doc_id");
-            if (doc_id.isEmpty())
+            if (doc_id.isEmpty()) {
                 finish();
+            }
             loadData();
+
+            doctor.setId(Integer.valueOf(doc_id));
+            doctor = userRepository.getDoctor(doctor);
+
+            if(doctor.isClinic==1)
+            {
+                txt_doctor_name.setText(doctor.getFirst_name());
+            }else
+            {
+                txt_doctor_name.setText(doctor.getSubTitle()+" "+doctor.getFirst_name()+" "+doctor.getLast_name());
+            }
+            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
+                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getApplicationContext());
+            }
+
+
             txt_one_star.post(new TimerTask() {
                 @Override
                 public void run() {

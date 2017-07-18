@@ -917,10 +917,10 @@ public class HttpCall {
 
     }
 
-    public void rateDoctor(String doc_id, String txtcomment, String rate) {
+    public void rateDoctor(String doc_id, String txtcomment, String rate,String requestId) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate);
+            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate,requestId);
             Call<JsonObject> connection = service.rateDoctor(comment);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override

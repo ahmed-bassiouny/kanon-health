@@ -36,15 +36,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/txt_doctor_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/temp"
-            android:textColor="@color/black"
-            android:textSize="25sp" />
+            android:layout_margin="20dp"
+            android:weightSum="6">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_chat_user_avatar"
+                android:layout_width="@dimen/size_50dp"
+                android:layout_height="@dimen/size_50dp"
+                android:layout_gravity="left"
+                android:layout_marginRight="@dimen/size_15dp"
+                android:src="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/txt_doctor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lines="2"
+                android:padding="5dp"
+                android:text="@string/temp"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -72,7 +91,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:id="@+id/txt_reviews"
             android:layout_marginStart="15dp"

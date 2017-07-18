@@ -121,6 +121,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @BindView(R.id.img_requestpermission)
     ImageView img_requestpermission;
 
+    @BindView(R.id.can_rate)
+    Button canRate;
+
+
+
     // loca variable
     int userID;
     String userPassword;
@@ -143,6 +148,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     MessageRepositry messageRepositry;
 
     boolean iamDoctor = false;
+    boolean iamClinic = false;
     public static boolean chatRunning = false;
     LocationManager mLocationManager;
 
@@ -154,6 +160,19 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+
+        canRate.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(getActivity(), Comment.class);
+                intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
         return view;
     }
 
@@ -228,6 +247,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             tv_chat_user_name.setText(doctor.getLast_name() +" "+ doctor.getFirst_name());
 
         iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
+        iamClinic=new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
     }
 
     private void loadChatOnline(int userID, int doctorID) {
@@ -420,6 +440,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
 
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1049,6 +1070,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             // client chat with doctor and session closed
             chat_bar.setVisibility(View.GONE);
             open_chat_session.setVisibility(View.VISIBLE);
+            if(iamDoctor ==false && iamClinic==false) {
+                if (doctor.getCan_rate() == 1) {
+                    canRate.setVisibility(View.VISIBLE);
+                } else {
+                    canRate.setVisibility(View.GONE);
+                }
+            }
         } else {
             // client chat with doctor and session opened
             chat_bar.setVisibility(View.VISIBLE);
@@ -1163,7 +1191,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                                         public void onSuccess(Object response) {
                                                             Intent intent = new Intent(getActivity(), Comment.class);
                                                             intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                                                            intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
                                                             startActivity(intent);
+                                                            getActivity().finish();
                                                         }
 
                                                         @Override
@@ -1176,6 +1206,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                             adb.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                                    if(iamDoctor ==false && iamClinic==false)
+                                                    {
+                                                        doctor.setCan_rate(1);
+                                                        userRepository.update(doctor);
+                                                        canRate.setVisibility(View.VISIBLE);
+                                                    }
                                                 }
                                             });
                                             adb.show();
@@ -1324,5 +1360,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             Log.e("messageSeen", "messageSeen: ", e);
         }
     }
+
 
 }

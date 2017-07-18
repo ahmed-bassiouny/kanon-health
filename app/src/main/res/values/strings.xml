@@ -50,7 +50,7 @@
 
     <string name="next">Next</string>
     <string name="sign_up">Verifiziere deine Nummer</string>
-    <string name="signup">Sign Up</string>
+    <string name="signup">Anmelden</string>
     <string name="enter_verification_code">Enter your verification number</string>
     <string name="verify_code">Verify</string>
     <string name="resend">Resend</string>
@@ -191,6 +191,8 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="payment">Payment</string>
     <string name="payment_details">Payment details</string>
     <string name="open_session_again">Start New Request</string>
+
+    <string name="rate_your_last_request">Rate your last request</string>
     <string name="close_conversation">Are you sure you want to close the conversation</string>
     <string name="session_ended">Session Closed</string>
     <string name="rate_conversation">Please rate your conversation</string>
@@ -218,7 +220,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="generate_qrcode">Sorry Can\'t Generate QrCode</string>
     <string name="msg_not_send">Sorry Message not Send</string>
     <string name="attach_not_show">Sorry Soemthing Happened in Attachment</string>
-    <string name="error_in_getting_default_country">unable to get the default country</string>
+    <string name="error_in_getting_default_country">Nicht in der Lage, das Standardland zu erhalten</string>
     <string name="no_country_data">Sorry, no data found</string>
 
 </resources>

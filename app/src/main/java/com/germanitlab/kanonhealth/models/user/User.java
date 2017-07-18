@@ -255,6 +255,8 @@ public class User implements Serializable {
     private String speciality_icon;
     @DatabaseField
     private int is_chat ;
+
+    @DatabaseField
     @SerializedName("request_id")
     private int request_id;
 
@@ -273,7 +275,7 @@ public class User implements Serializable {
     public void setCan_rate(int can_rate) {
         this.can_rate = can_rate;
     }
-
+    @DatabaseField
     @SerializedName("can_rate")
     private int can_rate; //0 false , 1 true
 
