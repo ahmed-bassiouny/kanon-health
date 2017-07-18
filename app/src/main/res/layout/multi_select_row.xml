@@ -10,7 +10,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/img_icon"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/app_icon" />
 
     <TextView
         android:id="@+id/tv_title"
