@@ -409,6 +409,30 @@ public class HttpCall {
 
     }
 
+    public void getLocation() {
+        try {
+            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            Call<com.google.gson.JsonObject> call = apiInterface.getLocation();
+            call.enqueue(new Callback<com.google.gson.JsonObject>() {
+                @Override
+                public void onResponse(Call<com.google.gson.JsonObject> call, Response<com.google.gson.JsonObject> response) {
+                    Log.d("PopUp Request", "Success");
+                    apiResponse.onSuccess(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<com.google.gson.JsonObject> call, Throwable t) {
+                    Log.e("PopUp Error", t.getMessage());
+                    apiResponse.onFailed(t.getLocalizedMessage());
+                }
+            });
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(context, context.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public void getDoctor(String userID, String password, String doctorID, int entity_type) {
         try {
             DoctorRequest doctorRequest = new DoctorRequest(userID, password, doctorID, entity_type);

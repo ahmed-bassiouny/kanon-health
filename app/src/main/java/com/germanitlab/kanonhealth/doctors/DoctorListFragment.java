@@ -75,7 +75,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     static DoctorListFragment doctorListFragment;
     private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
-    public Boolean is_doctor_data = false, is_clinic_data = false;
+    public Boolean is_doctor_data = false, is_clinic_data = false , is_chat_data_left =false , is_chat_data_right = false;
     LinearLayoutManager llm;
     boolean is_doc;
     private static int firstVisibleItemPositionForRightTab = 0;
@@ -131,6 +131,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         getBySpeciality(true, type);
         type = User.DOCTOR_TYPE;
         getBySpeciality(true, type);
+        getChatData();
     }
 
 
@@ -183,6 +184,66 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && permissions.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 startActivity(new Intent(getActivity(), StartQrScan.class));
+        }
+    }
+
+    public void getChatData(){
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                doctorList = (List<User>) response;
+                updateDataBase(doctorList);
+                is_chat_data_left = true ;
+                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                    util.dismissProgressDialog();
+                    prefManager.put(PrefManager.IS_OLD, true);
+                }
+            }
+
+            @Override
+            public void onFailed(String error) {
+                is_chat_data_left = true ;
+                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                    util.dismissProgressDialog();
+                    prefManager.put(PrefManager.IS_OLD, true);
+                }
+//                            tvLoadingError.setVisibility(View.VISIBLE);
+//                            if (error != null && error.length() > 0)
+//                                tvLoadingError.setText(error);
+//                            else tvLoadingError.setText("Some thing went wrong");
+            }
+        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+        new HttpCall(getActivity(), new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                doctorList = (List<User>) response;
+                updateDataBase(doctorList);
+                is_chat_data_right = true ;
+                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                    util.dismissProgressDialog();
+                    prefManager.put(PrefManager.IS_OLD, true);
+                }
+            }
+
+            @Override
+            public void onFailed(String error) {
+                is_chat_data_right = true ;
+                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                    util.dismissProgressDialog();
+                    prefManager.put(PrefManager.IS_OLD, true);
+                }
+//                            tvLoadingError.setVisibility(View.VISIBLE);
+//                            if (error != null && error.length() > 0)
+//                                tvLoadingError.setText(error);
+//                            else tvLoadingError.setText("Some thing went wrong");
+//                            chat_layout.setVisibility(View.GONE);
+            }
+        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+    }
+    private void updateDataBase(List<User> doctorList) {
+        for (User user : doctorList) {
+            user.setIs_chat(1);
+            mDoctorRepository.create(user);
         }
     }
 
@@ -264,7 +325,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     }
 
 
-    private void getBySpeciality(final boolean b, final int typeNumber) {
+    private void getBySpeciality(final boolean first_time, final int typeNumber) {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -273,12 +334,14 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
                     doctorList = (List<User>) response;
                     updateDatabase(doctorList);
-                    if (b) {
-                        if (typeNumber == User.DOCTOR_TYPE)
+                    if (first_time) {
+                        if (typeNumber == User.DOCTOR_TYPE) {
                             is_doctor_data = true;
+                            setAdapter(doctorList);
+                        }
                         else if (typeNumber == User.CLINICS_TYPE)
                             is_clinic_data = true;
-                        if (is_clinic_data && is_doctor_data) {
+                        if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
                             util.dismissProgressDialog();
                             prefManager.put(PrefManager.IS_OLD, true);
                         }
@@ -289,7 +352,18 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     }
 
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    if (first_time) {
+                        if (typeNumber == User.DOCTOR_TYPE) {
+                            is_doctor_data = true;
+                        }
+                        else if (typeNumber == User.CLINICS_TYPE)
+                            is_clinic_data = true;
+                        if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                            util.dismissProgressDialog();
+                            prefManager.put(PrefManager.IS_OLD, true);
+                        }
+
+                    }                    Crashlytics.logException(e);
                     Log.e("tag about Exception", "msg about Exception ", e);
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
@@ -299,7 +373,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             @Override
             public void onFailed(String error) {
-                if (b)
+                if (first_time)
                     util.dismissProgressDialog();
             }
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),

@@ -136,6 +136,9 @@ public class User implements Serializable {
     @SerializedName("is_open")
     private int isOpen;
     @DatabaseField
+    @SerializedName("last_msg_date")
+    private String last_msg_date;
+    @DatabaseField
     @SerializedName("platform")
     private String platform;
     @DatabaseField
@@ -836,8 +839,17 @@ public class User implements Serializable {
         return json_rate_percentage;
     }
 
+    public String getLast_msg_date() {
+        return last_msg_date;
+    }
+
+    public void setLast_msg_date(String last_msg_date) {
+        this.last_msg_date = last_msg_date;
+    }
+
     public void setJson_rate_percentage(String json_rate_percentage) {
         this.json_rate_percentage = json_rate_percentage;
+
     }
 }
 

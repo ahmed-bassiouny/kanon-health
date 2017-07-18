@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,6 +32,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mukesh.countrypicker.Country;
 
@@ -56,6 +59,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     final int REQUEST_CODE = 10;
     Util util;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,19 +75,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             found = true;
             initView();
             handelEvent();
-            String locale = getResources().getConfiguration().locale.getCountry();
+            getCountryFromSIM();
 
-            try {
-                Country country = Country.getCountryByISO(locale);
-                if (country != null) {
-                    etPostelCode.setText(country.getDialCode());
-                    select_country.setText(country.getName());
-                    found = true;
-
-                }
-            } catch (Exception e) {
-                Toast.makeText(signupActivity, R.string.error_in_getting_default_country, Toast.LENGTH_SHORT).show();
-            }
             etPostelCode.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -126,6 +119,79 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             etMobileNumber.setText(savedInstanceState.getString("phone"));
     }
 
+    private void getCountryFromSIM() {
+        String countryAndCode;
+        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+        if(telephonyManager != null) {
+            countryAndCode = telephonyManager.getSimCountryIso();
+            if(!TextUtils.isEmpty(countryAndCode))
+                setCountryAndCode(countryAndCode);
+            else
+                getCountryFromNetwork();
+        }
+        else
+            getCountryFromLocal();
+    }
+
+    private void getCountryFromNetwork() {
+        util.showProgressDialog();
+
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                try {
+                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1,((JsonObject) response).get("countryCode").toString().length()-1) ;
+                    setCountryAndCode(countryAndCode);
+                    util.dismissProgressDialog();
+                }
+                catch (Exception e){
+                    getCountryFromLocal();
+                    util.dismissProgressDialog();
+                }
+
+            }
+
+            @Override
+            public void onFailed(String error) {
+                getCountryFromLocal();
+                util.dismissProgressDialog();
+            }
+        }).getLocation();
+
+    }
+
+    private void getCountryFromLocal() {
+        String countryAndCode;
+        countryAndCode = getResources().getConfiguration().locale.getCountry();
+        if(!TextUtils.isEmpty(countryAndCode))
+            setCountryAndCode(countryAndCode);
+        else 
+            setDefaultCountry();
+
+    }
+
+    private void setDefaultCountry() {
+        etPostelCode.setText("+49");
+        select_country.setText("germany");
+        country = "germany" ;
+        code = "+49" ;
+        found = true;
+    }
+
+    private void setCountryAndCode(String countryAndCode) {
+        Country countryObject = Country.getCountryByISO(countryAndCode);
+        if (countryObject != null) {
+            etPostelCode.setText(countryObject.getDialCode());
+            select_country.setText(countryObject.getName());
+            country = countryObject.getName() ;
+            code = countryObject.getDialCode() ;
+            found = true;
+        }
+        else
+            setDefaultCountry();
+    }
+
+
 
     private void initView() {
         select_country = (TextView) findViewById(R.id.select_country);
@@ -148,6 +214,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                 return true;
             }
         });
+
     }
 
     private void handelEvent() {

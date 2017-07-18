@@ -135,7 +135,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             setAdapter(doctorList);
             checkTabToScrollTo();
             if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                new HttpCall(getActivity(), this).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
             }
         }
         scrollToPosition(firstVisibleItemPositionForLeftTab);
