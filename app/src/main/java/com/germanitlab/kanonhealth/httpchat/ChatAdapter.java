@@ -949,9 +949,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
             status.setVisibility(View.VISIBLE);
 
-            if (mMessages.get(position).getSeen() == 1) {
+            if (mMessages.get(position).getSeen() >0) {
                 status.setImageResource(R.drawable.readnew);
-            } else if (mMessages.get(position).getIs_delivered() == 1) {
+            } else if (mMessages.get(position).getIs_delivered() >0) {
                 status.setImageResource(R.drawable.receivenew);
             } else if (mMessages.get(position).getIs_send()) {
                 status.setImageResource(R.drawable.sentnew);

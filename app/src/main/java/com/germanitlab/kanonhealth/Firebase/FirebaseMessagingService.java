@@ -63,11 +63,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     else //notify
                     if(remoteMessage.getData().get("msg")!=null && remoteMessage.getData().get("from_id")!=null && remoteMessage.getData().get("to_id")!=null) {
                         Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),remoteMessage.getData().get("from_id"),true);
-                        if(remoteMessage.getData().get("msg")!=null){
-                            messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
-                            Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),"",false);
+                    }else if(remoteMessage.getData().get("msg")!=null){
+                        messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
+                        Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),"",false);
 
-                        }
                     }
                     break;
                 case 2:

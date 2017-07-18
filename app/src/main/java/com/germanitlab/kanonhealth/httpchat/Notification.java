@@ -38,8 +38,7 @@ public class Notification {
             Intent notificationIntent = new Intent(context, HttpChatActivity.class);
             notificationIntent.putExtra("doctorID", from_id);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 2, notificationIntent,
-                    PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 2, notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
             builder.setContentIntent(contentIntent);
         }
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
