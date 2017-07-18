@@ -1,32 +1,21 @@
 <resources>
     <string name="app_name">Kanon_Health</string>
     <string name="my_doctors">My Doctor\'s</string>
-    <string name="chats">Chats</string>
     <string name="search">Search</string>
-    <string name="my_decument">My documents</string>
     <string name="docor_list">Doctor List</string>
     <string name="setting">Settings</string>
-    <string name="sign_in">Sign in</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_profile">My Profile</string>
     <string name="edit">Edit</string>
 
     <string name="personal_info">Important Information</string>
     <string name="birthday">Birthday :</string>
-    <string name="date">date :</string>
-    <string name="category">category :</string>
-    <string name="doctor">Doctor :</string>
-    <string name="diagnose">Diagnose :</string>
-    <string name="report">Report :</string>
-    <string name="comment">Comment :</string>
     <string name="streat">Streart Name :</string>
     <string name="house_number">House Number :</string>
     <string name="zip_code">Zip Code :</string>
     <string name="provinz">Provinz</string>
     <string name="voluntary_info">Voluntary Information</string>
-    <string name="question">Question :</string>
     <string name="answer">Please Fill Data</string>
     <string name="back">Back</string>
     <string name="change_passcode">Change Passcode</string>
@@ -36,15 +25,11 @@
     <string name="faq">FAQ</string>
     <string name="contact_support">Sorry Missing Data , Please Contact with Support</string>
     <string name="version">Version</string>
-    <string name="help">Hilfe</string>
     <string name="all_doctors">All Doctors</string>
-    <string name="only_my_self">Only Myself</string>
-    <string name="contact">Contact</string>
     <!-- Edit by Ahmed-->
     <string name="add_to">Add to My Doctor\'s</string>
     <string name="remove_from">Remove as my Doctor</string>
     <string name="error_connection">Please Check Your Internet Connection</string>
-    <string name="serror_connection">Please Check Your Internet Connection</string>
     <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
     <string name="end_session">Close Current Request</string>
     <string name="start_session">Start New Conversation</string>
@@ -63,14 +48,7 @@
     <string name="province">Province :</string>
     <string name="country">Country :</string>
 
-    <string name="hot_line">Hotline</string>
-    <string name="fax">Fax</string>
-    <string name="website">Wensite</string>
-    <string name="service">Service</string>
-    <string name="profile">Profile</string>
     <string name="next">Next</string>
-    <string name="skip">Skip</string>
-    <string name="start">Got It</string>
     <string name="sign_up">Verifiziere deine Nummer</string>
     <string name="signup">Sign Up</string>
     <string name="enter_verification_code">Enter your verification number</string>
@@ -79,7 +57,6 @@
     <string name="resend_message">If you did not receive an SMS, Tab the Resend button below</string>
     <string name="verifcation">Verification</string>
     <string name="save">Save</string>
-    <string name="request">Request</string>
     <string name="error_message">Some thing was wrong please try again</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -87,24 +64,8 @@
     <string name="some_wrong">Some thing was wrong when loading application please try agin</string>
     <string name="login">Login</string>
     <string name="show_profile">Show Profile</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="pay">Pay</string>
-    <string name="select_profile_img">Select Profile Image</string>
 
     <string name="question_11_12_13">Was soll untersucht werden?</string>
-
-    <string name="rp_quest">Name des Medikaments?</string>
-    <string name="uberweisung_ques1">An welchem Fachartzt?</string>
-    <string name="uberweisung_ques2">Aus welchem Anlass?</string>
-    <string name="krankenhaus_ques1">An welches Krankenhaus?</string>
-    <string name="krankenhaus_ques2">Aus welchem Anlass?</string>
-    <string name="au_ques1">An welchen Zeitraum?</string>
-    <string name="au_ques2">Aus welchem Anlass?</string>
-    <string name="attest_ques1">Was soll attestiert werden?</string>
-    <string name="attest_ques2">Für welchen Zeitraum?</string>
-    <string name="worüber">Worüber möchten Sie eine Beratung bekommen?</string>
-    <string name="finish">Danke, Sie Sind jetzt eingeloggt. Das Praxispersonal hat Ihre Anfrage erhalten. Sie werden in 8 Stunden automatisch ausgeloggt. Bitte warten Sie bis Sie aufgerufen werden.</string>
 
 
     <string name="main_question">Bitte wählen Sie den Grund \n
@@ -114,14 +75,10 @@
     <string name="medizinische_dokumente">Medizinische Dokumente</string> <!-- (question_2)-->
     <string name="fertig">Fertig</string>
 
-    <string name="Answer">Ich möchte eine Behandlung für....</string>
-
     <string name="ich">Ich habe einen Termin</string>  <!--(question_4)-->
-    <string name="at_which_time">Zu welcher Uhrzeit?</string>
 
     //Beratung
     <string name="beratung_frage">Worüber möchten Sie beraten werden?</string>  <!--(question_31)-->
-    <string name="action_submit">Abschicken</string>
 
     //Untersuchung und Behandlung
     <string name="körperliche_untersuchung">Körperliche Untersuchung</string>  <!--(question_11)-->
@@ -130,7 +87,6 @@
 
     <string name="sonstiges">Sonstiges</string> <!-- (question_14)-->
 
-    <string name="other">other</string>
     //Medizinsche
 
     <string name="rp">Rezept</string> <!--(question_21)-->
@@ -160,12 +116,10 @@
     //Termin
     <string name="termin_frage">Zur welcher Uhrziet?</string> <!--(question_41)-->
 
-    <string name="dialog_danke_message">Danke, Sie Sind jetzt eingeloggt</string>
     <string name="herz_abhorchen">Herz abhorchen</string>
 
 
     //Inquiry strings
-    <string name="firstLevel">firstLevel</string>
     <string name="secondLevel">secondLevel</string>
 
     //First Level
@@ -175,7 +129,6 @@
     <string name="question_12">question_12</string>
     <string name="question_13">question_13</string>
     <string name="question_14">question_14</string>
-    <string name="question_15">question_15</string>
 
     //First Level
     <string name="question_2">question_2</string>
@@ -228,19 +181,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="wrong_code">Der eingegebene Code ist leider ungültig</string>
 
 
-    <string-array name="countries_code">
-        <item>+965</item>
-        <item>+987</item>
-        <item>+762</item>
-
-    </string-array>
-
-    <string-array name="countries_name">
-        <item>Egypt</item>
-        <item>Germany</item>
-        <item>England</item>
-    </string-array>
-    <string name="title_activity_doctor_profile">DoctorProfile</string>
     <string name="under_verificauion_header">Die Praxis APP sendet eine SMS, um deine Telefonnummer zu verifizieren. Gib deinen Landescode und deine Telefonnumer ein:</string>
     <string name="select_your_country">Wähle dein Land</string>
     <string name="Invalid_country">Ungültiges Landy</string>
@@ -261,7 +201,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="error_getting_database">error while getting data from database</string>
     <string name="error_loading_data">error while loading data</string>
     <string name="error_saving_data">error while saving data</string>
-    <string name="error_playing">error while plying video</string>
     <string name="contact_by_chat">Contact By Chat</string>
     <string name="status_online">Status Online</string>
     <string name="status_offline">Status Offline</string>
@@ -272,15 +211,9 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="upload_failed">Upload Failed</string>
     <string name="save_success">Save Success</string>
     <string name="edit_practics">Pracits Edit</string>
-    <string name="image_not_found">Sorry Image not found</string>
-    <string name="private_status">private</string>
-    <string name="public_status">public</string>
-    <string name="doctor_status">doctor</string>
     <string name="cany_play_video">Sorry , erro with video</string>
     <string name="cant_find_location">Sorry , Can\'t Find Location</string>
     <string name="cantupload">Sorry , Media not upload</string>
-    <string name="support">Support</string>
-    <string name="cant_insert_message">Can\'t Save Message in Database</string>
     <string name="send_fail">Error while connecting to server</string>
     <string name="generate_qrcode">Sorry Can\'t Generate QrCode</string>
     <string name="msg_not_send">Sorry Message not Send</string>

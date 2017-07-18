@@ -30,7 +30,6 @@
             android:layout_marginRight="5dp"
             android:gravity="left"
             android:textColor="@color/black"
-            android:layout_toLeftOf="@id/tv_date_my"
             android:text="00" />
 
 

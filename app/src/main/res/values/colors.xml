@@ -15,40 +15,11 @@
 
     <color name="colorPrimary">#0099cc</color>
     <color name="colorPrimaryDark">#006b9b</color>
-    <color name="primary_light">#BBDEFB</color>
-    <color name="accent">#03A9F4</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
 
 
-    <array name="array_dot_active">
-        <item>@color/colorAccent</item>
-        <item>@color/colorAccent</item>
-        <item>@color/colorAccent</item>
-        <item>@color/colorAccent</item>
-    </array>
-
-    <array name="array_dot_inactive">
-        <item>@color/gray_black</item>
-        <item>@color/gray_black</item>
-        <item>@color/gray_black</item>
-        <item>@color/gray_black</item>
-    </array>
-
-    <color name="actionbar">#3cb879</color>
-    <color name="body_background">#e8e8e8</color>
-    <color name="body_background_green">#82e783</color>
-    <color name="server_status_bar">#2b2b2b</color>
     <color name="title_gray">#434343</color>
-    <color name="bg_msg_you">#5eb964</color>
-    <color name="bg_msg_from">#e5e7eb</color>
-    <color name="msg_border_color">#a1a1a1</color>
-    <color name="bg_btn_join">#1e6258</color>
-    <color name="bg_msg_input">#e8e8e8</color>
     <color name="text_msg_input">#626262</color>
-    <color name="lblFromName">#777777</color>
     <color name="black_obacity">#5cffffff</color>
     <color name="medium_grey">#9E9E9E</color>
 
@@ -56,10 +27,8 @@
     //Privacy Colors
     <color name="red">#f44336</color>
     <color name="green">#4CAF50</color>
-    <color name="document_background">#e0e0e0</color>
 
 
     //chat color
     <color name="chatbackground_gray">#e0e0e0</color>
-    <color name="chatbackground_white">#ffffff</color>
 </resources>
