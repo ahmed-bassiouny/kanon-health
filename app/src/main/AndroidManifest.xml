@@ -107,9 +107,7 @@
         <activity
             android:name=".intro.StartQrScan"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".DoctorProfile"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".profile.EditUserProfileActivity"
             android:screenOrientation="portrait" />
@@ -145,14 +143,17 @@
             android:name=".Help"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Comment"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
             android:name=".initialProfile.ProfileDetails"
             android:screenOrientation="portrait" />
         <activity
             android:name=".forward.ForwardActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".PlayVideoActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".PasscodeActivty"
             android:screenOrientation="portrait" />
@@ -187,10 +188,7 @@
         <activity
             android:name=".TimeTable"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Comment"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".AddPractics"
             android:screenOrientation="portrait" />

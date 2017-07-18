@@ -64,7 +64,7 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PopupHelper;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.doctors.Comment;
+import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -1139,10 +1139,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                         Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
                                         checkSessionOpen(iamDoctor);
-                                        if (doctor.isClinic == 1) {
+                                        if (doctor.isClinic == 1||doctor.getIsDoc() ==1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                                             adb.setTitle(R.string.rate_conversation);
-                                            adb.setCancelable(true);
+                                            adb.setCancelable(false);
                                             adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -1159,6 +1159,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                                             Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                                                         }
                                                     }).closeSession(String.valueOf(doctor.getId()));
+                                                }
+                                            });
+                                            adb.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
                                                 }
                                             });
                                             adb.show();
