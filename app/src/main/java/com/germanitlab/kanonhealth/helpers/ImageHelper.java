@@ -211,40 +211,40 @@ public class ImageHelper {
     }
 
 
-    public static void setLanguageImage(final ImageView iv, String langCode) {
-        if (!TextUtils.isEmpty(langCode)) {
+//    public static void setLanguageImage(final ImageView iv, String langCode) {
+//        if (!TextUtils.isEmpty(langCode)) {
+//
+////            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
+//            int resourceId = getResourceIdByName("ic_lang_" + langCode);
+//
+//            if (resourceId != -1) {
+//                iv.setImageResource(resourceId);
+//            } else {
+////                iv.setImageDrawable(null);
+//                Country temp = Country.getCountryByISO(langCode);
+//                if (temp != null) {
+//                    iv.setImageResource(temp.getFlag());
+//                } else {
+//                    iv.setImageDrawable(null);
+//                }
+//            }
+//        }
+//    }
 
-//            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
-            int resourceId = getResourceIdByName("ic_lang_" + langCode);
 
-            if (resourceId != -1) {
-                iv.setImageResource(resourceId);
-            } else {
+//    public static void setCountryImage(final ImageView iv, String langCode) {
+//        if (!TextUtils.isEmpty(langCode)) {
+//
+////            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
+//            int resourceId = getResourceIdByName("ic_lang_round_" + langCode);
+//
+//            if (resourceId != -1) {
+//                iv.setImageResource(resourceId);
+//            } else {
 //                iv.setImageDrawable(null);
-                Country temp = Country.getCountryByISO(langCode);
-                if (temp != null) {
-                    iv.setImageResource(temp.getFlag());
-                } else {
-                    iv.setImageDrawable(null);
-                }
-            }
-        }
-    }
-
-
-    public static void setCountryImage(final ImageView iv, String langCode) {
-        if (!TextUtils.isEmpty(langCode)) {
-
-//            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
-            int resourceId = getResourceIdByName("ic_lang_round_" + langCode);
-
-            if (resourceId != -1) {
-                iv.setImageResource(resourceId);
-            } else {
-                iv.setImageDrawable(null);
-            }
-        }
-    }
+//            }
+//        }
+//    }
 
 
     private static int getResourceIdByName(String name) {

@@ -70,6 +70,7 @@ import com.nex3z.flowlayout.FlowLayout;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,7 +118,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.image_star)
     ImageView ivStar;
     @BindView(R.id.iv_location)
-    ImageView ivLocation;
+    CircleImageView ivLocation;
     @BindView(R.id.tv_locations)
     TextView tvLocations;
 
@@ -456,7 +457,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
         flowLayout.removeAllViews();
         txtLanguageNames.setText("");
-        int size = 0 ;
+        int size = 0;
         for (ChooseModel chooseModel : supported_lang) {
             if (i == 0) {
                 String country_code = chooseModel.getCountry_code();
@@ -464,7 +465,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     txtLanguageNames.append(chooseModel.getLang_title());
                     if (supported_lang.size() > size + 1) {
                         txtLanguageNames.append(" , ");
-                        size ++;
+                        size++;
                     }
                     Country country = Country.getCountryByISO(country_code);
                     if (country != null) {
@@ -592,9 +593,23 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
-        tvLocations.setText(user.getAddress());
         //ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
-        ImageHelper.setCountryImage(ivLocation, user.getCountry_flag());
+        String countryDail = user.getCountryCOde();
+        if (!TextUtils.isEmpty(countryDail)) {
+            Country country = null;
+            for (Country c : Country.getAllCountries()) {
+                if (c.getDialCode().equals(countryDail)) {
+                    country = c;
+                }
+            }
+            if (country != null) {
+                ivLocation.setImageResource(country.getFlag());
+                Locale l = new Locale("", country.getCode());
+                if (l != null) {
+                    tvLocations.setText(l.getDisplayCountry(Locale.getDefault()));
+                }
+            }
+        }
 
 
 //        loadQRCode(tv_qr_code);

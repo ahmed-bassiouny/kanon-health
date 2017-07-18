@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.ChooseModel;
+import com.mukesh.countrypicker.Country;
 
 import java.util.List;
 
@@ -63,8 +65,14 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.LANGUAUGE:
-                   // ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getLang_icon(), context);
-                    ImageHelper.setLanguageImage(holder.image,list.get(position).getLong_short());
+                    if (!TextUtils.isEmpty(list.get(position).getLong_short())) {
+                        Country temp = Country.getCountryByISO(list.get(position).getLong_short());
+                        if (temp != null) {
+                            holder.image.setImageResource(temp.getFlag());
+                        } else {
+                            holder.image.setImageDrawable(null);
+                        }
+                    }
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.MEMBERAT:
