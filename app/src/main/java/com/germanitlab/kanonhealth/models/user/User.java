@@ -252,6 +252,27 @@ public class User implements Serializable {
     private String speciality_icon;
     @DatabaseField
     private int is_chat ;
+    @SerializedName("request_id")
+    private int request_id;
+
+    public int getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(int request_id) {
+        this.request_id = request_id;
+    }
+
+    public int getCan_rate() {
+        return can_rate;
+    }
+
+    public void setCan_rate(int can_rate) {
+        this.can_rate = can_rate;
+    }
+
+    @SerializedName("can_rate")
+    private int can_rate; //0 false , 1 true
 
     public String getLocation_img() {
         return location_img;
