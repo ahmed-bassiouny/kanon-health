@@ -318,11 +318,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             } else {
                 Intent intent = new Intent(this, HttpChatActivity.class);
                 intent.putExtra("doctorID", user.get_Id());
-                PrefManager prefManager = new PrefManager(this);
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
-                intent.putExtra("doctorName", user.getLast_name() + " " + user.getFirst_name());
-                intent.putExtra("iamDoctor", false);
-                intent.putExtra("doctorUrl", user.getAvatar());
                 startActivity(intent);
             }
 

@@ -195,10 +195,13 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
 
         try {
-            Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
-            String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            Log.d("my converted date", s);
-            tvBirthDate.setText(s);
+            if(userInfoResponse.getUser().getBirth_date()!=null) {
+                Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
+                String s = (DateUtil.formatBirthday(parseDate.getTime()));
+                Log.d("my converted date", s);
+                tvBirthDate.setText(s);
+            }else
+                tvBirthDate.setText("");
         } catch (ParseException e) {
             e.printStackTrace();
         }

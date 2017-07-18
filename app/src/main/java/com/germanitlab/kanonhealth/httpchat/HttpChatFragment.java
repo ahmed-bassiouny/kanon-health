@@ -69,6 +69,7 @@ import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -124,14 +125,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     int userID;
     String userPassword;
     int doctorID;
-    String doctorName = "";
-    String doctorUrl = "";
+
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
     private static final int RECORD_VIDEO = 3;
     private Uri selectedImageUri = null;
     private boolean show_privacy = false;
     User doctor;
+    UserRepository userRepository;
 
 
     ArrayList<Message> messages;
@@ -156,12 +157,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         return view;
     }
 
-    public static HttpChatFragment newInstance(int doctorID, String doctorUrl, boolean iamDoctor) {
+    public static HttpChatFragment newInstance(int doctorID) {
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
-        bundle.putString("doctorName", "My Documents");
-        bundle.putString("doctorUrl", doctorUrl);
-        bundle.putBoolean("iamDoctor", iamDoctor);
         if (httpChatFragment == null) {
             httpChatFragment = new HttpChatFragment();
             httpChatFragment.setArguments(bundle);
@@ -199,6 +197,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         recyclerView.setLayoutManager(llm);
         messageRepositry = new MessageRepositry(getActivity());
         messages = new ArrayList<>();
+        userRepository=new UserRepository(getActivity());
     }
 
     // set data in object
@@ -206,24 +205,29 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         userID = prefManager.getInt(PrefManager.USER_ID);
         userPassword = prefManager.getData(prefManager.USER_PASSWORD);
         doctorID = getArguments().getInt("doctorID");
-        doctorName = getArguments().getString("doctorName");
-        doctorUrl = getArguments().getString("doctorUrl");
-        iamDoctor = getArguments().getBoolean("iamDoctor", false);
-        if (doctorUrl != null && !doctorUrl.isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctorUrl, getActivity());
-        tv_chat_user_name.setText(doctorName);
         if (userID == doctorID) {
+            doctor.setLast_name("My Documents");
+            doctor.setFirst_name(" ");
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
+        } else {
+            // get data of doctor i talk with him from database
+            try {
+                doctor.setId(doctorID);
+                doctor = userRepository.getDoctor(doctor);
+                if (doctor != null)
+                    checkSessionOpen(iamDoctor);
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
-        Gson gson = new Gson();
-        try {
-            doctor = gson.fromJson(prefManager.getData(prefManager.USER_INTENT), User.class);
-            if (doctor != null)
-                checkSessionOpen(iamDoctor);
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+        if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
+            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getActivity());
+        if(doctor.getLast_name() !=null && doctor.getFirst_name()!=null)
+            tv_chat_user_name.setText(doctor.getLast_name() +" "+ doctor.getFirst_name());
+
+        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
     }
 
     private void loadChatOnline(int userID, int doctorID) {
@@ -267,7 +271,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
     public boolean isStoragePermissionGranted() {
-        if (getContext()!= null &&Build.VERSION.SDK_INT >= 23) {
+        if (getContext() != null && Build.VERSION.SDK_INT >= 23) {
             if (getContext().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 setData();
                 return true;
@@ -312,6 +316,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
     private void setData() {
+        if (getActivity() == null)
+            return;
         chatAdapter = new ChatAdapter(messages, getActivity(), show_privacy);
         recyclerView.setAdapter(chatAdapter);
         pbar_loading.setVisibility(View.GONE);
@@ -332,6 +338,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         img_requestpermission.setEnabled(true);
                         etMessage.setHint("Nachricht schreiben");
                         doctor.setIsOpen(1);
+                        userRepository.update(doctor);
                         checkSessionOpen(iamDoctor);
                     }
 
@@ -718,7 +725,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @Override
     public void onStart() {
         super.onStart();
-        if(userID != doctorID) {
+        if (userID != doctorID) {
             chatRunning = true;
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
                     new IntentFilter("MyData"));
@@ -731,7 +738,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @Override
     public void onStop() {
         super.onStop();
-        if(userID != doctorID) {
+        if (userID != doctorID) {
             chatRunning = false;
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
         }
@@ -758,8 +765,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 // checkSessionOpen(iamDoctor);
                 //  Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
                 Message message = (Message) intent.getSerializableExtra("extra");
-                if((message.getFrom_id()==userID||message.getFrom_id()==doctorID)&&(message.getTo()==userID||message.getTo()==doctorID)){
+                if ((message.getFrom_id() == userID || message.getFrom_id() == doctorID) && (message.getTo() == userID || message.getTo() == doctorID)) {
                     doctor.setIsOpen(0);
+                    userRepository.update(doctor);
                     checkSessionOpen(iamDoctor);
                     getActivity().invalidateOptionsMenu();
 
@@ -1019,7 +1027,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private void checkSessionOpen(final boolean iamDoctor) {
 
-        if(doctorID==userID){
+        if (doctorID == userID) {
             // i talk with my self in document
             chat_bar.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
@@ -1051,7 +1059,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if (doctorID == 1) {
+        if (doctorID == 1 ||doctor.getIsOpen()==0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
@@ -1086,7 +1094,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                                     Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                     doctor.setIsOpen(0);
+                                    userRepository.update(doctor);
                                     checkSessionOpen(iamDoctor);
+                                    getActivity().invalidateOptionsMenu();
                                     if (doctor.isClinic == 1) {
                                         Intent intent = new Intent(getActivity(), InquiryActivity.class);
                                         UserInfoResponse userInfoResponse = new UserInfoResponse();
@@ -1138,7 +1148,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                                         Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                         doctor.setIsOpen(0);
+                                        userRepository.update(doctor);
                                         checkSessionOpen(iamDoctor);
+                                        getActivity().invalidateOptionsMenu();
                                         if (doctor.isClinic == 1||doctor.getIsDoc() ==1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                                             adb.setTitle(R.string.rate_conversation);
@@ -1292,9 +1304,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     public void requestAudioPermission() {
         requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
     }
-    private void messageSeen(){
+
+    private void messageSeen() {
         // i sent request to make my msg seen
-        MessageRequest messageRequest = new MessageRequest(userID,userPassword,doctorID);
+        MessageRequest messageRequest = new MessageRequest(userID, userPassword, doctorID);
         try {
             new HttpCall(getActivity(), new ApiResponse() {
                 @Override
@@ -1306,9 +1319,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                 }
             }).messagesSeen(messageRequest);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("messageSeen", "messageSeen: ", e);
         }
     }
+
 }

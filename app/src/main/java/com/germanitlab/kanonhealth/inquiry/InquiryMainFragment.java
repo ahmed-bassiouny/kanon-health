@@ -174,11 +174,6 @@ public class InquiryMainFragment extends Fragment {
                                     ///////
                                     Intent intent = new Intent(getActivity(), HttpChatActivity.class);
                                     intent.putExtra("doctorID", userInfoResponse.getUser().get_Id());
-                                    prefManager.put(prefManager.USER_INTENT, gson.toJson(userInfoResponse.getUser()));
-                                    intent.putExtra("doctorName", userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
-                                                                    // if doctor user app or another
-                                    intent.putExtra("iamDoctor",new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1);
-                                    intent.putExtra("doctorUrl", userInfoResponse.getUser().getAvatar());
                                     startActivity(intent);
                                     ///////
                                     dismissProgressDialog();

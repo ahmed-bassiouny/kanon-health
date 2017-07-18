@@ -11,10 +11,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
+import com.germanitlab.kanonhealth.httpchat.MessageRequest;
+import com.germanitlab.kanonhealth.httpchat.Notification;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -44,7 +52,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         /*
         *
         * */
-
+         // notificationType ==  1 for new messagee ,2 for login , 3 for deliver message , 4 for close session   Andy
 
         try {
             int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
@@ -52,9 +60,16 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 case 1:
                     if (HttpChatFragment.chatRunning)
                         getMessage(remoteMessage,notificationType);
-                    else
-                        // notify
-                        break;
+                    else //notify
+                    if(remoteMessage.getData().get("msg")!=null && remoteMessage.getData().get("from_id")!=null && remoteMessage.getData().get("to_id")!=null) {
+                        Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),remoteMessage.getData().get("from_id"),true);
+                        if(remoteMessage.getData().get("msg")!=null){
+                            messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
+                            Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),"",false);
+
+                        }
+                    }
+                    break;
                 case 2:
                     getLogin(remoteMessage);
                     break;
@@ -161,5 +176,25 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(2, builder.build());
 
+    }
+
+    private void messagesDeliver(String userID,String doctorID){
+        // i sent request to make my msg seen
+        try {
+            MessageRequest messageRequest = new MessageRequest(Integer.parseInt(userID),new  PrefManager(this).getData(PrefManager.USER_PASSWORD),Integer.parseInt(doctorID));
+            new HttpCall(this, new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                }
+
+                @Override
+                public void onFailed(String error) {
+
+                }
+            }).messagesSeen(messageRequest);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Log.e("messagesDeliver", "messagesDeliver: ", e);
+        }
     }
 }

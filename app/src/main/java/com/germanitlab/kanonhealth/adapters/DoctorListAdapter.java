@@ -264,14 +264,6 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         Gson gson = new Gson();
         Intent intent = new Intent(activity, HttpChatActivity.class);
         intent.putExtra("doctorID", doctor.get_Id());
-        PrefManager prefManager = new PrefManager(activity);
-        prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-        intent.putExtra("doctorName", doctor.getLast_name() + " " + doctor.getFirst_name());
-        intent.putExtra("doctorUrl", doctor.getAvatar());
-        if (is_doc)
-            intent.putExtra("iamDoctor", true);
-        else
-            intent.putExtra("iamDoctor", false);
         activity.startActivity(intent);
     }
 }

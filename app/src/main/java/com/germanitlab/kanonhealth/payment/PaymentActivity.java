@@ -20,7 +20,9 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 
 import butterknife.BindView;
@@ -160,12 +162,7 @@ public class PaymentActivity extends AppCompatActivity {
                     Intent intent= new Intent(PaymentActivity.this, HttpChatActivity.class);
                     intent.putExtra("doctorID", doctor.get_Id());
                     doctor.setIsOpen(1);
-                    Gson gson=new Gson();
-                    intent.putExtra("doctor_data", gson.toJson(doctor));
-                    prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
-                    intent.putExtra("doctorName", doctor.getLast_name()+" "+doctor.getFirst_name());
-                    intent.putExtra("userType", doctor.isClinic == 1 ? 3 : doctor.getIsDoc() == 1 ? 2 : 1);
-                    intent.putExtra("doctorUrl", doctor.getAvatar());
+                    new UserRepository(PaymentActivity.this).update(doctor);
                     startActivity(intent);
                     finish();
                 }

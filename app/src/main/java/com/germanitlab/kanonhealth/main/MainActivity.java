@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 case 0:
                     return DoctorListFragment.newInstance(speciality_id, type);
                 case 1:
-                    return HttpChatFragment.newInstance(new PrefManager(MainActivity.this).getInt(PrefManager.USER_ID),"",false);
+                    return HttpChatFragment.newInstance(new PrefManager(MainActivity.this).getInt(PrefManager.USER_ID));
                 case 2:
                     return ChatsDoctorFragment.newInstance();
                 case 3:

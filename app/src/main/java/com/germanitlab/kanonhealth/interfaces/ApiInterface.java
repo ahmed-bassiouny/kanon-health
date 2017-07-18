@@ -184,5 +184,8 @@ public interface ApiInterface {
     @POST("/messages/seen")
     Call<JsonObject> messagesSeen(@Body MessageRequest messageRequest);
 
+    @POST("/messages/deliver")
+    Call<JsonObject> messagesDeliver(@Body MessageRequest messageRequest);
+
 }
 
