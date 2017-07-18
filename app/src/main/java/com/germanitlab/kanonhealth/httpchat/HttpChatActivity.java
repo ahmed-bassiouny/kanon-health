@@ -3,6 +3,8 @@ package com.germanitlab.kanonhealth.httpchat;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -20,8 +22,9 @@ public class HttpChatActivity extends AppCompatActivity {
         doctorID = getIntent().getIntExtra("doctorID", 0);
         iamDoctor = getIntent().getBooleanExtra("iamDoctor", false);
 
-        if (doctorID == 0)
+        if (doctorID == 0) {
             finish();
+        }
 
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);

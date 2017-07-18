@@ -30,14 +30,19 @@ public class Comment {
     @SerializedName("country_flag")
     private String country_flag;
 
+    @SerializedName("req_id")
+    private String req_id;
 
-    public Comment(int userID, String password, String key, String doc_id, String comment, String rate) {
+
+    public Comment(int userID, String password, String key, String doc_id, String comment, String rate,String req_id) {
         this.userID = userID;
         this.password = password;
         this.Key = key;
         this.doc_id = doc_id;
         this.comment = comment;
         this.rate = rate;
+        this.req_id=req_id;
+
     }
 
     public String getPassword() {
@@ -50,6 +55,14 @@ public class Comment {
 
     public String getKey() {
         return Key;
+    }
+
+    public String getReq_id() {
+        return req_id;
+    }
+
+    public void setReq_id(String req_id) {
+        this.req_id = req_id;
     }
 
     public void setKey(String key) {
