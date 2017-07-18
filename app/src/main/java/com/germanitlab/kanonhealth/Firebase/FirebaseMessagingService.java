@@ -2,7 +2,6 @@ package com.germanitlab.kanonhealth.Firebase;
 
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -17,10 +16,9 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.httpchat.MessageRequest;
+import com.germanitlab.kanonhealth.httpchat.MessageRequestSeen;
 import com.germanitlab.kanonhealth.httpchat.Notification;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -63,6 +61,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     else //notify
                     if(remoteMessage.getData().get("msg")!=null && remoteMessage.getData().get("from_id")!=null && remoteMessage.getData().get("to_id")!=null) {
                         Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),remoteMessage.getData().get("from_id"),true);
+                        messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
                     }else if(remoteMessage.getData().get("msg")!=null){
                         messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
                         Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),"",false);
@@ -180,7 +179,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     private void messagesDeliver(String userID,String doctorID){
         // i sent request to make my msg seen
         try {
-            MessageRequest messageRequest = new MessageRequest(Integer.parseInt(userID),new  PrefManager(this).getData(PrefManager.USER_PASSWORD),Integer.parseInt(doctorID));
+            MessageRequestSeen messageRequest = new MessageRequestSeen(Integer.parseInt(userID),Integer.parseInt(doctorID));
             new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -190,7 +189,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 public void onFailed(String error) {
 
                 }
-            }).messagesSeen(messageRequest);
+            }).messagesDeliver(messageRequest);
         }catch (Exception e){
             Crashlytics.logException(e);
             Log.e("messagesDeliver", "messagesDeliver: ", e);

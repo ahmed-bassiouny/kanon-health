@@ -7,7 +7,6 @@ package com.germanitlab.kanonhealth.httpchat;
 public class MessageRequest {
 
     private int user_id;
-    private int id;
     private int to;
 
     public String getPassword() {
@@ -22,31 +21,24 @@ public class MessageRequest {
 
     public MessageRequest(int user_id, int to) {
         this.user_id = user_id;
-        this.id = to;
         this.to=to;
     }
 
-    public MessageRequest(int user_id, String password,int to){
-        this.user_id = user_id;
-        this.id = to;
-        this.to=to;
-        this.password=password;
-    }
     public int getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_id(int from_id) {
+        this.user_id = from_id;
 
     }
 
     public int getTo() {
-        return id;
+        return to;
     }
 
-    public void setTo(int to) {
-        this.id = to;
+    public void setTo(int id) {
+        this.to = id;
     }
 
 }

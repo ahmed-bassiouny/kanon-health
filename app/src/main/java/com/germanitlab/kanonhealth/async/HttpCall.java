@@ -8,6 +8,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.httpchat.MessageRequest;
+import com.germanitlab.kanonhealth.httpchat.MessageRequestSeen;
 import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.germanitlab.kanonhealth.interfaces.ApiInterface;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
@@ -1255,7 +1256,7 @@ public class HttpCall {
             Crashlytics.logException(e);
         }
     }
-    public void messagesSeen(MessageRequest messageRequest){
+    public void messagesSeen(MessageRequestSeen messageRequest){
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<JsonObject> connection = service.messagesSeen(messageRequest);
@@ -1276,7 +1277,7 @@ public class HttpCall {
             Crashlytics.logException(e);
         }
     }
-    public void messagesDeliver(MessageRequest messageRequest){
+    public void messagesDeliver(MessageRequestSeen messageRequest){
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<JsonObject> connection = service.messagesDeliver(messageRequest);

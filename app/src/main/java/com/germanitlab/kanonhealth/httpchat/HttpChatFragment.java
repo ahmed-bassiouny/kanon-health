@@ -631,7 +631,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         showPopup.setAnimationStyle(R.style.Animations_GrowFromTop);
 
 
-        showPopup.showAtLocation(view, Gravity.TOP, 0, 400);
+        showPopup.showAtLocation(view, Gravity.BOTTOM, 0, 400);
 
 
         showPopup.setOutsideTouchable(true);
@@ -1343,7 +1343,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private void messageSeen() {
         // i sent request to make my msg seen
-        MessageRequest messageRequest = new MessageRequest(userID, userPassword, doctorID);
+        MessageRequestSeen messageRequest = new MessageRequestSeen(userID, userPassword, doctorID);
         try {
             new HttpCall(getActivity(), new ApiResponse() {
                 @Override

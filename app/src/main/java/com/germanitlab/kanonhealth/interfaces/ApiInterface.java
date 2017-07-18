@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.interfaces;
 
 
 import com.germanitlab.kanonhealth.httpchat.MessageRequest;
+import com.germanitlab.kanonhealth.httpchat.MessageRequestSeen;
 import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Forward;
@@ -185,10 +186,10 @@ public interface ApiInterface {
     Call<UploadImageResponse> uploadMedia( @Part MultipartBody.Part image);
 
     @POST("/messages/seen")
-    Call<JsonObject> messagesSeen(@Body MessageRequest messageRequest);
+    Call<JsonObject> messagesSeen(@Body MessageRequestSeen messageRequest);
 
     @POST("/messages/deliver")
-    Call<JsonObject> messagesDeliver(@Body MessageRequest messageRequest);
+    Call<JsonObject> messagesDeliver(@Body MessageRequestSeen messageRequest);
 
 }
 
