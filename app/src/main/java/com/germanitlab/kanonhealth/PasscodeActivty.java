@@ -51,9 +51,8 @@ public class PasscodeActivty extends AppCompatActivity {
 
     }
 
-    @OnTouch({R.id.one, R.id.two, R.id.three, R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine, R.id.zero})
+    @OnTouch({R.id.one, R.id.two, R.id.three, R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine, R.id.zero, R.id.delete, R.id.submit})
     public boolean hoverEffect(View view, MotionEvent motionEvent) {
-
         if (view != null && view instanceof CircleImageView) {
             CircleImageView iv = (CircleImageView) view;
             if (motionEvent != null) {
@@ -66,7 +65,6 @@ public class PasscodeActivty extends AppCompatActivity {
                 }
             }
         }
-
         return false;
     }
 
