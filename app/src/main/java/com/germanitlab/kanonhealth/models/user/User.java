@@ -1,5 +1,7 @@
 package com.germanitlab.kanonhealth.models.user;
 
+import android.text.TextUtils;
+
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -852,6 +854,24 @@ public class User implements Serializable {
     public void setJson_rate_percentage(String json_rate_percentage) {
         this.json_rate_percentage = json_rate_percentage;
 
+    }
+
+    public String getFullName()
+    {
+        String result = "";
+        if(!TextUtils.isEmpty(subTitle))
+        {
+            result += subTitle + " ";
+        }
+        if(!TextUtils.isEmpty(first_name))
+        {
+            result += first_name + " ";
+        }
+        if(!TextUtils.isEmpty(last_name))
+        {
+            result += last_name;
+        }
+        return result.trim();
     }
 }
 
