@@ -1302,8 +1302,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             img_send_audio.setEnabled(true);
             img_send_txt.setEnabled(true);
             button2.setEnabled(true);
-            button2.setText(R.string.open_session_again);
-            etMessage.setHint("Nachricht schreiben");
+            button2.setText(R.string.start_new_request);
+            etMessage.setHint(R.string.write_message);
             messageSeen();
         } else {
             loadChatOffline(doctorID);

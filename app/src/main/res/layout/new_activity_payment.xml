@@ -94,7 +94,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
-                            android:text="Specialists .. "
+                            android:text="@string/specialities"
                             android:textColor="@color/gray_black" />
 
                         <RatingBar
@@ -186,7 +186,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/size_5dp"
                             android:textSize="18sp"
-                            android:text="Chat from anywhere you are."
+                            android:text="@string/chat_from_anywhere_you_are"
                             android:textColor="@android:color/background_dark" />
 
                     </LinearLayout>
@@ -213,7 +213,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/size_5dp"
                             android:textSize="18sp"
-                            android:text="Send pictures, voice and videos."
+                            android:text="@string/send_picture_voice_and_videos"
                             android:textColor="@android:color/background_dark" />
 
                     </LinearLayout>
@@ -239,7 +239,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/size_5dp"
                             android:textSize="18sp"
-                            android:text="easy and secure payment."
+                            android:text="@string/easy_and_secure_payment"
                             android:textColor="@android:color/background_dark" />
 
                     </LinearLayout>
@@ -313,7 +313,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="Voucher code"
+            android:text="@string/voucher_code"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="@dimen/size_10dp"
             android:gravity="center_vertical"/>
@@ -324,13 +324,11 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="@dimen/size_10dp"
             android:gravity="center_vertical"
-            android:text="Consult a colleague \n (lets keep it free to consult colleagues)" />
+            android:text="@string/consult_a_colleague_lets_keep_it_free_to_consult_colleagues" />
 
     </LinearLayout>
 
 </LinearLayout>
-
-
 
             <Button
                 android:id="@+id/next"

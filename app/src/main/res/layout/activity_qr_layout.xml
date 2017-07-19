@@ -21,7 +21,7 @@
             android:layout_height="0dp"
             android:layout_weight="10"
             android:gravity="top"
-            android:text="@string/qr_text"
+            android:text="@string/dear_patients_in_order_to_help_you_quickly_and_easily_we_have_developed_for_you_an_own_practice_APP_With_the_QR_code_you_can_dial_into_the_practice_please_let_us_know_your_concerns_by_selecting_the_options_and_provide_them_with_your_photos_in_the_form_of_a_photo"
             android:textAlignment="center"
             android:textColor="@android:color/background_dark"
             android:textSize="24sp"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Error in loading doctor data"
+            android:text="@string/error_in_loading_doctor_data"
             android:textColor="@android:color/background_dark"
             android:textSize="@dimen/size_20dp" />
     </LinearLayout>

@@ -17,7 +17,7 @@
         android:padding="20dp"
         android:textSize="20dp"
         android:textColor="@android:color/background_dark"
-        android:text="Enter your passcode" />
+        android:text="@string/enter_your_passcode" />
 
     <TextView
         android:layout_width="match_parent"

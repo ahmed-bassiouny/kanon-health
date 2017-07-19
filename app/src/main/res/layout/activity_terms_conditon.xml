@@ -4,8 +4,7 @@
     android:id="@+id/activity_terms_conditon"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.kanonhealth.kanon_health.settings.TermsConditonActivity">
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.Toolbar
@@ -31,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/terms_conditions"
+            android:text="@string/terms_and_conditions"
             android:textColor="@color/black" />
 
 

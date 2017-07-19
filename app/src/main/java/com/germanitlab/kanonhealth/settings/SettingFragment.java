@@ -316,7 +316,7 @@ public class SettingFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (user.getIsDoc() == null || user.getIsClinic() == null) {
-                        Toast.makeText(getActivity(), R.string.contact_support, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.sorry_missing_data_please_contact_support, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (user.getIsDoc() == 1 || user.getIsClinic() == 1) {
@@ -392,12 +392,12 @@ public class SettingFragment extends Fragment {
                 new PrefManager(getActivity()).put(PrefManager.USER_STATUS, statusResponse.getIs_available());
 
                 if (statusResponse.getIs_available().equals("1")) {
-                    txt_status.setText(R.string.youareonline);
+                    txt_status.setText(R.string.you_are_now_online);
                     btn_change_status.setText(R.string.go_offline);
                     user.setIs_available("1");
 
                 } else {
-                    txt_status.setText(R.string.youareoffline);
+                    txt_status.setText(R.string.you_are_now_offline);
                     btn_change_status.setText(R.string.go_online);
                     user.setIs_available("0");
                 }
@@ -452,11 +452,11 @@ public class SettingFragment extends Fragment {
         // call rest to get data
 
         if (userStatus.equals("1")) {
-            txt_status.setText(R.string.youareonline);
+            txt_status.setText(R.string.you_are_now_online);
             btn_change_status.setText(R.string.go_offline);
 
         } else {
-            txt_status.setText(R.string.youareoffline);
+            txt_status.setText(R.string.you_are_now_offline);
             btn_change_status.setText(R.string.go_online);
         }
     }

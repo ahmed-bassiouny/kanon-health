@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.kanonhealth.kanon_health.Document_Update">
+    tools:context=".documents.Document_Update">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -15,13 +15,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Update Document" />
+            android:text="@string/update_document" />
 
         <ImageView
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
+            android:padding="10dp"
             android:src="@drawable/sent" />
     </android.support.v7.widget.Toolbar>
 
@@ -186,21 +187,23 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="Date          : "
+            android:layout_weight="2"
+            android:text="@string/date"
             android:textColor="@android:color/background_dark" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:orientation="vertical">
+            android:orientation="vertical"
+           >
 
             <TextView
                 android:layout_width="match_parent"
@@ -210,7 +213,8 @@
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/blue"></LinearLayout>
+                android:background="@color/blue"
+                android:orientation="vertical"></LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -220,14 +224,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="Category  : "
+            android:layout_weight="2"
+            android:text="@string/category"
             android:textColor="@android:color/background_dark" />
 
         <EditText
@@ -244,14 +249,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="Doctor      : "
+            android:layout_weight="2"
+            android:text="@string/doctor"
             android:textColor="@android:color/background_dark" />
 
         <EditText
@@ -268,14 +274,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="Diagnose  : "
+            android:layout_weight="2"
+            android:text="@string/diagnose"
             android:textColor="@android:color/background_dark" />
 
         <EditText
@@ -292,14 +299,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="Report      : "
+            android:layout_weight="2"
+            android:text="@string/report"
             android:textColor="@android:color/background_dark" />
 
         <EditText
@@ -316,14 +324,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="Comment : "
+            android:layout_weight="2"
+            android:text="@string/comment"
             android:textColor="@android:color/background_dark" />
 
         <EditText

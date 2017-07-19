@@ -10,7 +10,7 @@
     <me.biubiubiu.justifytext.library.JustifyTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="In Order to Chat to the doctor click on the Image below and select your pament method "
+        android:text="@string/in_order_to_chat_to_the_doctor_click_on_the_image_below_and_select_your_payment_method"
         android:gravity="center"
         android:textSize="25dp"
         android:textColor="@android:color/background_dark"

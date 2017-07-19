@@ -179,28 +179,32 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="Gender" />
+                    android:text="@string/gender"
+                    android:textSize="12dp"/>
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:id="@+id/rbmale"
-                    android:text="Male" />
+                    android:textSize="10dp"
+                    android:text="@string/male" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:id="@+id/rbfemal"
-                    android:text="Female" />
+                    android:textSize="10dp"
+                    android:text="@string/female" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:id="@+id/rbother"
-                    android:text="Other" />
+                    android:textSize="10dp"
+                    android:text="@string/other" />
             </RadioGroup>
 
             <EditText
@@ -208,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:id="@+id/edgender"
-                android:hint="Gender" />
+                android:hint="@string/gender" />
         </LinearLayout>
 
         <Button
@@ -217,7 +221,7 @@
             android:layout_gravity="center"
             android:id="@+id/button_submit"
             android:drawableLeft="@drawable/ic_done_all_white_24dp"
-            android:text="@string/fertig"
+            android:text="@string/finished"
             android:textColor="#FFFFFF"
             android:background="@drawable/round" />
 

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Practice Profile"
+            android:text="@string/practice_profile"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -115,7 +115,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name :"
+                            android:text="@string/name"
                             android:textColor="@color/black" />
 
                         <EditText
@@ -145,7 +145,7 @@
                         android:layout_alignParentTop="true"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:text="Invite other doctor +"
+                        android:text="@string/invite_other_doctor"
                         android:textColor="@android:color/background_dark" />
 
                     <View
@@ -166,7 +166,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:text="Specialities"
+                            android:text="@string/specialities"
                             android:textColor="@android:color/background_dark" />
 
                         <android.support.v7.widget.RecyclerView
@@ -251,7 +251,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/streat"
+                                android:text="@string/street_name"
                                 android:textColor="@color/black" />
 
                             <EditText
@@ -414,7 +414,7 @@
                             android:layout_height="wrap_content"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="Location On Map (Manual)"
+                            android:text="@string/location_on_map_manual"
                             android:textColor="@color/black"
                             android:textSize="@dimen/size_15sp" />
 
@@ -447,7 +447,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:text="Languages"
+                            android:text="@string/languages"
                             android:textSize="@dimen/size_15sp"
                             android:textColor="@android:color/background_dark" />
 
@@ -506,8 +506,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="bottom"
-                            android:hint="@string/first_name"
-                            android:text="Working hours"
+                            android:text="@string/working_hours"
                             android:textColor="@android:color/background_dark"
                             android:textSize="16sp" />
 
@@ -541,7 +540,7 @@
                             android:layout_weight="2"
                             android:gravity="center"
                             android:padding="@dimen/size_5dp"
-                            android:text="No Time has set"
+                            android:text="@string/no_time_has_set"
                             android:textColor="@color/red"
                             android:textCursorDrawable="@color/black"
                             android:textStyle="bold" />
@@ -572,8 +571,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:hint="@string/first_name"
-                            android:text="Tel : "
+                            android:text="@string/telephone"
                             android:textColor="@android:color/background_dark"
                             android:textSize="16dp" />
 
@@ -611,7 +609,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:text="Practice Documents"
+                            android:text="@string/practice_documents"
                             android:textColor="@android:color/background_dark"
                             android:textSize="16dp" />
 

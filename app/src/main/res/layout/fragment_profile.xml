@@ -187,7 +187,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/personal_info"
+                        android:text="@string/important_information"
                         android:textColor="@android:color/background_dark"
                         android:textSize="@dimen/size_15sp"
                         android:textStyle="bold" />
@@ -229,7 +229,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ems="7"
-                            android:text="@string/streat"
+                            android:text="@string/street_name"
                             android:textColor="@android:color/background_dark"
                             android:textStyle="bold" />
 
@@ -239,7 +239,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:text="El-Nasr" />
+                            android:text="@string/street_name" />
 
                     </TableRow>
 
@@ -342,7 +342,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:text="Egypt" />
+                            android:text="@string/country" />
 
                     </TableRow>
 
@@ -357,7 +357,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/voluntary_info"
+                        android:text="@string/voluntary_information"
                         android:textColor="@android:color/background_dark"
                         android:textSize="@dimen/size_15sp"
                         android:textStyle="bold" />
