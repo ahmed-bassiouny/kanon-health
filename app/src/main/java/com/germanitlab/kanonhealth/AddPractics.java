@@ -1,13 +1,17 @@
 package com.germanitlab.kanonhealth;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -316,6 +320,17 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @OnClick(R.id.locationonmap)
     public void locationonmap() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            askForLocationPermission();
+            return;
+        }
         try {
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
             try {
@@ -331,6 +346,27 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
 
+    }
+    private void askForLocationPermission() {
+        String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //resume tasks needing this
+                switch (requestCode) {
+                    case Constants.LAST_LOCATION_PERMISSION_CODE:
+                        locationonmap();
+                        break;
+                }
+            }
+        }
     }
 
     @OnClick(R.id.member_text)
