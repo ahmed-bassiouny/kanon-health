@@ -223,6 +223,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private void initData() {
         userID = prefManager.getInt(PrefManager.USER_ID);
         userPassword = prefManager.getData(prefManager.USER_PASSWORD);
+        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
+        iamClinic=new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
         doctorID = getArguments().getInt("doctorID");
         if (userID == doctorID) {
             doctor.setLast_name("My Documents");
@@ -234,8 +236,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             try {
                 doctor.setId(doctorID);
                 doctor = userRepository.getDoctor(doctor);
-                if (doctor != null)
-                    checkSessionOpen(iamDoctor);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -246,8 +246,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         if(doctor.getLast_name() !=null && doctor.getFirst_name()!=null)
             tv_chat_user_name.setText(doctor.getLast_name() +" "+ doctor.getFirst_name());
 
-        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
-        iamClinic=new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
     }
 
     private void loadChatOnline(int userID, int doctorID) {
@@ -1305,6 +1303,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             button2.setText(R.string.start_new_request);
             etMessage.setHint(R.string.write_message);
             messageSeen();
+            if (doctor != null)
+                checkSessionOpen(iamDoctor);
         } else {
             loadChatOffline(doctorID);
             imgbtn_chat_attach.setEnabled(false);

@@ -156,9 +156,9 @@ public class HttpCall {
         }
     }
 
-    public void getAllDoctor(String userID, String password) {
+    public void getAllDoctor(String userID, String password,String im) {
         try {
-            BasicRequest request = new BasicRequest(userID, password, 1);
+            BasicRequest request = new BasicRequest(userID, password, 1,im);
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<List<User>> connection = service.getAllDoctor(request);
 
@@ -186,9 +186,9 @@ public class HttpCall {
     }
 
 
-    public void getChatDoctors(String userID, String password) {
+    public void getChatDoctors(String userID, String password,String im) {
         try {
-            BasicRequest request = new BasicRequest(userID, password, 1);
+            BasicRequest request = new BasicRequest(userID, password, 1,im);
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<List<User>> connection = service.getMyDoctor(request);
 
@@ -215,9 +215,9 @@ public class HttpCall {
 
     }
 
-    public void getChatClinics(String userID, String password) {
+    public void getChatClinics(String userID, String password,String im) {
         try {
-            BasicRequest request = new BasicRequest(userID, password, 1);
+            BasicRequest request = new BasicRequest(userID, password, 1,im);
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<List<User>> connection = service.getMyClinics(request);
 
@@ -244,9 +244,9 @@ public class HttpCall {
 
     }
 
-    public void getChatClient(String userID, String password) {
+    public void getChatClient(String userID, String password,String im) {
         try {
-            BasicRequest request = new BasicRequest(userID, password, 1);
+            BasicRequest request = new BasicRequest(userID, password, 1,im);
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<List<User>> connection = service.getMyClients(request);
 
@@ -273,9 +273,9 @@ public class HttpCall {
 
     }
 
-    public void getChatDoctorAndClinics(String userID, String password) {
+    public void getChatDoctorAndClinics(String userID, String password,String im) {
         try {
-            BasicRequest request = new BasicRequest(userID, password, 1);
+            BasicRequest request = new BasicRequest(userID, password, 1,im);
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<List<User>> connection = service.getMyDoctorsAndClients(request);
 
@@ -746,14 +746,11 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                    Log.d("Answers ", response.body().toString());
                     apiResponse.onSuccess(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    Log.e("Answers ", " " + t.getLocalizedMessage());
                     apiResponse.onFailed(t.getLocalizedMessage());
                 }
             });

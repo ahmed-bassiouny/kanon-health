@@ -41,6 +41,7 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 
@@ -128,14 +129,14 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             setAdapter(doctorList);
             checkTabToScrollTo();
             if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
             }
         } else {
             doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
             setAdapter(doctorList);
             checkTabToScrollTo();
             if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                new HttpCall(getActivity(), this).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
             }
         }
         scrollToPosition(firstVisibleItemPositionForLeftTab);
@@ -371,7 +372,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
                             }
-                        }).getChatClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
                     }
                 } else {
                     doctorList = mDoctorRepository.getChat(User.DOCTOR_AND_CLINICS_TYPE);
@@ -400,7 +401,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
                             }
-                        }).getChatDoctorAndClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatDoctorAndClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
                     }
                 }
             }
@@ -433,7 +434,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
                             }
-                        }).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
                     }
                 } else {
                     doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
@@ -459,7 +460,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
                             }
-                        }).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD));
+                        }).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
                     }
                 }
 
@@ -550,5 +551,13 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //            tvLoadingError.setText(error);
 //        else tvLoadingError.setText("Some thing went wrong");
     }
-
+    private String getIam(){
+        Gson gson = new Gson();
+        if(gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsDoc()==1)
+            return "doc";
+        else if(gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsClinic()==1)
+            return "clinic";
+        else
+            return "user";
+    }
 }

@@ -111,7 +111,7 @@ public class ForwardActivity extends AppCompatActivity {
                     tvLoadingError.setText(error);
                 else tvLoadingError.setText("Some thing went wrong");*/
                 }
-            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),"");
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

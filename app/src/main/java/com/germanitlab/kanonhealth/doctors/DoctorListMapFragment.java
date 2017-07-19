@@ -27,6 +27,7 @@ import com.germanitlab.kanonhealth.helpers.LocationServicesTurn;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
         mGoogleApiClient.connect();
         MapsInitializer.initialize(this.getActivity());
 
-        new HttpCall(activity, this).getAllDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+        new HttpCall(activity, this).getAllDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),getIam());
 
 
     }
@@ -292,5 +294,14 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
     public void onFailed(String error) {
         Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         Log.e("error", error + " +++");
+    }
+    private String getIam(){
+        Gson gson = new Gson();
+        if(gson.fromJson(prefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsDoc()==1)
+            return "doc";
+        else if(gson.fromJson(prefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsClinic()==1)
+            return "clinic";
+        else
+            return "user";
     }
 }
