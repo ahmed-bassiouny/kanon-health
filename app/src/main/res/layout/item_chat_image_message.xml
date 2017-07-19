@@ -93,6 +93,13 @@
                 android:max="100"
                 android:visibility="gone"
                 android:progressDrawable="@drawable/shape_progress_circle" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/playvideo"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:id="@+id/play_video"/>
 
 
         </RelativeLayout>

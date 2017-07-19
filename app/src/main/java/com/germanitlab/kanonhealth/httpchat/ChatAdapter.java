@@ -225,7 +225,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     public class ImageViewHolder extends BaseViewHolder {
         public ImageView image_message;
         public TextView message, date, privacy_txt;
-        public ImageView status, privacy_image;
+        public ImageView status, privacy_image,play_video;
         public RelativeLayout background;
         public LinearLayout messageContainer;
         public ProgressBar progress_view_download, pbar_loading;
@@ -239,7 +239,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             status = (ImageView) itemView.findViewById(R.id.status);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
-
+            play_video= (ImageView) itemView.findViewById(R.id.play_video);
             image_message = (ImageView) itemView.findViewById(R.id.image_message);
             progress_view_download = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
             pbar_loading = (ProgressBar) itemView.findViewById(R.id.pbar_loading);
@@ -344,6 +344,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             final Message message = mMessages.get(position);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
+            imageViewHolder.play_video.setVisibility(View.GONE);
             if (message.getImageText() != null) {
                 imageViewHolder.message.setText(message.getImageText());
                 imageViewHolder.message.setVisibility(View.VISIBLE);
@@ -652,6 +653,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
             final Message locationMessage = mMessages.get(position);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+            imageViewHolder.play_video.setVisibility(View.GONE);
             showLayout_Privacy(locationMessage, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
             imageViewHolder.message.setVisibility(View.GONE);
@@ -733,7 +735,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     imageViewHolder.image_message.setImageBitmap(videoThumbnail);
 
 
-                    playViedo(imageViewHolder.messageContainer, file.getPath());
+                    playViedo(imageViewHolder.play_video, file.getPath());
+                    imageViewHolder.play_video.setVisibility(View.VISIBLE);
 
                 } else {
                     imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
@@ -758,6 +761,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                                     message.setMsg(uri.toString());
 
                                     playViedo(imageViewHolder.messageContainer, message.getMsg());
+                                    imageViewHolder.play_video.setVisibility(View.VISIBLE);
                                 }
                             });
                         }
@@ -939,16 +943,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             setImagePrivacy(message.getPrivacy(), imagePrivacy, txtPrivacy);
             changePrivacy(imagePrivacy, position, txtPrivacy, progressBar);
             imagePrivacy.setVisibility(View.VISIBLE);
-            imagePrivacy.setVisibility(View.VISIBLE);
+            txtPrivacy.setVisibility(View.VISIBLE);
         } else {
             imagePrivacy.setVisibility(View.GONE);
             txtPrivacy.setVisibility(View.GONE);
         }
-        if (mMessages.get(position).getFrom_id() == userID) {
+        if (mMessages.get(position).getFrom_id() == userID ) {
             background.setGravity(Gravity.RIGHT);
             messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
-            status.setVisibility(View.VISIBLE);
-
             if (mMessages.get(position).getSeen() ==2) {
                 status.setImageResource(R.drawable.readnew);
             } else if (mMessages.get(position).getSeen() ==1) {
@@ -960,9 +962,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         } else {
             background.setGravity(Gravity.LEFT);
             messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
-            status.setVisibility(View.GONE);
-
         }
+        if(!show_privacy && mMessages.get(position).getFrom_id() == userID){
+            status.setVisibility(View.VISIBLE);
+        }else
+            status.setVisibility(View.GONE);
         try {
             String[] split = message.getSent_at().split(" ")[1].split(":");
             date.setText(split[0] + " " + split[1]);
