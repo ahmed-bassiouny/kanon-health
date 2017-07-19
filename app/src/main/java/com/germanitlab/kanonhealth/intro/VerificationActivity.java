@@ -153,6 +153,7 @@ public class VerificationActivity extends AppCompatActivity {
                                         Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
                                         intent.putExtra("checkPassword", false);
                                         intent.putExtra("finish", false);
+                                        intent.putExtra("has_back", false);
                                         startActivity(intent);
                                         finish();
                                     }

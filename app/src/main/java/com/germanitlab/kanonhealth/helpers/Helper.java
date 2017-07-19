@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -110,7 +111,8 @@ public class Helper {
         if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
             ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1, activity);
         }
-        name.setText(userInfoResponse.getUser().getFirst_name().toString() + " " + userInfoResponse.getUser().getLast_name().toString());
+        if(userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFirst_name()) && !TextUtils.isEmpty(userInfoResponse.getUser().getLast_name()))
+            name.setText(userInfoResponse.getUser().getFirst_name().toString() + " " + userInfoResponse.getUser().getLast_name().toString());
 //                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
         try {
             Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirthDate().toString());

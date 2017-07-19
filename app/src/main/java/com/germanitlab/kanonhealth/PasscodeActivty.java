@@ -23,7 +23,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PasscodeActivty extends AppCompatActivity {
 
     boolean checkPassword; // check password if you want login or enter
-    boolean finish; // finish this activity or redirect to main activity
+    boolean finish;// finish this activity or redirect to main activity
+    boolean has_back; // go back to the previuos activity
     String tempPasscode = "";
     String passcode = "";
     PrefManager prefManager;
@@ -41,6 +42,7 @@ public class PasscodeActivty extends AppCompatActivity {
             prefManager = new PrefManager(this);
             checkPassword = getIntent().getBooleanExtra("checkPassword", true);
             finish = getIntent().getBooleanExtra("finish", true);
+            has_back = getIntent().getBooleanExtra("has_back", false);
             if (!checkPassword) {
                 passText.setText("Set your Password");
             }
@@ -172,6 +174,14 @@ public class PasscodeActivty extends AppCompatActivity {
         pass.setText("");
         passcode = "";
         tempPasscode = "";
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(has_back)
+            super.onBackPressed();
+        else
+            return;
     }
 
     private void finishActivity() {

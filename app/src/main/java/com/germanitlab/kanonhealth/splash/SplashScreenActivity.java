@@ -22,6 +22,7 @@ import com.germanitlab.kanonhealth.intro.SignupActivity;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
+import com.google.zxing.common.StringUtils;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -63,6 +64,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                             intent.putExtra("checkPassword", true);
                             intent.putExtra("finish", false);
+                            intent.putExtra("has_back", false);
                             startActivity(intent);
                             finish();
                         }
@@ -81,6 +83,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
                         intent.putExtra("finish", false);
+                        intent.putExtra("has_back", false);
                         startActivity(intent);
                         finish();
                     } else {
@@ -130,7 +133,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
                 }
-            }).joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+            }).joinUser(prefManager.getInt(PrefManager.USER_ID));
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
@@ -156,6 +159,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", true);
                         intent.putExtra("finish", false);
+                        intent.putExtra("has_back", false);
                         startActivity(intent);
                         finish();
 
@@ -170,6 +174,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                     intent.putExtra("checkPassword", true);
                     intent.putExtra("finish", false);
+                    intent.putExtra("has_back", false);
                     startActivity(intent);
                     Log.e("Splash", error);
                     finish();

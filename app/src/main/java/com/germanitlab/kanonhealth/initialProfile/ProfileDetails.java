@@ -396,6 +396,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
                         intent.putExtra("finish", false);
+                        intent.putExtra("has_back", true);
                         startActivity(intent);
 
 
@@ -420,5 +421,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             finish();
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }

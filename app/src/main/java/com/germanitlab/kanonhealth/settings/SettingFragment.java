@@ -261,6 +261,7 @@ public class SettingFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), PasscodeActivty.class);
                     intent.putExtra("checkPassword", true);
                     intent.putExtra("finish", true);
+                    intent.putExtra("has_back", true);
                     startActivityForResult(intent, 13);
                 }
             });
@@ -468,6 +469,7 @@ public class SettingFragment extends Fragment {
             Intent intent = new Intent(getActivity(), PasscodeActivty.class);
             intent.putExtra("checkPassword", false);
             intent.putExtra("finish", true);
+            intent.putExtra("has_back", true);
             startActivity(intent);
         }
     }
