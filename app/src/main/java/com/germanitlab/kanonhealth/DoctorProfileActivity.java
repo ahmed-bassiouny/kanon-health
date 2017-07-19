@@ -490,7 +490,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.heart_item_layout, null);
         HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
-        item.setImageResource(src);
+        item.setImageBitmap(ImageHelper.TrimBitmap(src, DoctorProfileActivity.this));
         return view;
     }
 
@@ -603,7 +603,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 }
             }
             if (country != null) {
-                ivLocation.setImageResource(country.getFlag());
+                ivLocation.setImageBitmap(ImageHelper.TrimBitmap(country.getFlag(), DoctorProfileActivity.this));
                 Locale l = new Locale("", country.getCode());
                 if (l != null) {
                     tvLocations.setText(l.getDisplayCountry(Locale.getDefault()));
