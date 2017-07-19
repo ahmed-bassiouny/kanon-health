@@ -423,8 +423,10 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<com.google.gson.JsonObject> call, Throwable t) {
-                    Log.e("PopUp Error", t.getMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
         } catch (Exception e) {
