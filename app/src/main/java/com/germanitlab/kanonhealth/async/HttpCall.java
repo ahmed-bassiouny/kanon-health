@@ -434,9 +434,9 @@ public class HttpCall {
 
     }
 
-    public void getDoctor(String userID, String password, String doctorID, int entity_type) {
+    public void getDoctor(String userID, String password, String doctorID) {
         try {
-            DoctorRequest doctorRequest = new DoctorRequest(userID, password, doctorID, entity_type);
+            DoctorRequest doctorRequest = new DoctorRequest(userID, password, doctorID);
             ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<UserInfoResponse> call = apiInterface.getDoctor(doctorRequest);
             call.enqueue(new Callback<UserInfoResponse>() {

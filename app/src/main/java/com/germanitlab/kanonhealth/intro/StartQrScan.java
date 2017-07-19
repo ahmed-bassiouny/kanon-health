@@ -54,42 +54,9 @@ public class StartQrScan extends AppCompatActivity {
                 } else if (result.getContents().startsWith("WEBLOGIN_")) {
                     sendQrCode(result.getContents().replace("WEBLOGIN_", ""));
                 } else {
-                    Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                     final String key = result.getContents();
-                    final Dialog dialog = new Dialog(this);
-                    dialog.setContentView(R.layout.activity_qr_activity);
-                    dialog.setTitle("Custom Alert Dialog");
-                    dialog.setCanceledOnTouchOutside(false);
-                    Button btnDoctor = (Button) dialog.findViewById(R.id.doctor);
-                    Button btnClinic = (Button) dialog.findViewById(R.id.clinic);
-                    Button btnUser = (Button) dialog.findViewById(R.id.doctor);
-                    Button btnCancel = (Button) dialog.findViewById(R.id.cancel);
-                    btnDoctor.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendRequest(key, 2);
-                        }
-                    });
-                    btnClinic.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendRequest(key, 3);
-                        }
-                    });
-                    btnUser.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendRequest(key, 1);
-                        }
-                    });
-                    btnCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        }
-                    });
+                    sendRequest(key);
 
-                    dialog.show();
                     //Save the User ID in the sh
 
                 }
@@ -99,11 +66,12 @@ public class StartQrScan extends AppCompatActivity {
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            finish();
         }
 
     }
 
-    private void sendRequest(String key, int i) {
+    private void sendRequest(String key) {
         showProgressDialog();
         //Getting the doctor's data
         new HttpCall(this, new ApiResponse() {
@@ -129,7 +97,7 @@ public class StartQrScan extends AppCompatActivity {
                 DismissProgressDialog();
                 Log.e("My error ", error.toString());
             }
-        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key, i);
+        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
     }
 
     public void showProgressDialog() {

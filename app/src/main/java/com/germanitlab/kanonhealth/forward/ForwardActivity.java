@@ -408,7 +408,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Log.e("My error ", error.toString());
 
             }
-        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key, entity_type);
+        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
     }
 
     public void dismissProgressDialog() {

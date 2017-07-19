@@ -23,11 +23,10 @@ public class DoctorRequest implements Serializable {
     private int is_object = 1;
 
 
-    public DoctorRequest(String userID, String password, String Key, int entity_type) {
+    public DoctorRequest(String userID, String password, String Key) {
         this.userID = userID;
         this.password = password;
         this.Key = Key;
-        this.entity_type = entity_type;
     }
 
     public DoctorRequest(String userID, String password, String Key, String doc_id) {

@@ -497,7 +497,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         String filepath = new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath();
                         String ext1 = filepath.substring(filepath.lastIndexOf(".")); // Extension with dot .jpg, .png
                         final String type;
-                        if (ext1.equals(".mp4"))
+                        if (ext1.equals(".mp4")||ext1.equals(".3gp"))
                             type = Constants.VIDEO;
                         else if (ext1.equals(".jpg") || ext1.equals(".png") || ext1.equals(".jpeg"))
                             type = Constants.IMAGE;
@@ -778,7 +778,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     // seen request for specific msg
                 } else {
                     // show notification
-                    // deliverd request for specific msg
+                    messagesDeliver();
                 }
 
             } else if (notificationType == 4) {
@@ -795,22 +795,40 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 }
             } else if (notificationType == 3) {
                 //handle Deliverd Message here /// Andy
-                final Message msg = (Message) intent.getSerializableExtra("extra");
-                new Thread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         for (Message message : messages) {
-                            if (message.getId() == msg.getId()) {
+                            if (message.getSeen()==0) {
                                 int index = messages.indexOf(message);
-                                messages.set(index, msg);
+                                message.setSeen(1);
+                                messages.set(index, message);
                                 chatAdapter.setList(messages);
                                 chatAdapter.notifyDataSetChanged();
                                 messageRepositry.createOrUpate(message);
                             }
                         }
                     }
-                }).start();
+                });
+            }else if (notificationType == 6) {
+                //handle Deliverd Message here /// Andy
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Message message : messages) {
+                            if (message.getSeen() == 1 || message.getSeen() == 0) {
+                                int index = messages.indexOf(message);
+                                message.setSeen(2);
+                                messages.set(index, message);
+                                chatAdapter.setList(messages);
+                                chatAdapter.notifyDataSetChanged();
+                                messageRepositry.createOrUpate(message);
+                            }
+                        }
+                    }
+                });
             }
+
 
         }
     };
@@ -887,6 +905,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                     @Override
                                     public void onFailed(String error) {
                                         Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                        removeDummyMessage(index2);
                                     }
                                 }).uploadMedia(mOutputFile.getPath());
 
@@ -1300,7 +1319,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private void creatRealMessage(Message message, int index) {
         try {
-            if (index > 0)
+            if (index >= 0)
                 messages.remove(index);
             messages.add(message);
             chatAdapter.setList(messages);
@@ -1361,5 +1380,24 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     }
 
+    private void messagesDeliver(){
+        // i sent request to make my msg seen
+        try {
+            MessageRequestSeen messageRequest = new MessageRequestSeen(userID,doctorID);
+            new HttpCall(getActivity(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                }
+
+                @Override
+                public void onFailed(String error) {
+
+                }
+            }).messagesDeliver(messageRequest);
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Log.e("messagesDeliver", "messagesDeliver: ", e);
+        }
+    }
 
 }

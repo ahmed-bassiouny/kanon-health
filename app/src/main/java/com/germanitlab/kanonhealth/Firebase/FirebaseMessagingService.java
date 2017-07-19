@@ -50,7 +50,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         /*
         *
         * */
-         // notificationType ==  1 for new messagee ,2 for login , 3 for deliver message , 4 for close session   Andy
+         // notificationType ==  1 for new messagee ,2 for login , 3 for deliver message , 4 for close session ,6 for seen message  Andy
 
         try {
             int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
@@ -72,8 +72,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     getLogin(remoteMessage);
                     break;
                 case 3:
+                case 6:
                     if (HttpChatFragment.chatRunning)
-                        getMessage(remoteMessage,notificationType);
+                        getMessageDeliveredSeen(remoteMessage,notificationType);
                     break;
                 case 4: // for closeing session
                     if(HttpChatFragment.chatRunning)
@@ -135,6 +136,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         message.setSent_at(remoteMessage.getData().get("sent_at"));
         Intent intent = new Intent("MyData");
         intent.putExtra("extra", message);
+        intent.putExtra("notificationtype", notificationtype);
+        broadcaster.sendBroadcast(intent);
+    }
+    private void getMessageDeliveredSeen(RemoteMessage remoteMessage,int notificationtype) {
+        Intent intent = new Intent("MyData");
         intent.putExtra("notificationtype", notificationtype);
         broadcaster.sendBroadcast(intent);
     }
