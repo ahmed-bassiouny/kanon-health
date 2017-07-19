@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -182,6 +183,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     boolean is_doc;
     @BindView(R.id.txt_language_names)
     TextView txtLanguageNames;
+    @BindView(R.id.nsv_soctor_profile_scroll)
+    NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -949,5 +952,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         intent.putExtra("long", user.getLocation_long());
         intent.putExtra("lat", user.getLocation_lat());
         startActivity(intent);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        nestedScrollView.fullScroll(View.FOCUS_UP);
     }
 }
