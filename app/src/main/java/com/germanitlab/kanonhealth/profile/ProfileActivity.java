@@ -71,8 +71,6 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     ProgressBar progressBar;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.recycler_view2)
-    RecyclerView recyclerView2;
     //    @BindView(R.id.img_profile_qr)
 //    ImageView qr;
     @BindView(R.id.scrollView)

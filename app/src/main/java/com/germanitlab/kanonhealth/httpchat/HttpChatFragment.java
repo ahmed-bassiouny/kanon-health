@@ -1300,8 +1300,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
-
-
             if (doctor.isClinic == 1) {
                 Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                 intent.putExtra("doctor_data", doctor);

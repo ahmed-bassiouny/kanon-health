@@ -132,6 +132,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     LinearLayout llPracticeProfile;
     @BindView(R.id.border)
     View vBorder;
+    @BindView(R.id.v_document_line)
+    View viewDocumentLine ;
 
 
     @BindView(R.id.ed_location)
@@ -455,10 +457,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getMembers_at() != null)
             set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
         if (user.getDocuments() != null) {
-            doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
-            recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-            recyclerViewDocument.setAdapter(doctorDocumentAdapter);
-            recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
+            if(!is_me) { // handle the document if the profile is not my profile
+                doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
+                recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+                recyclerViewDocument.setAdapter(doctorDocumentAdapter);
+                recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
+            }
+            else {
+                viewDocumentLine.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -590,6 +597,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
 
     private void bindData() {
+        chechEditPermission();
 
         //Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
@@ -687,7 +695,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             else
                 tvOnline.setText(R.string.status_offline);
         }
-        chechEditPermission();
         checkDoctor();
     }
 
