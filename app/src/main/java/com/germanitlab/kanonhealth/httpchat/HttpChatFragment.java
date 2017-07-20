@@ -373,6 +373,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             message.setTo(doctorID);
             message.setMsg(etMessage.getText().toString());
             message.setType(Constants.TEXT);
+            message.setDate(getDateTimeNow());
+            message.setSent_at(getDateTimeNow());
             etMessage.setText("");
             message.setIs_send(false);
             etMessage.setHint("Nachricht schreiben");
