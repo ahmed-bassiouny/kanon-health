@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth;
 
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -56,11 +56,9 @@ import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.github.siyamed.shapeimageview.HeartImageView;
-import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
@@ -80,6 +78,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DoctorProfileActivity extends AppCompatActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks {
 
+    private static final int CROP_PIC = 5;
     @BindView(R.id.speciality_recycleview)
     FlowLayout flSpeciliaty;
     SpecilaitiesAdapter adapter;
@@ -150,6 +149,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     EditText etProvince;
     @BindView(R.id.ed_country)
     EditText etCountry;
+    @BindView(R.id.view_no_clinic_line)
+    View vNoClinicLine;
 
     // data of ivEdit
     @BindView(R.id.edit)
@@ -380,7 +381,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             user.setAddress(etLocation.getText().toString());
             user.getInfo().setStreetname(etStreetName.getText().toString());
             user.getInfo().setHouseNumber(etHouseNumber.getText().toString());
-            user.getInfo().setZipCode(etZipCode.getText().toString());
+            user.getInfo().setZip_code(etZipCode.getText().toString());
             user.getInfo().setProvinz(etProvince.getText().toString());
             user.getInfo().setCountry(etCountry.getText().toString());
         } else {
@@ -455,7 +456,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getSupported_lang() != null)
             setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
-            set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+            if(user.getMembers_at().size() > 0) {
+                set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+                vNoClinicLine.setVisibility(View.GONE);
+            }
+            else
+                vNoClinicLine.setVisibility(View.VISIBLE);
         if (user.getDocuments() != null) {
             if(!is_me) { // handle the document if the profile is not my profile
                 doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
@@ -550,29 +556,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
+                    case CROP_PIC :
+                        afterCropFinish();
+                        break;
                     case TAKE_PICTURE:
                         util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-
-                        pickerDialog.dismiss();
-                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                util.dismissProgressDialog();
-                                uploadImageResponse = (UploadImageResponse) response;
-                                user.setAvatar(uploadImageResponse.getFile_url());
-                                Log.e("After Casting", uploadImageResponse.getFile_url());
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                util.dismissProgressDialog();
-                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                                Log.i("Doctor Profile  ", " Activity " + error);
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
+                        performCrop();
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -593,6 +583,28 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             Log.i("Doctor Profile  ", " Activity ", e);
         }
+    }
+
+    private void afterCropFinish() {
+        pickerDialog.dismiss();
+        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+        ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                util.dismissProgressDialog();
+                uploadImageResponse = (UploadImageResponse) response;
+                user.setAvatar(uploadImageResponse.getFile_url());
+                Log.e("After Casting", uploadImageResponse.getFile_url());
+            }
+
+            @Override
+            public void onFailed(String error) {
+                util.dismissProgressDialog();
+                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                Log.i("Doctor Profile  ", " Activity " + error);
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
     }
 
 
@@ -671,7 +683,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             etLocation.setText(user.getAddress());
             etStreetName.setText(user.getInfo().getStreetname());
             etHouseNumber.setText(user.getInfo().getHouseNumber());
-            etZipCode.setText(user.getInfo().getZipCode());
+            etZipCode.setText(user.getInfo().getZip_code());
             etProvince.setText(user.getInfo().getProvinz());
             etCountry.setText(user.getInfo().getCountry());
         }
@@ -896,7 +908,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setMembers_at(templist);
-                set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+                if(user.getMembers_at().size() > 0) {
+                    set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+                    vNoClinicLine.setVisibility(View.GONE);
+                }
+                else
+                    vNoClinicLine.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -977,5 +994,35 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     protected void onResume() {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
+    }
+
+    private void performCrop() {
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not
+            // support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(selectedImageUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, CROP_PIC);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            Toast toast = Toast
+                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

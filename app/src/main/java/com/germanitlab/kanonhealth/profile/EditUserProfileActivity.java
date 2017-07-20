@@ -4,6 +4,7 @@ package com.germanitlab.kanonhealth.profile;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -69,6 +70,7 @@ import butterknife.OnClick;
 
 public class EditUserProfileActivity extends AppCompatActivity implements Serializable, ApiResponse, DialogPickerCallBacks {
 
+    private static final int CROP_PIC = 5;
     private UserInfoResponse userInfoResponse;
 
     private EditQuestionAdapter mAdapter;
@@ -192,7 +194,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
         }
         etStreet.setText(userInfoResponse.getUser().getInfo().getStreetname());
         etHousePhone.setText(userInfoResponse.getUser().getInfo().getHouseNumber());
-        etZip.setText(userInfoResponse.getUser().getInfo().getZipCode());
+        etZip.setText(userInfoResponse.getUser().getInfo().getZip_code());
         etProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
         etCountry.setText(userInfoResponse.getUser().getInfo().getCountry());
         questionAnswer = userInfoResponse.getUser().getQuestions();
@@ -265,31 +267,13 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
+                    case CROP_PIC :
+                        afterCropFinish();
+                        break;
                     case TAKE_PICTURE:
                         util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        ImageHelper.setImage(imgAvatar, imageUri, this);
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                try {
-                                    util.dismissProgressDialog();
-                                    uploadImageResponse = (UploadImageResponse) response;
-                                    user.setAvatar(uploadImageResponse.getFile_url());
-                                    Log.e("After Casting", uploadImageResponse.getFile_url());
-                                } catch (Exception e) {
-                                    Crashlytics.logException(e);
-                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
+                        performCrop();
 
                         break;
                 }
@@ -298,6 +282,32 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void afterCropFinish() {
+        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+        ImageHelper.setImage(imgAvatar, imageUri, this);
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                try {
+                    util.dismissProgressDialog();
+                    uploadImageResponse = (UploadImageResponse) response;
+                    user.setAvatar(uploadImageResponse.getFile_url());
+                    Log.e("After Casting", uploadImageResponse.getFile_url());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
+
     }
 
 
@@ -486,7 +496,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
         user.setBirthDate(birthdate);
         Log.d("my birthdate format", etBirthday.getText().toString());
         info.setStreetname(etStreet.getText().toString());
-        info.setZipCode(etZip.getText().toString());
+        info.setZip_code(etZip.getText().toString());
         info.setHouseNumber(etHousePhone.getText().toString());
         info.setProvinz(etProvinz.getText().toString());
         info.setCountry(etCountry.getText().toString());
@@ -539,6 +549,35 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
     @Override
     public void onCameraClicked() {
         takeImageWithCamera();
+    }
+    private void performCrop() {
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not
+            // support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(selectedImageUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, CROP_PIC);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            Toast toast = Toast
+                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     @Override

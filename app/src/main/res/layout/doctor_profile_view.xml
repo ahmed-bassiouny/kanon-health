@@ -169,7 +169,7 @@
                                     android:layout_height="0dp"
                                     android:layout_margin="5dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/custom_edittext_without_border_style"
+                                    android:background="@drawable/custom_textview_with_border_gray_background"
                                     android:ellipsize="end"
                                     android:focusable="false"
                                     android:focusableInTouchMode="false"
@@ -188,7 +188,7 @@
                                     android:layout_gravity="center"
                                     android:layout_margin="5dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/custom_edittext_without_border_style"
+                                    android:background="@drawable/custom_textview_with_border_gray_background"
                                     android:clickable="true"
                                     android:ellipsize="end"
                                     android:focusable="false"
@@ -207,7 +207,7 @@
                                     android:layout_height="0dp"
                                     android:layout_margin="5dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/custom_edittext_without_border_style"
+                                    android:background="@drawable/custom_textview_with_border_gray_background"
                                     android:clickable="true"
                                     android:ellipsize="end"
                                     android:focusable="false"
@@ -531,6 +531,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/background_dark"
+                            android:textStyle="bold"
                             android:textSize="16dp" />
 
 
@@ -571,19 +572,17 @@
                                 app:civ_border_width="0dp" />
 
 
-                            <TextView
-                                android:id="@+id/tv_locations"
-                                android:layout_width="match_parent"
-                                android:layout_height="30dp"
-                                android:layout_toEndOf="@id/iv_location"
-                                android:gravity="start|center_vertical"
-                                android:paddingStart="@dimen/size_10dp"
-                                android:text=""
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp" />
+
                         </RelativeLayout>
 
-
+                        <TextView
+                            android:id="@+id/tv_locations"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:gravity="start|center_vertical"
+                            android:text=""
+                            android:textColor="@android:color/background_dark"
+                            android:textSize="16dp" />
                         <RelativeLayout
                             android:id="@+id/mapContanier"
                             android:layout_width="343dp"
@@ -700,7 +699,6 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_alignParentEnd="true"
                                 android:layout_below="@+id/member_text"
-                                android:layout_marginLeft="@dimen/size_5dp"
                                 android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
 
                             <ImageView
@@ -716,12 +714,6 @@
                                 android:visibility="gone" />
                         </RelativeLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black" />
 
 
                         <View
@@ -757,6 +749,11 @@
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/black"
+                            android:id="@+id/view_no_clinic_line"/>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -818,7 +815,7 @@
                             android:id="@+id/tablelayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"></TableLayout>
+                            android:layout_marginTop="10dp"></TableLayout>
 
                         <View
                             android:layout_width="match_parent"
