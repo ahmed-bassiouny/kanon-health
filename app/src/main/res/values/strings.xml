@@ -238,7 +238,35 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <!--specialities-->
     <string name="dentist"> Zahnarzt</string>
-
+    <string name="allergist"> allergist</string>
+    <string name="ear_doctor">ear_doctor</string>
+    <string name="anaesthesiologist">anaesthesiologist</string>
+    <string name="andrologist">andrologist</string>
+    <string name="cardiac_electrophysiologist">cardiac_electrophysiologist</string>
+    <string name="cardiologist">cardiologist</string>
+    <string name="dermathology">dermathology</string>
+    <string name="disabled">disabled</string>
+    <string name="emergency_doctor">emergenc_doctor</string>
+    <string name="endocrinologist">endocrinologist  </string>
+    <string name="family_doctor">family_doctor</string>
+    <string name="gastroenterologist">gastroenterologist</string>
+    <string name="geriatrician">geriatrician</string>
+    <string name="hematologist">hematologist</string>
+    <string name="neonatologist">neonatologist</string>
+    <string name="neurology">neurology</string>
+    <string name="oncologist">oncologist</string>
+    <string name="ophthalmologist">ophthalmologist</string>
+    <string name="orthopedist">orthopedist</string>
+    <string name="pathology"> pathology</string>
+    <string name="pediatrician">pediatrician</string>
+    <string name="perinatologist">perinatologist</string>
+    <string name="periodontist">periodontist</string>
+    <string name="physical_therapy">physical_therapy</string>
+    <string name="plastic_surgeon">plastic_surgeon</string>
+    <string name="rheumatologist"> rheumatologist</string>
+    <string name="surgeon">surgeon</string>
+    <string name="urologist">urologist</string>
+    <string name="xray">xray</string>
 
 
     <!--time table activity-->
@@ -257,6 +285,9 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="laboratory_investigation">Laboruntersuchung (Blut, Urin etc.)</string>
     <string name="heart_listen">Herz abhorchen</string>
     <string name="others">sonstiges</string>
+
+
+
 
 
 
