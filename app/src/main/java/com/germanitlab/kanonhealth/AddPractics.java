@@ -164,7 +164,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
                         ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), AddPractics.this);
                     }
-                    etName.setText(user.getFirst_name());
+                    etName.setText(user.getFullName());
                     etLocation.setText(user.getAddress());
                     etHouseNumber.setText(user.getInfo().getHouseNumber());
                     etZipCode.setText(user.getInfo().getZipCode());

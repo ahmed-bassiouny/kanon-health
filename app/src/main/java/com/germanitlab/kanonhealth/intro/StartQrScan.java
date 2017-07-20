@@ -15,6 +15,7 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
@@ -28,12 +29,14 @@ import com.google.zxing.integration.android.IntentResult;
 public class StartQrScan extends AppCompatActivity {
     PrefManager prefManager;
     ProgressDialog progressDialog;
+    Util util ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefManager = new PrefManager(this);
         new IntentIntegrator(this).initiateScan();
+        util = Util.getInstance(this);
 
     }
 
@@ -72,7 +75,7 @@ public class StartQrScan extends AppCompatActivity {
     }
 
     private void sendRequest(String key) {
-        showProgressDialog();
+        util.showProgressDialog();
         //Getting the doctor's data
         new HttpCall(this, new ApiResponse() {
             @Override
@@ -84,7 +87,7 @@ public class StartQrScan extends AppCompatActivity {
                     intent.putExtra("tab", "");
                     startActivity(intent);
                     finish();
-                    DismissProgressDialog();
+                    util.dismissProgressDialog();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -94,19 +97,12 @@ public class StartQrScan extends AppCompatActivity {
             @Override
             public void onFailed(String error) {
                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                DismissProgressDialog();
+                util.dismissProgressDialog();
                 Log.e("My error ", error.toString());
             }
         }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
     }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
-    }
-
-    public void DismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
     public void sendQrCode(String qrCode) {
         try {

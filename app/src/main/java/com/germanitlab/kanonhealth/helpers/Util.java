@@ -66,7 +66,8 @@ public class Util {
     }
 
     public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
+        if(context != null)
+           progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
     }
 
     public void dismissProgressDialog() {

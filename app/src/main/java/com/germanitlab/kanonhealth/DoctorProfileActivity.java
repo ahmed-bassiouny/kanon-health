@@ -679,7 +679,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             if (user.isClinic == 1)
                 tvToolbarName.setText(user.getFirst_name());
             else
-                tvToolbarName.setText(user.getLast_name() + ", " + user.getFirst_name());
+                tvToolbarName.setText(user.getFullName());
             edAddToFavourite.setText(R.string.add_to_my_doctors);
             tvContact.setText(R.string.contact_by_chat);
             if (user.getIs_available() != null && user.getIs_available().equals("1"))
@@ -784,7 +784,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             return;
         try {
             if (user.getIs_my_doctor() != null && !TextUtils.isEmpty(user.getIs_my_doctor()) && user.getIs_my_doctor().equals("0"))
-                edAddToFavourite.setText(getString(R.string.add_to_my_doctors));
+                edAddToFavourite.setText(getString(R.string.add_to));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));
         } catch (Exception e) {

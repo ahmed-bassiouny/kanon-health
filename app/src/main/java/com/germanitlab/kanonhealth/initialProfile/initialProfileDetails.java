@@ -32,6 +32,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
@@ -64,11 +65,13 @@ public class initialProfileDetails extends AppCompatActivity {
     private InternetFilesOperations internetFilesOperations;
     ProgressDialog progressDialog;
     PrefManager prefManager;
+    Util util ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPrefManager = new PrefManager(this);
+        util = Util.getInstance(this);
         setContentView(R.layout.profile_details_activity);
         ButterKnife.bind(this);
         prefManager = new PrefManager(this);
@@ -149,7 +152,7 @@ public class initialProfileDetails extends AppCompatActivity {
 
 
             if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")) {
-                showProgressDialog();
+                util.showProgressDialog();
                 final User user = new User();
                 user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
                 user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
@@ -174,7 +177,7 @@ public class initialProfileDetails extends AppCompatActivity {
                             mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
 
                             mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
-                            dismissProgressDialog();
+                            util.dismissProgressDialog();
 //                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
 //                    intent.putExtra("status", 1);
 //                    startActivity(intent);
@@ -226,13 +229,13 @@ public class initialProfileDetails extends AppCompatActivity {
 
 
                         Uri imageUri = data.getData();
-                        showProgressDialog();
+                        util.showProgressDialog();
                         Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
                         ImageHelper.setImage(imageProfile, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
-                                dismissProgressDialog();
+                                util.dismissProgressDialog();
                                 uploadImageResponse = (UploadImageResponse) response;
                                 Log.e("After Casting", uploadImageResponse.getFile_url());
                             }
@@ -270,12 +273,6 @@ public class initialProfileDetails extends AppCompatActivity {
     }
 
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", "Bitte, Warten Sie...", true);
-    }
 
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
 }

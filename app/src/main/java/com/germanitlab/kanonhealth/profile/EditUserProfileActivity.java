@@ -39,6 +39,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -105,6 +106,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
     private String birthdate;
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
+    Util util ;
 
 
     UploadImageResponse uploadImageResponse;
@@ -122,6 +124,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
         try {
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
+            util = Util.getInstance(this);
             ButterKnife.bind(this);
             etFirstName.setSelected(false);
             Intent i = getIntent();
@@ -237,14 +240,14 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
                     case Constants.IMAGE_REQUEST:
                         selectedImageUri = data.getData();
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        showProgressDialog();
+                        util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                         ImageHelper.setImage(imgAvatar, imageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
                                 try {
-                                    dismissProgressDialog();
+                                    util.dismissProgressDialog();
                                     uploadImageResponse = (UploadImageResponse) response;
                                     user.setAvatar(uploadImageResponse.getFile_url());
                                     Log.e("After Casting", uploadImageResponse.getFile_url());
@@ -263,7 +266,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
                         break;
                     case TAKE_PICTURE:
-                        showProgressDialog();
+                        util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         ImageHelper.setImage(imgAvatar, imageUri, this);
@@ -271,7 +274,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
                             @Override
                             public void onSuccess(Object response) {
                                 try {
-                                    dismissProgressDialog();
+                                    util.dismissProgressDialog();
                                     uploadImageResponse = (UploadImageResponse) response;
                                     user.setAvatar(uploadImageResponse.getFile_url());
                                     Log.e("After Casting", uploadImageResponse.getFile_url());
@@ -527,14 +530,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
         // image.setImageBitmap(bitmap);
     }
 
-
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", "Bitte, Warten Sie...", true);
-    }
-
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
     @Override
     public void onGalleryClicked(Intent intent) {

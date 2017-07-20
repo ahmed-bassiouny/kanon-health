@@ -23,6 +23,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
@@ -47,6 +48,7 @@ public class QrActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+    Util util ;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -82,7 +84,7 @@ public class QrActivity extends AppCompatActivity {
     }
 
     public void sendRequest(String key ) {
-        showProgressDialog();
+        util.showProgressDialog();
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -95,7 +97,7 @@ public class QrActivity extends AppCompatActivity {
                     i.putExtra("doctor_data", json);
                     startActivity(i);
                     finish();
-                    DismissProgressDialog();
+                    util.dismissProgressDialog();
 
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -107,7 +109,7 @@ public class QrActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(String error) {
-                DismissProgressDialog();
+                util.dismissProgressDialog();
                 Log.e("My error ", error.toString());
                 linearLayout.setVisibility(View.GONE);
                 errortxt.setVisibility(View.VISIBLE);
@@ -120,6 +122,7 @@ public class QrActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             prefManager = new PrefManager(this);
+            util = Util.getInstance(this);
             String doctorId = prefManager.getData("doctor_id");
             Log.e("Splash User id", doctorId);
             if (doctorId.equals("")) {
@@ -154,14 +157,6 @@ public class QrActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
-    }
-
-    public void DismissProgressDialog() {
-        progressDialog.dismiss();
     }
 
 

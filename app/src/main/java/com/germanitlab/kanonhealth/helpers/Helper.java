@@ -111,8 +111,8 @@ public class Helper {
         if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
             ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1, activity);
         }
-        if(userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFirst_name()) && !TextUtils.isEmpty(userInfoResponse.getUser().getLast_name()))
-            name.setText(userInfoResponse.getUser().getFirst_name().toString() + " " + userInfoResponse.getUser().getLast_name().toString());
+        if(userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName()))
+            name.setText(userInfoResponse.getUser().getFullName());
 //                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
         try {
             Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirthDate().toString());
@@ -126,15 +126,6 @@ public class Helper {
         }
         dialog.show();
     }
-
-    public static void dismissProgressDialog(ProgressDialog progressDialog) {
-        progressDialog.dismiss();
-    }
-
-    public static void showProgressDialog(ProgressDialog progressDialog, Activity activity) {
-        progressDialog = ProgressDialog.show(activity, "", activity.getResources().getString(R.string.waiting_text), true);
-    }
-
 
     public static void showAlertDialog(final Context context, String title, String message
             , DialogInterface.OnClickListener yesClickListener, DialogInterface.OnClickListener noClickListener) {
