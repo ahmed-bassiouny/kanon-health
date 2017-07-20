@@ -487,10 +487,12 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="attach_not_show">Sorry Soemthing Happened in Attachment</string>
     <string name="error_in_getting_default_country">Nicht in der Lage, das Standardland zu erhalten</string>
     <string name="no_country_data">Sorry, no data found</string>
-
-
-
-
+    <string name="details_of_settings">Details of Settings</string>
+    <string name="of_5_stars">of 5 Stars -</string>
+    <string name="scan">Scan</string>
+    <string name="nachricht_schreiben">Nachricht schreiben</string>
+    <string name="closed">Closed</string>
+    <string name="my_qr">My QR</string>
 
 
 </resources>

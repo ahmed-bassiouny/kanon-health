@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/practice_name"
-        android:text=";lkjuhy"
+        android:text=""
         android:textStyle="bold"
         android:textColor="@android:color/background_dark"
         android:layout_alignParentTop="true"

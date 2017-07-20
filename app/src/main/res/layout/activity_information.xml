@@ -148,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="Settings"
+                android:text="@string/settings"
                 android:textColor="@color/blue"
                 android:textStyle="bold" />
 
@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:text="Details of Settings"
+                android:text="@string/details_of_settings"
                 android:textColor="@android:color/background_dark" />
         </LinearLayout>
     </LinearLayout>

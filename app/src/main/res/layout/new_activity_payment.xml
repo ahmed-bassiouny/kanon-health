@@ -86,7 +86,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
-                            android:text="Andrew Andrew"
+                            android:text=""
                             android:textColor="@android:color/background_dark" />
 
                         <TextView
@@ -102,7 +102,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/size_5dp"
-                            android:text="Last name"
+                            android:text=""
                             android:rating="3.5"
                             style="?android:attr/ratingBarStyleSmall"
                             android:textColor="@android:color/background_dark" />
@@ -151,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/size_5dp"
                         android:textSize="20sp"
-                        android:text="9.90 $"
+                        android:text=""
                         android:textColor="@android:color/background_dark" />
 
 

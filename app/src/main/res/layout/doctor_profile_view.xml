@@ -855,7 +855,7 @@
                                 android:layout_marginLeft="8dp"
                                 android:layout_weight="5"
                                 android:gravity="left"
-                                android:text="01280195069"
+                                android:text=""
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16dp" />
 
@@ -871,7 +871,7 @@
                                 android:inputType="phone"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/et_location"
-                                android:text="01280195069"
+                                android:text=""
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16dp"
                                 android:visibility="gone" />
@@ -906,7 +906,7 @@
                                 android:inputType="textPersonName"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_street_name"
-                                android:text="Alexandria, Egypt"
+                                android:text=""
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16dp"
                                 android:visibility="gone" />
@@ -919,7 +919,7 @@
                                 android:layout_marginLeft="8dp"
                                 android:layout_weight="5"
                                 android:gravity="bottom"
-                                android:text="Alexandria, Egypt"
+                                android:text=""
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16dp" />
                         </LinearLayout>

@@ -30,7 +30,7 @@
             android:layout_marginRight="5dp"
             android:gravity="left"
             android:textColor="@color/black"
-            android:text="00" />
+            android:text="" />
 
 
         <LinearLayout
@@ -46,7 +46,7 @@
                 style="@style/chat_timings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="17:10"
+                android:text=""
                 android:layout_marginRight="@dimen/size_5dp"
                 android:textColor="@color/black" />
 

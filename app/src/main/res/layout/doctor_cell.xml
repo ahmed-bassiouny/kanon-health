@@ -54,7 +54,7 @@
         android:layout_toEndOf="@id/tv_doctor_name_cell"
         android:ems="5"
         android:gravity="center"
-        android:text="09:22 AM"
+        android:text=""
         app:layout_marginEndPercent="3%"
         app:layout_marginTopPercent="4%" />
 
@@ -68,7 +68,7 @@
         android:gravity="left"
         android:lines="1"
         android:maxLines="1"
-        android:text="sdfvftghfthfgguhgjghjngnhjkghhngnjkghjnhnhgiignjh"
+        android:text=""
         android:textColor="@color/title_gray"
         android:textSize="@dimen/size_15sp"
         android:visibility="visible"
