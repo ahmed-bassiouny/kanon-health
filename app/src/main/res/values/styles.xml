@@ -24,7 +24,7 @@
         <!-- Customize your theme here -->
     </style>
 
-    <!-- Customized theme for splash screen -->
+    <!-- Customized theme for splash_logo screen -->
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
