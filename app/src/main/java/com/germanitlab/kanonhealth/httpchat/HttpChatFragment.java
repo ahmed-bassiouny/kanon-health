@@ -131,6 +131,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     String userPassword;
     int doctorID;
 
+    int flagIsSent=0;
+
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
     private static final int RECORD_VIDEO = 3;
@@ -221,10 +223,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     // set data in object
     private void initData() {
-        userID = prefManager.getInt(PrefManager.USER_ID);
-        userPassword = prefManager.getData(prefManager.USER_PASSWORD);
         iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
         iamClinic=new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
+
+
+        userID = prefManager.getInt(PrefManager.USER_ID);
+        userPassword = prefManager.getData(prefManager.USER_PASSWORD);
+
         doctorID = getArguments().getInt("doctorID");
         if (userID == doctorID) {
             doctor.setLast_name("My Documents");
@@ -347,31 +352,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     public void changeText() {
 
         if (etMessage.getText().toString().trim().length() > 0) {
-            if (iamDoctor && doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
-                new HttpCall(getActivity(), new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        imgbtn_chat_attach.setEnabled(true);
-                        img_send_audio.setEnabled(true);
-                        img_requestpermission.setEnabled(true);
-                        etMessage.setHint("Nachricht schreiben");
-                        doctor.setIsOpen(1);
-                        userRepository.update(doctor);
-                        checkSessionOpen(iamDoctor);
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        imgbtn_chat_attach.setEnabled(false);
-                        img_send_audio.setEnabled(false);
-                        img_requestpermission.setEnabled(false);
-                        etMessage.setHint("");
-                        etMessage.setHint("Session is Close , Type message to open it");
-                        Toast.makeText(getContext(), "Sorry Session still Closed", Toast.LENGTH_SHORT).show();
-                    }
-                }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
-                        String.valueOf(doctor.getId()), "2");
-            }
 
             img_send_txt.setVisibility(View.VISIBLE);
             img_send_audio.setVisibility(View.GONE);
@@ -393,35 +373,87 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             message.setTo(doctorID);
             message.setMsg(etMessage.getText().toString());
             message.setType(Constants.TEXT);
-            message.setIs_send(false);
             etMessage.setText("");
+            message.setIs_send(false);
+            etMessage.setHint("Nachricht schreiben");
             messages.add(message);
             chatAdapter.setList(messages);
             chatAdapter.notifyDataSetChanged();
             final int index = messages.size() - 1;
             recyclerView.scrollToPosition(index);
 
+            if (iamDoctor&&doctorID!=userID &&doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
+                new HttpCall(getActivity(), new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        imgbtn_chat_attach.setEnabled(true);
+                        img_send_audio.setEnabled(true);
+                        img_requestpermission.setEnabled(true);
+                        doctor.setIsOpen(1);
+                        userRepository.update(doctor);
+                        checkSessionOpen(iamDoctor);
+
+
+                        new HttpCall(getContext(), new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                Message temp = messages.get(index);
+                                temp.setIs_send(true);
+                                messages.set(index, temp);
+                                chatAdapter.setList(messages);
+                                chatAdapter.notifyDataSetChanged();
+                                recyclerView.scrollToPosition(messages.size() - 1);
+                                messageRepositry.create((Message) response);
+                                Toast.makeText(getContext(), "Message  sent", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
+                                removeDummyMessage(index);
+                            }
+                        }).sendMessage(message);
+
+
+                    }
+                    @Override
+                    public void onFailed(String error) {
+                        imgbtn_chat_attach.setEnabled(false);
+                        img_send_audio.setEnabled(false);
+                        img_requestpermission.setEnabled(false);
+                        Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
+                        removeDummyMessage(index);
+                    }
+                }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
+                        String.valueOf(doctor.getId()), "2");
+            }else
+            {
+
+                new HttpCall(getContext(), new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Message temp = messages.get(index);
+                        temp.setIs_send(true);
+                        messages.set(index, temp);
+                        chatAdapter.setList(messages);
+                        chatAdapter.notifyDataSetChanged();
+                        recyclerView.scrollToPosition(messages.size() - 1);
+                        messageRepositry.create((Message) response);
+
+                    }
+
+                    @Override
+                    public void onFailed(String error) {
+                        Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
+                        removeDummyMessage(index);
+                    }
+                }).sendMessage(message);
+
+
+            }
 
             //request
-            new HttpCall(getContext(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    Message temp = messages.get(index);
-                    temp.setIs_send(true);
-                    messages.set(index, temp);
-                    chatAdapter.setList(messages);
-                    chatAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(messages.size() - 1);
-                    messageRepositry.create((Message) response);
 
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
-                    removeDummyMessage(index);
-                }
-            }).sendMessage(message);
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.msg_not_send, Toast.LENGTH_SHORT).show();
             Crashlytics.logException(e);
@@ -1077,7 +1109,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 imgbtn_chat_attach.setEnabled(false);
                 img_send_audio.setEnabled(false);
                 img_requestpermission.setEnabled(false);
-                etMessage.setHint("Session is Close , Type message to open it");
+                etMessage.setHint("Nachricht schreiben");
             }
         } else if (doctor.getIsClinic() == 1) {
             // client chat with clinics
@@ -1268,8 +1300,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
-            if (doctor.isClinic == null)
-                doctor.setIsClinic(0);
+
 
             if (doctor.isClinic == 1) {
                 Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);

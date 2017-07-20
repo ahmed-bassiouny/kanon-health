@@ -261,19 +261,17 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
 
     <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <!--java strings-->
     <string name="app_name">Kanon_Health</string>
     <string name="my_doctors">My Doctor\'s</string>
-    <string name="docor_list">Doctor List</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
 
 
-    <string name="personal_info">Important Information</string>
-    <string name="streat">Streart Name :</string>
-    <string name="provinz">Provinz</string>
+
     <string name="voluntary_information">Freiwillige Informationen</string>
-    <string name="answer">Please Fill Data</string>
 
     <string name="change_phone">Change Phone Number</string>
     <string name="sound_notification"><![CDATA[Sound & Notification]]></string>

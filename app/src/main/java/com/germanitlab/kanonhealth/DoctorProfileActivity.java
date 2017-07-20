@@ -355,7 +355,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void handleNewData() {
         if (tvContact.getText().toString().trim().isEmpty() || edAddToFavourite.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, R.string.answer, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_fill_data, Toast.LENGTH_SHORT).show();
             return;
         }
         user.setSubTitle(tvOnline.getText().toString());
@@ -784,7 +784,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             return;
         try {
             if (user.getIs_my_doctor() != null && !TextUtils.isEmpty(user.getIs_my_doctor()) && user.getIs_my_doctor().equals("0"))
-                edAddToFavourite.setText(getString(R.string.add_to));
+                edAddToFavourite.setText(getString(R.string.add_to_my_doctors));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));
         } catch (Exception e) {

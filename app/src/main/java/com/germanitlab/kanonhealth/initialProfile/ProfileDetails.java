@@ -234,7 +234,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         String birthDate = textBirthday.getText().toString();
         gender_other = edGender.getText().toString();
         if (gender == 3 && gender_other.trim().isEmpty()) {
-            Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
             return;
         }
         if (!firstName.trim().isEmpty() && !lastName.trim().isEmpty() && !birthDate.trim().isEmpty()) {
@@ -277,7 +277,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 }
             }).editProfile(user);
         } else {
-            Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
         }
 
     }

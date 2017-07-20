@@ -199,7 +199,7 @@ public class initialProfileDetails extends AppCompatActivity {
                     }
                 }).editProfile(user);
             } else {
-                Toast.makeText(this, getResources().getString(R.string.answer), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
