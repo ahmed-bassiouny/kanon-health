@@ -130,10 +130,10 @@ public class User implements Serializable {
     private String active;
     @DatabaseField
     @SerializedName("is_doc")
-    private Integer isDoc;
+    private int isDoc;
     @DatabaseField
     @SerializedName("is_clinic")
-    public Integer isClinic;
+    public int isClinic;
     @DatabaseField
     @SerializedName("is_open")
     private int isOpen;
@@ -297,7 +297,7 @@ public class User implements Serializable {
         return id;
     }
 
-    public Integer getIsClinic() {
+    public int getIsClinic() {
         return isClinic;
     }
 
@@ -383,7 +383,7 @@ public class User implements Serializable {
         this.active = active;
     }
 
-    public Integer getIsDoc() {
+    public int getIsDoc() {
         return isDoc;
     }
 

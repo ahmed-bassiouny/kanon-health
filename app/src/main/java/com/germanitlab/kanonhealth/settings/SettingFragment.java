@@ -315,10 +315,6 @@ public class SettingFragment extends Fragment {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (user.getIsDoc() == null || user.getIsClinic() == null) {
-                        Toast.makeText(getActivity(), R.string.sorry_missing_data_please_contact_support, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
                     if (user.getIsDoc() == 1 || user.getIsClinic() == 1) {
                         Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", user);
