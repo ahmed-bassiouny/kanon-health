@@ -1431,4 +1431,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(chatAdapter!=null)
+        chatAdapter.clearSelected();
+    }
 }

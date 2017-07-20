@@ -854,9 +854,9 @@ public class HttpCall {
     }
 
 
-    public void forward(String userID, String password, List id, List doctors) {
+    public void forward(String userID, String password, String msgs, String doctors) {
         try {
-            Forward forward = new Forward(userID, password, id, doctors);
+            Forward forward = new Forward(userID, password, msgs, doctors);
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<JsonObject> connection = service.forward(forward);
             connection.enqueue(new Callback<JsonObject>() {

@@ -66,10 +66,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private int userID;
     private String passowrd;
     List<Integer> list = new ArrayList<>();
+    List<Integer> selectedPositions = new ArrayList<>();
     private boolean selected = false;
     private boolean show_privacy = false; // it's attribte to decide if it's document (show prrivacy) or chat (disappear privacy)
     private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
+    private final int FORWARDMSG=5;
 
     public ChatAdapter(List<Message> messages, final Activity activity, boolean show_privacy) {
         this.activity = activity;
@@ -90,7 +92,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     Intent intent = new Intent(activity, ForwardActivity.class);
                     intent.putExtra("list", (ArrayList<Integer>) list);
                     intent.putExtra("chat_doctor_id", userID);
-                    activity.startActivity(intent);
+                    activity.startActivityForResult(intent,FORWARDMSG);
                 }
             }
         });
@@ -319,14 +321,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    longClick(textMessage, textMsgViewHolder.background);
+                    longClick(textMessage, textMsgViewHolder.background,position);
                     return true;
                 }
             });
             textMsgViewHolder.background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onclick(textMessage, textMsgViewHolder.background);
+                    onclick(textMessage, textMsgViewHolder.background,position);
                 }
             });
 
@@ -380,10 +382,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 @Override
                 public void onClick(View view) {
                     if (selected) {
-                        if (!list.contains(message.get_Id()))
-                            selectItem(imageViewHolder.background, message);
-                        else
-                            unselectItem(imageViewHolder.background, message);
+                        if (!list.contains(message.get_Id())) {
+                            selectItem(imageViewHolder.background, message,position);
+                            selectedPositions.add(position);
+                        }
+                        else {
+                            unselectItem(imageViewHolder.background, message,position);
+                            selectedPositions.remove(position);
+                        }
                     } else {
 
                         File file = new File(mMessages.get(position).getMsg());
@@ -396,7 +402,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imageViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    longClick(message, imageViewHolder.background);
+                    longClick(message, imageViewHolder.background,position);
                     return true;
                 }
             });
@@ -618,10 +624,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     if (!selected) {
                         changeToolbar(true);
                     }
-                    if (!list.contains(mediaMessage.get_Id()))
-                        selectItem(audioViewHolder.background, mediaMessage);
+                    if (!list.contains(mediaMessage.get_Id())) {
+                        selectItem(audioViewHolder.background, mediaMessage,position);
+                        selectedPositions.add(position);
+                    }
                     else {
-                        unselectItem(audioViewHolder.background, mediaMessage);
+                        unselectItem(audioViewHolder.background, mediaMessage,position);
+                        selectedPositions.remove(position);
                     }
 
                     return true;
@@ -631,10 +640,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 @Override
                 public void onClick(View view) {
                     if (selected)
-                        if (!list.contains(mediaMessage.get_Id()))
-                            selectItem(audioViewHolder.background, mediaMessage);
+                        if (!list.contains(mediaMessage.get_Id())) {
+                            selectItem(audioViewHolder.background, mediaMessage,position);
+                            selectedPositions.add(position);
+                        }
                         else {
-                            unselectItem(audioViewHolder.background, mediaMessage);
+                            unselectItem(audioViewHolder.background, mediaMessage,position);
+                            selectedPositions.remove(position);
                         }
                     else {
 
@@ -677,10 +689,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 @Override
                 public void onClick(View view) {
                     if (selected) {
-                        if (!list.contains(locationMessage.get_Id()))
-                            selectItem(imageViewHolder.background, locationMessage);
-                        else
-                            unselectItem(imageViewHolder.background, locationMessage);
+                        if (!list.contains(locationMessage.get_Id())) {
+                            selectItem(imageViewHolder.background, locationMessage,position);
+                            selectedPositions.add(position);
+                        }
+                        else {
+                            unselectItem(imageViewHolder.background, locationMessage,position);
+                            selectedPositions.remove(position);
+                        }
                     } else {
 
                         File file = new File(mMessages.get(position).getMsg());
@@ -693,7 +709,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imageViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    longClick(locationMessage, imageViewHolder.background);
+                    longClick(locationMessage, imageViewHolder.background,position);
                     return true;
                 }
             });
@@ -772,10 +788,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 @Override
                 public void onClick(View view) {
                     if (selected) {
-                        if (!list.contains(message.get_Id()))
-                            selectItem(imageViewHolder.background, message);
-                        else
-                            unselectItem(imageViewHolder.background, message);
+                        if (!list.contains(message.get_Id())) {
+                            selectItem(imageViewHolder.background, message,position);
+                            selectedPositions.add(position);
+                        }
+                        else {
+                            unselectItem(imageViewHolder.background, message,position);
+                            selectedPositions.remove(position);
+                        }
                     } else {
 
                         File file = new File(mMessages.get(position).getMsg());
@@ -788,7 +808,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imageViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    longClick(message, imageViewHolder.background);
+                    longClick(message, imageViewHolder.background,position);
                     return true;
                 }
             });
@@ -800,9 +820,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     }
                 /*-------------------------- Additional important Methods------------*/
 
-    public void selectItem(RelativeLayout messageContainer, Message message) {
+    public void selectItem(RelativeLayout messageContainer, Message message,int position) {
         messageContainer.setBackgroundResource(R.color.gray_black);
         list.add(message.get_Id());
+        selectedPositions.add(position);
     }
 
     public void changeToolbar(Boolean select) {
@@ -818,10 +839,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
-    private void unselectItem(RelativeLayout messageContainer, Message message) {
+    private void unselectItem(RelativeLayout messageContainer, Message message,int position) {
         try {
             messageContainer.setBackgroundResource(0);
             list.remove(list.indexOf(message.get_Id()));
+            selectedPositions.remove(position);
             if (list.size() == 0) {
                 changeToolbar(false);
                 selected = false;
@@ -833,22 +855,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
-    private void longClick(Message textMessage, RelativeLayout background) {
+    private void longClick(Message textMessage, RelativeLayout background,int position) {
         if (!selected) {
             changeToolbar(true);
         }
         if (!list.contains(textMessage.get_Id()))
-            selectItem(background, textMessage);
+            selectItem(background, textMessage,position);
         else
-            unselectItem(background, textMessage);
+            unselectItem(background, textMessage,position);
     }
 
-    private void onclick(Message textMessage, RelativeLayout background) {
+    private void onclick(Message textMessage, RelativeLayout background,int position) {
         if (selected) {
             if (!list.contains(textMessage.get_Id()))
-                selectItem(background, textMessage);
+                selectItem(background, textMessage,position);
             else {
-                unselectItem(background, textMessage);
+                unselectItem(background, textMessage,position);
             }
         }
     }
@@ -975,7 +997,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
     }
 
-    private void showLocationOptions(String title, final int position, String lat, String lng) {
+    /*private void showLocationOptions(String title, final int position, String lat, String lng) {
 
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(activity);
         builderSingle.setTitle(title);
@@ -1014,7 +1036,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         } catch (Exception ex) {
         }
 
-    }
+    }*/
 
     public void playViedo(View view, final String path) {
         try {
@@ -1046,5 +1068,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     }
 
+    public void clearSelected(){
+        if(selectedPositions==null ||selectedPositions.size()==0||list==null||list.size()==0)
+            return;
+        for (Integer position : selectedPositions) {
+            mMessages.get(position);
+            notifyItemChanged(position);
+        }
+        list.clear();
+        selectedPositions.clear();
+        changeToolbar(false);
+    }
 }
 
