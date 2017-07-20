@@ -85,9 +85,12 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<com.google.gson.JsonObject> call, Throwable t) {
+                    if(t != null) {
+                        Log.e("QR ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
 
-                    Log.e("QR ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
                 }
             });
         } catch (Exception e) {
@@ -114,9 +117,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                    Log.e("activateUser ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("activateUser ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
         } catch (Exception e) {
@@ -144,9 +149,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<UserRegisterResponse> call, Throwable t) {
-
-                    Log.e("activateUser ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("activateUser ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
 
@@ -172,9 +179,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    Log.e("activateUser ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("activateUser ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
         } catch (Exception e) {
@@ -202,9 +211,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    Log.e("My User ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if( t != null) {
+                        Log.e("My User ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
         } catch (Exception e) {
@@ -231,9 +242,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    Log.e("My User ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("My User ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
 
@@ -260,9 +273,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    Log.e("My User ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("My User ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
 
@@ -289,9 +304,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    Log.e("My User ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if (t != null) {
+                        Log.e("My User ", " " + t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
 
@@ -315,7 +332,10 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<ArrayList<Speciality>> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -341,9 +361,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                    Log.e("QR ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("QR ", " " + t.getLocalizedMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -371,9 +393,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-
-                    Log.e("QR ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("QR ", " " + t.getLocalizedMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -399,8 +423,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<com.google.gson.JsonObject> call, Throwable t) {
-                    Log.e("PopUp Error", t.getMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        Log.e("PopUp Error", t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -429,6 +456,7 @@ public class HttpCall {
                     if(t!=null) {
                         Log.e("PopUp Error", " api error" + t.getMessage());
                         apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
                     }
                 }
             });
@@ -453,8 +481,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                    Log.e("DoctorResponse ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -478,8 +509,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                    Log.e("DoctorResponse ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -503,8 +537,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<Comment>> call, Throwable t) {
-                    Log.e("DoctorResponse ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -531,9 +568,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<StatusResponse> call, Throwable t) {
-
-                    Log.e("Setting ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -577,8 +616,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<UploadImageResponse> call, Throwable t) {
-                    Log.e("imageUploadFailed", t.toString());
-                }
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }                }
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -606,8 +648,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("QR ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -635,8 +680,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("QR ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -666,8 +714,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<List<String>> call, Throwable t) {
 
-                    Log.e("Qestion ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -697,9 +748,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("delete message fail", call.toString());
-
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -729,8 +782,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("Answers ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -754,7 +810,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<User>> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -779,8 +839,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("Answers ", " " + t.getMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -806,8 +869,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    Log.e("Answers ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -835,8 +901,11 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<SettingResponse> call, Throwable t) {
 
-                    Log.e("Setting ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -862,9 +931,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                    Log.e("Answers ", " " + t.getLocalizedMessage());
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -887,8 +958,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
-                }
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }                }
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -910,7 +984,10 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t != null) {
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -933,7 +1010,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -956,7 +1037,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -978,7 +1063,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1000,7 +1089,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1022,7 +1115,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1044,7 +1141,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<List<ChooseModel>> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1066,7 +1167,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1097,8 +1202,10 @@ public class HttpCall {
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                            Log.e("Answers ", " " + t.getMessage());
-                            apiResponse.onFailed(t.getLocalizedMessage());
+                            if(t!=null) {
+                                Log.e("PopUp Error", " api error" + t.getMessage());
+                                apiResponse.onFailed(t.getLocalizedMessage());
+                            }
                         }
                     });
                 }
@@ -1106,6 +1213,7 @@ public class HttpCall {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     apiResponse.onFailed(t.getLocalizedMessage());
+                    Crashlytics.logException(t);
                 }
             });
         } catch (Exception e) {
@@ -1127,7 +1235,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    apiResponse.onFailed(t.getLocalizedMessage());
+                    if(t!=null) {
+                        Log.e("PopUp Error", " api error" + t.getMessage());
+                        apiResponse.onFailed(t.getLocalizedMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1152,9 +1264,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<MessageResponse> call, Throwable t) {
-                    Log.e("Httpcall", "loadChat: ", t);
-                    Crashlytics.logException(t);
-                    Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+                    if(t != null) {
+                        Log.e("Httpcall", "loadChat: ", t);
+                        Crashlytics.logException(t);
+                        Toast.makeText(context, R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1184,7 +1298,10 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<MessageResponse> call, Throwable t) {
-                    t.printStackTrace();
+                    if(t != null) {
+                        t.printStackTrace();
+                        Crashlytics.logException(t);
+                    }
 
                 }
             });
@@ -1222,9 +1339,10 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<UploadImageResponse> call, Throwable t) {
+                    if(t != null){
                     Crashlytics.logException(t);
                     Log.e("httpcall", "uploadMedia: ", t);
-                    Toast.makeText(context, context.getResources().getText(R.string.cantupload), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getText(R.string.cantupload), Toast.LENGTH_SHORT).show();}
                 }
             });
         } catch (Exception e) {
@@ -1249,8 +1367,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
-                    apiResponse.onFailed(t.getMessage());
+                    if(t != null) {
+                        Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
+                        apiResponse.onFailed(t.getMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1271,8 +1392,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
-                    apiResponse.onFailed(t.getMessage());
+                    if(t != null) {
+                        Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
+                        apiResponse.onFailed(t.getMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1293,8 +1417,11 @@ public class HttpCall {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
-                    apiResponse.onFailed(t.getMessage());
+                    if(t != null) {
+                        Toast.makeText(context, R.string.send_fail, Toast.LENGTH_LONG).show();
+                        apiResponse.onFailed(t.getMessage());
+                        Crashlytics.logException(t);
+                    }
                 }
             });
         } catch (Exception e) {

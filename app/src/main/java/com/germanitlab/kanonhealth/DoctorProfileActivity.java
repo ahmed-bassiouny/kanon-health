@@ -717,19 +717,21 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void getTimaTableData(List<Table> list) {
-        if (user.getOpen_Type() == 3)
-            tvNoTime.setText("permenant_closed");
-        else
-            tvNoTime.setText("Always Open");
-
-        if (list.size() > 0) {
-            llNoTime.setVisibility(View.GONE);
-            tablelayout.removeAllViews();
-            com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-            timeTable.creatTimeTable(list, this, tablelayout);
-        } else
-            llNoTime.setVisibility(View.VISIBLE);
-
+        if(user != null) {
+            if (user.getOpen_Type() == 3)
+                tvNoTime.setText("permenant_closed");
+            else
+                tvNoTime.setText("Always Open");
+            if(list != null) {
+                if (list.size() > 0) {
+                    llNoTime.setVisibility(View.GONE);
+                    tablelayout.removeAllViews();
+                    com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
+                    timeTable.creatTimeTable(list, this, tablelayout);
+                } else
+                    llNoTime.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
 
@@ -765,8 +767,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 new HttpCall(this, new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
-                        user.setIs_my_doctor("0");
-                        checkDoctor();
+                        if (response != null && user != null) {
+                            user.setIs_my_doctor("0");
+                            checkDoctor();
+                        }
                     }
 
                     @Override
