@@ -58,27 +58,30 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         try {
             ChooseModel model = allspecialist.get(position);
-            setDataChecked(holder.rbtn, model.getIsMyChoise());
-            switch (type) {
+            if(model != null) {
+                setDataChecked(holder.rbtn, model.getIsMyChoise());
+                switch (type) {
 
-                case Constants.SPECIALITIES:
-                    holder.tv_title.setText(model.getSpeciality_title());
-                    ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), R.drawable.profile_place_holder, context);
-                    break;
-                case Constants.LANGUAUGE:
-                    holder.tv_title.setText(model.getLang_title());
-                    holder.img_icon.setVisibility(View.GONE);
-                    break;
-                case Constants.MEMBERAT:
-                    break;
-                case Constants.DoctorAll:
-                    holder.tv_title.setText(model.getLast_nameMember() + " " + model.getFirst_nameMember());
-                    ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), R.drawable.profile_place_holder, context);
-                    if (model.getIs_available().equals("1"))
-                        holder.status.setImageResource(R.color.green);
-                    else
-                        holder.status.setImageResource(R.color.gray);
-                    break;
+                    case Constants.SPECIALITIES:
+                        holder.tv_title.setText(model.getSpeciality_title());
+                        ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), R.drawable.profile_place_holder, context);
+                        break;
+                    case Constants.LANGUAUGE:
+                        holder.tv_title.setText(model.getLang_title());
+                        holder.img_icon.setVisibility(View.GONE);
+                        break;
+                    case Constants.MEMBERAT:
+                        break;
+                    case Constants.DoctorAll:
+                        holder.tv_title.setText(model.getLast_nameMember() + " " + model.getFirst_nameMember());
+                        if(holder.img_icon != null && model.getAvatarMember() != null)
+                           ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), R.drawable.profile_place_holder, context);
+                        if (model.getIs_available().equals("1"))
+                            holder.status.setImageResource(R.color.green);
+                        else
+                            holder.status.setImageResource(R.color.gray);
+                        break;
+                }
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

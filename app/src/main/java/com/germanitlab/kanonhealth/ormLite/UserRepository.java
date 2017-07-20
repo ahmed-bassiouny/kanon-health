@@ -174,7 +174,7 @@ public class UserRepository {
             List<User> userList;
             switch (type) {
                 case User.DOCTOR_TYPE:
-                    userList = doctorsDao.queryBuilder().orderByRaw("last_name COLLATE NOCASE ASC").where().eq("isDoc", 1).query();
+                    userList = doctorsDao.queryBuilder().orderByRaw("first_name COLLATE NOCASE ASC").where().eq("isDoc", 1).query();
                     break;
                 case User.CLINICS_TYPE:
                     userList = doctorsDao.queryBuilder().orderByRaw("first_name COLLATE NOCASE ASC").where().eq("isClinic", 1).query();
@@ -182,13 +182,13 @@ public class UserRepository {
                 case User.CLIENT_TYPE:
                     ////////////////start handle from here the query of the user
                     /// handle full scenario of the database from start of the app and the progress dialoge
-                    userList = doctorsDao.queryBuilder().orderByRaw("last_name COLLATE NOCASE ASC ,first_name COLLATE NOCASE ASC").where().eq("isDoc", 0).and().eq("isClinic", 0).query();
+                    userList = doctorsDao.queryBuilder().orderByRaw("first_name COLLATE NOCASE ASC ,first_name COLLATE NOCASE ASC").where().eq("isDoc", 0).and().eq("isClinic", 0).query();
                     break;
                 case User.DOCTOR_AND_CLINICS_TYPE:
                     userList = doctorsDao.queryBuilder().orderByRaw("first_name COLLATE NOCASE ASC").where().eq("isDoc", 1).or().eq("isClinic", 1).query();
                     break;
                 default:
-                    userList = doctorsDao.queryBuilder().orderByRaw("last_name COLLATE NOCASE ASC ,first_name COLLATE NOCASE ASC").where().eq("isDoc", 1).query();
+                    userList = doctorsDao.queryBuilder().orderByRaw("first_name COLLATE NOCASE ASC").where().eq("isDoc", 1).query();
                     break;
             }
             setJsonData(userList);

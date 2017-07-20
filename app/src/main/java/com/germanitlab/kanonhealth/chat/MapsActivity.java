@@ -15,6 +15,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.Specilaities;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -43,6 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ProgressDialog progressDialog;
     int create;
     PrefManager prefManager;
+    Util util ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         final ImageView back, filter;
         create = 2;
+        util = Util.getInstance(this);
         try {
             prefManager = new PrefManager(this);
             back = (ImageView) this.findViewById(R.id.img_btn_back);
@@ -138,7 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         ) {
 
                     LatLng sydney = new LatLng(doctor.getLocation_lat(), doctor.getLocation_long());
-                    mMap.addMarker(new MarkerOptions().position(sydney).title(doctor.getLast_name()+", "+doctor.getFirst_name()));
+                    mMap.addMarker(new MarkerOptions().position(sydney).title(doctor.getFullName()));
                 }
             } else {
                 // Add a marker in Sydney and move the camera
@@ -155,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getBySpeciality(final int id, int type) {
-        showProgressDialog();
+        util.showProgressDialog();
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -163,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.e("Update user response :", "no response found");
                     Gson gson = new Gson();
                     jsonString = gson.toJson(response);
-                    dismissProgressDialog();
+                    util.dismissProgressDialog();
                     layout.setVisibility(View.VISIBLE);
                     jsonString = intent.getStringExtra("Location");
                     Type listType = new TypeToken<List<User>>() {
@@ -181,18 +184,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onFailed(String error) {
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 Log.e("Error", error);
             }
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), id, type);
     }
 
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
-    }
+
+
 }

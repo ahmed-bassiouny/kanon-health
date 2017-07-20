@@ -238,7 +238,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
 
     private void registerUser(String phone, String countryCode) {
-        showProgressDialog();
+        util.showProgressDialog();
         new HttpCall(SignupActivity.this, this).registerUser(phone, countryCode);
     }
 
@@ -262,7 +262,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
                 oldUser = true;
             }
             if (registerResponse.isSucess()) {
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
                 intent.putExtra("number", etMobileNumber.getText().toString());
                 intent.putExtra("codeNumber", code.toString());
@@ -272,7 +272,7 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
             } else {
 
-                dismissProgressDialog();
+                util.dismissProgressDialog();
                 Snackbar snackbar = Snackbar
                         .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
                 snackbar.show();
@@ -298,16 +298,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     @Override
     public void onFailed(String error) {
-        dismissProgressDialog();
+        util.dismissProgressDialog();
         Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-    }
-
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
-    }
-
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
     }
 
     @Override

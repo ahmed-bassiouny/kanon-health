@@ -26,6 +26,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
@@ -59,11 +60,13 @@ public class ForwardActivity extends AppCompatActivity {
     private int entity_type;
     PrefManager prefManager;
     int chat_doctor_id;
+    Util util ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forward);
+        util = Util.getInstance(this);
         try {
             prefManager = new PrefManager(this);
             doctorsForward = new ArrayList<>();
@@ -79,12 +82,12 @@ public class ForwardActivity extends AppCompatActivity {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             ListDoctors = new ArrayList<>();
             edtDoctorListFilter = (EditText) findViewById(R.id.edt_doctor_list_filter);
-            showProgressDialog();
+            util.showProgressDialog();
             new HttpCall(getApplicationContext(), new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
                     try {
-                        dismissProgressDialog();
+                        util.dismissProgressDialog();
                         ListDoctors = (List<User>) response;
                         ChooseList.addAll(ListDoctors);
                         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -104,7 +107,7 @@ public class ForwardActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
-                    dismissProgressDialog();
+                    util.dismissProgressDialog();
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 /*tvLoadingError.setVisibility(View.VISIBLE);
                 if (error != null && error.length() > 0)
@@ -128,7 +131,7 @@ public class ForwardActivity extends AppCompatActivity {
                 if (charSequence.toString().trim().length() > 0) {
                     for (int j = 0; j < ListDoctors.size(); j++) {
 
-                        String name = ListDoctors.get(j).getLast_name()+", "+ListDoctors.get(j).getFirst_name();
+                        String name = ListDoctors.get(j).getFullName();
 
                         if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
@@ -180,7 +183,7 @@ public class ForwardActivity extends AppCompatActivity {
                                 intent.putExtra("doctorID", user.get_Id());
                                 PrefManager prefManager = new PrefManager(ForwardActivity.this);
                                 prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
-                                intent.putExtra("doctorName", user.getLast_name() + " " + user.getFirst_name());
+                                intent.putExtra("doctorName", user.getFullName());
                                 intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
                                 intent.putExtra("doctorUrl", user.getAvatar());
                                 startActivity(intent);
@@ -387,7 +390,7 @@ public class ForwardActivity extends AppCompatActivity {
     }
 
     public void sendRequest(String key, int entity_type) {
-        showProgressDialog();
+        util.showProgressDialog();
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -411,11 +414,5 @@ public class ForwardActivity extends AppCompatActivity {
         }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
     }
 
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
-    }
 }

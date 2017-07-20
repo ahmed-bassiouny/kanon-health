@@ -37,7 +37,6 @@
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"
-        android:textAllCaps="true"
         android:textColor="@color/title_gray"
         android:textSize="@dimen/size_15sp"
         android:textStyle="bold"

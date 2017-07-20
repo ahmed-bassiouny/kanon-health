@@ -137,10 +137,10 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 }
             }
             if (doctor.isClinic == 1) {
-                holder.tvDoctorName.setText(doctor.getFirst_name());
+                holder.tvDoctorName.setText(doctor.getFullName());
                 holder.tvPractice.setVisibility(View.GONE);
             } else {
-                holder.tvDoctorName.setText(doctor.getLast_name() + ", " + doctor.getFirst_name());
+                holder.tvDoctorName.setText(doctor.getFullName());
             }
 
 //            holder.tvAbout.setText(doctor.getAbout());

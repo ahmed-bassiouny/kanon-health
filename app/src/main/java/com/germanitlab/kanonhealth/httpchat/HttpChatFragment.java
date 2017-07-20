@@ -243,8 +243,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getActivity());
-        if(doctor.getLast_name() !=null && doctor.getFirst_name()!=null)
-            tv_chat_user_name.setText(doctor.getLast_name() +" "+ doctor.getFirst_name());
+        if(doctor.getFullName() !=null )
+            tv_chat_user_name.setText(doctor.getFullName());
 
     }
 

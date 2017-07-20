@@ -66,7 +66,8 @@ public class Util {
     }
 
     public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
+        if(context != null)
+           progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
     }
 
     public void dismissProgressDialog() {
@@ -95,10 +96,12 @@ public class Util {
         }
     }
     public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+        if(activity != null) {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) activity.getSystemService(
+                            Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }

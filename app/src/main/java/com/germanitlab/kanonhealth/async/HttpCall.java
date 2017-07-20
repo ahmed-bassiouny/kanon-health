@@ -418,7 +418,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<com.google.gson.JsonObject> call, Response<com.google.gson.JsonObject> response) {
                     Log.d("PopUp Request", "Success");
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -917,10 +920,10 @@ public class HttpCall {
 
     }
 
-    public void rateDoctor(String doc_id, String txtcomment, String rate,String requestId) {
+    public void rateDoctor(String doc_id, String txtcomment, String rate, String requestId) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate,requestId);
+            Comment comment = new Comment(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), "0", doc_id, txtcomment, rate, requestId);
             Call<JsonObject> connection = service.rateDoctor(comment);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -943,7 +946,7 @@ public class HttpCall {
     public void closeSession(String id) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
-            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "","0", id);
+            DoctorRequest mDoctorRequest = new DoctorRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "", "0", id);
             Call<JsonObject> connection = service.closeSession(mDoctorRequest);
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -1172,11 +1175,11 @@ public class HttpCall {
 
                     if (response.body().getStatus() == 1)
 
-                    if (response.body().getStatus()!=null &&response.body().getStatus() == 1)
+                        if (response.body().getStatus() != null && response.body().getStatus() == 1)
 
-                        apiResponse.onSuccess(response.body().getMsg());
-                    else
-                        onFailure(call, new Exception());
+                            apiResponse.onSuccess(response.body().getMsg());
+                        else
+                            onFailure(call, new Exception());
                 }
 
                 @Override
@@ -1255,7 +1258,8 @@ public class HttpCall {
             Crashlytics.logException(e);
         }
     }
-    public void messagesSeen(MessageRequestSeen messageRequest){
+
+    public void messagesSeen(MessageRequestSeen messageRequest) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<JsonObject> connection = service.messagesSeen(messageRequest);
@@ -1276,7 +1280,8 @@ public class HttpCall {
             Crashlytics.logException(e);
         }
     }
-    public void messagesDeliver(MessageRequestSeen messageRequest){
+
+    public void messagesDeliver(MessageRequestSeen messageRequest) {
         try {
             ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
             Call<JsonObject> connection = service.messagesDeliver(messageRequest);

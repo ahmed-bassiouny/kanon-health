@@ -234,21 +234,26 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
-        menu.findItem(R.id.mi_save).setVisible(false);
-        menu.findItem(R.id.mi_edit).setVisible(true);
+        if(menu != null) {
+            try {
+                getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
+                menu.findItem(R.id.mi_save).setVisible(false);
+                menu.findItem(R.id.mi_edit).setVisible(true);
 
 
-        if (is_me) {
-            menu.findItem(R.id.mi_save).setVisible(false);
-            menu.findItem(R.id.mi_edit).setVisible(true);
+                if (is_me) {
+                    menu.findItem(R.id.mi_save).setVisible(false);
+                    menu.findItem(R.id.mi_edit).setVisible(true);
 
-        } else {
-            menu.findItem(R.id.mi_save).setVisible(false);
-            menu.findItem(R.id.mi_edit).setVisible(false);
+                } else {
+                    menu.findItem(R.id.mi_save).setVisible(false);
+                    menu.findItem(R.id.mi_edit).setVisible(false);
+
+                }
+                this.menu = menu;
+            }catch (Exception e){}
 
         }
-        this.menu = menu;
         return true;
     }
 
@@ -674,7 +679,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             if (user.isClinic == 1)
                 tvToolbarName.setText(user.getFirst_name());
             else
-                tvToolbarName.setText(user.getLast_name() + ", " + user.getFirst_name());
+                tvToolbarName.setText(user.getFullName());
             edAddToFavourite.setText(R.string.add_to_my_doctors);
             tvContact.setText(R.string.contact_by_chat);
             if (user.getIs_available() != null && user.getIs_available().equals("1"))
@@ -739,36 +744,38 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void addToMyDoctor() {
         if (is_me)
             return;
+        if (user !=null && !TextUtils.isEmpty(user.getIs_my_doctor()))
+            if (user.getIs_my_doctor().equals("0")) {
+                new HttpCall(this, new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        if (response != null && user != null) {
+                            user.setIs_my_doctor("1");
+                            checkDoctor();
+                        }
+                    }
 
-        if (user.getIs_my_doctor().equals("0")) {
-            new HttpCall(this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    user.setIs_my_doctor("1");
-                    checkDoctor();
-                }
+                    @Override
+                    public void onFailed(String error) {
+                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                        Log.i("Doctor Profile  ", " Activity " + error);
+                    }
+                }).addToMyDoctor(user.get_Id() + "");
+            } else {
+                new HttpCall(this, new ApiResponse() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        user.setIs_my_doctor("0");
+                        checkDoctor();
+                    }
 
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                    Log.i("Doctor Profile  ", " Activity " + error);
-                }
-            }).addToMyDoctor(user.get_Id() + "");
-        } else {
-            new HttpCall(this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    user.setIs_my_doctor("0");
-                    checkDoctor();
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                    Log.i("Doctor Profile  ", " Activity " + error);
-                }
-            }).removeFromMyDoctor(user.get_Id() + "");
-        }
+                    @Override
+                    public void onFailed(String error) {
+                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                        Log.i("Doctor Profile  ", " Activity " + error);
+                    }
+                }).removeFromMyDoctor(user.get_Id() + "");
+            }
 
     }
 
@@ -777,7 +784,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             return;
         try {
             if (user.getIs_my_doctor() != null && !TextUtils.isEmpty(user.getIs_my_doctor()) && user.getIs_my_doctor().equals("0"))
-                edAddToFavourite.setText(getString(R.string.add_to_my_doctors));
+                edAddToFavourite.setText(getString(R.string.add_to));
             else
                 edAddToFavourite.setText(getString(R.string.remove_from));
         } catch (Exception e) {

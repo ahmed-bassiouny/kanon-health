@@ -37,6 +37,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -84,6 +85,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     String gender_other = "Male";
     int gender = 1;
     PrefManager prefManager;
+    Util util ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         try {
             mPrefManager = new PrefManager(this);
             pickerDialog = new PickerDialog();
+            util = Util.getInstance(this);
             setContentView(R.layout.profile_details_activity);
             ButterKnife.bind(this);
             prefManager = new PrefManager(this);
@@ -235,7 +238,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             return;
         }
         if (!firstName.trim().isEmpty() && !lastName.trim().isEmpty() && !birthDate.trim().isEmpty()) {
-            showProgressDialog();
+            util.showProgressDialog();
             final User user = new User();
             user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
@@ -261,7 +264,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
                     mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
                     mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
-                    dismissProgressDialog();
+                    util.dismissProgressDialog();
                     loadData();
 
                 }
@@ -269,7 +272,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 @Override
                 public void onFailed(String error) {
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                    dismissProgressDialog();
+                    util.dismissProgressDialog();
 
                 }
             }).editProfile(user);
@@ -304,14 +307,14 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             switch (requestCode) {
                 case Constants.IMAGE_REQUEST:
                     selectedImageUri = data.getData();
-                    showProgressDialog();
+                    util.showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                     ImageHelper.setImage(imageProfile, selectedImageUri, this);
 
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            dismissProgressDialog();
+                            util.dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
                             Log.e("After Casting", uploadImageResponse.getFile_url());
                             Toast.makeText(ProfileDetails.this, "Upload Success", Toast.LENGTH_SHORT).show();
@@ -326,7 +329,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
                     break;
                 case TAKE_PICTURE:
-                    showProgressDialog();
+                    util.showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
 
                     ImageHelper.setImage(imageProfile, selectedImageUri, this);
@@ -334,7 +337,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     new HttpCall(this, new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            dismissProgressDialog();
+                            util.dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
                             Log.e("After Casting", uploadImageResponse.getFile_url());
                         }
@@ -351,13 +354,6 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     }
 
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", "Bitte, Warten Sie...", true);
-    }
-
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
     @Override
     public void onGalleryClicked(Intent intent) {
@@ -396,6 +392,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
                         intent.putExtra("finish", false);
+                        intent.putExtra("has_back", true);
                         startActivity(intent);
 
 
@@ -420,5 +417,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             finish();
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }

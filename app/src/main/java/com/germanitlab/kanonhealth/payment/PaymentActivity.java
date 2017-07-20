@@ -89,7 +89,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void handelUI(User doctorObj) {
         try {
             if (doctorObj != null) {
-                tvDoctorName.setText(doctorObj.getLast_name()+", "+doctorObj.getFirst_name());
+                tvDoctorName.setText(doctorObj.getFullName());
 
                 ImageHelper.setImage(ivDoctor, Constants.CHAT_SERVER_URL + "/" + doctorObj.getAvatar(), R.drawable.placeholder, this);
 

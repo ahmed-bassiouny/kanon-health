@@ -106,7 +106,7 @@ public class VerificationActivity extends AppCompatActivity {
                 verificationCode = verification_Code.getText().toString();
             }
             final UserRegisterResponse registerResponse = (UserRegisterResponse) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
-            showProgressDialog();
+            util.showProgressDialog();
             new HttpCall(VerificationActivity.this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -133,7 +133,7 @@ public class VerificationActivity extends AppCompatActivity {
                             }).start();
                             CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, registerResponse);
                             joinUser();
-                            dismissProgressDialog();
+                            util.dismissProgressDialog();
                             if (oldUser) {
                                 UserRegisterResponse userRegisterResponse = new UserRegisterResponse( );
                                 userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
@@ -153,6 +153,7 @@ public class VerificationActivity extends AppCompatActivity {
                                         Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
                                         intent.putExtra("checkPassword", false);
                                         intent.putExtra("finish", false);
+                                        intent.putExtra("has_back", false);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -171,7 +172,7 @@ public class VerificationActivity extends AppCompatActivity {
                                 finish();
                             }
                         } else {
-                            dismissProgressDialog();
+                            util.dismissProgressDialog();
                             Snackbar snackbar = Snackbar
                                     .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
                             snackbar.show();
@@ -186,12 +187,12 @@ public class VerificationActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
-                    dismissProgressDialog();
+                    util.dismissProgressDialog();
                     Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 }
             }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
         } catch (Exception e) {
-            dismissProgressDialog();
+            util.dismissProgressDialog();
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
@@ -254,13 +255,6 @@ public class VerificationActivity extends AppCompatActivity {
         }).joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
     }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.waiting_text), true);
-    }
-
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
     @Override
     public void onBackPressed() {

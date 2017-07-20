@@ -119,14 +119,7 @@ public class RateActivity extends AppCompatActivity {
 
             doctor.setId(Integer.valueOf(doc_id));
             doctor = userRepository.getDoctor(doctor);
-
-            if(doctor.isClinic==1)
-            {
-                txt_doctor_name.setText(doctor.getFirst_name());
-            }else
-            {
-                txt_doctor_name.setText(doctor.getSubTitle()+" "+doctor.getFirst_name()+" "+doctor.getLast_name());
-            }
+            txt_doctor_name.setText(doctor.getFullName());
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getApplicationContext());
             }

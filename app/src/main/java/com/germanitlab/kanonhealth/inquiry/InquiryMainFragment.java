@@ -20,6 +20,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -65,6 +66,7 @@ public class InquiryMainFragment extends Fragment {
     UserInfoResponse doctor;
 
     private PrefManager prefManager;
+    Util util ;
 
     @Nullable
     @Override
@@ -73,6 +75,7 @@ public class InquiryMainFragment extends Fragment {
         View root = inflater.inflate(R.layout.questions, container, false);
         ButterKnife.bind(this, root);
         prefManager = new PrefManager(getActivity());
+        util = Util.getInstance(getActivity());
 
         //hide the keyboard
         View view = getActivity().getCurrentFocus();
@@ -163,7 +166,7 @@ public class InquiryMainFragment extends Fragment {
                         final Gson gson = new Gson();
                         doctor = gson.fromJson(jsonString, UserInfoResponse.class);
                         Log.d("doctor Data from QR", jsonString);
-                        showProgressDialog();
+                        util.showProgressDialog();
                         new HttpCall(getActivity(), new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -176,7 +179,7 @@ public class InquiryMainFragment extends Fragment {
                                     intent.putExtra("doctorID", userInfoResponse.getUser().get_Id());
                                     startActivity(intent);
                                     ///////
-                                    dismissProgressDialog();
+                                    util.dismissProgressDialog();
                                     getActivity().finish();
                                 } catch (Exception e) {
                                     Crashlytics.logException(e);
@@ -187,7 +190,7 @@ public class InquiryMainFragment extends Fragment {
 
                             @Override
                             public void onFailed(String error) {
-                                dismissProgressDialog();
+                                util.dismissProgressDialog();
                                 Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
                         }).sendPopUpResult(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD),
@@ -218,12 +221,6 @@ public class InquiryMainFragment extends Fragment {
         return getResources().getString(resource);
     }
 
-    public void showProgressDialog() {
-        progressDialog = ProgressDialog.show(getActivity(), "", "Bitte, Warten Sie...", true);
-    }
 
-    public void dismissProgressDialog() {
-        progressDialog.dismiss();
-    }
 
 }

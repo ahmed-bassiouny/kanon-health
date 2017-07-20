@@ -185,7 +185,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
             is_doctor = false;
 
 
-        tvName.setText(userInfoResponse.getUser().getLast_name() + " " + userInfoResponse.getUser().getFirst_name());
+        tvName.setText(userInfoResponse.getUser().getFullName());
         tvPhone.setText(userInfoResponse.getUser().getCountryCOde() + userInfoResponse.getUser().getPhone());
         try {
             userInfoResponse.getUser().setBirthDate(userInfoResponse.getUser().getBirth_date().toString());
