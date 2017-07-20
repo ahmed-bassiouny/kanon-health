@@ -206,7 +206,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
         tvStreet.setText(userInfoResponse.getUser().getInfo().getStreetname());
         tvHouseNumber.setText(userInfoResponse.getUser().getInfo().getHouseNumber());
-        tvZipCode.setText(userInfoResponse.getUser().getInfo().getZipCode());
+        tvZipCode.setText(userInfoResponse.getUser().getInfo().getZip_code());
         tvProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
         tvCounty.setText(userInfoResponse.getUser().getInfo().getCountry());
         if (!is_doctor) {

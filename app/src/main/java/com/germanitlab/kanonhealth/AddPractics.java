@@ -1,9 +1,8 @@
 package com.germanitlab.kanonhealth;
 
-import android.*;
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -49,7 +48,6 @@ import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
-import com.germanitlab.kanonhealth.settings.SettingFragment;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -121,6 +119,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     Util util;
     UploadImageResponse uploadImageResponse;
     private static final int TAKE_PICTURE = 1;
+    private static final int CROP_PIC = 55;
     int PLACE_PICKER_REQUEST = 22;
     String practics_id = "";
 
@@ -167,7 +166,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     etName.setText(user.getFullName());
                     etLocation.setText(user.getAddress());
                     etHouseNumber.setText(user.getInfo().getHouseNumber());
-                    etZipCode.setText(user.getInfo().getZipCode());
+                    etZipCode.setText(user.getInfo().getZip_code());
                     etProvince.setText(user.getInfo().getProvinz());
                     etCountry.setText(user.getInfo().getCountry());
                     etTelephone.setText(user.getPhone());
@@ -239,7 +238,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             user.setFirst_name(etName.getText().toString());
             user.setAddress(etLocation.getText().toString());
             info.setHouseNumber(etHouseNumber.getText().toString());
-            info.setZipCode(etZipCode.getText().toString());
+            info.setZip_code(etZipCode.getText().toString());
             info.setProvinz(etProvince.getText().toString());
             info.setCountry(etCountry.getText().toString());
             user.setInfo(info);
@@ -535,30 +534,13 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                         pickerDialog.dismiss();
 
                         break;
+                    case CROP_PIC :
+                        afterCropFinish();
+                        break;
                     case TAKE_PICTURE:
                         util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-
-                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                util.dismissProgressDialog();
-                                uploadImageResponse = (UploadImageResponse) response;
-                                user.setAvatar(uploadImageResponse.getFile_url());
-                                Log.e("After Casting", uploadImageResponse.getFile_url());
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                util.dismissProgressDialog();
-                                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                                Log.e("upload image failed :", error);
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
-                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-                        pickerDialog.dismiss();
+                        performCrop();
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -583,6 +565,59 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void performCrop() {
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not
+            // support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(selectedImageUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, CROP_PIC);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            Toast toast = Toast
+                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private void afterCropFinish() {
+        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                util.dismissProgressDialog();
+                uploadImageResponse = (UploadImageResponse) response;
+                user.setAvatar(uploadImageResponse.getFile_url());
+                Log.e("After Casting", uploadImageResponse.getFile_url());
+            }
+
+            @Override
+            public void onFailed(String error) {
+                util.dismissProgressDialog();
+                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                Log.e("upload image failed :", error);
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
+                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
+        pickerDialog.dismiss();
     }
 
     private void getTimaTableData(List<Table> list) {

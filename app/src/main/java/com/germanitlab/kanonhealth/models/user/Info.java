@@ -10,30 +10,59 @@ import java.io.Serializable;
 
 public class Info implements Serializable {
 
-/*
-"info": {
-            "Birthday": "",
-            "Streetname": "",
-            "House number": "",
-            "Zip Code": "",
-            "Provinz": "",
-            "Country": ""
-        },*/
-
 
     @SerializedName("Birthday")
     private String birthday;
-    @SerializedName("Streetname")
+    @SerializedName("streetname")
     private String streetname;
-    @SerializedName("House number")
+    @SerializedName("house_number")
     private String houseNumber;
-    @SerializedName("Zip Code")
-    private String zipCode;
-    @SerializedName("Provinz")
+    @SerializedName("zip_code")
+    private String zip_code;
+    @SerializedName("provinz")
     private String provinz;
-    @SerializedName("Country")
+    @SerializedName("country")
     private String country;
+    @SerializedName("city")
+    private String city;
+    @SerializedName("hotline")
+    private String hotline;
+    @SerializedName("fax")
+    private String fax;
+    @SerializedName("website")
+    private String website;
 
+    public String getHotline() {
+        return hotline;
+    }
+
+    public void setHotline(String hotline) {
+        this.hotline = hotline;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getBirthday() {
         return birthday;
@@ -59,12 +88,12 @@ public class Info implements Serializable {
         this.houseNumber = houseNumber;
     }
 
-    public String getZipCode() {
-        return zipCode;
+    public String getZip_code() {
+        return zip_code;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
+    public void setZip_code(String zip_code) {
+        this.zip_code = zip_code;
     }
 
     public String getProvinz() {

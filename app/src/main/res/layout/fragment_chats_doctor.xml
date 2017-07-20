@@ -78,7 +78,7 @@
                     <Button
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:text="Praxis"
+                        android:text="@string/practice"
                         android:id="@+id/praxis_list"
                         android:layout_height="match_parent" />
                 </LinearLayout>

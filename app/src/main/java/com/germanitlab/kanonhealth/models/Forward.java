@@ -9,11 +9,11 @@ import java.util.List;
 
 public class Forward implements Serializable {
     private String user_id;
+    private String to;
+    private String msg_id;
     private String password;
-    private List<Integer> msg_id;
-    private List<Integer> to;
 
-    public Forward(String user_id, String password, List<Integer> msg_id, List<Integer> to_id) {
+    public Forward(String user_id, String password, String msg_id, String to_id) {
         this.user_id = user_id;
         this.password = password;
         this.msg_id = msg_id;
@@ -36,19 +36,19 @@ public class Forward implements Serializable {
         this.password = password;
     }
 
-    public List<Integer> getMsg_id() {
+    public String getMsg_id() {
         return msg_id;
     }
 
-    public void setMsg_id(List<Integer> msg_id) {
+    public void setMsg_id(String msg_id) {
         this.msg_id = msg_id;
     }
 
-    public List<Integer> getTo_id() {
+    public String getTo_id() {
         return to;
     }
 
-    public void setTo_id(List<Integer> to_id) {
+    public void setTo_id(String to_id) {
         this.to = to_id;
     }
 }

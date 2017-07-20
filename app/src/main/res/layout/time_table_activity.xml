@@ -216,7 +216,7 @@
                             android:layout_gravity="left"
                             android:layout_marginLeft="15dp"
                             android:gravity="left|center"
-                            android:text="Closed"
+                            android:text="@string/closed"
                             android:textColor="@android:color/holo_red_dark" />
                     </LinearLayout>
                 </LinearLayout>

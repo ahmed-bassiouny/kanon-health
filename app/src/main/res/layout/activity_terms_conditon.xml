@@ -44,5 +44,5 @@
         android:gravity="center_horizontal"
         android:padding="@dimen/size_30dp"
         android:textSize="@dimen/size_15sp"
-        android:text="Any thing is here " />
+        android:text="" />
 </LinearLayout>

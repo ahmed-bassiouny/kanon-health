@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_margin="16dp"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,15 +13,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="@string/reviews"
-            android:textSize="20sp"
             android:textColor="@color/black"
-            android:layout_centerInParent="true" />
+            android:textSize="20sp" />
 
         <ImageView
+            android:id="@+id/img_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/img_back"
             android:src="@drawable/ic_arrow_back_black_24dp"
             tools:ignore="ContentDescription" />
 
@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,12 +91,36 @@
             android:rating="5" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/txt_reviews_1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:id="@+id/txt_reviews"
             android:layout_marginStart="15dp"
-            android:text="4.9 of 5 Stars - 300 Reviews" />
+            android:text=""
+            android:textColor="@color/black" />
+
+
+        <TextView
+            android:id="@+id/txt_reviews_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/of_5_stars"
+            android:textColor="@color/black" />
+
+
+        <TextView
+            android:id="@+id/txt_reviews_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/black" />
+
+
+        <TextView
+            android:id="@+id/txt_reviews_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reviews"
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <TableLayout
@@ -108,43 +133,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:weightSum="6"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="6">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:text="@string/five_star"
-                android:layout_weight=".5"
                 android:textColor="@color/black" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_weight="5"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="5">
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:clickable="false"
                     android:id="@+id/temp"
-                    android:background="@drawable/border" />
-
-                <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:clickable="false"
+                    android:background="@drawable/border"
+                    android:clickable="false" />
+
+                <Button
                     android:id="@+id/btn_five_stars"
-                    android:background="@color/colorPrimaryDark" />
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:clickable="false" />
             </FrameLayout>
 
             <TextView
+                android:id="@+id/txt_five_stars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="320"
                 android:layout_marginStart="5dp"
-                android:id="@+id/txt_five_stars"
                 android:layout_weight=".5"
+                android:text=""
                 android:textColor="@color/black" />
         </TableRow>
 
@@ -152,42 +177,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:weightSum="6"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="6">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/four_star"
                 android:layout_weight=".5"
+                android:text="@string/four_star"
                 android:textColor="@color/black" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_weight="5"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="5">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:clickable="false"
-                    android:background="@drawable/border" />
+                    android:background="@drawable/border"
+                    android:clickable="false" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:clickable="false"
                     android:id="@+id/btn_four_stars"
-                    android:background="@color/colorPrimaryDark" />
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:clickable="false" />
             </FrameLayout>
 
             <TextView
+                android:id="@+id/txt_four_stars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="320"
-                android:id="@+id/txt_four_stars"
-                android:layout_weight=".5"
                 android:layout_marginStart="5dp"
+                android:layout_weight=".5"
+                android:text=""
                 android:textColor="@color/black" />
         </TableRow>
 
@@ -195,43 +220,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:weightSum="6"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="6">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/three_star"
                 android:layout_weight=".5"
+                android:text="@string/three_star"
                 android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_weight="5"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="5">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:clickable="false"
-                    android:background="@drawable/border" />
+                    android:background="@drawable/border"
+                    android:clickable="false" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:clickable="false"
-                    android:layout_height="20dp"
                     android:id="@+id/btn_three_stars"
-                    android:background="@color/colorPrimaryDark" />
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:clickable="false" />
             </FrameLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="320"
                 android:id="@+id/txt_three_stars"
-                android:layout_weight=".5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_weight=".5"
+                android:text=""
                 android:textColor="@color/black" />
         </TableRow>
 
@@ -239,42 +264,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:weightSum="6"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="6">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:text="@string/two_star"
-                android:layout_weight=".5"
                 android:textColor="@color/black" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_weight="5"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="5">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:clickable="false"
-                    android:background="@drawable/border" />
+                    android:background="@drawable/border"
+                    android:clickable="false" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:clickable="false"
                     android:id="@+id/btn_two_stars"
-                    android:background="@color/colorPrimaryDark" />
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:clickable="false" />
             </FrameLayout>
 
             <TextView
+                android:id="@+id/txt_two_stars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="320"
-                android:id="@+id/txt_two_stars"
                 android:layout_marginStart="5dp"
                 android:layout_weight=".5"
+                android:text=""
                 android:textColor="@color/black" />
         </TableRow>
 
@@ -282,42 +307,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:weightSum="6"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="6">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/one_star"
                 android:layout_weight=".5"
+                android:text="@string/one_star"
                 android:textColor="@color/black" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_weight="5"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="5">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:clickable="false"
-                    android:background="@drawable/border" />
+                    android:background="@drawable/border"
+                    android:clickable="false" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:clickable="false"
                     android:id="@+id/btn_one_star"
-                    android:background="@color/colorPrimaryDark" />
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:clickable="false" />
             </FrameLayout>
 
             <TextView
+                android:id="@+id/txt_one_star"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="320"
-                android:layout_weight=".5"
-                android:id="@+id/txt_one_star"
                 android:layout_marginStart="5dp"
+                android:layout_weight=".5"
+                android:text=""
                 android:textColor="@color/black" />
         </TableRow>
     </TableLayout>
@@ -331,10 +356,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:scrollbars="vertical"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical" />
 
 
 </LinearLayout>

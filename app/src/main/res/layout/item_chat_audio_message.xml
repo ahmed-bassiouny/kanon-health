@@ -84,7 +84,7 @@
                     android:layout_alignBottom="@id/above"
                     android:layout_gravity="right"
                     android:layout_toRightOf="@id/above"
-                    android:text="17:10"
+                    android:text=""
                     android:textColor="@color/black" />
                 <ImageView
                     android:layout_marginLeft="5dp"

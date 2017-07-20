@@ -129,7 +129,7 @@
                                 android:id="@+id/tv_profile_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Eslam \n A.Gwad"
+                                android:text=""
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="@dimen/size_17sp"
                                 android:textStyle="bold" />
@@ -159,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:padding="@dimen/size_5dp"
-                            android:text="+02 01066253101"
+                            android:text=""
                             android:textColor="@color/colorAccent"
                             android:textStyle="bold" />
 
@@ -214,7 +214,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:text="27.02.1991" />
+                            android:text="" />
 
                     </TableRow>
 
@@ -264,8 +264,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:digits="1234567890"
-                            android:text="14" />
+                            android:digits=""
+                            android:text="" />
 
                     </TableRow>
 
@@ -289,9 +289,9 @@
                             android:id="@+id/tv_profile_zip_code"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:digits="1234567890"
+                            android:digits=""
                             android:layout_weight="2"
-                            android:text="27-02-1991" />
+                            android:text="" />
 
                     </TableRow>
 
@@ -316,7 +316,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:text="11111" />
+                            android:text="" />
 
                     </TableRow>
 

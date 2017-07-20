@@ -98,7 +98,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/above"
                 android:paddingBottom="5dp"
-                android:text="17:10"
+                android:text=""
                 android:textColor="@color/gray_black" />
 
         </LinearLayout>
@@ -133,7 +133,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/image_message"
             android:paddingBottom="5dp"
-            android:text="17:10"
+            android:text=""
             android:textColor="@color/gray_black" />
 
     </LinearLayout>
@@ -178,7 +178,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:paddingBottom="5dp"
-            android:text="17:10"
+            android:text=""
             android:textColor="@color/gray_black" />
     </LinearLayout>
 

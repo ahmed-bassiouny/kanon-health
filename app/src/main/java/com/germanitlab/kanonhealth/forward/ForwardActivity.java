@@ -2,38 +2,32 @@ package com.germanitlab.kanonhealth.forward;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.User;
-import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -49,18 +43,15 @@ public class ForwardActivity extends AppCompatActivity {
     private List<User> ListDoctors;
     private List<User> ChooseList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private DoctorListAdapter mAdapter;
-    ProgressDialog progressDialog;
-    private EditText edtDoctorListFilter;
+    private ForwardAdapter mAdapter;
     ArrayList<Integer> doctorsForward, messagesForward;
     @BindView(R.id.btn_forward_document)
     Button foward_document;
     Boolean search;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
-    private int entity_type;
     PrefManager prefManager;
     int chat_doctor_id;
-    Util util ;
+    Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +64,13 @@ public class ForwardActivity extends AppCompatActivity {
             messagesForward = new ArrayList<>();
             ButterKnife.bind(this);
             search = false;
-            chat_doctor_id = getIntent().getIntExtra("chat_doctor_id",0);
-            if(chat_doctor_id==0) {
+            chat_doctor_id = getIntent().getIntExtra("chat_doctor_id", 0);
+            if (chat_doctor_id == 0) {
                 finish();
                 Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
             }
             messagesForward = getIntent().getIntegerArrayListExtra("list");
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             ListDoctors = new ArrayList<>();
-            edtDoctorListFilter = (EditText) findViewById(R.id.edt_doctor_list_filter);
             util.showProgressDialog();
             new HttpCall(getApplicationContext(), new ApiResponse() {
                 @Override
@@ -100,6 +89,7 @@ public class ForwardActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
 
@@ -109,12 +99,9 @@ public class ForwardActivity extends AppCompatActivity {
                 public void onFailed(String error) {
                     util.dismissProgressDialog();
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                /*tvLoadingError.setVisibility(View.VISIBLE);
-                if (error != null && error.length() > 0)
-                    tvLoadingError.setText(error);
-                else tvLoadingError.setText("Some thing went wrong");*/
+                    finish();
                 }
-            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),"");
+            }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), "");
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -172,26 +159,8 @@ public class ForwardActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    if (doctorsForward.size() > 1) {
-                        Toast.makeText(ForwardActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
-                        for(User user:ListDoctors){
-                            if(user.getId()==doctorsForward.get(0)){
-                                Intent intent = new Intent(ForwardActivity.this, HttpChatActivity.class);
-                                Gson gson = new Gson();
-                                intent.putExtra("doctorID", user.get_Id());
-                                PrefManager prefManager = new PrefManager(ForwardActivity.this);
-                                prefManager.put(prefManager.USER_INTENT, gson.toJson(user));
-                                intent.putExtra("doctorName", user.getFullName());
-                                intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
-                                intent.putExtra("doctorUrl", user.getAvatar());
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-
-                    }
+                    Toast.makeText(ForwardActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
+                    finish();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -205,7 +174,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Log.e("Error", error);
                 Toast.makeText(ForwardActivity.this, getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
             }
-        }).forward(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), messagesForward, doctorsForward);
+        }).forward(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ListtoString(messagesForward), ListtoString(doctorsForward));
     }
 
     private void addListener(RecyclerView recyclerView) {
@@ -229,25 +198,25 @@ public class ForwardActivity extends AppCompatActivity {
 
     private void addToList(View view, int position) {
         try {
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.background);
+            PercentRelativeLayout percentRelativeLayout = (PercentRelativeLayout) view.findViewById(R.id.myrow);
             if (ChooseList.size() == 0) {
                 if (!doctorsForward.contains(ListDoctors.get(position).get_Id())) {
                     doctorsForward.add(ListDoctors.get(position).get_Id());
-                    linearLayout.setBackgroundResource(R.color.gray_black);
+                    percentRelativeLayout.setBackgroundResource(R.color.gray_black);
                     ListDoctors.get(position).setChosen(true);
                 } else {
                     doctorsForward.remove(doctorsForward.indexOf(ListDoctors.get(position).get_Id()));
-                    linearLayout.setBackgroundResource(0);
+                    percentRelativeLayout.setBackgroundResource(0);
                     ListDoctors.get(position).setChosen(false);
                 }
             } else {
                 if (!doctorsForward.contains(ChooseList.get(position).get_Id())) {
                     doctorsForward.add(ChooseList.get(position).get_Id());
-                    linearLayout.setBackgroundResource(R.color.gray_black);
+                    percentRelativeLayout.setBackgroundResource(R.color.gray_black);
                     ChooseList.get(position).setChosen(true);
                 } else {
                     doctorsForward.remove(doctorsForward.indexOf(ChooseList.get(position).get_Id()));
-                    linearLayout.setBackgroundResource(0);
+                    percentRelativeLayout.setBackgroundResource(0);
                     ChooseList.get(position).setChosen(false);
                 }
             }
@@ -261,7 +230,7 @@ public class ForwardActivity extends AppCompatActivity {
     private void setAdapter(List<User> DoctorList) {
         try {
             if (DoctorList != null) {
-                mAdapter = new DoctorListAdapter(DoctorList, this, View.GONE, 3);
+                mAdapter = new ForwardAdapter(DoctorList, this);
                 recyclerView.setAdapter(mAdapter);
             }
         } catch (Exception e) {
@@ -414,5 +383,12 @@ public class ForwardActivity extends AppCompatActivity {
         }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
     }
 
+    private String ListtoString(List<Integer> list) {
+        String result = "";
+        for (Integer item : list) {
+            result += item + ",";
+        }
+        return result.substring(0, (result.length() - 1));
+    }
 
 }

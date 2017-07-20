@@ -37,10 +37,12 @@ public class RateActivity extends AppCompatActivity {
     TextView txt_doctor_name;
     @BindView(R.id.rb_doctor_rate)
     RatingBar rb_doctor_rate;
-    @BindView(R.id.txt_reviews)
-    TextView txt_reviews;
-    @BindView(R.id.img_back)
+    @BindView(R.id.txt_reviews_1)
+    TextView txt_reviews_1;
+    @BindView(R.id.txt_reviews_3)
+    TextView txt_reviews_3;
 
+    @BindView(R.id.img_back)
     ImageView ivBack;
 
     // rate stars Button
@@ -133,7 +135,8 @@ public class RateActivity extends AppCompatActivity {
                     for (String key : rate_percentages.keySet())
                         setRate(key, rate_percentages.get(key));
                     rate_result = (sum_rate_result / sum_rate_number);
-                    txt_reviews.setText(String.format("%.02f", rate_result) + " Of 5 Stars - " + sum_rate_number + " Reviews");
+                    txt_reviews_1.setText(String.format("%.02f", rate_result));
+                    txt_reviews_3.setText(sum_rate_number);
                     rb_doctor_rate.setRating(rate_result);
 
                 }
