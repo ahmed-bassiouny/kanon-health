@@ -38,6 +38,7 @@
                     android:adjustViewBounds="true"
                     android:maxWidth="250dp"
                     android:maxHeight="250dp"
+                    android:scaleType="centerCrop"
                     android:layout_centerInParent="true"
                     android:layout_margin="1dp" />
 

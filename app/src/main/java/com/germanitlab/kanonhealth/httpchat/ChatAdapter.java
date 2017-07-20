@@ -991,7 +991,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             status.setVisibility(View.GONE);
         try {
             String[] split = message.getSent_at().split(" ")[1].split(":");
-            date.setText(split[0] + " " + split[1]);
+            date.setText(split[0] + ":" + split[1]);
         } catch (Exception ex) {
             date.setText(message.getSent_at());
         }

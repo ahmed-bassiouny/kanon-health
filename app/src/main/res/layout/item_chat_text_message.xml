@@ -37,8 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="20dp"
             android:paddingBottom="5dp">
 
             <TextView
@@ -46,8 +44,7 @@
                 style="@style/chat_timings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:layout_marginRight="@dimen/size_5dp"
+                android:text="10:30"
                 android:textColor="@color/black" />
 
             <ImageView
