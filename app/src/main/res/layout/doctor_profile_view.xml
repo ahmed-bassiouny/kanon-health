@@ -197,9 +197,9 @@
                                     android:inputType="textPersonName"
                                     android:lines="1"
                                     android:maxLines="1"
-                                    android:text="@string/add_to"
+                                    android:text="@string/add_to_my_doctors"
                                     android:textColor="@android:color/background_dark"
-                                    android:textSize="15sp" />
+                                    android:textSize="12sp" />
 
                                 <EditText
                                     android:id="@+id/tv_contact"
@@ -242,7 +242,7 @@
                                 android:id="@+id/tv_rating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rating "
+                                android:text="@string/rating"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -290,7 +290,7 @@
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
-                                android:text="Specialities"
+                                android:text="@string/specialities"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -370,7 +370,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/streat"
+                                    android:text="@string/street_name"
                                     android:textColor="@color/black"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
@@ -552,7 +552,7 @@
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
-                                android:text="Location"
+                                android:text="@string/location"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -630,7 +630,7 @@
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
-                                android:text="Languages"
+                                android:text="@string/languages"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -688,8 +688,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
-                                android:text="Member In Practice"
-
+                                android:text="@string/member_in_practice"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -745,7 +744,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="3dp"
-                                android:text="@string/important_info"
+                                android:text="@string/important_information"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -771,7 +770,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="bottom"
                                 android:hint="@string/first_name"
-                                android:text="Working Hours"
+                                android:text="@string/working_hours"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -809,7 +808,7 @@
                                 android:layout_weight="2"
                                 android:gravity="center"
                                 android:padding="@dimen/size_5dp"
-                                android:text="No Time has set"
+                                android:text="@string/no_time_has_set"
                                 android:textColor="@color/red"
                                 android:textCursorDrawable="@color/black"
                                 android:textStyle="bold" />
@@ -843,7 +842,7 @@
                                 android:layout_weight="2"
                                 android:gravity="left"
                                 android:hint="@string/first_name"
-                                android:text="Tel : "
+                                android:text="@string/telephone"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16dp" />
 
@@ -890,7 +889,7 @@
                                 android:layout_weight="2"
                                 android:gravity="left"
                                 android:hint="@string/first_name"
-                                android:text="Location : "
+                                android:text="@string/location"
                                 android:textColor="@android:color/background_dark"
                                 android:textSize="16dp" />
 

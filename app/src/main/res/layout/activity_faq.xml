@@ -40,41 +40,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/size_30dp"
-        android:text="How to use ? "
+        android:text="@string/how_to_use"
         android:textSize="@dimen/size_15sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/size_30dp"
-        android:text="the answer here "
+        android:text="@string/the_answer_is_here"
         android:textSize="@dimen/size_15sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/size_30dp"
-        android:text="How to use ? "
+        android:text="@string/how_to_use"
         android:textSize="@dimen/size_15sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/size_30dp"
-        android:text="the answer here "
+        android:text="@string/the_answer_is_here"
         android:textSize="@dimen/size_15sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/size_30dp"
-        android:text="How to use ? "
+        android:text="@string/how_to_use"
         android:textSize="@dimen/size_15sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/size_30dp"
-        android:text="the answer here "
+        android:text="@string/the_answer_is_here"
         android:textSize="@dimen/size_15sp" />
 </LinearLayout>

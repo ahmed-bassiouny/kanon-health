@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Opening Hours"
+            android:text="@string/opening_hours"
             android:textSize="18sp"
             android:textColor="@color/white" />
 
@@ -69,7 +69,7 @@
                         android:button="@null"
                         android:drawablePadding="30dp"
                         android:drawableRight="@android:drawable/btn_radio"
-                        android:text="Use Timetable"
+                        android:text="@string/use_timetable"
                         android:textSize="20dip" />
 
                     <RadioButton
@@ -79,7 +79,7 @@
                         android:button="@null"
                         android:drawablePadding="30dp"
                         android:drawableRight="@android:drawable/btn_radio"
-                        android:text="Always open"
+                        android:text="@string/always_open"
                         android:textSize="20dp" />
 
                     <RadioButton
@@ -89,7 +89,7 @@
                         android:button="@null"
                         android:drawablePadding="30dp"
                         android:drawableRight="@android:drawable/btn_radio"
-                        android:text="no hours avaliable"
+                        android:text="@string/no_hours_available"
                         android:textSize="20dp" />
 
                     <RadioButton
@@ -99,7 +99,7 @@
                         android:button="@null"
                         android:drawablePadding="30dp"
                         android:drawableRight="@android:drawable/btn_radio"
-                        android:text="Peramenant Closed"
+                        android:text="@string/permanently_closed"
                         android:textSize="20dp" />
                 </RadioGroup>
 

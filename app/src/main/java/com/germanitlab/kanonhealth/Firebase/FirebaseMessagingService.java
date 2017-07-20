@@ -69,7 +69,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     }
                     break;
                 case 2:
-                    getLogin(remoteMessage);
+                    if(remoteMessage.getData().get("body")!=null &&remoteMessage.getData().get("title")!=null)
+                    Notification.showNotification(this, remoteMessage.getData().get("body"), remoteMessage.getData().get("title"),"",false);
                     break;
                 case 3:
                 case 6:
@@ -124,6 +125,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     private void getLogin(RemoteMessage remoteMessage) {
         showNotification(remoteMessage.getData().get("body"), remoteMessage.getData().get("title"), 0, 0, false);
+
     }
 
     private void getMessage(RemoteMessage remoteMessage,int notificationtype) {

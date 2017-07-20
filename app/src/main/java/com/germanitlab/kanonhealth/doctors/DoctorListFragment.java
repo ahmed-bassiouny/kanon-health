@@ -39,6 +39,7 @@ import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
+import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -212,7 +213,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
             }
-        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),getIam());
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -238,7 +239,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
             }
-        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD));
+        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),getIam());
     }
     private void updateDataBase(List<User> doctorList) {
         for (User user : doctorList) {
@@ -582,6 +583,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             return 0;
         }
 
+    }
+    private String getIam(){
+        Gson gson = new Gson();
+        if(gson.fromJson(prefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsDoc()==1)
+            return "doc";
+        else if(gson.fromJson(prefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsClinic()==1)
+            return "clinic";
+        else
+            return "user";
     }
 
 

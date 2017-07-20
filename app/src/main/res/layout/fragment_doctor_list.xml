@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/gray"
-                android:text="Doctors"
+                android:text="@string/doctors"
                 android:textAllCaps="false" />
 
             <Button
@@ -47,7 +47,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/gray"
-                android:text="Practice"
+                android:text="@string/practice"
                 android:textAllCaps="false" />
         </LinearLayout>
 

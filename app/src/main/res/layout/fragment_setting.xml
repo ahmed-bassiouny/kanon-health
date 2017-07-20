@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/setting"
+        android:text="@string/settings"
         android:textColor="@color/black" />
 
 
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="My Profile"
+                    android:text="@string/my_profile"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="KanonHealth Web"
+                    android:text="@string/kanon_health_web"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -151,7 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="Requset Dr. status"
+                    android:text="@string/request_doctor_status"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -179,7 +179,7 @@
                     android:layout_margin="@dimen/size_10sp"
                     android:paddingLeft="@dimen/size_20dp"
                     android:visibility="gone"
-                    android:text="Add Practice"
+                    android:text="@string/add_practice"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -229,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="Recommend This app to your friends"
+                    android:text="@string/recommend_this_app_to_your_friends"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -258,7 +258,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="@string/change_phone"
+                    android:text="@string/change_phone_number"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -286,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="@string/sound_notification"
+                    android:text="@string/sound_and_notification"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -314,7 +314,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="@string/terms_conditions"
+                    android:text="@string/terms_and_conditions"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -370,7 +370,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="@string/contact_support"
+                    android:text="@string/sorry_missing_data_please_contact_support"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -454,7 +454,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="10dp"
                     android:paddingLeft="@dimen/size_15dp"
-                    android:text="@string/youareoffline"
+                    android:text="@string/you_are_now_offline"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
             </TableRow>

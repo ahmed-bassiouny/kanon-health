@@ -184,7 +184,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(this, getResources().getText(R.string.contact_support), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getText(R.string.sorry_missing_data_please_contact_support), Toast.LENGTH_SHORT).show();
             finish();
         }
 

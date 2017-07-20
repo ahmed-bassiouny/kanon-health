@@ -99,7 +99,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/borderedittext"
                 android:gravity="top"
-                android:hint="@string/write_review_hint"
+                android:hint="@string/write_a_review"
                 android:imeOptions="actionSend"
                 android:inputType="textMultiLine"
                 android:padding="10dp"
@@ -113,7 +113,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:text="@string/evp_submit" />
+                android:text="@string/submit" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

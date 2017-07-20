@@ -16,6 +16,8 @@ public class BasicRequest implements Serializable {
     private String password;
     @SerializedName("is_array")
     private int isArray;
+    @SerializedName("im")
+    private String im;
 
     private int is_object = 1;
 
@@ -24,10 +26,11 @@ public class BasicRequest implements Serializable {
         this.password = password;
     }
 
-    public BasicRequest(String userID, String password, int isArray) {
+    public BasicRequest(String userID, String password, int isArray,String im) {
         this.userID = userID;
         this.password = password;
         this.isArray = isArray;
+        this.im=im;
     }
 
     public String getUserID() {

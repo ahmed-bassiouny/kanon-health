@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Opening Hours"
+            android:text="@string/opening_hours"
             android:textSize="18sp"
             android:textColor="@color/black" />
 
@@ -106,7 +106,7 @@
                     android:gravity="center_vertical"
                     android:textSize="@dimen/size_17sp"
                     android:textColor="@color/black"
-                    android:text="Schedule" />
+                    android:text="@string/schedule" />
 
                 <ImageView
                     android:checked="true"
@@ -129,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:text="Opening Hours"
+                    android:text="@string/opening_hours"
                     android:textColor="@android:color/background_dark" />
             </LinearLayout>
 
@@ -152,7 +152,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:gravity="center|left"
-                        android:text="Monday"
+                        android:text="@string/monday"
                         android:textColor="@android:color/background_dark" />
 
                     <Switch
@@ -182,7 +182,7 @@
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="from"
+                            android:text="@string/from"
                             android:textColor="@android:color/background_dark" />
 
                         <TextView
@@ -191,7 +191,7 @@
                             android:layout_gravity="center"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="to"
+                            android:text="@string/to"
                             android:textColor="@android:color/background_dark" />
 
 
@@ -240,7 +240,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:gravity="center|left"
-                            android:text="Tuesday"
+                            android:text="@string/tuesday"
                             android:textColor="@android:color/background_dark" />
 
                         <Switch
@@ -270,7 +270,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="from"
+                                android:text="@string/from"
                                 android:textColor="@android:color/background_dark" />
 
                             <TextView
@@ -279,7 +279,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="to"
+                                android:text="@string/to"
                                 android:textColor="@android:color/background_dark" />
 
 
@@ -313,7 +313,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:gravity="center|left"
-                            android:text="Wednesday"
+                            android:text="@string/wednesday"
                             android:textColor="@android:color/background_dark" />
 
                         <Switch
@@ -343,7 +343,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="from"
+                                android:text="@string/from"
                                 android:textColor="@android:color/background_dark" />
 
                             <TextView
@@ -352,7 +352,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="to"
+                                android:text="@string/to"
                                 android:textColor="@android:color/background_dark" />
 
 
@@ -385,7 +385,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:gravity="center|left"
-                            android:text="Thursday"
+                            android:text="@string/thursday"
                             android:textColor="@android:color/background_dark" />
 
                         <Switch
@@ -415,7 +415,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="from"
+                                android:text="@string/from"
                                 android:textColor="@android:color/background_dark" />
 
                             <TextView
@@ -424,7 +424,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="to"
+                                android:text="@string/to"
                                 android:textColor="@android:color/background_dark" />
 
 
@@ -457,7 +457,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:gravity="center|left"
-                            android:text="Friday"
+                            android:text="@string/friday"
                             android:textColor="@android:color/background_dark" />
 
                         <Switch
@@ -487,7 +487,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="from"
+                                android:text="@string/from"
                                 android:textColor="@android:color/background_dark" />
 
                             <TextView
@@ -496,7 +496,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="to"
+                                android:text="@string/to"
                                 android:textColor="@android:color/background_dark" />
 
 
@@ -529,7 +529,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:gravity="center|left"
-                            android:text="Saturday"
+                            android:text="@string/saturday"
                             android:textColor="@android:color/background_dark" />
 
                         <Switch
@@ -559,7 +559,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="from"
+                                android:text="@string/from"
                                 android:textColor="@android:color/background_dark" />
 
                             <TextView
@@ -568,7 +568,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="to"
+                                android:text="@string/to"
                                 android:textColor="@android:color/background_dark" />
 
 
@@ -601,7 +601,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:gravity="center|left"
-                            android:text="Sunday"
+                            android:text="@string/sunday"
                             android:textColor="@android:color/background_dark" />
 
                         <Switch
@@ -631,7 +631,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="from"
+                                android:text="@string/from"
                                 android:textColor="@android:color/background_dark" />
 
                             <TextView
@@ -640,7 +640,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="to"
+                                android:text="@string/to"
                                 android:textColor="@android:color/background_dark" />
 
 

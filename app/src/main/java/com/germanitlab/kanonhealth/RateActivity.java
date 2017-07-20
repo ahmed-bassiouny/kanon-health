@@ -131,7 +131,6 @@ public class RateActivity extends AppCompatActivity {
                 ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getApplicationContext());
             }
 
-
             txt_one_star.post(new TimerTask() {
                 @Override
                 public void run() {
@@ -152,7 +151,6 @@ public class RateActivity extends AppCompatActivity {
             Log.e("Rate Activity", "", e);
 
         }
-
 
     }
 

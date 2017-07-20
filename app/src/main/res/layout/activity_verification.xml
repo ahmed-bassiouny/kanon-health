@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/enter_verification_code"
+            android:text="@string/enter_your_verification_code"
             android:textColor="@color/black"
             android:textSize="@dimen/size_17sp"
             android:textStyle="bold" />
@@ -80,7 +80,7 @@
                 android:background="@drawable/round"
                 android:paddingLeft="@dimen/size_40dp"
                 android:paddingRight="@dimen/size_40dp"
-                android:text="@string/verify_code"
+                android:text="@string/verify"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/size_17sp" />
@@ -94,7 +94,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/size_3dp"
                 android:padding="@dimen/size_5dp"
-                android:text="@string/resend_message"
+                android:text="@string/if_you_did_not_receive_an_sms_tab_the_resend_button_below"
                 android:textColor="@color/black" />
 
             <Button

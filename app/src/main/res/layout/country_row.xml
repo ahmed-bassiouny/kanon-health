@@ -25,7 +25,7 @@
         android:maxLines="1"
         android:paddingBottom="1dp"
         android:paddingTop="@dimen/size_10dp"
-        android:text="Germany"
+        android:text="@string/germany"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp" />
 

@@ -47,7 +47,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Forward to"
+                android:text="@string/forward_to"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:gravity="center" />
@@ -60,13 +60,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scan"
-        android:text="Scan Qr Code" />
+        android:text="@string/scan_qr_code" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_forward_document"
-        android:text="Add to My document" />
+        android:text="@string/add_to_my_account" />
 
     <EditText
         android:id="@+id/edt_doctor_list_filter"

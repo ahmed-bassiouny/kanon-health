@@ -16,7 +16,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/rp"
+            android:text="@string/recipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_rp"
@@ -33,7 +33,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/uberweisung"
+            android:text="@string/transfer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_uberweisung"
@@ -51,7 +51,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/krankenhaus_einweisung"
+            android:text="@string/hospitalization"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_krankenhaus"
@@ -88,7 +88,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/attest"
+            android:text="@string/certificate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_attest"
@@ -110,7 +110,7 @@
 
     <TextView
 
-        android:text="@string/untershchung"
+        android:text="@string/examination"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

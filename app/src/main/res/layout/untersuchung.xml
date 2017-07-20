@@ -17,7 +17,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/körperliche_untersuchung"
+            android:text="@string/physical_examination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_koperliche"
@@ -35,7 +35,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/laboruntersuchung"
+            android:text="@string/laboratory_investigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -54,7 +54,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/technische_untersuchung"
+            android:text="@string/technical_inspection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_techische"
@@ -72,7 +72,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/herz_abhorchen"
+            android:text="@string/heart_listen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_herz"
@@ -91,7 +91,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/sonstiges"
+            android:text="@string/others"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_sonstiges"

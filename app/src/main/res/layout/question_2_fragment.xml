@@ -17,6 +17,7 @@
             android:src="@drawable/ic_check_black_24dp"
             android:id="@+id/button_finish"
             android:onClick="addMyQuestionsAnswer"
+            android:padding="@dimen/size_10dp"
             android:layout_gravity="right" />
     </LinearLayout>
 
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
-            android:text="@string/körperliche_untersuchung"
+            android:text="@string/physical_examination"
             android:textColor="@android:color/background_dark"
             android:textSize="16dp" />
     </LinearLayout>
@@ -69,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
-            android:hint="@string/answer"
+            android:hint="@string/please_fill_data"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:nextFocusForward="@+id/text_question2_fragment"
@@ -103,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
-            android:text="@string/technische_untersuchung"
+            android:text="@string/technical_inspection"
             android:textColor="@android:color/background_dark"
             android:textSize="16dp" />
     </LinearLayout>
@@ -129,7 +130,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
             android:inputType="text"
-            android:hint="@string/answer"
+            android:hint="@string/please_fill_data"
             android:imeOptions="actionNext"
             android:textColor="@android:color/background_dark"
             android:textSize="16dp" />

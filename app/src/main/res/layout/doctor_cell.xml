@@ -86,7 +86,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"
-        android:text="Specialities"
+        android:text="@string/specialities"
         android:textColor="@color/text_msg_input"
         android:textSize="@dimen/size_15sp"
         app:layout_heightPercent="20%"

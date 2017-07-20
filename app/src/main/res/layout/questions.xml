@@ -19,7 +19,7 @@
         android:gravity="center">
 
         <TextView
-            android:text="@string/main_question"
+            android:text="@string/please_choose_the_reason_for_your_visit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/text_welcome"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/round"
             android:drawableLeft="@drawable/documents_white"
-            android:text="@string/medizinische_dokumente"
+            android:text="@string/medical_documents"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_untersuchung"
-            android:text="@string/untershchung"
+            android:text="@string/examination"
             android:textStyle="bold"
             android:drawableLeft="@drawable/consultation"
             android:textAllCaps="false"
@@ -94,7 +94,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/ich"
+            android:text="@string/i_have_an_appointment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_Ich"
@@ -113,7 +113,7 @@
         android:gravity="center">
 
         <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:text="Fertig"
+            android:text="@string/finished"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_submit"

@@ -1,78 +1,323 @@
 <resources>
+
+    <!--add practices.xml-->
+    <string name="practice_profile">Praxisprofil</string>
+    <string name="name">Name</string>
+    <string name="invite_other_doctor">Einen anderen Arzt einladen +</string>
+    <string name="specialities">Spezialitäten</string>
+    <string name="location">Standort</string>
+    <string name="street_name">Straßenname</string>
+    <string name="house_number">Hausnummer</string>
+    <string name="zip_code">Postleitzahl</string>
+    <string name="city">Stadt</string>
+    <string name="province">Provinz</string>
+    <string name="country">Land</string>
+    <string name="location_on_map_manual">Lage auf der Karte (Handbuch)</string>
+    <string name="languages">Sprachen</string>
+    <string name="working_hours">Arbeitszeiten</string>
+    <string name="no_time_has_set">Keine Zeiten angegeben</string>
+    <string name="telephone">Telefon</string>
+    <string name="practice_documents">Üben Dokumente</string>
+
+
+
+    <!--comment.xml-->
+    <string name="please_rate">bitte bewerten</string>
+    <string name="submit">einreichen</string>
+    <string name="write_a_review">eine Rezension schreiben...</string>
+
+
+    <!--country_activity.xml-->
+    <string name="sorry_no_data_found">Sorry keine Daten gefunden</string>
+
+
+    <!--doctor_map.xml-->
+    <string name="back">zurück</string>
+    <string name="doctor_list">Doktorliste</string>
+    <string name="all_doctors">Alle Ärzte</string>
+
+
+    <!--documents_update.xml-->
+    <string name="update_document">Dokument aktualisieren</string>
+    <string name="date">Datum</string>
+    <string name="category">Kategorie</string>
+    <string name="doctor">Arzt</string>
+    <string name="diagnose">Diagnostizieren</string>
+    <string name="report">Bericht</string>
+    <string name="comment">Kommentar</string>
+
+
+    <!--faq.xml-->
+    <string name="faq">FAQ</string>
+    <string name="how_to_use">wie benutzt man?</string>
+    <string name="the_answer_is_here">Hier ist die Antwort</string>
+
+
+
+
+    <!--activity_forward.xml-->
+    <string name="forward_to">Weiterleiten</string>
+    <string name="scan_qr_code">QR-Code scannen</string>
+    <string name="add_to_my_account">Zu meinem Dokument hinzufügen</string>
+    <string name="search">Suche</string>
+
+    <!--help.xml-->
+    <string name="text">Text</string>
+
+
+
+    <!--information.xml-->
+    <string name="details_of_doctor_list">Details der Liste des Arztes</string>
+    <string name="documents">Dokumente</string>
+    <string name="details_of_documents">Details der Dokumente</string>
+    <string name="chat">Chat</string>
+    <string name="details_of_chat">Details von Chat</string>
+    <string name="contacts">Kontakte</string>
+    <string name="settings">Einstellungen</string>
+
+
+
+
+    <!--opening hours.xml-->
+    <string name="opening_hours">Öffnungszeiten</string>
+    <string name="use_timetable">Zeitplan verwenden</string>
+    <string name="always_open">immer offen</string>
+    <string name="no_hours_available">Keine stunden verfügbar</string>
+    <string name="permanently_closed">Dauerhaft geschlossen</string>
+    <string name="save">sparen</string>
+
+
+    <!--pre request.xml-->
+    <string name="in_order_to_chat_to_the_doctor_click_on_the_image_below_and_select_your_payment_method">Um mit dem Arzt zu chatten, klicken Sie auf das Bild unten und wählen Sie Ihre Zahlungsmethode</string>
+
+
+
+
+    <!--qr activity.xml-->
+    <string name="client">Klient</string>
+    <string name="cancel">stornieren</string>
+
+
+    <!--qr layout.xml-->
+    <string name="dear_patients_in_order_to_help_you_quickly_and_easily_we_have_developed_for_you_an_own_practice_APP_With_the_QR_code_you_can_dial_into_the_practice_please_let_us_know_your_concerns_by_selecting_the_options_and_provide_them_with_your_photos_in_the_form_of_a_photo">Liebe Patienten, um Ihnen schnell und einfach helfen zu können, haben wir für Sie eine eigene Praxis APP entwickelt.
+\n \n
+Mit dem  QR Code können Sie sich in die Praxis einwählen.
+\n \n
+Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen sie Ihre mitgebrachten Dokumente in Form eines Fotos uns zur Verfügung.</string>
+    <string name="error_in_loading_doctor_data">Fehler beim Laden der Doktordaten</string>
+
+    <!--rate.xml-->
+    <string name="one_star">1 Sterne</string>
+    <string name="two_star">2 Sterne</string>
+    <string name="three_star">3 Sterne</string>
+    <string name="four_star">4 Sterne</string>
+    <string name="five_star">5 Sterne</string>
+    <string name="reviews">Bewertungen</string>
+
+
+    <string name="verify_your_number">Verifiziere deine Nummer</string>
+    <string name="the_practice_app_sends_an_sms_to_verify_your_phone_number_enter_your_country_code_and_phone_number">Die Praxis APP sendet eine SMS, um deine Telefonnummer zu verifizieren. Gib deinen Landescode und deine Telefonnumer ein</string>
+    <string name="select_your_country">Wähle dein Land</string>
+    <string name="signup">Anmelden</string>
+
+    <!--support.xml-->
+    <string name="sorry_missing_data_please_contact_support">Fehlende Daten, bitte Kontakt mit Support</string>
+
+    <!--terms conditions.xml-->
+    <string name="terms_and_conditions">Geschäftsbedingungen</string>
+
+    <!--verification.xml-->
+    <string name="verifcation">Überprüfung</string>
+    <string name="enter_your_verification_code">Geben Sie Ihren Bestätigungs-Code ein</string>
+    <string name="verify">überprüfen</string>
+    <string name="resend">erneut senden</string>
+    <string name="if_you_did_not_receive_an_sms_tab_the_resend_button_below">Wenn Sie keine SMS erhalten haben, klicken Sie auf die Schaltfläche "Weiter"</string>
+
+
+    <!--country row.xml-->
+    <string name="germany">Deutschland</string>
+
+
+    <!--custom dialog.xml-->
+    <string name="login">Anmeldung</string>
+    <string name="show_profile">Zeige Profil</string>
+
+    <!--doctor edit profile.xml-->
+    <string name="my_profile">mein Profil</string>
+    <string name="important_information">Wichtige Informationen :</string>
+    <string name="last_name">Nachname</string>
+    <string name="first_name">Vorname</string>
+    <string name="birthday">Geburtstag</string>
+
+    <!--doctor profile view.xml-->
+    <string name="main_profile">Hauptprofile</string>
+    <string name="status_online">Stauts online</string>
+    <string name="status_offline">Stauts offline</string>
+    <string name="add_to_my_doctors">Füge meinen Ärzten hinzu</string>
+    <string name="contact_by_chat">Kontakt per Chat</string>
+    <string name="rating">Bewertung</string>
+    <string name="member_in_practice">Mitglied in Praxis</string>
+
+
+    <!--fragment chat doctors.xml-->
+    <string name="doctors">Ärzte</string>
+    <string name="practice">Praxen</string>
+
+    <!--fragment http chat.xml-->
+    <string name="start_new_request">Neue Anfrage starten</string>
+    <string name="rate_your_last_request">Bewerte deine letzte Anfrage</string>
+    <string name="write_message">Nachricht schreibens</string>
+
+    <!--fragment profile.xml-->
+    <string name="edit">bearbeiten</string>
+
+
+    <!--fragment setting.xml-->
+    <string name="change_passcode">Passcode ändern</string>
+    <string name="kanon_health_web">KanonHealth Web</string>
+    <string name="request_doctor_status">Arzt Status beantragen</string>
+    <string name="add_practice">Klinik hinzufügen</string>
+    <string name="recommend_this_app_to_your_friends">Diese app an Freunde weiterempfehlen</string>
+    <string name="change_phone_number">Telefonnummer ändern</string>
+    <string name="sound_and_notification">Ton und Benachrichtigung</string>
+    <string name="version">Version</string>
+    <string name="you_are_now_offline">Du bist jetzt offline</string>
+    <string name="you_are_now_online">Du bist jetzt online</string>
+    <string name="go_online">Online gehen</string>
+    <string name="go_offline">offline gehen</string>
+
+
+    <!--image picker dialog.xml-->
+    <string name="take_new_image">Nehme neues Bild</string>
+    <string name="select_from_gallery">Aus gallary auswählen</string>
+    <string name="delete_image">Lösche Bild</string>
+
+
+    <!--medizinische.xml-->
+    <string name="recipe">Rezept</string> <!--(question_21)-->
+    <string name="transfer">Überweisung</string>  <!--(question_22)-->
+    <string name="hospitalization">Krankenhauseinweisung</string> <!--(question_23)-->
+    <string name="au">AU (Krankschreibung)</string><!-- (question_24)-->
+    <string name="certificate">Attest</string> <!--(question_25)-->
+    <string name="examination" translatable="false">Untersuchung / Behandlung</string> <!--(question_1)-->
+
+    <!--payment.xml-->
+    <string name="payment">Zahlungen</string>
+    <string name="payment_details">Zahlungsdetails</string>
+    <string name="chat_from_anywhere_you_are">Chat von irgendwo du bist</string>
+    <string name="send_picture_voice_and_videos">Senden Sie Bilder, Stimme und Videos</string>
+    <string name="easy_and_secure_payment">Einfache und sichere Bezahlung</string>
+    <string name="voucher_code">Voucher_code</string>
+    <string name="consult_a_colleague_lets_keep_it_free_to_consult_colleagues">Konsultieren Sie einen Kollegen \n (Lass es uns frei halten, Kollegen zu konsultieren)</string>
+    <string name="next">Nächster</string>
+
+    <!--passcode_activity.xml-->
+    <string name="enter_your_passcode">Passcode eingeben</string>
+
+    <!--profile details.xml-->
+    <string name="gender">Geschlecht</string>
+    <string name="male">männlich</string>
+    <string name="female">weiblich</string>
+    <string name="other">andere</string>
+    <string name="finished">fertig</string>
+    <string name="profile_detail_header">Bitte wählen Sie ein Profilbild</string>
+    <string name="title">Titel</string>
+
+
+    <!--question_1_fragment-->
+    <string name="physical_examination">Körperliche Untersuchung</string>
+    <string name="please_fill_data">Bitte füllen Sie bitte Daten aus</string>
+    <string name="technical_inspection">Technische Untersuchung (EKG etc.)</string> <!--(question_13)-->
+
+
+    <!--questions.xml-->
+    <string name="please_choose_the_reason_for_your_visit">Bitte wählen Sie den Grund \n Ihres Besuchs</string>
+    <string name="medical_documents">Medizinische Dokumente</string> <!-- (question_2)-->
+    <string name="consultation">Beratung</string>
+    <string name="i_have_an_appointment">Ich habe einen Termin</string>
+
+    <!--specialities-->
+    <string name="dentist"> Zahnarzt</string>
+
+
+
+    <!--time table activity-->
+    <string name="schedule">  Zeitplan</string>
+    <string name="sunday">Sonntag</string>
+    <string name="monday">Montag</string>
+    <string name="tuesday">Dienstag</string>
+    <string name="wednesday">Mittwoch</string>
+    <string name="thursday">Donnerstag</string>
+    <string name="friday">Freitag</string>
+    <string name="saturday">Samstag</string>
+    <string name="from">von</string>
+    <string name="to">nach</string>
+
+    <!--untersuchung-->
+    <string name="laboratory_investigation">Laboruntersuchung (Blut, Urin etc.)</string>
+    <string name="heart_listen">Herz abhorchen</string>
+    <string name="others">sonstiges</string>
+
+
+
+    <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
     <string name="app_name">Kanon_Health</string>
     <string name="my_doctors">My Doctor\'s</string>
-    <string name="search">Search</string>
     <string name="docor_list">Doctor List</string>
-    <string name="setting">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="my_profile">My Profile</string>
-    <string name="edit">Edit</string>
+
+
 
     <string name="personal_info">Important Information</string>
-    <string name="birthday">Birthday :</string>
     <string name="streat">Streart Name :</string>
-    <string name="house_number">House Number :</string>
-    <string name="zip_code">Zip Code :</string>
     <string name="provinz">Provinz</string>
-    <string name="voluntary_info">Voluntary Information</string>
+    <string name="voluntary_information">Freiwillige Informationen</string>
     <string name="answer">Please Fill Data</string>
-    <string name="back">Back</string>
-    <string name="change_passcode">Change Passcode</string>
+
     <string name="change_phone">Change Phone Number</string>
     <string name="sound_notification"><![CDATA[Sound & Notification]]></string>
-    <string name="terms_conditions">Terms and Conditions</string>
-    <string name="faq">FAQ</string>
-    <string name="contact_support">Sorry Missing Data , Please Contact with Support</string>
-    <string name="version">Version</string>
-    <string name="all_doctors">All Doctors</string>
+
+
+
+
+
     <!-- Edit by Ahmed-->
-    <string name="add_to">Add to My Doctor\'s</string>
+
     <string name="remove_from">Remove as my Doctor</string>
     <string name="error_connection">Please Check Your Internet Connection</string>
     <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
     <string name="end_session">Close Current Request</string>
     <string name="start_session">Start New Conversation</string>
-    <string name="please_rate">Please Rate</string>
-    <string name="reviews">Reviews</string>
+
     <string name="write_review_hint">Write a review ...</string>
     <string name="temp"> Temp Value to Test</string>
     <string name="invalid_input"> Your input is invalid</string>
     <string name="thanksforcomment">Thanks for Comment</string>
-    <string name="youareoffline">You are now : Offline</string>
-    <string name="youareonline">You are now : Online</string>
-    <string name="go_online">Go Online</string>
-    <string name="go_offline">Go Offline</string>
-    <string name="location">Location :</string>
-    <string name="city">City :</string>
-    <string name="province">Province :</string>
-    <string name="country">Country :</string>
 
-    <string name="next">Next</string>
-    <string name="sign_up">Verifiziere deine Nummer</string>
-    <string name="signup">Anmelden</string>
-    <string name="enter_verification_code">Enter your verification number</string>
-    <string name="verify_code">Verify</string>
-    <string name="resend">Resend</string>
-    <string name="resend_message">If you did not receive an SMS, Tab the Resend button below</string>
-    <string name="verifcation">Verification</string>
-    <string name="save">Save</string>
+
+
+
+
+
+
+
+
     <string name="error_message">Some thing was wrong please try again</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="warning">Warning</string>
     <string name="some_wrong">Some thing was wrong when loading application please try agin</string>
-    <string name="login">Login</string>
-    <string name="show_profile">Show Profile</string>
+
+
 
     <string name="question_11_12_13">Was soll untersucht werden?</string>
 
 
-    <string name="main_question">Bitte wählen Sie den Grund \n
-        Ihres Besuchs</string>
+
     <string name="beratung" translatable="false">Beratung</string> <!--(question_3)-->
-    <string name="untershchung" translatable="false">Untersuchung / Behandlung</string> <!--(question_1)-->
-    <string name="medizinische_dokumente">Medizinische Dokumente</string> <!-- (question_2)-->
+
+
     <string name="fertig">Fertig</string>
 
     <string name="ich">Ich habe einen Termin</string>  <!--(question_4)-->
@@ -81,34 +326,33 @@
     <string name="beratung_frage">Worüber möchten Sie beraten werden?</string>  <!--(question_31)-->
 
     //Untersuchung und Behandlung
-    <string name="körperliche_untersuchung">Körperliche Untersuchung</string>  <!--(question_11)-->
+    <!--(question_11)-->
     <string name="laboruntersuchung">Laboruntersuchung (Blut, Urin etc.)</string>  <!--(question_12)-->
-    <string name="technische_untersuchung">Technische Untersuchung (EKG etc.)</string> <!--(question_13)-->
+
 
     <string name="sonstiges">Sonstiges</string> <!-- (question_14)-->
 
     //Medizinsche
 
-    <string name="rp">Rezept</string> <!--(question_21)-->
+
     //Questions
     <string name="rp_question">Name des Medikaments?</string>  <!--(question_212)-->
 
-    <string name="uberweisung">Überweisung</string>  <!--(question_22)-->
+
     //Questions
     <string name="uberweisung_first_question">An welchen Fachartzt?</string>  <!--(question_221)-->
     <string name="uberweisung_second_question">Aus welchem Anlass?</string>  <!--(question_222)-->
 
-    <string name="krankenhaus_einweisung">Krankenhauseinweisung</string> <!--(question_23)-->
+
     //Questions
     <string name="krankenhaus_first_question">An welches Krankenhaus?</string>
     <string name="krankenhaus_second_question">Aus welchem Anlass?</string>  <!--(question_232)-->
 
-    <string name="au">AU (Krankschreibung)</string><!-- (question_24)-->
     //Questions
     <string name="au_first_question">Für welchen Zeitraum?</string> <!--(question_252)-->
     <string name="au_second_question">Aus welchem Grund?</string>  <!--(question_242)-->
 
-    <string name="attest">Attest</string> <!--(question_25)-->
+
     //Questions
     <string name="attest_first_question">Was soll attestiert werden?</string>  <!--(question_251)-->
     <string name="attest_second_question">Für welchen Zeitraum?</string> <!--(question_241)-->
@@ -165,48 +409,40 @@
     <string name="question_41">question_41</string>
     <string name="first_level">firstLevel</string>
     <string name="waiting_text">Wird Geladen</string>
-    <string name="qr_text">Liebe Patienten, um Ihnen schnell und einfach helfen zu können, haben wir für Sie eine eigene Praxis APP entwickelt.
-\n \n
-Mit dem  QR Code können Sie sich in die Praxis einwählen.
-\n \n
-Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen sie Ihre mitgebrachten Dokumente in Form eines Fotos uns zur Verfügung.</string>
+
 
     //Profile Detail
-    <string name="profile_detail_header">Bitte wählen Sie ein Profilbild</string>
-    <string name="first_name">Vorname</string>
-    <string name="last_name">Nachname</string>
-    <string name="important_info">Wichtige Informationen :</string>
+
+
+
+
 
     //SplashScreen
     <string name="wrong_code">Der eingegebene Code ist leider ungültig</string>
 
 
-    <string name="under_verificauion_header">Die Praxis APP sendet eine SMS, um deine Telefonnummer zu verifizieren. Gib deinen Landescode und deine Telefonnumer ein:</string>
-    <string name="select_your_country">Wähle dein Land</string>
-    <string name="Invalid_country">Ungültiges Landy</string>
-    <string name="take_new_image">Take New Image</string>
-    <string name="select_from_gallery">Select From Gallery</string>
-    <string name="delete_image">Delete Image</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="payment">Payment</string>
-    <string name="payment_details">Payment details</string>
-    <string name="open_session_again">Start New Request</string>
 
-    <string name="rate_your_last_request">Rate your last request</string>
+
+    <string name="Invalid_country">Ungültiges Landy</string>
+
+
+    <string name="title_activity_maps">Map</string>
+
+
+
     <string name="close_conversation">Are you sure you want to close the conversation</string>
     <string name="session_ended">Session Closed</string>
     <string name="rate_conversation">Please rate your conversation</string>
-    <string name="main_profile">Main Profile</string>
+
     <string name="error_create_database">error while create database</string>
     <string name="error_update_database">error while update database</string>
     <string name="erre_database_insert">error while insert in database</string>
     <string name="error_getting_database">error while getting data from database</string>
     <string name="error_loading_data">error while loading data</string>
     <string name="error_saving_data">error while saving data</string>
-    <string name="contact_by_chat">Contact By Chat</string>
-    <string name="status_online">Status Online</string>
-    <string name="status_offline">Status Offline</string>
-    <string name="title">Title</string>
+
+
+
     <string name="error_in_registeration">error in registeration</string>
     <string name="please_access_storage">Can\'t Access Storage</string>
     <string name="save_practics">Practics Saved</string>
@@ -222,5 +458,10 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="attach_not_show">Sorry Soemthing Happened in Attachment</string>
     <string name="error_in_getting_default_country">Nicht in der Lage, das Standardland zu erhalten</string>
     <string name="no_country_data">Sorry, no data found</string>
+
+
+
+
+
 
 </resources>

@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/contact_support"
+            android:text="@string/sorry_missing_data_please_contact_support"
             android:textColor="@color/black" />
 
 

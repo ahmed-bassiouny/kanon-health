@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="3dp"
-                        android:text="@string/important_info"
+                        android:text="@string/important_information"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16sp" />
 
@@ -215,7 +215,7 @@
                         android:nextFocusForward="@+id/ed_house_number"
                         android:imeOptions="actionNext"
                         android:layout_marginLeft="8dp"
-                        android:hint="@string/streat"
+                        android:hint="@string/street_name"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -263,11 +263,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
-                        android:maxLines="1"
-                        android:inputType="textPersonName"
-                        android:nextFocusForward="@+id/et_edit_proviz"
-                        android:imeOptions="actionNext"
                         android:hint="@string/zip_code"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:nextFocusForward="@+id/et_edit_proviz"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -293,7 +293,7 @@
                         android:inputType="textPersonName"
                         android:nextFocusForward="@+id/et_edit_country"
                         android:imeOptions="actionNext"
-                        android:hint="@string/provinz"
+                        android:hint="@string/province"
                         android:textCursorDrawable="@color/blue"
                         android:textSize="16dp" />
                 </LinearLayout>
@@ -384,7 +384,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="3dp"
-                        android:text="@string/voluntary_info"
+                        android:text="@string/voluntary_information"
                         android:textColor="@android:color/background_dark"
                         android:textSize="16sp" />
 

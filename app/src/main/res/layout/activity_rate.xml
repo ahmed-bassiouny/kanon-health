@@ -114,7 +114,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5 Stars"
+                android:text="@string/five_star"
                 android:layout_weight=".5"
                 android:textColor="@color/black" />
 
@@ -158,7 +158,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4 Stars"
+                android:text="@string/four_star"
                 android:layout_weight=".5"
                 android:textColor="@color/black" />
 
@@ -201,7 +201,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="3 Stars"
+                android:text="@string/three_star"
                 android:layout_weight=".5"
                 android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
@@ -245,7 +245,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2 Stars"
+                android:text="@string/two_star"
                 android:layout_weight=".5"
                 android:textColor="@color/black" />
 
@@ -288,7 +288,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1 Stars"
+                android:text="@string/one_star"
                 android:layout_weight=".5"
                 android:textColor="@color/black" />
 
