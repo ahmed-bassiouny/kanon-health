@@ -312,40 +312,7 @@ public class ForwardActivity extends AppCompatActivity {
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 */
                     final String key = result.getContents();
-                    final Dialog dialog = new Dialog(this);
-                    dialog.setContentView(R.layout.activity_qr_activity);
-                    dialog.setTitle("Custom Alert Dialog");
-                    dialog.setCanceledOnTouchOutside(false);
-                    Button btnDoctor = (Button) dialog.findViewById(R.id.doctor);
-                    Button btnClinic = (Button) dialog.findViewById(R.id.clinic);
-                    Button btnUser = (Button) dialog.findViewById(R.id.doctor);
-                    Button btnCancel = (Button) dialog.findViewById(R.id.cancel);
-                    btnDoctor.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendRequest(key, 2);
-                        }
-                    });
-                    btnClinic.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendRequest(key, 3);
-                        }
-                    });
-                    btnUser.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendRequest(key, 1);
-                        }
-                    });
-                    btnCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        }
-                    });
-
-                    dialog.show();
+                    sendRequest(key);
 
                 }
             } else {
@@ -358,7 +325,7 @@ public class ForwardActivity extends AppCompatActivity {
 
     }
 
-    public void sendRequest(String key, int entity_type) {
+    public void sendRequest(String key) {
         util.showProgressDialog();
         new HttpCall(this, new ApiResponse() {
             @Override
