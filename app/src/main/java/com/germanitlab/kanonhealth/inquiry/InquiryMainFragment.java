@@ -127,6 +127,10 @@ public class InquiryMainFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();        //hide the keyboard
+    }
 
     @OnClick({R.id.button_medizinische, R.id.button_Ich, R.id.button_beratung, R.id.button_untersuchung, R.id.button_submit})
     public void onClick(View view) {

@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -136,6 +137,13 @@ public class TwoQuestionsFragment extends Fragment {
             InquiryActivity.inquiryResult.add(mTwoQuestionMap);
 
             mCallback.OnChoiceSelected(mFirstLevelName, null);
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+
+
 
         } else {
             Toast.makeText(getActivity(), "Bitte schreibe deine Antwort heir", Toast.LENGTH_SHORT).show();
