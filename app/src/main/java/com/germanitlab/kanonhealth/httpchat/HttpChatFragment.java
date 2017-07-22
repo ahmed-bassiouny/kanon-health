@@ -242,7 +242,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 doctor.setId(doctorID);
                 doctor = userRepository.getDoctor(doctor);
             } catch (Exception e) {
-                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
             }
         }
 

@@ -62,7 +62,7 @@ import java.util.List;
 public class SettingFragment extends Fragment {
 
 
-    private View view;
+    private View view ,vLineUnderDrStatus;
     private Toolbar toolbar;
     private TextView tvBack, tvSetting, trVersion;
     private ImageView imgQr;
@@ -224,6 +224,11 @@ public class SettingFragment extends Fragment {
             trSupport = (TableRow) view.findViewById(R.id.tr_support);
             profile = (TableRow) view.findViewById(R.id.my_profile);
             trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
+            vLineUnderDrStatus =  view.findViewById(R.id.v_under_dr_status);
+            if(prefManager.iamDoctor()) {
+                trDrStatus.setVisibility(View.GONE);
+                vLineUnderDrStatus.setVisibility(View.GONE);
+            }
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -247,6 +252,7 @@ public class SettingFragment extends Fragment {
             btn_change_status = (Button) view.findViewById(R.id.btn_change_status);
 
             PackageInfo pInfo = null;
+
             try {
                 pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
                 String version = pInfo.versionName;
@@ -265,6 +271,7 @@ public class SettingFragment extends Fragment {
                     startActivityForResult(intent, 13);
                 }
             });
+
             trSound.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
