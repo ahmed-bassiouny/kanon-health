@@ -188,6 +188,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 holder.imgAvatar.setBorderWidth(0);
                 holder.imgAvatar.setBorderOverlay(false);
                 if (doctor.getSpecialities() != null && doctor.getSpecialities().size() > 0) {
+                    holder.tvSpecialist.setText("");
                     for (int x = 0; x < doctor.getSpecialities().size(); x++) {
                         ImageView image = new ImageView(activity);
 //                image.setBackgroundResource(R.drawable.doctor_icon);
@@ -197,6 +198,11 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
                         image.setLayoutParams(parms);
                         holder.linearLayoutSpecialist.addView(image);
+//                        if (x == 0) {
+//                            holder.tvSpecialist.append(doctor.getSpecialities().get(x).getSpeciality_title());
+//                        } else {
+//                            holder.tvSpecialist.append(", " + doctor.getSpecialities().get(x).getSpeciality_title());
+//                        }
                     }
                 }
             }

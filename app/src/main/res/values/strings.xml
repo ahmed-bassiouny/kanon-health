@@ -1,39 +1,42 @@
 <resources>
 
+    <!--example-->
+    <!--<string name="english_translation_with_no_spaces_and_all_lower_case">German Translation With Spaces And Upper Case if needed</string>-->
+
     <!--add practices.xml-->
-    <string name="practice_profile">Praxisprofil</string>
+    <string name="practice_profile">Praxis Profil</string>
     <string name="name">Name</string>
-    <string name="invite_other_doctor">Einen anderen Arzt einladen +</string>
-    <string name="specialities">Spezialitäten</string>
+    <string name="invite_other_doctor">Andre Ärzt einladen +</string>
+    <string name="specialities">Fachrichtung</string>
     <string name="location">Standort</string>
     <string name="street_name">Straßenname</string>
     <string name="house_number">Hausnummer</string>
     <string name="zip_code">Postleitzahl</string>
     <string name="city">Stadt</string>
-    <string name="province">Provinz</string>
+    <string name="province">Bundesland</string>
     <string name="country">Land</string>
-    <string name="location_on_map_manual">Lage auf der Karte (Handbuch)</string>
+    <string name="location_on_map_manual">Lage auf der Karte (Manuel)</string>
     <string name="languages">Sprachen</string>
     <string name="working_hours">Arbeitszeiten</string>
     <string name="no_time_has_set">Keine Zeiten angegeben</string>
     <string name="telephone">Telefon</string>
-    <string name="practice_documents">Üben Dokumente</string>
+    <string name="practice_documents">Praxis Dokumente</string>
 
 
 
     <!--comment.xml-->
-    <string name="please_rate">bitte bewerten</string>
-    <string name="submit">einreichen</string>
+    <string name="please_rate">Bitte bewerten</string>
+    <string name="submit">Abschicken</string>
     <string name="write_a_review">eine Rezension schreiben...</string>
 
 
     <!--country_activity.xml-->
-    <string name="sorry_no_data_found">Sorry keine Daten gefunden</string>
+    <string name="sorry_no_data_found">Keine Daten gefunden</string>
 
 
     <!--doctor_map.xml-->
     <string name="back">zurück</string>
-    <string name="doctor_list">Doktorliste</string>
+    <string name="doctor_list">Ärzte Liste</string>
     <string name="all_doctors">Alle Ärzte</string>
 
 
@@ -49,7 +52,7 @@
 
     <!--faq.xml-->
     <string name="faq">FAQ</string>
-    <string name="how_to_use">wie benutzt man?</string>
+    <string name="how_to_use">Richtige Anwendung</string>
     <string name="the_answer_is_here">Hier ist die Antwort</string>
 
 
@@ -67,7 +70,7 @@
 
 
     <!--information.xml-->
-    <string name="details_of_doctor_list">Details der Liste des Arztes</string>
+    <string name="details_of_doctor_list">Details Ärzte-Liste</string>
     <string name="documents">Dokumente</string>
     <string name="details_of_documents">Details der Dokumente</string>
     <string name="chat">Chat</string>
@@ -81,14 +84,14 @@
     <!--opening hours.xml-->
     <string name="opening_hours">Öffnungszeiten</string>
     <string name="use_timetable">Zeitplan verwenden</string>
-    <string name="always_open">immer offen</string>
-    <string name="no_hours_available">Keine stunden verfügbar</string>
+    <string name="always_open">immer geöffnet</string>
+    <string name="no_hours_available">Keine Öffnungszeiten verfügbar</string>
     <string name="permanently_closed">Dauerhaft geschlossen</string>
-    <string name="save">sparen</string>
+    <string name="save">Speichern</string>
 
 
     <!--pre request.xml-->
-    <string name="in_order_to_chat_to_the_doctor_click_on_the_image_below_and_select_your_payment_method">Um mit dem Arzt zu chatten, klicken Sie auf das Bild unten und wählen Sie Ihre Zahlungsmethode</string>
+    <string name="in_order_to_chat_to_the_doctor_click_on_the_image_below_and_select_your_payment_method">Um den Chat mit dem Arzt zu beginnen, klicken Sie bitte auf das Bild unten und wählen Sie Ihre Zahlungsmethode</string>
 
 
 
@@ -121,7 +124,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="signup">Anmelden</string>
 
     <!--support.xml-->
-    <string name="sorry_missing_data_please_contact_support">Fehlende Daten, bitte Kontakt mit Support</string>
+    <string name="sorry_missing_data_please_contact_support">Fehlende Daten, bitte Kontakt mit Support aufnehmen.</string>
 
     <!--terms conditions.xml-->
     <string name="terms_and_conditions">Geschäftsbedingungen</string>
@@ -140,21 +143,21 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <!--custom dialog.xml-->
     <string name="login">Anmeldung</string>
-    <string name="show_profile">Zeige Profil</string>
+    <string name="show_profile">Profil anzeigen</string>
 
     <!--doctor edit profile.xml-->
-    <string name="my_profile">mein Profil</string>
+    <string name="my_profile">Mein Profil</string>
     <string name="important_information">Wichtige Informationen :</string>
     <string name="last_name">Nachname</string>
     <string name="first_name">Vorname</string>
-    <string name="birthday">Geburtstag</string>
+    <string name="birthday">Geburtsdatum</string>
 
     <!--doctor profile view.xml-->
-    <string name="main_profile">Hauptprofile</string>
-    <string name="status_online">Stauts online</string>
-    <string name="status_offline">Stauts offline</string>
-    <string name="add_to_my_doctors">Füge meinen Ärzten hinzu</string>
-    <string name="contact_by_chat">Kontakt per Chat</string>
+    <string name="main_profile">Mein Profil</string>
+    <string name="status_online">Status Online</string>
+    <string name="status_offline">Status Offline</string>
+    <string name="add_to_my_doctors">zu Favoriten hinzufügen</string>
+    <string name="contact_by_chat">Per Chat kontaktieren</string>
     <string name="rating">Bewertung</string>
     <string name="member_in_practice">Mitglied in Praxis</string>
 
@@ -176,21 +179,21 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="change_passcode">Passcode ändern</string>
     <string name="kanon_health_web">KanonHealth Web</string>
     <string name="request_doctor_status">Arzt Status beantragen</string>
-    <string name="add_practice">Klinik hinzufügen</string>
-    <string name="recommend_this_app_to_your_friends">Diese app an Freunde weiterempfehlen</string>
+    <string name="add_practice">Praxis hinzufügen</string>
+    <string name="recommend_this_app_to_your_friends">Kanon Health an Freunde weiterempfehlen</string>
     <string name="change_phone_number">Telefonnummer ändern</string>
     <string name="sound_and_notification">Ton und Benachrichtigung</string>
     <string name="version">Version</string>
     <string name="you_are_now_offline">Du bist jetzt offline</string>
     <string name="you_are_now_online">Du bist jetzt online</string>
     <string name="go_online">Online gehen</string>
-    <string name="go_offline">offline gehen</string>
+    <string name="go_offline">Offline gehen</string>
 
 
     <!--image picker dialog.xml-->
-    <string name="take_new_image">Nehme neues Bild</string>
-    <string name="select_from_gallery">Aus gallary auswählen</string>
-    <string name="delete_image">Lösche Bild</string>
+    <string name="take_new_image">Neues Foto aufnehmen</string>
+    <string name="select_from_gallery">Foto aus Gallary auswählen</string>
+    <string name="delete_image">Bild löschen</string>
 
 
     <!--medizinische.xml-->
@@ -204,29 +207,29 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <!--payment.xml-->
     <string name="payment">Zahlungen</string>
     <string name="payment_details">Zahlungsdetails</string>
-    <string name="chat_from_anywhere_you_are">Chat von irgendwo du bist</string>
-    <string name="send_picture_voice_and_videos">Senden Sie Bilder, Stimme und Videos</string>
+    <string name="chat_from_anywhere_you_are">Chatte von Überall</string>
+    <string name="send_picture_voice_and_videos">Sende Bilder, Sound und Videos</string>
     <string name="easy_and_secure_payment">Einfache und sichere Bezahlung</string>
-    <string name="voucher_code">Voucher_code</string>
-    <string name="consult_a_colleague_lets_keep_it_free_to_consult_colleagues">Konsultieren Sie einen Kollegen \n (Lass es uns frei halten, Kollegen zu konsultieren)</string>
-    <string name="next">Nächster</string>
+    <string name="voucher_code">Gutscheincode</string>
+    <string name="consult_a_colleague_lets_keep_it_free_to_consult_colleagues">Konsultieren Sie einen Kollegen \n (Lassen Sie uns die Konsulation von Kollegen kostenfrei halten)</string>
+    <string name="next">Weiter</string>
 
     <!--passcode_activity.xml-->
     <string name="enter_your_passcode">Passcode eingeben</string>
 
     <!--profile details.xml-->
     <string name="gender">Geschlecht</string>
-    <string name="male">männlich</string>
-    <string name="female">weiblich</string>
-    <string name="other">andere</string>
-    <string name="finished">fertig</string>
+    <string name="male">Männlich</string>
+    <string name="female">Weiblich</string>
+    <string name="other">Sonstige</string>
+    <string name="finished">Fertig</string>
     <string name="profile_detail_header">Bitte wählen Sie ein Profilbild</string>
     <string name="title">Titel</string>
 
 
     <!--question_1_fragment-->
     <string name="physical_examination">Körperliche Untersuchung</string>
-    <string name="please_fill_data">Bitte füllen Sie bitte Daten aus</string>
+    <string name="please_fill_data">Bitte ausfüllen</string>
     <string name="technical_inspection">Technische Untersuchung (EKG etc.)</string> <!--(question_13)-->
 
 
@@ -238,35 +241,35 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <!--specialities-->
     <string name="dentist"> Zahnarzt</string>
-    <string name="allergist"> allergist</string>
-    <string name="ear_doctor">ear_doctor</string>
-    <string name="anaesthesiologist">anaesthesiologist</string>
-    <string name="andrologist">andrologist</string>
+    <string name="allergist"> Allergist</string>
+    <string name="ear_doctor">HNO (Hals, Nasen, Ohren)</string>
+    <string name="anaesthesiologist">Anaesthesist </string>
+    <string name="andrologist">Androloge</string>
     <string name="cardiac_electrophysiologist">cardiac_electrophysiologist</string>
-    <string name="cardiologist">cardiologist</string>
-    <string name="dermathology">dermathology</string>
+    <string name="cardiologist">Kardiologe</string>
+    <string name="dermathology">Dermatologe</string>
     <string name="disabled">disabled</string>
-    <string name="emergency_doctor">emergenc_doctor</string>
-    <string name="endocrinologist">endocrinologist  </string>
-    <string name="family_doctor">family_doctor</string>
-    <string name="gastroenterologist">gastroenterologist</string>
-    <string name="geriatrician">geriatrician</string>
-    <string name="hematologist">hematologist</string>
-    <string name="neonatologist">neonatologist</string>
-    <string name="neurology">neurology</string>
-    <string name="oncologist">oncologist</string>
-    <string name="ophthalmologist">ophthalmologist</string>
-    <string name="orthopedist">orthopedist</string>
-    <string name="pathology"> pathology</string>
-    <string name="pediatrician">pediatrician</string>
+    <string name="emergency_doctor">Notfall Arzt</string>
+    <string name="endocrinologist">Endokrinologie  </string>
+    <string name="family_doctor">Familien Arzt</string>
+    <string name="gastroenterologist">Gastroenterologie</string>
+    <string name="geriatrician">Geriatrie</string>
+    <string name="hematologist">Hämatologie</string>
+    <string name="neonatologist">Neonatologie</string>
+    <string name="neurology">Neurologe</string>
+    <string name="oncologist">Onkologie</string>
+    <string name="ophthalmologist">Ophthalmologie</string>
+    <string name="orthopedist">Orthopädie</string>
+    <string name="pathology"> Pathologie</string>
+    <string name="pediatrician">Pädiatrie</string>
     <string name="perinatologist">perinatologist</string>
-    <string name="periodontist">periodontist</string>
-    <string name="physical_therapy">physical_therapy</string>
-    <string name="plastic_surgeon">plastic_surgeon</string>
-    <string name="rheumatologist"> rheumatologist</string>
-    <string name="surgeon">surgeon</string>
-    <string name="urologist">urologist</string>
-    <string name="xray">xray</string>
+    <string name="periodontist">Parodontitis</string>
+    <string name="physical_therapy">Physiotherapie</string>
+    <string name="plastic_surgeon">Plastische Chirurgie</string>
+    <string name="rheumatologist">Rheumatologie</string>
+    <string name="surgeon">Chirurgie</string>
+    <string name="urologist">Urologie</string>
+    <string name="xray">Radiologie</string>
 
 
     <!--time table activity-->
@@ -279,7 +282,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="from">von</string>
-    <string name="to">nach</string>
+    <string name="to">bis</string>
 
     <!--untersuchung-->
     <string name="laboratory_investigation">Laboruntersuchung (Blut, Urin etc.)</string>
@@ -295,7 +298,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <!--java strings-->
     <string name="app_name">Kanon Health</string>
-    <string name="my_doctors">My Doctor\'s</string>
+    <string name="my_doctors">Meine Favoriten</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
@@ -304,7 +307,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <string name="voluntary_information">Freiwillige Informationen</string>
 
-    <string name="change_phone">Change Phone Number</string>
+    <string name="change_phone">Rufnummer ändern</string>
     <string name="sound_notification"><![CDATA[Sound & Notification]]></string>
 
 
@@ -313,16 +316,16 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <!-- Edit by Ahmed-->
 
-    <string name="remove_from">Remove as my Doctor</string>
-    <string name="error_connection">Please Check Your Internet Connection</string>
-    <string name="change_privacy_msg">Möchten Sie die Privatsphäre ändern?</string>
-    <string name="end_session">Close Current Request</string>
-    <string name="start_session">Start New Conversation</string>
+    <string name="remove_from">von Favoriten entfernen</string>
+    <string name="error_connection">Bitte die Internetverbundung überprüfen</string>
+    <string name="change_privacy_msg">Möchten Sie die Privatsphäre Einstellung ändern?</string>
+    <string name="end_session">Aktuelle Anfrage beenden</string>
+    <string name="start_session">Neue Anfrage starten</string>
 
-    <string name="write_review_hint">Write a review ...</string>
+    <string name="write_review_hint">Rezession schreiben...</string>
     <string name="temp"> Temp Value to Test</string>
-    <string name="invalid_input"> Your input is invalid</string>
-    <string name="thanksforcomment">Thanks for Comment</string>
+    <string name="invalid_input">Ihre Eingabe ist ungültig</string>
+    <string name="thanksforcomment">Danke für dein Kommentar</string>
 
 
 
@@ -332,11 +335,11 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
 
 
-    <string name="error_message">Some thing was wrong please try again</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="warning">Warning</string>
-    <string name="some_wrong">Some thing was wrong when loading application please try agin</string>
+    <string name="error_message">etwas ist schief gelaufen, bitte nochmal probieren</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="warning">Warnung</string>
+    <string name="some_wrong">etwas ist beim Laden schief gelaufen, bitte erneut probieren</string>
 
 
 
@@ -452,16 +455,16 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
 
 
-    <string name="Invalid_country">Ungültiges Landy</string>
+    <string name="Invalid_country">Ungültiges Land</string>
 
 
     <string name="title_activity_maps">Map</string>
 
 
 
-    <string name="close_conversation">Are you sure you want to close the conversation</string>
-    <string name="session_ended">Session Closed</string>
-    <string name="rate_conversation">Please rate your conversation</string>
+    <string name="close_conversation">Bist du sicher, dass du die Anfrage beenden möchtest?</string>
+    <string name="session_ended">Anfrage beendet</string>
+    <string name="rate_conversation">Bitte bewerte deine Anfrage</string>
 
     <string name="error_create_database">error while create database</string>
     <string name="error_update_database">error while update database</string>
@@ -473,11 +476,11 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
 
     <string name="error_in_registeration">error in registeration</string>
-    <string name="please_access_storage">Can\'t Access Storage</string>
-    <string name="save_practics">Practics Saved</string>
-    <string name="upload_failed">Upload Failed</string>
-    <string name="save_success">Save Success</string>
-    <string name="edit_practics">Pracits Edit</string>
+    <string name="please_access_storage">Kein zugriff auf den Speicher</string>
+    <string name="save_practics">Praxis gespeichert</string>
+    <string name="upload_failed">Upload fehlgeschlagen</string>
+    <string name="save_success">Erfolgreich gespeichert</string>
+    <string name="edit_practics">Praxis editieren</string>
     <string name="cany_play_video">Sorry , erro with video</string>
     <string name="cant_find_location">Sorry , Can\'t Find Location</string>
     <string name="cantupload">Sorry , Media not upload</string>
@@ -493,52 +496,52 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="nachricht_schreiben">Nachricht schreiben</string>
     <string name="closed">Closed</string>
     <string name="my_qr">My QR</string>
-    <string name="permenant_closed">Permenant Closed</string>
-    <string name="new_picture">New Picture</string>
-    <string name="from_your_camera">From your Camera</string>
-    <string name="please_select_messages">Please Select Messages</string>
-    <string name="privacy_private">Private</string>
-    <string name="privacy_public">Public</string>
-    <string name="practices">practices</string>
-    <string name="clients">Clients</string>
-    <string name="camera_permission_needed_please_allow_in_app_settings_for_additional_functionality">Camera permission needed. Please allow in App Settings for additional functionality.</string>
-    <string name="invalid_qr_please_try_again">Invalid Qr please try again</string>
-    <string name="permission_denied">Permission denied</string>
-    <string name="image">Image</string>
+    <string name="permenant_closed">Permenant geschlossen</string>
+    <string name="new_picture">Neues Bild</string>
+    <string name="from_your_camera">von der Kamera</string>
+    <string name="please_select_messages">Nachricht wählen</string>
+    <string name="privacy_private">Privat</string>
+    <string name="privacy_public">Öffentlich</string>
+    <string name="practices">Praxen</string>
+    <string name="clients">Patienten</string>
+    <string name="camera_permission_needed_please_allow_in_app_settings_for_additional_functionality">Kamera Freigabe wird benötigt. Bitte bestätige die Kamera Freigabe.</string>
+    <string name="invalid_qr_please_try_again">Ungültige QR code. Bitte erneut probieren</string>
+    <string name="permission_denied">Erlaubnis verweigert</string>
+    <string name="image">Bild</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>
-    <string name="close">Close</string>
-    <string name="open">Open</string>
+    <string name="close">Schließen</string>
+    <string name="open">Öffnen</string>
     <string name="this_device_doesnot_support_the_crop_action">This device doesn\'t support the crop action!</string>
-    <string name="please_open_chat_again">Please Open chat again</string>
+    <string name="please_open_chat_again">Bitte den Chat erneut öffnen</string>
     <string name="write_a_message">Nachricht schreiben</string>
-    <string name="message_sent">Message  sent</string>
-    <string name="message_not_send">Message not send</string>
-    <string name="picture_not_send">Picture not send</string>
-    <string name="this_file_is_not_supported">This file is not supported</string>
-    <string name="recoding_canceled">Recoding Canceled</string>
+    <string name="message_sent">Nachricht gesendet</string>
+    <string name="message_not_send">Nachricht nicht gesendet</string>
+    <string name="picture_not_send">Bild nicht gesendet</string>
+    <string name="this_file_is_not_supported">Diese Datei wird nucht unterstützt</string>
+    <string name="recoding_canceled">Aufnahme abgebrochen</string>
     <string name="ok">Ok</string>
-    <string name="rate">Rate</string>
+    <string name="rate">Bewerten</string>
     <string name="offline_mode_canot_contact_with_doctor">Offline mode , can\'t contact with doctor</string>
-    <string name="select_image">Select Image</string>
+    <string name="select_image">Bild wählen</string>
     <string name="please_choose_an_option_cancel_via_back">Bitte wählen Sie eine Option. Abbrechen über Zurück.</string>
-    <string name="please_write_your_answer_here">Bitte schreibe deine Antwort hiar</string>
-    <string name="set_your_password">Set your Password</string>
-    <string name="wrong_passcode">wrong passcode</string>
-    <string name="confirm_your_passcode">Confirm Your Passcode</string>
-    <string name="your_password_saved">Your Password Saved</string>
-    <string name="invalid_passcode">Invalid Passcode</string>
-    <string name="please_choose_one_of_these_methods">Please choose one of these methods</string>
-    <string name="something_went_wrong">Something went wrong</string>
+    <string name="please_write_your_answer_here">Bitte schreibe deine Antwort hier</string>
+    <string name="set_your_password">Passwort wählen</string>
+    <string name="wrong_passcode">Falsches Passwort</string>
+    <string name="confirm_your_passcode">Passcode bestätigen</string>
+    <string name="your_password_saved">Passcode gespeichert</string>
+    <string name="invalid_passcode">Falscher Passcode</string>
+    <string name="please_choose_one_of_these_methods">Bitte eine Methode wählen</string>
+    <string name="something_went_wrong">etwas ist schief gelaufen</string>
     <string name="cancelled">Cancelled</string>
-    <string name="error_while_loading_practice">Error while loading practice</string>
-    <string name="error_while_loading_data">Error while loading data</string>
+    <string name="error_while_loading_practice">Fehler beim laden</string>
+    <string name="error_while_loading_data">Fehler beim laden</string>
     <string name="enter_the_correct_code">Geben Sie den richtigen Code ein</string>
-    <string name="please_select_a_contact">Please select a contact</string>
-    <string name="do_you_want_to_close_app">Do you want to close app?</string>
-    <string name="upload_success">Upload Success</string>
-    <string name="image_not_save_error_while_uploading">image not save error while uploading</string>
-    <string name="upload_image_failed">upload image failed</string>
+    <string name="please_select_a_contact">Bitte einen Kontakt wählen</string>
+    <string name="do_you_want_to_close_app">Willst du die App schließen?</string>
+    <string name="upload_success">Upload erfolgreich</string>
+    <string name="image_not_save_error_while_uploading">Bild nicht gespeichert, Fehler beim laden.</string>
+    <string name="upload_image_failed">Bild-upload abgebrochen</string>
 
 
 </resources>

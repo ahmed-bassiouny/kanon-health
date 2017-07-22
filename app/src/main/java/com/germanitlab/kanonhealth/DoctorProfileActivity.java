@@ -500,8 +500,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
 
     private View setImageCircle(String speciality_icon) {
-        CircularImageView circularImageView = new CircularImageView(this);
+        ImageView circularImageView = new ImageView(this);
         ImageHelper.setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, getApplicationContext());
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(128,128));
+        circularImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         return circularImageView;
     }
 

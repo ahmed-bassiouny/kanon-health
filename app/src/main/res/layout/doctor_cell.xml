@@ -84,8 +84,6 @@
         android:layout_below="@id/tv_practice"
         android:layout_toEndOf="@id/img_avatar_cell"
         android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
         android:text="@string/specialities"
         android:textColor="@color/text_msg_input"
         android:textSize="@dimen/size_15sp"
