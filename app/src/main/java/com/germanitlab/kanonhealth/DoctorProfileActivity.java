@@ -536,7 +536,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         util.showProgressDialog();
                         pickerDialog.dismiss();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                         ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
@@ -551,18 +550,34 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             @Override
                             public void onFailed(String error) {
                                 util.dismissProgressDialog();
-                                Toast.makeText(DoctorProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
-                                Log.i("Doctor Profile  ", " Activity " + error);
+                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                civEditAvatar.setImageResource(R.drawable.profile_place_holder);
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
-                    case CROP_PIC :
+                    /*case CROP_PIC :
                         afterCropFinish();
-                        break;
+                        break;*/
                     case TAKE_PICTURE:
+                        pickerDialog.dismiss();
                         util.showProgressDialog();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        performCrop();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                util.dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                civEditAvatar.setImageResource(R.drawable.profile_place_holder);
+                            }
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -580,12 +595,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.i("Doctor Profile  ", " Activity ", e);
         }
     }
 
-    private void afterCropFinish() {
+    /*private void afterCropFinish() {
         pickerDialog.dismiss();
         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
         ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
@@ -605,7 +618,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 Log.i("Doctor Profile  ", " Activity " + error);
             }
         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-    }
+    }*/
 
 
     private void bindData() {
@@ -816,26 +829,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     }
 
-    private void loadQRCode(TextView textView) {
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Dialog dialog;
-                dialog = new Dialog(DoctorProfileActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.custom_dialoge);
-                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.MATCH_PARENT);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-                imageView.setImageResource(R.drawable.qr);
-                if (user.getQr_url() != null && user.getQr_url() != "") {
-                    ImageHelper.setImage(imageView, Constants.CHAT_SERVER_URL + "/" + user.getQr_url(), R.drawable.qr, DoctorProfileActivity.this);
-                }
-                dialog.show();
-            }
-        });
-    }
-
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
@@ -994,35 +987,5 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     protected void onResume() {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
-    }
-
-    private void performCrop() {
-        // take care of exceptions
-        try {
-            // call the standard crop action intent (the user device may not
-            // support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
-            cropIntent.setDataAndType(selectedImageUri, "image/*");
-            // set crop properties
-            cropIntent.putExtra("crop", "true");
-            // indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            // retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-            // start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, CROP_PIC);
-        }
-        // respond to users whose devices do not support the crop action
-        catch (ActivityNotFoundException anfe) {
-            Toast toast = Toast
-                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
-            toast.show();
-        }
     }
 }
