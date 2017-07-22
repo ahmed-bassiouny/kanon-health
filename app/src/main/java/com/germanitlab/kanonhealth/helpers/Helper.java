@@ -100,8 +100,6 @@ public class Helper {
         TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
 
         String idEncrypt=getMd5(String.valueOf(userInfoResponse.getUser().getId()));
-        Log.i("ID: ", String.valueOf(userInfoResponse.getUser().getId()));
-        Log.i( "ImportQr: ",idEncrypt);
         if(!idEncrypt.isEmpty()) {
             Bitmap myBitmap = QRCode.from(userInfoResponse.getUser().getId()+":"+idEncrypt).bitmap();
             imageView.setImageBitmap(myBitmap);

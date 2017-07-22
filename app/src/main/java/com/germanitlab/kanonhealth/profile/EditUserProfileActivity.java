@@ -167,8 +167,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
     }
 
     private void bindData() {
-
-
+        if(userInfoResponse.getUser().getAvatar()!=null &&!userInfoResponse.getUser().getAvatar().isEmpty())
         ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar(), this);
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -243,8 +242,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
                         selectedImageUri = data.getData();
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         util.showProgressDialog();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        ImageHelper.setImage(imgAvatar, imageUri, this);
+                        ImageHelper.setImage(imgAvatar, selectedImageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {
@@ -252,28 +250,57 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
                                     util.dismissProgressDialog();
                                     uploadImageResponse = (UploadImageResponse) response;
                                     user.setAvatar(uploadImageResponse.getFile_url());
-                                    Log.e("After Casting", uploadImageResponse.getFile_url());
                                 } catch (Exception e) {
                                     Crashlytics.logException(e);
-                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                    util.dismissProgressDialog();
+                                    Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                    imgAvatar.setImageResource(R.drawable.profile_place_holder);
+
                                 }
 
                             }
 
                             @Override
                             public void onFailed(String error) {
-                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                                util.dismissProgressDialog();
+                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                imgAvatar.setImageResource(R.drawable.profile_place_holder);
+
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
-                    case CROP_PIC :
+                    /*case CROP_PIC :
                         afterCropFinish();
-                        break;
+                        break;*/
                     case TAKE_PICTURE:
                         util.showProgressDialog();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        performCrop();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        ImageHelper.setImage(imgAvatar, selectedImageUri, this);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                try {
+                                    util.dismissProgressDialog();
+                                    uploadImageResponse = (UploadImageResponse) response;
+                                    user.setAvatar(uploadImageResponse.getFile_url());
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    util.dismissProgressDialog();
+                                    Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                    imgAvatar.setImageResource(R.drawable.profile_place_holder);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                imgAvatar.setImageResource(R.drawable.profile_place_holder);
+                            }
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                         break;
                 }
@@ -401,7 +428,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     }
 
-    @OnClick(R.id.img_edit_avatar)
+    @OnClick(R.id.img_edit)
     public void onEditProfileImageClicked() {
         try {
             if (ContextCompat.checkSelfPermission(this,
