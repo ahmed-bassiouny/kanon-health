@@ -103,8 +103,8 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     @Override
     public void onPause() {
-        if(type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE)
-            firstVisibleItemPositionForLeftTab = getScrolled() ;
+        if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE)
+            firstVisibleItemPositionForLeftTab = getScrolled();
         else
             firstVisibleItemPositionForRightTab = getScrolled();
         super.onPause();
@@ -129,14 +129,14 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             setAdapter(doctorList);
             checkTabToScrollTo();
             if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
+                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
             }
         } else {
             doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
             setAdapter(doctorList);
             checkTabToScrollTo();
             if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
+                new HttpCall(getActivity(), this).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
             }
         }
         scrollToPosition(firstVisibleItemPositionForLeftTab);
@@ -167,12 +167,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
             initView();
             is_doc = mPrefManager.get(PrefManager.IS_DOCTOR);
             if (!is_doc) {
-                btnLeftList.setText("Doctors");
-                btnRightList.setText("practices");
+                btnLeftList.setText(R.string.doctors);
+                btnRightList.setText(R.string.practices);
                 type = User.CLIENT_TYPE;
             } else {
-                btnLeftList.setText("Clients");
-                btnRightList.setText("others");
+                btnLeftList.setText(R.string.clients);
+                btnRightList.setText(R.string.others);
                 type = User.DOCTOR_TYPE;
             }
             handelEvent();
@@ -216,7 +216,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 
     public void requestPermissionForCamera() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-            Toast.makeText(getContext().getApplicationContext(), "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext().getApplicationContext(), R.string.camera_permission_needed_please_allow_in_app_settings_for_additional_functionality, Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
             startActivity(new Intent(getActivity(), StartQrScan.class));
@@ -372,7 +372,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
                             }
-                        }).getChatClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
+                        }).getChatClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
                     }
                 } else {
                     doctorList = mDoctorRepository.getChat(User.DOCTOR_AND_CLINICS_TYPE);
@@ -401,7 +401,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
                             }
-                        }).getChatDoctorAndClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
+                        }).getChatDoctorAndClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
                     }
                 }
             }
@@ -434,7 +434,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
                             }
-                        }).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
+                        }).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
                     }
                 } else {
                     doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
@@ -460,7 +460,7 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
                             }
-                        }).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD),getIam());
+                        }).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
                     }
                 }
 
@@ -551,11 +551,12 @@ public class ChatsDoctorFragment extends Fragment implements ApiResponse {
 //            tvLoadingError.setText(error);
 //        else tvLoadingError.setText("Some thing went wrong");
     }
-    private String getIam(){
+
+    private String getIam() {
         Gson gson = new Gson();
-        if(gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsDoc()==1)
+        if (gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1)
             return "doc";
-        else if(gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsClinic()==1)
+        else if (gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1)
             return "clinic";
         else
             return "user";

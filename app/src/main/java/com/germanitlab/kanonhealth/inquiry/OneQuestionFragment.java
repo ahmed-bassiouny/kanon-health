@@ -158,7 +158,7 @@ public class OneQuestionFragment extends Fragment {
             mCallback.OnChoiceSelected(mFirstLevelName, null);
 
         } else {
-            Toast.makeText(getActivity(), "Bitte schreibe deine Antwort hiar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.please_write_your_answer_here, Toast.LENGTH_SHORT).show();
         }
     }
 

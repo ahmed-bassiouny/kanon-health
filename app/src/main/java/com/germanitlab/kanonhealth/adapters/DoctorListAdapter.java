@@ -95,19 +95,19 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 if (list != null) {
                     if (list.size() > 0) {
                         int index = list.size() - 1;
-                        if (holder.tvSpecialist != null &&list.get(index).getType() !=null) {
+                        if (holder.tvSpecialist != null && list.get(index).getType() != null) {
                             switch (list.get(index).getType()) {
                                 case Constants.IMAGE:
-                                    holder.tvSpecialist.setText("Image");
+                                    holder.tvSpecialist.setText(R.string.image);
                                     break;
                                 case Constants.AUDIO:
-                                    holder.tvSpecialist.setText("Audio");
+                                    holder.tvSpecialist.setText(R.string.audio);
                                     break;
                                 case Constants.VIDEO:
-                                    holder.tvSpecialist.setText("Video");
+                                    holder.tvSpecialist.setText(R.string.video);
                                     break;
                                 case Constants.LOCATION:
-                                    holder.tvSpecialist.setText("Location");
+                                    holder.tvSpecialist.setText(R.string.location);
                                     break;
                                 case Constants.TEXT:
                                     holder.tvSpecialist.setText(list.get(index).getMsg());
@@ -128,11 +128,11 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 if (doctor.getIs_available().equals("0")) {
                     final int newColor = activity.getResources().getColor(R.color.medium_grey);
                     holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-                    holder.tvSpecialist.append("\n" + lasseen + "  " + "Close");
+                    holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.close));
                 } else {
                     final int newColor = activity.getResources().getColor(R.color.green);
                     holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-                    holder.tvSpecialist.append("\n" + lasseen + "  " + "Open");
+                    holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.open));
 
                 }
             }

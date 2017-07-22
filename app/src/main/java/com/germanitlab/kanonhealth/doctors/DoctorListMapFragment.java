@@ -220,7 +220,7 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
                 }
 
             } else {
-                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

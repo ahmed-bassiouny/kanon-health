@@ -126,7 +126,7 @@ public class SettingFragment extends Fragment {
             rvPracticies.setNestedScrollingEnabled(false);
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(getContext(), "error while loading clinics", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.error_while_loading_practice, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -375,7 +375,7 @@ public class SettingFragment extends Fragment {
 
             }
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Error while loading data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.error_while_loading_data, Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -29,7 +29,7 @@ import com.google.zxing.integration.android.IntentResult;
 public class StartQrScan extends AppCompatActivity {
     PrefManager prefManager;
     ProgressDialog progressDialog;
-    Util util ;
+    Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class StartQrScan extends AppCompatActivity {
         try {
             if (result != null) {
                 if (result.getContents() == null) {
-                    Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.cancelled, Toast.LENGTH_LONG).show();
 //                if (prefManager.getData(Constants.USER_ID) != null) {
 //
 //                    Intent i = new Intent(this, MainActivity.class);
@@ -81,7 +81,7 @@ public class StartQrScan extends AppCompatActivity {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    UserInfoResponse userInfoResponse=(UserInfoResponse)response;
+                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
                     Intent intent = new Intent(StartQrScan.this, DoctorProfileActivity.class);
                     intent.putExtra("doctor_data", userInfoResponse.getUser());
                     intent.putExtra("tab", "");
@@ -120,7 +120,7 @@ public class StartQrScan extends AppCompatActivity {
 
                 @Override
                 public void onFailed(String error) {
-                    Toast.makeText(StartQrScan.this, "Message not send", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StartQrScan.this, R.string.message_not_send, Toast.LENGTH_SHORT).show();
                 }
             }).sendQrCode(webLogin);
 

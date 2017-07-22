@@ -44,7 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ProgressDialog progressDialog;
     int create;
     PrefManager prefManager;
-    Util util ;
+    Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 // Add a marker in Sydney and move the camera
                 LatLng sydney = new LatLng(lat, longi);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Location"));
+                mMap.addMarker(new MarkerOptions().position(sydney).title(getString(R.string.location)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             }
@@ -190,8 +190,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), id, type);
     }
-
-
 
 
 }

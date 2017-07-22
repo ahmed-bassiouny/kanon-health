@@ -76,7 +76,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
     static DoctorListFragment doctorListFragment;
     private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
-    public Boolean is_doctor_data = false, is_clinic_data = false , is_chat_data_left =false , is_chat_data_right = false;
+    public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = false, is_chat_data_right = false;
     LinearLayoutManager llm;
     boolean is_doc;
     private static int firstVisibleItemPositionForRightTab = 0;
@@ -110,8 +110,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             initView();
             is_doc = prefManager.get(PrefManager.IS_DOCTOR);
             gson = new Gson();
-            btnLeftList.setText("Doctors");
-            btnRightList.setText("practices");
+            btnLeftList.setText(R.string.doctors);
+            btnRightList.setText(R.string.practices);
             type = User.DOCTOR_TYPE;
             doctorList = new ArrayList<>();
             mDoctorRepository = new UserRepository(getContext());
@@ -188,14 +188,14 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }
     }
 
-    public void getChatData(){
+    public void getChatData() {
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
                 doctorList = (List<User>) response;
                 updateDataBase(doctorList);
-                is_chat_data_left = true ;
-                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                is_chat_data_left = true;
+                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
                     util.dismissProgressDialog();
                     prefManager.put(PrefManager.IS_OLD, true);
                 }
@@ -203,8 +203,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             @Override
             public void onFailed(String error) {
-                is_chat_data_left = true ;
-                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                is_chat_data_left = true;
+                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
                     util.dismissProgressDialog();
                     prefManager.put(PrefManager.IS_OLD, true);
                 }
@@ -213,14 +213,14 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 //                                tvLoadingError.setText(error);
 //                            else tvLoadingError.setText("Some thing went wrong");
             }
-        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),getIam());
+        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
         new HttpCall(getActivity(), new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
                 doctorList = (List<User>) response;
                 updateDataBase(doctorList);
-                is_chat_data_right = true ;
-                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                is_chat_data_right = true;
+                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
                     util.dismissProgressDialog();
                     prefManager.put(PrefManager.IS_OLD, true);
                 }
@@ -228,8 +228,8 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 
             @Override
             public void onFailed(String error) {
-                is_chat_data_right = true ;
-                if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                is_chat_data_right = true;
+                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
                     util.dismissProgressDialog();
                     prefManager.put(PrefManager.IS_OLD, true);
                 }
@@ -239,8 +239,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
 //                            else tvLoadingError.setText("Some thing went wrong");
 //                            chat_layout.setVisibility(View.GONE);
             }
-        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),getIam());
+        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
     }
+
     private void updateDataBase(List<User> doctorList) {
         for (User user : doctorList) {
             user.setIs_chat(1);
@@ -274,7 +275,7 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
             showDialog(scanResult.getContents());
         } else {
 
-            Toast.makeText(getActivity(), "Invalid Qr please try again", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.invalid_qr_please_try_again, Toast.LENGTH_LONG).show();
 
         }
     }
@@ -339,10 +340,9 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                         if (typeNumber == User.DOCTOR_TYPE) {
                             is_doctor_data = true;
                             setAdapter(doctorList);
-                        }
-                        else if (typeNumber == User.CLINICS_TYPE)
+                        } else if (typeNumber == User.CLINICS_TYPE)
                             is_clinic_data = true;
-                        if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                        if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
                             util.dismissProgressDialog();
                             prefManager.put(PrefManager.IS_OLD, true);
                         }
@@ -356,15 +356,15 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
                     if (first_time) {
                         if (typeNumber == User.DOCTOR_TYPE) {
                             is_doctor_data = true;
-                        }
-                        else if (typeNumber == User.CLINICS_TYPE)
+                        } else if (typeNumber == User.CLINICS_TYPE)
                             is_clinic_data = true;
-                        if(is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data){
+                        if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
                             util.dismissProgressDialog();
                             prefManager.put(PrefManager.IS_OLD, true);
                         }
 
-                    }                    Crashlytics.logException(e);
+                    }
+                    Crashlytics.logException(e);
                     Log.e("tag about Exception", "msg about Exception ", e);
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
@@ -584,11 +584,12 @@ public class DoctorListFragment extends Fragment implements ApiResponse {
         }
 
     }
-    private String getIam(){
+
+    private String getIam() {
         Gson gson = new Gson();
-        if(gson.fromJson(prefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsDoc()==1)
+        if (gson.fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1)
             return "doc";
-        else if(gson.fromJson(prefManager.getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsClinic()==1)
+        else if (gson.fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1)
             return "clinic";
         else
             return "user";

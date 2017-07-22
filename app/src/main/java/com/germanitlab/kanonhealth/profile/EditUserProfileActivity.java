@@ -472,8 +472,8 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        contentValues.put(MediaStore.Images.Media.TITLE, getString(R.string.new_picture));
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.from_your_camera));
         selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
@@ -602,7 +602,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
         // respond to users whose devices do not support the crop action
         catch (ActivityNotFoundException anfe) {
             Toast toast = Toast
-                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

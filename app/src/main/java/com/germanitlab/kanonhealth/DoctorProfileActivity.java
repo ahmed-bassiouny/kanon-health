@@ -132,7 +132,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.border)
     View vBorder;
     @BindView(R.id.v_document_line)
-    View viewDocumentLine ;
+    View viewDocumentLine;
 
 
     @BindView(R.id.ed_location)
@@ -237,7 +237,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(menu != null) {
+        if (menu != null) {
             try {
                 getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
                 menu.findItem(R.id.mi_save).setVisible(false);
@@ -254,7 +254,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
                 }
                 this.menu = menu;
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
 
         }
         return true;
@@ -456,20 +457,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getSupported_lang() != null)
             setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
-            if(user.getMembers_at().size() > 0) {
+            if (user.getMembers_at().size() > 0) {
                 set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                 vNoClinicLine.setVisibility(View.GONE);
-            }
-            else
+            } else
                 vNoClinicLine.setVisibility(View.VISIBLE);
         if (user.getDocuments() != null) {
-            if(!is_me) { // handle the document if the profile is not my profile
+            if (!is_me) { // handle the document if the profile is not my profile
                 doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
                 recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
                 recyclerViewDocument.setAdapter(doctorDocumentAdapter);
                 recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
-            }
-            else {
+            } else {
                 viewDocumentLine.setVisibility(View.GONE);
             }
         }
@@ -666,7 +665,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         }
         setAdapters();
-        tvRating.setText("Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
+        tvRating.setText(R.string.rating + "  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " " + R.string.reviews + ")");
 
         tvSpecilities.setText("");
         if (user.getSpecialities() != null)
@@ -749,12 +748,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void getTimaTableData(List<Table> list) {
-        if(user != null) {
+        if (user != null) {
             if (user.getOpen_Type() == 3)
-                tvNoTime.setText("permenant_closed");
+                tvNoTime.setText(R.string.permenant_closed);
             else
-                tvNoTime.setText("Always Open");
-            if(list != null) {
+                tvNoTime.setText(R.string.always_open);
+            if (list != null) {
                 if (list.size() > 0) {
                     llNoTime.setVisibility(View.GONE);
                     tablelayout.removeAllViews();
@@ -778,7 +777,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void addToMyDoctor() {
         if (is_me)
             return;
-        if (user !=null && !TextUtils.isEmpty(user.getIs_my_doctor()))
+        if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
             if (user.getIs_my_doctor().equals("0")) {
                 new HttpCall(this, new ApiResponse() {
                     @Override
@@ -831,8 +830,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        contentValues.put(MediaStore.Images.Media.TITLE, getString(R.string.new_picture));
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.from_your_camera));
         selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
@@ -901,11 +900,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setMembers_at(templist);
-                if(user.getMembers_at().size() > 0) {
+                if (user.getMembers_at().size() > 0) {
                     set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                     vNoClinicLine.setVisibility(View.GONE);
-                }
-                else
+                } else
                     vNoClinicLine.setVisibility(View.VISIBLE);
                 break;
         }
@@ -987,5 +985,35 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     protected void onResume() {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
+    }
+
+    private void performCrop() {
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not
+            // support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(selectedImageUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, CROP_PIC);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            Toast toast = Toast
+                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }

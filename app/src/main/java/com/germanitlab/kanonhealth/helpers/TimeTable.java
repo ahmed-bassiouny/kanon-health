@@ -21,23 +21,24 @@ import java.util.List;
  */
 
 public class TimeTable {
+    private Context context;
 
     private String getDayOfWeek(String day) {
         switch (day) {
             case "0":
-                return "monday";
+                return context.getString(R.string.monday);
             case "1":
-                return "tuesday";
+                return context.getString(R.string.tuesday);
             case "2":
-                return "wednesday";
+                return context.getString(R.string.wednesday);
             case "3":
-                return "thursday";
+                return context.getString(R.string.thursday);
             case "4":
-                return "friday";
+                return context.getString(R.string.friday);
             case "5":
-                return "saturday";
+                return context.getString(R.string.saturday);
             case "6":
-                return "sunday";
+                return context.getString(R.string.sunday);
             default:
                 return "";
         }
@@ -45,6 +46,7 @@ public class TimeTable {
 
     public void creatTimeTable(List<Table> list, Context context, TableLayout tablelayout) {
         try {
+            this.context = context;
             Collections.sort(list, new Comparator<Table>() {
                 @Override
                 public int compare(Table t2, Table t1) {

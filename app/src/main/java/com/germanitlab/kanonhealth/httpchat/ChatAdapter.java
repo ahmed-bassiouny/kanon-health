@@ -59,7 +59,7 @@ import static com.germanitlab.kanonhealth.helpers.Constants.folder;
  * Created by bassiouny on 28/06/17.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder> implements  View.OnLongClickListener {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder> implements View.OnLongClickListener {
 
     private List<Message> mMessages;
     private Activity activity;
@@ -87,7 +87,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             @Override
             public void onClick(View view) {
                 if (list.size() == 0)
-                    Toast.makeText(activity, "Please Select Messages", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.please_select_messages, Toast.LENGTH_LONG).show();
                 else {
                     Intent intent = new Intent(activity, ForwardActivity.class);
                     intent.putExtra("list", (ArrayList<Integer>) list);
@@ -127,32 +127,32 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     @Override
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position) {
         if (mMessages.get(position).getType() != null)
-        switch (mMessages.get(position).getType()) {
-            case Constants.IMAGE:
-                ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
-                setImageMessage(imageViewHolder, position);
-                break;
-            case Constants.AUDIO:
-                AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
-                setAudioMessage(audioViewHolder, position);
-                break;
-            case Constants.VIDEO:
-                ImageViewHolder VideoViewHolder = (ImageViewHolder) baseViewHolder;
-                setVideoMessage(VideoViewHolder, position);
-                break;
-            case Constants.LOCATION:
-                ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
-                setLocationMessage(locationViewHolder, position);
-                break;
-            case Constants.UNDEFINED:
-                ImageViewHolder undefinedViewHolder = (ImageViewHolder) baseViewHolder;
-                setUndefinedMessage(undefinedViewHolder, position);
-                break;
-            default:
-                //for text message
-                TextMsgViewHolder textMsgViewHolder = (TextMsgViewHolder) baseViewHolder;
-                setTextMessage(textMsgViewHolder, position);
-        }
+            switch (mMessages.get(position).getType()) {
+                case Constants.IMAGE:
+                    ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
+                    setImageMessage(imageViewHolder, position);
+                    break;
+                case Constants.AUDIO:
+                    AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
+                    setAudioMessage(audioViewHolder, position);
+                    break;
+                case Constants.VIDEO:
+                    ImageViewHolder VideoViewHolder = (ImageViewHolder) baseViewHolder;
+                    setVideoMessage(VideoViewHolder, position);
+                    break;
+                case Constants.LOCATION:
+                    ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
+                    setLocationMessage(locationViewHolder, position);
+                    break;
+                case Constants.UNDEFINED:
+                    ImageViewHolder undefinedViewHolder = (ImageViewHolder) baseViewHolder;
+                    setUndefinedMessage(undefinedViewHolder, position);
+                    break;
+                default:
+                    //for text message
+                    TextMsgViewHolder textMsgViewHolder = (TextMsgViewHolder) baseViewHolder;
+                    setTextMessage(textMsgViewHolder, position);
+            }
     }
 
     @Override
@@ -227,7 +227,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     public class ImageViewHolder extends BaseViewHolder {
         public ImageView image_message;
         public TextView message, date, privacy_txt;
-        public ImageView status, privacy_image,play_video;
+        public ImageView status, privacy_image, play_video;
         public RelativeLayout background;
         public LinearLayout messageContainer;
         public ProgressBar progress_view_download, pbar_loading;
@@ -241,7 +241,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             status = (ImageView) itemView.findViewById(R.id.status);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
-            play_video= (ImageView) itemView.findViewById(R.id.play_video);
+            play_video = (ImageView) itemView.findViewById(R.id.play_video);
             image_message = (ImageView) itemView.findViewById(R.id.image_message);
             progress_view_download = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
             pbar_loading = (ProgressBar) itemView.findViewById(R.id.pbar_loading);
@@ -884,7 +884,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             } else {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red));
             }
-            txtPrivacy.setText("Private");
+            txtPrivacy.setText(R.string.privacy_private);
         } else if (privacy == 1) {
 //            image.setBackgroundResource(R.drawable.blue);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -892,7 +892,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             } else {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue));
             }
-            txtPrivacy.setText("Doctor");
+            txtPrivacy.setText(R.string.doctor);
         } else if (privacy == 2) {
 //            image.setBackgroundResource(R.drawable.green);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -900,7 +900,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             } else {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green));
             }
-            txtPrivacy.setText("Public");
+            txtPrivacy.setText(R.string.privacy_public);
         }
     }
 
@@ -913,7 +913,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
-                        "Ja",
+                        R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, final int position) {
                                 dialog.cancel();
@@ -947,7 +947,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                         });
 
                 builder1.setNegativeButton(
-                        "Nein",
+                        R.string.no,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -970,12 +970,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imagePrivacy.setVisibility(View.GONE);
             txtPrivacy.setVisibility(View.GONE);
         }
-        if (mMessages.get(position).getFrom_id() == userID ) {
+        if (mMessages.get(position).getFrom_id() == userID) {
             background.setGravity(Gravity.RIGHT);
             messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
-            if (mMessages.get(position).getSeen() ==2) {
+            if (mMessages.get(position).getSeen() == 2) {
                 status.setImageResource(R.drawable.readnew);
-            } else if (mMessages.get(position).getSeen() ==1) {
+            } else if (mMessages.get(position).getSeen() == 1) {
                 status.setImageResource(R.drawable.receivenew);
             } else if (mMessages.get(position).getIs_send()) {
                 status.setImageResource(R.drawable.sentnew);
@@ -985,9 +985,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             background.setGravity(Gravity.LEFT);
             messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
         }
-        if(!show_privacy && mMessages.get(position).getFrom_id() == userID){
+        if (!show_privacy && mMessages.get(position).getFrom_id() == userID) {
             status.setVisibility(View.VISIBLE);
-        }else
+        } else
             status.setVisibility(View.GONE);
         try {
             String[] split = message.getSent_at().split(" ")[1].split(":");

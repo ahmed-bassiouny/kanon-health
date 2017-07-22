@@ -254,7 +254,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
 
             } else {
                 tvLoadingError.setVisibility(View.VISIBLE);
-                tvLoadingError.setText("Some thing went wrong");
+                tvLoadingError.setText(R.string.something_went_wrong);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -271,7 +271,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         if (error != null && error.length() > 0)
             tvLoadingError.setText(error);
         else
-            tvLoadingError.setText("Some thing went wrong");
+            tvLoadingError.setText(R.string.something_went_wrong);
         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
     }

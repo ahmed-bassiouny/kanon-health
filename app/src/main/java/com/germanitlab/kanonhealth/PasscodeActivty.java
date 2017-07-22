@@ -44,7 +44,7 @@ public class PasscodeActivty extends AppCompatActivity {
             finish = getIntent().getBooleanExtra("finish", true);
             has_back = getIntent().getBooleanExtra("has_back", false);
             if (!checkPassword) {
-                passText.setText("Set your Password");
+                passText.setText(R.string.set_your_password);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -132,7 +132,7 @@ public class PasscodeActivty extends AppCompatActivity {
     public void submit(View view) {
         try {
             if (passcode.length() != 6)
-                Toast.makeText(this, "wrong passcode", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.wrong_passcode, Toast.LENGTH_SHORT).show();
             else if (checkPassword) {
                 // check password to login
                 checkPasscode();
@@ -143,14 +143,14 @@ public class PasscodeActivty extends AppCompatActivity {
                     tempPasscode = passcode;
                     passcode = "";
                     pass.setText("");
-                    passText.setText("Confirm Your Passcode");
+                    passText.setText(R.string.confirm_your_passcode);
                 } else if (tempPasscode.equals(passcode)) {
                     //enter passcode second time to save it
                     prefManager.put(PrefManager.PASSCODE, passcode);
-                    Toast.makeText(this, "Your Password Saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.your_password_saved, Toast.LENGTH_SHORT).show();
                     finishActivity();
                 } else if (!tempPasscode.equals(passcode)) {
-                    passText.setText("Set your Password");
+                    passText.setText(R.string.set_your_password);
                     wrongPassword();
                 }
             }
@@ -170,7 +170,7 @@ public class PasscodeActivty extends AppCompatActivity {
     }
 
     private void wrongPassword() {
-        Toast.makeText(this, "Invalid Passcode", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.invalid_passcode, Toast.LENGTH_SHORT).show();
         pass.setText("");
         passcode = "";
         tempPasscode = "";
@@ -178,7 +178,7 @@ public class PasscodeActivty extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(has_back)
+        if (has_back)
             super.onBackPressed();
         else
             return;

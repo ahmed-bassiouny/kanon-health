@@ -146,7 +146,7 @@ public class ForwardActivity extends AppCompatActivity {
             if (doctorsForward.size() > 0)
                 sendForward();
             else
-                Toast.makeText(getApplicationContext(), "please Select", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.please_select_a_contact, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -159,14 +159,12 @@ public class ForwardActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    Toast.makeText(ForwardActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ForwardActivity.this, R.string.message_sent, Toast.LENGTH_SHORT).show();
                     finish();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
-
-
             }
 
             @Override
@@ -306,7 +304,7 @@ public class ForwardActivity extends AppCompatActivity {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
                 if (result.getContents() == null) {
-                    Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.cancelled, Toast.LENGTH_LONG).show();
                 } else {
 /*
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();

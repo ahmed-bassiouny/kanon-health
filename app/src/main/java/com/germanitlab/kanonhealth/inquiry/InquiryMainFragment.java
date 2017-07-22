@@ -66,7 +66,7 @@ public class InquiryMainFragment extends Fragment {
     UserInfoResponse doctor;
 
     private PrefManager prefManager;
-    Util util ;
+    Util util;
 
     @Nullable
     @Override
@@ -204,7 +204,7 @@ public class InquiryMainFragment extends Fragment {
 
                         break;
                     } else {
-                        Toast.makeText(getActivity(), "Bitte wählen Sie eine Option. Abbrechen über Zurück.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.please_choose_an_option_cancel_via_back, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -224,7 +224,6 @@ public class InquiryMainFragment extends Fragment {
     public String getResourceString(int resource) {
         return getResources().getString(resource);
     }
-
 
 
 }

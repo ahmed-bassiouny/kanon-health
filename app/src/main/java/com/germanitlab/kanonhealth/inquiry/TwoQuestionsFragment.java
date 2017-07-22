@@ -146,7 +146,7 @@ public class TwoQuestionsFragment extends Fragment {
 
 
         } else {
-            Toast.makeText(getActivity(), "Bitte schreibe deine Antwort heir", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.please_write_your_answer_here, Toast.LENGTH_SHORT).show();
         }
     }
 

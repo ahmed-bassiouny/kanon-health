@@ -125,13 +125,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     Button canRate;
 
 
-
     // loca variable
     int userID;
     String userPassword;
     int doctorID;
 
-    int flagIsSent=0;
+    int flagIsSent = 0;
 
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
@@ -163,11 +162,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
-        canRate.setOnClickListener(new View.OnClickListener()
-        {
+        canRate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Comment.class);
                 intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
                 intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
@@ -202,7 +199,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             handelEvent();
             checkMode();
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Please Open chat again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_open_chat_again, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }
@@ -218,13 +215,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         recyclerView.setLayoutManager(llm);
         messageRepositry = new MessageRepositry(getActivity());
         messages = new ArrayList<>();
-        userRepository=new UserRepository(getActivity());
+        userRepository = new UserRepository(getActivity());
     }
 
     // set data in object
     private void initData() {
         iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
-        iamClinic=new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
+        iamClinic = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
 
 
         userID = prefManager.getInt(PrefManager.USER_ID);
@@ -248,7 +245,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getActivity());
-        if(doctor.getFullName() !=null )
+        if (doctor.getFullName() != null)
             tv_chat_user_name.setText(doctor.getFullName());
 
     }
@@ -377,14 +374,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             message.setSent_at(getDateTimeNow());
             etMessage.setText("");
             message.setIs_send(false);
-            etMessage.setHint("Nachricht schreiben");
+            etMessage.setHint(R.string.write_a_message);
             messages.add(message);
             chatAdapter.setList(messages);
             chatAdapter.notifyDataSetChanged();
             final int index = messages.size() - 1;
             recyclerView.scrollToPosition(index);
 
-            if (iamDoctor&&doctorID!=userID &&doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
+            if (iamDoctor && doctorID != userID && doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
                 new HttpCall(getActivity(), new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
@@ -406,30 +403,30 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                 chatAdapter.notifyDataSetChanged();
                                 recyclerView.scrollToPosition(messages.size() - 1);
                                 messageRepositry.create((Message) response);
-                                Toast.makeText(getContext(), "Message  sent", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.message_sent, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public void onFailed(String error) {
-                                Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                                 removeDummyMessage(index);
                             }
                         }).sendMessage(message);
 
 
                     }
+
                     @Override
                     public void onFailed(String error) {
                         imgbtn_chat_attach.setEnabled(false);
                         img_send_audio.setEnabled(false);
                         img_requestpermission.setEnabled(false);
-                        Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                         removeDummyMessage(index);
                     }
                 }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                         String.valueOf(doctor.getId()), "2");
-            }else
-            {
+            } else {
 
                 new HttpCall(getContext(), new ApiResponse() {
                     @Override
@@ -446,7 +443,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                     @Override
                     public void onFailed(String error) {
-                        Toast.makeText(getContext(), "Message not send", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                         removeDummyMessage(index);
                     }
                 }).sendMessage(message);
@@ -505,7 +502,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                                     @Override
                                     public void onFailed(String error) {
-                                        Toast.makeText(getContext(), "Picture not send", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.picture_not_send, Toast.LENGTH_SHORT).show();
                                         removeDummyMessage(index);
                                     }
                                 }).sendMessage(message);
@@ -529,12 +526,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         String filepath = new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath();
                         String ext1 = filepath.substring(filepath.lastIndexOf(".")); // Extension with dot .jpg, .png
                         final String type;
-                        if (ext1.equals(".mp4")||ext1.equals(".3gp"))
+                        if (ext1.equals(".mp4") || ext1.equals(".3gp"))
                             type = Constants.VIDEO;
                         else if (ext1.equals(".jpg") || ext1.equals(".png") || ext1.equals(".jpeg"))
                             type = Constants.IMAGE;
                         else {
-                            Toast.makeText(getActivity(), "don't support this file", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.this_file_is_not_supported, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         final int index2 = creatDummyMessage();
@@ -559,7 +556,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                                     @Override
                                     public void onFailed(String error) {
-                                        Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                                         removeDummyMessage(index2);
                                     }
                                 }).sendMessage(message);
@@ -732,8 +729,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     public void takePhoto() {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        contentValues.put(MediaStore.Images.Media.TITLE, R.string.new_picture);
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, R.string.from_your_camera);
         selectedImageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
@@ -831,7 +828,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     @Override
                     public void run() {
                         for (Message message : messages) {
-                            if (message.getSeen()==0) {
+                            if (message.getSeen() == 0) {
                                 int index = messages.indexOf(message);
                                 message.setSeen(1);
                                 messages.set(index, message);
@@ -842,7 +839,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         }
                     }
                 });
-            }else if (notificationType == 6) {
+            } else if (notificationType == 6) {
                 //handle Deliverd Message here /// Andy
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -892,7 +889,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         Log.e("stop Recording", "stop");
 
                         if (img_send_audio.getProgress() < 30) {
-                            Toast.makeText(getActivity(), "You cancel record", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.recoding_canceled, Toast.LENGTH_SHORT).show();
                             stopRecording(true);
                             setButtonToTextMsg(true);
                         } else {
@@ -929,7 +926,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                             @Override
                                             public void onFailed(String error) {
                                                 removeDummyMessage(index2);
-                                                Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                                             }
                                         }).sendMessage(message);
                                     }
@@ -975,7 +972,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
             @Override
             public void onFailed(String error) {
-                Toast.makeText(getActivity(), "Message not send", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                 removeDummyMessage(index2);
             }
         }).sendMessage(message);
@@ -1111,7 +1108,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 imgbtn_chat_attach.setEnabled(false);
                 img_send_audio.setEnabled(false);
                 img_requestpermission.setEnabled(false);
-                etMessage.setHint("Nachricht schreiben");
+                etMessage.setHint(R.string.write_a_message);
             }
         } else if (doctor.getIsClinic() == 1) {
             // client chat with clinics
@@ -1121,7 +1118,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             // client chat with doctor and session closed
             chat_bar.setVisibility(View.GONE);
             open_chat_session.setVisibility(View.VISIBLE);
-            if(iamDoctor ==false && iamClinic==false) {
+            if (iamDoctor == false && iamClinic == false) {
                 if (doctor.getCan_rate() == 1) {
                     canRate.setVisibility(View.VISIBLE);
                 } else {
@@ -1138,7 +1135,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if (doctorID == 1 ||doctor.getIsOpen()==0) {
+        if (doctorID == 1 || doctor.getIsOpen() == 0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
@@ -1163,7 +1160,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     AlertDialog.Builder adb_end = new AlertDialog.Builder(getActivity());
                     adb_end.setTitle(R.string.close_conversation);
                     adb_end.setCancelable(false);
-                    adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    adb_end.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             new HttpCall(getActivity(), new ApiResponse() {
@@ -1199,7 +1196,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         }
 
                     });
-                    adb_end.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    adb_end.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
@@ -1217,7 +1214,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     AlertDialog.Builder adb_end = new AlertDialog.Builder(getActivity());
                     adb_end.setTitle(R.string.close_conversation);
                     adb_end.setCancelable(false);
-                    adb_end.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    adb_end.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             new HttpCall(getActivity(), new ApiResponse() {
@@ -1230,11 +1227,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                         userRepository.update(doctor);
                                         checkSessionOpen(iamDoctor);
                                         getActivity().invalidateOptionsMenu();
-                                        if (doctor.isClinic == 1||doctor.getIsDoc() ==1) {
+                                        if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                                             adb.setTitle(R.string.rate_conversation);
                                             adb.setCancelable(false);
-                                            adb.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                                            adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     new HttpCall(getActivity(), new ApiResponse() {
@@ -1254,11 +1251,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                                     }).closeSession(String.valueOf(doctor.getId()));
                                                 }
                                             });
-                                            adb.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                            adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    if(iamDoctor ==false && iamClinic==false)
-                                                    {
+                                                    if (iamDoctor == false && iamClinic == false) {
                                                         doctor.setCan_rate(1);
                                                         userRepository.update(doctor);
                                                         canRate.setVisibility(View.VISIBLE);
@@ -1343,8 +1339,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             img_send_audio.setEnabled(false);
             img_send_txt.setEnabled(false);
             button2.setEnabled(false);
-            button2.setText("Offline mode , can't contact with doctor");
-            etMessage.setHint("Offline mode , can't contact with doctor");
+            button2.setText(R.string.offline_mode_canot_contact_with_doctor);
+            etMessage.setHint(R.string.offline_mode_canot_contact_with_doctor);
         }
     }
 
@@ -1358,7 +1354,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             recyclerView.scrollToPosition(messages.size() - 1);
             messageRepositry.create(message);
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "Message not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
             Crashlytics.logException(e);
         }
     }
@@ -1411,10 +1407,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     }
 
-    private void messagesDeliver(){
+    private void messagesDeliver() {
         // i sent request to make my msg seen
         try {
-            MessageRequestSeen messageRequest = new MessageRequestSeen(userID,doctorID);
+            MessageRequestSeen messageRequest = new MessageRequestSeen(userID, doctorID);
             new HttpCall(getActivity(), new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
@@ -1425,7 +1421,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                 }
             }).messagesDeliver(messageRequest);
-        }catch (Exception e){
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("messagesDeliver", "messagesDeliver: ", e);
         }
@@ -1434,7 +1430,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @Override
     public void onResume() {
         super.onResume();
-        if(chatAdapter!=null)
-        chatAdapter.clearSelected();
+        if (chatAdapter != null)
+            chatAdapter.clearSelected();
     }
 }

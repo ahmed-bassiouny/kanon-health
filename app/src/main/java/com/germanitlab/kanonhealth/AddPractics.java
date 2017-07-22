@@ -170,7 +170,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     etProvince.setText(user.getInfo().getProvinz());
                     etCountry.setText(user.getInfo().getCountry());
                     etTelephone.setText(user.getPhone());
-                    if(user.getLocation_img()!=null && !user.getLocation_img().isEmpty()) {
+                    if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
                         ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), AddPractics.this);
                         location_img.setVisibility(View.VISIBLE);
                     }
@@ -346,6 +346,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         }
 
     }
+
     private void askForLocationPermission() {
         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -553,7 +554,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                 }
             } else if (requestCode == PLACE_PICKER_REQUEST) {
                 if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace( this,data);
+                    Place place = PlacePicker.getPlace(this, data);
                     user.setLocation_lat(place.getLatLng().latitude);
                     user.setLocation_long(place.getLatLng().longitude);
                 }
@@ -592,7 +593,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         // respond to users whose devices do not support the crop action
         catch (ActivityNotFoundException anfe) {
             Toast toast = Toast
-                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -622,9 +623,9 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     private void getTimaTableData(List<Table> list) {
         if (user.getOpen_Type() == 3)
-            tvNoTime.setText("permenant_closed");
+            tvNoTime.setText(R.string.permenant_closed);
         else
-            tvNoTime.setText("Always Open");
+            tvNoTime.setText(R.string.always_open);
 
         if (list.size() > 0) {
             llNo.setVisibility(View.GONE);
@@ -664,8 +665,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        contentValues.put(MediaStore.Images.Media.TITLE, getString(R.string.new_picture));
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.from_your_camera));
         selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
@@ -692,13 +693,14 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     private boolean isvalid(EditText editText) {
         if (editText.getText().toString().trim().isEmpty()) {
-            editText.setError("Please Fill Data");
+            editText.setError(AddPractics.this.getString(R.string.please_fill_data));
             return false;
         } else
             return true;
     }
+
     @OnClick(R.id.location_img)
-    public void openMap(){
+    public void openMap() {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         intent.putExtra("long", user.getLocation_long());
         intent.putExtra("lat", user.getLocation_lat());
