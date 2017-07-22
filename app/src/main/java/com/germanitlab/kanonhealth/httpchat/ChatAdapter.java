@@ -347,6 +347,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
             imageViewHolder.play_video.setVisibility(View.GONE);
+            imageViewHolder.image_message.setImageBitmap(null);
             if (message.getImageText() != null) {
                 imageViewHolder.message.setText(message.getImageText());
                 imageViewHolder.message.setVisibility(View.VISIBLE);
@@ -713,7 +714,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     return true;
                 }
             });
-
+            imageViewHolder.image_message.setImageBitmap(null);
             JSONObject jsonObject = new JSONObject(locationMessage.getMsg());
             double lat = jsonObject.getDouble("lat");
             double lng = jsonObject.getDouble("long");
@@ -734,7 +735,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer, imageViewHolder.background
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading);
             imageViewHolder.message.setVisibility(View.GONE);
-
             if (!new File(message.getMsg()).exists()) {
                 final String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
                 final File file = new File(folder, fileName);
