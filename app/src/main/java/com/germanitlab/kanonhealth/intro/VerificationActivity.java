@@ -21,7 +21,6 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -29,10 +28,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
-import com.germanitlab.kanonhealth.models.user.UserRegisterRequest;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -132,7 +128,6 @@ public class VerificationActivity extends AppCompatActivity {
                                 }
                             }).start();
                             CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, registerResponse);
-                            joinUser();
                             util.dismissProgressDialog();
                             if (oldUser) {
                                 UserRegisterResponse userRegisterResponse = new UserRegisterResponse( );
@@ -221,39 +216,7 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
 
-    public void joinUser() {
 
-        new SocketCall(getApplicationContext(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-
-                Log.d("Join User1 Response", response.toString());
-
-            }
-
-            @Override
-            public void onFailed(String error) {
-
-                Log.e("Join User1 Response", error.toString());
-
-                Helper.showAlertDialog(getApplicationContext(), getString(R.string.warning), getString(R.string.some_wrong), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        joinUser();
-                        dialogInterface.dismiss();
-                    }
-                }, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
-
-
-            }
-        }).joinUser(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-    }
 
 
     @Override

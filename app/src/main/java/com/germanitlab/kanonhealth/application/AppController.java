@@ -3,23 +3,9 @@ package com.germanitlab.kanonhealth.application;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-
 import io.fabric.sdk.android.Fabric;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 /**
  * Created by eslam on 1/10/17.

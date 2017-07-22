@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.initialProfile;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -61,6 +63,7 @@ import butterknife.OnClick;
 public class ProfileDetails extends AppCompatActivity implements DialogPickerCallBacks {
 
     private static final int TAKE_PICTURE = 1;
+    private static final int CROP_PIC = 5 ;
 
     @BindView(R.id.rggender)
     RadioGroup rgGender;
@@ -188,6 +191,21 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
     private void askForPermission(String[] permission, Integer requestCode) {
         ActivityCompat.requestPermissions(this, permission, requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //resume tasks needing this
+                switch (requestCode) {
+                    case Constants.GALLERY_PERMISSION_CODE:
+                        pickerDialog.show(getFragmentManager(), "imagePickerDialog");
+                        break;
+                }
+            }
+        }
     }
 
     @OnClick(R.id.edit_birthday)
@@ -328,30 +346,66 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                     break;
+                case CROP_PIC :
+                    AfterCropFinish();
+                    break;
                 case TAKE_PICTURE:
                     util.showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-
-                    ImageHelper.setImage(imageProfile, selectedImageUri, this);
-
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            util.dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), "upload image failed ", Toast.LENGTH_SHORT).show();
-                        }
-                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-
+                    performCrop();
                     break;
             }
         }
     }
+
+    public void AfterCropFinish(){
+        ImageHelper.setImage(imageProfile, selectedImageUri, this);
+
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                util.dismissProgressDialog();
+                uploadImageResponse = (UploadImageResponse) response;
+                Log.e("After Casting", uploadImageResponse.getFile_url());
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), "upload image failed ", Toast.LENGTH_SHORT).show();
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
+    }
+
+    private void performCrop() {
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not
+            // support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(selectedImageUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, CROP_PIC);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            Toast toast = Toast
+                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
 
 
 

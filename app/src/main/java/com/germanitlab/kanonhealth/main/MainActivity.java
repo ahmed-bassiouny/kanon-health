@@ -40,7 +40,6 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.socket.emitter.Emitter;
 
 
 public class MainActivity extends AppCompatActivity implements OnImgDoctorListMapClick {
@@ -163,34 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 R.id.doctor_list_continer, "DoctorListMapFragment");
     }
 
-    private Emitter.Listener handleIncomingMessages = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    Log.d("Incoming Message", args[0].toString());
 
-                    try {
-                        if (data.get("type").equals(Constants.LOCATION)) {
-                            String msgLoc = data.getString("msg");
-                            JSONObject jsonObject = new JSONObject(msgLoc);
-                            double lat = jsonObject.getDouble("lat");
-                            double lng = jsonObject.getDouble("long");
-                            data.put("msg", "long:" + lng + ",lat:" + lat);
-                            handelMessage(data.toString());
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        handelMessage(data.toString());
-                    }
-
-
-                }
-            });
-        }
-    };
 
 
     private void setupTabIcons() {
