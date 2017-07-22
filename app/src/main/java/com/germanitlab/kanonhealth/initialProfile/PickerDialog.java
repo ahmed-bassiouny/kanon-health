@@ -91,11 +91,6 @@ public class PickerDialog extends DialogFragment {
 
     @OnClick(R.id.select_image)
     public void onTakeImageClicked() {
-        callBacks.onCameraClicked();
-    }
-
-    @OnClick(R.id.take_image)
-    public void onSelectImageClicked() {
         try {
             Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
             getIntent.setType("image/*");
@@ -111,6 +106,12 @@ public class PickerDialog extends DialogFragment {
             Crashlytics.logException(e);
             Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @OnClick(R.id.take_image)
+    public void onSelectImageClicked() {
+        callBacks.onCameraClicked();
+
     }
 
     @OnClick(R.id.delete_image)

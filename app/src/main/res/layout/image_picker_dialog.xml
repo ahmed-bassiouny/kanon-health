@@ -10,10 +10,8 @@
         android:orientation="vertical">
 
         <LinearLayout
-
-            android:id="@+id/take_image"
+            android:id="@+id/select_image"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -31,12 +29,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/take_new_image" />
+                android:text="@string/select_from_gallery" />
         </LinearLayout>
 
         <LinearLayout
-
-            android:id="@+id/select_image"
+            android:id="@+id/take_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin">
@@ -52,7 +49,7 @@
                 style="@style/PickerTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/select_from_gallery" />
+                android:text="@string/take_new_image" />
         </LinearLayout>
 
         <LinearLayout
@@ -61,13 +58,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_add_a_photo_black_24dp" />
+                android:background="@drawable/ic_delete_black_24dp" />
 
             <TextView
 
