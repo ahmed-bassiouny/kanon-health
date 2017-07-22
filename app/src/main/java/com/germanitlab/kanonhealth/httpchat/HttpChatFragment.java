@@ -385,7 +385,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 new HttpCall(getActivity(), new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
-                        imgbtn_chat_attach.setEnabled(true);
+                        layout_chat_attach.setEnabled(true);
                         img_send_audio.setEnabled(true);
                         img_requestpermission.setEnabled(true);
                         doctor.setIsOpen(1);
@@ -418,7 +418,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                     @Override
                     public void onFailed(String error) {
-                        imgbtn_chat_attach.setEnabled(false);
+                        layout_chat_attach.setEnabled(false);
                         img_send_audio.setEnabled(false);
                         img_requestpermission.setEnabled(false);
                         Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
@@ -660,7 +660,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         showPopup.setAnimationStyle(R.style.Animations_GrowFromTop);
 
 
-        showPopup.showAtLocation(view, Gravity.BOTTOM, 0, 400);
+        showPopup.showAtLocation(view, Gravity.BOTTOM, 0, 300);
 
 
         showPopup.setOutsideTouchable(true);
@@ -878,7 +878,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                     case MotionEvent.ACTION_DOWN:
                         linearTextMsg.setVisibility(View.GONE);
-                        imgbtn_chat_attach.setVisibility(View.GONE);
+                        layout_chat_attach.setVisibility(View.GONE);
                         relativeAudio.setVisibility(View.VISIBLE);
                         img_send_audio.setBackgroundResource(0);
                         Log.e("Start Recording", "start");
@@ -991,8 +991,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     LinearLayout linearTextMsg;
     @BindView(R.id.relative_record)
     RelativeLayout relativeAudio;
-    @BindView(R.id.imgbtn_chat_attach)
-    ImageButton imgbtn_chat_attach;
+    @BindView(R.id.layout_chat_attach)
+    LinearLayout layout_chat_attach;
 
     private void startRecording() {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -1085,7 +1085,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
 
         linearTextMsg.setVisibility(View.VISIBLE);
-        imgbtn_chat_attach.setVisibility(View.VISIBLE);
+        layout_chat_attach.setVisibility(View.VISIBLE);
         relativeAudio.setVisibility(View.GONE);
     }
 
@@ -1105,7 +1105,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             chat_bar.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
             if (doctor.getIsOpen() == 0) {
-                imgbtn_chat_attach.setEnabled(false);
+                layout_chat_attach.setEnabled(false);
                 img_send_audio.setEnabled(false);
                 img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
@@ -1322,7 +1322,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private void checkMode() {
         if (Helper.isNetworkAvailable(getContext())) {
             loadChatOnline(userID, doctorID);
-            imgbtn_chat_attach.setEnabled(true);
+            layout_chat_attach.setEnabled(true);
             etMessage.setEnabled(true);
             img_send_audio.setEnabled(true);
             img_send_txt.setEnabled(true);
@@ -1334,7 +1334,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 checkSessionOpen(iamDoctor);
         } else {
             loadChatOffline(doctorID);
-            imgbtn_chat_attach.setEnabled(false);
+            layout_chat_attach.setEnabled(false);
             etMessage.setEnabled(false);
             img_send_audio.setEnabled(false);
             img_send_txt.setEnabled(false);
