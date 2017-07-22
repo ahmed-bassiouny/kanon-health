@@ -56,7 +56,7 @@ public class QrActivity extends AppCompatActivity {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
                 if (result.getContents() == null) {
-                    Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.cancelled, Toast.LENGTH_LONG).show();
                     if (prefManager.getData(Constants.USER_ID) != null) {
 
                         Intent i = new Intent(this, MainActivity.class);

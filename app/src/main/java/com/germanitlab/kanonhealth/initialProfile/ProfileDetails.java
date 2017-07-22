@@ -63,7 +63,7 @@ import butterknife.OnClick;
 public class ProfileDetails extends AppCompatActivity implements DialogPickerCallBacks {
 
     private static final int TAKE_PICTURE = 1;
-    private static final int CROP_PIC = 5 ;
+    private static final int CROP_PIC = 5;
 
     @BindView(R.id.rggender)
     RadioGroup rgGender;
@@ -88,7 +88,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     String gender_other = "Male";
     int gender = 1;
     PrefManager prefManager;
-    Util util ;
+    Util util;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -334,12 +334,12 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         public void onSuccess(Object response) {
                             util.dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
-                            Toast.makeText(ProfileDetails.this, "Upload Success", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
                             util.dismissProgressDialog();
                             imageProfile.setImageResource(R.drawable.profile_place_holder);
                         }
@@ -359,12 +359,12 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         public void onSuccess(Object response) {
                             util.dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
-                            Toast.makeText(ProfileDetails.this, "Upload Success", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
                             util.dismissProgressDialog();
                             imageProfile.setImageResource(R.drawable.profile_place_holder);
                         }
@@ -374,7 +374,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         }
     }
 
-    public void AfterCropFinish(){
+    public void AfterCropFinish() {
         ImageHelper.setImage(imageProfile, selectedImageUri, this);
 
         new HttpCall(this, new ApiResponse() {
@@ -387,7 +387,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
             @Override
             public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), "upload image failed ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.upload_image_failed, Toast.LENGTH_SHORT).show();
             }
         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
     }
@@ -417,12 +417,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         // respond to users whose devices do not support the crop action
         catch (ActivityNotFoundException anfe) {
             Toast toast = Toast
-                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
-
-
 
 
     @Override
@@ -439,6 +437,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     public void deleteMyImage() {
 
     }
+
     private void loadData() {
         try {
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -448,7 +447,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             progressDialog.show();
-            if(!Helper.isNetworkAvailable(this)){
+            if (!Helper.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -474,7 +473,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
                 @Override
                 public void onFailed(String error) {
-                    Log.e("ProfileDetails", error );
+                    Log.e("ProfileDetails", error);
                     progressDialog.dismiss();
                     finish();
                 }

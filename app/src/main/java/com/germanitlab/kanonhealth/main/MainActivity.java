@@ -41,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
 public class MainActivity extends AppCompatActivity implements OnImgDoctorListMapClick {
 
 
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     Intent intent;
     private Toolbar toolbar;
     private TextView tvToolbarTitle;
-    public AppBarLayout appBarLayout ;
+    public AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                     mytablayout.getTabAt(position).select();
                     toolbar.getMenu().clear();
                     invalidateOptionsMenu();
-                    if(position == 0)
+                    if (position == 0)
                         toolbar.inflateMenu(R.menu.contacts_menu);
-                    else if(position == 1)
+                    else if (position == 1)
                         toolbar.inflateMenu(R.menu.menu_document);
-                    else if(position == 2)
+                    else if (position == 2)
                         toolbar.inflateMenu(R.menu.contacts_menu);
-                    else if(position == 3)
+                    else if (position == 3)
                         toolbar.inflateMenu(R.menu.menu_settings);
                 }
 
@@ -139,12 +138,13 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean touchesAllowed = true ;
+        boolean touchesAllowed = true;
         if (touchesAllowed) {
             return super.onTouchEvent(event);
         } else {
             return MotionEventCompat.getActionMasked(event) != MotionEvent.ACTION_MOVE && super.onTouchEvent(event);
-        }    }
+        }
+    }
 
     private void initTB() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -161,8 +161,6 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         new Helper(MainActivity.this).replaceFragments(new DoctorListMapFragment(MainActivity.this),
                 R.id.doctor_list_continer, "DoctorListMapFragment");
     }
-
-
 
 
     private void setupTabIcons() {
@@ -205,11 +203,11 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             return;
         }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Do you want to close app?");
+        builder1.setMessage(R.string.do_you_want_to_close_app);
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
-                "Ok",
+                R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -221,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 });
 
         builder1.setNegativeButton(
-                "Cancel",
+                R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();

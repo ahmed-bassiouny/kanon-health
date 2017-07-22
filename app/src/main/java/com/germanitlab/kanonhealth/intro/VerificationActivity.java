@@ -96,7 +96,7 @@ public class VerificationActivity extends AppCompatActivity {
     public void verify() {
         try {
             if (verification_Code.getText().toString().length() == 0) {
-                Toast.makeText(getApplicationContext(), "Geben Sie den richtigen Code ein", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.enter_the_correct_code, Toast.LENGTH_LONG).show();
                 return;
             } else {
                 verificationCode = verification_Code.getText().toString();

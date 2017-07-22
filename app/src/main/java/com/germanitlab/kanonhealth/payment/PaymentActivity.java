@@ -134,7 +134,7 @@ public class PaymentActivity extends AppCompatActivity {
     public void nextClicked() {
         try {
             if(rgPayment.getCheckedRadioButtonId() == -1){
-                Toast.makeText(this, "please choose one of the methods", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.please_choose_one_of_these_methods, Toast.LENGTH_SHORT).show();
                 return;
             }
 

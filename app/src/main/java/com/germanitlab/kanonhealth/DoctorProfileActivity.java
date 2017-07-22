@@ -132,7 +132,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @BindView(R.id.border)
     View vBorder;
     @BindView(R.id.v_document_line)
-    View viewDocumentLine ;
+    View viewDocumentLine;
 
 
     @BindView(R.id.ed_location)
@@ -237,7 +237,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(menu != null) {
+        if (menu != null) {
             try {
                 getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
                 menu.findItem(R.id.mi_save).setVisible(false);
@@ -254,7 +254,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
                 }
                 this.menu = menu;
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
 
         }
         return true;
@@ -456,20 +457,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getSupported_lang() != null)
             setImage(user.getSupported_lang(), flLanguages, 0);
         if (user.getMembers_at() != null)
-            if(user.getMembers_at().size() > 0) {
+            if (user.getMembers_at().size() > 0) {
                 set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                 vNoClinicLine.setVisibility(View.GONE);
-            }
-            else
+            } else
                 vNoClinicLine.setVisibility(View.VISIBLE);
         if (user.getDocuments() != null) {
-            if(!is_me) { // handle the document if the profile is not my profile
+            if (!is_me) { // handle the document if the profile is not my profile
                 doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
                 recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
                 recyclerViewDocument.setAdapter(doctorDocumentAdapter);
                 recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
-            }
-            else {
+            } else {
                 viewDocumentLine.setVisibility(View.GONE);
             }
         }
@@ -536,7 +535,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         util.showProgressDialog();
                         pickerDialog.dismiss();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
                         ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
                         new HttpCall(this, new ApiResponse() {
                             @Override
@@ -551,18 +549,34 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                             @Override
                             public void onFailed(String error) {
                                 util.dismissProgressDialog();
-                                Toast.makeText(DoctorProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
-                                Log.i("Doctor Profile  ", " Activity " + error);
+                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                civEditAvatar.setImageResource(R.drawable.profile_place_holder);
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
-                    case CROP_PIC :
+                    /*case CROP_PIC :
                         afterCropFinish();
-                        break;
+                        break;*/
                     case TAKE_PICTURE:
+                        pickerDialog.dismiss();
                         util.showProgressDialog();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        performCrop();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                util.dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                                civEditAvatar.setImageResource(R.drawable.profile_place_holder);
+                            }
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
@@ -580,12 +594,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-            Log.i("Doctor Profile  ", " Activity ", e);
         }
     }
 
-    private void afterCropFinish() {
+    /*private void afterCropFinish() {
         pickerDialog.dismiss();
         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
         ImageHelper.setImage(civEditAvatar, selectedImageUri, this);
@@ -605,7 +617,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 Log.i("Doctor Profile  ", " Activity " + error);
             }
         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-    }
+    }*/
 
 
     private void bindData() {
@@ -653,7 +665,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         }
         setAdapters();
-        tvRating.setText("Rating  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " Reviews)");
+        tvRating.setText(R.string.rating + "  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " " + R.string.reviews + ")");
 
         tvSpecilities.setText("");
         if (user.getSpecialities() != null)
@@ -736,12 +748,12 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     }
 
     private void getTimaTableData(List<Table> list) {
-        if(user != null) {
+        if (user != null) {
             if (user.getOpen_Type() == 3)
-                tvNoTime.setText("permenant_closed");
+                tvNoTime.setText(R.string.permenant_closed);
             else
-                tvNoTime.setText("Always Open");
-            if(list != null) {
+                tvNoTime.setText(R.string.always_open);
+            if (list != null) {
                 if (list.size() > 0) {
                     llNoTime.setVisibility(View.GONE);
                     tablelayout.removeAllViews();
@@ -765,7 +777,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     public void addToMyDoctor() {
         if (is_me)
             return;
-        if (user !=null && !TextUtils.isEmpty(user.getIs_my_doctor()))
+        if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
             if (user.getIs_my_doctor().equals("0")) {
                 new HttpCall(this, new ApiResponse() {
                     @Override
@@ -816,30 +828,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     }
 
-    private void loadQRCode(TextView textView) {
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Dialog dialog;
-                dialog = new Dialog(DoctorProfileActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.custom_dialoge);
-                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.MATCH_PARENT);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-                imageView.setImageResource(R.drawable.qr);
-                if (user.getQr_url() != null && user.getQr_url() != "") {
-                    ImageHelper.setImage(imageView, Constants.CHAT_SERVER_URL + "/" + user.getQr_url(), R.drawable.qr, DoctorProfileActivity.this);
-                }
-                dialog.show();
-            }
-        });
-    }
-
     public void takeImageWithCamera() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        contentValues.put(MediaStore.Images.Media.TITLE, getString(R.string.new_picture));
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.from_your_camera));
         selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
@@ -908,11 +900,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                         templist.add(item);
                 }
                 user.setMembers_at(templist);
-                if(user.getMembers_at().size() > 0) {
+                if (user.getMembers_at().size() > 0) {
                     set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                     vNoClinicLine.setVisibility(View.GONE);
-                }
-                else
+                } else
                     vNoClinicLine.setVisibility(View.VISIBLE);
                 break;
         }
@@ -1021,7 +1012,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         // respond to users whose devices do not support the crop action
         catch (ActivityNotFoundException anfe) {
             Toast toast = Toast
-                    .makeText(this, "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
