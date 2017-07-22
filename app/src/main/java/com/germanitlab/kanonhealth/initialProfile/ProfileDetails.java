@@ -334,25 +334,41 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                         public void onSuccess(Object response) {
                             util.dismissProgressDialog();
                             uploadImageResponse = (UploadImageResponse) response;
-                            Log.e("After Casting", uploadImageResponse.getFile_url());
                             Toast.makeText(ProfileDetails.this, "Upload Success", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailed(String error) {
-                            Log.e("upload image failed :", error);
-                            Toast.makeText(getApplicationContext(), "upload image failed ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                            util.dismissProgressDialog();
+                            imageProfile.setImageResource(R.drawable.profile_place_holder);
                         }
                     }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
 
                     break;
-                case CROP_PIC :
+                /*case CROP_PIC :
                     AfterCropFinish();
-                    break;
+                    break;*/
                 case TAKE_PICTURE:
                     util.showProgressDialog();
                     Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    performCrop();
+                    ImageHelper.setImage(imageProfile, selectedImageUri, this);
+
+                    new HttpCall(this, new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            util.dismissProgressDialog();
+                            uploadImageResponse = (UploadImageResponse) response;
+                            Toast.makeText(ProfileDetails.this, "Upload Success", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailed(String error) {
+                            Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                            util.dismissProgressDialog();
+                            imageProfile.setImageResource(R.drawable.profile_place_holder);
+                        }
+                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                     break;
             }
         }
