@@ -1,11 +1,14 @@
 package com.germanitlab.kanonhealth;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,12 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.Table;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -247,7 +250,7 @@ public class TimeTable extends AppCompatActivity {
             final LinearLayout line = new LinearLayout(this);
             final int lineId = line.generateViewId();
             line.setId(lineId);
-            line.setMinimumWidth(1);
+            line.setMinimumWidth(2);
             line.setMinimumHeight(1);
             layout_from_to.setVisibility(View.VISIBLE);
             line.setBackgroundColor(getResources().getColor(R.color.black));
@@ -263,26 +266,11 @@ public class TimeTable extends AppCompatActivity {
             if (tfrom != null)
                 from.setText(tfrom);
             else
-                from.setText("10:00");
+                from.setText("10:00 AM");
             from.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calendar now = Calendar.getInstance();
-                    TimePickerDialog dpd = TimePickerDialog.newInstance(
-                            new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                    if (minute < 10)
-                                        from.setText(hourOfDay + ":0" + minute);
-                                    else
-                                        from.setText(hourOfDay + ":" + minute);
-                                }
-                            },
-                            now.get(Calendar.MINUTE),
-                            now.get(Calendar.SECOND),
-                            false
-                    );
-                    dpd.show(getFragmentManager(), "Datepickerdialog");
+                    showTimePicker(from);
                 }
             });
             from.setTextColor(getResources().getColor(R.color.black));
@@ -293,7 +281,7 @@ public class TimeTable extends AppCompatActivity {
             linearLayout.addView(from);
             LinearLayout verticalLine = new LinearLayout(this);
             verticalLine.setLayoutParams(new LinearLayout.LayoutParams(
-                    getPixal(1), LinearLayout.LayoutParams.MATCH_PARENT));
+                    getPixal(2), LinearLayout.LayoutParams.MATCH_PARENT));
             verticalLine.setBackgroundResource(R.color.black);
             linearLayout.addView(verticalLine);
             final TextView to = new TextView(this);
@@ -302,25 +290,11 @@ public class TimeTable extends AppCompatActivity {
             else
                 to.setText("10:00");
             to.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar now = Calendar.getInstance();
-                    TimePickerDialog dpd = TimePickerDialog.newInstance(
-                            new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                    if (minute < 10)
-                                        to.setText(hourOfDay + ":0" + minute);
-                                    else
-                                        to.setText(hourOfDay + ":" + minute);
-                                }
-                            },
-                            now.get(Calendar.HOUR),
-                            now.get(Calendar.MINUTE),
-                            false
-                    );
-                    dpd.show(getFragmentManager(), "Datepickerdialog");
-                }
+                    @Override
+                    public void onClick(View v) {
+                        showTimePicker(to);
+
+                    }
             });
             to.setTextColor(getResources().getColor(R.color.black));
             to.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
@@ -515,5 +489,29 @@ public class TimeTable extends AppCompatActivity {
             else if (table.getDayweek().equals("6"))
                 addNewItem(sunday_layout, 6, sundaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
         }
+    }
+    private void showTimePicker(final TextView txt){
+        Calendar mcurrentTime = Calendar.getInstance();
+        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = mcurrentTime.get(Calendar.MINUTE);
+        TimePickerDialog mTimePicker;
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(TimeTable.this, android.R.style.Theme_Holo_Light_Dialog);
+
+        mTimePicker = new TimePickerDialog(wrapper, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                if (minute < 10)
+                    txt.setText(hourOfDay + ":0" + minute);
+                else
+                    txt.setText(hourOfDay + ":" + minute);
+                if(hourOfDay < 12) {
+                    txt.append(" AM") ;
+                } else {
+                    txt.append(" PM");
+                }
+            }
+        }, hour, minute, false);//Yes 24 hour time
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
     }
 }

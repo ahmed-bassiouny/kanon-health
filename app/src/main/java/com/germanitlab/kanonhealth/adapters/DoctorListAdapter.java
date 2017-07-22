@@ -197,6 +197,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                         ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getSpecialities().get(x).getSpeciality_icon(), activity);
                         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
                         image.setLayoutParams(parms);
+                        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         holder.linearLayoutSpecialist.addView(image);
 //                        if (x == 0) {
 //                            holder.tvSpecialist.append(doctor.getSpecialities().get(x).getSpeciality_title());
