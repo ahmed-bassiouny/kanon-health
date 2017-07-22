@@ -1,7 +1,5 @@
 package com.germanitlab.kanonhealth.splash;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +11,6 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
-import com.germanitlab.kanonhealth.async.SocketCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
@@ -22,7 +19,6 @@ import com.germanitlab.kanonhealth.intro.SignupActivity;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
-import com.google.zxing.common.StringUtils;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -57,7 +53,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                     // to check passcode
                     if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
-                        joinUser();
                         if (Helper.isNetworkAvailable(SplashScreenActivity.this))
                             loadData();
                         else {
@@ -72,14 +67,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                     } // registered but not filled my data
                     else if (isLogin && storedUser.equals("")) {
 
-                        joinUser();
                         startActivity(new Intent(SplashScreenActivity.this, ProfileDetails.class));
                         finish();
                     }
                     // all data saved but no passcode set
                     else if (isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
 
-                        joinUser();
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
                         intent.putExtra("finish", false);
@@ -99,45 +92,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     }
 
-    public void joinUser() {
-        if (prefManager.getInt(PrefManager.USER_ID) == 0) {
-            return;
-        }
-        try {
-            new SocketCall(getApplicationContext(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    Log.d("Join User1 Response", response.toString());
-                }
 
-                @Override
-                public void onFailed(String error) {
-
-                    Log.e("Join User1 Response", error.toString());
-
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-
-                    Helper.showAlertDialog(getApplicationContext(), getString(R.string.warning), getString(R.string.wrong_code), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            joinUser();
-                            dialogInterface.dismiss();
-                        }
-                    }, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    });
-
-
-                }
-            }).joinUser(prefManager.getInt(PrefManager.USER_ID));
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-        }
-    }
 
     private void loadData() {
         try {
