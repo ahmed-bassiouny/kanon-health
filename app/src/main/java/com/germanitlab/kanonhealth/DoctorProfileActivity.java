@@ -493,20 +493,13 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     }
                 }
             } else if (i == 1) {
-                flowLayout.addView(setImageCircle(chooseModel.getSpeciality_icon()));
+                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , getApplicationContext()));
             }
         }
     }
 
 
-    private View setImageCircle(String speciality_icon) {
-        ImageView circularImageView = new ImageView(this);
-        ImageHelper.setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, getApplicationContext());
-        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(128,128));
-        circularImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        circularImageView.setPadding(4,4,4,4);
-        return circularImageView;
-    }
+
 
     private View setImageHeart(int src) {
         View view;

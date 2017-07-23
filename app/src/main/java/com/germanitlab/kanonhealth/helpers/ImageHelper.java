@@ -20,6 +20,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.germanitlab.kanonhealth.R;
 import com.mukesh.countrypicker.Country;
+import com.nex3z.flowlayout.FlowLayout;
 
 import java.lang.reflect.Field;
 
@@ -30,6 +31,14 @@ import java.lang.reflect.Field;
 public class ImageHelper {
 
     // image string url
+    public static View setImageCircle(String speciality_icon , Context context) {
+        ImageView circularImageView = new ImageView(context);
+        setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, context);
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(128,128));
+        circularImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        circularImageView.setPadding(4,4,4,4);
+        return circularImageView;
+    }
 
     public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
         setImage(iv, imageFullUrl, -1, null, ctx);
