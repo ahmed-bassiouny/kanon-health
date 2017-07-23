@@ -670,10 +670,15 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         tvRating.setText(R.string.rating + "  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " " + R.string.reviews + ")");
 
         tvSpecilities.setText("");
-        if (user.getSpecialities() != null)
+        if (user.getSpecialities() != null) {
+            int size = 0 ;
             for (ChooseModel speciality : user.getSpecialities()) {
-                tvSpecilities.append(speciality.getSpeciality_title() + " ");
+                size ++ ;
+                tvSpecilities.append(speciality.getSpeciality_title());
+                if(size < user.getSpecialities().size())
+                    tvSpecilities.append(", ");
             }
+        }
         if (user.getOpen_time() != null)
             getTimaTableData(user.getOpen_time());
 
