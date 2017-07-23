@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -36,8 +39,6 @@ public class TwoQuestionsFragment extends Fragment {
     TextView textSecondQuestion;
     @BindView(R.id.edit_answer2_fragment)
     EditText textSecondAnswer;
-    @BindView(R.id.button_finish)
-    ImageView finish;
 
     private OnChoiceSelectedListener mCallback;
 
@@ -106,7 +107,6 @@ public class TwoQuestionsFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.button_finish)
     public void onFinishedButtonClicked() {
 
         String firstAnswer = textFirstAnswer.getText().toString();
@@ -153,5 +153,26 @@ public class TwoQuestionsFragment extends Fragment {
 
     public String getResourceString(int resource) {
         return getResources().getString(resource);
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.question, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.save){
+            onFinishedButtonClicked();
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
     }
 }

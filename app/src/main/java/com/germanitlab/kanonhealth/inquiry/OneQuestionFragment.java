@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -34,9 +37,8 @@ public class OneQuestionFragment extends Fragment {
     TextView question;
     @BindView(R.id.edit_answer_fragment)
     EditText answer;
-    @BindView(R.id.button_finish)
-    ImageView finish;
     private boolean questionVisibility = true;
+
 
 
     @Nullable
@@ -91,7 +93,7 @@ public class OneQuestionFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.button_finish)
+
     public void onFinishedButtonClicked() {
         String text = answer.getText().toString();
         if (!text.equals("")) {
@@ -189,5 +191,25 @@ public class OneQuestionFragment extends Fragment {
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.question, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.save){
+            onFinishedButtonClicked();
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+    }
 }
