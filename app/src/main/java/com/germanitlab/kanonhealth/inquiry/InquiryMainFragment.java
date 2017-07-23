@@ -84,15 +84,7 @@ public class InquiryMainFragment extends Fragment {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
 
-            mFirstLevelName = bundle.getString(getResourceString(R.string.first_level));
-
-            if (!mFirstLevelName.equals("firstTime")) {
-                disableFinishedButtons(InquiryActivity.finishedFirstLevelOptions);
-            }
-        }
         return root;
     }
 
@@ -130,6 +122,15 @@ public class InquiryMainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();        //hide the keyboard
+//        Bundle bundle = getArguments();
+//        if (bundle != null) {
+//
+//            mFirstLevelName = bundle.getString(getResourceString(R.string.first_level));
+//
+//            if (!mFirstLevelName.equals("firstTime")) {
+                disableFinishedButtons(InquiryActivity.finishedFirstLevelOptions);
+           // }
+      //  }
     }
 
     @OnClick({R.id.button_medizinische, R.id.button_Ich, R.id.button_beratung, R.id.button_untersuchung, R.id.button_submit})
