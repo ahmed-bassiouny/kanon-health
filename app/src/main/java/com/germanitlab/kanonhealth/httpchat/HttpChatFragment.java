@@ -1433,4 +1433,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         if (chatAdapter != null)
             chatAdapter.clearSelected();
     }
+    @OnClick(R.id.img_back)
+    public void back(){
+        getActivity().finish();
+    }
 }
