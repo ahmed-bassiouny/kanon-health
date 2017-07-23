@@ -23,14 +23,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/status"
-        android:layout_alignBottom="@+id/img_avatar_cell"
-        android:layout_alignEnd="@id/img_avatar_cell"
+        android:layout_alignParentStart="true"
         android:layout_gravity="bottom|right"
         android:src="@color/medium_grey"
         app:layout_aspectRatio="100%"
-        app:layout_marginPercent="1.5%"
+        android:layout_alignBottom="@+id/img_avatar_cell"
+        app:layout_marginStartPercent="16.5%"
+        app:layout_marginTopPercent="4%"
         app:layout_widthPercent="5%" />
-
 
     <TextView
         android:id="@+id/tv_doctor_name_cell"

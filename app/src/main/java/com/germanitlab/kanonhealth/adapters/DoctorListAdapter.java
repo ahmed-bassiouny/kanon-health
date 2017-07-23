@@ -130,7 +130,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
                     holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.close));
                 } else {
-                    final int newColor = activity.getResources().getColor(R.color.green);
+                    final int newColor = activity.getResources().getColor(R.color.new_green);
                     holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
                     holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.open));
 
