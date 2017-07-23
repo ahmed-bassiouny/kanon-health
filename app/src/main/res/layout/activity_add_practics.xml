@@ -169,14 +169,14 @@
                             android:text="@string/specialities"
                             android:textColor="@android:color/background_dark" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/speciality_recycleview"
+                        <com.nex3z.flowlayout.FlowLayout
+                            android:id="@+id/flowlayout_speciality"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/specilities_text"
-                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+                            android:background="@android:color/white"></com.nex3z.flowlayout.FlowLayout>
 
 
                         <ImageView

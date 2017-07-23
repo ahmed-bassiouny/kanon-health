@@ -52,6 +52,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.nex3z.flowlayout.FlowLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -108,6 +109,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     TextView tvLanguages;
     @BindView(R.id.location_img)
     ImageView location_img;
+    @BindView(R.id.flowlayout_speciality)
+    FlowLayout flSpecilities ;
 
     // additional data
     User user;
@@ -456,7 +459,9 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                         tvSpecilities.append(speciality.getSpeciality_title() + " ");
                     }
 
-                    setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+              //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+                    setSpecilites(user.getSpecialities());
+
                     break;
                 case Constants.LANGUAUGE:
                     user.getSupported_lang().clear();
@@ -490,6 +495,17 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         }
 
     }
+
+    private void setSpecilites(List<ChooseModel> specialities) {
+        flSpecilities.removeAllViews();
+        for (ChooseModel chooseModel: specialities
+             ) {
+            flSpecilities.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , getApplicationContext()));
+
+        }
+    }
+
+
 
     public void setRecyclerView(List<ChooseModel> list, int id, int linearLayoutManager, int type) {
         if (recyclerView == null)
