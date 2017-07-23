@@ -266,7 +266,7 @@ public class TimeTable extends AppCompatActivity {
             if (tfrom != null)
                 from.setText(tfrom);
             else
-                from.setText("10:00 AM");
+                from.setText("10:00");
             from.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
