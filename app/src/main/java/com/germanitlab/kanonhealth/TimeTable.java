@@ -504,13 +504,8 @@ public class TimeTable extends AppCompatActivity {
                     txt.setText(hourOfDay + ":0" + minute);
                 else
                     txt.setText(hourOfDay + ":" + minute);
-                if(hourOfDay < 12) {
-                    txt.append(" AM") ;
-                } else {
-                    txt.append(" PM");
-                }
             }
-        }, hour, minute, false);//Yes 24 hour time
+        }, hour, minute, true);//Yes 24 hour time
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
     }

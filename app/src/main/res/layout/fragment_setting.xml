@@ -359,7 +359,7 @@
                 android:background="@color/gray_black" />
 
             <TableRow
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/tr_support"
                 android:padding="@dimen/size_10sp"
                 android:layout_width="match_parent"

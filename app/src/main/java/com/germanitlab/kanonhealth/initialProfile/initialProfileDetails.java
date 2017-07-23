@@ -146,8 +146,8 @@ public class initialProfileDetails extends AppCompatActivity {
     @OnClick(R.id.button_submit)
     public void onSubmitClicked() {
         try {
-            String firstName = editLastName.getText().toString();
-            String lastName = editFirstName.getText().toString();
+            String lastName = editLastName.getText().toString();
+            String firstName = editFirstName.getText().toString();
             String birthDate = textBirthday.getText().toString();
 
 

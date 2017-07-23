@@ -247,8 +247,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
             return;
         }
-        String firstName = editLastName.getText().toString();
-        String lastName = editFirstName.getText().toString();
+        String firstName = editFirstName.getText().toString();
+        String lastName = editLastName.getText().toString();
         String birthDate = textBirthday.getText().toString();
         gender_other = edGender.getText().toString();
         if (gender == 3 && gender_other.trim().isEmpty()) {
