@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:id="@+id/multi_choise_layout"
-    android:layout_margin="10dp"
+    android:layout_marginBottom="10dp"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
