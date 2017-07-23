@@ -424,7 +424,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
             try {
                 String[] split = message.getSent_at().split(" ")[1].split(":");
-                imageViewHolder.date.setText(split[0] + " " + split[1]);
+                imageViewHolder.date.setText(split[0] + ":" + split[1]+" ");
             } catch (Exception ex) {
                 imageViewHolder.date.setText(message.getSent_at());
             }
@@ -991,7 +991,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             status.setVisibility(View.GONE);
         try {
             String[] split = message.getSent_at().split(" ")[1].split(":");
-            date.setText(split[0] + ":" + split[1]);
+            date.setText(split[0] + ":" + split[1]+" ");
         } catch (Exception ex) {
             date.setText(message.getSent_at());
         }

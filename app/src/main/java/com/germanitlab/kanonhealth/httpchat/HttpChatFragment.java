@@ -245,8 +245,21 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getActivity());
-        if (doctor.getFullName() != null)
+        if (doctor.getFullName() != null) {
             tv_chat_user_name.setText(doctor.getFullName());
+            tv_chat_user_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
+                        Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+                        intent.putExtra("doctor_data", doctor);
+                        getActivity().startActivity(intent);
+                    }else{
+                        // this object is user and should open ProfileActivity
+                    }
+                }
+            });
+        }
 
     }
 

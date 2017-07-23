@@ -49,10 +49,10 @@
 
             <ImageView
                 android:id="@+id/status"
-                android:layout_width="@dimen/size_10dp"
+                android:layout_width="@dimen/size_15dp"
                 android:layout_gravity="left"
                 android:visibility="gone"
-                android:layout_height="@dimen/size_10dp"
+                android:layout_height="@dimen/size_15dp"
                 android:src="@drawable/pending" />
 
         </LinearLayout>
