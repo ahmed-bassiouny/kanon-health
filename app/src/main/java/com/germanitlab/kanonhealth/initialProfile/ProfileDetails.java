@@ -282,7 +282,6 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
                     mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
                     mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
-                    util.dismissProgressDialog();
                     loadData();
 
                 }
@@ -440,13 +439,9 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
     private void loadData() {
         try {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle(R.string.waiting_text);
-            progressDialog.setCancelable(false);
             UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
             userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
             userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            progressDialog.show();
             if (!Helper.isNetworkAvailable(this)) {
                 Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
                 return;
@@ -457,14 +452,12 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                     if (response != null) {
                         Gson gson = new Gson();
                         new PrefManager(ProfileDetails.this).put(PrefManager.USER_KEY, gson.toJson(response));
-                        progressDialog.dismiss();
+                        util.dismissProgressDialog();
                         Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
                         intent.putExtra("finish", false);
                         intent.putExtra("has_back", true);
                         startActivity(intent);
-
-
                     } else {
                         onFailed("response is null");
 
@@ -474,7 +467,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 @Override
                 public void onFailed(String error) {
                     Log.e("ProfileDetails", error);
-                    progressDialog.dismiss();
+                    util.dismissProgressDialog();
                     finish();
                 }
             }).getProfile(userRegisterResponse);
@@ -483,6 +476,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.sorry_missing_data_please_contact_support), Toast.LENGTH_SHORT).show();
+            util.dismissProgressDialog();
             finish();
         }
 
