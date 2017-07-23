@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
+
 
 import com.germanitlab.kanonhealth.R;
 
@@ -46,17 +48,33 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
             finishedFirstLevelOptions = new ArrayList<>();
             finishedSecondLevelOptions = new ArrayList<>();
             fragmentFlag=0;
-            getSupportFragmentManager().beginTransaction().add(R.id.inquiry_container, getInquiryMainFragment("firstTime"))
-                    .addToBackStack(null).commit();
+
+                getSupportFragmentManager().beginTransaction().add(R.id.inquiry_container, getInquiryMainFragment("firstTime"))
+                        .addToBackStack(null).commit();
+
         } else {
             finishedFirstLevelOptions = savedInstanceState.getStringArrayList("finished_first_level");
             finishedSecondLevelOptions = savedInstanceState.getStringArrayList("finished_second_level");
             inquiryResult = (ArrayList<HashMap<String, String>>) savedInstanceState.getSerializable("inquiry_result");
             fragmentFlag=1;
-            getSupportFragmentManager().beginTransaction().replace(R.id.inquiry_container, getInquiryMainFragment("comingFromSaveState"))
-                    .addToBackStack(null).commit();
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.inquiry_container, getInquiryMainFragment("comingFromSaveState"))
+                        .addToBackStack(null).commit();
+
         }
         ButterKnife.bind(this);
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        FragmentManager fm = getSupportFragmentManager();
+
+                        if(getSupportFragmentManager().getBackStackEntryCount()>3) {
+
+                            fm.getFragments().get(getSupportFragmentManager().getBackStackEntryCount() - 1).onResume();
+                        }
+                }
+                });
+
     }
 
     @Override
@@ -69,9 +87,11 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
     }
 
     private void replaceFragments(Fragment fragment) {
-        this.getSupportFragmentManager().beginTransaction().
-                replace(R.id.inquiry_container, fragment)
-                .addToBackStack(null).commit();
+
+            this.getSupportFragmentManager().beginTransaction().
+                    replace(R.id.inquiry_container, fragment)
+                    .addToBackStack(null).commit();
+
     }
 
     @Override
@@ -98,11 +118,11 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+        if ((getSupportFragmentManager().getBackStackEntryCount()== 1)) {
             finish();
         }else
         {
-            super.onBackPressed();
+            getSupportFragmentManager().popBackStack();
         }
     }
 

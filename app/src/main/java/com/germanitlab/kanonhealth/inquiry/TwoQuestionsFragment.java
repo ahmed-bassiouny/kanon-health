@@ -136,7 +136,8 @@ public class TwoQuestionsFragment extends Fragment {
 
             InquiryActivity.inquiryResult.add(mTwoQuestionMap);
 
-            mCallback.OnChoiceSelected(mFirstLevelName, null);
+          //  mCallback.OnChoiceSelected(mFirstLevelName, null);
+           getFragmentManager().popBackStack();
             View view = getActivity().getCurrentFocus();
             if (view != null) {
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

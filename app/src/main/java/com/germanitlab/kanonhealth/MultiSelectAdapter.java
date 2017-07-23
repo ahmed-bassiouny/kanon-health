@@ -64,7 +64,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
 
                     case Constants.SPECIALITIES:
                         holder.tv_title.setText(model.getSpeciality_title());
-                        ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getSpeciality_icon(), R.drawable.profile_place_holder, context);
+                        ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL_IMAGE + "/" + model.getSpeciality_icon(), -1, context);
                         break;
                     case Constants.LANGUAUGE:
                         holder.tv_title.setText(model.getLang_title());

@@ -155,7 +155,9 @@ public class OneQuestionFragment extends Fragment {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
-            mCallback.OnChoiceSelected(mFirstLevelName, null);
+
+           getFragmentManager().popBackStack();
+            // mCallback.OnChoiceSelected(mFirstLevelName, null);
 
         } else {
             Toast.makeText(getActivity(), R.string.please_write_your_answer_here, Toast.LENGTH_SHORT).show();
