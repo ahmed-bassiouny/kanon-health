@@ -354,6 +354,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             } else
                 imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+            Log.e("setImageMessage: " ,Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg());
             ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download, activity);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -905,7 +906,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     }
 
     private void changePrivacy(final ImageView imagePrivacy, final int pos, final TextView txtPrivacy, final ProgressBar progressBar) {
-        imagePrivacy.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clickPrivacy =new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
@@ -919,6 +920,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                                 dialog.cancel();
                                 progressBar.setVisibility(View.VISIBLE);
                                 imagePrivacy.setVisibility(View.GONE);
+                                txtPrivacy.setVisibility(View.GONE);
                                 new HttpCall(activity, new ApiResponse() {
                                     @Override
                                     public void onSuccess(Object response) {
@@ -940,6 +942,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                                         Toast.makeText(activity, activity.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
                                         progressBar.setVisibility(View.GONE);
                                         imagePrivacy.setVisibility(View.VISIBLE);
+                                        txtPrivacy.setVisibility(View.VISIBLE);
 
                                     }
                                 }).updatePrivacy(String.valueOf(userID), passowrd, mMessages.get(pos).get_Id(), (mMessages.get(pos).getPrivacy() + 1));
@@ -957,7 +960,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
             }
-        });
+        };
+        txtPrivacy.setOnClickListener(clickPrivacy);
+        imagePrivacy.setOnClickListener(clickPrivacy);
+
     }
 
     private void showLayout_Privacy(Message message, int position, ImageView imagePrivacy, LinearLayout messageContainer, RelativeLayout background, ImageView status, TextView txtPrivacy, TextView date, ProgressBar progressBar) {

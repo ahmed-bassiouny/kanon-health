@@ -542,6 +542,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="upload_success">Upload erfolgreich</string>
     <string name="image_not_save_error_while_uploading">Bild nicht gespeichert, Fehler beim laden.</string>
     <string name="upload_image_failed">Bild-upload abgebrochen</string>
+    <string name="slide_to_cancle">Gleiten zum abbrechen</string>
 
 
 </resources>

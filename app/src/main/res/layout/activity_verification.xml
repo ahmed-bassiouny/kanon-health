@@ -63,6 +63,7 @@
                     android:hint="_ _ _  _ _ _"
                     android:layout_gravity="center"
                     android:maxLength="6"
+                    android:focusable="true"
                     android:maxLines="1"
                     android:imeOptions="actionSend"
                     android:inputType="phone"

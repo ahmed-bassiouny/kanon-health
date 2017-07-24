@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +30,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
@@ -215,14 +217,9 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+        // old code about dateoicker
+        /*
         Calendar calender = Calendar.getInstance();
-//        Dialog mDialog = new DatePickerDialog(ProfileDetails.this,
-//                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-//                mDateSetListener, calender.get(Calendar.YEAR),
-//                calender.get(Calendar.MONTH), calender
-//                .get(Calendar.DAY_OF_MONTH));
-//
-//        mDialog.show();
         final Context themedContext = new ContextThemeWrapper(
                 ProfileDetails.this,
                 android.R.style.Theme_Holo_Light_Dialog
@@ -235,8 +232,34 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 calender.get(Calendar.MONTH),
                 calender.get(Calendar.DAY_OF_MONTH));
 
-        mDialog.show();
+        mDialog.show();*/
 
+        Calendar calender = Calendar.getInstance();
+         new DatePickerPopWin.Builder(ProfileDetails.this, new DatePickerPopWin.OnDatePickedListener() {
+            @Override
+            public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
+                month=month+1;
+                birthdate = year + "-" + month+ "-" + day;
+                Date parseDate = null;
+                try {
+                    parseDate = DateUtil.getAnotherFormat().parse(birthdate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String s = (DateUtil.formatBirthday(parseDate.getTime()));
+                textBirthday.setText(s);
+            }
+        }).textConfirm("CONFIRM") //text of confirm button
+                .textCancel("CANCEL") //text of cancel button
+                .btnTextSize(16) // button text size
+                .viewTextSize(25) // pick view text size
+                .colorCancel(Color.parseColor("#999999")) //color of cancel button
+                .colorConfirm(Color.parseColor("#009900"))//color of confirm button
+                .minYear(1900) //min year in loop
+                .maxYear(Calendar.YEAR) // max year in loop
+                .showDayMonthYear(true) // shows like dd mm yyyy (default is false)
+                .dateChose(calender.get(Calendar.YEAR)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.DAY_OF_MONTH)) // date chose when init popwindow
+                .build();
 
     }
 
