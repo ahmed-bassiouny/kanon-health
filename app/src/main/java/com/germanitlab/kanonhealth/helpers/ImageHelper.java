@@ -34,7 +34,7 @@ public class ImageHelper {
     public static View setImageCircle(String speciality_icon , Context context) {
         ImageView circularImageView = new ImageView(context);
         setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, context);
-        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(128,128));
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(60,60));
         circularImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         circularImageView.setPadding(7, 4, 7, 4);
         return circularImageView;

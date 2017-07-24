@@ -1,375 +1,277 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/gray"
-    tools:context="com.germanitlab.kanonhealth.PasscodeActivty">
+    android:layout_height="match_parent">
+
 
     <TextView
-        android:layout_width="match_parent"
+        app:layout_widthPercent="100%"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:id="@+id/pass_text"
         android:padding="20dp"
-        android:textSize="20dp"
-        android:textColor="@android:color/background_dark"
+        android:textSize="25dp"
+        android:textColor="@color/dark_gray"
         android:text="@string/enter_your_passcode" />
-    <TextView
-        android:layout_width="match_parent"
+
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/indicator"
+        app:layout_widthPercent="100%"
         android:layout_height="wrap_content"
-        android:id="@+id/pass"
+        android:layout_below="@+id/pass_text"
+        android:layout_margin="10dp"
         android:gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:textColor="@android:color/background_dark"
-        android:background="@drawable/custom_edittext_without_border_style"
-        android:textAlignment="center"
-        android:textSize="35dp"
-        android:text="" />
+        android:focusable="false">
+        <Button
+            android:id="@+id/ind_one"
+            android:layout_width="20dp"
+            app:layout_aspectRatio="99%"
+            android:text=""
+            android:background="@drawable/indicator_unpressed_shape"
+            android:layout_margin="@dimen/size_5dp"
+            android:focusable="false"
+            android:clickable="false"
+            />
 
-    <TableLayout
-        android:layout_width="match_parent"
+        <Button
+            android:id="@+id/ind_two"
+            android:layout_width="20dp"
+            app:layout_aspectRatio="99%"
+            android:text=""
+            android:background="@drawable/indicator_unpressed_shape"
+            android:layout_toEndOf="@+id/ind_one"
+            android:layout_margin="@dimen/size_5dp"
+            android:focusable="false"
+            android:clickable="false"
+            />
+
+        <Button
+            android:id="@+id/ind_three"
+            android:layout_width="20dp"
+            app:layout_aspectRatio="99%"
+            android:text=""
+            android:background="@drawable/indicator_unpressed_shape"
+            android:layout_toEndOf="@+id/ind_two"
+            android:layout_margin="@dimen/size_5dp"
+            android:focusable="false"
+            android:clickable="false"
+            />
+        <Button
+            android:id="@+id/ind_four"
+            android:layout_width="20dp"
+            app:layout_aspectRatio="99%"
+            android:text=""
+            android:layout_toEndOf="@+id/ind_three"
+            android:background="@drawable/indicator_unpressed_shape"
+            android:layout_margin="@dimen/size_5dp"
+            android:focusable="false"
+            android:clickable="false"
+            />
+
+        <Button
+            android:id="@+id/ind_five"
+            android:layout_width="20dp"
+            app:layout_aspectRatio="99%"
+            android:text=""
+            android:background="@drawable/indicator_unpressed_shape"
+            android:layout_toEndOf="@+id/ind_four"
+            android:layout_margin="@dimen/size_5dp"
+            android:focusable="false"
+            android:clickable="false"
+            />
+
+        <Button
+            android:id="@+id/ind_six"
+            android:layout_width="20dp"
+            app:layout_aspectRatio="99%"
+            android:text=""
+            android:background="@drawable/indicator_unpressed_shape"
+            android:layout_toEndOf="@+id/ind_five"
+            android:layout_margin="@dimen/size_5dp"
+            android:focusable="false"
+            android:clickable="false"
+            />
+    </android.support.percent.PercentRelativeLayout>
+
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/group_one"
+        app:layout_widthPercent="100%"
         android:layout_height="wrap_content"
-        android:paddingRight="30dp"
-        android:paddingLeft="30dp"
-        android:layout_gravity="center">
+        android:layout_below="@+id/indicator"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:clickable="true">
+        <Button
+            android:id="@+id/one"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="1"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            android:clickable="true"
+            />
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="35dp"
-            android:gravity="center">
+        <Button
+            android:id="@+id/two"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="2"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/one"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/one"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:src="@drawable/one"
-                android:background="?selectableItemBackgroundBorderless"
-                android:backgroundTint="@color/black"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                android:layout_weight="1"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/two"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/two"
-                android:layout_weight="1"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/three"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_weight="1"
-                android:src="@drawable/three"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_marginTop="15dp"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/four"
-                android:layout_width="match_parent"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_height="60dp"
-                android:src="@drawable/four"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                android:layout_weight="1"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/five"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/five"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_weight="1"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/six"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/six"
-                android:background="?selectableItemBackgroundBorderless"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
-            android:gravity="center">
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/seven"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/seven"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                android:layout_weight="1"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/eight"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/eight"
-                android:layout_weight="1"
-                android:background="?selectableItemBackgroundBorderless"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/nine"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/nine"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_marginTop="15dp"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/delete"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:src="@drawable/remove"
-                android:background="?selectableItemBackgroundBorderless"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                android:layout_weight="1"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/zero"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/zero"
-                android:layout_weight="1"
-                android:background="?selectableItemBackgroundBorderless"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/submit"
-                android:layout_width="match_parent"
-                android:background="?selectableItemBackgroundBorderless"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/sbmit"
-                app:civ_border_width="13dp"
-                app:civ_border_color="#0099cc"
-                app:civ_fill_color="#0099cc" />
-
-        </TableRow>
-    </TableLayout>
+        <Button
+            android:id="@+id/three"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="3"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/two"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+    </android.support.percent.PercentRelativeLayout>
 
 
-    <!--
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="30dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <at.markushi.ui.CircleButton
-                android:id="@+id/one"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/one"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-            <at.markushi.ui.CircleButton
-                android:id="@+id/two"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/two"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/group_two"
+        app:layout_widthPercent="100%"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/group_one"
+        android:layout_margin="10dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/four"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="4"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+
+        <Button
+            android:id="@+id/five"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="5"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/four"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+
+        <Button
+            android:id="@+id/six"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="6"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/five"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+    </android.support.percent.PercentRelativeLayout>
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/group_three"
+        app:layout_widthPercent="100%"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/group_two"
+        android:layout_margin="10dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/seven"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="7"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+
+        <Button
+            android:id="@+id/eight"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="8"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/seven"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+
+        <Button
+            android:id="@+id/nine"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="9"
+            android:textSize="25dp"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/eight"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
+    </android.support.percent.PercentRelativeLayout>
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/group_four"
+        app:layout_widthPercent="100%"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/group_three"
+        android:layout_margin="10dp"
+        android:gravity="center">
 
 
-            <at.markushi.ui.CircleButton
-                android:id="@+id/three"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/three"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-        </LinearLayout>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+        <Button
+            android:id="@+id/empty"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:background="@drawable/button_bg_round"
+            android:visibility="invisible"
+            android:layout_margin="@dimen/size_5dp"
+            android:textColor="@color/tab_text_selector"
+            />
 
-            <at.markushi.ui.CircleButton
-                android:id="@+id/one"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/one"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-            <at.markushi.ui.CircleButton
-                android:id="@+id/two"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/two"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
+        <Button
+            android:id="@+id/zero"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="0"
+            android:textSize="25dp"
+            android:textColor="@color/tab_text_selector"
+            android:background="@drawable/button_bg_round"
+            android:layout_toEndOf="@+id/empty"
+            android:layout_margin="@dimen/size_5dp"
+            />
 
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="60dp"
+            app:layout_aspectRatio="99%"
+            android:text="@string/delete"
+            android:textSize="13dp"
+            android:textColor="@color/dark_gray"
+            android:background="#0000"
+            android:layout_toEndOf="@+id/zero"
+            android:layout_margin="@dimen/size_5dp"
+            />
 
-            <at.markushi.ui.CircleButton
-                android:id="@+id/three"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/three"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+    </android.support.percent.PercentRelativeLayout>
 
-            android:layout_marginTop="10dp"
-            android:gravity="center">
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/four"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/four"
-                android:layout_weight="1"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/five"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/five"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/six"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/six"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center">
-            <at.markushi.ui.CircleButton
-                android:id="@+id/seven"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/seven"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/eight"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/eight"
-                android:layout_weight="1"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/nine"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/nine"
-                android:layout_weight="1"
-                app:cb_pressedRingWidth="0dp"
-                app:cb_color="#0099cc" />
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:weightSum="3"
-            android:gravity="center">
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/delete"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/back1"
-                android:layout_weight="1" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/zero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:cb_color="#0099cc"
-                app:cb_pressedRingWidth="0dp"
-                android:src="@drawable/zero" />
-            <at.markushi.ui.CircleButton
-                android:id ="@+id/submit"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:src="@drawable/sbmit"
-                android:scaleType="fitXY" />
-        </TableRow>
-    </TableLayout>
--->
-
-</LinearLayout>
+</android.support.percent.PercentRelativeLayout>

@@ -48,7 +48,6 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
             inquiryResult = new ArrayList<>();
             finishedFirstLevelOptions = new ArrayList<>();
             finishedSecondLevelOptions = new ArrayList<>();
-            fragmentFlag=0;
 
                 getSupportFragmentManager().beginTransaction().add(R.id.inquiry_container, getInquiryMainFragment("firstTime"))
                         .addToBackStack(null).commit();
@@ -57,24 +56,12 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
             finishedFirstLevelOptions = savedInstanceState.getStringArrayList("finished_first_level");
             finishedSecondLevelOptions = savedInstanceState.getStringArrayList("finished_second_level");
             inquiryResult = (ArrayList<HashMap<String, String>>) savedInstanceState.getSerializable("inquiry_result");
-            fragmentFlag=1;
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.inquiry_container, getInquiryMainFragment("comingFromSaveState"))
                         .addToBackStack(null).commit();
 
         }
         ButterKnife.bind(this);
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    public void onBackStackChanged() {
-                        FragmentManager fm = getSupportFragmentManager();
-
-                        if(getSupportFragmentManager().getBackStackEntryCount()>3) {
-
-                            fm.getFragments().get(getSupportFragmentManager().getBackStackEntryCount() - 1).onResume();
-                        }
-                }
-                });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
