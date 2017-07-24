@@ -174,7 +174,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Comment.class);
                 intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-                int req_id=doctor.getRequest_id();
                 intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
                 startActivity(intent);
                 getActivity().finish();
@@ -250,12 +249,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             tv_chat_user_name.setEnabled(false);
         } else {
             // get data of doctor i talk with him from database
-            try {
+            /*try {
                 doctor.setId(doctorID);
                 doctor = userRepository.getDoctor(doctor);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-            }
+            }*/
+            doctor.setId(doctorID);
+            doctor = userRepository.getDoctor(doctor);
         }
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
@@ -1450,9 +1451,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick({R.id.img_chat_user_avatar,R.id.tv_chat_user_name})
     public void openProfile(){
         if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
-            Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+            /*Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", doctor);
-            getActivity().startActivity(intent);
+            getActivity().startActivity(intent);*/
         }else{
             // this object is user and should open ProfileActivity
         }

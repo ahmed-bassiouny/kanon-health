@@ -233,6 +233,7 @@ public class UserRepository {
             PreparedQuery<User> preparedQuery = queryBuilder.prepare();
 // query for all accounts that have "qwerty" as a password
             List<User> accountList = doctorsDao.query(preparedQuery);
+
             if (accountList.size() == 1)
                 return accountList.get(0);
         } catch (Exception e) {
