@@ -18,7 +18,7 @@
         android:textSize="20dp"
         android:textColor="@android:color/background_dark"
         android:text="@string/enter_your_passcode" />
-
+master
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

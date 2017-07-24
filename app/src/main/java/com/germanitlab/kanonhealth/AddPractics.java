@@ -129,6 +129,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_practics);
         ButterKnife.bind(this);
         initTB();
@@ -244,6 +245,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             info.setZip_code(etZipCode.getText().toString());
             info.setProvinz(etProvince.getText().toString());
             info.setCountry(etCountry.getText().toString());
+            info.setStreetname(etStreetName.getText().toString());
+            info.setCity(etCity.getText().toString());
             user.setInfo(info);
             user.setPhone(etTelephone.getText().toString());
             user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
