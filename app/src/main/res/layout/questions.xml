@@ -74,7 +74,7 @@
         android:gravity="center">
 
         <Button
-            android:text="@string/beratung"
+            android:text="@string/consultation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_beratung"

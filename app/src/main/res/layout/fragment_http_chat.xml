@@ -220,7 +220,7 @@
                     android:imeOptions="actionDone"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="@string/nachricht_schreiben" />
+                    android:hint="@string/write_a_message" />
             </LinearLayout>
 
 
