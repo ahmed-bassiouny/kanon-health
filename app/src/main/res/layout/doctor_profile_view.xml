@@ -659,7 +659,7 @@
                                 android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
-                                android:layout_alignTop="@id/language_recycleview"
+                                android:layout_alignTop="@id/fl_language"
                                 android:layout_marginRight="10dp"
                                 android:src="@drawable/edit"
                                 android:textColor="@android:color/background_dark"

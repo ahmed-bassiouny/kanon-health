@@ -43,6 +43,7 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
@@ -151,8 +152,6 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     EditText etProvince;
     @BindView(R.id.ed_country)
     EditText etCountry;
-    @BindView(R.id.view_no_clinic_line)
-    View vNoClinicLine;
 
     // data of ivEdit
     @BindView(R.id.edit)
@@ -461,9 +460,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         if (user.getMembers_at() != null)
             if (user.getMembers_at().size() > 0) {
                 set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-                vNoClinicLine.setVisibility(View.GONE);
-            } else
-                vNoClinicLine.setVisibility(View.VISIBLE);
+            }
         if (user.getDocuments() != null) {
             if (!is_me) { // handle the document if the profile is not my profile
                 doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
@@ -491,7 +488,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     }
                     Country country = Country.getCountryByISO(country_code);
                     if (country != null) {
-                        flowLayout.addView(setImageHeart(country.getFlag()));
+                        flowLayout.addView(ImageHelper.setImageHeart(country.getFlag() , getApplicationContext()));
                     }
                 }
             } else if (i == 1) {
@@ -503,14 +500,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
 
 
-    private View setImageHeart(int src) {
-        View view;
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.heart_item_layout, null);
-        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
-        item.setImageBitmap(ImageHelper.TrimBitmap(src, DoctorProfileActivity.this));
-        return view;
-    }
+
 
     public void set(RecyclerView.Adapter adapter, List<ChooseModel> list, RecyclerView recyclerVie, int id, int linearLayoutManager, int type) {
 
@@ -635,6 +625,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
+        etCity.setText(user.getInfo().getCity());
         //ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
         String countryDail = user.getCountryCOde();
         if (!TextUtils.isEmpty(countryDail)) {
@@ -915,9 +906,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 user.setMembers_at(templist);
                 if (user.getMembers_at().size() > 0) {
                     set(adapter, user.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-                    vNoClinicLine.setVisibility(View.GONE);
-                } else
-                    vNoClinicLine.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }

@@ -428,7 +428,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     //Forth Level Options
     <string name="question_41">question_41</string>
     <string name="first_level">firstLevel</string>
-    <string name="waiting_text">Wird Geladen</string>
+    <string name="waiting_text">warten .</string>
 
 
     //Profile Detail

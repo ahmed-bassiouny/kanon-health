@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,6 +53,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
 import java.io.Serializable;
@@ -82,6 +84,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     EditText etCountry;
     @BindView(R.id.ed_name)
     EditText etName;
+    @BindView(R.id.fl_language)
+    FlowLayout flLanguages ;
 
 
     @BindView(R.id.et_telephone)
@@ -477,10 +481,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     }
                     user.setSupported_lang(templist);
                     tvLanguages.setText("");
-                    for (ChooseModel lang : user.getSupported_lang()) {
-                        tvLanguages.append(lang.getLang_title() + " ");
-                    }
-                    setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+                    setImage(user.getSupported_lang(), flLanguages, 0);
+                    //  setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
                     break;
                 case Constants.MEMBERAT:
                 case Constants.DoctorAll:
@@ -501,6 +503,29 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         }
 
     }
+    private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
+        flowLayout.removeAllViews();
+        tvLanguages.setText("");
+        int size = 0;
+        for (ChooseModel chooseModel : supported_lang) {
+                String country_code = chooseModel.getCountry_code();
+                if (!TextUtils.isEmpty(country_code)) {
+                    tvLanguages.append(chooseModel.getLang_title());
+                    if (supported_lang.size() > size + 1) {
+                        tvLanguages.append(" , ");
+                        size++;
+                    }
+                    Country country = Country.getCountryByISO(country_code);
+                    if (country != null) {
+                        flowLayout.addView(ImageHelper.setImageHeart(country.getFlag() , getApplicationContext()));
+                    }
+                    else {
+                        Log.d("Country " + chooseModel.getLang_title().toString()  , "code " + chooseModel.getCountry_code().toString());
+                    }
+                }
+        }
+    }
+
 
     private void setSpecilites(List<ChooseModel> specialities) {
         flSpecilities.removeAllViews();

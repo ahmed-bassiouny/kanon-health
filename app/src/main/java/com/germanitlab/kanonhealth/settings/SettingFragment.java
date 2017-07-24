@@ -74,6 +74,7 @@ public class SettingFragment extends Fragment {
     private User user;
     private RecyclerView rvPracticies;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
+     View vLineUnderClinics ;
 
     //status doctor
     private TextView txt_status, tvAddPractice;
@@ -119,6 +120,12 @@ public class SettingFragment extends Fragment {
 
             UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
             List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
+            if(userInfoResponse.getUser().getMembers_at().size() > 0){
+                vLineUnderClinics.setVisibility(View.VISIBLE);
+            }
+            else {
+                vLineUnderClinics.setVisibility(View.GONE);
+            }
             mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             rvPracticies.setLayoutManager(mLayoutManager);
@@ -229,6 +236,7 @@ public class SettingFragment extends Fragment {
                 trDrStatus.setVisibility(View.GONE);
                 vLineUnderDrStatus.setVisibility(View.GONE);
             }
+            vLineUnderClinics = view.findViewById(R.id.v_line_under_clinics);
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);

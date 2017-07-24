@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,7 +19,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
+import com.github.siyamed.shapeimageview.HeartImageView;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
@@ -34,11 +37,20 @@ public class ImageHelper {
     public static View setImageCircle(String speciality_icon , Context context) {
         ImageView circularImageView = new ImageView(context);
         setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, context);
-        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(60,60));
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(100,100));
         circularImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         circularImageView.setPadding(7, 4, 7, 4);
         return circularImageView;
     }
+    public static View setImageHeart(int src , Context context) {
+        View view;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.heart_item_layout, null);
+        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
+        item.setImageBitmap(ImageHelper.TrimBitmap(src, context));
+        return view;
+    }
+
 
     public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
         setImage(iv, imageFullUrl, -1, null, ctx);

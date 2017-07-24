@@ -169,15 +169,17 @@
                             android:text="@string/specialities"
                             android:textColor="@android:color/background_dark" />
 
-                        <com.nex3z.flowlayout.FlowLayout
+
+                        <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/flowlayout_speciality"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/specilities_text"
-                            android:background="@android:color/white"></com.nex3z.flowlayout.FlowLayout>
-
+                            android:background="@android:color/white"
+                            app:layout_horizontalSpacing="50dp"
+                            f:layout_newLine="true"></com.nex3z.flowlayout.FlowLayout>
 
                         <ImageView
                             android:id="@+id/edit_speciality_list"
@@ -451,22 +453,14 @@
                             android:textSize="@dimen/size_15sp"
                             android:textColor="@android:color/background_dark" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/language_recycleview"
+                        <com.nex3z.flowlayout.FlowLayout
+                            android:id="@+id/fl_language"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginLeft="@dimen/size_5dp"
                             android:layout_toRightOf="@+id/language_text"
-                            android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
-
-                        <TextView
-                            android:id="@+id/tv_languages"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/language_recycleview"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="16dp" />
+                            android:background="@android:color/white"></com.nex3z.flowlayout.FlowLayout>
 
                         <ImageView
                             android:id="@+id/edit_languages_list"
@@ -474,11 +468,21 @@
                             android:layout_height="30dp"
                             android:layout_alignParentRight="true"
                             android:layout_alignParentTop="true"
-                            android:layout_alignTop="@id/language_recycleview"
+                            android:layout_alignTop="@id/fl_language"
                             android:rotation="180"
                             android:src="@drawable/ic_arrow_back_black_24dp"
                             android:textColor="@android:color/background_dark" />
+
                     </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_languages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16dp" />
 
                     <View
                         android:layout_width="match_parent"
