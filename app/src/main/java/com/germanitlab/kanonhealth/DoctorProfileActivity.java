@@ -667,7 +667,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
         }
         setAdapters();
-        tvRating.setText(R.string.rating + "  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " " + R.string.reviews + ")");
+        tvRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(user.getRate_count()) + " (" + String.valueOf(user.getRate_avr()) + " " + getResources().getString(R.string.reviews) + ")");
 
         tvSpecilities.setText("");
         if (user.getSpecialities() != null) {
@@ -722,7 +722,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 tvToolbarName.setText(user.getFirst_name());
             else
                 tvToolbarName.setText(user.getFullName());
-            edAddToFavourite.setText(R.string.add_to_my_doctors);
+            edAddToFavourite.setText(getResources().getString(R.string.add_to_my_doctors));
             tvContact.setText(R.string.contact_by_chat);
             if (user.getIs_available() != null && user.getIs_available().equals("1"))
                 tvOnline.setText(R.string.status_online);
