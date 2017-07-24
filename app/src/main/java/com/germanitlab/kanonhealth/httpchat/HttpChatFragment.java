@@ -41,6 +41,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -165,6 +166,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         canRate.setOnClickListener(new View.OnClickListener() {
             @Override

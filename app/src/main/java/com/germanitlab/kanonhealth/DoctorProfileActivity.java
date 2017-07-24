@@ -379,7 +379,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
          etCity.setEnabled(editable);
          etProvince.setEnabled(editable);
          etCountry.setEnabled(editable);*/
-        if (user.isClinic == 1) {
+        if (user.getInfo() !=null&& user.isClinic == 1) {
             user.setAddress(etLocation.getText().toString());
             user.getInfo().setStreetname(etStreetName.getText().toString());
             user.getInfo().setHouseNumber(etHouseNumber.getText().toString());
@@ -625,6 +625,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
         etTelephone.setText(user.getPhone());
         ratingBar.setRating(user.getRate_avr());
         tvLocation.setText(user.getAddress());
+        if(user.getInfo()!=null)
         etCity.setText(user.getInfo().getCity());
         //ImageHelper.setImage(ivLocation, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getCountry_flag(), getApplicationContext());
         String countryDail = user.getCountryCOde();
