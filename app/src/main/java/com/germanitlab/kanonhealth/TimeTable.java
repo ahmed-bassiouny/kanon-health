@@ -293,11 +293,11 @@ public class TimeTable extends AppCompatActivity {
             else
                 to.setText("16:00");
             to.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showTimePicker(to);
+                @Override
+                public void onClick(View v) {
+                    showTimePicker(to);
 
-                    }
+                }
             });
             to.setTextColor(getResources().getColor(R.color.black));
             to.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
@@ -311,11 +311,11 @@ public class TimeTable extends AppCompatActivity {
                 addToArray(day, lineId, layoutId, fromId, toId);
             LinearLayout linearLayout1 = new LinearLayout(this);
             linearLayout1.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, .33f));
-            linearLayout1.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+            linearLayout1.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
             ImageView minus = new ImageView(this);
             minus.setBackgroundResource(R.drawable.ic_remove_black_24dp);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(getPixal(40), LinearLayout.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.RIGHT;
+            layoutParams.gravity = Gravity.END;
             layoutParams.setMargins(5, 0, 5, 0);
             minus.setLayoutParams(layoutParams);
             minus.setOnClickListener(new View.OnClickListener() {
@@ -425,7 +425,7 @@ public class TimeTable extends AppCompatActivity {
         try {
             Intent intent = new Intent();
             intent.putExtra("type", 0);
-            int key = 0 ;
+            int key = 0;
             List<Table> list = new ArrayList<>();
             while (key < 8) {
                 if (map.containsKey(key)) {
@@ -493,7 +493,8 @@ public class TimeTable extends AppCompatActivity {
                 addNewItem(sunday_layout, 6, sundaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
         }
     }
-    private void showTimePicker(final TextView txt){
+
+    private void showTimePicker(final TextView txt) {
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);

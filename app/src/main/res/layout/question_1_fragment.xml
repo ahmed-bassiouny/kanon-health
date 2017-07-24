@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:text="@string/physical_examination"
             android:textColor="@android:color/background_dark"
             android:textSize="16dp" />
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:textCursorDrawable="@color/blue"
             android:hint="@string/please_fill_data"
             android:inputType="text"

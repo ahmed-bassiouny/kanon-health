@@ -966,7 +966,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
 
     private void changeGravity(TextView textView, boolean editable) {
         if (editable) {
-            textView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            textView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             textView.setPadding(5, 0, 0, 0);
         } else {
             textView.setGravity(Gravity.CENTER);

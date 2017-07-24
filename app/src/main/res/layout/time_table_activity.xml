@@ -149,9 +149,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:gravity="center|left"
+                        android:gravity="center|start"
                         android:text="@string/monday"
                         android:textColor="@android:color/background_dark" />
 
@@ -198,9 +198,9 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:layout_weight="5"
-                            android:gravity="right"></LinearLayout>
+                            android:gravity="end"></LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -213,9 +213,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_gravity="left"
-                            android:layout_marginLeft="15dp"
-                            android:gravity="left|center"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="15dp"
+                            android:gravity="start|center"
                             android:text="@string/closed"
                             android:textColor="@android:color/holo_red_dark" />
                     </LinearLayout>
@@ -237,9 +237,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
-                            android:gravity="center|left"
+                            android:gravity="center|start"
                             android:text="@string/tuesday"
                             android:textColor="@android:color/background_dark" />
 
@@ -286,9 +286,9 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="5"
-                                android:gravity="right"></LinearLayout>
+                                android:gravity="end"></LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -310,9 +310,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
-                            android:gravity="center|left"
+                            android:gravity="center|start"
                             android:text="@string/wednesday"
                             android:textColor="@android:color/background_dark" />
 
@@ -359,9 +359,9 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="5"
-                                android:gravity="right"></LinearLayout>
+                                android:gravity="end"></LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -382,9 +382,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
-                            android:gravity="center|left"
+                            android:gravity="center|start"
                             android:text="@string/thursday"
                             android:textColor="@android:color/background_dark" />
 
@@ -431,9 +431,9 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="5"
-                                android:gravity="right"></LinearLayout>
+                                android:gravity="end"></LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -454,9 +454,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
-                            android:gravity="center|left"
+                            android:gravity="center|start"
                             android:text="@string/friday"
                             android:textColor="@android:color/background_dark" />
 
@@ -503,9 +503,9 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="5"
-                                android:gravity="right"></LinearLayout>
+                                android:gravity="end"></LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -526,9 +526,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
-                            android:gravity="center|left"
+                            android:gravity="center|start"
                             android:text="@string/saturday"
                             android:textColor="@android:color/background_dark" />
 
@@ -575,9 +575,9 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="5"
-                                android:gravity="right"></LinearLayout>
+                                android:gravity="end"></LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -598,9 +598,9 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
-                            android:gravity="center|left"
+                            android:gravity="center|start"
                             android:text="@string/sunday"
                             android:textColor="@android:color/background_dark" />
 
@@ -647,9 +647,9 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_weight="5"
-                                android:gravity="right"></LinearLayout>
+                                android:gravity="end"></LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

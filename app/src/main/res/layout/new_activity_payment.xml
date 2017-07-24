@@ -139,7 +139,7 @@
                         android:layout_weight="3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:textSize="20sp"
                         android:text="@string/payment_details"
                         android:textColor="@android:color/background_dark" />
@@ -149,7 +149,7 @@
                         android:layout_width="0dp"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:textSize="20sp"
                         android:text=""
                         android:textColor="@android:color/background_dark" />
@@ -162,7 +162,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:orientation="vertical"
-                    android:gravity="right">
+                    android:gravity="end">
 
                     <LinearLayout
                         android:padding="@dimen/size_10dp"
@@ -175,8 +175,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/size_5dp"
-                            android:layout_marginRight="@dimen/size_5dp"
+                            android:layout_marginStart="@dimen/size_5dp"
+                            android:layout_marginEnd="@dimen/size_5dp"
                             android:src="@drawable/ic_done_all_white_24dp"
                             android:tint="@color/colorPrimaryDark"
                             android:textColor="@android:color/background_dark" />
@@ -184,7 +184,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/size_5dp"
+                            android:paddingStart="@dimen/size_5dp"
                             android:textSize="18sp"
                             android:text="@string/chat_from_anywhere_you_are"
                             android:textColor="@android:color/background_dark" />
@@ -202,8 +202,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/size_5dp"
-                            android:layout_marginRight="@dimen/size_5dp"
+                            android:layout_marginStart="@dimen/size_5dp"
+                            android:layout_marginEnd="@dimen/size_5dp"
                             android:src="@drawable/ic_done_all_white_24dp"
                             android:tint="@color/colorPrimaryDark"
                             android:textColor="@android:color/background_dark" />
@@ -211,7 +211,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/size_5dp"
+                            android:paddingStart="@dimen/size_5dp"
                             android:textSize="18sp"
                             android:text="@string/send_picture_voice_and_videos"
                             android:textColor="@android:color/background_dark" />
@@ -228,8 +228,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/size_5dp"
-                            android:layout_marginRight="@dimen/size_5dp"
+                            android:layout_marginStart="@dimen/size_5dp"
+                            android:layout_marginEnd="@dimen/size_5dp"
                             android:src="@drawable/ic_done_all_white_24dp"
                             android:tint="@color/colorPrimaryDark"
                             android:textColor="@android:color/background_dark" />
@@ -237,7 +237,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/size_5dp"
+                            android:paddingStart="@dimen/size_5dp"
                             android:textSize="18sp"
                             android:text="@string/easy_and_secure_payment"
                             android:textColor="@android:color/background_dark" />
@@ -314,15 +314,15 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="@string/voucher_code"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="@dimen/size_10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="@dimen/size_10dp"
             android:gravity="center_vertical"/>
         <TextView
             android:id="@+id/rb_free_text"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="@dimen/size_10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="@dimen/size_10dp"
             android:gravity="center_vertical"
             android:text="@string/consult_a_colleague_lets_keep_it_free_to_consult_colleagues" />
 

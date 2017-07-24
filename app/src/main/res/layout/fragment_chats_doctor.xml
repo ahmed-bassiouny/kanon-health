@@ -95,7 +95,7 @@
                         android:layout_margin="@dimen/size_10dp"
                         android:id="@+id/img_filter"
                         android:background="@drawable/custom_edittext_without_border_style"
-                        android:drawableLeft="@drawable/search"
+                        android:drawableStart="@drawable/search"
                         android:gravity="center"
                         android:hint="@string/search"
                         android:imeOptions="actionDone"
@@ -103,8 +103,8 @@
                         android:maxLines="1"
                         android:textCursorDrawable="@color/blue"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingLeft="@dimen/size_20dp"
-                        android:paddingRight="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_20dp"
+                        android:paddingEnd="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp"
                         android:textColor="@color/gray_black" />
 

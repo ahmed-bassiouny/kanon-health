@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin">
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -16,218 +16,217 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-            android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
-            android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_profile"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:src="@drawable/profile_place_holder" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignEnd="@+id/image_profile"
-                android:layout_alignParentTop="true"
-                android:id="@+id/image_profile_edit"
-                android:layout_alignRight="@+id/image_profile"
-
-                android:src="@drawable/camera" />
-        </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/title" />
-
-            <EditText
-                android:id="@+id/et_title"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@+id/edit_first_name"
-                android:hint="@string/title"
-                android:textSize="16dp" />
-        </LinearLayout>
+                android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
+                android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-            android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_profile"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/profile_place_holder" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_account_circle_black_24dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_profile_edit"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignEnd="@+id/image_profile"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/camera" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/edit_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@+id/edit_last_name"
-                android:hint="@string/first_name"
-                android:textSize="16dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_subtitles_black_24dp" />
-
-            <EditText
-                android:id="@+id/edit_last_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:imeOptions="actionNext"
-                android:layout_marginLeft="8dp"
-                android:hint="@string/last_name"
-                android:textSize="16dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_event_black_24dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/edit_birthday"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/title" />
+
+                <EditText
+                    android:id="@+id/et_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="bottom"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="8dp"
-                    android:hint="@string/birthday"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/title"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:nextFocusForward="@+id/edit_first_name"
                     android:textSize="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_account_circle_black_24dp" />
+
+                <EditText
+                    android:id="@+id/edit_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/first_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:nextFocusForward="@+id/edit_last_name"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_subtitles_black_24dp" />
+
+                <EditText
+                    android:id="@+id/edit_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/last_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_event_black_24dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1.5dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@android:color/darker_gray"></LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/edit_birthday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginStart="8dp"
+                        android:gravity="bottom"
+                        android:hint="@string/birthday"
+                        android:textSize="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1.5dp"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@android:color/darker_gray"></LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_margin="10dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioGroup
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/rggender"
-                android:weightSum="4">
+                android:layout_margin="10dp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:id="@+id/rggender"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/black"
-                    android:text="@string/gender"
-                    android:textSize="12dp"/>
+                    android:orientation="horizontal"
+                    android:weightSum="4">
 
-                <RadioButton
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/gender"
+                        android:textColor="@color/black"
+                        android:textSize="12dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbmale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/male"
+                        android:textSize="10dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbfemal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/female"
+                        android:textSize="10dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbother"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/other"
+                        android:textSize="10dp" />
+                </RadioGroup>
+
+                <EditText
+                    android:id="@+id/edgender"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/rbmale"
-                    android:textSize="10dp"
-                    android:text="@string/male" />
+                    android:hint="@string/gender"
+                    android:visibility="gone" />
+            </LinearLayout>
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/rbfemal"
-                    android:textSize="10dp"
-                    android:text="@string/female" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/rbother"
-                    android:textSize="10dp"
-                    android:text="@string/other" />
-            </RadioGroup>
-
-            <EditText
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button_submit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:id="@+id/edgender"
-                android:hint="@string/gender" />
+                android:layout_gravity="center"
+                android:background="@drawable/round"
+                android:drawableStart="@drawable/ic_done_all_white_24dp"
+                android:text="@string/finished"
+                android:textColor="#FFFFFF" />
+
         </LinearLayout>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/button_submit"
-            android:drawableLeft="@drawable/ic_done_all_white_24dp"
-            android:text="@string/finished"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/round" />
-
-    </LinearLayout>
     </ScrollView>
 </LinearLayout>

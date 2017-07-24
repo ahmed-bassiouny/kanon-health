@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/my_profile"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -77,8 +77,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/change_passcode"
                     android:id="@+id/tv_setting"
                     android:textColor="@color/black"
@@ -104,8 +104,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/kanon_health_web"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -132,8 +132,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -150,7 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/request_doctor_status"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -160,8 +160,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:id="@+id/v_under_dr_status"
                 android:background="@color/gray_black" />
@@ -178,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="@dimen/size_10sp"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:visibility="gone"
                     android:text="@string/add_practice"
                     android:textColor="@color/black"
@@ -191,8 +191,8 @@
                 android:layout_height="1dp"
                 android:id="@+id/line"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -202,7 +202,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_margin="@dimen/size_5dp"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:layout_marginBottom="@dimen/size_3dp"
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
@@ -215,8 +215,8 @@
                 android:layout_width="match_parent"
                 android:id="@+id/v_line_under_clinics"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:background="@color/gray_black" />
 
             <TableRow
@@ -230,7 +230,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/recommend_this_app_to_your_friends"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -241,8 +241,8 @@
                 android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -259,7 +259,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/change_phone_number"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -269,9 +269,9 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
                 android:visibility="gone"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -287,7 +287,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/sound_and_notification"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -298,8 +298,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -315,7 +315,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/terms_and_conditions"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -326,8 +326,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -343,7 +343,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/faq"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -354,8 +354,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -371,7 +371,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/support"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -381,8 +381,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -398,7 +398,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/zxing_menu_help"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -409,8 +409,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -425,7 +425,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/size_20dp"
+                    android:paddingStart="@dimen/size_20dp"
                     android:text="@string/version"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -436,8 +436,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:layout_marginRight="@dimen/size_10dp"
+                android:layout_marginStart="@dimen/size_10dp"
+                android:layout_marginEnd="@dimen/size_10dp"
                 android:layout_marginTop="@dimen/size_3dp"
                 android:background="@color/gray_black" />
 
@@ -455,7 +455,7 @@
                     android:padding="10dp"
                     android:visibility="gone"
                     android:layout_marginTop="10dp"
-                    android:paddingLeft="@dimen/size_15dp"
+                    android:paddingStart="@dimen/size_15dp"
                     android:text="@string/you_are_now_offline"
                     android:textColor="@color/black"
                     android:textStyle="bold" />

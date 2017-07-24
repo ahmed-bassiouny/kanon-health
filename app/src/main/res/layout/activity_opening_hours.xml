@@ -53,8 +53,8 @@
                     android:id="@+id/radios"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_gravity="left"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="start"
                     android:padding="10dp"
                     android:layoutDirection="ltr"
                     android:inputType="text"
@@ -64,11 +64,11 @@
                         android:id="@+id/first"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="start"
                         android:background="@color/white"
                         android:button="@null"
                         android:drawablePadding="30dp"
-                        android:drawableRight="@android:drawable/btn_radio"
+                        android:drawableEnd="@android:drawable/btn_radio"
                         android:text="@string/use_timetable"
                         android:textSize="20dip" />
 
@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:button="@null"
                         android:drawablePadding="30dp"
-                        android:drawableRight="@android:drawable/btn_radio"
+                        android:drawableEnd="@android:drawable/btn_radio"
                         android:text="@string/always_open"
                         android:textSize="20dp" />
 
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:button="@null"
                         android:drawablePadding="30dp"
-                        android:drawableRight="@android:drawable/btn_radio"
+                        android:drawableEnd="@android:drawable/btn_radio"
                         android:text="@string/no_hours_available"
                         android:textSize="20dp" />
 
@@ -98,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:button="@null"
                         android:drawablePadding="30dp"
-                        android:drawableRight="@android:drawable/btn_radio"
+                        android:drawableEnd="@android:drawable/btn_radio"
                         android:text="@string/permanently_closed"
                         android:textSize="20dp" />
                 </RadioGroup>

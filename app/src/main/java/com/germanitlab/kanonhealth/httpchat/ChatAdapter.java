@@ -985,7 +985,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             relativeParams.setMargins(100, 0, 0, 0);  // left, top, right, bottom
             background.setLayoutParams(relativeParams);
 
-            background.setGravity(Gravity.RIGHT);
+            background.setGravity(Gravity.END);
             messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
             if (mMessages.get(position).getSeen() == 2) {
                 status.setImageResource(R.drawable.readnew);
@@ -998,7 +998,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         } else {
             relativeParams.setMargins(0, 0, 100, 0);  // left, top, right, bottom
             background.setLayoutParams(relativeParams);
-            background.setGravity(Gravity.LEFT);
+            background.setGravity(Gravity.START);
             messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
         }
         if (!show_privacy && mMessages.get(position).getFrom_id() == userID) {
