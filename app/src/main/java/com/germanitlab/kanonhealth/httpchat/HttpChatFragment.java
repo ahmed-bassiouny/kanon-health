@@ -41,6 +41,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -153,6 +155,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     boolean iamClinic = false;
     public static boolean chatRunning = false;
     LocationManager mLocationManager;
+    @BindView(R.id.imgbtn_chat_attach)
+    ImageButton imgbtn_chat_attach;
 
 
     @Override
@@ -162,6 +166,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         canRate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,18 +243,20 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }else if(doctorID== CustomerSupportActivity.supportID){
             doctor.setId(doctorID);
             doctor.setLast_name(getResources().getString(R.string.support));
-            doctor.setIsOpen(0);
+            doctor.setIsOpen(1);
             doctor.setFirst_name(" ");
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
         } else {
             // get data of doctor i talk with him from database
-            try {
+            /*try {
                 doctor.setId(doctorID);
                 doctor = userRepository.getDoctor(doctor);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-            }
+            }*/
+            doctor.setId(doctorID);
+            doctor = userRepository.getDoctor(doctor);
         }
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
@@ -468,9 +476,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     }
 
-    @OnClick({R.id.imgbtn_chat_attach, R.id.layout_chat_attach})
+    @OnClick( R.id.layout_chat_attach)
     public void showDialogMedia() {
         try {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
             showPopup(getView());
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.attach_not_show, Toast.LENGTH_SHORT).show();
@@ -1441,9 +1451,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick({R.id.img_chat_user_avatar,R.id.tv_chat_user_name})
     public void openProfile(){
         if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
-            Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+            /*Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", doctor);
-            getActivity().startActivity(intent);
+            getActivity().startActivity(intent);*/
         }else{
             // this object is user and should open ProfileActivity
         }

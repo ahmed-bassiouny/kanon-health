@@ -982,7 +982,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
         RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)background.getLayoutParams();
         if (mMessages.get(position).getFrom_id() == userID) {
-            relativeParams.setMargins(100, 0, 0, 0);  // left, top, right, bottom
+            relativeParams.setMargins(200, 0, 0, 0);  // left, top, right, bottom
             background.setLayoutParams(relativeParams);
 
             background.setGravity(Gravity.END);
@@ -996,7 +996,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             } else
                 status.setImageResource(R.drawable.pending);
         } else {
-            relativeParams.setMargins(0, 0, 100, 0);  // left, top, right, bottom
+            relativeParams.setMargins(0, 0, 200, 0);  // left, top, right, bottom
             background.setLayoutParams(relativeParams);
             background.setGravity(Gravity.START);
             messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);

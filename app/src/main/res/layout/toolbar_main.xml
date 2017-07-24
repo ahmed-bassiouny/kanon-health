@@ -15,6 +15,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"/>
 
 </android.support.v7.widget.Toolbar>

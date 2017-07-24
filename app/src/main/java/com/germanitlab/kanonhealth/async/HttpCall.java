@@ -1301,6 +1301,7 @@ public class HttpCall {
                     if(t != null) {
                         t.printStackTrace();
                         Crashlytics.logException(t);
+                        apiResponse.onFailed(t.getLocalizedMessage());
                     }
 
                 }
@@ -1308,6 +1309,7 @@ public class HttpCall {
         } catch (Exception e) {
             Log.e("Httpcall", "sendMessage: ", e);
             Crashlytics.logException(e);
+            apiResponse.onFailed(e.getLocalizedMessage());
         }
     }
 
@@ -1341,14 +1343,14 @@ public class HttpCall {
                 public void onFailure(Call<UploadImageResponse> call, Throwable t) {
                     if(t != null){
                     Crashlytics.logException(t);
-                    Log.e("httpcall", "uploadMedia: ", t);
-                    Toast.makeText(context, context.getResources().getText(R.string.cant_upload), Toast.LENGTH_SHORT).show();}
+                    apiResponse.onFailed(t.getLocalizedMessage());
+                    }
                 }
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("httpcall", "uploadMedia: ", e);
-            Toast.makeText(context, context.getResources().getText(R.string.cant_upload), Toast.LENGTH_SHORT).show();
+            apiResponse.onFailed(e.getLocalizedMessage());
         }
 
 
