@@ -247,18 +247,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getActivity());
         if (doctor.getFullName() != null) {
             tv_chat_user_name.setText(doctor.getFullName());
-            tv_chat_user_name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
-                        Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-                        intent.putExtra("doctor_data", doctor);
-                        getActivity().startActivity(intent);
-                    }else{
-                        // this object is user and should open ProfileActivity
-                    }
-                }
-            });
         }
 
     }
@@ -894,13 +882,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         layout_chat_attach.setVisibility(View.GONE);
                         relativeAudio.setVisibility(View.VISIBLE);
                         img_send_audio.setBackgroundResource(0);
-                        Log.e("Start Recording", "start");
                         startRecording();
 
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.e("stop Recording", "stop");
-
                         if (img_send_audio.getProgress() < 30) {
                             Toast.makeText(getActivity(), R.string.recoding_canceled, Toast.LENGTH_SHORT).show();
                             stopRecording(true);
@@ -1014,14 +999,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         tvRecordTimer.setText("0:00");
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
-            mRecorder.setAudioEncodingBitRate(48000);
-        } else {
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mRecorder.setAudioEncodingBitRate(64000);
-        }
-        mRecorder.setAudioSamplingRate(16000);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+        mRecorder.setAudioEncodingBitRate(16);
+        mRecorder.setAudioSamplingRate(44100);
         mOutputFile = getOutputFile();
         mOutputFile.getParentFile().mkdirs();
         mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
@@ -1031,9 +1012,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             mRecorder.start();
             mStartTime = SystemClock.elapsedRealtime();
             mHandler.postDelayed(mTickExecutor, 100);
-            Log.d("Voice Recorder", "started recording to " + mOutputFile.getAbsolutePath());
         } catch (IOException e) {
-            Log.e("Voice Recorder", "prepare() failed " + e.getMessage());
+
         }
     }
 
@@ -1449,5 +1429,16 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick(R.id.img_back)
     public void back(){
         getActivity().finish();
+    }
+
+    @OnClick({R.id.img_chat_user_avatar,R.id.tv_chat_user_name})
+    public void openProfile(){
+        if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
+            Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+            intent.putExtra("doctor_data", doctor);
+            getActivity().startActivity(intent);
+        }else{
+            // this object is user and should open ProfileActivity
+        }
     }
 }

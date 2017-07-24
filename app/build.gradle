@@ -100,6 +100,6 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
-
+    compile 'com.brucetoo.pickview:library:1.2.3'
 }
 apply plugin: 'com.google.gms.google-services'
