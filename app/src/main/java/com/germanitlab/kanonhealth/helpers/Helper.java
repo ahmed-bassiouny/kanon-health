@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -35,6 +37,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +51,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Helper {
 
     private Activity activity;
+    private String birthdate="";
+
 
     public Helper(Activity activity) {
 
@@ -174,6 +179,36 @@ public class Helper {
             Toast.makeText(activity, R.string.generate_qrcode, Toast.LENGTH_SHORT).show();
         }
         return "";
+    }
+    public void  showDatePicker( final TextView textView){
+        Calendar calender = Calendar.getInstance();
+        if(birthdate.isEmpty())
+            birthdate=calender.get(Calendar.YEAR) + "-" + calender.get(Calendar.MONTH) + "-" +calender.get(Calendar.DAY_OF_MONTH);
+        DatePickerPopWin pickerPopWin=new DatePickerPopWin.Builder(activity, new DatePickerPopWin.OnDatePickedListener() {
+            @Override
+            public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
+                birthdate = dateDesc;
+                Date parseDate = null;
+                try {
+                    parseDate = DateUtil.getAnotherFormat().parse(birthdate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String newformatDate = (DateUtil.formatBirthday(parseDate.getTime()));
+                textView.setText(newformatDate);
+            }
+        }).textConfirm("CONFIRM") //text of confirm button
+                .textCancel("CANCEL") //text of cancel button
+                .btnTextSize(16) // button text size
+                .viewTextSize(25) // pick view text size
+                .colorCancel(Color.parseColor("#999999")) //color of cancel button
+                .colorConfirm(Color.parseColor("#009900"))//color of confirm button
+                .minYear(1900) //min year in loop
+                .maxYear(calender.get(Calendar.YEAR)+1) // max year in loop
+                .showDayMonthYear(true) // shows like dd mm yyyy (default is false)
+                .dateChose(birthdate) // date chose when init popwindow
+                .build();
+        pickerPopWin.showPopWin(activity);
     }
 }
 

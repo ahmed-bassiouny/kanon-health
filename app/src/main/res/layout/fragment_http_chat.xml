@@ -196,8 +196,8 @@
 
                 <ImageButton
                     android:id="@+id/imgbtn_chat_attach"
-                    android:layout_width="@dimen/size_20dp"
-                    android:layout_height="@dimen/size_20dp"
+                    android:layout_width="@dimen/size_30dp"
+                    android:layout_height="@dimen/size_30dp"
                     android:rotation="270"
                     android:layout_gravity="right|center"
                     android:background="@drawable/attach_file"/>

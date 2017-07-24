@@ -39,6 +39,7 @@ import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
@@ -109,6 +110,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
     private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
     Util util ;
+    Helper helper ;
 
 
     UploadImageResponse uploadImageResponse;
@@ -393,13 +395,13 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     @OnClick(R.id.et_edit_birthday)
     public void viewBirthdate(View v) {
-        try {
+
             View view = this.getCurrentFocus();
             if (view != null) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-            Calendar calender = Calendar.getInstance();
+          //  Calendar calender = Calendar.getInstance();
        /* Dialog mDialog = new DatePickerDialog(EditUserProfileActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog,
                 mDateSetListener, calender.get(Calendar.YEAR),
@@ -407,7 +409,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
                 .get(Calendar.DAY_OF_MONTH));
 
         mDialog.show();*/
-            final Context themedContext = new ContextThemeWrapper(
+           /* final Context themedContext = new ContextThemeWrapper(
                     EditUserProfileActivity.this,
                     android.R.style.Theme_Holo_Light_Dialog
             );
@@ -423,8 +425,11 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
+        if(helper==null)
+            helper=new Helper(this);
+        helper.showDatePicker(etBirthday);
 
     }
 

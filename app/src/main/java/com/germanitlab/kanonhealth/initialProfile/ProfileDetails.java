@@ -91,6 +91,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     int gender = 1;
     PrefManager prefManager;
     Util util;
+    Helper helper ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -234,6 +235,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
 
         mDialog.show();*/
 
+        /*
         Calendar calender = Calendar.getInstance();
         if(birthdate.isEmpty())
         birthdate=calender.get(Calendar.YEAR) + "-" + calender.get(Calendar.MONTH) + "-" +calender.get(Calendar.DAY_OF_MONTH);
@@ -247,8 +249,8 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                String s = (DateUtil.formatBirthday(parseDate.getTime()));
-                textBirthday.setText(s);
+                String newformatDate = (DateUtil.formatBirthday(parseDate.getTime()));
+                textBirthday.setText(newformatDate);
             }
         }).textConfirm("CONFIRM") //text of confirm button
                 .textCancel("CANCEL") //text of cancel button
@@ -261,7 +263,10 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 .showDayMonthYear(true) // shows like dd mm yyyy (default is false)
                 .dateChose(birthdate) // date chose when init popwindow
                 .build();
-        pickerPopWin.showPopWin(this);
+        pickerPopWin.showPopWin(this);*/
+        if(helper==null)
+            helper=new Helper(this);
+        helper.showDatePicker(textBirthday);
     }
 
     @OnClick(R.id.button_submit)

@@ -136,7 +136,7 @@ public class RateActivity extends AppCompatActivity {
                         setRate(key, rate_percentages.get(key));
                     rate_result = (sum_rate_result / sum_rate_number);
                     txt_reviews_1.setText(String.format("%.02f", rate_result));
-                    txt_reviews_3.setText(String.valueOf(sum_rate_number));
+                    txt_reviews_3.setText(String.valueOf(sum_rate_number)); // android.content.res.Resources$NotFoundException: String resource ID #0x77
                     rb_doctor_rate.setRating(rate_result);
 
                 }
