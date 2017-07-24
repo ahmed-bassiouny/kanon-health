@@ -288,7 +288,7 @@ public class TimeTable extends AppCompatActivity {
             if (tto != null)
                 to.setText(tto);
             else
-                to.setText("10:00");
+                to.setText(" ");
             to.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
