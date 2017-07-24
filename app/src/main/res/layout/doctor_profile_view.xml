@@ -321,6 +321,14 @@
                                 android:visibility="gone" />
                         </RelativeLayout>
 
+                        <TextView
+                            android:id="@+id/tv_specilities"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/background_dark"
+                            android:textStyle="bold"
+                            android:textSize="16dp" />
+
                         <View
                             android:id="@+id/border"
                             android:layout_width="match_parent"
@@ -526,13 +534,7 @@
                             </TableRow>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tv_specilities"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/background_dark"
-                            android:textStyle="bold"
-                            android:textSize="16dp" />
+
 
 
                         <View
@@ -547,7 +549,7 @@
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:id="@+id/textView4"
+                                android:id="@+id/tv_location_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentLeft="true"
@@ -564,25 +566,27 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_margin="5dp"
-                                android:layout_alignTop="@+id/textView4"
+                                android:layout_alignTop="@+id/tv_location_text"
                                 android:layout_gravity="center"
-                                android:layout_toEndOf="@+id/textView4"
+                                android:layout_toEndOf="@+id/tv_location_text"
                                 android:textColor="@android:color/background_dark"
                                 app:civ_border_color="@android:color/transparent"
                                 app:civ_border_width="0dp" />
 
+                            <TextView
+                                android:id="@+id/tv_locations"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_alignTop="@+id/iv_location"
+                                android:layout_toEndOf="@+id/iv_location"
+                                android:gravity="start|center_vertical"
+                                android:text=""
+                                android:textColor="@android:color/background_dark"
+                                android:textSize="16dp" />
 
 
                         </RelativeLayout>
 
-                        <TextView
-                            android:id="@+id/tv_locations"
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:gravity="start|center_vertical"
-                            android:text=""
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="16dp" />
                         <RelativeLayout
                             android:id="@+id/mapContanier"
                             android:layout_width="343dp"

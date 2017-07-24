@@ -455,8 +455,12 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     user.setSpecialities(templist);
 
                     tvSpecilities.setText("");
+                    int size = 0;
                     for (ChooseModel speciality : user.getSpecialities()) {
-                        tvSpecilities.append(speciality.getSpeciality_title() + " ");
+                        tvSpecilities.append(speciality.getSpeciality_title());
+                        size++;
+                        if (size < user.getSpecialities().size())
+                            tvSpecilities.append(", ");
                     }
 
               //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);

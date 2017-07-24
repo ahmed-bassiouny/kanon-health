@@ -96,6 +96,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
     EditText tvOnline;
     @BindView(R.id.img_edit_avatar)
     CircleImageView civEditAvatar;
+    @BindView(R.id.tv_location_text)
+    TextView tvLocationName;
 
     @BindView(R.id.tv_contact)
     EditText tvContact;
@@ -624,6 +626,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), this);
         }
 
+        if (user.isClinic == 1) {
+            tvLocationName.setVisibility(View.GONE);
+        }
+
 
         tvTelephone.setText(user.getPhone());
         etTelephone.setText(user.getPhone());
@@ -680,8 +686,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
             llPracticeProfile.setVisibility(View.VISIBLE);
             vBorder.setVisibility(View.VISIBLE);
             if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
-                mapContanier.setVisibility(View.VISIBLE);
-                ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
+                if (user.getLocation_lat() != 0 && user.getLocation_long() != 0) {
+                    mapContanier.setVisibility(View.VISIBLE);
+                    ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
+                } else
+                    mapContanier.setVisibility(View.GONE);
             } else
                 mapContanier.setVisibility(View.GONE);
         } else {
@@ -880,8 +889,11 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                 user.setSpecialities(templist);
                 setImage(user.getSpecialities(), flSpeciliaty, 1);
                 tvSpecilities.setText("");
+                int size = 0;
                 for (ChooseModel speciality : user.getSpecialities()) {
-                    tvSpecilities.append(speciality.getSpeciality_title() + " ");
+                    tvSpecilities.append(speciality.getSpeciality_title());
+                    if (size < user.getSpecialities().size())
+                        tvSpecilities.append(", ");
                 }
                 break;
             case Constants.LANGUAUGE:
