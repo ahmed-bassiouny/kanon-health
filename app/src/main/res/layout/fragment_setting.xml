@@ -371,7 +371,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/size_20dp"
-                    android:text="@string/sorry_missing_data_please_contact_support"
+                    android:text="@string/support"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 

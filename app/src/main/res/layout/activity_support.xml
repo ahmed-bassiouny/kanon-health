@@ -4,35 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
-
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/size_35dp"
-            android:drawableLeft="@drawable/back"
-            android:drawablePadding="@dimen/size_10dp"
-            android:gravity="center"
-            android:text="@string/back"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/size_15sp"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/sorry_missing_data_please_contact_support"
-            android:textColor="@color/black" />
-
-
-    </android.support.v7.widget.Toolbar>
+        android:layout_height="match_parent"
+        android:id="@+id/main" />
 
 </LinearLayout>

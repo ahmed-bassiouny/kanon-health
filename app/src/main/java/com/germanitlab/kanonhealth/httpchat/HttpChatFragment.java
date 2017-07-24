@@ -72,6 +72,7 @@ import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
+import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 
@@ -229,10 +230,17 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         doctorID = getArguments().getInt("doctorID");
         if (userID == doctorID) {
-            doctor.setLast_name("My Documents");
+            doctor.setLast_name(getResources().getString(R.string.documents));
             doctor.setFirst_name(" ");
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
+        }else if(doctorID== CustomerSupportActivity.supportID){
+            doctor.setId(doctorID);
+            doctor.setLast_name(getResources().getString(R.string.support));
+            doctor.setIsOpen(0);
+            doctor.setFirst_name(" ");
+            img_chat_user_avatar.setVisibility(View.INVISIBLE);
+            tv_chat_user_name.setEnabled(false);
         } else {
             // get data of doctor i talk with him from database
             try {

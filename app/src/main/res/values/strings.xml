@@ -505,6 +505,7 @@
     <string name="upload_image_failed">Upload image failed.</string>
     <string name="slide_to_cancle">Slide to cancel.</string>
     <string name="delete">delete</string>
+    <string name="support">Support</string>
 
 
 </resources>

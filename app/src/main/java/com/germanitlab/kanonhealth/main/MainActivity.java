@@ -256,13 +256,13 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Contact";
+                    return getResources().getString(R.string.contacts);
                 case 1:
-                    return "Documents";
+                    return getResources().getString(R.string.documents);
                 case 2:
-                    return "Chat";
+                    return getResources().getString(R.string.chat);
                 case 3:
-                    return "Settings";
+                    return getResources().getString(R.string.settings);
             }
             return null;
         }

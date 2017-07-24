@@ -12,7 +12,6 @@ import com.germanitlab.kanonhealth.models.user.User;
 public class HttpChatActivity extends AppCompatActivity {
 
     int doctorID;
-    boolean iamDoctor;
     HttpChatFragment fr;
 
     @Override
@@ -20,7 +19,6 @@ public class HttpChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_chat);
         doctorID = getIntent().getIntExtra("doctorID", 0);
-        iamDoctor = getIntent().getBooleanExtra("iamDoctor", false);
 
         if (doctorID == 0) {
             finish();
@@ -28,7 +26,6 @@ public class HttpChatActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
-        bundle.putBoolean("iamDoctor", iamDoctor);
 
         fr = new HttpChatFragment();
         fr.setArguments(bundle);
