@@ -404,7 +404,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                 chatAdapter.notifyDataSetChanged();
                                 recyclerView.scrollToPosition(messages.size() - 1);
                                 messageRepositry.create((Message) response);
-                                Toast.makeText(getContext(), R.string.message_sent, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

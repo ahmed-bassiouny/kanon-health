@@ -51,6 +51,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.germanitlab.kanonhealth.helpers.Constants.folder;
@@ -66,7 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private int userID;
     private String passowrd;
     List<Integer> list = new ArrayList<>();
-    List<Integer> selectedPositions = new ArrayList<>();
+    HashSet<Integer> selectedPositions = new HashSet<>();
     private boolean selected = false;
     private boolean show_privacy = false; // it's attribte to decide if it's document (show prrivacy) or chat (disappear privacy)
     private PrefManager prefManager;
@@ -536,9 +537,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
                 File file = new File(folder, fileName);
 
+                audioViewHolder.ll_play.setVisibility(View.VISIBLE);
+                audioViewHolder.progress_view_download.setVisibility(View.GONE);
                 if (file.exists()) {
-                    audioViewHolder.ll_play.setVisibility(View.VISIBLE);
-                    audioViewHolder.progress_view_download.setVisibility(View.GONE);
                     mediaMessage.setMsg(file.getPath());
                     mediaMessage.setLoaded(true);
                     mediaMessage.setLoading(false);
@@ -560,6 +561,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                         e.printStackTrace();
                     }
                 } else {
+
+                    audioViewHolder.ll_play.setVisibility(View.GONE);
+                    audioViewHolder.progress_view_download.setVisibility(View.VISIBLE);
                     internetFilesOperations.downloadUrlWithProgress(audioViewHolder.progress_view_download, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
                         @Override
                         public void onDownloadFinish(final String pathOFDownloadedFile) {
