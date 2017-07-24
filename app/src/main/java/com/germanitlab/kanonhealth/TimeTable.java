@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.Table;
 
 import java.io.Serializable;
@@ -90,6 +91,7 @@ public class TimeTable extends AppCompatActivity {
 
     public static OpeningHoursActivity instance;
     public static Activity TimetableInstance;
+    Helper helper ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,7 @@ public class TimeTable extends AppCompatActivity {
         initTB();
 
         try {
+            helper = new Helper(this);
             TimetableInstance = this;
 
             ButterKnife.bind(this);
@@ -266,11 +269,11 @@ public class TimeTable extends AppCompatActivity {
             if (tfrom != null)
                 from.setText(tfrom);
             else
-                from.setText("10:00");
+                from.setText("08:00");
             from.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showTimePicker(from);
+                   showTimePicker(from);
                 }
             });
             from.setTextColor(getResources().getColor(R.color.black));
@@ -288,7 +291,7 @@ public class TimeTable extends AppCompatActivity {
             if (tto != null)
                 to.setText(tto);
             else
-                to.setText(" ");
+                to.setText("16:00");
             to.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
