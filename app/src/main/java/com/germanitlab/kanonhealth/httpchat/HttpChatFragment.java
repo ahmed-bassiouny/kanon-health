@@ -41,6 +41,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -153,6 +154,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     boolean iamClinic = false;
     public static boolean chatRunning = false;
     LocationManager mLocationManager;
+    @BindView(R.id.imgbtn_chat_attach)
+    ImageButton imgbtn_chat_attach;
 
 
     @Override
@@ -237,7 +240,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }else if(doctorID== CustomerSupportActivity.supportID){
             doctor.setId(doctorID);
             doctor.setLast_name(getResources().getString(R.string.support));
-            doctor.setIsOpen(0);
+            doctor.setIsOpen(1);
             doctor.setFirst_name(" ");
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
@@ -468,9 +471,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     }
 
-    @OnClick({R.id.imgbtn_chat_attach, R.id.layout_chat_attach})
+    @OnClick( R.id.layout_chat_attach)
     public void showDialogMedia() {
         try {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
             showPopup(getView());
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.attach_not_show, Toast.LENGTH_SHORT).show();

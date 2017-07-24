@@ -303,13 +303,13 @@ public class SettingFragment extends Fragment {
                 public void onClick(View view) {
 
                     //Edit ahmed
-                    Intent intent = new Intent(getActivity(), HttpChatActivity.class);
+                    /*Intent intent = new Intent(getActivity(), HttpChatActivity.class);
                     intent.putExtra("doctorID", 1);
                     intent.putExtra("doctorName", "Support");
                     intent.putExtra("doctorUrl", "");
                     intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
-                    startActivity(intent);
-
+                    startActivity(intent);*/
+                    startActivity(new Intent(getContext(), CustomerSupportActivity.class));
                 }
             });
             tvAddPractice.setOnClickListener(new View.OnClickListener() {
