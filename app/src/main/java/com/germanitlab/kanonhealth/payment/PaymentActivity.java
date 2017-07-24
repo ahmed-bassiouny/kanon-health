@@ -24,6 +24,8 @@ import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,6 +143,10 @@ public class PaymentActivity extends AppCompatActivity {
             new HttpCall(PaymentActivity.this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
+                    JsonObject j= (JsonObject) response;
+                    JsonElement req_id=j.get("id");
+                    int req=req_id.getAsInt();
+
 //                    Intent intent = new Intent(PaymentActivity.this, Comment.class);
 //                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
 //                    startActivity(intent);
@@ -162,6 +168,7 @@ public class PaymentActivity extends AppCompatActivity {
                     Intent intent= new Intent(PaymentActivity.this, HttpChatActivity.class);
                     intent.putExtra("doctorID", doctor.get_Id());
                     doctor.setIsOpen(1);
+                    doctor.setRequest_id(req);
                     new UserRepository(PaymentActivity.this).update(doctor);
                     startActivity(intent);
                     finish();

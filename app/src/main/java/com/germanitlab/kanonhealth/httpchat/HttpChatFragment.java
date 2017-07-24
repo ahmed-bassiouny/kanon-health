@@ -171,6 +171,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Comment.class);
                 intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                int req_id=doctor.getRequest_id();
                 intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
                 startActivity(intent);
                 getActivity().finish();

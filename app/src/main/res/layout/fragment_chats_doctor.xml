@@ -73,14 +73,16 @@
                         android:layout_weight="1"
                         android:text="@string/doctors"
                         android:id="@+id/doctor_list"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:textAllCaps="false"/>
 
                     <Button
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:text="@string/practice"
                         android:id="@+id/praxis_list"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:textAllCaps="false"/>
                 </LinearLayout>
 
                 <LinearLayout
