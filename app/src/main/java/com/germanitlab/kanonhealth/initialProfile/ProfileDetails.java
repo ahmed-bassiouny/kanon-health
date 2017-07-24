@@ -86,7 +86,7 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     ProgressDialog progressDialog;
     private Uri selectedImageUri;
     PickerDialog pickerDialog;
-    String birthdate;
+    String birthdate="";
     String gender_other = "Male";
     int gender = 1;
     PrefManager prefManager;
@@ -235,11 +235,12 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         mDialog.show();*/
 
         Calendar calender = Calendar.getInstance();
-         new DatePickerPopWin.Builder(ProfileDetails.this, new DatePickerPopWin.OnDatePickedListener() {
+        if(birthdate.isEmpty())
+        birthdate=calender.get(Calendar.YEAR) + "-" + calender.get(Calendar.MONTH) + "-" +calender.get(Calendar.DAY_OF_MONTH);
+        DatePickerPopWin pickerPopWin=new DatePickerPopWin.Builder(ProfileDetails.this, new DatePickerPopWin.OnDatePickedListener() {
             @Override
             public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
-                month=month+1;
-                birthdate = year + "-" + month+ "-" + day;
+                birthdate = dateDesc;
                 Date parseDate = null;
                 try {
                     parseDate = DateUtil.getAnotherFormat().parse(birthdate);
@@ -256,11 +257,11 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
                 .colorCancel(Color.parseColor("#999999")) //color of cancel button
                 .colorConfirm(Color.parseColor("#009900"))//color of confirm button
                 .minYear(1900) //min year in loop
-                .maxYear(Calendar.YEAR) // max year in loop
+                .maxYear(calender.get(Calendar.YEAR)+1) // max year in loop
                 .showDayMonthYear(true) // shows like dd mm yyyy (default is false)
-                .dateChose(calender.get(Calendar.YEAR)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.DAY_OF_MONTH)) // date chose when init popwindow
+                .dateChose(birthdate) // date chose when init popwindow
                 .build();
-
+        pickerPopWin.showPopWin(this);
     }
 
     @OnClick(R.id.button_submit)

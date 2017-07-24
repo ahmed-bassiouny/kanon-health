@@ -164,12 +164,14 @@
                     android:src="@drawable/ic_mic_black_24dp" />
 
 
+                <!--
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerInParent="true"
                     android:hint="@string/slide_to_cancle"/>
+                    -->
                 <TextView
                     android:id="@+id/timer"
                     android:layout_width="wrap_content"
