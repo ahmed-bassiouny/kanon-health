@@ -59,7 +59,7 @@ public class TwoQuestionsFragment extends Fragment {
         if (bundle != null) {
 
             mFirstLevelName = bundle.getString(getResourceString(R.string.first_level));
-            mSecondLevelName = bundle.getString(getResourceString(R.string.secondLevel));
+            mSecondLevelName = bundle.getString(getResourceString(R.string.second_Level));
 
             if (mSecondLevelName.equals(getResourceString(R.string.question_22))) {
                 textFirstQuestion.setText(getResources().getString(R.string.uberweisung_first_question));
@@ -130,7 +130,7 @@ public class TwoQuestionsFragment extends Fragment {
             //Creating the hashMap Object for the end result of this choice
             HashMap<String, String> mTwoQuestionMap = new HashMap<>();
             mTwoQuestionMap.put(getResourceString(R.string.first_level), mFirstLevelName);
-            mTwoQuestionMap.put(getResourceString(R.string.secondLevel), mSecondLevelName);
+            mTwoQuestionMap.put(getResourceString(R.string.second_Level), mSecondLevelName);
             mTwoQuestionMap.put(firstQuestionKey, firstAnswer);
             mTwoQuestionMap.put(secondQuestionKey, secondAnswer);
 

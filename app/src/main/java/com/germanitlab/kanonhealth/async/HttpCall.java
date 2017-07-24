@@ -1342,13 +1342,13 @@ public class HttpCall {
                     if(t != null){
                     Crashlytics.logException(t);
                     Log.e("httpcall", "uploadMedia: ", t);
-                    Toast.makeText(context, context.getResources().getText(R.string.cantupload), Toast.LENGTH_SHORT).show();}
+                    Toast.makeText(context, context.getResources().getText(R.string.cant_upload), Toast.LENGTH_SHORT).show();}
                 }
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("httpcall", "uploadMedia: ", e);
-            Toast.makeText(context, context.getResources().getText(R.string.cantupload), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getText(R.string.cant_upload), Toast.LENGTH_SHORT).show();
         }
 
 

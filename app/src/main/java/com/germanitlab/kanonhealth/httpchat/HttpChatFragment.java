@@ -510,7 +510,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                             @Override
                             public void onFailed(String error) {
-                                Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
                                 removeDummyMessage(index);
                             }
                         }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), selectedImageUri)).getPath());
@@ -564,7 +564,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                             @Override
                             public void onFailed(String error) {
-                                Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
                                 removeDummyMessage(index2);
                             }
                         }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath());
@@ -930,7 +930,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
                                     @Override
                                     public void onFailed(String error) {
-                                        Toast.makeText(getActivity(), R.string.cantupload, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
                                         removeDummyMessage(index2);
                                     }
                                 }).uploadMedia(mOutputFile.getPath());

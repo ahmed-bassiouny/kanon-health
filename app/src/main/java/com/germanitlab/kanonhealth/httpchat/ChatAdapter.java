@@ -1074,7 +1074,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(activity, activity.getResources().getText(R.string.cany_play_video), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, activity.getResources().getText(R.string.cant_play_video), Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -128,7 +128,7 @@ public class MedizinischeFragment extends Fragment {
     public Bundle addSecondLevelName(String secondLevelName) {
         Bundle bundle = new Bundle();
         bundle.putString(getResourceString(R.string.first_level), mFirstLevelName);
-        bundle.putString(getResourceString(R.string.secondLevel), secondLevelName);
+        bundle.putString(getResourceString(R.string.second_Level), secondLevelName);
         return bundle;
     }
 

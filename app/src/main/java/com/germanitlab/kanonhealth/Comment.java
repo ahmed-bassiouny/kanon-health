@@ -106,7 +106,7 @@ onBackPressed();
                 new HttpCall(this, new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
-                        Toast.makeText(Comment.this, R.string.thanksforcomment, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
                         doctor.setCan_rate(0);
                         userRepository.update(doctor);
                         Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);

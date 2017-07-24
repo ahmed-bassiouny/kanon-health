@@ -84,28 +84,28 @@ public class UntersuchungFragment extends Fragment {
             case R.id.button_koperliche:
 
                 bundle.putString(getResourceString(R.string.first_level), mFirstLevelName);
-                bundle.putString(getResourceString(R.string.secondLevel), getResourceString(R.string.question_11));
+                bundle.putString(getResourceString(R.string.second_Level), getResourceString(R.string.question_11));
                 oneQuestionFragment.setArguments(bundle);
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_11), oneQuestionFragment);
                 break;
             case R.id.button_laboruntersuchung:
 
                 bundle.putString(getResourceString(R.string.first_level), mFirstLevelName);
-                bundle.putString(getResourceString(R.string.secondLevel), getResourceString(R.string.question_12));
+                bundle.putString(getResourceString(R.string.second_Level), getResourceString(R.string.question_12));
                 oneQuestionFragment.setArguments(bundle);
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_12), oneQuestionFragment);
                 break;
             case R.id.button_techische:
 
                 bundle.putString(getResourceString(R.string.first_level), mFirstLevelName);
-                bundle.putString(getResourceString(R.string.secondLevel), getResourceString(R.string.question_13));
+                bundle.putString(getResourceString(R.string.second_Level), getResourceString(R.string.question_13));
                 oneQuestionFragment.setArguments(bundle);
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_13), oneQuestionFragment);
                 break;
             case R.id.button_sonstiges:
 
                 bundle.putString(getResourceString(R.string.first_level), mFirstLevelName);
-                bundle.putString(getResourceString(R.string.secondLevel), getResourceString(R.string.question_14));
+                bundle.putString(getResourceString(R.string.second_Level), getResourceString(R.string.question_14));
                 oneQuestionFragment.setArguments(bundle);
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_14), oneQuestionFragment);
                 break;
