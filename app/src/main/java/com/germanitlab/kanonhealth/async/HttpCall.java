@@ -78,9 +78,12 @@ public class HttpCall {
             connection.enqueue(new Callback<com.google.gson.JsonObject>() {
                 @Override
                 public void onResponse(Call<com.google.gson.JsonObject> call, Response<com.google.gson.JsonObject> response) {
-                    String reponseStr = response.toString().replaceAll("\\\\", "");
+                    if (response != null){
+                        String reponseStr = response.toString().replaceAll("\\\\", "");
                     Log.e("new String", reponseStr);
                     apiResponse.onSuccess(response.body());
+                }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -110,9 +113,11 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                    Log.d("activateUser ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("activateUser ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -142,9 +147,11 @@ public class HttpCall {
             connection.enqueue(new Callback<UserRegisterResponse>() {
                 @Override
                 public void onResponse(Call<UserRegisterResponse> call, Response<UserRegisterResponse> response) {
-
-                    Log.d("activateUser ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("activateUser ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -172,9 +179,11 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-
-                    Log.d("DoctorResponse ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("DoctorResponse ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -204,9 +213,11 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-
-                    Log.d("My User ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("My User ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -235,9 +246,11 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-
-                    Log.d("My User ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("My User ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -266,9 +279,11 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-
-                    Log.d("My User ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("My User ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -297,9 +312,11 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-
-                    Log.d("My User ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("My User ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -327,7 +344,10 @@ public class HttpCall {
             call.enqueue(new Callback<ArrayList<Speciality>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Speciality>> call, Response<ArrayList<Speciality>> response) {
-                    apiResponse.onSuccess((response.body()));
+                    if (response != null) {
+                        apiResponse.onSuccess((response.body()));
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -354,9 +374,11 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                    Log.d("QR ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("QR ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -386,9 +408,11 @@ public class HttpCall {
             connection.enqueue(new Callback<UserInfoResponse>() {
                 @Override
                 public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-
-                    Log.d("QR ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("QR ", response.body().toString());
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -417,8 +441,11 @@ public class HttpCall {
             call.enqueue(new Callback<com.google.gson.JsonObject>() {
                 @Override
                 public void onResponse(Call<com.google.gson.JsonObject> call, Response<com.google.gson.JsonObject> response) {
-                    Log.d("PopUp Request", "Success");
-                    apiResponse.onSuccess(response.body());
+                    if (response != null) {
+                        Log.d("PopUp Request", "Success");
+                        apiResponse.onSuccess(response.body());
+                    }                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -475,8 +502,10 @@ public class HttpCall {
             call.enqueue(new Callback<UserInfoResponse>() {
                 @Override
                 public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                    Log.d("DoctorResponse ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -503,8 +532,10 @@ public class HttpCall {
             call.enqueue(new Callback<UserInfoResponse>() {
                 @Override
                 public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                    Log.d("DoctorResponse ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -531,8 +562,10 @@ public class HttpCall {
             call.enqueue(new Callback<List<Comment>>() {
                 @Override
                 public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
-                    Log.d("DoctorResponse ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -562,8 +595,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
 
-                    Log.d("Setting ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -610,8 +645,10 @@ public class HttpCall {
             connection.enqueue(new Callback<UploadImageResponse>() {
                 @Override
                 public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
-                    Log.e("image response success:", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -641,8 +678,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.d("QR ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -673,8 +712,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.d("QR ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -707,8 +748,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<List<String>> call, Response<List<String>> response) {
 
-                    Log.d("Qestion ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -741,8 +784,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.e("delete message call", call.toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -774,9 +819,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                    Log.d("Answers ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");;
                 }
 
                 @Override
@@ -805,7 +851,10 @@ public class HttpCall {
             connection.enqueue(new Callback<List<User>>() {
                 @Override
                 public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -833,7 +882,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 //                Log.d("Answers ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -862,8 +914,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.d("Answers ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -894,8 +948,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<SettingResponse> call, Response<SettingResponse> response) {
 
-                    Log.d("Setting ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -925,8 +981,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.d("Answers ", response.body().toString());
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -953,7 +1011,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -979,7 +1040,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1005,7 +1069,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1032,7 +1099,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1058,7 +1128,10 @@ public class HttpCall {
             connection.enqueue(new Callback<List<ChooseModel>>() {
                 @Override
                 public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1084,7 +1157,10 @@ public class HttpCall {
             connection.enqueue(new Callback<List<ChooseModel>>() {
                 @Override
                 public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1110,7 +1186,10 @@ public class HttpCall {
             connection.enqueue(new Callback<List<ChooseModel>>() {
                 @Override
                 public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1136,7 +1215,10 @@ public class HttpCall {
             connection.enqueue(new Callback<List<ChooseModel>>() {
                 @Override
                 public void onResponse(Call<List<ChooseModel>> call, Response<List<ChooseModel>> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1162,7 +1244,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");;
                 }
 
                 @Override
@@ -1196,7 +1281,10 @@ public class HttpCall {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 //                Log.d("Answers ", response.body().toString());
-                            apiResponse.onSuccess(response.body());
+                            if (response != null)
+                                apiResponse.onSuccess(response.body());
+                            else
+                                apiResponse.onSuccess("");
                         }
 
                         @Override
@@ -1230,7 +1318,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response.body());
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1257,7 +1348,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                     if (response.body().getStatus() == 1)
-                        apiResponse.onSuccess(response.body().getMessage());
+                        if (response != null)
+                            apiResponse.onSuccess(response.body().getMessage());
+                        else
+                            apiResponse.onSuccess("");
                     else
                         onFailure(call, new Exception(context.getString(R.string.error_loading_data)));
                 }
@@ -1291,7 +1385,10 @@ public class HttpCall {
 
                         if (response.body().getStatus() != null && response.body().getStatus() == 1)
 
-                            apiResponse.onSuccess(response.body().getMsg());
+                            if (response != null)
+                                apiResponse.onSuccess(response.body().getMsg());
+                            else
+                                apiResponse.onSuccess("");
                         else
                             onFailure(call, new Exception());
                 }
@@ -1333,7 +1430,10 @@ public class HttpCall {
                 @Override
                 public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
                     if (response.body().getStatus() == 1)
-                        apiResponse.onSuccess(response.body().getFile_url());
+                        if (response != null)
+                            apiResponse.onSuccess(response.body().getFile_url());
+                        else
+                            apiResponse.onSuccess("");
                     else
                         onFailure(call, new Exception("status not equal 1"));
 
@@ -1364,7 +1464,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response);
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1389,7 +1492,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response);
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override
@@ -1414,7 +1520,10 @@ public class HttpCall {
             connection.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    apiResponse.onSuccess(response);
+                    if (response != null)
+                        apiResponse.onSuccess(response.body());
+                    else
+                        apiResponse.onSuccess("");
                 }
 
                 @Override

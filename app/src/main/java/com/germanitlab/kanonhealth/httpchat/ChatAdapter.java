@@ -85,6 +85,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         setList(messages);
         ImageView forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
 
+        if(forward!=null)
         forward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
