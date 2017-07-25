@@ -137,23 +137,50 @@
                         android:layout_marginTop="2dp"
                         android:background="@color/black" />
 
-                    <TextView
-                        android:id="@+id/member_text"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:text="@string/invite_other_doctor"
-                        android:textColor="@android:color/background_dark" />
+                        android:layout_height="wrap_content">
 
+                        <TextView
+                            android:id="@+id/invite_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/invite_other_doctor"
+                            android:textColor="@android:color/background_dark" />
+
+
+                        <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/flowlayout_invite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="5dp"
+                            android:layout_toEndOf="@+id/invite_text"
+                            android:background="@android:color/white"
+                            app:layout_horizontalSpacing="50dp"
+                            f:layout_newLine="true"></com.nex3z.flowlayout.FlowLayout>
+
+                        <ImageView
+                            android:id="@+id/edit_invite_doctor"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="9dp"
+                            android:layout_marginStart="5dp"
+                            android:rotation="180"
+                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:textColor="@android:color/background_dark" />
+                    </RelativeLayout>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginBottom="2dp"
                         android:layout_marginTop="2dp"
                         android:background="@color/black" />
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">

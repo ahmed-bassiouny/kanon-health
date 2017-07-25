@@ -115,6 +115,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     ImageView location_img;
     @BindView(R.id.flowlayout_speciality)
     FlowLayout flSpecilities ;
+    @BindView(R.id.flowlayout_invite)
+    FlowLayout flInvite;
 
     // additional data
     User user;
@@ -378,7 +380,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         }
     }
 
-    @OnClick(R.id.member_text)
+    @OnClick(R.id.edit_invite_doctor)
     public void edit_member_list() {
         try {
             Bundle bundle = new Bundle();
@@ -470,7 +472,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                     }
 
               //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
-                    setSpecilites(user.getSpecialities());
+                    setCircles(user.getSpecialities() , flSpecilities);
 
                     break;
                 case Constants.LANGUAUGE:
@@ -492,8 +494,8 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                             templist.add(item);
                     }
                     user.setMembers_at(templist);
-                    setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-
+               //     setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+                    setCircles(templist ,flInvite);
                     break;
             }
         } catch (Exception e) {
@@ -527,11 +529,11 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     }
 
 
-    private void setSpecilites(List<ChooseModel> specialities) {
-        flSpecilities.removeAllViews();
+    private void setCircles(List<ChooseModel> specialities, FlowLayout flowLayout) {
+        flowLayout.removeAllViews();
         for (ChooseModel chooseModel: specialities
              ) {
-            flSpecilities.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , getApplicationContext()));
+            flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , this));
 
         }
     }

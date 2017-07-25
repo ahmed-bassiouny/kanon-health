@@ -78,6 +78,8 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     @BindView(R.id.first_name)
     EditText etFirstName;
+    @BindView(R.id.et_title)
+    EditText etTitle;
     @BindView(R.id.last_name)
     EditText etLastName;
     @BindView(R.id.et_edit_mobile_number)
@@ -182,6 +184,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
         etFirstName.setText(userInfoResponse.getUser().getFirst_name());
         etLastName.setText(userInfoResponse.getUser().getLast_name());
+        etTitle.setText(userInfoResponse.getUser().getSubTitle());
         etCountryCode.setText(userInfoResponse.getUser().getCountryCOde());
         birthdate = userInfoResponse.getUser().getBirth_date();
         etPhone.setText(userInfoResponse.getUser().getPhone());
@@ -523,6 +526,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
     private void setUserObject() {
         user.setFirst_name(etFirstName.getText().toString());
         user.setLast_name(etLastName.getText().toString());
+        user.setSubTitle(etTitle.getText().toString());
         user.setPlatform("3");
         user.setPhone(etPhone.getText().toString());
         user.setBirthDate(birthdate);

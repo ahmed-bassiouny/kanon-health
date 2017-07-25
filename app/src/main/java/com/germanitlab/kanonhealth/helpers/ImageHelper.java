@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +13,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
@@ -34,11 +37,12 @@ import java.lang.reflect.Field;
 public class ImageHelper {
 
     // image string url
-    public static View setImageCircle(String speciality_icon , Context context) {
-        ImageView circularImageView = new ImageView(context);
-        setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, context);
-        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(100,100));
-        circularImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+    public static View setImageCircle(String speciality_icon , Activity activity) {
+        Helper helper = new Helper(activity);
+        ImageView circularImageView = new ImageView(activity);
+        setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, activity);
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30),helper.dpToPx(30)));
+        circularImageView.setScaleType(ImageView.ScaleType.CENTER);
         circularImageView.setPadding(7, 4, 7, 4);
         return circularImageView;
     }

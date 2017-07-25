@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -179,6 +180,14 @@ public class Helper {
             Toast.makeText(activity, R.string.generate_qrcode, Toast.LENGTH_SHORT).show();
         }
         return "";
+    }
+    public int pxToDp(int px) {
+        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+        return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
     public void  showDatePicker( final TextView textView){
         Calendar calender = Calendar.getInstance();

@@ -492,7 +492,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements Message<
                     }
                 }
             } else if (i == 1) {
-                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , getApplicationContext()));
+                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , this));
             }
         }
     }
