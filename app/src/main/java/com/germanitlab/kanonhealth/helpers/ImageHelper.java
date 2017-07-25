@@ -30,6 +30,8 @@ import com.nex3z.flowlayout.FlowLayout;
 
 import java.lang.reflect.Field;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Milad Metias on 6/28/17.
  */
@@ -39,10 +41,15 @@ public class ImageHelper {
     // image string url
     public static View setImageCircle(String speciality_icon , Activity activity) {
         Helper helper = new Helper(activity);
-        ImageView circularImageView = new ImageView(activity);
-        setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, activity);
+        CircleImageView circularImageView = new CircleImageView(activity);
+        if(TextUtils.isEmpty(speciality_icon))
+        {
+            circularImageView.setImageResource(R.drawable.placeholder);
+        }
+        else {
+            setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, activity);
+        }
         circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30),helper.dpToPx(30)));
-        circularImageView.setScaleType(ImageView.ScaleType.CENTER);
         circularImageView.setPadding(7, 4, 7, 4);
         return circularImageView;
     }
