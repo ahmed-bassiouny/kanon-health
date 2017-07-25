@@ -98,7 +98,7 @@
 
     <!--qr activity.xml-->
     <string name="client">Klient</string>
-    <string name="cancel">stornieren</string>
+    <string name="cancel">Abbrechen</string>
 
 
     <!--qr layout.xml-->
