@@ -45,6 +45,7 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -316,7 +317,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             final Message textMessage = mMessages.get(position);
             showLayout_Privacy(textMessage, position, textMsgViewHolder.privacy_image, textMsgViewHolder.messageContainer, textMsgViewHolder.background,
                     textMsgViewHolder.status, textMsgViewHolder.privacy_txt, textMsgViewHolder.date, textMsgViewHolder.pbar_loading);
-            textMsgViewHolder.message.setText(textMessage.getMsg());
+            textMsgViewHolder.message.setText(StringEscapeUtils.unescapeJava(textMessage.getMsg()));
 
 
             textMsgViewHolder.background.setOnLongClickListener(new View.OnLongClickListener() {

@@ -32,6 +32,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -77,6 +79,8 @@ import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -385,7 +389,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             message.setUser_id(userID);
             message.setFrom_id(userID);
             message.setTo(doctorID);
-            message.setMsg(etMessage.getText().toString());
+            message.setMsg(StringEscapeUtils.escapeJava(etMessage.getText().toString()));
             message.setType(Constants.TEXT);
             message.setDate(getDateTimeNow());
             message.setSent_at(getDateTimeNow());
@@ -1451,9 +1455,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick({R.id.img_chat_user_avatar,R.id.tv_chat_user_name})
     public void openProfile(){
         if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
-            /*Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+            Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", doctor);
-            getActivity().startActivity(intent);*/
+            getActivity().startActivity(intent);
         }else{
             // this object is user and should open ProfileActivity
         }
