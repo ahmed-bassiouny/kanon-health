@@ -557,6 +557,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
             if (resultCode == RESULT_OK) {
                 switch (requestCode) {
                     case Constants.IMAGE_REQUEST:
+                        pickerDialog.dismiss();
                         selectedImageUri = data.getData();
                         prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
                         util.showProgressDialog();
@@ -578,19 +579,41 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
                                 util.dismissProgressDialog();
                                 Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
                                 Log.e("upload image failed :", error);
+                                civImageAvatar.setImageResource(R.drawable.profile_place_holder);
                             }
                         }).uploadImage(prefManager.getData(PrefManager.USER_ID)
                                 , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-                        pickerDialog.dismiss();
 
                         break;
                     case CROP_PIC :
                         afterCropFinish();
                         break;
                     case TAKE_PICTURE:
-                        util.showProgressDialog();
+                        /*util.showProgressDialog();
                         Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        performCrop();
+                        performCrop();*/
+                        pickerDialog.dismiss();
+                        util.showProgressDialog();
+                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+                        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
+                        new HttpCall(this, new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                util.dismissProgressDialog();
+                                uploadImageResponse = (UploadImageResponse) response;
+                                user.setAvatar(uploadImageResponse.getFile_url());
+                                Log.e("After Casting", uploadImageResponse.getFile_url());
+                            }
+
+                            @Override
+                            public void onFailed(String error) {
+                                util.dismissProgressDialog();
+                                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                                Log.e("upload image failed :", error);
+                                civImageAvatar.setImageResource(R.drawable.profile_place_holder);
+                            }
+                        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
+                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
                         break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));

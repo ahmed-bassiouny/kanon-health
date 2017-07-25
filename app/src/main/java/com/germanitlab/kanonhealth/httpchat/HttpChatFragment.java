@@ -130,6 +130,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     @BindView(R.id.can_rate)
     Button canRate;
+    @BindView(R.id.slide_to_cancle)
+    TextView slide_to_cancle;
 
 
     // loca variable
