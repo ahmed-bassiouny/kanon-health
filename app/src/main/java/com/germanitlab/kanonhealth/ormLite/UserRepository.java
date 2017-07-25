@@ -232,8 +232,8 @@ public class UserRepository {
 // prepare our sql statement
             PreparedQuery<User> preparedQuery = queryBuilder.prepare();
 // query for all accounts that have "qwerty" as a password
-            List<User> accountList = doctorsDao.query(preparedQuery);
-
+            List<User> accountList =  doctorsDao.queryBuilder().where().eq("id", doctor.get_Id()).query();
+            setJsonData(accountList);
             if (accountList.size() == 1)
                 return accountList.get(0);
         } catch (Exception e) {
