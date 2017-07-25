@@ -156,7 +156,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     public static boolean chatRunning = false;
     LocationManager mLocationManager;
     @BindView(R.id.imgbtn_chat_attach)
-    ImageButton imgbtn_chat_attach;
+    ImageView imgbtn_chat_attach;
 
 
     @Override
