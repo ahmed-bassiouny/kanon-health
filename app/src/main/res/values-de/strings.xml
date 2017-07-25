@@ -507,7 +507,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="recoding_canceled">Aufnahme abgebrochen</string>
     <string name="ok">Ok</string>
     <string name="rate">Bewerten</string>
-    <string name="offline_mode_canot_contact_with_doctor">Offline mode , can\'t contact with doctor</string>
+    <string name="offline_mode_canot_contact_with_doctor">Offline-Modus,kann jetzt nicht chatten</string>
     <string name="select_image">Bild wählen</string>
     <string name="please_choose_an_option_cancel_via_back">Bitte wählen Sie eine Option. Abbrechen über Zurück.</string>
     <string name="please_write_your_answer_here">Bitte schreibe deine Antwort hier</string>

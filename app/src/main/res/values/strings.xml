@@ -482,7 +482,7 @@
     <string name="recoding_canceled">Recoding canceled.</string>
     <string name="ok">Ok.</string>
     <string name="rate">Rate.</string>
-    <string name="offline_mode_canot_contact_with_doctor">Offline mode , can\'t contact with doctor.</string>
+    <string name="offline_mode_canot_contact_with_doctor">Offline mode,can\'t chat now.</string>
     <string name="select_image">select image.</string>
     <string name="please_choose_an_option_cancel_via_back">
 	Please choose an option cancel via back.</string>
