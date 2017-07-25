@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -41,6 +42,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
@@ -62,7 +64,7 @@ import butterknife.OnClick;
  * Created by Mo on 3/12/17.
  */
 
-public class ProfileDetails extends AppCompatActivity implements DialogPickerCallBacks {
+public class ProfileDetails extends ParentActivity implements DialogPickerCallBacks {
 
     private static final int TAKE_PICTURE = 1;
     private static final int CROP_PIC = 5;
@@ -84,7 +86,6 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     EditText et_title;
     UploadImageResponse uploadImageResponse;
     ProgressDialog progressDialog;
-    private Uri selectedImageUri;
     PickerDialog pickerDialog;
     String birthdate="";
     String gender_other = "Male";
@@ -103,11 +104,11 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
             setContentView(R.layout.profile_details_activity);
             ButterKnife.bind(this);
             prefManager = new PrefManager(this);
-            if (savedInstanceState != null) {
-                textBirthday.setText(savedInstanceState.getString("birthdate"));
-                selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI"));
-                ImageHelper.setImage(imageProfile, selectedImageUri, this);
-            }
+//            if (savedInstanceState != null) {
+//                textBirthday.setText(savedInstanceState.getString("birthdate"));
+//                selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI"));
+//                ImageHelper.setImage(imageProfile, selectedImageUri, this);
+//            }
             editLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -173,24 +174,16 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         }
 
     }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        if (selectedImageUri != null)
+//            outState.putString("imageURI", selectedImageUri.toString());
+//        outState.putString("birthdate", textBirthday.getText().toString());
+//        super.onSaveInstanceState(outState);
+//    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (selectedImageUri != null)
-            outState.putString("imageURI", selectedImageUri.toString());
-        outState.putString("birthdate", textBirthday.getText().toString());
-        super.onSaveInstanceState(outState);
-    }
 
-    public void takeImageWithCamera() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "New Picture");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-        selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-        startActivityForResult(intent, TAKE_PICTURE);
-    }
 
     private void askForPermission(String[] permission, Integer requestCode) {
         ActivityCompat.requestPermissions(this, permission, requestCode);
@@ -345,120 +338,18 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
         }
     };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        pickerDialog.dismiss();
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case Constants.IMAGE_REQUEST:
-                    selectedImageUri = data.getData();
-                    util.showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    ImageHelper.setImage(imageProfile, selectedImageUri, this);
 
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            util.dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
-                            util.dismissProgressDialog();
-                            imageProfile.setImageResource(R.drawable.profile_place_holder);
-                        }
-                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-
-                    break;
-                /*case CROP_PIC :
-                    AfterCropFinish();
-                    break;*/
-                case TAKE_PICTURE:
-                    util.showProgressDialog();
-                    Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                    ImageHelper.setImage(imageProfile, selectedImageUri, this);
-
-                    new HttpCall(this, new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            util.dismissProgressDialog();
-                            uploadImageResponse = (UploadImageResponse) response;
-                            Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
-                            util.dismissProgressDialog();
-                            imageProfile.setImageResource(R.drawable.profile_place_holder);
-                        }
-                    }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-                    break;
-            }
-        }
-    }
-
-    public void AfterCropFinish() {
-        ImageHelper.setImage(imageProfile, selectedImageUri, this);
-
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                util.dismissProgressDialog();
-                uploadImageResponse = (UploadImageResponse) response;
-                Log.e("After Casting", uploadImageResponse.getFile_url());
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), R.string.upload_image_failed, Toast.LENGTH_SHORT).show();
-            }
-        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-    }
-
-    private void performCrop() {
-        // take care of exceptions
-        try {
-            // call the standard crop action intent (the user device may not
-            // support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
-            cropIntent.setDataAndType(selectedImageUri, "image/*");
-            // set crop properties
-            cropIntent.putExtra("crop", "true");
-            // indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            // retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-            // start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, CROP_PIC);
-        }
-        // respond to users whose devices do not support the crop action
-        catch (ActivityNotFoundException anfe) {
-            Toast toast = Toast
-                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
 
 
     @Override
     public void onGalleryClicked(Intent intent) {
-        startActivityForResult(intent, Constants.IMAGE_REQUEST);
+        Helper.getCroppedImageFromCamera(this, PickerBuilder.SELECT_FROM_GALLERY);
     }
 
     @Override
     public void onCameraClicked() {
-        takeImageWithCamera();
+        Helper.getCroppedImageFromCamera(this, PickerBuilder.SELECT_FROM_CAMERA);
     }
 
     @Override
@@ -514,5 +405,29 @@ public class ProfileDetails extends AppCompatActivity implements DialogPickerCal
     @Override
     public void onBackPressed() {
         return;
+    }
+
+    @Override
+    public void ImagePickerCallBack(Uri uri) {
+        util.showProgressDialog();
+        Log.e("ImageUri", uri != null ? uri.toString() : "Empty Uri");
+        ImageHelper.setImage(imageProfile, uri, this);
+
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                util.dismissProgressDialog();
+                uploadImageResponse = (UploadImageResponse) response;
+                Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
+                util.dismissProgressDialog();
+                imageProfile.setImageResource(R.drawable.profile_place_holder);
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
+
     }
 }

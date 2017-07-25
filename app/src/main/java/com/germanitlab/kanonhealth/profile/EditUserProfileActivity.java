@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -41,6 +42,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateUtil;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
@@ -69,7 +71,7 @@ import butterknife.OnClick;
  * Created by Geram IT Lab on 21/02/2017.
  */
 
-public class EditUserProfileActivity extends AppCompatActivity implements Serializable, ApiResponse, DialogPickerCallBacks {
+public class EditUserProfileActivity extends ParentActivity implements Serializable, ApiResponse, DialogPickerCallBacks {
 
     private static final int CROP_PIC = 5;
     private UserInfoResponse userInfoResponse;
@@ -109,7 +111,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
     Uri imageUri;
     PickerDialog pickerDialog;
     private String birthdate;
-    private Uri selectedImageUri;
     private static final int TAKE_PICTURE = 1;
     Util util ;
     Helper helper ;
@@ -236,111 +237,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        try {
-            pickerDialog.dismiss();
-            if (resultCode == RESULT_OK) {
-                switch (requestCode) {
-                    case Constants.IMAGE_REQUEST:
-                        selectedImageUri = data.getData();
-                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        util.showProgressDialog();
-                        ImageHelper.setImage(imgAvatar, selectedImageUri, this);
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                try {
-                                    util.dismissProgressDialog();
-                                    uploadImageResponse = (UploadImageResponse) response;
-                                    user.setAvatar(uploadImageResponse.getFile_url());
-                                } catch (Exception e) {
-                                    Crashlytics.logException(e);
-                                    util.dismissProgressDialog();
-                                    Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
-                                    imgAvatar.setImageResource(R.drawable.profile_place_holder);
 
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                util.dismissProgressDialog();
-                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
-                                imgAvatar.setImageResource(R.drawable.profile_place_holder);
-
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-
-                        break;
-                    /*case CROP_PIC :
-                        afterCropFinish();
-                        break;*/
-                    case TAKE_PICTURE:
-                        util.showProgressDialog();
-                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        ImageHelper.setImage(imgAvatar, selectedImageUri, this);
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                try {
-                                    util.dismissProgressDialog();
-                                    uploadImageResponse = (UploadImageResponse) response;
-                                    user.setAvatar(uploadImageResponse.getFile_url());
-                                } catch (Exception e) {
-                                    Crashlytics.logException(e);
-                                    util.dismissProgressDialog();
-                                    Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
-                                    imgAvatar.setImageResource(R.drawable.profile_place_holder);
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                util.dismissProgressDialog();
-                                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
-                                imgAvatar.setImageResource(R.drawable.profile_place_holder);
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-
-                        break;
-                }
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void afterCropFinish() {
-        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-        ImageHelper.setImage(imgAvatar, imageUri, this);
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                try {
-                    util.dismissProgressDialog();
-                    uploadImageResponse = (UploadImageResponse) response;
-                    user.setAvatar(uploadImageResponse.getFile_url());
-                    Log.e("After Casting", uploadImageResponse.getFile_url());
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-            }
-        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-
-    }
 
 
     @Override
@@ -478,15 +375,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     }
 
-    public void takeImageWithCamera() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, getString(R.string.new_picture));
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.from_your_camera));
-        selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-        startActivityForResult(intent, TAKE_PICTURE);
-    }
 
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -579,42 +467,14 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
 
     @Override
     public void onGalleryClicked(Intent intent) {
-        startActivityForResult(intent, Constants.IMAGE_REQUEST);
+        Helper.getCroppedImageFromCamera(this, PickerBuilder.SELECT_FROM_GALLERY);
     }
 
     @Override
     public void onCameraClicked() {
-        takeImageWithCamera();
+        Helper.getCroppedImageFromCamera(this, PickerBuilder.SELECT_FROM_CAMERA);
     }
-    private void performCrop() {
-        // take care of exceptions
-        try {
-            // call the standard crop action intent (the user device may not
-            // support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
-            cropIntent.setDataAndType(selectedImageUri, "image/*");
-            // set crop properties
-            cropIntent.putExtra("crop", "true");
-            // indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            // retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-            // start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, CROP_PIC);
-        }
-        // respond to users whose devices do not support the crop action
-        catch (ActivityNotFoundException anfe) {
-            Toast toast = Toast
-                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
+
 
     @Override
     public void deleteMyImage() {
@@ -627,5 +487,37 @@ public class EditUserProfileActivity extends AppCompatActivity implements Serial
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void ImagePickerCallBack(Uri uri) {
+        prefManager.put(PrefManager.PROFILE_IMAGE, uri.toString());
+        util.showProgressDialog();
+        ImageHelper.setImage(imgAvatar, uri, this);
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                try {
+                    util.dismissProgressDialog();
+                    uploadImageResponse = (UploadImageResponse) response;
+                    user.setAvatar(uploadImageResponse.getFile_url());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    util.dismissProgressDialog();
+                    Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                    imgAvatar.setImageResource(R.drawable.profile_place_holder);
+
+                }
+
+            }
+
+            @Override
+            public void onFailed(String error) {
+                util.dismissProgressDialog();
+                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
+                imgAvatar.setImageResource(R.drawable.profile_place_holder);
+
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
     }
 }

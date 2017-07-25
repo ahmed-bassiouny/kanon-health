@@ -3,16 +3,17 @@ package com.germanitlab.kanonhealth.helpers;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,23 +25,25 @@ import android.widget.Toast;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.AddPractics;
+import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
+import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import net.glxn.qrgen.android.QRCode;
 
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -164,6 +167,26 @@ public class Helper {
         else
             return false ;
     }
+
+    public static void getCroppedImageFromCamera(final ParentActivity activity, int type) {
+        getCroppedImageFromCamera(null, activity, type);
+    }
+
+
+    public static void getCroppedImageFromCamera(final ParentFragment parentFragment, final AppCompatActivity activity, int type) {
+        new PickerBuilder(activity, type)
+                .setOnImageReceivedListener(new PickerBuilder.onImageReceivedListener() {
+                    @Override
+                    public Uri onImageReceived(Uri imageUri) {
+//                        imageView.setImageURI(imageUri);
+                        parentFragment.ImagePickerCallBack(imageUri);
+                        return imageUri;
+                    }
+                })
+                .start();
+    }
+
+
 
     public String getMd5(String s) {
         try {

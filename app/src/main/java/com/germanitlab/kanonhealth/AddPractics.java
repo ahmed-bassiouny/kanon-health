@@ -2,19 +2,15 @@ package com.germanitlab.kanonhealth;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,12 +28,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -65,7 +64,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AddPractics extends AppCompatActivity implements Message<ChooseModel>, DialogPickerCallBacks {
+public class AddPractics extends ParentActivity implements Message<ChooseModel>, DialogPickerCallBacks {
 
     //Edit text
     @BindView(R.id.ed_location)
@@ -124,7 +123,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
     RecyclerView recyclerView;
     PickerDialog pickerDialog;
     PrefManager prefManager;
-    private Uri selectedImageUri;
+    //    private Uri selectedImageUri;
     Util util;
     UploadImageResponse uploadImageResponse;
     private static final int TAKE_PICTURE = 1;
@@ -556,42 +555,34 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         try {
             if (resultCode == RESULT_OK) {
                 switch (requestCode) {
-                    case Constants.IMAGE_REQUEST:
-                        selectedImageUri = data.getData();
-                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-                        util.showProgressDialog();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
-
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                util.dismissProgressDialog();
-                                uploadImageResponse = (UploadImageResponse) response;
-                                user.setAvatar(uploadImageResponse.getFile_url());
-                                Log.e("After Casting", uploadImageResponse.getFile_url());
-                                prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                util.dismissProgressDialog();
-                                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                                Log.e("upload image failed :", error);
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
-                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-                        pickerDialog.dismiss();
-
-                        break;
-                    case CROP_PIC :
-                        afterCropFinish();
-                        break;
-                    case TAKE_PICTURE:
-                        util.showProgressDialog();
-                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
-                        performCrop();
-                        break;
+//                    case Constants.IMAGE_REQUEST:
+//                        selectedImageUri = data.getData();
+//                        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
+//                        util.showProgressDialog();
+//                        Log.e("ImageUri", selectedImageUri != null ? selectedImageUri.toString() : "Empty Uri");
+//                        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
+//
+//                        new HttpCall(this, new ApiResponse() {
+//                            @Override
+//                            public void onSuccess(Object response) {
+//                                util.dismissProgressDialog();
+//                                uploadImageResponse = (UploadImageResponse) response;
+//                                user.setAvatar(uploadImageResponse.getFile_url());
+//                                Log.e("After Casting", uploadImageResponse.getFile_url());
+//                                prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
+//                            }
+//
+//                            @Override
+//                            public void onFailed(String error) {
+//                                util.dismissProgressDialog();
+//                                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+//                                Log.e("upload image failed :", error);
+//                            }
+//                        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
+//                                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
+//                        pickerDialog.dismiss();
+//
+//                        break;
                     case Constants.HOURS_CODE:
                         user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
                         user.setOpen_Type(data.getIntExtra("type", 0));
@@ -617,58 +608,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     }
 
-    private void performCrop() {
-        // take care of exceptions
-        try {
-            // call the standard crop action intent (the user device may not
-            // support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
-            cropIntent.setDataAndType(selectedImageUri, "image/*");
-            // set crop properties
-            cropIntent.putExtra("crop", "true");
-            // indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            // retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-            // start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, CROP_PIC);
-        }
-        // respond to users whose devices do not support the crop action
-        catch (ActivityNotFoundException anfe) {
-            Toast toast = Toast
-                    .makeText(this, R.string.this_device_doesnot_support_the_crop_action, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
 
-    private void afterCropFinish() {
-        prefManager.put(PrefManager.PROFILE_IMAGE, selectedImageUri.toString());
-        ImageHelper.setImage(civImageAvatar, selectedImageUri, AddPractics.this);
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                util.dismissProgressDialog();
-                uploadImageResponse = (UploadImageResponse) response;
-                user.setAvatar(uploadImageResponse.getFile_url());
-                Log.e("After Casting", uploadImageResponse.getFile_url());
-            }
-
-            @Override
-            public void onFailed(String error) {
-                util.dismissProgressDialog();
-                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                Log.e("upload image failed :", error);
-            }
-        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
-                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, selectedImageUri));
-        pickerDialog.dismiss();
-    }
 
     private void getTimaTableData(List<Table> list) {
         if (user.getOpen_Type() == 3)
@@ -688,13 +628,14 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     @Override
     public void onGalleryClicked(Intent intent) {
-        startActivityForResult(intent, Constants.IMAGE_REQUEST);
+        Helper.getCroppedImageFromCamera(this, PickerBuilder.SELECT_FROM_GALLERY);
 
     }
 
     @Override
     public void onCameraClicked() {
-        takeImageWithCamera();
+//        takeImageWithCamera();
+        Helper.getCroppedImageFromCamera(this, PickerBuilder.SELECT_FROM_CAMERA);
     }
 
     @Override
@@ -712,15 +653,7 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
 
     }
 
-    public void takeImageWithCamera() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, getString(R.string.new_picture));
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.from_your_camera));
-        selectedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-        startActivityForResult(intent, TAKE_PICTURE);
-    }
+
 
     /* Get the real path from the URI
     public String getPathFromURI(Uri contentUri) {
@@ -754,5 +687,29 @@ public class AddPractics extends AppCompatActivity implements Message<ChooseMode
         intent.putExtra("long", user.getLocation_long());
         intent.putExtra("lat", user.getLocation_lat());
         startActivity(intent);
+    }
+
+    @Override
+    public void ImagePickerCallBack(Uri uri) {
+        util.showProgressDialog();
+        ImageHelper.setImage(civImageAvatar, uri, AddPractics.this);
+        new HttpCall(this, new ApiResponse() {
+            @Override
+            public void onSuccess(Object response) {
+                util.dismissProgressDialog();
+                uploadImageResponse = (UploadImageResponse) response;
+                user.setAvatar(uploadImageResponse.getFile_url());
+                Log.e("After Casting", uploadImageResponse.getFile_url());
+            }
+
+            @Override
+            public void onFailed(String error) {
+                util.dismissProgressDialog();
+                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+                Log.e("upload image failed :", error);
+            }
+        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
+                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
+        pickerDialog.dismiss();
     }
 }

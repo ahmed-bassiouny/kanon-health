@@ -68,6 +68,14 @@
             android:name=".settings.TermsConditonActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Crop.TempActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".settings.FaqActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -83,9 +91,9 @@
             android:name=".profile.ProfileActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".initialProfile.initialProfileDetails"
-            android:screenOrientation="portrait" />
+        <!--<activity-->
+        <!--android:name=".initialProfile.initialProfileDetails"-->
+        <!--android:screenOrientation="portrait" />-->
         <activity
             android:name=".intro.Information"
             android:screenOrientation="portrait" />

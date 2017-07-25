@@ -111,37 +111,37 @@ public class initialProfileDetails extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
 
-    @OnClick(R.id.edit_birthday)
-    public void onEditBirthdayClicked() {
-        try {
-            View view = this.getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-            Calendar calender = Calendar.getInstance();
-
-
-            final Context themedContext = new ContextThemeWrapper(
-                    initialProfileDetails.this,
-                    android.R.style.Theme_Holo_Light_Dialog
-            );
-
-            final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
-                    themedContext,
-                    mDateSetListener,
-                    calender.get(Calendar.YEAR),
-                    calender.get(Calendar.MONTH),
-                    calender.get(Calendar.DAY_OF_MONTH));
-
-            mDialog.show();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
+//    @OnClick(R.id.edit_birthday)
+//    public void onEditBirthdayClicked() {
+//        try {
+//            View view = this.getCurrentFocus();
+//            if (view != null) {
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//            }
+//            Calendar calender = Calendar.getInstance();
+//
+//
+//            final Context themedContext = new ContextThemeWrapper(
+//                    initialProfileDetails.this,
+//                    android.R.style.Theme_Holo_Light_Dialog
+//            );
+//
+//            final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
+//                    themedContext,
+//                    mDateSetListener,
+//                    calender.get(Calendar.YEAR),
+//                    calender.get(Calendar.MONTH),
+//                    calender.get(Calendar.DAY_OF_MONTH));
+//
+//            mDialog.show();
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//    }
 
     @OnClick(R.id.button_submit)
     public void onSubmitClicked() {
