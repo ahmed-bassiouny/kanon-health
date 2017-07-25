@@ -169,7 +169,16 @@ public class Helper {
     }
 
     public static void getCroppedImageFromCamera(final ParentActivity activity, int type) {
-        getCroppedImageFromCamera(null, activity, type);
+        new PickerBuilder(activity, type)
+                .setOnImageReceivedListener(new PickerBuilder.onImageReceivedListener() {
+                    @Override
+                    public Uri onImageReceived(Uri imageUri) {
+//                        imageView.setImageURI(imageUri);
+                        activity.ImagePickerCallBack(imageUri);
+                        return imageUri;
+                    }
+                })
+                .start();
     }
 
 
