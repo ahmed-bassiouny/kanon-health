@@ -296,25 +296,25 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getActivity());
+            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
         if (doctor.getFullName() != null) {
             tv_chat_user_name.setText(doctor.getFullName());
         }
 
     }
 
-    private void loadChatOnline(int userID, int doctorID) {
+    private void loadChatOnline() {
         MessageRequest messageRequest = new MessageRequest(userID, doctorID);
         new HttpCall(getActivity(), this).loadChat(messageRequest);
         // request seen all msg
     }
 
-    private void loadChatOffline(final int doctorID) {
+    private void loadChatOffline() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                messages = (ArrayList) messageRepositry.getAll(doctorID);
+                messages = (ArrayList) messageRepositry.getAll(userID,doctorID);
                 isStoragePermissionGranted();
                 pbar_loading.setVisibility(View.GONE);
             }
@@ -1194,7 +1194,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private void checkMode() {
         if (Helper.isNetworkAvailable(getContext())) {
-            loadChatOnline(userID, doctorID);
+            loadChatOnline();
             layout_chat_attach.setEnabled(true);
             etMessage.setEnabled(true);
             mHoldingButtonLayout.setButtonEnabled(true);
@@ -1206,7 +1206,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             if (doctor != null)
                 checkSessionOpen(iamDoctor);
         } else {
-            loadChatOffline(doctorID);
+            loadChatOffline();
             mHoldingButtonLayout.setButtonEnabled(false);
             layout_chat_attach.setEnabled(false);
             etMessage.setEnabled(false);
