@@ -49,10 +49,10 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.MyViewHolder> 
             holder.txt_comment.setText(comment.getComment());
             holder.rb_person_rate.setRating(Float.valueOf(comment.getRate()));
             if (comment.getAvatar() != null && comment.getAvatar() != "") {
-                ImageHelper.setImage(holder.img_person_image, Constants.CHAT_SERVER_URL + "/" + comment.getAvatar(), R.drawable.profile_place_holder, activity);
+                ImageHelper.setImage(holder.img_person_image, Constants.CHAT_SERVER_URL + "/" + comment.getAvatar(), R.drawable.profile_place_holder);
             }
             if (comment.getCountry_flag() != null && comment.getCountry_flag() != "") {
-                ImageHelper.setImage(holder.img_country_image, Constants.CHAT_SERVER_URL + "/" + comment.getCountry_flag(), R.drawable.profile_place_holder, activity);
+                ImageHelper.setImage(holder.img_country_image, Constants.CHAT_SERVER_URL + "/" + comment.getCountry_flag(), R.drawable.profile_place_holder);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

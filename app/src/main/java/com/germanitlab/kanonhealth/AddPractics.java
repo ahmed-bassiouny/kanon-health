@@ -169,7 +169,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
                     UserInfoResponse userInfoResponse = (UserInfoResponse) response;
                     user = userInfoResponse.getUser();
                     if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
-                        ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), AddPractics.this);
+                        ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar());
                     }
                     etName.setText(user.getFullName());
                     etLocation.setText(user.getAddress());
@@ -179,7 +179,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
                     etCountry.setText(user.getInfo().getCountry());
                     etTelephone.setText(user.getPhone());
                     if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
-                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), AddPractics.this);
+                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
                         location_img.setVisibility(View.VISIBLE);
                     }
                     progressDialog.dismiss();
@@ -646,7 +646,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     public void deleteMyImage() {
         try {
             user.setAvatar("");
-            ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), R.drawable.placeholder, this);
+            ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), R.drawable.placeholder);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
         } catch (Exception e) {
@@ -696,7 +696,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     @Override
     public void ImagePickerCallBack(Uri uri) {
         util.showProgressDialog();
-        ImageHelper.setImage(civImageAvatar, uri, AddPractics.this);
+        ImageHelper.setImage(civImageAvatar, uri);
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {

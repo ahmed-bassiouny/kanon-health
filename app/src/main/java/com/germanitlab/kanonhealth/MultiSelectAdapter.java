@@ -67,7 +67,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
 
                     case Constants.SPECIALITIES:
                         holder.tv_title.setText(model.getSpeciality_title());
-                        ImageHelper.setImage(holder.img_icon, serverURL + "/" + model.getSpeciality_icon(), -1, context);
+                        ImageHelper.setImage(holder.img_icon, serverURL + "/" + model.getSpeciality_icon(), -1);
                         break;
                     case Constants.LANGUAUGE:
                         holder.tv_title.setText(model.getLang_title());
@@ -79,7 +79,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
                         holder.tv_title.setText(model.getLast_nameMember() + " " + model.getFirst_nameMember());
                         if (holder.img_icon != null) {
                             if (model.getAvatarMember() != null && !TextUtils.isEmpty(model.getAvatarMember())) {
-                                ImageHelper.setImage(holder.img_icon, serverURL + "/" + model.getAvatarMember(), -1, context);
+                                ImageHelper.setImage(holder.img_icon, serverURL + "/" + model.getAvatarMember(), -1);
                             } else {
                                 holder.img_icon.setImageResource(R.drawable.placeholder);
                             }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:id="@+id/myrow"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_avatar_cell"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:layout_marginTopPercent="4%"
+        android:src="@drawable/placeholder"
+        app:civ_border_color="#cfcdcd"
+        app:civ_border_width="@dimen/size_3dp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="3%"
+        app:layout_marginStartPercent="3%"
+        app:layout_widthPercent="20%" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/status"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom|end"
+        android:src="@color/medium_grey"
+        app:layout_aspectRatio="100%"
+        android:layout_alignBottom="@+id/img_avatar_cell"
+        app:layout_marginStartPercent="16.5%"
+        app:layout_marginTopPercent="4%"
+        app:layout_widthPercent="5%" />
+
+    <TextView
+        android:id="@+id/tv_doctor_name_cell"
+        android:ellipsize="end"
+        android:lines="1"
+        android:layout_alignParentEnd="true"
+        android:maxLines="1"
+        app:layout_marginEndPercent="3%"
+        android:textColor="@color/title_gray"
+        android:textSize="@dimen/size_15sp"
+        android:textStyle="bold"
+        app:layout_heightPercent="30%"
+        app:layout_marginTopPercent="3%"
+        app:layout_widthPercent="50%"
+        tools:text=""
+        android:layout_toEndOf="@+id/img_avatar_cell" />
+
+    <TextView
+        android:id="@+id/tv_specialities"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/tv_doctor_name_cell"
+        android:layout_toEndOf="@id/img_avatar_cell"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_msg_input"
+        android:textSize="@dimen/size_15sp"
+        app:layout_heightPercent="30%"
+        app:layout_marginEndPercent="3%"
+        app:layout_marginTopPercent="3%" />
+
+
+    <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_dynamic_specialist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/tv_specialities"
+        android:layout_toEndOf="@id/img_avatar_cell"
+        android:orientation="horizontal"
+        app:layout_heightPercent="30%"
+        app:layout_marginBottomPercent="4%"
+        app:layout_marginEndPercent="3%"
+        app:layout_marginTopPercent="3%"
+        f:layout_newLine="true">
+
+
+    </com.nex3z.flowlayout.FlowLayout>
+
+    <View
+        android:layout_alignStart="@+id/ll_dynamic_specialist"
+        android:layout_alignEnd="@+id/ll_dynamic_specialist"
+        android:layout_alignParentBottom="true"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="#DFCEC9" />
+
+</android.support.percent.PercentRelativeLayout>

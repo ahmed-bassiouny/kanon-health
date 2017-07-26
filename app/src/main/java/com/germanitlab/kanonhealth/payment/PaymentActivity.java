@@ -93,7 +93,7 @@ public class PaymentActivity extends AppCompatActivity {
             if (doctorObj != null) {
                 tvDoctorName.setText(doctorObj.getFullName());
 
-                ImageHelper.setImage(ivDoctor, Constants.CHAT_SERVER_URL + "/" + doctorObj.getAvatar(), R.drawable.placeholder, this);
+                ImageHelper.setImage(ivDoctor, Constants.CHAT_SERVER_URL + "/" + doctorObj.getAvatar(), R.drawable.placeholder);
 
                 if (doctorObj.getRate() != null) {
                     ratingBar.setRating(Float.parseFloat(doctorObj.getRate()));

@@ -571,7 +571,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
 
         //Helper.setImage(getApplicationContext(), Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), civEditAvatar, R.drawable.placeholder);
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
-            ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), this);
+            ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar());
         }
 
         if (user.isClinic == 1) {
@@ -638,7 +638,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
             if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
                 if (user.getLocation_lat() != 0 && user.getLocation_long() != 0) {
                     mapContanier.setVisibility(View.VISIBLE);
-                    ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img(), this);
+                    ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
                 } else
                     mapContanier.setVisibility(View.GONE);
             } else
@@ -894,7 +894,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
     @Override
     public void deleteMyImage() {
         user.setAvatar("");
-        ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL + "/" + user.getAvatar(), R.drawable.placeholder, this);
+        ImageHelper.setImage(civEditAvatar, Constants.CHAT_SERVER_URL + "/" + user.getAvatar(), R.drawable.placeholder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }
@@ -944,7 +944,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
         util.showProgressDialog();
         prefManager.put(PrefManager.PROFILE_IMAGE, uri.toString());
         pickerDialog.dismiss();
-        ImageHelper.setImage(civEditAvatar, uri, this);
+        ImageHelper.setImage(civEditAvatar, uri);
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {

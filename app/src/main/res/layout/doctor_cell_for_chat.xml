@@ -21,47 +21,26 @@
         app:layout_marginStartPercent="3%"
         app:layout_widthPercent="20%" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/status"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="bottom|end"
-        android:src="@color/medium_grey"
-        app:layout_aspectRatio="100%"
-        android:layout_alignBottom="@+id/img_avatar_cell"
-        app:layout_marginStartPercent="16.5%"
-        app:layout_marginTopPercent="4%"
-        app:layout_widthPercent="5%" />
 
     <TextView
         android:id="@+id/tv_doctor_name_cell"
-        android:layout_toEndOf="@+id/img_avatar_cell"
         android:ellipsize="end"
         android:lines="1"
+        android:layout_alignParentEnd="true"
         android:maxLines="1"
+        app:layout_marginEndPercent="3%"
         android:textColor="@color/title_gray"
         android:textSize="@dimen/size_15sp"
         android:textStyle="bold"
-        app:layout_heightPercent="20%"
-        app:layout_marginTopPercent="4%"
+        app:layout_heightPercent="17%"
+        app:layout_marginTopPercent="3%"
         app:layout_widthPercent="50%"
-        tools:text="" />
-
-    <TextView
-        android:id="@+id/tv_doctor_date_cell"
-        android:layout_alignBottom="@id/tv_doctor_name_cell"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/tv_doctor_name_cell"
-        android:layout_gravity="end"
-        android:layout_toEndOf="@id/tv_doctor_name_cell"
-        android:ems="5"
-        android:gravity="center"
-        android:text=""
-        app:layout_marginEndPercent="3%"
-        app:layout_marginTopPercent="4%" />
+        tools:text=""
+        android:layout_toEndOf="@+id/img_avatar_cell" />
 
 
     <TextView
-        android:id="@+id/tv_practice"
+        android:id="@+id/tv_last_msg"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/tv_doctor_name_cell"
         android:layout_toEndOf="@id/img_avatar_cell"
@@ -73,23 +52,40 @@
         android:textColor="@color/title_gray"
         android:textSize="@dimen/size_15sp"
         android:visibility="visible"
-        app:layout_heightPercent="20%"
+        app:layout_heightPercent="17%"
         app:layout_marginEndPercent="3%"
-        app:layout_marginTopPercent="4%" />
+        app:layout_marginTopPercent="3%" />
+
+    <TextView
+        android:id="@+id/tv_last_msg_date"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/tv_last_msg"
+        android:layout_toEndOf="@id/img_avatar_cell"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/title_gray"
+        android:textSize="@dimen/size_15sp"
+        android:visibility="visible"
+        app:layout_heightPercent="17%"
+        app:layout_marginEndPercent="3%"
+        app:layout_marginTopPercent="3%" />
 
 
     <TextView
         android:id="@+id/tv_specialities"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/tv_practice"
+        android:layout_below="@id/tv_last_msg_date"
         android:layout_toEndOf="@id/img_avatar_cell"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/text_msg_input"
         android:textSize="@dimen/size_15sp"
-        app:layout_heightPercent="20%"
+        app:layout_heightPercent="17%"
         app:layout_marginEndPercent="3%"
-        app:layout_marginTopPercent="4%" />
+        app:layout_marginTopPercent="3%" />
 
 
     <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
@@ -100,14 +96,21 @@
         android:layout_below="@id/tv_specialities"
         android:layout_toEndOf="@id/img_avatar_cell"
         android:orientation="horizontal"
-        app:layout_heightPercent="20%"
+        app:layout_heightPercent="17%"
         app:layout_marginBottomPercent="4%"
         app:layout_marginEndPercent="3%"
-        app:layout_marginTopPercent="4%"
+        app:layout_marginTopPercent="3%"
         f:layout_newLine="true">
 
 
     </com.nex3z.flowlayout.FlowLayout>
 
+    <View
+        android:layout_alignStart="@+id/ll_dynamic_specialist"
+        android:layout_alignEnd="@+id/ll_dynamic_specialist"
+        android:layout_alignParentBottom="true"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="#DFCEC9" />
 
 </android.support.percent.PercentRelativeLayout>

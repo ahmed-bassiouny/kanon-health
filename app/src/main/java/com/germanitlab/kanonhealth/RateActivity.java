@@ -123,7 +123,7 @@ public class RateActivity extends AppCompatActivity {
             doctor = userRepository.getDoctor(doctor);
             txt_doctor_name.setText(doctor.getFullName());
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), getApplicationContext());
+                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
             }
 
             txt_one_star.post(new TimerTask() {

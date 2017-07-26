@@ -174,7 +174,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     private void bindData() {
 
         if (userInfoResponse.getUser().getAvatar() != null && !userInfoResponse.getUser().getAvatar().isEmpty()) {
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar(), this);
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar());
         }
 
         if (userInfoResponse.getUser().getIsDoc() == 1)

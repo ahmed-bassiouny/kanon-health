@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
@@ -55,7 +56,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Helper {
 
     private Activity activity;
-    private String birthdate="";
+    private String birthdate = "";
 
 
     public Helper(Activity activity) {
@@ -108,30 +109,57 @@ public class Helper {
 //                TextView last_name = (TextView) dialog.findViewById(R.id.last_name);
         TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
 
-        String idEncrypt=getMd5(String.valueOf(userInfoResponse.getUser().getId()));
-        if(!idEncrypt.isEmpty()) {
-            Bitmap myBitmap = QRCode.from(userInfoResponse.getUser().getId()+":"+idEncrypt).bitmap();
+        String idEncrypt = getMd5(String.valueOf(userInfoResponse.getUser().getId()));
+        if (!idEncrypt.isEmpty()) {
+            Bitmap myBitmap = QRCode.from(userInfoResponse.getUser().getId() + ":" + idEncrypt).bitmap();
             imageView.setImageBitmap(myBitmap);
         }
         CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
         if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
-            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1, activity);
+            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1);
         }
-        if(userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName()))
+        if (userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName()))
             name.setText(userInfoResponse.getUser().getFullName());
 //                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
         try {
             Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirthDate().toString());
-            String s="";
-            if(!userInfoResponse.getUser().getBirthDate().toString().equals("0000-00-00"))
-                s= (DateUtil.formatBirthday(parseDate.getTime()));
+            String s = "";
+            if (!userInfoResponse.getUser().getBirthDate().toString().equals("0000-00-00"))
+                s = (DateUtil.formatBirthday(parseDate.getTime()));
             birthdate.setText(s);
         } catch (ParseException e) {
             e.printStackTrace();
             birthdate.setText("");
         }
         dialog.show();
+    }
+
+    public static String getFormattedDate(String timeInString) {
+        try {
+            Date parseDate = DateUtil.getFormat().parse(timeInString);
+            Calendar smsTime = Calendar.getInstance();
+            smsTime.setTimeInMillis(parseDate.getTime());
+
+            Calendar now = Calendar.getInstance();
+
+            final String timeFormatString = "h:mm aa";
+            final String dateTimeFormatString = "EEEE, MMMM d, h:mm aa";
+            final long HOURS = 60 * 60 * 60;
+            if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
+                return "Today " + DateFormat.format(timeFormatString, smsTime);
+            } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
+                return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
+            } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
+                return DateFormat.format(dateTimeFormatString, smsTime).toString();
+            } else {
+                return DateFormat.format("MMMM dd yyyy, h:mm aa", smsTime).toString();
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "invalid date";
     }
 
     public static void showAlertDialog(final Context context, String title, String message
@@ -158,14 +186,13 @@ public class Helper {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        if(context != null) {
+        if (context != null) {
             ConnectivityManager connectivityManager
                     = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        }
-        else
-            return false ;
+        } else
+            return false;
     }
 
     public static void getCroppedImageFromCamera(final ParentActivity activity, int type) {
@@ -196,7 +223,6 @@ public class Helper {
     }
 
 
-
     public String getMd5(String s) {
         try {
             // Create MD5 Hash
@@ -206,7 +232,7 @@ public class Helper {
 
             // Create Hex String
             StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
+            for (int i = 0; i < messageDigest.length; i++)
                 hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
             return hexString.toString();
 
@@ -217,19 +243,22 @@ public class Helper {
         }
         return "";
     }
+
     public int pxToDp(int px) {
         DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
         return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
+
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
-    public void  showDatePicker( final TextView textView){
+
+    public void showDatePicker(final TextView textView) {
         Calendar calender = Calendar.getInstance();
-        if(birthdate.isEmpty())
-            birthdate=calender.get(Calendar.YEAR) + "-" + calender.get(Calendar.MONTH) + "-" +calender.get(Calendar.DAY_OF_MONTH);
-        DatePickerPopWin pickerPopWin=new DatePickerPopWin.Builder(activity, new DatePickerPopWin.OnDatePickedListener() {
+        if (birthdate.isEmpty())
+            birthdate = calender.get(Calendar.YEAR) + "-" + calender.get(Calendar.MONTH) + "-" + calender.get(Calendar.DAY_OF_MONTH);
+        DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(activity, new DatePickerPopWin.OnDatePickedListener() {
             @Override
             public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
                 birthdate = dateDesc;
@@ -249,7 +278,7 @@ public class Helper {
                 .colorCancel(Color.parseColor("#999999")) //color of cancel button
                 .colorConfirm(Color.parseColor("#009900"))//color of confirm button
                 .minYear(1900) //min year in loop
-                .maxYear(calender.get(Calendar.YEAR)+1) // max year in loop
+                .maxYear(calender.get(Calendar.YEAR) + 1) // max year in loop
                 .showDayMonthYear(true) // shows like dd mm yyyy (default is false)
                 .dateChose(birthdate) // date chose when init popwindow
                 .build();

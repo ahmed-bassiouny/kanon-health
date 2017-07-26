@@ -13,20 +13,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.github.siyamed.shapeimageview.HeartImageView;
-import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.lang.reflect.Field;
 
@@ -38,212 +35,66 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ImageHelper {
 
-    // image string url
-    public static View setImageCircle(String speciality_icon , Activity activity) {
-        Helper helper = new Helper(activity);
-        CircleImageView circularImageView = new CircleImageView(activity);
-        if(TextUtils.isEmpty(speciality_icon))
-        {
-            circularImageView.setImageResource(R.drawable.placeholder);
-        }
-        else {
-            setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1, activity);
-        }
-        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30),helper.dpToPx(30)));
-        circularImageView.setPadding(7, 4, 7, 4);
-        return circularImageView;
-    }
-    public static View setImageHeart(int src , Context context) {
-        View view;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.heart_item_layout, null);
-        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
-        item.setImageBitmap(ImageHelper.TrimBitmap(src, context));
-        return view;
+    public static void setImage(ImageView iv, String imageFullUrl) {
+        setImage(iv, imageFullUrl, -1, null);
     }
 
-
-    public static void setImage(ImageView iv, String imageFullUrl, Context ctx) {
-        setImage(iv, imageFullUrl, -1, null, ctx);
+    public static void setImage(ImageView iv, String imageFullUrl, ProgressBar progressBar) {
+        setImage(iv, imageFullUrl, -1, progressBar);
     }
 
-    public static void setImage(ImageView iv, String imageFullUrl, ProgressBar progressBar, Context ctx) {
-        setImage(iv, imageFullUrl, -1, progressBar, ctx);
+    public static void setImage(ImageView iv, String imageFullUrl, int placeHolder) {
+        setImage(iv, imageFullUrl, placeHolder, null);
     }
 
-    public static void setImage(ImageView iv, String imageFullUrl, int placeHolder, Context ctx) {
-        setImage(iv, imageFullUrl, placeHolder, null, ctx);
-    }
+    public static void setImage(final ImageView iv, String imageFullUrl, int placeHolder, final ProgressBar progressBar) {
+        try {
 
-    public static void setImage(final ImageView iv, String imageFullUrl, int placeHolder, final ProgressBar progressBar, Context ctx) {
-        if (TextUtils.isEmpty(imageFullUrl)) {
-            iv.setImageResource(placeHolder);
-        } else if (placeHolder == -1) {
-            if (progressBar != null) {
-                Glide.with(ctx.getApplicationContext())
-                        .load(imageFullUrl)
-                        .asBitmap()
-                        .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
-//                    .into(iv);
-                        .dontAnimate()
-                        .into(new SimpleTarget<Bitmap>() {
+            ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
 
-                            @Override
-                            public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                                // TODO Auto-generated method stub
-                                iv.setImageBitmap(arg0);
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-            } else {
-                Glide.with(ctx.getApplicationContext())
-                        .load(imageFullUrl)
-                        .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
-                        .into(iv);
+            DisplayImageOptions.Builder options = new DisplayImageOptions.Builder()
+
+                    .resetViewBeforeLoading(true)
+                    .cacheInMemory(false)
+                    .cacheOnDisk(true)
+                    .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2);
+            if (placeHolder != -1) {
+                options.showImageOnLoading(placeHolder); // resource or drawable
+                options.showImageForEmptyUri(placeHolder); // resource or drawable
+                options.showImageOnFail(placeHolder);// resource or drawable
             }
-        } else {
-            if (progressBar != null) {
-                Glide.with(ctx.getApplicationContext())
-                        .load(imageFullUrl)
-                        .asBitmap()
-                        .fitCenter()
-                        .placeholder(placeHolder)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
-//                    .into(iv);
-                        .dontAnimate()
-                        .into(new SimpleTarget<Bitmap>() {
 
-                            @Override
-                            public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                                // TODO Auto-generated method stub
-                                iv.setImageBitmap(arg0);
-                                progressBar.setVisibility(View.GONE);
+            imageLoader.displayImage(imageFullUrl, iv, options.build(), new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
 
-                            }
-                        });
-            } else {
-                Glide.with(ctx.getApplicationContext())
-                        .load(imageFullUrl)
-                        .fitCenter()
-                        .placeholder(placeHolder)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
-                        .into(iv);
+                }
 
-            }
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e("milad", "setImage: ", e);
         }
     }
 
-// image string url
-
-    public static void setImage(ImageView iv, Uri imageFullUri, Context ctx) {
-        setImage(iv, imageFullUri, -1, null, ctx);
+    public static void setImage(ImageView iv, Uri imageFullUrl) {
+        iv.setImageURI(imageFullUrl);
     }
-
-    public static void setImage(ImageView iv, Uri imageFullUri, ProgressBar progressBar, Context ctx) {
-        setImage(iv, imageFullUri, -1, progressBar, ctx);
-    }
-
-    public static void setImage(ImageView iv, Uri imageFullUri, int placeHolder, Context ctx) {
-        setImage(iv, imageFullUri, placeHolder, null, ctx);
-    }
-
-    public static void setImage(final ImageView iv, Uri imageFullUri, int placeHolder, final ProgressBar progressBar, Context ctx) {
-        if (placeHolder == -1) {
-            Glide.with(ctx.getApplicationContext())
-                    .load(imageFullUri)
-                    .asBitmap()
-                    .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .skipMemoryCache(true)
-//                    .into(iv);
-                    .dontAnimate()
-                    .into(new SimpleTarget<Bitmap>() {
-
-                        @Override
-                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                            // TODO Auto-generated method stub
-                            iv.setImageBitmap(arg0);
-                            if (progressBar != null) {
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    });
-        } else {
-            Glide.with(ctx.getApplicationContext())
-                    .load(imageFullUri)
-                    .asBitmap()
-                    .fitCenter()
-                    .placeholder(placeHolder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .skipMemoryCache(true)
-//                    .into(iv);
-                    .dontAnimate()
-                    .into(new SimpleTarget<Bitmap>() {
-
-                        @Override
-                        public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                            // TODO Auto-generated method stub
-                            iv.setImageBitmap(arg0);
-                            if (progressBar != null) {
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    });
-        }
-    }
-
-    //background
-    public static void setBackground(final View v, String imageFullUrl, Context ctx) {
-
-        setBackground(v, imageFullUrl, R.drawable.appbackground, ctx);
-    }
-
-    public static void setBackground(final View v, String imageFullUrl, int placeHolder, Context ctx) {
-
-        v.setBackgroundResource(placeHolder);
-
-        if (!TextUtils.isEmpty(imageFullUrl)) {
-            int width = v.getWidth();
-            int height = v.getHeight();
-
-            if (width <= 0) {
-                width = v.getMeasuredWidth();
-            }
-            if (height <= 0) {
-                height = v.getMeasuredHeight();
-            }
-
-            if (width <= 0 && v.getLayoutParams() != null) {
-                width = v.getLayoutParams().width;
-            }
-            if (height <= 0 && v.getLayoutParams() != null) {
-                height = v.getLayoutParams().height;
-            }
-
-
-            Glide.with(ctx.getApplicationContext())
-                    .load(imageFullUrl)
-                    .asBitmap()
-                    .into(new SimpleTarget<Bitmap>(width, height) {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            Drawable drawable = new BitmapDrawable(resource);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                v.setBackground(drawable);
-                            } else {
-                                v.setBackgroundDrawable(drawable);
-                            }
-                        }
-                    });
-        }
-    }
-
 
     public static Bitmap TrimBitmap(int res, Context context) {
         Bitmap bm = BitmapFactory.decodeResource(context.getResources(), res);
@@ -321,43 +172,6 @@ public class ImageHelper {
 
     }
 
-
-//    public static void setLanguageImage(final ImageView iv, String langCode) {
-//        if (!TextUtils.isEmpty(langCode)) {
-//
-////            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
-//            int resourceId = getResourceIdByName("ic_lang_" + langCode);
-//
-//            if (resourceId != -1) {
-//                iv.setImageResource(resourceId);
-//            } else {
-////                iv.setImageDrawable(null);
-//                Country temp = Country.getCountryByISO(langCode);
-//                if (temp != null) {
-//                    iv.setImageResource(temp.getFlag());
-//                } else {
-//                    iv.setImageDrawable(null);
-//                }
-//            }
-//        }
-//    }
-
-
-//    public static void setCountryImage(final ImageView iv, String langCode) {
-//        if (!TextUtils.isEmpty(langCode)) {
-//
-////            int resourceId = ctx.getResources().getIdentifier("ic_lang_" + langCode, "drawable", "com.germanitlab.kanonhealth");
-//            int resourceId = getResourceIdByName("ic_lang_round_" + langCode);
-//
-//            if (resourceId != -1) {
-//                iv.setImageResource(resourceId);
-//            } else {
-//                iv.setImageDrawable(null);
-//            }
-//        }
-//    }
-
-
     private static int getResourceIdByName(String name) {
         name = name.toLowerCase();
         int drawableId = -1;
@@ -371,4 +185,28 @@ public class ImageHelper {
             return drawableId;
         }
     }
+
+    public static View setImageCircle(String speciality_icon, Activity activity) {
+        Helper helper = new Helper(activity);
+        CircleImageView circularImageView = new CircleImageView(activity);
+        if (TextUtils.isEmpty(speciality_icon)) {
+            circularImageView.setImageResource(R.drawable.placeholder);
+        } else {
+            setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1);
+        }
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30), helper.dpToPx(30)));
+        circularImageView.setPadding(7, 4, 7, 4);
+        return circularImageView;
+    }
+
+    public static View setImageHeart(int src, Context context) {
+        View view;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.heart_item_layout, null);
+        HeartImageView item = (HeartImageView) view.findViewById(R.id.hiv_heart);
+        item.setImageBitmap(ImageHelper.TrimBitmap(src, context));
+        return view;
+    }
+
 }
+
