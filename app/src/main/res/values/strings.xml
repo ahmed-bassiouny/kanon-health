@@ -479,7 +479,7 @@
     <string name="message_not_send">Message not send.</string>
     <string name="picture_not_send">Picture not send.</string>
     <string name="this_file_is_not_supported">This file is not supported.</string>
-    <string name="recoding_canceled">Recoding canceled.</string>
+    <string name="recoding_canceled">Recording canceled.</string>
     <string name="ok">Ok.</string>
     <string name="rate">Rate.</string>
     <string name="offline_mode_canot_contact_with_doctor">Offline mode,can\'t chat now.</string>
@@ -506,6 +506,11 @@
     <string name="slide_to_cancle">Slide to cancel.</string>
     <string name="delete">delete</string>
     <string name="support">Support</string>
+    <string name="hint_type_your_msg">Type your message</string>
+
+
+    <string name="label_slide_to_cancel">Slide to cancel</string>
+
 
 
 </resources>

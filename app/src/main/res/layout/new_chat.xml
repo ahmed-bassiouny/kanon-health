@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/line_separator">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:title=""
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_back"
+            android:src="@drawable/ic_arrow_back_black_24dp"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_chat_user_avatar"
+            android:layout_width="@dimen/size_50dp"
+            android:layout_height="@dimen/size_50dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="@dimen/size_15dp"
+            android:src="@drawable/placeholder" />
+
+        <TextView
+            android:id="@+id/tv_chat_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.28"
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/size_5dp"
+        android:layout_marginStart="@dimen/size_5dp"
+        android:background="@color/dark_gray"
+        />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:weightSum="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="67dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="0.22"
+            android:gravity="center"
+            android:padding="10dp"
+            android:weightSum="1">
+
+            <ImageButton
+                android:id="@+id/imgbtn_forward"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_margin="5dp"
+                android:background="@drawable/ic_forward_white_24dp"
+                android:duplicateParentState="true" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_chat_messages"
+                android:layout_width="match_parent"
+                android:background="@color/chatbackground_gray"
+                android:layout_height="match_parent"
+                android:paddingBottom="20dp"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/pbar_loading" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/activity_main_time_margin_bottom"
+        android:text="00:00:00"
+        android:visibility="invisible"/>
+
+    <View
+        android:id="@+id/line_separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_main_shadow_height"
+        android:layout_above="@+id/chat_bar"
+        android:layout_gravity="bottom"
+        android:background="@drawable/background_shadow"/>
+
+    <com.dewarder.holdinglibrary.HoldingButtonLayout
+        android:id="@+id/chat_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_main_start_record_width"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="@dimen/size_5dp"
+        app:hbl_cancel_icon="@drawable/ic_close_black_24dp"
+        app:hbl_holding_view="@+id/start_record"
+        app:hbl_icon="@drawable/ic_mic_black"
+        app:hbl_radius="@dimen/activity_main_holding_button_radius"
+        app:hbl_second_radius="@dimen/activity_main_holding_button_second_radius">
+
+        <LinearLayout
+            android:id="@+id/slide_to_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="@dimen/activity_main_slide_to_cancel_margin_right"
+            android:layout_marginRight="@dimen/activity_main_slide_to_cancel_margin_right"
+            android:gravity="center_vertical"
+            android:visibility="invisible">
+
+            <ImageView
+                android:layout_width="@dimen/activity_main_slide_to_cancel_icon_size"
+                android:layout_height="@dimen/activity_main_slide_to_cancel_icon_size"
+                android:layout_marginEnd="@dimen/activity_main_slide_to_cancel_icon_margin_right"
+                android:layout_marginRight="@dimen/activity_main_slide_to_cancel_icon_margin_right"
+                android:scaleType="center"
+                android:src="@drawable/ic_keyboard_arrow_left_black_24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_slide_to_cancel"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:gravity="center"
+            android:minHeight="@dimen/activity_main_input_holder_min_height"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/layout_chat_attach"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgbtn_chat_attach"
+                android:layout_width="@dimen/size_50dp"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/size_10dp"
+                android:paddingEnd="@dimen/size_10dp"
+                android:rotation="270"
+                android:scaleType="fitCenter"
+                android:src="@drawable/attach_file"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_chat_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_main_input_margin_left"
+                android:layout_marginStart="@dimen/activity_main_input_margin_left"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/hint_type_your_msg"
+                android:paddingBottom="@dimen/activity_main_input_padding_vertical"
+                android:paddingTop="@dimen/activity_main_input_padding_vertical"
+                android:textSize="@dimen/activity_main_input_text_size"/>
+
+            <ImageView
+                android:id="@+id/start_record"
+                android:layout_width="@dimen/activity_main_start_record_width"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_mic_black"
+                android:padding="@dimen/activity_main_input_padding_vertical"
+             />
+
+
+        </LinearLayout>
+
+    </com.dewarder.holdinglibrary.HoldingButtonLayout>
+    <ImageButton
+        android:id="@+id/img_send_txt"
+        android:layout_width="@dimen/activity_main_start_record_width"
+        android:layout_height="@dimen/activity_main_start_record_width"
+        android:src="@drawable/ic_send_black_24dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+      />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:id="@+id/open_chat_session"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_new_request" />
+        <Button
+            android:id="@+id/can_rate"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rate_your_last_request"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

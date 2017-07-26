@@ -535,5 +535,8 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="delete">löschen</string>
     <string name="support">Support</string>Unterstützung
 
+    <string name="label_slide_to_cancel">Slide to cancel</string>
+    <string name="hint_type_your_msg">Type your message</string>
+
 
 </resources>

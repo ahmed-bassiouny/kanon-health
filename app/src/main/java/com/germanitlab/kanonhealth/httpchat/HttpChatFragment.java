@@ -2,6 +2,8 @@ package com.germanitlab.kanonhealth.httpchat;
 
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -32,8 +34,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +43,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -58,6 +59,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.dewarder.holdinglibrary.HoldingButtonLayout;
+import com.dewarder.holdinglibrary.HoldingButtonLayoutListener;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
@@ -80,8 +83,6 @@ import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -98,22 +99,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+public class HttpChatFragment extends Fragment implements ApiResponse, Serializable , HoldingButtonLayoutListener {
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class HttpChatFragment extends Fragment implements ApiResponse, Serializable {
-
-
-    // Declare UI
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
     @BindView(R.id.et_chat_message)
     EditText etMessage;
-    @BindView(R.id.img_send_audio)
-    SeekBar img_send_audio;
+
+    @BindView(R.id.start_record)
+    ImageView  start_record;
+
     @BindView(R.id.img_send_txt)
     ImageButton img_send_txt;
+
     @BindView(R.id.pbar_loading)
     ProgressBar pbar_loading;
     @BindView(R.id.tv_chat_user_name)
@@ -125,21 +123,29 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     Toolbar toolbar;
     @BindView(R.id.button2)
     Button button2;
-    @BindView(R.id.img_requestpermission)
-    ImageView img_requestpermission;
-
     @BindView(R.id.can_rate)
     Button canRate;
-    @BindView(R.id.slide_to_cancle)
-    TextView slide_to_cancle;
+    @BindView(R.id.imgbtn_chat_attach)
+    ImageView imgbtn_chat_attach;
+    @BindView(R.id.layout_chat_attach)
+    LinearLayout layout_chat_attach;
 
+    @BindView(R.id.open_chat_session)
+    LinearLayout open_chat_session;
+
+
+    private MediaRecorder mRecorder;
+    private File mOutputFile;
+    private long startTimeForRecording = 0, endTimeForRecording = 0;
+    private Handler mHandler = new Handler();
+    private long startTime = 0;
+    private int[] amplitudes = new int[100];
+    private int i = 0;
 
     // loca variable
     int userID;
     String userPassword;
     int doctorID;
-
-    int flagIsSent = 0;
 
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
@@ -161,19 +167,43 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     boolean iamClinic = false;
     public static boolean chatRunning = false;
     LocationManager mLocationManager;
-    @BindView(R.id.imgbtn_chat_attach)
-    ImageView imgbtn_chat_attach;
+
+    private static final DateFormat mFormatter = new SimpleDateFormat("mm:ss:SS");
+    private static final float SLIDE_TO_CANCEL_ALPHA_MULTIPLIER = 2.5f;
+    private static final long TIME_INVALIDATION_FREQUENCY = 50L;
+
+    private HoldingButtonLayout mHoldingButtonLayout;
+    private TextView mTime;
+    private EditText mInput;
+    private View mSlideToCancel;
+
+    private int mAnimationDuration;
+    private ViewPropertyAnimator mTimeAnimator;
+    private ViewPropertyAnimator mSlideToCancelAnimator;
+    private ViewPropertyAnimator mInputAnimator;
+
+    private long mStartTime;
+    private Runnable mTimerRunnable;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_http_chat, container, false);
+        View view = inflater.inflate(R.layout.new_chat, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        mHoldingButtonLayout = (HoldingButtonLayout) view.findViewById(R.id.chat_bar);
+        mHoldingButtonLayout.addListener(this);
+        mTime = (TextView) view.findViewById(R.id.time);
+        mInput = (EditText) view.findViewById(R.id.et_chat_message);
+        mSlideToCancel = view.findViewById(R.id.slide_to_cancel);
+
+        mAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         canRate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +230,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         return httpChatFragment;
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -209,7 +238,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             initObjects();
             checkAudioPermission();
             initData();
-            handelEvent();
+            //  handelEvent();
             checkMode();
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.please_open_chat_again, Toast.LENGTH_SHORT).show();
@@ -235,7 +264,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private void initData() {
         iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
         iamClinic = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
-
 
         userID = prefManager.getInt(PrefManager.USER_ID);
         userPassword = prefManager.getData(prefManager.USER_PASSWORD);
@@ -367,22 +395,19 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         recyclerView.scrollToPosition(messages.size() - 1);
     }
 
-    // init text input
     @OnTextChanged(R.id.et_chat_message)
     public void changeText() {
-
         if (etMessage.getText().toString().trim().length() > 0) {
-
             img_send_txt.setVisibility(View.VISIBLE);
-            img_send_audio.setVisibility(View.GONE);
-            img_requestpermission.setVisibility(View.GONE);
+            start_record.setVisibility(View.GONE);
+            //     img_requestpermission.setVisibility(View.GONE);
 
         } else {
             img_send_txt.setVisibility(View.GONE);
+            start_record.setVisibility(View.VISIBLE);
             checkAudioPermission();
         }
     }
-
     @OnClick(R.id.img_send_txt)
     public void img_send_txt() {
         try {
@@ -391,7 +416,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             message.setUser_id(userID);
             message.setFrom_id(userID);
             message.setTo(doctorID);
-            message.setMsg(StringEscapeUtils.escapeJava(etMessage.getText().toString()));
+            message.setMsg(etMessage.getText().toString());
             message.setType(Constants.TEXT);
             message.setDate(getDateTimeNow());
             message.setSent_at(getDateTimeNow());
@@ -409,8 +434,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     @Override
                     public void onSuccess(Object response) {
                         layout_chat_attach.setEnabled(true);
-                        img_send_audio.setEnabled(true);
-                        img_requestpermission.setEnabled(true);
+                        mHoldingButtonLayout.setButtonEnabled(true);
+                        // img_requestpermission.setEnabled(true);
                         doctor.setIsOpen(1);
                         userRepository.update(doctor);
                         checkSessionOpen(iamDoctor);
@@ -441,8 +466,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     @Override
                     public void onFailed(String error) {
                         layout_chat_attach.setEnabled(false);
-                        img_send_audio.setEnabled(false);
-                        img_requestpermission.setEnabled(false);
+                        mHoldingButtonLayout.setButtonEnabled(false);
+                        //  img_requestpermission.setEnabled(false);
                         Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                         removeDummyMessage(index);
                     }
@@ -493,7 +518,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
 
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -886,91 +910,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     };
 
-    //* noy fixed
-    private void handelEvent() {
-
-        img_send_audio.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction()) {
-
-                    case MotionEvent.ACTION_MOVE:
-
-                        //handle drag action here   Milad :D
-                        break;
-
-                    case MotionEvent.ACTION_DOWN:
-                        linearTextMsg.setVisibility(View.GONE);
-                        layout_chat_attach.setVisibility(View.GONE);
-                        relativeAudio.setVisibility(View.VISIBLE);
-                        img_send_audio.setBackgroundResource(0);
-                        startRecording();
-
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (img_send_audio.getProgress() < 30) {
-                            Toast.makeText(getActivity(), R.string.recoding_canceled, Toast.LENGTH_SHORT).show();
-                            stopRecording(true);
-                            setButtonToTextMsg(true);
-                        } else {
-                            stopRecording(true);
-                            long diff = endTimeForRecording - startTimeForRecording;
-                            Log.e("Difference", String.valueOf(diff));
-                            if (diff > 1000) {
-                                Log.e("No file capacity ", String.valueOf(mOutputFile.getUsableSpace()));
-
-
-                                /**send to server**/
-                                final int index2 = creatDummyMessage();
-
-                                new HttpCall(getActivity(), new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        final Message message = new Message();
-                                        message.setUser_id(userID);
-                                        message.setFrom_id(userID);
-                                        message.setTo(doctorID);
-                                        message.setIs_url(1);
-                                        message.setMsg((String) response);
-                                        message.setType(Constants.AUDIO);
-                                        message.setIs_send(false);
-                                        message.setSent_at(getDateTimeNow());
-
-                                        //request
-                                        new HttpCall(getActivity(), new ApiResponse() {
-                                            @Override
-                                            public void onSuccess(Object response) {
-                                                creatRealMessage((Message) response, index2);
-                                            }
-
-                                            @Override
-                                            public void onFailed(String error) {
-                                                removeDummyMessage(index2);
-                                                Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                            }
-                                        }).sendMessage(message);
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-                                        Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                                        removeDummyMessage(index2);
-                                    }
-                                }).uploadMedia(mOutputFile.getPath());
-
-
-                            }
-                            setButtonToTextMsg(true);
-                        }
-                        break;
-                }
-
-                return false;
-            }
-
-        });
-    }
 
     private void getLocationandSend(double longitude, double latitude) {
         //create dummy message
@@ -999,140 +938,43 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }).sendMessage(message);
     }
 
-    private MediaRecorder mRecorder;
-    private File mOutputFile;
-    private long startTimeForRecording = 0, endTimeForRecording = 0;
-    private Handler mHandler = new Handler();
-    private long mStartTime = 0;
-    @BindView(R.id.timer)
-    TextView tvRecordTimer;
-    private int[] amplitudes = new int[100];
-    private int i = 0;
-    @BindView(R.id.linear_txt_msg)
-    LinearLayout linearTextMsg;
-    @BindView(R.id.relative_record)
-    RelativeLayout relativeAudio;
-    @BindView(R.id.layout_chat_attach)
-    LinearLayout layout_chat_attach;
 
-    private void startRecording() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        startTimeForRecording = cal.getTimeInMillis();
-        mRecorder = new MediaRecorder();
-        tvRecordTimer.setText("0:00");
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//    private void setButtonToTextMsg(Boolean comingFromVoiceRecording) {
+//
+//        if (!comingFromVoiceRecording) {
+//            start_record.setBackgroundResource(R.drawable.ic_send_black_24dp);
+//            start_record.setOnTouchListener(null);
+//        }
+//
+//        linearTextMsg.setVisibility(View.VISIBLE);
+//        layout_chat_attach.setVisibility(View.VISIBLE);
+//        relativeAudio.setVisibility(View.GONE);
+//    }
 
-        mRecorder.setAudioEncodingBitRate(16);
-        mRecorder.setAudioSamplingRate(44100);
-        mOutputFile = getOutputFile();
-        mOutputFile.getParentFile().mkdirs();
-        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
-
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-            mStartTime = SystemClock.elapsedRealtime();
-            mHandler.postDelayed(mTickExecutor, 100);
-        } catch (IOException e) {
-
-        }
-    }
-
-    private File getOutputFile() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
-        return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-                + "/RECORDING_"
-                + dateFormat.format(new Date())
-                + ".m4a");
-    }
-
-    private Runnable mTickExecutor = new Runnable() {
-        @Override
-        public void run() {
-            tick();
-            mHandler.postDelayed(mTickExecutor, 100);
-        }
-    };
-
-    private void tick() {
-        long time = (mStartTime < 0) ? 0 : (SystemClock.elapsedRealtime() - mStartTime);
-        int minutes = (int) (time / 60000);
-        int seconds = (int) (time / 1000) % 60;
-        if (seconds > 0)
-            tvRecordTimer.setText(minutes + ":" + (seconds < 10 ? "0" + seconds : seconds));
-        if (mRecorder != null) {
-            amplitudes[i] = mRecorder.getMaxAmplitude();
-            //Log.d("Voice Recorder","amplitude: "+(amplitudes[i] * 100 / 32767));
-            if (i >= amplitudes.length - 1) {
-                i = 0;
-            } else {
-                ++i;
-            }
-        }
-    }
-
-
-    protected void stopRecording(boolean saveFile) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        endTimeForRecording = cal.getTimeInMillis();
-
-        try {
-            mRecorder.stop();
-        } catch (RuntimeException stopException) {
-            //handle cleanup here
-        }
-
-        mRecorder.release();
-        mRecorder = null;
-        mStartTime = 0;
-        mHandler.removeCallbacks(mTickExecutor);
-        if (!saveFile && mOutputFile != null) {
-            mOutputFile.delete();
-        }
-    }
-
-    private void setButtonToTextMsg(Boolean comingFromVoiceRecording) {
-
-        if (!comingFromVoiceRecording) {
-            img_send_audio.setBackgroundResource(R.drawable.ic_send_black_24dp);
-            img_send_audio.setOnTouchListener(null);
-        }
-
-        linearTextMsg.setVisibility(View.VISIBLE);
-        layout_chat_attach.setVisibility(View.VISIBLE);
-        relativeAudio.setVisibility(View.GONE);
-    }
-
-    @BindView(R.id.open_chat_session)
-    LinearLayout open_chat_session;
-    @BindView(R.id.chat_bar)
-    LinearLayout chat_bar;
 
     private void checkSessionOpen(final boolean iamDoctor) {
 
         if (doctorID == userID) {
             // i talk with my self in document
-            chat_bar.setVisibility(View.VISIBLE);
+            mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
         } else if (iamDoctor && doctor.isClinic == 0 && doctor.getIsDoc() == 0) {
             // i chat with client and sssion closed
-            chat_bar.setVisibility(View.VISIBLE);
+            mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
             if (doctor.getIsOpen() == 0) {
                 layout_chat_attach.setEnabled(false);
-                img_send_audio.setEnabled(false);
-                img_requestpermission.setEnabled(false);
+                mHoldingButtonLayout.setButtonEnabled(false);
+                // img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
             }
         } else if (doctor.getIsClinic() == 1) {
             // client chat with clinics
-            chat_bar.setVisibility(View.VISIBLE);
+            mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
         } else if (doctor.getIsOpen() == 0) {
             // client chat with doctor and session closed
-            chat_bar.setVisibility(View.GONE);
+            mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
             if (iamDoctor == false && iamClinic == false) {
                 if (doctor.getCan_rate() == 1) {
@@ -1143,7 +985,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             }
         } else {
             // client chat with doctor and session opened
-            chat_bar.setVisibility(View.VISIBLE);
+            mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
         }
     }
@@ -1242,6 +1084,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                                         doctor.setIsOpen(0);
                                         userRepository.update(doctor);
                                         checkSessionOpen(iamDoctor);
+                                        canRate.setVisibility(View.GONE);
                                         getActivity().invalidateOptionsMenu();
                                         if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
                                             AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
@@ -1340,7 +1183,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             loadChatOnline(userID, doctorID);
             layout_chat_attach.setEnabled(true);
             etMessage.setEnabled(true);
-            img_send_audio.setEnabled(true);
+            mHoldingButtonLayout.setButtonEnabled(true);
             img_send_txt.setEnabled(true);
             button2.setEnabled(true);
             button2.setText(R.string.start_new_request);
@@ -1350,9 +1193,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 checkSessionOpen(iamDoctor);
         } else {
             loadChatOffline(doctorID);
+            mHoldingButtonLayout.setButtonEnabled(false);
             layout_chat_attach.setEnabled(false);
             etMessage.setEnabled(false);
-            img_send_audio.setEnabled(false);
             img_send_txt.setEnabled(false);
             button2.setEnabled(false);
             button2.setText(R.string.offline_mode_canot_contact_with_doctor);
@@ -1386,22 +1229,23 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                img_requestpermission.setVisibility(View.GONE);
-                img_send_audio.setVisibility(View.VISIBLE);
+                //   img_requestpermission.setVisibility(View.GONE);
+                start_record.setVisibility(View.VISIBLE);
             } else {
-                img_requestpermission.setVisibility(View.VISIBLE);
-                img_send_audio.setVisibility(View.GONE);
+                //img_requestpermission.setVisibility(View.VISIBLE);
+                start_record.setVisibility(View.GONE);
             }
         } else {
-            img_requestpermission.setVisibility(View.GONE);
-            img_send_audio.setVisibility(View.VISIBLE);
+            // img_requestpermission.setVisibility(View.GONE);
+            start_record.setVisibility(View.VISIBLE);
         }
     }
 
-    @OnClick(R.id.img_requestpermission)
-    public void requestAudioPermission() {
-        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
-    }
+//    @OnClick(R.id.start_record)
+//    public void requestAudioPermission() {
+//       requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
+//        start_record.setVisibility(View.INVISIBLE);
+//    }
 
     private void messageSeen() {
         // i sent request to make my msg seen
@@ -1457,11 +1301,251 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     @OnClick({R.id.img_chat_user_avatar,R.id.tv_chat_user_name})
     public void openProfile(){
         if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
-            Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+            /*Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", doctor);
-            getActivity().startActivity(intent);
+            getActivity().startActivity(intent);*/
         }else{
             // this object is user and should open ProfileActivity
+        }
+    }
+
+
+
+    @Override
+    public void onBeforeExpand() {
+        cancelAllAnimations();
+        mSlideToCancel.setTranslationX(0f);
+        mSlideToCancel.setAlpha(0f);
+        mSlideToCancel.setVisibility(View.VISIBLE);
+        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+        mSlideToCancelAnimator.start();
+
+        mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+        mInputAnimator.setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mInput.setVisibility(View.INVISIBLE);
+                mInputAnimator.setListener(null);
+            }
+        });
+        mInputAnimator.start();
+
+        mTime.setTranslationY(mTime.getHeight());
+        mTime.setAlpha(0f);
+        mTime.setVisibility(View.VISIBLE);
+        mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+        mTimeAnimator.start();
+        mHoldingButtonLayout.getHoldingView().setVisibility(View.INVISIBLE);
+
+    }
+
+    @Override
+    public void onExpand() {
+        mStartTime = System.currentTimeMillis();
+        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
+        startRecording();
+        invalidateTimer();
+        mHoldingButtonLayout.getHoldingView().setVisibility(View.INVISIBLE);
+    }
+
+
+    @Override
+    public void onBeforeCollapse() {
+        cancelAllAnimations();
+
+        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(0f).setDuration(mAnimationDuration);
+        mSlideToCancelAnimator.setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mSlideToCancel.setVisibility(View.INVISIBLE);
+                mSlideToCancelAnimator.setListener(null);
+            }
+        });
+        mSlideToCancelAnimator.start();
+
+        mInput.setAlpha(0f);
+        mInput.setVisibility(View.VISIBLE);
+        mInputAnimator = mInput.animate().alpha(1f).setDuration(mAnimationDuration);
+        mInputAnimator.start();
+
+        mTimeAnimator = mTime.animate().translationY(mTime.getHeight()).alpha(0f).setDuration(mAnimationDuration);
+        mTimeAnimator.setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mTime.setVisibility(View.INVISIBLE);
+                mTimeAnimator.setListener(null);
+            }
+        });
+        mTimeAnimator.start();
+        mHoldingButtonLayout.getHoldingView().setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onCollapse(boolean isCancel) {
+        mHoldingButtonLayout.getHoldingView().setVisibility(View.VISIBLE);
+        stopTimer();
+        if (isCancel) {
+            stopRecording(false);
+            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
+        } else {
+            stopRecording(true);
+            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
+
+            final int index2 = creatDummyMessage();
+            new HttpCall(getActivity(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    final Message message = new Message();
+                    message.setUser_id(userID);
+                    message.setFrom_id(userID);
+                    message.setTo(doctorID);
+                    message.setIs_url(1);
+                    message.setMsg((String) response);
+                    message.setType(Constants.AUDIO);
+                    message.setIs_send(false);
+                    message.setSent_at(getDateTimeNow());
+
+                    //request
+                    new HttpCall(getActivity(), new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            creatRealMessage((Message) response, index2);
+                        }
+
+                        @Override
+                        public void onFailed(String error) {
+                            removeDummyMessage(index2);
+                            Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
+                        }
+                    }).sendMessage(message);
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
+                    removeDummyMessage(index2);
+                }
+            }).uploadMedia(mOutputFile.getPath());
+
+
+
+        }
+    }
+
+    @Override
+    public void onOffsetChanged(float offset, boolean isCancel) {
+        mSlideToCancel.setTranslationX(-mHoldingButtonLayout.getWidth() * offset);
+        mSlideToCancel.setAlpha(1 - SLIDE_TO_CANCEL_ALPHA_MULTIPLIER * offset);
+    }
+
+    private void invalidateTimer() {
+        mTimerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mTime.setText(getFormattedTime());
+                invalidateTimer();
+            }
+        };
+
+        mTime.postDelayed(mTimerRunnable, TIME_INVALIDATION_FREQUENCY);
+    }
+
+    private void stopTimer() {
+        if (mTimerRunnable != null) {
+            mTime.getHandler().removeCallbacks(mTimerRunnable);
+        }
+    }
+
+    private void cancelAllAnimations() {
+        if (mInputAnimator != null) {
+            mInputAnimator.cancel();
+        }
+
+        if (mSlideToCancelAnimator != null) {
+            mSlideToCancelAnimator.cancel();
+        }
+
+        if (mTimeAnimator != null) {
+            mTimeAnimator.cancel();
+        }
+    }
+
+    private String getFormattedTime() {
+        return mFormatter.format(new Date(System.currentTimeMillis() - mStartTime));
+    }
+
+
+    private void startRecording() {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        startTimeForRecording = cal.getTimeInMillis();
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+        mRecorder.setAudioEncodingBitRate(16);
+        mRecorder.setAudioSamplingRate(44100);
+        mOutputFile = getOutputFile();
+        mOutputFile.getParentFile().mkdirs();
+        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+
+        try {
+            mRecorder.prepare();
+            mRecorder.start();
+            startTime = SystemClock.elapsedRealtime();
+            mHandler.postDelayed(mTickExecutor, 100);
+        } catch (IOException e) {
+
+        }
+    }
+
+    private File getOutputFile() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
+        return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                + "/RECORDING_"
+                + dateFormat.format(new Date())
+                + ".m4a");
+    }
+
+    private Runnable mTickExecutor = new Runnable() {
+        @Override
+        public void run() {
+            tick();
+            mHandler.postDelayed(mTickExecutor, 100);
+        }
+    };
+
+    private void tick() {
+        long time = (startTime < 0) ? 0 : (SystemClock.elapsedRealtime() - startTime);
+        int minutes = (int) (time / 60000);
+        int seconds = (int) (time / 1000) % 60;
+        if (mRecorder != null) {
+            amplitudes[i] = mRecorder.getMaxAmplitude();
+            //Log.d("Voice Recorder","amplitude: "+(amplitudes[i] * 100 / 32767));
+            if (i >= amplitudes.length - 1) {
+                i = 0;
+            } else {
+                ++i;
+            }
+        }
+    }
+
+
+    protected void stopRecording(boolean saveFile) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        endTimeForRecording = cal.getTimeInMillis();
+
+        try {
+            mRecorder.stop();
+        } catch (RuntimeException stopException) {
+            //handle cleanup here
+        }
+        mRecorder.release();
+        mRecorder = null;
+        startTime = 0;
+        mHandler.removeCallbacks(mTickExecutor);
+        if (!saveFile && mOutputFile != null) {
+            mOutputFile.delete();
         }
     }
 }
