@@ -151,40 +151,36 @@
                 android:id="@+id/relative_record"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".1"
+                android:layout_weight=".15"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
-                <ImageView
-                    android:layout_width="@dimen/size_20dp"
-                    android:layout_height="@dimen/size_20dp"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_mic_black_24dp" />
 
 
-                <!--
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerInParent="true"
-                    android:hint="@string/slide_to_cancle"/>
-                    -->
+
                 <TextView
                     android:id="@+id/timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="center_horizontal"
                     android:text=""
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="30sp"
                     android:textStyle="bold"
                     android:typeface="monospace" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/slide_to_cancle"
+                    android:layout_toEndOf="@id/timer"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:drawableStart="@drawable/back"
+                    android:hint="@string/slide_to_cancle"/>
+
+
             </RelativeLayout>
 
             <LinearLayout
