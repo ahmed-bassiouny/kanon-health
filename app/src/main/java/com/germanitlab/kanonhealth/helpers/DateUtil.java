@@ -18,14 +18,14 @@ public class DateUtil {
     public static SimpleDateFormat getFormat() {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return format;
     }
 
     public static SimpleDateFormat getAnotherFormat() {
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return format;

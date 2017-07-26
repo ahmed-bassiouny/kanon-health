@@ -50,7 +50,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
     @Override
     public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_contact, parent, false);
         return new ItemView(view);
     }
 
@@ -64,27 +64,26 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
             if (doctor.isClinic == 1) {
                 holder.tvDoctorName.setText(doctor.getFullName());
-                holder.tvPractice.setVisibility(View.GONE);
+                holder.tvlastMsg.setVisibility(View.GONE);
             } else {
                 holder.tvDoctorName.setText(doctor.getFullName());
             }
-            holder.tvDate.setText(doctor.getLastOnline());
             holder.tvSpecialist.setVisibility(View.GONE);
 
-            holder.tvPractice.setText("");
+            holder.tvlastMsg.setText("");
             if (doctor.getIsDoc() == 1 && doctor.getMembers_at() != null && doctor.getMembers_at().size() > 0) {
-                holder.tvPractice.setVisibility(View.VISIBLE);
+                holder.tvlastMsg.setVisibility(View.VISIBLE);
                 boolean isFirst = true;
                 for (ChooseModel practice : doctor.getMembers_at()) {
                     if (isFirst) {
-                        holder.tvPractice.setText(practice.getFirst_nameMember());
+                        holder.tvlastMsg.setText(practice.getFirst_nameMember());
                         isFirst = false;
                     } else {
-                        holder.tvPractice.append(", " + practice.getFirst_nameMember());
+                        holder.tvlastMsg.append(", " + practice.getFirst_nameMember());
                     }
                 }
             } else {
-                holder.tvPractice.setVisibility(View.GONE);
+                holder.tvlastMsg.setVisibility(View.GONE);
             }
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
@@ -106,7 +105,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgStatus;
-        TextView tvDoctorName, tvDate, tvSpecialist, tvPractice;
+        TextView tvDoctorName, tvSpecialist, tvlastMsg;
         FlowLayout linearLayoutSpecialist;
 
 
@@ -115,9 +114,8 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar_cell);
 //            imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
-            tvPractice = (TextView) itemView.findViewById(R.id.tv_practice);
+            tvlastMsg = (TextView) itemView.findViewById(R.id.tv_last_msg);
             tvDoctorName = (TextView) itemView.findViewById(R.id.tv_doctor_name_cell);
-            tvDate = (TextView) itemView.findViewById(R.id.tv_doctor_date_cell);
             tvSpecialist = (TextView) itemView.findViewById(R.id.tv_specialities);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
             linearLayoutSpecialist = (FlowLayout) itemView.findViewById(R.id.ll_dynamic_specialist);

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -78,7 +81,13 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     @Override
     public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell, parent, false);
+        View view;
+        if (tabPosition == 1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_contact, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_chat, parent, false);
+        }
+
         return new ItemView(view);
     }
 
@@ -89,87 +98,68 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             holder.setIsRecyclable(false);
 
                 /* data base
+                // tab poition is for tabs from 1 to 4
          */
+            final User doctor = doctorContactsList.get(position);
+
+            if (holder.tvDoctorName != null) {
+                if (!TextUtils.isEmpty(doctor.getFullName()))
+                    holder.tvDoctorName.setText(doctor.getFullName());
+            }
             if (tabPosition == 3) {
-                list = mMessageRepositry.getAll(doctorContactsList.get(position).get_Id());
+                list = mMessageRepositry.getAll(doctor.get_Id());
                 if (list != null) {
                     if (list.size() > 0) {
                         int index = list.size() - 1;
-                        if (holder.tvSpecialist != null && list.get(index).getType() != null) {
+                        if (holder.tvLastMsg != null && list.get(index).getType() != null) {
                             switch (list.get(index).getType()) {
                                 case Constants.IMAGE:
-                                    holder.tvSpecialist.setText(R.string.image);
+                                    holder.tvLastMsg.setText(R.string.image);
                                     break;
                                 case Constants.AUDIO:
-                                    holder.tvSpecialist.setText(R.string.audio);
+                                    holder.tvLastMsg.setText(R.string.audio);
                                     break;
                                 case Constants.VIDEO:
-                                    holder.tvSpecialist.setText(R.string.video);
+                                    holder.tvLastMsg.setText(R.string.video);
                                     break;
                                 case Constants.LOCATION:
-                                    holder.tvSpecialist.setText(R.string.location);
+                                    holder.tvLastMsg.setText(R.string.location);
                                     break;
                                 case Constants.TEXT:
-                                    holder.tvSpecialist.setText(list.get(index).getMsg());
+                                    holder.tvLastMsg.setText(list.get(index).getMsg());
                                     break;
                             }
+
+                        }
+                        if (holder.tvLastMsgDate != null) {
+                            holder.tvLastMsgDate.setText(Helper.getFormattedDate(list.get(index).getSent_at()));
                         }
                     } else {
-                        holder.tvSpecialist.setText("");
+                        holder.tvLastMsg.setText("");
                     }
                 }
-                holder.imgStatus.setVisibility(View.GONE);
             }
-
-
-            final User doctor = doctorContactsList.get(position);
-            String lasseen = (doctor.getLastOnline() != "null" && doctor.getLastOnline() != null) ? doctor.getLastOnline() : "";
-            if (doctor.getIs_available() != null && tabPosition != 3) {
-                if (doctor.getIs_available().equals("0")) {
-                    final int newColor = activity.getResources().getColor(R.color.medium_grey);
-                    holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-                    holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.close));
-                } else {
-                    final int newColor = activity.getResources().getColor(R.color.new_green);
-                    holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-                    holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.open));
-
+            if (holder.tvSpecialist != null) {
+                holder.tvSpecialist.setText("");
+                int size = 0;
+                for (ChooseModel chooseModel : doctor.getSpecialities()
+                        ) {
+                    holder.tvSpecialist.append(chooseModel.getSpeciality_title());
+                    size++;
+                    if (size < doctor.getSpecialities().size())
+                        holder.tvSpecialist.append(", ");
+                    ImageView image = new ImageView(activity);
+//                image.setBackgroundResource(R.drawable.doctor_icon);
+//                        int width = holder.linearLayoutSpecialist.getHeight();
+//                        int height = holder.linearLayoutSpecialist.getHeight();
+                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon(), activity);
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    parms.setMargins(5, 0, 5, 0);
+                    image.setLayoutParams(parms);
+                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    holder.linearLayoutSpecialist.addView(image);
                 }
             }
-            if (doctor.isClinic == 1) {
-                holder.tvDoctorName.setText(doctor.getFullName());
-                holder.tvPractice.setVisibility(View.GONE);
-            } else {
-                holder.tvDoctorName.setText(doctor.getFullName());
-            }
-
-//            holder.tvAbout.setText(doctor.getAbout());
-//            if (doctor.isChosen())
-//                holder.background.setBackgroundResource(R.color.dark_gray);
-            holder.tvDate.setText(doctor.getLastOnline());
-            if (doctor.getUnreadedMesCount() > 0) {
-//                holder.tvUnreadMessage.setVisibility(View.VISIBLE);
-//                holder.tvUnreadMessage.setText(doctor.getUnreadedMesCount());
-            } else {
-//                holder.tvUnreadMessage.setVisibility(View.INVISIBLE);
-            }
-//            holder.tvSubtitle.setText(doctor.getSubTitle());
-            holder.tvPractice.setText("");
-            if (doctor.getIsDoc() == 1 && doctor.getMembers_at() != null && doctor.getMembers_at().size() > 0) {
-                holder.tvPractice.setVisibility(View.VISIBLE);
-                boolean isFirst = true;
-                for (ChooseModel practice : doctor.getMembers_at()) {
-                    if (isFirst) {
-                        holder.tvPractice.setText(practice.getFirst_nameMember());
-                        isFirst = false;
-                    } else {
-                        holder.tvPractice.append(", " + practice.getFirst_nameMember());
-                    }
-                }
-            } else {
-                holder.tvPractice.setVisibility(View.GONE);
-            }
-//        holder.imgPage.setImageResource(R.drawable.doctor_icon);
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
             }
@@ -184,30 +174,115 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 } else {
                     holder.imgAvatar.setBorderColor(Color.GREEN);
                 }
+
             } else {
                 holder.imgAvatar.setBorderWidth(0);
                 holder.imgAvatar.setBorderOverlay(false);
-                if (doctor.getSpecialities() != null && doctor.getSpecialities().size() > 0) {
-                    holder.tvSpecialist.setText("");
-                    for (int x = 0; x < doctor.getSpecialities().size(); x++) {
-                        ImageView image = new ImageView(activity);
-//                image.setBackgroundResource(R.drawable.doctor_icon);
-//                        int width = holder.linearLayoutSpecialist.getHeight();
-//                        int height = holder.linearLayoutSpecialist.getHeight();
-                        ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getSpecialities().get(x).getSpeciality_icon(), activity);
-                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        parms.setMargins(5,0,5,0);
-                        image.setLayoutParams(parms);
-                        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        holder.linearLayoutSpecialist.addView(image);
-//                        if (x == 0) {
-//                            holder.tvSpecialist.append(doctor.getSpecialities().get(x).getSpeciality_title());
-//                        } else {
-//                            holder.tvSpecialist.append(", " + doctor.getSpecialities().get(x).getSpeciality_title());
-//                        }
+
+            }
+            if (tabPosition == 1) {
+                if (doctor.getIs_available() != null) {
+                    if (doctor.getIs_available().equals("0")) {
+                        final int newColor = activity.getResources().getColor(R.color.medium_grey);
+                        holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+                    } else {
+                        final int newColor = activity.getResources().getColor(R.color.new_green);
+                        holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
                     }
                 }
             }
+
+
+//            if (tabPosition == 3) {
+//
+//            }
+//
+//
+//            String lasseen = (doctor.getLastOnline() != "null" && doctor.getLastOnline() != null) ? doctor.getLastOnline() : "";
+//            if (doctor.getIs_available() != null && tabPosition != 3) {
+//                if (doctor.getIs_available().equals("0")) {
+//                    final int newColor = activity.getResources().getColor(R.color.medium_grey);
+//                    holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+//                    holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.close));
+//                } else {
+//                    final int newColor = activity.getResources().getColor(R.color.new_green);
+//                    holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+//                    holder.tvSpecialist.append("\n" + lasseen + "  " + activity.getString(R.string.open));
+//
+//                }
+//            }
+//            if (doctor.isClinic == 1) {
+//                holder.tvDoctorName.setText(doctor.getFullName());
+//                holder.tvLastMsg.setVisibility(View.GONE);
+//            } else {
+//                holder.tvDoctorName.setText(doctor.getFullName());
+//            }
+//
+////            holder.tvAbout.setText(doctor.getAbout());
+////            if (doctor.isChosen())
+////                holder.background.setBackgroundResource(R.color.dark_gray);
+//            if (doctor.getUnreadedMesCount() > 0) {
+////                holder.tvUnreadMessage.setVisibility(View.VISIBLE);
+////                holder.tvUnreadMessage.setText(doctor.getUnreadedMesCount());
+//            } else {
+////                holder.tvUnreadMessage.setVisibility(View.INVISIBLE);
+//            }
+////            holder.tvSubtitle.setText(doctor.getSubTitle());
+//            holder.tvLastMsg.setText("");
+//            if (doctor.getIsDoc() == 1 && doctor.getMembers_at() != null && doctor.getMembers_at().size() > 0) {
+//                holder.tvLastMsg.setVisibility(View.VISIBLE);
+//                boolean isFirst = true;
+//                for (ChooseModel practice : doctor.getMembers_at()) {
+//                    if (isFirst) {
+//                        holder.tvLastMsg.setText(practice.getFirst_nameMember());
+//                        isFirst = false;
+//                    } else {
+//                        holder.tvLastMsg.append(", " + practice.getFirst_nameMember());
+//                    }
+//                }
+//            } else {
+//                holder.tvLastMsg.setVisibility(View.GONE);
+//            }
+////        holder.imgPage.setImageResource(R.drawable.doctor_icon);
+//            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
+//                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+//            }
+//            if (tabPosition == 3) {
+//                // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);
+//                if (doctor.getIsOpen() != 1) {
+//                    holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
+//                } else if (doctor.getIsDoc() == 1) {
+//                    holder.imgAvatar.setBorderColor(Color.BLUE);
+//                } else if (doctor.getIsClinic() == 1) {
+//                    holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
+//                } else {
+//                    holder.imgAvatar.setBorderColor(Color.GREEN);
+//                }
+//            } else {
+//                holder.imgAvatar.setBorderWidth(0);
+//                holder.imgAvatar.setBorderOverlay(false);
+//            }
+//            if (doctor.getSpecialities() != null && doctor.getSpecialities().size() > 0) {
+//                holder.tvSpecialist.setText("");
+//                for (int x = 0; x < doctor.getSpecialities().size(); x++) {
+//                    ImageView image = new ImageView(activity);
+////                image.setBackgroundResource(R.drawable.doctor_icon);
+////                        int width = holder.linearLayoutSpecialist.getHeight();
+////                        int height = holder.linearLayoutSpecialist.getHeight();
+//                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getSpecialities().get(x).getSpeciality_icon(), activity);
+//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                    parms.setMargins(5, 0, 5, 0);
+//                    image.setLayoutParams(parms);
+//                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//                    holder.linearLayoutSpecialist.addView(image);
+////                        if (x == 0) {
+////                            holder.tvSpecialist.append(doctor.getSpecialities().get(x).getSpeciality_title());
+////                        } else {
+////                            holder.tvSpecialist.append(", " + doctor.getSpecialities().get(x).getSpeciality_title());
+////                        }
+//                }
+//            }
+//
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -250,8 +325,9 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgStatus;
-        TextView tvDoctorName, tvDate, tvSpecialist, tvPractice;
+        TextView tvDoctorName, tvSpecialist, tvLastMsg, tvLastMsgDate;
         FlowLayout linearLayoutSpecialist;
+        PercentRelativeLayout prlMyRow;
 
 
         public ItemView(View itemView) {
@@ -259,12 +335,13 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar_cell);
 //            imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
-            tvPractice = (TextView) itemView.findViewById(R.id.tv_practice);
+            tvLastMsg = (TextView) itemView.findViewById(R.id.tv_last_msg);
+            tvLastMsgDate = (TextView) itemView.findViewById(R.id.tv_last_msg_date);
             tvDoctorName = (TextView) itemView.findViewById(R.id.tv_doctor_name_cell);
-            tvDate = (TextView) itemView.findViewById(R.id.tv_doctor_date_cell);
             tvSpecialist = (TextView) itemView.findViewById(R.id.tv_specialities);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
             linearLayoutSpecialist = (FlowLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
+            prlMyRow = (PercentRelativeLayout) itemView.findViewById(R.id.myrow);
         }
     }
 
