@@ -83,12 +83,15 @@ public class MessageRepositry {
         return null;
     }*/
 
-    public List<Message> getAll(int doctorID) {
+    public List<Message> getAll(int userID,int doctorID) {
         try {
 
             QueryBuilder<Message, Integer> queryBuilder = messagesDao.queryBuilder();
             // the 'password' field must be equal to "qwerty"
-            queryBuilder.where().eq("to_id", doctorID).or().eq("from_id", doctorID);
+            if(userID==doctorID)
+                queryBuilder.where().eq("to_id", doctorID).and().eq("from_id", doctorID);
+            else
+                queryBuilder.where().eq("to_id", doctorID).or().eq("from_id", doctorID);
             // prepare our sql statement
             PreparedQuery<Message> preparedQuery = queryBuilder.orderBy("id", true).prepare();
             // query for all accounts that have "qwerty" as a password

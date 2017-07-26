@@ -50,16 +50,20 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     int tabPosition;
     boolean is_doc = false;
     boolean is_clinic = false;
-
+    int userID;
+    PrefManager prefManager;
     public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
         try {
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
             this.visibility = visibility;
             tabPosition = i;
+            prefManager=new PrefManager(activity);
             mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
-            is_doc = new Gson().fromJson(new PrefManager(activity).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
-            is_clinic = new Gson().fromJson(new PrefManager(activity).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
+            is_doc = new Gson().fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
+            is_clinic = new Gson().fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
+            userID = prefManager.getInt(PrefManager.USER_ID);
+
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -107,7 +111,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     holder.tvDoctorName.setText(doctor.getFullName());
             }
             if (tabPosition == 3) {
-                list = mMessageRepositry.getAll(doctor.get_Id());
+                list = mMessageRepositry.getAll(userID,doctorContactsList.get(position).get_Id());
                 if (list != null) {
                     if (list.size() > 0) {
                         int index = list.size() - 1;

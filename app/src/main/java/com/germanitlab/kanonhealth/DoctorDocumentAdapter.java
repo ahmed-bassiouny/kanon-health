@@ -21,11 +21,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -204,17 +204,14 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
     // Image
     public class ImageViewHolder extends BaseViewHolder {
         public ImageView image_message;
-        public TextView message, date, privacy_txt;
+        public TextView  date, privacy_txt;
         public ImageView status, privacy_image;
-        public RelativeLayout background;
-        public LinearLayout messageContainer;
+        public FrameLayout messageContainer;
         public ProgressBar progress_view_download, pbar_loading;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
-            background = (RelativeLayout) itemView.findViewById(R.id.background);
-            messageContainer = (LinearLayout) itemView.findViewById(R.id.message_container);
-            message = (TextView) itemView.findViewById(R.id.message);
+            messageContainer = (FrameLayout) itemView.findViewById(R.id.message_container);
             date = (TextView) itemView.findViewById(R.id.date);
             status = (ImageView) itemView.findViewById(R.id.status);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
@@ -229,15 +226,13 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
     // Audio
     public class AudioViewHolder extends BaseViewHolder {
-        public LinearLayout ll_play;
-        public LinearLayout message_container;
-        public RelativeLayout background;
-        public ImageButton btn_play_pause;
-        public TextView tv_music_current_loc, tv_music_duration, date, privacy_txt;
-        public ImageView privacy_image, status;
-        public ProgressBar progress_view_download, pbar_loading;
+        public FrameLayout message_container;
+        public ImageView btn_play_pause;
         public SeekBar seek_bar_music;
-
+        public ProgressBar loading;
+        public TextView tv_music_duration, date, privacy_txt;
+        public ImageView privacy_image, status;
+        public ProgressBar pbar_loading;
         private MediaPlayer mp;
         // Handler to update UI timer, progress bar etc,.
         private Handler mHandler = new Handler();
@@ -247,35 +242,31 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
         public AudioViewHolder(View itemView) {
             super(itemView);
-            message_container = (LinearLayout) itemView.findViewById(R.id.message_container);
-            background = (RelativeLayout) itemView.findViewById(R.id.background);
-            btn_play_pause = (ImageButton) itemView.findViewById(R.id.btn_play_pause);
-            tv_music_current_loc = (TextView) itemView.findViewById(R.id.tv_music_current_loc);
+            message_container = (FrameLayout) itemView.findViewById(R.id.message_container);
+            btn_play_pause = (ImageView) itemView.findViewById(R.id.btn_play_pause);
             seek_bar_music = (SeekBar) itemView.findViewById(R.id.seek_bar_music);
             tv_music_duration = (TextView) itemView.findViewById(R.id.tv_music_duration);
-            progress_view_download = (ProgressBar) itemView.findViewById(R.id.progress_view_download);
             date = (TextView) itemView.findViewById(R.id.date);
             privacy_image = (ImageView) itemView.findViewById(R.id.privacy_image);
             privacy_txt = (TextView) itemView.findViewById(R.id.privacy_txt);
             status = (ImageView) itemView.findViewById(R.id.status);
-            ll_play = (LinearLayout) itemView.findViewById(R.id.ll_play);
             pbar_loading = (ProgressBar) itemView.findViewById(R.id.pbar_loading);
+            loading =(ProgressBar)itemView.findViewById(R.id.loading);
+
         }
     }
 
     // Text
     public static class TextMsgViewHolder extends BaseViewHolder {
-        public LinearLayout messageContainer;
+        public FrameLayout messageContainer;
         public TextView message, date, privacy_txt;
         public ImageView status, privacy_image;
-        public RelativeLayout background;
         public ProgressBar pbar_loading;
 
 
         public TextMsgViewHolder(View itemView) {
             super(itemView);
-            background = (RelativeLayout) itemView.findViewById(R.id.background);
-            messageContainer = (LinearLayout) itemView.findViewById(R.id.message_container);
+            messageContainer = (FrameLayout) itemView.findViewById(R.id.message_container);
             message = (TextView) itemView.findViewById(R.id.message);
             date = (TextView) itemView.findViewById(R.id.date);
             status = (ImageView) itemView.findViewById(R.id.status);
@@ -307,11 +298,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
             final Message message = mMessages.get(position);
 
-            if(message.getImageText()!=null){
-                imageViewHolder.message.setText(message.getImageText());
-                imageViewHolder.message.setVisibility(View.VISIBLE);
-            }else
-                imageViewHolder.message.setVisibility(View.GONE);
+
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
@@ -424,9 +411,10 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                 String fileName = mediaMessage.getMsg().substring(mediaMessage.getMsg().lastIndexOf("/") + 1);
                 File file = new File(Constants.folder, fileName);
 
+
+                audioViewHolder.btn_play_pause.setVisibility(View.VISIBLE);
+                audioViewHolder.loading.setVisibility(View.GONE);
                 if (file.exists()) {
-                    audioViewHolder.ll_play.setVisibility(View.VISIBLE);
-                    audioViewHolder.progress_view_download.setVisibility(View.GONE);
                     mediaMessage.setMsg(file.getPath());
                     mediaMessage.setLoaded(true);
                     mediaMessage.setLoading(false);
@@ -448,7 +436,9 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                         e.printStackTrace();
                     }
                 } else {
-                    internetFilesOperations.downloadUrlWithProgress(audioViewHolder.progress_view_download, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
+                    audioViewHolder.btn_play_pause.setVisibility(View.GONE);
+                    audioViewHolder.loading.setVisibility(View.VISIBLE);
+                    internetFilesOperations.downloadUrlWithProgress(audioViewHolder.loading, mediaMessage.getType(), mediaMessage.getMsg(), new DownloadListener() {
                         @Override
                         public void onDownloadFinish(final String pathOFDownloadedFile) {
                             activity.runOnUiThread(new Runnable() {
@@ -467,7 +457,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                                         audioViewHolder.seek_bar_music.setMax(100);
                                         Uri uri = Uri.fromFile(new File(mediaMessage.getMsg()));
                                         mediaMessage.setMsg(uri.toString());
-                                        audioViewHolder.ll_play.setVisibility(View.VISIBLE);
+                                        audioViewHolder.btn_play_pause.setVisibility(View.VISIBLE);
                                         // Updating progress bar
                                         audioViewHolder.mHandler.postDelayed(mUpdateTimeTask, 100);
                                     } catch (IllegalArgumentException e) {
@@ -519,7 +509,6 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
             final Message locationMessage = mMessages.get(position);
             imageViewHolder.status.setVisibility(View.GONE);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -554,7 +543,6 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
         try {
             final Message message = mMessages.get(position);
-            imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.status.setVisibility(View.GONE);
 
             if (!new File(message.getMsg()).exists()) {

@@ -273,18 +273,19 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     }
 
-    private void loadChatOnline(int userID, int doctorID) {
+    private void loadChatOnline() {
         MessageRequest messageRequest = new MessageRequest(userID, doctorID);
         new HttpCall(getActivity(), this).loadChat(messageRequest);
         // request seen all msg
     }
 
-    private void loadChatOffline(final int doctorID) {
+    private void loadChatOffline() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                messages = (ArrayList) messageRepositry.getAll(doctorID);
+                messages = (ArrayList) messageRepositry.getAll(userID,doctorID);
+
                 isStoragePermissionGranted();
                 pbar_loading.setVisibility(View.GONE);
             }
@@ -1337,7 +1338,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private void checkMode() {
         if (Helper.isNetworkAvailable(getContext())) {
-            loadChatOnline(userID, doctorID);
+            loadChatOnline();
             layout_chat_attach.setEnabled(true);
             etMessage.setEnabled(true);
             img_send_audio.setEnabled(true);
@@ -1349,7 +1350,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             if (doctor != null)
                 checkSessionOpen(iamDoctor);
         } else {
-            loadChatOffline(doctorID);
+            loadChatOffline();
             layout_chat_attach.setEnabled(false);
             etMessage.setEnabled(false);
             img_send_audio.setEnabled(false);
