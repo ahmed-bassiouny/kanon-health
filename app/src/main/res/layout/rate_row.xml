@@ -80,7 +80,7 @@
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/size_25dp"
                     android:layout_height="@dimen/size_25dp"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginEnd="5dp" />
 
                 <TextView
                     android:id="@+id/name"

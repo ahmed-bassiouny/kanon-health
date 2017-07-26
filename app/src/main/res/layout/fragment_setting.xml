@@ -25,8 +25,8 @@
     <!--android:id="@+id/scan"-->
     <!--android:layout_width="@dimen/size_40dp"-->
     <!--android:layout_height="@dimen/size_35dp"-->
-    <!--android:layout_gravity="right"-->
-    <!--android:layout_marginRight="@dimen/size_25dp"-->
+    <!--android:layout_gravity="End"-->
+    <!--android:layout_marginEnd="@dimen/size_25dp"-->
     <!--android:background="@null"-->
     <!--android:scaleType="fitXY"-->
     <!--android:src="@drawable/scan"-->
@@ -36,8 +36,8 @@
     <!--android:id="@+id/myQr"-->
     <!--android:layout_width="@dimen/size_40dp"-->
     <!--android:layout_height="@dimen/size_35dp"-->
-    <!--android:layout_gravity="right"-->
-    <!--android:layout_marginRight="@dimen/size_25dp"-->
+    <!--android:layout_gravity="End"-->
+    <!--android:layout_marginEnd="@dimen/size_25dp"-->
     <!--android:background="@null"-->
     <!--android:scaleType="fitXY"-->
     <!--android:src="@drawable/qrcode"-->
