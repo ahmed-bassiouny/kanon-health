@@ -471,7 +471,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
                     }
 
               //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
-                    setCircles(user.getSpecialities() , flSpecilities);
+                    setCircles(user.getSpecialities(), flSpecilities, 1);
 
                     break;
                 case Constants.LANGUAUGE:
@@ -494,7 +494,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
                     }
                     user.setMembers_at(templist);
                //     setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-                    setCircles(templist ,flInvite);
+                    setCircles(templist, flInvite, 2);
                     break;
             }
         } catch (Exception e) {
@@ -528,11 +528,15 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     }
 
 
-    private void setCircles(List<ChooseModel> specialities, FlowLayout flowLayout) {
+    private void setCircles(List<ChooseModel> specialities, FlowLayout flowLayout, int type) {
+        // type = 1 for specialities , type = 2 for members
         flowLayout.removeAllViews();
         for (ChooseModel chooseModel: specialities
              ) {
+            if (type == 1)
             flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , this));
+            else if (type == 2)
+                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getAvatarMember(), this));
 
         }
     }

@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +31,14 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     private ArrayList<ChooseModel> allspecialist;
     int type = 0;
     Context context;
+    private String serverURL = "";
 
 
-    public MultiSelectAdapter(Context context, ArrayList<ChooseModel> allspecialist, int type) {
+    public MultiSelectAdapter(Context context, ArrayList<ChooseModel> allspecialist, int type, String serverUrl) {
         this.context = context;
         this.allspecialist = allspecialist;
         this.type = type;
+        this.serverURL = serverUrl;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
 
                     case Constants.SPECIALITIES:
                         holder.tv_title.setText(model.getSpeciality_title());
-                        ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL_IMAGE + "/" + model.getSpeciality_icon(), -1, context);
+                        ImageHelper.setImage(holder.img_icon, serverURL + "/" + model.getSpeciality_icon(), -1, context);
                         break;
                     case Constants.LANGUAUGE:
                         holder.tv_title.setText(model.getLang_title());
@@ -74,8 +77,13 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
                         break;
                     case Constants.DoctorAll:
                         holder.tv_title.setText(model.getLast_nameMember() + " " + model.getFirst_nameMember());
-                        if(holder.img_icon != null && model.getAvatarMember() != null)
-                           ImageHelper.setImage(holder.img_icon, Constants.CHAT_SERVER_URL + "/" + model.getAvatarMember(), R.drawable.profile_place_holder, context);
+                        if (holder.img_icon != null) {
+                            if (model.getAvatarMember() != null && !TextUtils.isEmpty(model.getAvatarMember())) {
+                                ImageHelper.setImage(holder.img_icon, serverURL + "/" + model.getAvatarMember(), -1, context);
+                            } else {
+                                holder.img_icon.setImageResource(R.drawable.placeholder);
+                            }
+                        }
                         if (model.getIs_available().equals("1"))
                             holder.status.setImageResource(R.color.green);
                         else

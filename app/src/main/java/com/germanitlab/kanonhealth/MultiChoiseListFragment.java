@@ -140,7 +140,7 @@ public class MultiChoiseListFragment extends DialogFragment implements ApiRespon
                 initDataMemberAt(response);
                 break;
         }
-        mAdapter = new MultiSelectAdapter(getContext(), allspecialist, type);
+        mAdapter = new MultiSelectAdapter(getContext(), allspecialist, type, Constants.CHAT_SERVER_URL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
