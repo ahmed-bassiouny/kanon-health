@@ -231,7 +231,7 @@ public class initialProfileDetails extends AppCompatActivity {
                         Uri imageUri = data.getData();
                         util.showProgressDialog();
                         Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
-                        ImageHelper.setImage(imageProfile, imageUri, this);
+                        ImageHelper.setImage(imageProfile, imageUri);
                         new HttpCall(this, new ApiResponse() {
                             @Override
                             public void onSuccess(Object response) {

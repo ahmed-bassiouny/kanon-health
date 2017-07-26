@@ -173,7 +173,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     private void bindData() {
         if(userInfoResponse.getUser().getAvatar()!=null &&!userInfoResponse.getUser().getAvatar().isEmpty())
-        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar(), this);
+        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar());
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -480,7 +480,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     public void deleteMyImage() {
         try {
             user.setAvatar("");
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder, this);
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
         } catch (Exception e) {
@@ -493,7 +493,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     public void ImagePickerCallBack(Uri uri) {
         prefManager.put(PrefManager.PROFILE_IMAGE, uri.toString());
         util.showProgressDialog();
-        ImageHelper.setImage(imgAvatar, uri, this);
+        ImageHelper.setImage(imgAvatar, uri);
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {

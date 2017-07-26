@@ -86,7 +86,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
                 holder.tvlastMsg.setVisibility(View.GONE);
             }
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
             }
         }catch(Exception e){
                 Crashlytics.logException(e);

@@ -117,7 +117,7 @@ public class Helper {
         CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
         if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
-            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1, activity);
+            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1);
         }
         if (userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName()))
             name.setText(userInfoResponse.getUser().getFullName());

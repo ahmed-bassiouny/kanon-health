@@ -61,7 +61,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         try {
             switch (type) {
                 case Constants.SPECIALITIES:
-                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getSpeciality_icon(), context);
+                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getSpeciality_icon());
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.LANGUAUGE:
@@ -78,7 +78,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
                 case Constants.MEMBERAT:
                 case Constants.DoctorAll:
                     holder.title.setText(list.get(position).getFirst_nameMember());
-                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getAvatarMember(), context);
+                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getAvatarMember());
                     holder.title.setVisibility(View.VISIBLE);
                     break;
             }

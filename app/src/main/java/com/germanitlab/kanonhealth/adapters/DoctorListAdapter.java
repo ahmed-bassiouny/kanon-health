@@ -152,7 +152,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 //                image.setBackgroundResource(R.drawable.doctor_icon);
 //                        int width = holder.linearLayoutSpecialist.getHeight();
 //                        int height = holder.linearLayoutSpecialist.getHeight();
-                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon(), activity);
+                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
                     LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     parms.setMargins(5, 0, 5, 0);
                     image.setLayoutParams(parms);
@@ -161,7 +161,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 }
             }
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), activity);
+                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), R.drawable.placeholder);
             }
             if (tabPosition == 3) {
                 // Glide.with(activity).load(Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar()).into(holder.imgAvatar);

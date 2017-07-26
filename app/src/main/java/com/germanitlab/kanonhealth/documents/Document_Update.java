@@ -61,7 +61,7 @@ public class Document_Update extends AppCompatActivity {
             if (type.equals(Constants.IMAGE)) {
                 image_layout.setVisibility(View.VISIBLE);
                 Uri imageUri = Uri.fromFile(new File(message.getMsg()));
-                ImageHelper.setImage(imageView, imageUri, this);
+                ImageHelper.setImage(imageView, imageUri);
             } else if (type == Constants.VIDEO) {
                 video_layout.setVisibility(View.VISIBLE);
                 videoMessage.setImageBitmap(ThumbnailUtils.createVideoThumbnail(message.getMsg(),

@@ -313,7 +313,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
             }else
                 imageViewHolder.message.setVisibility(View.GONE);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download, activity);
+            ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -324,7 +324,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                     dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
                     ImageView img = (ImageView) dialog.findViewById(R.id.img);
                     ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
-                    ImageHelper.setImage(img, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), pbar, activity);
+                    ImageHelper.setImage(img, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), pbar);
                     dialog.show();
                 }
             });
@@ -541,7 +541,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
             double lat = jsonObject.getDouble("lat");
             double lng = jsonObject.getDouble("long");
             String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(lat) + "," + String.valueOf(lng) + "&zoom=15&size=200x200&sensor=false";
-            ImageHelper.setImage(imageViewHolder.image_message, URL, imageViewHolder.progress_view_download, activity);
+            ImageHelper.setImage(imageViewHolder.image_message, URL, imageViewHolder.progress_view_download);
 
         } catch (Exception e) {
             Crashlytics.logException(e);

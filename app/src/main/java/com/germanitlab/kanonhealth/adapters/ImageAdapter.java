@@ -39,7 +39,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         try {
             if (images[position] != null) {
-                ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL + "/" + images[position], R.drawable.profile_place_holder, mContext);
+                ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL + "/" + images[position], R.drawable.profile_place_holder);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

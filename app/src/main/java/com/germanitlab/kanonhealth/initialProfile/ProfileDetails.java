@@ -411,7 +411,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     public void ImagePickerCallBack(Uri uri) {
         util.showProgressDialog();
         Log.e("ImageUri", uri != null ? uri.toString() : "Empty Uri");
-        ImageHelper.setImage(imageProfile, uri, this);
+        ImageHelper.setImage(imageProfile, uri);
 
         new HttpCall(this, new ApiResponse() {
             @Override
