@@ -56,6 +56,16 @@
             android:visibility="gone" />
 
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:id="@+id/select_item"
+            android:clickable="false"
+            android:focusable="false"
+            android:background="@color/select_item_chat"
+            android:visibility="gone"/>
+
     </FrameLayout>
 
     <ImageView
