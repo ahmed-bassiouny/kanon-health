@@ -142,6 +142,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private int[] amplitudes = new int[100];
     private int i = 0;
 
+    private int audioFlag=0;
+
     // loca variable
     int userID;
     String userPassword;
@@ -236,7 +238,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         try {
             initObjects();
-            checkAudioPermission();
+           // checkAudioPermission();
             initData();
             //  handelEvent();
             checkMode();
@@ -376,10 +378,22 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         recordVideo();
                         break;
                     case Constants.AUDIO_PERMISSION_CODE:
-                        checkAudioPermission();
+                        setData();
                         break;
                     case Constants.LAST_LOCATION_PERMISSION_CODE:
                         getMyLocation();
+                        break;
+                    case 13 :
+//                        startRecording();
+                        break;
+                }
+            }
+            else
+            {
+                switch (requestCode) {
+
+                    case 13 :
+//                        mHoldingButtonLayout.cancel();
                         break;
                 }
             }
@@ -405,7 +419,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         } else {
             img_send_txt.setVisibility(View.GONE);
             start_record.setVisibility(View.VISIBLE);
-            checkAudioPermission();
+            //checkAudioPermission();
         }
     }
     @OnClick(R.id.img_send_txt)
@@ -1225,27 +1239,46 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         recyclerView.scrollToPosition(messages.size() - 1);
     }
 
-    private void checkAudioPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                //   img_requestpermission.setVisibility(View.GONE);
-                start_record.setVisibility(View.VISIBLE);
-            } else {
-                //img_requestpermission.setVisibility(View.VISIBLE);
-                start_record.setVisibility(View.GONE);
-            }
-        } else {
-            // img_requestpermission.setVisibility(View.GONE);
-            start_record.setVisibility(View.VISIBLE);
-        }
-    }
-
-//    @OnClick(R.id.start_record)
-//    public void requestAudioPermission() {
-//       requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
-//        start_record.setVisibility(View.INVISIBLE);
+//    private void checkAudioPermission() {
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+//                    ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                //   img_requestpermission.setVisibility(View.GONE);
+//             //   start_record.setVisibility(View.VISIBLE);
+//
+//            } else {
+//                //img_requestpermission.setVisibility(View.VISIBLE);
+//              //  start_record.setVisibility(View.GONE);
+//
+//            }
+//        } else {
+//            // img_requestpermission.setVisibility(View.GONE);
+//         //   start_record.setVisibility(View.VISIBLE);
+//
+//        }
 //    }
+//
+//    private void checkAPermission() {
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+//                    ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                //   img_requestpermission.setVisibility(View.GONE);
+//                //   start_record.setVisibility(View.VISIBLE);
+//                startRecording();
+//            } else {
+//                //img_requestpermission.setVisibility(View.VISIBLE);
+//                //  start_record.setVisibility(View.GONE);
+//                onCollapse(true);
+//            }
+//        } else {
+//            // img_requestpermission.setVisibility(View.GONE);
+//            //   start_record.setVisibility(View.VISIBLE);
+//            startRecording();
+//        }
+//    }
+
+
+
 
     private void messageSeen() {
         // i sent request to make my msg seen
@@ -1308,44 +1341,62 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             // this object is user and should open ProfileActivity
         }
     }
-
-
+//    @OnClick(R.id.start_record)
+//    public void requestAudioPermission() {
+//
+//    }
 
     @Override
     public void onBeforeExpand() {
-        cancelAllAnimations();
-        mSlideToCancel.setTranslationX(0f);
-        mSlideToCancel.setAlpha(0f);
-        mSlideToCancel.setVisibility(View.VISIBLE);
-        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
-        mSlideToCancelAnimator.start();
 
-        mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
-        mInputAnimator.setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mInput.setVisibility(View.INVISIBLE);
-                mInputAnimator.setListener(null);
-            }
-        });
-        mInputAnimator.start();
 
-        mTime.setTranslationY(mTime.getHeight());
-        mTime.setAlpha(0f);
-        mTime.setVisibility(View.VISIBLE);
-        mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
-        mTimeAnimator.start();
-        mHoldingButtonLayout.getHoldingView().setVisibility(View.INVISIBLE);
+//        if(whileFlag==1) {
+//            onBeforeCollapse();
+//            onCollapse(true);
+//            mHoldingButtonLayout.getHoldingView().setVisibility(View.VISIBLE);
+//        }
+
+//        if(whileFlag!=1) {
+            cancelAllAnimations();
+            mSlideToCancel.setTranslationX(0f);
+            mSlideToCancel.setAlpha(0f);
+            mSlideToCancel.setVisibility(View.VISIBLE);
+            mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+            mSlideToCancelAnimator.start();
+
+            mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+            mInputAnimator.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mInput.setVisibility(View.INVISIBLE);
+                    mInputAnimator.setListener(null);
+                }
+            });
+            mInputAnimator.start();
+
+            mTime.setTranslationY(mTime.getHeight());
+            mTime.setAlpha(0f);
+            mTime.setVisibility(View.VISIBLE);
+            mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+            mTimeAnimator.start();
+            mStartTime = System.currentTimeMillis();
+        if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            startRecording();
+        }
+        else{
+            onBeforeCollapse();
+//            onCollapse(true);
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 13);
+        }
 
     }
 
     @Override
     public void onExpand() {
-        mStartTime = System.currentTimeMillis();
-        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
-        startRecording();
-        invalidateTimer();
-        mHoldingButtonLayout.getHoldingView().setVisibility(View.INVISIBLE);
+        if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            invalidateTimer();
+        }
+
     }
 
 
@@ -1377,58 +1428,64 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             }
         });
         mTimeAnimator.start();
-        mHoldingButtonLayout.getHoldingView().setVisibility(View.INVISIBLE);
+
+
     }
 
     @Override
     public void onCollapse(boolean isCancel) {
-        mHoldingButtonLayout.getHoldingView().setVisibility(View.VISIBLE);
-        stopTimer();
-        if (isCancel) {
-            stopRecording(false);
-            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
-        } else {
-            stopRecording(true);
-            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
+        if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
-            final int index2 = creatDummyMessage();
-            new HttpCall(getActivity(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    final Message message = new Message();
-                    message.setUser_id(userID);
-                    message.setFrom_id(userID);
-                    message.setTo(doctorID);
-                    message.setIs_url(1);
-                    message.setMsg((String) response);
-                    message.setType(Constants.AUDIO);
-                    message.setIs_send(false);
-                    message.setSent_at(getDateTimeNow());
+            try {
+                stopTimer();
+                if (isCancel) {
+                    stopRecording(false);
+//            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
+                } else {
+                    stopRecording(true);
+//            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
-                    //request
+                    final int index2 = creatDummyMessage();
                     new HttpCall(getActivity(), new ApiResponse() {
                         @Override
                         public void onSuccess(Object response) {
-                            creatRealMessage((Message) response, index2);
+                            final Message message = new Message();
+                            message.setUser_id(userID);
+                            message.setFrom_id(userID);
+                            message.setTo(doctorID);
+                            message.setIs_url(1);
+                            message.setMsg((String) response);
+                            message.setType(Constants.AUDIO);
+                            message.setIs_send(false);
+                            message.setSent_at(getDateTimeNow());
+
+                            //request
+                            new HttpCall(getActivity(), new ApiResponse() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    creatRealMessage((Message) response, index2);
+                                }
+
+                                @Override
+                                public void onFailed(String error) {
+                                    removeDummyMessage(index2);
+                                    Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
+                                }
+                            }).sendMessage(message);
                         }
 
                         @Override
                         public void onFailed(String error) {
+                            Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
                             removeDummyMessage(index2);
-                            Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
                         }
-                    }).sendMessage(message);
+                    }).uploadMedia(mOutputFile.getPath());
+
                 }
 
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                    removeDummyMessage(index2);
-                }
-            }).uploadMedia(mOutputFile.getPath());
-
-
-
+            } catch (Exception e) {
+                Log.e("milad", "onCollapse: ", e);
+            }
         }
     }
 
@@ -1476,27 +1533,30 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
 
     private void startRecording() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        startTimeForRecording = cal.getTimeInMillis();
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+      //  Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));خى
 
-        mRecorder.setAudioEncodingBitRate(16);
-        mRecorder.setAudioSamplingRate(44100);
-        mOutputFile = getOutputFile();
-        mOutputFile.getParentFile().mkdirs();
-        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+            startTimeForRecording = mStartTime;
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-            startTime = SystemClock.elapsedRealtime();
-            mHandler.postDelayed(mTickExecutor, 100);
-        } catch (IOException e) {
+            mRecorder.setAudioEncodingBitRate(16);
+            mRecorder.setAudioSamplingRate(44100);
+            mOutputFile = getOutputFile();
+            mOutputFile.getParentFile().mkdirs();
+            mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
 
-        }
+            try {
+                mRecorder.prepare();
+                mRecorder.start();
+                startTime = SystemClock.elapsedRealtime();
+                mHandler.postDelayed(mTickExecutor, 100);
+            } catch (IOException e) {
+
+            }
+
+
     }
 
     private File getOutputFile() {
@@ -1540,8 +1600,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         } catch (RuntimeException stopException) {
             //handle cleanup here
         }
-        mRecorder.release();
-        mRecorder = null;
+        if(mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
         startTime = 0;
         mHandler.removeCallbacks(mTickExecutor);
         if (!saveFile && mOutputFile != null) {
