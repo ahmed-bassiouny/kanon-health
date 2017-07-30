@@ -184,7 +184,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     private ViewPropertyAnimator mInputAnimator;
 
     private long mStartTime;
-    private long tempStartTime;
     private Runnable mTimerRunnable;
     FCViewPager vp;
     boolean flagLongPress=false;
@@ -413,11 +412,17 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     public void changeText() {
         if (etMessage.getText().toString().trim().length() > 0) {
             img_send_txt.setVisibility(View.VISIBLE);
+            mHoldingButtonLayout.setButtonEnabled(false);
+            mHoldingButtonLayout.removeListener(this);
             start_record.setVisibility(View.GONE);
             //     img_requestpermission.setVisibility(View.GONE);
 
         } else {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
             img_send_txt.setVisibility(View.GONE);
+            mHoldingButtonLayout.setButtonEnabled(true);
+            mHoldingButtonLayout.addListener(this);
             start_record.setVisibility(View.VISIBLE);
             //checkAudioPermission();
         }
@@ -525,8 +530,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     @OnClick(R.id.layout_chat_attach)
     public void showDialogMedia() {
         try {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
+
             if (showAttachmentDialog) {
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
@@ -1226,6 +1230,8 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     public void onBeforeExpand() {
         timeDifference=0;
         flagLongPress=false;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
 
 //        if(whileFlag==1) {
 //            onBeforeCollapse();
@@ -1234,14 +1240,10 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 //        }
 
 //        if(whileFlag!=1) {
-        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
-        if (vp != null) {
-            vp.setEnableSwipe(false);
-        }
+
             cancelAllAnimations();
             mSlideToCancel.setTranslationX(0f);
             mSlideToCancel.setAlpha(0f);
-
             mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
             mSlideToCancelAnimator.start();
 
@@ -1261,22 +1263,27 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
             mTimeAnimator.start();
             mStartTime = System.currentTimeMillis();
-            tempStartTime=mStartTime;
+
 
 
     }
 
     @Override
     public void onExpand() {
-        if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            invalidateTimer();
+        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+        if (vp != null) {
+            vp.setEnableSwipe(false);
         }
+       // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            invalidateTimer();
+       // }
 
     }
 
 
     @Override
     public void onBeforeCollapse() {
+        mHoldingButtonLayout.getHoldingView().setClickable(true);
         cancelAllAnimations();
         mSlideToCancelAnimator = mSlideToCancel.animate().alpha(0f).setDuration(mAnimationDuration);
         mSlideToCancelAnimator.setListener(new AnimatorListenerAdapter() {
@@ -1287,7 +1294,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             }
         });
         mSlideToCancelAnimator.start();
-
         mInput.setAlpha(0f);
         mInput.setVisibility(View.VISIBLE);
         mInputAnimator = mInput.animate().alpha(1f).setDuration(mAnimationDuration);
@@ -1397,7 +1403,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                         startRecording();
                     }
                     else{
-                        onBeforeCollapse();
+                      onBeforeCollapse();
 //                      onCollapse(true);
                         requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},  Constants.AUDIO_PERMISSION_CODE);
                     }
