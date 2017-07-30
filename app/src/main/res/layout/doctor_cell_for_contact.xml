@@ -58,7 +58,7 @@
         android:textColor="@color/text_msg_input"
         android:textSize="@dimen/size_15sp"
         app:layout_heightPercent="30%"
-        app:layout_marginEndPercent="3%"
+        app:layout_marginEndPercent="6%"
         app:layout_marginTopPercent="3%" />
 
 

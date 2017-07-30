@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -153,6 +154,21 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     } else {
                         holder.tvSpecialist.append(", " + chooseModel.getSpeciality_title());
                     }
+                    // ellipsize text
+                    ViewTreeObserver vto = holder.tvSpecialist.getViewTreeObserver();
+                    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+                        @Override
+                        public void onGlobalLayout() {
+                            ViewTreeObserver obs = holder.tvSpecialist.getViewTreeObserver();
+                            obs.removeGlobalOnLayoutListener(this);
+                            if (holder.tvSpecialist.getLineCount() > 1) {
+                                int lineEndIndex = holder.tvSpecialist.getLayout().getLineEnd(0);
+                                String text = holder.tvSpecialist.getText().subSequence(0, lineEndIndex ) + "...";
+                                holder.tvSpecialist.setText(text);
+                            }
+                        }
+                    });
                     size++;
 
                     ImageView image = new ImageView(activity);
