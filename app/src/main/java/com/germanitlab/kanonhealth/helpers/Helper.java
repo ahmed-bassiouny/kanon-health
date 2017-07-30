@@ -209,7 +209,7 @@ public class Helper {
     }
 
 
-    public static void getCroppedImageFromCamera(final ParentFragment parentFragment, final AppCompatActivity activity, int type) {
+    public static void getCroppedImageFromCamera(final ParentFragment parentFragment, final FragmentActivity activity, int type) {
         new PickerBuilder(activity, type)
                 .setOnImageReceivedListener(new PickerBuilder.onImageReceivedListener() {
                     @Override

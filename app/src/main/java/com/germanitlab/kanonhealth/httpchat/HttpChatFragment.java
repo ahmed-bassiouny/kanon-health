@@ -58,6 +58,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.dewarder.holdinglibrary.HoldingButtonLayout;
 import com.dewarder.holdinglibrary.HoldingButtonLayoutListener;
 import com.germanitlab.kanonhealth.Comment;
+import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
@@ -66,6 +67,7 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentFragment;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -96,7 +98,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class HttpChatFragment extends Fragment implements ApiResponse, Serializable, HoldingButtonLayoutListener {
+public class HttpChatFragment extends ParentFragment implements ApiResponse, Serializable, HoldingButtonLayoutListener {
 
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
@@ -147,8 +149,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     String userPassword;
     int doctorID;
 
-    private static final int TAKE_PICTURE = 1;
-    private static final int SELECT_PICTURE = 2;
+    private static final int SELECT_VIDEO = 2;
     private static final int RECORD_VIDEO = 3;
     private Uri selectedImageUri = null;
     private boolean show_privacy = false;
@@ -366,13 +367,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         setData();
                         break;
                     case Constants.CAMERA_PERMISSION_CODE:
-                        takePhoto();
+                        //takePhoto();
                         break;
                     case Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE:
-                        pickImage();
+                       // pickImage();
                         break;
                     case Constants.VIDEO_PERMISSION_CODE:
-                        recordVideo();
+                       // recordVideo();
                         break;
                     case Constants.AUDIO_PERMISSION_CODE:
                         setData();
@@ -544,51 +545,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case TAKE_PICTURE:
-                    try {
-                        final int index = creatDummyMessage();
-                        new HttpCall(getContext(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                final Message message = new Message();
-                                message.setUser_id(userID);
-                                message.setFrom_id(userID);
-                                message.setTo(doctorID);
-                                message.setIs_url(1);
-                                message.setMsg((String) response);
-                                message.setType(Constants.IMAGE);
-                                message.setIs_send(false);
-                                message.setSent_at(getDateTimeNow());
-
-
-                                //request
-                                new HttpCall(getContext(), new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        creatRealMessage((Message) response, index);
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-                                        Toast.makeText(getContext(), R.string.picture_not_send, Toast.LENGTH_SHORT).show();
-                                        removeDummyMessage(index);
-                                    }
-                                }).sendMessage(message);
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                                removeDummyMessage(index);
-                            }
-                        }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), selectedImageUri)).getPath());
-                    } catch (Exception e) {
-                        Toast.makeText(getContext(), R.string.msg_not_send, Toast.LENGTH_SHORT).show();
-                        Crashlytics.logException(e);
-                        Log.e("send msg", "on Activity result: ", e);
-                    }
-                    break;
-                case SELECT_PICTURE:
+                case SELECT_VIDEO:
                 case RECORD_VIDEO:
                     try {
                         String filepath = new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath();
@@ -596,8 +553,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         final String type;
                         if (ext1.equals(".mp4") || ext1.equals(".3gp"))
                             type = Constants.VIDEO;
-                        else if (ext1.equals(".jpg") || ext1.equals(".png") || ext1.equals(".jpeg"))
-                            type = Constants.IMAGE;
                         else {
                             Toast.makeText(getActivity(), R.string.this_file_is_not_supported, Toast.LENGTH_SHORT).show();
                             return;
@@ -652,41 +607,38 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        takePhoto();
-                    } else
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
-                } else takePhoto();
-
-                attachment.setVisibility(View.INVISIBLE);
-                showAttachmentDialog = false;
+                takeAndSelectImage();
             }
         });
         getActivity().findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                takeAndSelectImage();
+            }
+        });
+
+        getActivity().findViewById(R.id.img_selectvideo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (getActivity().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        pickImage();
+                        pickVideo();
                     } else
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE);
                 } else {
-                    pickImage();
+                    pickVideo();
                 }
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
             }
         });
-        getActivity().findViewById(R.id.img_video).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.img_recordvideo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                             getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
                         recordVideo();
-
                     } else
                         requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.VIDEO_PERMISSION_CODE);
                 } else {
@@ -718,15 +670,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
     public void getMyLocation() {
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             askForLocationPermission();
             return;
         }
@@ -745,13 +689,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         Location bestLocation = null;
         for (String provider : providers) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 askForLocationPermission();
                 return null;
             }
@@ -771,18 +708,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
     }
-
-    public void takePhoto() {
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, R.string.new_picture);
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, R.string.from_your_camera);
-        selectedImageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
-        startActivityForResult(intent, TAKE_PICTURE);
-    }
-
     private int creatDummyMessage() {
         Message message = new Message();
         message.setSent_at(getDateTimeNow());
@@ -803,11 +728,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         return dateFormat.format(cal.getTime()).toString();
     }
 
-    private void pickImage() {
+    private void pickVideo() {
         Intent intent = new Intent();
-        intent.setType("image/* video/*");
+        intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, SELECT_PICTURE);
+        startActivityForResult(intent, SELECT_VIDEO);
 
     }
 
@@ -1561,5 +1486,63 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         if (!saveFile && mOutputFile != null) {
             mOutputFile.delete();
         }
+    }
+
+    @Override
+    public void ImagePickerCallBack(Uri uri) {
+
+        try {
+            final int index = creatDummyMessage();
+            new HttpCall(getContext(), new ApiResponse() {
+                @Override
+                public void onSuccess(Object response) {
+                    final Message message = new Message();
+                    message.setUser_id(userID);
+                    message.setFrom_id(userID);
+                    message.setTo(doctorID);
+                    message.setIs_url(1);
+                    message.setMsg((String) response);
+                    message.setType(Constants.IMAGE);
+                    message.setIs_send(false);
+                    message.setSent_at(getDateTimeNow());
+
+                    //request
+                    new HttpCall(getContext(), new ApiResponse() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            creatRealMessage((Message) response, index);
+                        }
+
+                        @Override
+                        public void onFailed(String error) {
+                            Toast.makeText(getContext(), R.string.picture_not_send, Toast.LENGTH_SHORT).show();
+                            removeDummyMessage(index);
+                        }
+                    }).sendMessage(message);
+                }
+
+                @Override
+                public void onFailed(String error) {
+                    Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
+                    removeDummyMessage(index);
+                }
+            }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), uri)).getPath());
+        } catch (Exception e) {
+            Toast.makeText(getContext(), R.string.msg_not_send, Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(e);
+            Log.e("send msg", "on Activity result: ", e);
+        }
+    }
+    private void takeAndSelectImage(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), PickerBuilder.SELECT_FROM_GALLERY);
+            } else
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
+        } else
+            Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), PickerBuilder.SELECT_FROM_GALLERY);
+
+        attachment.setVisibility(View.INVISIBLE);
+        showAttachmentDialog = false;
     }
 }

@@ -510,7 +510,10 @@
 
 
     <string name="label_slide_to_cancel">Slide to cancel</string>
-
+    <string name="camera">Camera</string>
+    <string name="record_video">Record Video</string>
+    <string name="gallery">Gallery</string>
+    <string name="select_video">Select Video</string>
 
 
 </resources>

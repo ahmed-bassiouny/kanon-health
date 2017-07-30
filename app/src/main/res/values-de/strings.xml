@@ -537,6 +537,10 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     <string name="label_slide_to_cancel">Slide to cancel</string>
     <string name="hint_type_your_msg">Type your message</string>
+    <string name="camera">Kamera</string>
+    <string name="record_video">Ein Video aufnehmen</string>
+    <string name="select_video">Video auswählen</string>
+    <string name="gallery">Galerie</string>
 
 
 </resources>

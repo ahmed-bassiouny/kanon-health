@@ -510,6 +510,10 @@
     <string name="upload_image_failed">فشل في رفع الصورة.</string>
     <string name="slide_to_cancle">مرر للإلغاء.</string>
     <string name="delete">امسح</string>
+    <string name="camera">كاميرا</string>
+    <string name="record_video">تسجيل فيديو</string>
+    <string name="select_video">اختار فيديو</string>
+    <string name="gallery">معرض الصور</string>
 
 
 </resources>

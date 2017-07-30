@@ -4,66 +4,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
+    android:gravity="center"
     android:paddingBottom="10dp"
     android:layout_height="wrap_content">
 
     <ImageView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
         android:src="@drawable/cameraicon"
-        android:padding="10dp"
+        android:padding="15dp"
         android:id="@+id/img_photo"/>
     <TextView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
         android:id="@+id/txt_photo"
-        android:text="Photo"
         android:layout_below="@id/img_photo"
+        android:text="@string/camera"
         android:gravity="center" />
+    
     <ImageView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
         android:id="@+id/img_gallery"
-        android:padding="10dp"
+        android:padding="15dp"
         android:layout_toRightOf="@+id/img_photo"
         android:src="@drawable/galleryicon"/>
     <TextView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
         android:id="@+id/txt_gallery"
-        android:text="Gallery"
+        android:text="@string/gallery"
         android:layout_below="@id/img_gallery"
         android:layout_toRightOf="@id/txt_photo"
         android:gravity="center" />
+    
     <ImageView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
-        android:id="@+id/img_video"
-        android:padding="10dp"
+        android:id="@+id/img_recordvideo"
+        android:padding="15dp"
         android:layout_toRightOf="@id/img_gallery"
-        android:src="@drawable/videoicon" />
+        android:src="@drawable/recordvideoicon" />
     <TextView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_video"
-        android:text="Video"
-        android:layout_below="@id/img_video"
+        android:id="@+id/txt_recordvideo"
+        android:text="@string/record_video"
+        android:layout_below="@id/img_recordvideo"
         android:layout_toRightOf="@id/txt_gallery"
         android:gravity="center" />
+    
+    
     <ImageView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_selectvideo"
+        android:padding="15dp"
+        android:layout_below="@id/txt_photo"
+        android:src="@drawable/selectvideoicon" />
+    <TextView
+        app:layout_widthPercent="30%"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_selectvideo"
+        android:text="@string/select_video"
+        android:layout_below="@id/img_selectvideo"
+        android:gravity="center" />
+    <ImageView
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
         android:id="@+id/img_location"
-        android:padding="10dp"
-        android:layout_toRightOf="@id/img_video"
+        android:padding="15dp"
+        android:layout_below="@id/txt_photo"
+        android:layout_toRightOf="@id/img_selectvideo"
         android:src="@drawable/locationicon" />
     <TextView
-        app:layout_widthPercent="25%"
+        app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
         android:id="@+id/txt_location"
-        android:text="Location"
+        android:text="@string/location"
         android:layout_below="@id/img_location"
-        android:layout_toRightOf="@id/txt_video"
+        android:layout_toRightOf="@id/txt_selectvideo"
         android:gravity="center" />
 
 </android.support.percent.PercentRelativeLayout>

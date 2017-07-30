@@ -742,6 +742,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
                 } else {
                     imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
+                    imageViewHolder.image_message.setImageBitmap(null);
                     internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progress_view_download, message.getType(), message.getMsg(), new DownloadListener() {
                         @Override
                         public void onDownloadFinish(final String pathOFDownloadedFile) {

@@ -511,6 +511,10 @@ Canutoa.</string>
     <string name="upload_image_failed">ناکامی در افزایش تصویر.</string>
     <string name="slide_to_cancle">ضربه تند وشدید زدن به لغو.</string>
     <string name="delete">واضح</string>
+    <string name="camera">دوربین</string>
+    <string name="record_video">ضبط تصویر</string>
+    <string name="select_video">ویدئو را انتخاب کنید</string>
+    <string name="gallery">آلبوم عکس</string>
 
 
 </resources>
