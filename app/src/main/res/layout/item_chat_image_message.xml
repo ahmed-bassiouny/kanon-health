@@ -20,18 +20,21 @@
             android:id="@+id/image_message"
             android:layout_width="150dp"
             android:layout_height="150dp"
-
             android:layout_marginBottom="20dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right">
 
         <TextView
             android:id="@+id/date"
             style="@style/chat_timings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="2dp"
             android:text="10:30"
             android:textColor="@color/black" />
 
@@ -39,10 +42,9 @@
             android:id="@+id/status"
             android:layout_width="@dimen/size_15dp"
             android:layout_height="@dimen/size_15dp"
-            android:layout_gravity="bottom|right"
             android:src="@drawable/pending"
             android:visibility="gone" />
-
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_view_download"

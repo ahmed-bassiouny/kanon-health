@@ -37,41 +37,22 @@
             android:id="@+id/tv_chat_user_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.28"
             android:ellipsize="end"
             android:textColor="@color/black"
+            android:layout_marginRight="40dp"
             android:textStyle="bold" />
 
-
-    </android.support.v7.widget.Toolbar>
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blue"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:weightSum="1"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="67dp"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/imgbtn_forward"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="end"
-            android:layout_weight="0.22"
-            android:gravity="center"
-            android:padding="10dp"
-            android:weightSum="1">
+            android:visibility="gone"
+            android:layout_margin="5dp"
+            android:background="@drawable/forward"
+            android:duplicateParentState="true" />
 
-            <ImageButton
-                android:id="@+id/imgbtn_forward"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_forward_white_24dp"
-                android:duplicateParentState="true" />
-        </LinearLayout>
+
     </android.support.v7.widget.Toolbar>
 
         <FrameLayout
