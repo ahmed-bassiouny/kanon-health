@@ -1,262 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <TextView
-        app:layout_widthPercent="100%"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
         android:id="@+id/pass_text"
-        android:padding="20dp"
-        android:textSize="25dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:padding="20dp"
+        android:text="@string/enter_your_passcode"
+        android:textAlignment="center"
         android:textColor="@color/dark_gray"
-        android:text="@string/enter_your_passcode" />
+        android:textSize="25dp"
+        app:layout_widthPercent="100%" />
 
 
     <android.support.percent.PercentRelativeLayout
+        android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/indicator"
         android:layout_below="@+id/pass_text"
         app:layout_marginBottomPercent="5%">
 
         <Button
             android:id="@+id/ind_one"
+            android:background="@drawable/indicator_unpressed_shape"
+            android:clickable="false"
+            android:focusable="false"
             app:layout_aspectRatio="100%"
-            app:layout_widthPercent="5%"
+            app:layout_marginBottomPercent="1%"
             app:layout_marginEndPercent="4%"
             app:layout_marginStartPercent="25%"
-            app:layout_marginBottomPercent="1%"
-            android:background="@drawable/indicator_unpressed_shape"
-            android:focusable="false"
-            android:clickable="false"
+            app:layout_widthPercent="5%"
 
 
             />
 
         <Button
             android:id="@+id/ind_two"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="5%"
-            app:layout_marginEndPercent="4%"
-            android:background="@drawable/indicator_unpressed_shape"
             android:layout_toEndOf="@+id/ind_one"
-            android:focusable="false"
+            android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
-            />
+            android:focusable="false"
+            app:layout_aspectRatio="100%"
+            app:layout_marginEndPercent="4%"
+            app:layout_widthPercent="5%" />
 
         <Button
             android:id="@+id/ind_three"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="5%"
-            app:layout_marginEndPercent="4%"
-            android:background="@drawable/indicator_unpressed_shape"
             android:layout_toEndOf="@+id/ind_two"
-            android:focusable="false"
+            android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
-            />
+            android:focusable="false"
+            app:layout_aspectRatio="100%"
+            app:layout_marginEndPercent="4%"
+            app:layout_widthPercent="5%" />
+
         <Button
             android:id="@+id/ind_four"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="5%"
-            app:layout_marginEndPercent="4%"
             android:layout_toEndOf="@+id/ind_three"
             android:background="@drawable/indicator_unpressed_shape"
-            android:focusable="false"
             android:clickable="false"
-            />
+            android:focusable="false"
+            app:layout_aspectRatio="100%"
+            app:layout_marginEndPercent="4%"
+            app:layout_widthPercent="5%" />
 
         <Button
             android:id="@+id/ind_five"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="5%"
-            app:layout_marginEndPercent="4%"
-            android:background="@drawable/indicator_unpressed_shape"
             android:layout_toEndOf="@+id/ind_four"
-            android:focusable="false"
+            android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
-            />
+            android:focusable="false"
+            app:layout_aspectRatio="100%"
+            app:layout_marginEndPercent="4%"
+            app:layout_widthPercent="5%" />
 
         <Button
             android:id="@+id/ind_six"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="5%"
-            app:layout_marginEndPercent="4%"
-            android:background="@drawable/indicator_unpressed_shape"
             android:layout_toEndOf="@+id/ind_five"
-            android:focusable="false"
+            android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
-            />
-</android.support.percent.PercentRelativeLayout>
-
-
-        <Button
-            android:id="@+id/one"
-            android:layout_below="@+id/indicator"
-            app:layout_widthPercent="20%"
+            android:focusable="false"
             app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            app:layout_marginStartPercent="15%"
-            app:layout_marginBottomPercent="5%"
-            android:text="1"
-            android:textSize="35sp"
-            android:background="@drawable/button_bg_round"
-            android:textColor="@color/tab_text_selector"
-            android:clickable="true"
-            />
-
-        <Button
-            android:id="@+id/two"
-            android:layout_below="@+id/indicator"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="2"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/one"
-            android:textColor="@color/tab_text_selector"
-            />
-
-        <Button
-            android:id="@+id/three"
-            android:layout_below="@+id/indicator"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="3"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/two"
-            android:textColor="@color/tab_text_selector"
-            />
+            app:layout_marginEndPercent="4%"
+            app:layout_widthPercent="5%" />
+    </android.support.percent.PercentRelativeLayout>
 
 
+    <Button
+        android:id="@+id/one"
+        android:layout_below="@+id/indicator"
+        android:background="@drawable/button_bg_round"
+        android:clickable="true"
+        android:text="1"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginBottomPercent="5%"
+        app:layout_marginEndPercent="10%"
+        app:layout_marginStartPercent="10%"
+        app:layout_widthPercent="20%" />
 
-        <Button
-            android:id="@+id/four"
-            app:layout_marginStartPercent="15%"
-            android:layout_below="@+id/one"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            app:layout_marginBottomPercent="5%"
-            android:textSize="35sp"
-            android:text="4"
-            android:background="@drawable/button_bg_round"
-            android:textColor="@color/tab_text_selector"
-            />
+    <Button
+        android:id="@+id/two"
+        android:layout_below="@+id/indicator"
+        android:layout_toEndOf="@+id/one"
+        android:background="@drawable/button_bg_round"
+        android:text="2"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
 
-        <Button
-            android:id="@+id/five"
-            android:layout_below="@+id/one"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="5"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/four"
-            android:textColor="@color/tab_text_selector"
-            />
-
-        <Button
-            android:id="@+id/six"
-            android:layout_below="@+id/one"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="6"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/five"
-            android:textColor="@color/tab_text_selector"
-            />
+    <Button
+        android:id="@+id/three"
+        android:layout_below="@+id/indicator"
+        android:layout_toEndOf="@+id/two"
+        android:background="@drawable/button_bg_round"
+        android:text="3"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
 
 
-        <Button
-            android:id="@+id/seven"
-            android:layout_below="@+id/four"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            app:layout_marginStartPercent="15%"
-            app:layout_marginBottomPercent="5%"
-            android:text="7"
-            android:background="@drawable/button_bg_round"
-            android:textColor="@color/tab_text_selector"
-            />
+    <Button
+        android:id="@+id/four"
+        android:layout_below="@+id/one"
+        android:background="@drawable/button_bg_round"
+        android:text="4"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginBottomPercent="5%"
+        app:layout_marginEndPercent="10%"
+        app:layout_marginStartPercent="10%"
+        app:layout_widthPercent="20%" />
 
-        <Button
-            android:id="@+id/eight"
-            android:layout_below="@+id/four"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="8"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/seven"
-            android:textColor="@color/tab_text_selector"
-            />
+    <Button
+        android:id="@+id/five"
+        android:layout_below="@+id/one"
+        android:layout_toEndOf="@+id/four"
+        android:background="@drawable/button_bg_round"
+        android:text="5"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
 
-        <Button
-            android:id="@+id/nine"
-            android:layout_below="@+id/four"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="9"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/eight"
-            android:textColor="@color/tab_text_selector"
-            />
+    <Button
+        android:id="@+id/six"
+        android:layout_below="@+id/one"
+        android:layout_toEndOf="@+id/five"
+        android:background="@drawable/button_bg_round"
+        android:text="6"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
 
-        <Button
-            android:id="@+id/empty"
-            android:layout_below="@+id/seven"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            app:layout_marginStartPercent="15%"
-            android:background="@drawable/button_bg_round"
-            android:visibility="invisible"
-            android:textColor="@color/tab_text_selector"
-            />
 
-        <Button
-            android:id="@+id/zero"
-            android:layout_below="@+id/seven"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:textSize="35sp"
-            android:text="0"
-            android:textColor="@color/tab_text_selector"
-            android:background="@drawable/button_bg_round"
-            android:layout_toEndOf="@+id/empty"
-            />
+    <Button
+        android:id="@+id/seven"
+        android:layout_below="@+id/four"
+        android:background="@drawable/button_bg_round"
+        android:text="7"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginBottomPercent="5%"
+        app:layout_marginEndPercent="10%"
+        app:layout_marginStartPercent="10%"
+        app:layout_widthPercent="20%" />
 
-        <Button
-            android:id="@+id/delete"
-            android:layout_below="@+id/seven"
-            app:layout_widthPercent="20%"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="5%"
-            android:text="@string/delete"
-            android:textSize="13dp"
-            android:textColor="@color/dark_gray"
-            android:background="#0000"
-            android:layout_toEndOf="@+id/zero"
-            />
+    <Button
+        android:id="@+id/eight"
+        android:layout_below="@+id/four"
+        android:layout_toEndOf="@+id/seven"
+        android:background="@drawable/button_bg_round"
+        android:text="8"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
+
+    <Button
+        android:id="@+id/nine"
+        android:layout_below="@+id/four"
+        android:layout_toEndOf="@+id/eight"
+        android:background="@drawable/button_bg_round"
+        android:text="9"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
+
+    <Button
+        android:id="@+id/empty"
+        android:layout_below="@+id/seven"
+        android:background="@drawable/button_bg_round"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        android:visibility="invisible"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_marginStartPercent="10%"
+        app:layout_widthPercent="20%" />
+
+    <Button
+        android:id="@+id/zero"
+        android:layout_below="@+id/seven"
+        android:layout_toEndOf="@+id/empty"
+        android:background="@drawable/button_bg_round"
+        android:text="0"
+        android:textColor="@color/tab_text_selector"
+        android:textSize="35sp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_below="@+id/seven"
+        android:layout_toEndOf="@+id/zero"
+        android:background="#0000"
+        android:text="@string/delete"
+        android:textColor="@color/dark_gray"
+        android:textSize="13dp"
+        app:layout_aspectRatio="100%"
+        app:layout_marginEndPercent="10%"
+        app:layout_widthPercent="20%" />
 
 
 </android.support.percent.PercentRelativeLayout>

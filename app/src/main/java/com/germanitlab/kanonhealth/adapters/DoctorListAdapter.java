@@ -52,13 +52,14 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     boolean is_clinic = false;
     int userID;
     PrefManager prefManager;
+
     public DoctorListAdapter(List<User> doctorContactsList, Activity activity, int visibility, int i) {
         try {
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
             this.visibility = visibility;
             tabPosition = i;
-            prefManager=new PrefManager(activity);
+            prefManager = new PrefManager(activity);
             mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
             is_doc = new Gson().fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
             is_clinic = new Gson().fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
@@ -111,7 +112,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     holder.tvDoctorName.setText(doctor.getFullName());
             }
             if (tabPosition == 3) {
-                list = mMessageRepositry.getAll(userID,doctorContactsList.get(position).get_Id());
+                list = mMessageRepositry.getAll(userID, doctorContactsList.get(position).get_Id());
                 if (list != null) {
                     if (list.size() > 0) {
                         int index = list.size() - 1;
@@ -146,12 +147,14 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             if (holder.tvSpecialist != null) {
                 holder.tvSpecialist.setText("");
                 int size = 0;
-                for (ChooseModel chooseModel : doctor.getSpecialities()
-                        ) {
-                    holder.tvSpecialist.append(chooseModel.getSpeciality_title());
+                for (ChooseModel chooseModel : doctor.getSpecialities()) {
+                    if (TextUtils.isEmpty(holder.tvSpecialist.getText())) {
+                        holder.tvSpecialist.append(chooseModel.getSpeciality_title());
+                    } else {
+                        holder.tvSpecialist.append(", " + chooseModel.getSpeciality_title());
+                    }
                     size++;
-                    if (size < doctor.getSpecialities().size())
-                        holder.tvSpecialist.append(", ");
+
                     ImageView image = new ImageView(activity);
 //                image.setBackgroundResource(R.drawable.doctor_icon);
 //                        int width = holder.linearLayoutSpecialist.getHeight();

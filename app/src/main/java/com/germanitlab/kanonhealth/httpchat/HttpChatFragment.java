@@ -415,7 +415,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mHoldingButtonLayout.setButtonEnabled(false);
             mHoldingButtonLayout.removeListener(this);
             start_record.setVisibility(View.GONE);
-            //     img_requestpermission.setVisibility(View.GONE);
 
         } else {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -424,7 +423,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mHoldingButtonLayout.setButtonEnabled(true);
             mHoldingButtonLayout.addListener(this);
             start_record.setVisibility(View.VISIBLE);
-            //checkAudioPermission();
         }
     }
 
@@ -672,6 +670,13 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                     getMyLocation();
                 }
 
+            }
+        });
+        etMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
 

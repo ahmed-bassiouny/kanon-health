@@ -22,7 +22,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
@@ -192,17 +192,11 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
         }
 
 
-        try {
-            if(userInfoResponse.getUser().getBirth_date()!=null) {
-                Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
-                String s = (DateUtil.formatBirthday(parseDate.getTime()));
-                Log.d("my converted date", s);
-                tvBirthDate.setText(s);
-            }else
-                tvBirthDate.setText("");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        if (userInfoResponse.getUser().getBirth_date() != null) {
+            tvBirthDate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getUser().getBirth_date().toString())));
+        } else
+            tvBirthDate.setText("");
+
 
         tvStreet.setText(userInfoResponse.getUser().getInfo().getStreetname());
         tvHouseNumber.setText(userInfoResponse.getUser().getInfo().getHouseNumber());
@@ -283,7 +277,7 @@ public class ProfileActivity extends AppCompatActivity implements ApiResponse {
     }
 
     @OnClick(R.id.img_profile_qr)
-    public void qrcode(){
+    public void qrcode() {
         new Helper(this).ImportQr(mPrefManager);
     }
 }

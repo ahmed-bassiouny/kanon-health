@@ -39,7 +39,7 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
@@ -112,8 +112,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     PickerDialog pickerDialog;
     private String birthdate;
     private static final int TAKE_PICTURE = 1;
-    Util util ;
-    Helper helper ;
+    Util util;
+    Helper helper;
 
 
     UploadImageResponse uploadImageResponse;
@@ -172,8 +172,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     }
 
     private void bindData() {
-        if(userInfoResponse.getUser().getAvatar()!=null &&!userInfoResponse.getUser().getAvatar().isEmpty())
-        ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar());
+        if (userInfoResponse.getUser().getAvatar() != null && !userInfoResponse.getUser().getAvatar().isEmpty())
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar());
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -189,14 +189,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         etCountryCode.setText(userInfoResponse.getUser().getCountryCOde());
         birthdate = userInfoResponse.getUser().getBirth_date();
         etPhone.setText(userInfoResponse.getUser().getPhone());
-        try {
-            Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirth_date().toString());
-            String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            Log.d("my converted date", s);
-            etBirthday.setText(s);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getUser().getBirth_date().toString())));
         etStreet.setText(userInfoResponse.getUser().getInfo().getStreetname());
         etHousePhone.setText(userInfoResponse.getUser().getInfo().getHouseNumber());
         etZip.setText(userInfoResponse.getUser().getInfo().getZip_code());
@@ -236,8 +229,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         }
 
     }
-
-
 
 
     @Override
@@ -283,25 +274,19 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             arg2 = arg2 + 1;
             birthdate = arg1 + "-" + arg2 + "-" + arg3;
             Date parseDate = null;
-            try {
-                parseDate = DateUtil.getAnotherFormat().parse(birthdate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            etBirthday.setText(s);
+            etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(birthdate)));
         }
     };
 
     @OnClick(R.id.et_edit_birthday)
     public void viewBirthdate(View v) {
 
-            View view = this.getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-          //  Calendar calender = Calendar.getInstance();
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        //  Calendar calender = Calendar.getInstance();
        /* Dialog mDialog = new DatePickerDialog(EditUserProfileActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog,
                 mDateSetListener, calender.get(Calendar.YEAR),
@@ -327,8 +312,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }*/
 
-        if(helper==null)
-            helper=new Helper(this);
+        if (helper == null)
+            helper = new Helper(this);
         helper.showDatePicker(etBirthday);
 
     }
@@ -374,7 +359,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
 
     }
-
 
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
