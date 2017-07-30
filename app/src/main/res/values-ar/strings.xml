@@ -1,0 +1,515 @@
+<resources>
+
+    <!--example-->
+    <!--<string name="english_translation_with_no_spaces_and_all_lower_case">German Translation With Spaces And Upper Case if needed</string>-->
+
+    <!--add practices.xml-->
+    <string name="practice_profile">صفحة العياده.</string>
+    <string name="name">الاسم.</string>
+    <string name="invite_other_doctor">ادخل دكتور جديد.</string>
+    <string name="specialities">التخصصات.</string>
+    <string name="location">العنوان.</string>
+    <string name="street_name">اسم الشارع.</string>
+    <string name="house_number">رقم المبني.</string>
+    <string name="zip_code">رقم البريد.</string>
+    <string name="city">المدينه.</string>
+    <string name="province">المحافظة.</string>
+    <string name="country">البلد.</string>
+    <string name="location_on_map_manual">الموقع علي الخريطه يدوي.</string>
+    <string name="languages">االلغة.</string>
+    <string name="working_hours">مواعيد العمل.</string>
+    <string name="no_time_has_set">لم يتم تعيين الوقت.</string>
+    <string name="telephone">التليفون.</string>
+    <string name="practice_documents">وثائق العيادة.</string>
+
+
+    <!--comment.xml-->
+    <string name="please_rate">من فضلك قيٍيم.</string>
+    <string name="submit">اعرض.</string>
+    <string name="write_a_review">اضف رايك.</string>
+
+
+    <!--country_activity.xml-->
+    <string name="sorry_no_data_found">ناسف لم نتوصل للبيانات.</string>
+
+
+    <!--doctor_map.xml-->
+    <string name="back">ارجع.</string>
+    <string name="doctor_list">قائمه الدكتور.</string>
+    <string name="all_doctors">كل الدكاترة.</string>
+
+
+    <!--documents_update.xml-->
+    <string name="update_document">تحديث الوثائق.</string>
+    <string name="date">التاريخ.</string>
+    <string name="category">فئات.</string>
+    <string name="doctor">الدكتور.</string>
+    <string name="diagnose">اشخاص.</string>
+    <string name="report">تقرير.</string>
+    <string name="comment">تعليق.</string>
+
+
+    <!--faq.xml-->
+    <string name="faq">FAQ.</string>
+    <string name="how_to_use">كيفية الاستخدام.</string>
+    <string name="the_answer_is_here">الاجابة هنا.</string>
+
+
+    <!--activity_forward.xml-->
+    <string name="forward_to">ارسل الي.</string>
+    <string name="scan_qr_code">مسح الكود الرقمي.</string>
+    <string name="add_to_my_account">اضف لحسابي.</string>
+    <string name="search">ابحث.</string>
+
+    <!--help.xml-->
+    <string name="text">نَص</string>
+
+
+    <!--information.xml-->
+    <string name="details_of_doctor_list">تفاصيل قائمة الدكاترة.</string>
+    <string name="documents">الوثائق.</string>
+    <string name="details_of_documents">تفاصيل الوثائق.</string>
+    <string name="chat">دردشة.</string>
+    <string name="details_of_chat">تفاصيل الدردشة.</string>
+    <string name="contacts">االمتصلين.</string>
+    <string name="settings">الاعدادات.</string>
+
+
+    <!--opening hours.xml-->
+    <string name="opening_hours">اوقات الفتح.</string>
+    <string name="use_timetable">استخدام الجدول الزمني.</string>
+    <string name="always_open">دائما مفتوح.</string>
+    <string name="no_hours_available">لا توجد ساعات فراغ.</string>
+    <string name="permanently_closed">دائما مغلق.</string>
+    <string name="save">احفظ.</string>
+
+
+    <!--pre request.xml-->
+    <string name="in_order_to_chat_to_the_doctor_click_on_the_image_below_and_select_your_payment_method">
+	من أجل الدردشة مع الطبيب انقر على الصورة أدناه وحدد طريقة الدفع الخاصة بك.</string>
+
+
+    <!--qr activity.xml-->
+    <string name="client">المستخدم.</string>
+    <string name="cancel">الغاء.</string>
+
+
+    <!--qr layout.xml-->
+    <string name="dear_patients_in_order_to_help_you_quickly_and_easily_we_have_developed_for_you_an_own_practice_APP_With_the_QR_code_you_can_dial_into_the_practice_please_let_us_know_your_concerns_by_selecting_the_options_and_provide_them_with_your_photos_in_the_form_of_a_photo">
+	 اعزائي المستخدمين من اجل مساعدتك بسرعه  وسهولة قمنا بتطوير تطبيق عيادة خاصة لك برمز الكود الرقمي يممكنك الاتصال بالعياده من فضلكاخبنا مخاوفك عن طريق تحديد خيارات وتوفير صورك علي هيئة صورة فوتوغرافية.</string>
+    <string name="error_in_loading_doctor_data">خطا في تحميل بيانات الطبيب.</string>
+
+    <!--rate.xml-->
+    <string name="one_star">نجمة واحدة.</string>
+    <string name="two_star">نجمتين.</string>
+    <string name="three_star">ثلاث نجوم.</string>
+    <string name="four_star">اربعة نجوم.</string>
+    <string name="five_star">خمسة نجوم.</string>
+    <string name="reviews">اراء.</string>
+
+
+    <string name="verify_your_number">تحقق من رقمك.</string>
+    <string name="the_practice_app_sends_an_sms_to_verify_your_phone_number_enter_your_country_code_and_phone_number">
+	تطبيق العيادةيرسل لك رسالة نصية قصيرة للتحقق من رقمك ادخل رمز بلدك ورقم تليفونك.</string>
+    <string name="select_your_country">اختار بلدك.</string>
+    <string name="signup">الدخول.</string>
+
+    <!--support.xml-->
+    <string name="sorry_missing_data_please_contact_support">ناسف توجد بيانات مفقوده من فضلك تواصل مع  الدعم.</string>
+
+    <!--terms conditions.xml-->
+    <string name="terms_and_conditions">الاحكام والشروط.</string>
+
+    <!--verification.xml-->
+    <string name="verifcation">التحقق.</string>
+    <string name="enter_your_verification_code">ادخل كود التحقق.</string>
+    <string name="verify">تحقق.</string>
+    <string name="resend">اعد الارسال.</string>
+    <string name="if_you_did_not_receive_an_sms_tab_the_resend_button_below">
+	إذا لم تتلقى علامة تبويب الرسائل القصيرة اضغط علي زر إعادة إرسال أدناه.</string>
+
+
+    <!--country row.xml-->
+    <string name="germany">الماني.</string>
+
+
+    <!--custom dialog.xml-->
+    <string name="login">تسجيل الدخول.</string>
+    <string name="show_profile">اظهر صفحة المستخدم.</string>
+
+    <!--doctor edit profile.xml-->
+    <string name="my_profile">صفحتي الشخصية.</string>
+    <string name="important_information">معلومات هامة.</string>
+    <string name="last_name">الاسم الاخر.</string>
+    <string name="first_name">الاسم الاول.</string>
+    <string name="birthday">تاريخ الميلاد.</string>
+
+    <!--doctor profile view.xml-->
+    <string name="main_profile">الصفحة الرئيسية.</string>
+    <string name="status_online">متاح.</string>
+    <string name="status_offline">غير متاح.</string>
+    <string name="add_to_my_doctors">اضف الي اطبائي.</string>
+    <string name="contact_by_chat">التواصل عبر الدردشة.</string>
+    <string name="rating">التقييم.</string>
+    <string name="member_in_practice">فرد في العيادة.</string>
+
+
+    <!--fragment chat doctors.xml-->
+    <string name="doctors">الدكاترة.</string>
+    <string name="practice">العيادات.</string>
+
+    <!--fragment http chat.xml-->
+    <string name="start_new_request">ابدا طلب جديد.</string>
+    <string name="rate_your_last_request">قييم اخر طلباتك.</string>
+    <string name="write_message">اكتب رسالة</string>
+
+    <!--fragment profile.xml-->
+    <string name="edit">عدُل.</string>
+
+
+    <!--fragment setting.xml-->
+    <string name="change_passcode">تغيير رمز المرور.</string>
+    <string name="kanon_health_web">موقع كانون هيلث.</string>
+    <string name="request_doctor_status">طلب حالة الطبيب.</string>
+    <string name="add_practice">اضافة عيادة.</string>
+    <string name="recommend_this_app_to_your_friends">اوصي اصدقائق بهذا التطبيق.</string>
+    <string name="change_phone_number">تغير رقم التليفون.</string>
+    <string name="sound_and_notification">الصوت و الاشعارات.</string>
+    <string name="version">الاصدار.</string>
+    <string name="you_are_now_offline">انت الان غير متاح.</string>
+    <string name="you_are_now_online">انت الان متاح.</string>
+    <string name="go_online">كن متاح.</string>
+    <string name="go_offline">كن غير متاح.</string>
+
+
+    <!--image picker dialog.xml-->
+    <string name="take_new_image">التقط صورة جديدة.</string>
+    <string name="select_from_gallery">اختار من معرض الصور .</string>
+    <string name="delete_image">امسح المسدج.</string>
+
+
+    <!--medizinische.xml-->
+    <string name="recipe">وصف.</string> <!--(question_21)-->
+    <string name="transfer">نقل.</string>  <!--(question_22)-->
+    <string name="hospitalization">الإ قامة في المستشفي للعلاج.</string> <!--(question_23)-->
+    <string name="au">AU.</string><!-- (question_24)-->
+    <string name="certificate">شهادة.</string> <!--(question_25)-->
+    <string name="examination">فحص.</string> <!--(question_1)-->
+
+    <!--payment.xml-->
+    <string name="payment">الدفع.</string>
+    <string name="payment_details">تفاصيل الدفع.</string>
+    <string name="chat_from_anywhere_you_are">الدردشة من اي مكان تكون به.</string>
+    <string name="send_picture_voice_and_videos">ارسال صورة و صوت وفيديو.</string>
+    <string name="easy_and_secure_payment">دفع سهل وامن.</string>
+    <string name="voucher_code">كود القسيمة.</string>
+    <string name="consult_a_colleague_lets_keep_it_free_to_consult_colleagues">
+	تشاور الزملاء دعنا نجعلها مجانية لاسشارة الزملاء.</string>
+    <string name="next">التالي.</string>
+
+    <!--passcode_activity.xml-->
+    <string name="enter_your_passcode">ادخل رمز مرورك.</string>
+
+    <!--profile details.xml-->
+    <string name="gender">الجنس.</string>
+    <string name="male">ذكر.</string>
+    <string name="female">انثي.</string>
+    <string name="other">اخري.</string>
+    <string name="profile_detail_header">راس تفاصيل الملف الشخصي.</string>
+    <string name="title">العنوان.</string>
+
+
+    <!--question_1_fragment-->
+    <string name="physical_examination">فحص طبي."</string>
+    <string name="please_fill_data">من فضلك املء البيانات.</string>
+    <string name="technical_inspection">الفحص التقني.</string> <!--(question_13)-->
+
+
+    <!--questions.xml-->
+    <string name="please_choose_the_reason_for_your_visit">من فضلك اختار سبب الزيارة.</string>
+    <string name="medical_documents">وثائق طبية.</string> <!-- (question_2)-->
+    <string name="i_have_an_appointment">لدي معاد.</string>
+
+    <!--specialities-->
+    <string name="dentist">اسنان.</string>
+    <string name="allergist">الحساسية.</string>
+    <string name="ear_doctor">دكتور الاذن.</string>
+    <string name="anaesthesiologist">التخدير.</string>
+    <string name="andrologist">طب الذكورة.</string>
+    <string name="cardiac_electrophysiologist">رسوم القلب.</string>
+    <string name="cardiologist">طبيب القلب.</string>
+    <string name="dermathology">جلدية.</string>
+    <string name="disabled">الاعاقة.</string>
+    <string name="emergency_doctor">الطواريء.</string>
+    <string name="endocrinologist">الغدد.</string>
+    <string name="family_doctor">طبيب العائلة.</string>
+    <string name="gastroenterologist">الجهاز الهضمي.</string>
+    <string name="geriatrician">الشيخوخة.</string>
+    <string name="hematologist">امراض الدم .</string>
+    <string name="neonatologist">حديثي الولادة.</string>
+    <string name="neurology">الامراض العصبية.</string>
+    <string name="oncologist">الأورام.</string>
+    <string name="ophthalmologist">اخصائي بصريات.</string>
+    <string name="orthopedist">المجبر.</string>
+    <string name="pathology"> علم الأمراض.</string>
+    <string name="pediatrician">طبيب الأطفال.</string>
+    <string name="perinatologist">الحمل.</string>
+    <string name="periodontist">اللثة.</string>
+    <string name="physical_therapy">علاج بدني.</string>
+    <string name="plastic_surgeon">جراحة تجميل.</string>
+    <string name="rheumatologist">روماتيزم.</string>
+    <string name="surgeon">جراحة.</string>
+    <string name="urologist">طبيب مسالك بولية.</string>
+    <string name="xray">الاشعة.</string>
+
+
+    <!--time table activity-->
+    <string name="schedule">الجدول.</string>
+    <string name="sunday">الاحد.</string>
+    <string name="monday">الاثنين.</string>
+    <string name="tuesday">الثلاثاء.</string>
+    <string name="wednesday">الاربعاء.</string>
+    <string name="thursday">الخميس.</string>
+    <string name="friday">الجمعة.</string>
+    <string name="saturday">السبت.</string>
+    <string name="from">من.</string>
+    <string name="to">الي.</string>
+
+    <!--untersuchung-->
+    <string name="laboratory_investigation">فحص معملي.</string>
+    <string name="heart_listen">القلب.</string>
+
+
+    <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <!--java strings-->
+    <string name="app_name">Kanon Health.</string>
+    <string name="my_doctors">دكتوري.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+
+    <string name="voluntary_information">معلومات تطوعية.</string>
+
+    <string name="change_phone">تغير الرقم.</string>
+    <string name="sound_notification">صوت الاشعارات.</string>
+
+
+    <!-- Edit by Ahmed-->
+
+    <string name="remove_from">امسح من.</string>
+    <string name="error_connection">من فضلك تاكد من اتصالك بالانترنت.</string>
+    <string name="change_privacy_msg">هل تريد تغير اعدادات الخصوصية?</string>
+    <string name="end_session"> انهي الجلسة.</string>
+    <string name="start_session">ابدا الجلسة.</string>
+
+    <string name="write_review_hint">اكتب  لمحة عن رايك.</string>
+    <string name="temp">مؤقت.</string>
+    <string name="invalid_input">ادخال غير صحيح.</string>
+    <string name="thanks_for_comment">شكرا لتعليقك.</string>
+
+
+    <string name="error_message">حدث خطا من فضلك حاول مجددا.</string>
+    <string name="yes">نعم.</string>
+    <string name="no">لا.</string>
+    <string name="warning">تحذير.</string>
+    <string name="some_wrong">حدث خطاء اثناء التسوق من فضلك حاول مجددا.</string>
+
+
+    <string name="question_11_12_13">ما هو التحقيق?</string>
+
+
+    <string name="consultation">الاستشارة.</string> <!--(question_3)-->
+
+
+    <string name="finished">انتهي.</string>
+
+    <!--(question_4)-->
+
+    //Beratung
+    <string name="beratung_frage">عن ماذا تبحث?</string>  <!--(question_31)-->
+
+    //Untersuchung und Behandlung
+    <!--(question_11)-->
+    <string name="laboratory_examination">الفحص المعملي.</string>  <!--(question_12)-->
+
+
+    <string name="others">اخري.</string> <!-- (question_14)-->
+
+    //Medizinsche
+
+
+    //Questions
+    <string name="rp_question">اسم الدواء?</string>  <!--(question_212)-->
+
+
+    //Questions
+    <string name="uberweisung_first_question">اي تخصص?</string>  <!--(question_221)-->
+    <string name="uberweisung_second_question">لاي مناسبة?</string>  <!--(question_222)-->
+
+
+    //Questions
+    <string name="krankenhaus_first_question">لاي مستشفي?</string>
+    <string name="krankenhaus_second_question">لاي مناسبة?</string>  <!--(question_232)-->
+
+    //Questions
+    <string name="au_first_question">كم المدة?</string> <!--(question_252)-->
+    <string name="au_second_question">لاي سبب?</string>  <!--(question_242)-->
+
+
+    //Questions
+    <string name="attest_first_question">ما يجب ان يوجد?</string>  <!--(question_251)-->
+    <string name="attest_second_question">كم المدة?</string> <!--(question_241)-->
+
+    //Termin
+    <string name="termin_frage">في اي ساعة?</string> <!--(question_41)-->
+
+    <string name="Heart_listen">سماع القلب.</string>
+
+
+    //Inquiry strings
+    <string name="second_Level">المرحلة الثانية.</string>
+
+    //First Level
+    <string name="question_1">السؤال 1.</string>
+    //second Level
+    <string name="question_11">السؤال 11.</string>
+    <string name="question_12"> السؤال12 .</string>
+    <string name="question_13">السؤال 13.</string>
+    <string name="question_14">السؤال 14.</string>
+
+    //First Level
+    <string name="question_2">السؤال 2.</string>
+    //Second Level
+    <string name="question_21">السؤال 21.</string>
+
+
+    <string name="question_22">السؤال 22.</string>
+    <string name="question_23">السؤال 23.</string>
+    <string name="question_24">السؤال 24.</string>
+    <string name="question_25">السؤال 25.</string>
+    //Third Level Options
+    <string name="question_212">السؤال 212.</string>
+
+    <string name="question_221">السؤال 221.</string>
+    <string name="question_222">السؤال 222.</string>
+
+    <string name="question_231">السؤال 23.</string>
+    <string name="question_232">السؤال 23.</string>
+
+    <string name="question_241">السؤال 241.</string>
+    <string name="question_242">السؤال 242.</string>
+
+    <string name="question_251">السؤال 251.</string>
+    <string name="question_252">السؤال 252.</string>
+
+    //First Level
+    <string name="question_3">السؤال 3.</string>
+    //Second Level
+    <string name="question_31">السؤال 31.</string>
+    //First Level
+    <string name="question_4">السؤال 4.</string>
+    //Forth Level Options
+    <string name="question_41">السؤال_41.</string>
+    <string name="first_level">المرحلة الاولي.</string>
+    <string name="waiting_text">نص انتظار.</string>
+
+
+    //Profile Detail
+
+
+    //SplashScreen
+    <string name="wrong_code">للأسف، الرمز الذي أدخلته غير صحيح.</string>
+
+
+    <string name="Invalid_country">البلد غير صحيحة.</string>
+
+
+    <string name="title_activity_maps">خريطة</string>
+
+
+    <string name="close_conversation">هل انت متاكد تريد انهاء طلبك?</string>
+    <string name="session_ended">الطلب انتهي.</string>
+    <string name="rate_conversation">قييم المحادثة.</string>
+
+    <string name="error_create_database">حدث خطأ أثناء إنشاء قاعدة البيانات.</string>
+    <string name="error_update_database">حدث خطا اثناء تحديث قاعدة البيانات.</string>
+    <string name="erre_database_insert">حدث خطأ أثناء إدراجه في قاعدة البيانات.</string>
+    <string name="error_getting_database">حدث خطأ أثناء الحصول على البيانات من قاعدة البيانات.</string>
+    <string name="error_loading_data">خطاء اثناء تحميل البياناتا.</string>
+    <string name="error_saving_data">خطاء اثناء حفظ البيانات.</string>
+
+
+    <string name="error_in_registeration">خطا في التسجيل.</string>
+    <string name="please_access_storage">لا يمكن الوصول إلى الذاكرة.</string>
+    <string name="save_practics">حفظ العيادة.</string>
+    <string name="upload_failed">خطاء في رفع البيانات.</string>
+    <string name="save_success">تم الحفظ بنجاح.</string>
+    <string name="edit_practics">تعديل العيادة.</string>
+    <string name="cant_play_video">ناسف مشكلة اثناء الفيديو.</string>
+    <string name="cant_find_location">ناسف لن نتمكن للوصول للموقع.</string>
+    <string name="cant_upload">ناسف لم يتم الرفع للبيانات.</string>
+    <string name="send_fail">مشكلة في الوصول للسيرفري.</string>
+    <string name="generate_qrcode">ناسف لا يمكن توليد رمز الكود الرقمي.</string>
+    <string name="msg_not_send">ناسف الرسالة لم تصل.</string>
+    <string name="attach_not_show">ناسف حدث خطا في المرفق.</string>
+    <string name="error_in_getting_default_country">غير قادر على الحصول على الأرض القياسية.</string>
+    <string name="no_country_data">ناسف لم نجد بيانات.</string>
+    <string name="details_of_settings">تفاصيل من الاعدادات.</string>
+    <string name="of_5_stars">من 5 نجمات.</string>
+    <string name="scan">مسح.</string>
+    <string name="closed">مغلق.</string>
+    <string name="my_qr">رمز الكود الرقمي التابع لي.</string>
+    <string name="permenant_closed">مغلق.</string>
+    <string name="new_picture">صورة جديدة.</string>
+    <string name="from_your_camera">من كميرتك.</string>
+    <string name="please_select_messages">من فضلك اختار رسالة.</string>
+    <string name="privacy_private">خاص.</string>
+    <string name="privacy_public">عام.</string>
+    <string name="practices">عيادة.</string>
+    <string name="clients">مستخدم.</string>
+    <string name="camera_permission_needed_please_allow_in_app_settings_for_additional_functionality">
+	إذن الكاميرا اللازمة أرجو أن تسمحوا في إعدادات التطبيق للحصول على وظائف إضافية.</string>
+    <string name="invalid_qr_please_try_again">رمز الكود الرقمي غير صالح من فضلك حاول مجددا.</string>
+    <string name="permission_denied">طلب الاذن مرفوض.</string>
+    <string name="image">صورة.</string>
+    <string name="audio">صوت.</string>
+    <string name="video">فيديو.</string>
+    <string name="close">اغلق.</string>
+    <string name="open">افتح.</string>
+    <string name="this_device_doesnot_support_the_crop_action">لا يدعم هذا الجهاز إجراء الاقتصاص!</string>
+    <string name="please_open_chat_again">من فضلك افتح الدردشة مرة اخري.</string>
+    <string name="write_a_message">اكتب رسالة.</string>
+    <string name="message_sent">تم الارسال.</string>
+    <string name="message_not_send">الرسالة لم تصل.</string>
+    <string name="picture_not_send">الصورة لم تصل.</string>
+    <string name="this_file_is_not_supported">هذا الملف غير مدعوم.</string>
+    <string name="recoding_canceled">تم الغاء اعادة الترميز.</string>
+    <string name="ok">موافق.</string>
+    <string name="rate">قييم.</string>
+    <string name="offline_mode_canot_contact_with_doctor">غير متاح لا يمكن التواصل مع الدكتور.</string>
+    <string name="select_image">اختار صورة.</string>
+    <string name="please_choose_an_option_cancel_via_back">
+	الرجاء اختيار خيار إلغاء عبر العودة.</string>
+    <string name="please_write_your_answer_here">من فضلك اكتب اجابتك هنا.</string>
+    <string name="set_your_password">تعيين كلمة المرور الخاصة بك.</string>
+    <string name="wrong_passcode">رمز دخول خاطئ.</string>
+    <string name="confirm_your_passcode">تأكيد رمز المرور الخاص بك.</string>
+    <string name="your_password_saved">تم حفظ كلمة مرورك.</string>
+    <string name="invalid_passcode">رمز مرور خاطئ.</string>
+    <string name="please_choose_one_of_these_methods">من فضلك اختار احدي تلك الطرق.</string>
+    <string name="something_went_wrong">حدث شئ ما خطا.</string>
+    <string name="cancelled">الغي.</string>
+    <string name="error_while_loading_practice">خطا اثناء تحميل العيادة.</string>
+    <string name="error_while_loading_data">خطا اثناء تحميل الداتا.</string>
+    <string name="enter_the_correct_code">ادخل الكود الصحيح.</string>
+    <string name="please_select_a_contact">من فضلك اختار من المتصلين.</string>
+    <string name="do_you_want_to_close_app">هل تريد غلق التطبيق?</string>
+    <string name="upload_success">تم الرفع بنجاح.</string>
+    <string name="image_not_save_error_while_uploading">الصورة لم تحفظ مشكلة اثناء الرفع.</string>
+    <string name="upload_image_failed">فشل في رفع الصورة.</string>
+    <string name="slide_to_cancle">مرر للإلغاء.</string>
+    <string name="delete">امسح</string>
+
+
+</resources>
