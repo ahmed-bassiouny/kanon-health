@@ -141,7 +141,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private int[] amplitudes = new int[100];
     private int i = 0;
 
-    private int audioFlag = 0;
 
     // loca variable
     int userID;
@@ -160,7 +159,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     ArrayList<Message> messages;
     PrefManager prefManager;
     ChatAdapter chatAdapter;
-    GoogleApiClient mGoogleApiClient;
     static HttpChatFragment httpChatFragment;
     MessageRepositry messageRepositry;
 
@@ -256,6 +254,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
         messageRepositry = new MessageRepositry(getActivity());
         messages = new ArrayList<>();
@@ -285,14 +284,12 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             tv_chat_user_name.setEnabled(false);
         } else {
             // get data of doctor i talk with him from database
-            /*try {
+            try {
                 doctor.setId(doctorID);
                 doctor = userRepository.getDoctor(doctor);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-            }*/
-            doctor.setId(doctorID);
-            doctor = userRepository.getDoctor(doctor);
+            }
         }
 
         if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
