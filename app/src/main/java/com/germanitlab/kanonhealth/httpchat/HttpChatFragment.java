@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -183,8 +184,11 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     private ViewPropertyAnimator mInputAnimator;
 
     private long mStartTime;
+    private long tempStartTime;
     private Runnable mTimerRunnable;
     FCViewPager vp;
+    boolean flagLongPress=false;
+    long timeDifference=0;
     boolean showAttachmentDialog = false;
 
 
@@ -206,7 +210,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 
 
         mAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
         canRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,6 +220,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                 getActivity().finish();
             }
         });
+
         return view;
     }
 
@@ -1216,9 +1220,12 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 //
 //    }
 
+
+
     @Override
     public void onBeforeExpand() {
-
+        timeDifference=0;
+        flagLongPress=false;
 
 //        if(whileFlag==1) {
 //            onBeforeCollapse();
@@ -1231,12 +1238,12 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         if (vp != null) {
             vp.setEnableSwipe(false);
         }
-        cancelAllAnimations();
-        mSlideToCancel.setTranslationX(0f);
-        mSlideToCancel.setAlpha(0f);
-        mSlideToCancel.setVisibility(View.VISIBLE);
-        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
-        mSlideToCancelAnimator.start();
+            cancelAllAnimations();
+            mSlideToCancel.setTranslationX(0f);
+            mSlideToCancel.setAlpha(0f);
+
+            mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+            mSlideToCancelAnimator.start();
 
         mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
         mInputAnimator.setListener(new AnimatorListenerAdapter() {
@@ -1248,19 +1255,14 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         });
         mInputAnimator.start();
 
-        mTime.setTranslationY(mTime.getHeight());
-        mTime.setAlpha(0f);
-        mTime.setVisibility(View.VISIBLE);
-        mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
-        mTimeAnimator.start();
-        mStartTime = System.currentTimeMillis();
-        if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            startRecording();
-        } else {
-            onBeforeCollapse();
-//            onCollapse(true);
-            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 13);
-        }
+            mTime.setTranslationY(mTime.getHeight());
+            mTime.setAlpha(0f);
+           // mTime.setVisibility(View.VISIBLE);
+            mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+            mTimeAnimator.start();
+            mStartTime = System.currentTimeMillis();
+            tempStartTime=mStartTime;
+
 
     }
 
@@ -1276,7 +1278,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     @Override
     public void onBeforeCollapse() {
         cancelAllAnimations();
-
         mSlideToCancelAnimator = mSlideToCancel.animate().alpha(0f).setDuration(mAnimationDuration);
         mSlideToCancelAnimator.setListener(new AnimatorListenerAdapter() {
             @Override
@@ -1316,54 +1317,60 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             try {
                 stopTimer();
                 if (isCancel) {
-                    stopRecording(false);
+                    if(flagLongPress==true) {
+                        stopRecording(false);
+                    }
+
 //            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
                 } else {
-                    stopRecording(true);
+                    if (flagLongPress == true) {
+                        stopRecording(true);
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
-                    final int index2 = creatDummyMessage();
-                    new HttpCall(getActivity(), new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            final Message message = new Message();
-                            message.setUser_id(userID);
-                            message.setFrom_id(userID);
-                            message.setTo(doctorID);
-                            message.setIs_url(1);
-                            message.setMsg((String) response);
-                            message.setType(Constants.AUDIO);
-                            message.setIs_send(false);
-                            message.setSent_at(getDateTimeNow());
+                        final int index2 = creatDummyMessage();
+                        new HttpCall(getActivity(), new ApiResponse() {
+                            @Override
+                            public void onSuccess(Object response) {
+                                final Message message = new Message();
+                                message.setUser_id(userID);
+                                message.setFrom_id(userID);
+                                message.setTo(doctorID);
+                                message.setIs_url(1);
+                                message.setMsg((String) response);
+                                message.setType(Constants.AUDIO);
+                                message.setIs_send(false);
+                                message.setSent_at(getDateTimeNow());
 
-                            //request
-                            new HttpCall(getActivity(), new ApiResponse() {
-                                @Override
-                                public void onSuccess(Object response) {
-                                    creatRealMessage((Message) response, index2);
-                                }
+                                //request
+                                new HttpCall(getActivity(), new ApiResponse() {
+                                    @Override
+                                    public void onSuccess(Object response) {
+                                        creatRealMessage((Message) response, index2);
+                                    }
 
-                                @Override
-                                public void onFailed(String error) {
-                                    removeDummyMessage(index2);
-                                    Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                }
-                            }).sendMessage(message);
-                        }
+                                    @Override
+                                    public void onFailed(String error) {
+                                        removeDummyMessage(index2);
+                                        Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
+                                    }
+                                }).sendMessage(message);
+                            }
 
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                            removeDummyMessage(index2);
-                        }
-                    }).uploadMedia(mOutputFile.getPath());
+                            @Override
+                            public void onFailed(String error) {
+                                Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
+                                removeDummyMessage(index2);
+                            }
+                        }).uploadMedia(mOutputFile.getPath());
 
+                    }
                 }
 
-            } catch (Exception e) {
-                Log.e("milad", "onCollapse: ", e);
-            }
+        } catch(Exception e){
+            Log.e("milad", "onCollapse: ", e);
         }
+    }
+
     }
 
     @Override
@@ -1378,6 +1385,24 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             public void run() {
                 mTime.setText(getFormattedTime());
                 invalidateTimer();
+                if(timeDifference>700&&flagLongPress==false)
+                {
+                    flagLongPress=true;
+
+                    if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                        mStartTime = System.currentTimeMillis();
+                        mTime.setVisibility(View.VISIBLE);
+                        mSlideToCancel.setVisibility(View.VISIBLE);
+                        invalidateTimer();
+                        startRecording();
+                    }
+                    else{
+                        onBeforeCollapse();
+//                      onCollapse(true);
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},  Constants.AUDIO_PERMISSION_CODE);
+                    }
+
+                }
             }
         };
 
@@ -1405,7 +1430,9 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     }
 
     private String getFormattedTime() {
-        return mFormatter.format(new Date(System.currentTimeMillis() - mStartTime));
+
+        timeDifference = System.currentTimeMillis() - mStartTime;
+        return mFormatter.format(new Date(timeDifference));
     }
 
 
