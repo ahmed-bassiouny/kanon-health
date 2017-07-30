@@ -147,7 +147,7 @@ public class Helper {
             final String dateTimeFormatString = "EEEE, MMMM d, h:mm aa";
             final long HOURS = 60 * 60 * 60;
             if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
-                return "Today " + DateFormat.format(timeFormatString, smsTime);
+                return "" + DateFormat.format(timeFormatString, smsTime);
             } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
                 return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
             } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
