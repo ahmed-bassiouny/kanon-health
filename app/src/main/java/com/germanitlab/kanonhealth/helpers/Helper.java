@@ -119,47 +119,32 @@ public class Helper {
         if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
             ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1);
         }
-        if (userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName()))
+        if (userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName())) {
             name.setText(userInfoResponse.getUser().getFullName());
-//                last_name.setText(userInfoResponse.getUser().getLast_name().toString());
-        try {
-            Date parseDate = DateUtil.getAnotherFormat().parse(userInfoResponse.getUser().getBirthDate().toString());
-            String s = "";
-            if (!userInfoResponse.getUser().getBirthDate().toString().equals("0000-00-00"))
-                s = (DateUtil.formatBirthday(parseDate.getTime()));
-            birthdate.setText(s);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            birthdate.setText("");
         }
+        birthdate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getUser().getBirthDate().toString())));
         dialog.show();
     }
 
     public static String getFormattedDate(String timeInString) {
-        try {
-            Date parseDate = DateUtil.getFormat().parse(timeInString);
-            Calendar smsTime = Calendar.getInstance();
-            smsTime.setTimeInMillis(parseDate.getTime());
+        Date parseDate = DateHelper.FromDisplayDateStringToDisplay(DateHelper.FromServerDatetimeStringToDisplayString(timeInString));
+        Calendar smsTime = Calendar.getInstance();
+        smsTime.setTimeInMillis(parseDate.getTime());
 
-            Calendar now = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
 
-            final String timeFormatString = "h:mm aa";
-            final String dateTimeFormatString = "EEEE, MMMM d, h:mm aa";
-            final long HOURS = 60 * 60 * 60;
-            if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
-                return "" + DateFormat.format(timeFormatString, smsTime);
-            } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
-                return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
-            } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
-                return DateFormat.format(dateTimeFormatString, smsTime).toString();
-            } else {
-                return DateFormat.format("MMMM dd yyyy, h:mm aa", smsTime).toString();
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+        final String timeFormatString = "h:mm aa";
+        final String dateTimeFormatString = "EEEE, MMMM d, h:mm aa";
+        final long HOURS = 60 * 60 * 60;
+        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
+            return "" + DateFormat.format(timeFormatString, smsTime);
+        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
+            return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
+        } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
+            return DateFormat.format(dateTimeFormatString, smsTime).toString();
+        } else {
+            return DateFormat.format("MMMM dd yyyy, h:mm aa", smsTime).toString();
         }
-        return "invalid date";
     }
 
     public static void showAlertDialog(final Context context, String title, String message
@@ -262,17 +247,10 @@ public class Helper {
             @Override
             public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
                 birthdate = dateDesc;
-                Date parseDate = null;
-                try {
-                    parseDate = DateUtil.getAnotherFormat().parse(birthdate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                String newformatDate = (DateUtil.formatBirthday(parseDate.getTime()));
-                textView.setText(newformatDate);
+                textView.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(birthdate)));
             }
-        }).textConfirm("CONFIRM") //text of confirm button
-                .textCancel("CANCEL") //text of cancel button
+        }).textConfirm(activity.getString(R.string.ok)) //text of confirm button
+                .textCancel(activity.getString(R.string.cancel)) //text of cancel button
                 .btnTextSize(16) // button text size
                 .viewTextSize(25) // pick view text size
                 .colorCancel(Color.parseColor("#999999")) //color of cancel button

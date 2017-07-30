@@ -39,7 +39,7 @@ import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateUtil;
+import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
@@ -87,12 +87,12 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     UploadImageResponse uploadImageResponse;
     ProgressDialog progressDialog;
     PickerDialog pickerDialog;
-    String birthdate="";
+    String birthdate = "";
     String gender_other = "Male";
     int gender = 1;
     PrefManager prefManager;
     Util util;
-    Helper helper ;
+    Helper helper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -184,7 +184,6 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
 //    }
 
 
-
     private void askForPermission(String[] permission, Integer requestCode) {
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
@@ -257,8 +256,8 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
                 .dateChose(birthdate) // date chose when init popwindow
                 .build();
         pickerPopWin.showPopWin(this);*/
-        if(helper==null)
-            helper=new Helper(this);
+        if (helper == null)
+            helper = new Helper(this);
         helper.showDatePicker(textBirthday);
     }
 
@@ -327,19 +326,10 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             arg2 = arg2 + 1;
 
             birthdate = arg1 + "-" + arg2 + "-" + arg3;
-            Date parseDate = null;
-            try {
-                parseDate = DateUtil.getAnotherFormat().parse(birthdate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String s = (DateUtil.formatBirthday(parseDate.getTime()));
-            textBirthday.setText(s);
+            Date parseDate = DateHelper.FromDisplayDateStringToDisplay(birthdate);
+            textBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(parseDate));
         }
     };
-
-
-
 
 
     @Override
