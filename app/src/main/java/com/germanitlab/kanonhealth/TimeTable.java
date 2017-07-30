@@ -26,6 +26,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.models.Table;
+import com.germanitlab.kanonhealth.models.Times;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -85,9 +86,10 @@ public class TimeTable extends AppCompatActivity {
     LinearLayout monday_from_to;
     @BindView(R.id.ll_schedule)
     LinearLayout linearLayoutSchedule;
-    List<Table> list;
+    Table list;
     int type;
     public static Boolean active;
+    Table table;
 
     public static OpeningHoursActivity instance;
     public static Activity TimetableInstance;
@@ -99,6 +101,7 @@ public class TimeTable extends AppCompatActivity {
         setContentView(R.layout.time_table_activity);
 
         initTB();
+        table = new Table();
 
         try {
             helper = new Helper(this);
@@ -107,7 +110,7 @@ public class TimeTable extends AppCompatActivity {
             ButterKnife.bind(this);
             instance = new OpeningHoursActivity();
             map = new HashMap<>();
-            list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
+            list = (Table) getIntent().getSerializableExtra(Constants.DATA);
             type = getIntent().getIntExtra("type", 0);
             handleData(list);
         } catch (Exception e) {
@@ -425,26 +428,15 @@ public class TimeTable extends AppCompatActivity {
         try {
             Intent intent = new Intent();
             intent.putExtra("type", 0);
-            int key = 0;
-            List<Table> list = new ArrayList<>();
+            int key = 1;
             while (key < 8) {
                 if (map.containsKey(key)) {
                     List<Integer> Ids = map.get(key);
-                    int count = 0;
-                    while (count < Ids.size()) {
-                        Table table = new Table();
-                        table.setDayweek(String.valueOf(key));
-                        TextView from = (TextView) findViewById(Ids.get(count + 2));
-                        TextView to = (TextView) findViewById(Ids.get(count + 3));
-                        table.setFrom(String.valueOf(from.getText()));
-                        table.setTo(String.valueOf(to.getText()));
-                        list.add(table);
-                        count += 4;
-                    }
+                    setlists(key, Ids);
                 }
                 key++;
             }
-            intent.putExtra(Constants.DATA, (Serializable) list);
+            intent.putExtra(Constants.DATA, (Serializable) table);
             try {
                 if (OpeningHoursActivity.active)
                     instance.finish();
@@ -460,12 +452,62 @@ public class TimeTable extends AppCompatActivity {
 
     }
 
+    private void setlists(int key, List<Integer> ids) {
+        int count = 0;
+        List<Times> timesList = new ArrayList<>();
+        while (count < ids.size()) {
+//                        Table table = new Table();
+//                        table.setDayweek(String.valueOf(key));
+            Times times = new Times();
+            TextView from = (TextView) findViewById(ids.get(count + 2));
+            TextView to = (TextView) findViewById(ids.get(count + 3));
+            times.setFrom(from.getText().toString());
+            times.setTo(to.getText().toString());
+//                        table.setFrom(String.valueOf(from.getText()));
+//                        table.setTo(String.valueOf(to.getText()));
+//                        list.add(table);
+            count += 4;
+            timesList.add(times);
+
+        }
+        switch (key) {
+            case 1: {
+                table.setMon(timesList);
+                break;
+            }
+            case 2: {
+                table.setTues(timesList);
+                break;
+            }
+            case 3: {
+                table.setWedn(timesList);
+                break;
+            }
+            case 4: {
+                table.setThurs(timesList);
+                break;
+            }
+            case 5: {
+                table.setFri(timesList);
+                break;
+            }
+            case 6: {
+                table.setSat(timesList);
+                break;
+            }
+            case 7: {
+                table.setSun(timesList);
+                break;
+            }
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (requestCode == RESULT_OK) {
-                list = (List<Table>) data.getSerializableExtra(Constants.DATA);
+                list = (Table) data.getSerializableExtra(Constants.DATA);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -475,23 +517,36 @@ public class TimeTable extends AppCompatActivity {
 
     }
 
-    public void handleData(List<Table> list) {
-        for (Table table : list) {
-            if (table.getDayweek().equals("0"))
-                addNewItem(monday_layout, 0, monadaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("1"))
-                addNewItem(tuesday_layout, 1, tuesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("2"))
-                addNewItem(wendesday_layout, 2, wednesdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("3"))
-                addNewItem(thurday_layout, 3, thursdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("4"))
-                addNewItem(friday_layout, 4, fridaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("5"))
-                addNewItem(saturday_layout, 5, saturdaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-            else if (table.getDayweek().equals("6"))
-                addNewItem(sunday_layout, 6, sundaySwitch, table.getFrom(), table.getTo(), sunday_from_to);
-        }
+    public void handleData(Table list) {
+        if (list.getMon() != null && list.getMon().size() > 0)
+            for (Times times : list.getMon()) {
+                addNewItem(monday_layout, 0, monadaySwitch, times.getFrom(), times.getTo(), monday_from_to);
+            }
+        if (list.getTues() != null && list.getTues().size() > 0)
+            for (Times times : list.getTues()) {
+                addNewItem(tuesday_layout, 1, tuesdaySwitch, times.getFrom(), times.getTo(), tuesday_from_to);
+            }
+        if (list.getWedn() != null && list.getWedn().size() > 0)
+            for (Times times : list.getWedn()) {
+                addNewItem(wendesday_layout, 2, wednesdaySwitch, times.getFrom(), times.getTo(), wendesday_layout);
+            }
+        if (list.getThurs() != null && list.getThurs().size() > 0)
+            for (Times times : list.getThurs()) {
+                addNewItem(thurday_layout, 3, thursdaySwitch, times.getFrom(), times.getTo(), thurday_from_to);
+            }
+        if (list.getFri() != null && list.getFri().size() > 0)
+            for (Times times : list.getFri()) {
+                addNewItem(friday_layout, 0, fridaySwitch, times.getFrom(), times.getTo(), friday_from_to);
+            }
+        if (list.getSat() != null && list.getSat().size() > 0)
+            for (Times times : list.getSat()) {
+                addNewItem(saturday_layout, 0, saturdaySwitch, times.getFrom(), times.getTo(), saturday_from_to);
+            }
+        if (list.getSun() != null && list.getSun().size() > 0)
+            for (Times times : list.getSun()) {
+                addNewItem(sunday_layout, 0, sundaySwitch, times.getFrom(), times.getTo(), sunday_from_to);
+            }
+
     }
 
     private void showTimePicker(final TextView txt) {

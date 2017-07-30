@@ -229,7 +229,7 @@ public class User implements Serializable {
     @DatabaseField
     @SerializedName("rate_count")
     private int rate_count;
-    private List<Table> open_time = new ArrayList<>();
+    private Table open_time;
     private List<ChooseModel> supported_lang = new ArrayList<>();
     private List<ChooseModel> specialities = new ArrayList<>();
     private List<ChooseModel> members_at = new ArrayList<>();
@@ -682,7 +682,7 @@ public class User implements Serializable {
         return rate_count;
     }
 
-    public List<Table> getOpen_time() {
+    public Table getOpen_time() {
         return open_time;
     }
 
@@ -734,7 +734,7 @@ public class User implements Serializable {
         this.rate_count = rate_count;
     }
 
-    public void setOpen_time(List<Table> open_time) {
+    public void setOpen_time(Table open_time) {
         this.open_time = open_time;
     }
 

@@ -525,7 +525,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
                         break;*/
 
                     case Constants.HOURS_CODE:
-                        user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
+                        user.setOpen_time((Table) data.getSerializableExtra(Constants.DATA));
                         user.setOpen_Type(data.getIntExtra("type", 0));
                         getTimaTableData(user.getOpen_time());
                         break;
@@ -707,14 +707,14 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
         showDialogFragment(bundle);
     }
 
-    private void getTimaTableData(List<Table> list) {
+    private void getTimaTableData(Table list) {
         if (user != null) {
             if (user.getOpen_Type() == 3)
                 tvNoTime.setText(R.string.permenant_closed);
             else
                 tvNoTime.setText(R.string.always_open);
             if (list != null) {
-                if (list.size() > 0) {
+                if (list != null) {
                     llNoTime.setVisibility(View.GONE);
                     tablelayout.removeAllViews();
                     com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();

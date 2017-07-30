@@ -211,8 +211,7 @@ public class UserRepository {
             }.getType()));
             user.setSpecialities((List<ChooseModel>) gson.fromJson(user.getJson_specialities(), new TypeToken<List<ChooseModel>>() {
             }.getType()));
-            user.setOpen_time((List<Table>) gson.fromJson(user.getJson_open_time(), new TypeToken<List<Table>>() {
-            }.getType()));
+            user.setOpen_time((Table) gson.fromJson(user.getJson_open_time(), Table.class));
             user.setDocuments((ArrayList<Message>) gson.fromJson(user.getJsonDocument(), new TypeToken<ArrayList<Message>>() {
             }.getType()));
             user.setQuestions((LinkedHashMap<String, String>) gson.fromJson(user.getJson_questions(), new TypeToken<HashMap<String, String>>() {

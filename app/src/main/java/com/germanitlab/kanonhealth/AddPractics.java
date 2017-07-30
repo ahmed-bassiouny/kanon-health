@@ -543,16 +543,6 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
 
 
 
-    public void setRecyclerView(List<ChooseModel> list, int id, int linearLayoutManager, int type) {
-        if (recyclerView == null)
-            new RecyclerView(getApplicationContext());
-        SpecilaitiesAdapter adapter = new SpecilaitiesAdapter(list, getApplicationContext(), type);
-        recyclerView = (RecyclerView) findViewById(id);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setAdapter(adapter);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -588,7 +578,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
 //
 //                        break;
                     case Constants.HOURS_CODE:
-                        user.setOpen_time((List<Table>) data.getSerializableExtra(Constants.DATA));
+                        user.setOpen_time((Table) data.getSerializableExtra(Constants.DATA));
                         user.setOpen_Type(data.getIntExtra("type", 0));
                         getTimaTableData(user.getOpen_time());
                         break;
@@ -613,14 +603,13 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     }
 
 
-
-    private void getTimaTableData(List<Table> list) {
+    private void getTimaTableData(Table list) {
         if (user.getOpen_Type() == 3)
             tvNoTime.setText(R.string.permenant_closed);
         else
             tvNoTime.setText(R.string.always_open);
 
-        if (list.size() > 0) {
+        if (list != null) {
             llNo.setVisibility(View.GONE);
             tablelayout.removeAllViews();
             com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();

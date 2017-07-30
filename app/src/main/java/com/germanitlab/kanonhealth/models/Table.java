@@ -4,67 +4,77 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Geram IT Lab on 23/05/2017.
  */
 
 public class Table implements Serializable {
-    private String id;
-    private String type;
-    private String from;
-    private String to;
-    private String dayweek;
+    private List<Times> sat;
+    private List<Times> sun;
+    private List<Times> mon;
+    private List<Times> tues;
+    private List<Times> wedn;
+    private List<Times> thurs;
+    private List<Times> fri;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true ,columnName = "id")
     private User uid ;
 
-    public String getId() {
-        return id;
+    public List<Times> getSat() {
+        return sat;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSat(List<Times> sat) {
+        this.sat = sat;
     }
 
-    public String getType() {
-        return type;
+    public List<Times> getSun() {
+        return sun;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSun(List<Times> sun) {
+        this.sun = sun;
     }
 
-    public String getDayweek() {
-        return dayweek;
+    public List<Times> getMon() {
+        return mon;
     }
 
-    public void setDayweek(String dayweek) {
-        this.dayweek = dayweek;
+    public void setMon(List<Times> mon) {
+        this.mon = mon;
     }
 
-    public User getUid() {
-        return uid;
+    public List<Times> getTues() {
+        return tues;
     }
 
-    public void setUid(User uid) {
-        this.uid = uid;
+    public void setTues(List<Times> tues) {
+        this.tues = tues;
     }
 
-    public String getFrom() {
-        return from;
+    public List<Times> getWedn() {
+        return wedn;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setWedn(List<Times> wedn) {
+        this.wedn = wedn;
     }
 
-    public String getTo() {
-        return to;
+    public List<Times> getThurs() {
+        return thurs;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setThurs(List<Times> thurs) {
+        this.thurs = thurs;
     }
 
+    public List<Times> getFri() {
+        return fri;
+    }
+
+    public void setFri(List<Times> fri) {
+        this.fri = fri;
+    }
 }
