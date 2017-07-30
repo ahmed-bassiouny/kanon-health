@@ -26,7 +26,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <com.germanitlab.kanonhealth.FCViewPager
         android:id="@+id/myviewpager"
         android:background="@color/bg_screen_color"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -58,7 +58,8 @@
         android:minHeight="?attr/actionBarSize"
         app:tabSelectedTextColor="@color/colorPrimary"
         app:tabTextColor="@color/medium_grey"
-        app:tabTextAppearance="@style/TabStyle">
+        app:tabTextAppearance="@style/TabStyle"
+        >
 
         <!--<android.support.design.widget.TabItem-->
         <!--android:layout_width="wrap_content"-->

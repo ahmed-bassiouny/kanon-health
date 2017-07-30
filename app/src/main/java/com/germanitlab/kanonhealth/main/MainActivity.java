@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
 
     private TabLayout mytablayout;
-    private ViewPager myviewpager;
+    private FCViewPager myviewpager;
     int speciality_id;
     private int type;
     Intent intent;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             tvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
             initTB();
             mytablayout = (TabLayout) findViewById(R.id.mytablayout);
-            myviewpager = (ViewPager) findViewById(R.id.myviewpager);
+            myviewpager = (FCViewPager) findViewById(R.id.myviewpager);
             appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
             toolbar.inflateMenu(R.menu.contacts_menu);

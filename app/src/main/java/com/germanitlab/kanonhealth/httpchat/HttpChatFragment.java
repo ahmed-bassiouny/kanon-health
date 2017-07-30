@@ -62,6 +62,7 @@ import com.crashlytics.android.Crashlytics;
 import com.dewarder.holdinglibrary.HoldingButtonLayout;
 import com.dewarder.holdinglibrary.HoldingButtonLayoutListener;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
+import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -186,6 +187,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     private long mStartTime;
     private Runnable mTimerRunnable;
+    FCViewPager vp;
 
 
 
@@ -204,6 +206,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         mTime = (TextView) view.findViewById(R.id.time);
         mInput = (EditText) view.findViewById(R.id.et_chat_message);
         mSlideToCancel = view.findViewById(R.id.slide_to_cancel);
+
 
         mAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -1357,6 +1360,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 //        }
 
 //        if(whileFlag!=1) {
+        vp=(FCViewPager) getActivity().findViewById(R.id.myviewpager);
+        if(vp!=null) {
+            vp.setEnableSwipe(false);
+        }
             cancelAllAnimations();
             mSlideToCancel.setTranslationX(0f);
             mSlideToCancel.setAlpha(0f);
@@ -1434,6 +1441,10 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     @Override
     public void onCollapse(boolean isCancel) {
+        vp=(FCViewPager) getActivity().findViewById(R.id.myviewpager);
+        if(vp!=null) {
+            vp.setEnableSwipe(true);
+        }
         if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
             try {

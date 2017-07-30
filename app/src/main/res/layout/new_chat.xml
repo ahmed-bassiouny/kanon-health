@@ -202,6 +202,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_mic_black"
                 android:padding="@dimen/activity_main_input_padding_vertical"
+                android:focusable="true"
              />
 
 
