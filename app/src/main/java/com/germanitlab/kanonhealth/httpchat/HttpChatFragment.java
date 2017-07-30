@@ -239,9 +239,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         try {
             initObjects();
-            // checkAudioPermission();
             initData();
-            //  handelEvent();
+            showAttachmentDialog();
             checkMode();
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.please_open_chat_again, Toast.LENGTH_SHORT).show();
@@ -534,12 +533,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 showAttachmentDialog = true;
                 YoYo.with(Techniques.SlideInUp)
                         .duration(500)
-                        .onEnd(new YoYo.AnimatorCallback() {
-                            @Override
-                            public void call(Animator animator) {
-                                showPopup();
-                            }
-                        })
                         .playOn(attachment);
 
             }
@@ -657,7 +650,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
 
-    private void showPopup() {
+    private void showAttachmentDialog() {
 
         getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
