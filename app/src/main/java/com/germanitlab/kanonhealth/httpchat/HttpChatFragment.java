@@ -414,12 +414,10 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         if (etMessage.getText().toString().trim().length() > 0) {
             img_send_txt.setVisibility(View.VISIBLE);
             start_record.setVisibility(View.GONE);
-            //     img_requestpermission.setVisibility(View.GONE);
 
         } else {
             img_send_txt.setVisibility(View.GONE);
             start_record.setVisibility(View.VISIBLE);
-            //checkAudioPermission();
         }
     }
 
@@ -668,6 +666,13 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                     getMyLocation();
                 }
 
+            }
+        });
+        etMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
 

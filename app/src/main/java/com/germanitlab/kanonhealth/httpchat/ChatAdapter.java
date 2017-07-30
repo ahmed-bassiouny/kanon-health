@@ -945,7 +945,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imagePrivacy.setVisibility(View.GONE);
             txtPrivacy.setVisibility(View.GONE);
         }
-
+        relative_main.setVisibility(View.INVISIBLE);
         messageContainer.post(new Runnable() {
             RelativeLayout.LayoutParams params;
             @Override
@@ -966,6 +966,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
                     messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
                 }
+                relative_main.setVisibility(View.VISIBLE);
             }
         });
         if (!show_privacy && mMessages.get(position).getFrom_id() == userID) {

@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/btn_play_pause"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="15dp"
             android:scaleType="fitXY"
@@ -35,8 +35,8 @@
         <SeekBar
             android:id="@+id/seek_bar_music"
             android:layout_width="150dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="15dp"
             android:layout_height="wrap_content"></SeekBar>
 
         <TextView
@@ -47,7 +47,7 @@
             android:text="00:00"
             style="@style/chat_timings"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="35dp"></TextView>
 
         <TextView
