@@ -60,30 +60,6 @@
         app:tabTextColor="@color/medium_grey"
         app:tabTextAppearance="@style/TabStyle"
         >
-
-        <!--<android.support.design.widget.TabItem-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:icon="@drawable/doctor_tab"-->
-        <!--android:text="Contacts" />-->
-
-        <!--<android.support.design.widget.TabItem-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:icon="@drawable/document_tab"-->
-        <!--android:text="Documents" />-->
-
-        <!--<android.support.design.widget.TabItem-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:icon="@drawable/chat_tab"-->
-        <!--android:text="Chat" />-->
-
-        <!--<android.support.design.widget.TabItem-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:icon="@drawable/setting_tab"-->
-        <!--android:text="@string/setting" />-->
     </android.support.design.widget.TabLayout>
 
 </RelativeLayout>

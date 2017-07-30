@@ -195,7 +195,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mHoldingButtonLayout = (HoldingButtonLayout) view.findViewById(R.id.chat_bar);
         mHoldingButtonLayout.addListener(this);
