@@ -12,8 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaRecorder;
@@ -31,16 +29,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -51,16 +48,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.dewarder.holdinglibrary.HoldingButtonLayout;
 import com.dewarder.holdinglibrary.HoldingButtonLayoutListener;
+import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
@@ -69,10 +66,8 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.helpers.PopupHelper;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
-import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -100,7 +95,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-public class HttpChatFragment extends Fragment implements ApiResponse, Serializable , HoldingButtonLayoutListener {
+
+public class HttpChatFragment extends Fragment implements ApiResponse, Serializable, HoldingButtonLayoutListener {
 
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
@@ -108,7 +104,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     EditText etMessage;
 
     @BindView(R.id.start_record)
-    ImageView  start_record;
+    ImageView start_record;
 
     @BindView(R.id.img_send_txt)
     ImageButton img_send_txt;
@@ -133,6 +129,8 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     @BindView(R.id.open_chat_session)
     LinearLayout open_chat_session;
+    @BindView(R.id.attachment)
+    CardView attachment;
 
 
     private MediaRecorder mRecorder;
@@ -143,7 +141,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private int[] amplitudes = new int[100];
     private int i = 0;
 
-    private int audioFlag=0;
+    private int audioFlag = 0;
 
     // loca variable
     int userID;
@@ -188,7 +186,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     private long mStartTime;
     private Runnable mTimerRunnable;
     FCViewPager vp;
-
+    boolean showAttachmentDialog = false;
 
 
     @Override
@@ -241,7 +239,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
         try {
             initObjects();
-           // checkAudioPermission();
+            // checkAudioPermission();
             initData();
             //  handelEvent();
             checkMode();
@@ -279,7 +277,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             doctor.setFirst_name(" ");
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
-        }else if(doctorID== CustomerSupportActivity.supportID){
+        } else if (doctorID == CustomerSupportActivity.supportID) {
             doctor.setId(doctorID);
             doctor.setLast_name(getResources().getString(R.string.support));
             doctor.setIsOpen(1);
@@ -317,7 +315,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             @Override
             public void run() {
 
-                messages = (ArrayList) messageRepositry.getAll(userID,doctorID);
+                messages = (ArrayList) messageRepositry.getAll(userID, doctorID);
                 isStoragePermissionGranted();
                 pbar_loading.setVisibility(View.GONE);
             }
@@ -386,16 +384,14 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                     case Constants.LAST_LOCATION_PERMISSION_CODE:
                         getMyLocation();
                         break;
-                    case 13 :
+                    case 13:
 //                        startRecording();
                         break;
                 }
-            }
-            else
-            {
+            } else {
                 switch (requestCode) {
 
-                    case 13 :
+                    case 13:
 //                        mHoldingButtonLayout.cancel();
                         break;
                 }
@@ -425,6 +421,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
             //checkAudioPermission();
         }
     }
+
     @OnClick(R.id.img_send_txt)
     public void img_send_txt() {
         try {
@@ -524,12 +521,28 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         }
     }
 
-    @OnClick( R.id.layout_chat_attach)
+    @OnClick(R.id.layout_chat_attach)
     public void showDialogMedia() {
         try {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
-            showPopup(getView());
+            if (showAttachmentDialog) {
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
+            } else {
+                attachment.setVisibility(View.VISIBLE);
+                showAttachmentDialog = true;
+                YoYo.with(Techniques.SlideInUp)
+                        .duration(500)
+                        .onEnd(new YoYo.AnimatorCallback() {
+                            @Override
+                            public void call(Animator animator) {
+                                showPopup();
+                            }
+                        })
+                        .playOn(attachment);
+
+            }
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.attach_not_show, Toast.LENGTH_SHORT).show();
         }
@@ -644,12 +657,9 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
     }
 
 
-    private void showPopup(View view) {
-        final PopupWindow showPopup = PopupHelper.newBasicPopupWindow(getActivity());
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.custom_navigation_menu, null);
+    private void showPopup() {
 
-        popupView.findViewById(R.id.img_view_take_photo).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
@@ -659,10 +669,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
                 } else takePhoto();
 
-                showPopup.dismiss();
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
-        popupView.findViewById(R.id.img_view_gallery).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
@@ -673,14 +684,13 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 } else {
                     pickImage();
                 }
-                showPopup.dismiss();
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
-        popupView.findViewById(R.id.img_view_video).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.img_video).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                             getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -692,17 +702,15 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
                 } else {
                     recordVideo();
                 }
-
-
-                showPopup.dismiss();
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
-        popupView.findViewById(R.id.img_view_location).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.img_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                showPopup.dismiss();
-
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -716,23 +724,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
             }
         });
-
-
-        showPopup.setContentView(popupView);
-
-        showPopup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        showPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        showPopup.setAnimationStyle(R.style.Animations_GrowFromTop);
-
-
-        showPopup.showAtLocation(view, Gravity.BOTTOM, 0, 300);
-
-
-        showPopup.setOutsideTouchable(true);
-
-        showPopup.setFocusable(true);
-        // Removes default background.
-        showPopup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
 
@@ -1242,46 +1233,6 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         recyclerView.scrollToPosition(messages.size() - 1);
     }
 
-//    private void checkAudioPermission() {
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-//                    ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                //   img_requestpermission.setVisibility(View.GONE);
-//             //   start_record.setVisibility(View.VISIBLE);
-//
-//            } else {
-//                //img_requestpermission.setVisibility(View.VISIBLE);
-//              //  start_record.setVisibility(View.GONE);
-//
-//            }
-//        } else {
-//            // img_requestpermission.setVisibility(View.GONE);
-//         //   start_record.setVisibility(View.VISIBLE);
-//
-//        }
-//    }
-//
-//    private void checkAPermission() {
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-//                    ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                //   img_requestpermission.setVisibility(View.GONE);
-//                //   start_record.setVisibility(View.VISIBLE);
-//                startRecording();
-//            } else {
-//                //img_requestpermission.setVisibility(View.VISIBLE);
-//                //  start_record.setVisibility(View.GONE);
-//                onCollapse(true);
-//            }
-//        } else {
-//            // img_requestpermission.setVisibility(View.GONE);
-//            //   start_record.setVisibility(View.VISIBLE);
-//            startRecording();
-//        }
-//    }
-
-
-
 
     private void messageSeen() {
         // i sent request to make my msg seen
@@ -1329,18 +1280,19 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         if (chatAdapter != null)
             chatAdapter.clearSelected();
     }
+
     @OnClick(R.id.img_back)
-    public void back(){
+    public void back() {
         getActivity().finish();
     }
 
-    @OnClick({R.id.img_chat_user_avatar,R.id.tv_chat_user_name})
-    public void openProfile(){
-        if(doctor!=null&&(doctor.isClinic==1||doctor.getIsDoc()==1)) {
-            /*Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
+    @OnClick({R.id.img_chat_user_avatar, R.id.tv_chat_user_name})
+    public void openProfile() {
+        if (doctor != null && (doctor.isClinic == 1 || doctor.getIsDoc() == 1)) {
+            Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", doctor);
-            getActivity().startActivity(intent);*/
-        }else{
+            getActivity().startActivity(intent);
+        } else {
             // this object is user and should open ProfileActivity
         }
     }
@@ -1360,37 +1312,36 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 //        }
 
 //        if(whileFlag!=1) {
-        vp=(FCViewPager) getActivity().findViewById(R.id.myviewpager);
-        if(vp!=null) {
+        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+        if (vp != null) {
             vp.setEnableSwipe(false);
         }
-            cancelAllAnimations();
-            mSlideToCancel.setTranslationX(0f);
-            mSlideToCancel.setAlpha(0f);
-            mSlideToCancel.setVisibility(View.VISIBLE);
-            mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
-            mSlideToCancelAnimator.start();
+        cancelAllAnimations();
+        mSlideToCancel.setTranslationX(0f);
+        mSlideToCancel.setAlpha(0f);
+        mSlideToCancel.setVisibility(View.VISIBLE);
+        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+        mSlideToCancelAnimator.start();
 
-            mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
-            mInputAnimator.setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mInput.setVisibility(View.INVISIBLE);
-                    mInputAnimator.setListener(null);
-                }
-            });
-            mInputAnimator.start();
+        mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+        mInputAnimator.setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mInput.setVisibility(View.INVISIBLE);
+                mInputAnimator.setListener(null);
+            }
+        });
+        mInputAnimator.start();
 
-            mTime.setTranslationY(mTime.getHeight());
-            mTime.setAlpha(0f);
-            mTime.setVisibility(View.VISIBLE);
-            mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
-            mTimeAnimator.start();
-            mStartTime = System.currentTimeMillis();
-        if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+        mTime.setTranslationY(mTime.getHeight());
+        mTime.setAlpha(0f);
+        mTime.setVisibility(View.VISIBLE);
+        mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+        mTimeAnimator.start();
+        mStartTime = System.currentTimeMillis();
+        if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             startRecording();
-        }
-        else{
+        } else {
             onBeforeCollapse();
 //            onCollapse(true);
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 13);
@@ -1400,7 +1351,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     @Override
     public void onExpand() {
-        if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+        if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             invalidateTimer();
         }
 
@@ -1441,11 +1392,11 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
     @Override
     public void onCollapse(boolean isCancel) {
-        vp=(FCViewPager) getActivity().findViewById(R.id.myviewpager);
-        if(vp!=null) {
+        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+        if (vp != null) {
             vp.setEnableSwipe(true);
         }
-        if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+        if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
             try {
                 stopTimer();
@@ -1544,28 +1495,28 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
 
 
     private void startRecording() {
-      //  Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));خى
+        //  Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));خى
 
-            startTimeForRecording = mStartTime;
-            mRecorder = new MediaRecorder();
-            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        startTimeForRecording = mStartTime;
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
-            mRecorder.setAudioEncodingBitRate(16);
-            mRecorder.setAudioSamplingRate(44100);
-            mOutputFile = getOutputFile();
-            mOutputFile.getParentFile().mkdirs();
-            mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+        mRecorder.setAudioEncodingBitRate(16);
+        mRecorder.setAudioSamplingRate(44100);
+        mOutputFile = getOutputFile();
+        mOutputFile.getParentFile().mkdirs();
+        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
 
-            try {
-                mRecorder.prepare();
-                mRecorder.start();
-                startTime = SystemClock.elapsedRealtime();
-                mHandler.postDelayed(mTickExecutor, 100);
-            } catch (IOException e) {
+        try {
+            mRecorder.prepare();
+            mRecorder.start();
+            startTime = SystemClock.elapsedRealtime();
+            mHandler.postDelayed(mTickExecutor, 100);
+        } catch (IOException e) {
 
-            }
+        }
 
 
     }
@@ -1611,7 +1562,7 @@ public class HttpChatFragment extends Fragment implements ApiResponse, Serializa
         } catch (RuntimeException stopException) {
             //handle cleanup here
         }
-        if(mRecorder != null) {
+        if (mRecorder != null) {
             mRecorder.release();
             mRecorder = null;
         }
