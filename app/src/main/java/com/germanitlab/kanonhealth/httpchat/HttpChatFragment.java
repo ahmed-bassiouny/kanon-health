@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaRecorder;
@@ -39,9 +40,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -189,13 +192,14 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     boolean flagLongPress=false;
     long timeDifference=0;
     boolean showAttachmentDialog = false;
+    HoldingButtonLayoutListener fragment= this;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.new_chat, container, false);
+        final View view = inflater.inflate(R.layout.new_chat, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         getActivity().getWindow().setSoftInputMode(
@@ -217,6 +221,35 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                 intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
                 startActivity(intent);
                 getActivity().finish();
+            }
+        });
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                view.getWindowVisibleDisplayFrame(r);
+                if (view.getRootView().getHeight() - (r.bottom - r.top) > 500) { // if more than 100 pixels, its probably a keyboard...
+                    img_send_txt.setVisibility(View.VISIBLE);
+                    mHoldingButtonLayout.setButtonEnabled(false);
+                    mHoldingButtonLayout.removeListener(fragment);
+                    start_record.setVisibility(View.GONE);
+
+                } else {
+                    if (etMessage.getText().toString().trim().length() > 0) {
+
+                        img_send_txt.setVisibility(View.VISIBLE);
+                        mHoldingButtonLayout.setButtonEnabled(false);
+                        mHoldingButtonLayout.removeListener(fragment);
+                        start_record.setVisibility(View.GONE);
+
+                    } else {
+                        img_send_txt.setVisibility(View.GONE);
+                        mHoldingButtonLayout.setButtonEnabled(true);
+                        mHoldingButtonLayout.addListener(fragment);
+                        start_record.setVisibility(View.VISIBLE);
+                    }
+
+                }
             }
         });
 
@@ -407,7 +440,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         pbar_loading.setVisibility(View.GONE);
         recyclerView.scrollToPosition(messages.size() - 1);
     }
-
+//
     @OnTextChanged(R.id.et_chat_message)
     public void changeText() {
         if (etMessage.getText().toString().trim().length() > 0) {
@@ -417,14 +450,23 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             start_record.setVisibility(View.GONE);
 
         } else {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
             img_send_txt.setVisibility(View.GONE);
             mHoldingButtonLayout.setButtonEnabled(true);
             mHoldingButtonLayout.addListener(this);
             start_record.setVisibility(View.VISIBLE);
         }
     }
+
+//    @OnClick(R.id.et_chat_message)
+//    public void clickOnTextView()
+//    {
+//        img_send_txt.setVisibility(View.VISIBLE);
+//        mHoldingButtonLayout.setButtonEnabled(false);
+//        mHoldingButtonLayout.removeListener(this);
+//        start_record.setVisibility(View.GONE);
+//    }
+
+
 
     @OnClick(R.id.img_send_txt)
     public void img_send_txt() {
@@ -672,16 +714,17 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 
             }
         });
-        etMessage.setOnClickListener(new View.OnClickListener() {
+        etMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
+
+                return false;
             }
         });
 
     }
-
     public void getMyLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             askForLocationPermission();
@@ -1401,11 +1444,14 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                     flagLongPress=true;
 
                     if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                        mStartTime = System.currentTimeMillis();
-                        mTime.setVisibility(View.VISIBLE);
-                        mSlideToCancel.setVisibility(View.VISIBLE);
-                        invalidateTimer();
-                        startRecording();
+
+                       if(mHoldingButtonLayout.isAnimateHoldingView()) {
+                           mStartTime = System.currentTimeMillis();
+                           mTime.setVisibility(View.VISIBLE);
+                           mSlideToCancel.setVisibility(View.VISIBLE);
+                           invalidateTimer();
+                           startRecording();
+                       }
                     }
                     else{
                       onBeforeCollapse();
@@ -1583,4 +1629,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         attachment.setVisibility(View.INVISIBLE);
         showAttachmentDialog = false;
     }
+
+
+
 }
