@@ -71,7 +71,7 @@ public interface ApiInterface {
     @POST("questions/answer")
     Call<JsonObject> sendPopUpResult(@Body InqueryRequest popUpRequest);
 
-    @POST("http://ip-api.com/json")
+    @POST("/json")
     Call<JsonObject> getLocation();
 
     @POST("/users/get_myuser")
