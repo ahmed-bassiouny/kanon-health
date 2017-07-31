@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_margin="5dp"
     android:id="@+id/relative_main"
+    android:layoutDirection="ltr"
     android:layout_height="wrap_content">
 
 
@@ -12,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:background="@drawable/bubble_out_doc"
-        android:paddingStart="7dp"
+        android:paddingLeft="7dp"
         android:layout_width="wrap_content">
 
 
@@ -21,9 +22,9 @@
             style="@style/chat_text_message_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
             android:text="ddddd"
-            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
             android:textColor="@color/black" />
 
 
@@ -59,14 +60,14 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp" />
+        android:layout_marginLeft="5dp" />
 
     <TextView
         android:id="@+id/privacy_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/privacy_image"
-        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:textColor="@color/black" />
 
     <ProgressBar
@@ -74,7 +75,7 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/privacy_txt"
         android:visibility="gone" />
 
