@@ -4,54 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layoutDirection="ltr"
+    android:background="@color/gray"
     tools:context="com.germanitlab.kanonhealth.forward.ForwardActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue"
+        android:background="@color/white"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:weightSum="1">
 
 
-        <LinearLayout
-            android:layout_width="67dp"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/imgbtn_forward"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_weight="0.22"
-            android:gravity="center"
-            android:padding="10dp"
-            android:weightSum="1">
+            android:background="@drawable/ic_arrow_forward_black_24dp" />
 
-            <ImageButton
-                android:id="@+id/imgbtn_forward"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_forward_white_24dp"
-                android:duplicateParentState="true" />
-        </LinearLayout>
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_weight="0.22"
-            android:gravity="center"
-            android:padding="10dp"
-            android:weightSum="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/forward_to"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:gravity="center" />
-        </LinearLayout>
+            android:text="@string/forward_to"
+            android:textColor="@color/black"
+            android:gravity="center" />
 
 
     </android.support.v7.widget.Toolbar>
@@ -89,6 +70,6 @@
         android:id="@+id/recycler_view"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
