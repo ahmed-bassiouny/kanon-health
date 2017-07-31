@@ -130,8 +130,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     Button canRate;
     @BindView(R.id.imgbtn_chat_attach)
     ImageView imgbtn_chat_attach;
-    @BindView(R.id.layout_chat_attach)
-    LinearLayout layout_chat_attach;
 
     @BindView(R.id.open_chat_session)
     LinearLayout open_chat_session;
@@ -503,7 +501,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                 new HttpCall(getActivity(), new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
-                        layout_chat_attach.setEnabled(true);
+                        imgbtn_chat_attach.setEnabled(true);
                         mHoldingButtonLayout.setButtonEnabled(true);
                         // img_requestpermission.setEnabled(true);
                         doctor.setIsOpen(1);
@@ -535,7 +533,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 
                     @Override
                     public void onFailed(String error) {
-                        layout_chat_attach.setEnabled(false);
+                        imgbtn_chat_attach.setEnabled(false);
                         mHoldingButtonLayout.setButtonEnabled(false);
                         //  img_requestpermission.setEnabled(false);
                         Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
@@ -577,7 +575,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         }
     }
 
-    @OnClick(R.id.layout_chat_attach)
+    @OnClick(R.id.imgbtn_chat_attach)
     public void showDialogMedia() {
         try {
 
@@ -952,7 +950,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
             if (doctor.getIsOpen() == 0) {
-                layout_chat_attach.setEnabled(false);
+                imgbtn_chat_attach.setEnabled(false);
                 mHoldingButtonLayout.setButtonEnabled(false);
                 // img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
@@ -1170,7 +1168,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     private void checkMode() {
         if (Helper.isNetworkAvailable(getContext())) {
             loadChatOnline();
-            layout_chat_attach.setEnabled(true);
+            imgbtn_chat_attach.setEnabled(true);
             etMessage.setEnabled(true);
             mHoldingButtonLayout.setButtonEnabled(true);
             img_send_txt.setEnabled(true);
@@ -1183,7 +1181,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         } else {
             loadChatOffline();
             mHoldingButtonLayout.setButtonEnabled(false);
-            layout_chat_attach.setEnabled(false);
+            imgbtn_chat_attach.setEnabled(false);
             etMessage.setEnabled(false);
             img_send_txt.setEnabled(false);
             button2.setEnabled(false);

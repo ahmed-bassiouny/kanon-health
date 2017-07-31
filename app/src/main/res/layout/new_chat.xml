@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layoutDirection="ltr"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -30,7 +31,7 @@
             android:layout_width="@dimen/size_50dp"
             android:layout_height="@dimen/size_50dp"
             android:layout_gravity="start"
-            android:layout_marginEnd="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_15dp"
             android:src="@drawable/placeholder" />
 
         <TextView
@@ -102,7 +103,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="@dimen/activity_main_slide_to_cancel_margin_right"
             android:layout_marginRight="@dimen/activity_main_slide_to_cancel_margin_right"
             android:gravity="center_vertical"
             android:visibility="invisible">
@@ -110,7 +110,6 @@
             <ImageView
                 android:layout_width="@dimen/activity_main_slide_to_cancel_icon_size"
                 android:layout_height="@dimen/activity_main_slide_to_cancel_icon_size"
-                android:layout_marginEnd="@dimen/activity_main_slide_to_cancel_icon_margin_right"
                 android:layout_marginRight="@dimen/activity_main_slide_to_cancel_icon_margin_right"
                 android:scaleType="center"
                 android:src="@drawable/ic_keyboard_arrow_left_black_24dp"/>
@@ -129,23 +128,17 @@
             android:gravity="center"
             android:minHeight="@dimen/activity_main_input_holder_min_height"
             android:orientation="horizontal">
-        <LinearLayout
-            android:id="@+id/layout_chat_attach"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:gravity="center">
 
             <ImageView
                 android:id="@+id/imgbtn_chat_attach"
                 android:layout_width="@dimen/size_50dp"
                 android:layout_height="match_parent"
-                android:paddingStart="@dimen/size_10dp"
-                android:paddingEnd="@dimen/size_10dp"
+                android:layout_gravity="end"
+                android:paddingLeft="@dimen/size_10dp"
+                android:paddingRight="@dimen/size_10dp"
                 android:rotation="270"
                 android:scaleType="fitCenter"
                 android:src="@drawable/attach_file"/>
-            </LinearLayout>
 
             <EditText
                 android:id="@+id/et_chat_message"
