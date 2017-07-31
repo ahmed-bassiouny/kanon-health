@@ -13,7 +13,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/bubble_in_doc"
-        app:layout_widthPercent="50%">
+        app:layout_widthPercent="50%"
+        android:layout_alignParentEnd="true">
 
 
         <ImageView
@@ -33,7 +34,9 @@
             android:layout_below="@+id/image_message"
             android:layout_marginRight="15dp"
             android:text="10:30"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:layout_marginEnd="15dp"
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:id="@+id/status"
@@ -42,7 +45,8 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/image_message"
             android:layout_gravity="start"
-            android:src="@drawable/pending" />
+            android:src="@drawable/pending"
+            android:layout_alignParentEnd="true" />
 
 
         <ProgressBar

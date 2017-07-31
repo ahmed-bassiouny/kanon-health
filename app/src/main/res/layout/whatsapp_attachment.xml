@@ -7,7 +7,9 @@
     android:gravity="center"
     android:layoutDirection="ltr"
     android:paddingBottom="10dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp">
 
     <ImageView
         app:layout_widthPercent="30%"
@@ -33,7 +35,8 @@
         android:paddingRight="15dp"
         android:paddingTop="15dp"
         android:layout_toRightOf="@+id/img_photo"
-        android:src="@drawable/galleryicon"/>
+        android:src="@drawable/galleryicon"
+        android:layout_toEndOf="@+id/img_photo" />
     <TextView
         app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
@@ -41,7 +44,8 @@
         android:text="@string/gallery"
         android:layout_below="@id/img_gallery"
         android:layout_toRightOf="@id/txt_photo"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_toEndOf="@id/txt_photo" />
     
     <ImageView
         app:layout_widthPercent="30%"
@@ -51,7 +55,8 @@
         android:paddingRight="15dp"
         android:paddingTop="15dp"
         android:layout_toRightOf="@id/img_gallery"
-        android:src="@drawable/recordvideoicon" />
+        android:src="@drawable/recordvideoicon"
+        android:layout_toEndOf="@id/img_gallery" />
     <TextView
         app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
@@ -59,7 +64,8 @@
         android:text="@string/record_video"
         android:layout_below="@id/img_recordvideo"
         android:layout_toRightOf="@id/txt_gallery"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_toEndOf="@id/txt_gallery" />
     
     
     <ImageView
@@ -87,7 +93,8 @@
         android:paddingTop="15dp"
         android:layout_below="@id/txt_photo"
         android:layout_toRightOf="@id/img_selectvideo"
-        android:src="@drawable/locationicon" />
+        android:src="@drawable/locationicon"
+        android:layout_toEndOf="@id/img_selectvideo" />
     <TextView
         app:layout_widthPercent="30%"
         android:layout_height="wrap_content"
@@ -95,6 +102,7 @@
         android:text="@string/location"
         android:layout_below="@id/img_location"
         android:layout_toRightOf="@id/txt_selectvideo"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_toEndOf="@id/txt_selectvideo" />
 
 </android.support.percent.PercentRelativeLayout>

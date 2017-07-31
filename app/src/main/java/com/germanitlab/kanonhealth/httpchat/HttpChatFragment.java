@@ -1275,13 +1275,19 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             // this object is user and should open ProfileActivity
         }
     }
-//    @OnClick(R.id.start_record)
-//    public void requestAudioPermission() {
-//
-//    }
+
 
     @Override
     public void onBeforeExpand() {
+
+        mHoldingButtonLayout.setButtonEnabled(false);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mHoldingButtonLayout.setButtonEnabled(true);
+            }
+        }, 700);
 
             timeDifference = 0;
             flagLongPress = false;
@@ -1290,14 +1296,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             if (vp != null) {
                 vp.setEnableSwipe(false);
             }
-
-//        if(whileFlag==1) {
-//            onBeforeCollapse();
-//            onCollapse(true);
-//            mHoldingButtonLayout.getHoldingView().setVisibility(View.VISIBLE);
-//        }
-
-//        if(whileFlag!=1) {
 
             cancelAllAnimations();
             mSlideToCancel.setTranslationX(0f);
@@ -1362,13 +1360,12 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         });
         mTimeAnimator.start();
 
-
     }
 
     @Override
     public void onCollapse(boolean isCancel) {
 
-        if(expand==true) {
+        if(expand) {
             expand=false;
             vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
             if (vp != null) {
@@ -1386,45 +1383,48 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 //            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
                     } else {
                         if (flagLongPress == true) {
-                            stopRecording(true);
+                            if (System.currentTimeMillis()-mStartTime > 1000) {
+                                stopRecording(true);
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
-                            final int index2 = creatDummyMessage();
-                            new HttpCall(getActivity(), new ApiResponse() {
-                                @Override
-                                public void onSuccess(Object response) {
-                                    final Message message = new Message();
-                                    message.setUser_id(userID);
-                                    message.setFrom_id(userID);
-                                    message.setTo(doctorID);
-                                    message.setIs_url(1);
-                                    message.setMsg((String) response);
-                                    message.setType(Constants.AUDIO);
-                                    message.setIs_send(false);
-                                    message.setSent_at(getDateTimeNow());
+                                final int index2 = creatDummyMessage();
+                                new HttpCall(getActivity(), new ApiResponse() {
+                                    @Override
+                                    public void onSuccess(Object response) {
+                                        final Message message = new Message();
+                                        message.setUser_id(userID);
+                                        message.setFrom_id(userID);
+                                        message.setTo(doctorID);
+                                        message.setIs_url(1);
+                                        message.setMsg((String) response);
+                                        message.setType(Constants.AUDIO);
+                                        message.setIs_send(false);
+                                        message.setSent_at(getDateTimeNow());
 
-                                    //request
-                                    new HttpCall(getActivity(), new ApiResponse() {
-                                        @Override
-                                        public void onSuccess(Object response) {
-                                            creatRealMessage((Message) response, index2);
-                                        }
+                                        //request
+                                        new HttpCall(getActivity(), new ApiResponse() {
+                                            @Override
+                                            public void onSuccess(Object response) {
+                                                creatRealMessage((Message) response, index2);
+                                            }
 
-                                        @Override
-                                        public void onFailed(String error) {
-                                            removeDummyMessage(index2);
-                                            Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).sendMessage(message);
-                                }
+                                            @Override
+                                            public void onFailed(String error) {
+                                                removeDummyMessage(index2);
+                                                Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }).sendMessage(message);
+                                    }
 
-                                @Override
-                                public void onFailed(String error) {
-                                    Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                                    removeDummyMessage(index2);
-                                }
-                            }).uploadMedia(mOutputFile.getPath());
-
+                                    @Override
+                                    public void onFailed(String error) {
+                                        Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
+                                        removeDummyMessage(index2);
+                                    }
+                                }).uploadMedia(mOutputFile.getPath());
+                            } else {
+                                stopRecording(false);
+                            }
                         }
                     }
 
@@ -1455,11 +1455,14 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 
                     if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
-                           mStartTime = System.currentTimeMillis();
-                           mTime.setVisibility(View.VISIBLE);
-                           mSlideToCancel.setVisibility(View.VISIBLE);
-                          mTime.setText(getFormattedTime());
-                           startRecording();
+
+                                mStartTime = System.currentTimeMillis();
+                                mTime.setVisibility(View.VISIBLE);
+                                mSlideToCancel.setVisibility(View.VISIBLE);
+                                mTime.setText(getFormattedTime());
+                                startRecording();
+
+
 
                     }
                     else{
@@ -1523,9 +1526,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             startTime = SystemClock.elapsedRealtime();
             mHandler.postDelayed(mTickExecutor, 100);
         } catch (Exception e) {
-
         }
-
 
     }
 
