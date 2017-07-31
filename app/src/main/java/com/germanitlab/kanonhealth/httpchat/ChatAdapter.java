@@ -72,6 +72,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
     private final int FORWARDMSG = 5;
+    ImageView forward;
 
     public ChatAdapter(List<Message> messages, final Activity activity, boolean show_privacy) {
         this.activity = activity;
@@ -81,7 +82,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         passowrd = prefManager.getData(PrefManager.USER_PASSWORD);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(messages);
-        ImageView forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
+        forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
 
         if (forward != null)
             forward.setOnClickListener(new View.OnClickListener() {
@@ -810,11 +811,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
     public void changeToolbar(Boolean select) {
         selected = true;
-        ImageButton imgbtn_forward = (ImageButton) activity.findViewById(R.id.imgbtn_forward);
         if (select) {
-            imgbtn_forward.setVisibility(View.VISIBLE);
+            forward.setVisibility(View.VISIBLE);
         } else {
-            imgbtn_forward.setVisibility(View.GONE);
+            forward.setVisibility(View.INVISIBLE);
         }
     }
 
