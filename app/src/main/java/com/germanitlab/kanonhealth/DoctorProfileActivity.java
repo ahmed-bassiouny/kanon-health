@@ -290,8 +290,6 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
                 changeGravity(tvContact, false);
                 handleNewData();
                 bindData();
-                menu.findItem(R.id.mi_edit).setVisible(true);
-                menu.findItem(R.id.mi_save).setVisible(false);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -863,6 +861,8 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
     @Override
     public void onSuccess(Object response) {
         Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
+        menu.findItem(R.id.mi_edit).setVisible(true);
+        menu.findItem(R.id.mi_save).setVisible(false);
         util.dismissProgressDialog();
         setVisiblitiy(View.VISIBLE);
         UserInfoResponse userInfoResponse = new UserInfoResponse();
@@ -962,6 +962,6 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
                 civEditAvatar.setImageResource(R.drawable.profile_place_holder);
             }
         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
-
+        pickerDialog.dismiss();
     }
 }

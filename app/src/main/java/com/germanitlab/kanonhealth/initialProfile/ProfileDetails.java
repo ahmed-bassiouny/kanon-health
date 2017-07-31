@@ -418,6 +418,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
                 imageProfile.setImageResource(R.drawable.profile_place_holder);
             }
         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
+        pickerDialog.dismiss();
 
     }
 }

@@ -471,5 +471,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
             }
         }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
+        pickerDialog.dismiss();
     }
 }
