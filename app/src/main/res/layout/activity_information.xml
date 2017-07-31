@@ -21,7 +21,8 @@
             android:layout_height="@dimen/size_35dp"
             android:background="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/back" />
+            android:layout_gravity="start"
+            android:src="@drawable/ic_chevron_left_black_24dp" />
 
     </android.support.v7.widget.Toolbar>
 
