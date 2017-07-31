@@ -3,9 +3,12 @@ package com.germanitlab.kanonhealth.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,8 @@ import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.widget.SquareImageView;
+import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.gson.Gson;
 import com.nex3z.flowlayout.FlowLayout;
 
@@ -154,34 +159,39 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     } else {
                         holder.tvSpecialist.append(", " + chooseModel.getSpeciality_title());
                     }
-                    // ellipsize text
-                    ViewTreeObserver vto = holder.tvSpecialist.getViewTreeObserver();
-                    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                    // ellipsize text
+//                    ViewTreeObserver vto = holder.tvSpecialist.getViewTreeObserver();
+//                    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//
+//                        @Override
+//                        public void onGlobalLayout() {
+//                            ViewTreeObserver obs = holder.tvSpecialist.getViewTreeObserver();
+//                            obs.removeGlobalOnLayoutListener(this);
+//                            if (holder.tvSpecialist.getLineCount() > 1) {
+//                                int lineEndIndex = holder.tvSpecialist.getLayout().getLineEnd(0);
+//                                String text = holder.tvSpecialist.getText().subSequence(0, lineEndIndex - 3 ) + "...";
+//                                holder.tvSpecialist.setText(text);
+//                            }
+//                        }
+//                    });
 
-                        @Override
-                        public void onGlobalLayout() {
-                            ViewTreeObserver obs = holder.tvSpecialist.getViewTreeObserver();
-                            obs.removeGlobalOnLayoutListener(this);
-                            if (holder.tvSpecialist.getLineCount() > 1) {
-                                int lineEndIndex = holder.tvSpecialist.getLayout().getLineEnd(0);
-                                String text = holder.tvSpecialist.getText().subSequence(0, lineEndIndex ) + "...";
-                                holder.tvSpecialist.setText(text);
-                            }
-                        }
-                    });
                     size++;
 
-                    ImageView image = new ImageView(activity);
+                    SquareImageView image = new SquareImageView(activity);
 //                image.setBackgroundResource(R.drawable.doctor_icon);
 //                        int width = holder.linearLayoutSpecialist.getHeight();
 //                        int height = holder.linearLayoutSpecialist.getHeight();
                     ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
-                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    parms.setMargins(0, 0, 0, 0);
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    parms.setMargins(5, 0, 5, 0);
                     image.setLayoutParams(parms);
                     image.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     holder.linearLayoutSpecialist.addView(image);
                 }
+                holder.tvSpecialist.setLines(1);
+                holder.tvSpecialist.setMaxLines(1);
+                holder.tvSpecialist.setSingleLine(true);
+                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
             }
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar(), R.drawable.placeholder);
