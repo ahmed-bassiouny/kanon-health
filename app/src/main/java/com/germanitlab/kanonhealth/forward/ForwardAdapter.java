@@ -62,29 +62,10 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
             final User doctor = doctorContactsList.get(position);
 
-            if (doctor.isClinic == 1) {
-                holder.tvDoctorName.setText(doctor.getFullName());
-                holder.tvlastMsg.setVisibility(View.GONE);
-            } else {
-                holder.tvDoctorName.setText(doctor.getFullName());
-            }
+            holder.tvDoctorName.setText(doctor.getFullName());
             holder.tvSpecialist.setVisibility(View.GONE);
 
-            holder.tvlastMsg.setText("");
-            if (doctor.getIsDoc() == 1 && doctor.getMembers_at() != null && doctor.getMembers_at().size() > 0) {
-                holder.tvlastMsg.setVisibility(View.VISIBLE);
-                boolean isFirst = true;
-                for (ChooseModel practice : doctor.getMembers_at()) {
-                    if (isFirst) {
-                        holder.tvlastMsg.setText(practice.getFirst_nameMember());
-                        isFirst = false;
-                    } else {
-                        holder.tvlastMsg.append(", " + practice.getFirst_nameMember());
-                    }
-                }
-            } else {
-                holder.tvlastMsg.setVisibility(View.GONE);
-            }
+
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
             }
@@ -105,7 +86,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
     public class ItemView extends RecyclerView.ViewHolder {
         CircleImageView imgAvatar, imgStatus;
-        TextView tvDoctorName, tvSpecialist, tvlastMsg;
+        TextView tvDoctorName, tvSpecialist;
         FlowLayout linearLayoutSpecialist;
 
 
@@ -113,8 +94,6 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
             super(itemView);
 
             imgAvatar = (CircleImageView) itemView.findViewById(R.id.img_avatar_cell);
-//            imgPage = (CircleImageView) itemView.findViewById(R.id.img_lable_cell);
-            tvlastMsg = (TextView) itemView.findViewById(R.id.tv_last_msg);
             tvDoctorName = (TextView) itemView.findViewById(R.id.tv_doctor_name_cell);
             tvSpecialist = (TextView) itemView.findViewById(R.id.tv_specialities);
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
