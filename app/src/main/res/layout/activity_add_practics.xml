@@ -171,8 +171,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_marginEnd="9dp"
                             android:layout_marginStart="5dp"
-                            android:rotation="180"
-                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:src="@drawable/ic_arrow_forward_black_24dp"
                             android:textColor="@android:color/background_dark" />
                     </RelativeLayout>
                     <View
@@ -215,8 +214,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_marginEnd="9dp"
                             android:layout_marginStart="5dp"
-                            android:rotation="180"
-                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:src="@drawable/ic_arrow_forward_black_24dp"
                             android:textColor="@android:color/background_dark" />
                     </RelativeLayout>
 
@@ -452,8 +450,7 @@
                             android:layout_height="30dp"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
-                            android:rotation="180"
-                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:src="@drawable/ic_arrow_forward_black_24dp"
                             android:textColor="@android:color/background_dark" />
 
                     </RelativeLayout>
@@ -496,8 +493,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:layout_alignTop="@id/fl_language"
-                            android:rotation="180"
-                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:src="@drawable/ic_arrow_forward_black_24dp"
                             android:textColor="@android:color/background_dark" />
 
                     </RelativeLayout>
