@@ -510,6 +510,9 @@
     <string name="upload_image_failed">فشل في رفع الصورة.</string>
     <string name="slide_to_cancle">مرر للإلغاء.</string>
     <string name="delete">امسح</string>
+    <string name="type_voucher_codes">اكتب رقم التأكيد</string>
+    <string name="please_enter_voucher_code">اكتب الكود</string>
+    <string name="nine_euro">9.90 يورو</string>
     <string name="camera">كاميرا</string>
     <string name="record_video">تسجيل فيديو</string>
     <string name="select_video">اختار فيديو</string>

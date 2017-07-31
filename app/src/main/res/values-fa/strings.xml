@@ -511,6 +511,9 @@ Canutoa.</string>
     <string name="upload_image_failed">ناکامی در افزایش تصویر.</string>
     <string name="slide_to_cancle">ضربه تند وشدید زدن به لغو.</string>
     <string name="delete">واضح</string>
+    <string name="type_voucher_codes">نوع کدهای کوپن</string>
+    <string name="please_enter_voucher_code">لطفا کد کوپن را وارد</string>
+    <string name="nine_euro">9.90 يورو</string>
     <string name="camera">دوربین</string>
     <string name="record_video">ضبط تصویر</string>
     <string name="select_video">ویدئو را انتخاب کنید</string>

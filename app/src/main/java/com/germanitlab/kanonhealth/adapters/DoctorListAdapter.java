@@ -176,8 +176,8 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 //                        int width = holder.linearLayoutSpecialist.getHeight();
 //                        int height = holder.linearLayoutSpecialist.getHeight();
                     ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
-                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    parms.setMargins(5, 0, 5, 0);
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    parms.setMargins(0, 0, 0, 0);
                     image.setLayoutParams(parms);
                     image.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     holder.linearLayoutSpecialist.addView(image);

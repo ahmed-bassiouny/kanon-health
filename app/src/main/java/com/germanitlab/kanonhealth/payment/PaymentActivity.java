@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
@@ -26,6 +28,9 @@ import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,14 +54,22 @@ public class PaymentActivity extends AppCompatActivity {
     @BindView(R.id.rb_free)
     RadioButton rbFree ;
 
-    @BindView(R.id.rb_free_text)
-    TextView rbFreeText ;
+    @BindView(R.id.rb_euro)
+    RadioButton rbEuro;
+
+    @BindView(R.id.text_voucher)
+    EditText etVoucher;
+
+    @BindView(R.id.rb_voucher)
+    RadioButton rbVoucher;
 
     @BindView(R.id.rg_payment)
     RadioGroup rgPayment ;
     User doctor;
     private String type;
     PrefManager prefManager;
+    List<RadioButton> radioButtons = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +79,19 @@ public class PaymentActivity extends AppCompatActivity {
         initTB();
         prefManager = new PrefManager(this);
         try {
+            radioButtons = new ArrayList<RadioButton>();
+            radioButtons.add((RadioButton) findViewById(R.id.rb_paypal));
+            radioButtons.add((RadioButton) findViewById(R.id.rb_voucher));
+            radioButtons.add((RadioButton) findViewById(R.id.rb_euro));
+            radioButtons.add((RadioButton) findViewById(R.id.rb_free));
+            handleRadioButtons();
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
-
             doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT),User.class);
             if(doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR)) {
                 rbFree.setVisibility(View.VISIBLE);
-                rbFreeText.setVisibility(View.VISIBLE);
             }
             else {
                 rbFree.setVisibility(View.GONE);
-                rbFreeText.setVisibility(View.GONE);
             }
         /*
         handel data in ui
@@ -84,6 +100,28 @@ public class PaymentActivity extends AppCompatActivity {
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void handleRadioButtons() {
+        for (RadioButton button : radioButtons) {
+
+            button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) processRadioButtonClick(buttonView);
+                }
+            });
+
+        }
+    }
+
+    private void processRadioButtonClick(CompoundButton buttonView) {
+
+        for (RadioButton button : radioButtons) {
+
+            if (button != buttonView) button.setChecked(false);
         }
 
     }
@@ -136,9 +174,16 @@ public class PaymentActivity extends AppCompatActivity {
     public void nextClicked() {
         try {
             if(rgPayment.getCheckedRadioButtonId() == -1){
-                Toast.makeText(this, R.string.please_choose_one_of_these_methods, Toast.LENGTH_SHORT).show();
-                return;
+                if (!rbVoucher.isChecked()) {
+                    Toast.makeText(this, R.string.please_choose_one_of_these_methods, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (rbVoucher.isChecked() && etVoucher.getText().length() <= 0) {
+                    Toast.makeText(this, R.string.please_enter_voucher_code, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
             }
+
 
             new HttpCall(PaymentActivity.this, new ApiResponse() {
                 @Override

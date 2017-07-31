@@ -542,5 +542,8 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="select_video">Video auswählen</string>
     <string name="gallery">Galerie</string>
 
+    <string name="type_voucher_codes">Gutscheincodes eingeben</string>
+    <string name="please_enter_voucher_code">Bitte Gutscheincode eingeben</string>
+    <string name="nine_euro">9.90 Euro</string>
 
 </resources>

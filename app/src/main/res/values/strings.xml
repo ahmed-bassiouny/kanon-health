@@ -510,6 +510,9 @@
 
 
     <string name="label_slide_to_cancel">Slide to cancel</string>
+    <string name="type_voucher_codes">type voucher codes</string>
+    <string name="please_enter_voucher_code">please enter voucher code</string>
+    <string name="nine_euro">9.90 Euro</string>
     <string name="camera">Camera</string>
     <string name="record_video">Record Video</string>
     <string name="gallery">Gallery</string>
