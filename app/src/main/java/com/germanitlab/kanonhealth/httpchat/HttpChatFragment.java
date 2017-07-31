@@ -193,6 +193,8 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     long timeDifference=0;
     boolean showAttachmentDialog = false;
     HoldingButtonLayoutListener fragment= this;
+    boolean expand=false;
+
 
 
     @Override
@@ -230,28 +232,37 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                 view.getWindowVisibleDisplayFrame(r);
                 if (view.getRootView().getHeight() - (r.bottom - r.top) > 500) { // if more than 100 pixels, its probably a keyboard...
                     img_send_txt.setVisibility(View.VISIBLE);
-                    mHoldingButtonLayout.setButtonEnabled(false);
-                    mHoldingButtonLayout.removeListener(fragment);
-                    start_record.setVisibility(View.GONE);
+                  //  mHoldingButtonLayout.removeListener(fragment);
 
                 } else {
                     if (etMessage.getText().toString().trim().length() > 0) {
 
                         img_send_txt.setVisibility(View.VISIBLE);
-                        mHoldingButtonLayout.setButtonEnabled(false);
                         mHoldingButtonLayout.removeListener(fragment);
-                        start_record.setVisibility(View.GONE);
 
                     } else {
                         img_send_txt.setVisibility(View.GONE);
-                        mHoldingButtonLayout.setButtonEnabled(true);
                         mHoldingButtonLayout.addListener(fragment);
-                        start_record.setVisibility(View.VISIBLE);
                     }
 
                 }
             }
         });
+
+
+//        mHoldingButtonLayout.getHoldingView().setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_DOWN){
+//
+//
+//                    // Do what you want
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//
 
         return view;
     }
@@ -447,13 +458,12 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             img_send_txt.setVisibility(View.VISIBLE);
             mHoldingButtonLayout.setButtonEnabled(false);
             mHoldingButtonLayout.removeListener(this);
-            start_record.setVisibility(View.GONE);
 
         } else {
             img_send_txt.setVisibility(View.GONE);
             mHoldingButtonLayout.setButtonEnabled(true);
             mHoldingButtonLayout.addListener(this);
-            start_record.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -1272,14 +1282,15 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 //
 //    }
 
-
-
     @Override
     public void onBeforeExpand() {
-        timeDifference=0;
-        flagLongPress=false;
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(layout_chat_attach.getWindowToken(), 0);
+
+            timeDifference = 0;
+            flagLongPress = false;
+            expand = true;
+            vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+            if (vp != null) {
+                vp.setEnableSwipe(false);
 
 //        if(whileFlag==1) {
 //            onBeforeCollapse();
@@ -1295,43 +1306,38 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
             mSlideToCancelAnimator.start();
 
-        mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
-        mInputAnimator.setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mInput.setVisibility(View.INVISIBLE);
-                mInputAnimator.setListener(null);
-            }
-        });
-        mInputAnimator.start();
+            mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+            mInputAnimator.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mInput.setVisibility(View.INVISIBLE);
+                    mInputAnimator.setListener(null);
+                }
+            });
+            mInputAnimator.start();
 
             mTime.setTranslationY(mTime.getHeight());
             mTime.setAlpha(0f);
-           // mTime.setVisibility(View.VISIBLE);
+            // mTime.setVisibility(View.VISIBLE);
             mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
             mTimeAnimator.start();
             mStartTime = System.currentTimeMillis();
-
-
-
+        }
     }
 
     @Override
     public void onExpand() {
-        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
-        if (vp != null) {
-            vp.setEnableSwipe(false);
-        }
-       // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            invalidateTimer();
-       // }
 
-    }
+    // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+    invalidateTimer();
+    // }
+}
+
+
 
 
     @Override
     public void onBeforeCollapse() {
-        mHoldingButtonLayout.getHoldingView().setClickable(true);
         cancelAllAnimations();
         mSlideToCancelAnimator = mSlideToCancel.animate().alpha(0f).setDuration(mAnimationDuration);
         mSlideToCancelAnimator.setListener(new AnimatorListenerAdapter() {
@@ -1362,68 +1368,73 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 
     @Override
     public void onCollapse(boolean isCancel) {
-        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
-        if (vp != null) {
-            vp.setEnableSwipe(true);
-        }
-        if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
-            try {
-                stopTimer();
-                if (isCancel) {
-                    if(flagLongPress==true) {
-                        stopRecording(false);
-                    }
+        if(expand==true) {
+            expand=false;
+            vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+            if (vp != null) {
+                vp.setEnableSwipe(true);
+            }
+            if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+
+                try {
+                    stopTimer();
+                    if (isCancel) {
+                        if (flagLongPress == true) {
+                            stopRecording(false);
+                        }
 
 //            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (flagLongPress == true) {
-                        stopRecording(true);
+                    } else {
+                        if (flagLongPress == true) {
+                            stopRecording(true);
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
-                        final int index2 = creatDummyMessage();
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                final Message message = new Message();
-                                message.setUser_id(userID);
-                                message.setFrom_id(userID);
-                                message.setTo(doctorID);
-                                message.setIs_url(1);
-                                message.setMsg((String) response);
-                                message.setType(Constants.AUDIO);
-                                message.setIs_send(false);
-                                message.setSent_at(getDateTimeNow());
+                            final int index2 = creatDummyMessage();
+                            new HttpCall(getActivity(), new ApiResponse() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    final Message message = new Message();
+                                    message.setUser_id(userID);
+                                    message.setFrom_id(userID);
+                                    message.setTo(doctorID);
+                                    message.setIs_url(1);
+                                    message.setMsg((String) response);
+                                    message.setType(Constants.AUDIO);
+                                    message.setIs_send(false);
+                                    message.setSent_at(getDateTimeNow());
 
-                                //request
-                                new HttpCall(getActivity(), new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        creatRealMessage((Message) response, index2);
-                                    }
+                                    //request
+                                    new HttpCall(getActivity(), new ApiResponse() {
+                                        @Override
+                                        public void onSuccess(Object response) {
+                                            creatRealMessage((Message) response, index2);
+                                        }
 
-                                    @Override
-                                    public void onFailed(String error) {
-                                        removeDummyMessage(index2);
-                                        Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                    }
-                                }).sendMessage(message);
-                            }
+                                        @Override
+                                        public void onFailed(String error) {
+                                            removeDummyMessage(index2);
+                                            Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).sendMessage(message);
+                                }
 
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                                removeDummyMessage(index2);
-                            }
-                        }).uploadMedia(mOutputFile.getPath());
+                                @Override
+                                public void onFailed(String error) {
+                                    Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
+                                    removeDummyMessage(index2);
+                                }
+                            }).uploadMedia(mOutputFile.getPath());
 
+                        }
                     }
-                }
 
-        } catch(Exception e){
-            Log.e("milad", "onCollapse: ", e);
+                } catch (Exception e) {
+                    Log.e("milad", "onCollapse: ", e);
+                }
+            }
+
         }
-    }
 
     }
 
@@ -1439,24 +1450,23 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             public void run() {
                 mTime.setText(getFormattedTime());
                 invalidateTimer();
-                if(timeDifference>700&&flagLongPress==false)
+                if(timeDifference>1000&&flagLongPress==false)
                 {
                     flagLongPress=true;
 
                     if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
-                       if(mHoldingButtonLayout.isAnimateHoldingView()) {
                            mStartTime = System.currentTimeMillis();
                            mTime.setVisibility(View.VISIBLE);
                            mSlideToCancel.setVisibility(View.VISIBLE);
                            invalidateTimer();
                            startRecording();
-                       }
+
                     }
                     else{
                       onBeforeCollapse();
 //                      onCollapse(true);
-                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},  Constants.AUDIO_PERMISSION_CODE);
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
                     }
 
                 }
@@ -1570,6 +1580,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         if (!saveFile && mOutputFile != null) {
             mOutputFile.delete();
         }
+
     }
 
     @Override
