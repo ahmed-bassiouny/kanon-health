@@ -348,7 +348,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
 
     //Untersuchung und Behandlung
     <!--(question_11)-->
-    <string name="laboruntersuchung">Laboruntersuchung (Blut, Urin etc.)</string>  <!--(question_12)-->
 
 
     <!-- (question_14)-->
@@ -381,7 +380,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     //Termin
     <string name="termin_frage">Zur welcher Uhrziet?</string> <!--(question_41)-->
 
-    <string name="herz_abhorchen">Herz abhorchen</string>
 
 
     //Inquiry strings
@@ -533,10 +531,10 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="second_Level">Zweites Level.</string>
     <string name="thanks_for_comment">Danke für dein Kommentar</string>
     <string name="delete">löschen</string>
-    <string name="support">Support</string>Unterstützung
+    <string name="support">Unterstützung</string>Unterstützung
 
-    <string name="label_slide_to_cancel">Slide to cancel</string>
-    <string name="hint_type_your_msg">Type your message</string>
+    <string name="label_slide_to_cancel">Schuif om te annuleren</string>
+    <string name="hint_type_your_msg">Typ uw bericht</string>
     <string name="camera">Kamera</string>
     <string name="record_video">Ein Video aufnehmen</string>
     <string name="select_video">Video auswählen</string>
@@ -545,5 +543,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="type_voucher_codes">Gutscheincodes eingeben</string>
     <string name="please_enter_voucher_code">Bitte Gutscheincode eingeben</string>
     <string name="nine_euro">9.90 Euro</string>
+    <string name="Heart_listen">Herz abhorchen</string>
+    <string name="laboratory_examination">Laboruntersuchung (Blut, Urin etc.)</string>
 
 </resources>

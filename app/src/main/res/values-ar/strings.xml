@@ -517,6 +517,9 @@
     <string name="record_video">تسجيل فيديو</string>
     <string name="select_video">اختار فيديو</string>
     <string name="gallery">معرض الصور</string>
+    <string name="support">الدعم</string>
+    <string name="label_slide_to_cancel">مرر للإلغاء</string>
+    <string name="hint_type_your_msg">اكتب رسالتك</string>
 
 
 </resources>

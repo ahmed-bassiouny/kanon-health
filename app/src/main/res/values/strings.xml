@@ -326,7 +326,6 @@
 
     //Untersuchung und Behandlung
     <!--(question_11)-->
-    <string name="laboruntersuchung">Laboruntersuchung.</string>  <!--(question_12)-->
 
 
     <string name="others">Others.</string> <!-- (question_14)-->
@@ -359,7 +358,6 @@
     //Termin
     <string name="termin_frage">At what time clock?</string> <!--(question_41)-->
 
-    <string name="herz_abhorchen">Herz abhorchen.</string>
 
 
     //Inquiry strings
@@ -517,6 +515,7 @@
     <string name="record_video">Record Video</string>
     <string name="gallery">Gallery</string>
     <string name="select_video">Select Video</string>
+    <string name="Heart_listen">Listen heart</string>
 
 
 </resources>

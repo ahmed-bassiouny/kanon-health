@@ -518,6 +518,9 @@ Canutoa.</string>
     <string name="record_video">ضبط تصویر</string>
     <string name="select_video">ویدئو را انتخاب کنید</string>
     <string name="gallery">آلبوم عکس</string>
+    <string name="support">حمایت کردن</string>
+    <string name="label_slide_to_cancel">اسلاید برای لغو</string>
+    <string name="hint_type_your_msg">پیام خود را تایپ کنید</string>
 
 
 </resources>
