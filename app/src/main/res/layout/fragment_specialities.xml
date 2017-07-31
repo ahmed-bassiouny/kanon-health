@@ -7,7 +7,7 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -16,34 +16,38 @@
         android:padding="4dp"
         android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/img_btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/back" />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/back" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity=""
             android:layout_weight="1"
             android:gravity="center"
+            android:layout_gravity="center"
             android:text="@string/all_doctors" />
 
         <ImageView
             android:id="@+id/filter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:src="@drawable/filter"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_35dp"
+            android:drawableStart="@drawable/ic_arrow_left_blue_24dp"
+            android:drawablePadding="@dimen/size_10dp"
+            android:gravity="center"
+            android:text="@string/back"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/size_15sp"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

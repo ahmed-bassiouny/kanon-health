@@ -16,22 +16,18 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary">
 
-            <ImageButton
-                android:layout_width="@dimen/size_35dp"
-                android:layout_height="@dimen/size_35dp"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:id="@+id/img_btn_back"
-                android:src="@drawable/ic_chevron_left_black_24dp" />
-
             <TextView
+                android:id="@+id/img_btn_back"
+                android:layout_gravity="start"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/size_35dp"
+                android:drawableStart="@drawable/ic_chevron_left_black_24dp"
+                android:drawablePadding="@dimen/size_10dp"
+                android:gravity="center"
                 android:text="@string/back"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textSize="@dimen/size_15sp"
                 android:textStyle="bold" />
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -41,28 +37,36 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/scan"
-                android:layout_width="@dimen/size_40dp"
-                android:layout_height="@dimen/size_40dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:gravity="end"
                 android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/size_15dp"
-                android:background="@null"
-                android:contentDescription=""
-                android:scaleType="fitXY"
-                android:src="@drawable/scan"
-                tools:ignore="ContentDescription,RtlHardcoded" />
+                android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/myQr"
-                android:layout_width="@dimen/size_40dp"
-                android:layout_height="@dimen/size_35dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/size_25dp"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:src="@drawable/qrcode"
-                tools:ignore="ContentDescription,RtlHardcoded" />
+                <ImageButton
+                    android:id="@+id/scan"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="@dimen/size_40dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/size_15dp"
+                    android:background="@null"
+                    android:contentDescription=""
+                    android:scaleType="fitXY"
+                    android:src="@drawable/scan"
+                    tools:ignore="ContentDescription,RtlHardcoded" />
+
+                <ImageButton
+                    android:id="@+id/myQr"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="@dimen/size_35dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/size_25dp"
+                    android:background="@null"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/qrcode"
+                    tools:ignore="ContentDescription,RtlHardcoded" />
+            </LinearLayout>
+
 
         </android.support.v7.widget.Toolbar>
 

@@ -113,7 +113,7 @@
                 android:layout_height="@dimen/activity_main_slide_to_cancel_icon_size"
                 android:layout_marginRight="@dimen/activity_main_slide_to_cancel_icon_margin_right"
                 android:scaleType="center"
-                android:src="@drawable/ic_keyboard_arrow_left_black_24dp"/>
+                android:src="@drawable/ic_arrow_left_blue_24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
