@@ -966,7 +966,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
             if (iamDoctor == false && iamClinic == false) {
-                if (doctor.getHave_rate() == 1) {
+                if (doctor.getHave_rate() != 1) {
                     canRate.setVisibility(View.VISIBLE);
                 } else {
                     canRate.setVisibility(View.GONE);
@@ -1103,8 +1103,8 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     if (iamDoctor == false && iamClinic == false) {
-                                                        doctor.setHave_rate(1);
-                                                        userRepository.update(doctor);
+                                                       // doctor.setHave_rate(0);
+                                                        //userRepository.update(doctor);
                                                         canRate.setVisibility(View.VISIBLE);
                                                     }
                                                 }
@@ -1291,6 +1291,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
             if (vp != null) {
                 vp.setEnableSwipe(false);
+            }
 
 //        if(whileFlag==1) {
 //            onBeforeCollapse();
@@ -1322,7 +1323,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
             mTimeAnimator.start();
             mStartTime = System.currentTimeMillis();
-        }
+
     }
 
     @Override
@@ -1459,7 +1460,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                            mStartTime = System.currentTimeMillis();
                            mTime.setVisibility(View.VISIBLE);
                            mSlideToCancel.setVisibility(View.VISIBLE);
-                           invalidateTimer();
+                          mTime.setText(getFormattedTime());
                            startRecording();
 
                     }
@@ -1523,7 +1524,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mRecorder.start();
             startTime = SystemClock.elapsedRealtime();
             mHandler.postDelayed(mTickExecutor, 100);
-        } catch (IOException e) {
+        } catch (Exception e) {
 
         }
 
