@@ -283,8 +283,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
         try {
             final Message textMessage = mMessages.get(position);
             textMsgViewHolder.message.setText(textMessage.getMsg());
-
-
+            setTime(textMessage.getSent_at(),textMsgViewHolder.date);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Chat Adapter", "setTextMessage: ", e);
@@ -297,7 +296,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
         try {
 
             final Message message = mMessages.get(position);
-
+            setTime(message.getSent_at(),imageViewHolder.date);
 
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download);
@@ -329,6 +328,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
         try {
             final Message mediaMessage = mMessages.get(position);
             audioViewHolder.status.setVisibility(View.GONE);
+            setTime(mediaMessage.getSent_at(),audioViewHolder.date);
 
             // Mediaplayer
             audioViewHolder.mp = new MediaPlayer();
@@ -508,6 +508,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
             final Message locationMessage = mMessages.get(position);
             imageViewHolder.status.setVisibility(View.GONE);
+            setTime(locationMessage.getSent_at(),imageViewHolder.date);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -544,7 +545,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
         try {
             final Message message = mMessages.get(position);
             imageViewHolder.status.setVisibility(View.GONE);
-
+            setTime(message.getSent_at(),imageViewHolder.date);
             if (!new File(message.getMsg()).exists()) {
                 final String fileName = message.getMsg().substring(message.getMsg().lastIndexOf("/") + 1);
                 final File file = new File(Constants.folder, fileName);
@@ -634,6 +635,15 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
     public void setItem(Message item) {
         this.mMessages.add(item);
+    }
+
+    private void setTime(String time ,TextView txtdate){
+        try {
+            String[] split = time.split(" ")[1].split(":");
+            txtdate.setText(split[0] + ":" + split[1] + " ");
+        } catch (Exception ex) {
+            txtdate.setText(time);
+        }
     }
 }
 
