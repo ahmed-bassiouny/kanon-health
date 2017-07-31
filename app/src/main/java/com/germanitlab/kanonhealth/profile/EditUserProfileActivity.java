@@ -273,7 +273,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
             arg2 = arg2 + 1;
             birthdate = arg1 + "-" + arg2 + "-" + arg3;
-            Date parseDate = null;
             etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(birthdate)));
         }
     };
@@ -402,7 +401,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         user.setPlatform("3");
         user.setPhone(etPhone.getText().toString());
         user.setBirthDate(birthdate);
-        Log.d("my birthdate format", etBirthday.getText().toString());
         info.setStreetname(etStreet.getText().toString());
         info.setZip_code(etZip.getText().toString());
         info.setHouseNumber(etHousePhone.getText().toString());
@@ -416,36 +414,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         }
 
         user.setInfo(info);
-    }
-
-    public void decodeFile(String filePath) {
-
-        // Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, o);
-
-        // The new size we want to scale to
-        final int REQUIRED_SIZE = 1024;
-
-        // Find the correct scale value. It should be the power of 2.
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
-                break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        // Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        Bitmap b1 = BitmapFactory.decodeFile(filePath, o2);
-        Bitmap b = ExifUtils.rotateBitmap(filePath, b1);
-
-        // image.setImageBitmap(bitmap);
     }
 
 

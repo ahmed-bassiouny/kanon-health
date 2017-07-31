@@ -655,13 +655,13 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
         getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takeAndSelectImage();
+                takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA);
             }
         });
         getActivity().findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takeAndSelectImage();
+                takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY);
             }
         });
 
@@ -1617,14 +1617,15 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             Log.e("send msg", "on Activity result: ", e);
         }
     }
-    private void takeAndSelectImage(){
+    private void takeAndSelectImage(int type){
+        // type = PickerBuilder.SELECT_FROM_GALLERY or PickerBuilder.SELECT_FROM_CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), PickerBuilder.SELECT_FROM_GALLERY);
             } else
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
         } else
-            Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), PickerBuilder.SELECT_FROM_GALLERY);
+            Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), type);
 
         attachment.setVisibility(View.INVISIBLE);
         showAttachmentDialog = false;
