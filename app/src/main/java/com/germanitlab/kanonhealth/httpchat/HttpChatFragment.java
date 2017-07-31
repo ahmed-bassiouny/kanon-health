@@ -966,7 +966,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
             if (iamDoctor == false && iamClinic == false) {
-                if (doctor.getCan_rate() == 1) {
+                if (doctor.getHave_rate() == 1) {
                     canRate.setVisibility(View.VISIBLE);
                 } else {
                     canRate.setVisibility(View.GONE);
@@ -1103,7 +1103,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     if (iamDoctor == false && iamClinic == false) {
-                                                        doctor.setCan_rate(1);
+                                                        doctor.setHave_rate(1);
                                                         userRepository.update(doctor);
                                                         canRate.setVisibility(View.VISIBLE);
                                                     }
@@ -1327,7 +1327,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
 
     @Override
     public void onExpand() {
-
+        expand = true;
     // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
     invalidateTimer();
     // }

@@ -107,7 +107,7 @@ onBackPressed();
                     @Override
                     public void onSuccess(Object response) {
                         Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
-                        doctor.setCan_rate(0);
+                        doctor.setHave_rate(0);
                         userRepository.update(doctor);
                         Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
                         intent.putExtra("doctorID", Integer.valueOf(doc_id));
@@ -132,7 +132,7 @@ onBackPressed();
 
     @Override
     public void onBackPressed() {
-        doctor.setCan_rate(1);
+        doctor.setHave_rate(1);
         userRepository.update(doctor);
         Intent intent = new Intent(this, HttpChatActivity.class);
         intent.putExtra("doctorID", Integer.valueOf(doc_id));
