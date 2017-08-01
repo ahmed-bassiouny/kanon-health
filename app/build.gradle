@@ -60,7 +60,6 @@ dependencies {
 
     //// heart image view
 
-    //compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.kenglxn.QRGen:android:2.3.0'
     compile 'com.brucetoo.pickview:library:1.2.3'
@@ -75,8 +74,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:percent:25.3.1'
@@ -110,5 +107,6 @@ dependencies {
     compile 'com.daimajia.easing:library:2.0@aar'
     compile 'com.daimajia.androidanimations:library:2.3@aar'
     compile 'com.dewarder:holdingbutton:0.0.9'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -263,6 +264,17 @@ public class Helper {
         pickerPopWin.showPopWin(activity);
     }
 
+
+    public static void handleError(String tag, String errorMsg, Throwable e, int errorCode, Context context) {
+        Crashlytics.setInt("Error_Code", errorCode);
+        Crashlytics.logException(e);
+        if ((!TextUtils.isEmpty(tag)) && (!TextUtils.isEmpty(errorMsg)) && context != null) {
+            Log.e(tag, errorMsg + " Error Code : " + errorCode, e);
+            Toast.makeText(context, errorMsg + " Error Code : " + errorCode, Toast.LENGTH_LONG).show();
+        } else {
+            Log.e("handleError", " Error Code : " + errorCode, e);
+        }
+    }
 
 }
 
