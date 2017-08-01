@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Speciality;
@@ -15,6 +16,7 @@ import com.germanitlab.kanonhealth.api.parameters.MessagesParamater;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
 import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
+import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
@@ -270,6 +272,23 @@ public class ApiHelper {
             Helper.handleError(TAG, "getSpecialities", e, -1, context);
         }finally {
             return specialityArrayList;
+        }
+    }
+
+    // get all Language
+    public static ArrayList<Language> getLanguage(Context context){
+        ArrayList<Language> languageArrayList= new ArrayList<>();
+        try{
+            String  jsonString =post(API_SPECIALITIES_LIST,EMPTY_JSON);
+            Gson gson = new Gson();
+            LanguageResponse languageResponse = gson.fromJson(jsonString,LanguageResponse.class);
+            if(languageResponse.getStatus()){
+                languageArrayList=languageResponse.getData();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "getSpecialities", e, -1, context);
+        }finally {
+            return languageArrayList;
         }
     }
 

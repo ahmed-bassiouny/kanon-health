@@ -23,6 +23,8 @@ public class Speciality extends ParentModel {
     private String image;
 
     public Integer getSpecialityID() {
+        if(specialityID==null)
+            specialityID=0;
         return specialityID;
     }
 
