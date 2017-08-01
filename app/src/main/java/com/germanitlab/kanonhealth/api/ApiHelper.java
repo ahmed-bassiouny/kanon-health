@@ -13,6 +13,7 @@ import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.MimeUtils;
 import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.google.gson.Gson;
 
@@ -98,14 +99,14 @@ public class ApiHelper {
     }
 
 
-    private static String postWithFile(String url, String parameters, File file, String fileParameterName, String mediaType) throws IOException {
+    private static String postWithFile(String url, String parameters, File file, String fileParameterName) throws IOException {
         String result = "";
         OkHttpClient client = new OkHttpClient();
         RequestBody body = MultipartBody.create(JSON, parameters);
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(mediaType), file))
+                .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(MimeUtils.getType(file.getName())), file))
                 .addPart(body)
                 .build();
 
@@ -164,7 +165,7 @@ public class ApiHelper {
     }
 
     // send message in chat
-    public static Message sendMessage(int UserID,int toID,String textMessage,String type,String media,Context context){
+    public static Message sendMessage(int UserID,int toID,String textMessage,String type,File file,Context context){
         Message message=null;
         try{
             MessageSendParamaters messageSendParamaters = new MessageSendParamaters();
@@ -173,9 +174,8 @@ public class ApiHelper {
             messageSendParamaters.setMessage(textMessage);
             messageSendParamaters.setTypeMessage(type);
             messageSendParamaters.setIsForward(0);
-            messageSendParamaters.setMedia(media);
 
-            String jsonString =post(API_MESSAGES_SEND,messageSendParamaters.toJson());
+            String jsonString =postWithFile(API_MESSAGES_SEND,messageSendParamaters.toJson(),file,MessageSendParamaters.PARAMATER_MEDIA);
             Gson gson = new Gson();
             MessageSendResponse messageSendResponse = gson.fromJson(jsonString,MessageSendResponse.class);
             if(messageSendResponse.getStatus()){
