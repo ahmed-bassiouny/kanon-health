@@ -4,14 +4,21 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
+import com.germanitlab.kanonhealth.api.parameters.MessageSendParamaters;
+import com.germanitlab.kanonhealth.api.parameters.MessagesParamater;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
+import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
+import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -85,6 +92,7 @@ public class ApiHelper {
                 .url(SERVER_API_URL + url)
                 .post(body)
                 .build();
+        Log.i(TAG, request.toString());
         Response response = client.newCall(request).execute();
         return response.body().string();
     }
@@ -131,6 +139,52 @@ public class ApiHelper {
             Helper.handleError(TAG, "postRegister", e, -1, context);
         } finally {
             return result;
+        }
+    }
+
+    // get all message in chat
+    public static ArrayList<Message> getMessages(int UserID,int toID,Context context){
+        ArrayList<Message> result = new ArrayList<>();
+        try {
+            MessagesParamater messagesParamater = new MessagesParamater();
+            messagesParamater.setUserID(UserID);
+            messagesParamater.setToID(toID);
+
+            String jsonString =post(API_MESSAGES_LIST,messagesParamater.toJson());
+            Gson gson = new Gson();
+            MessagesResponse messageResponse = gson.fromJson(jsonString,MessagesResponse.class);
+            if(messageResponse.getStatus()){
+                result=messageResponse.getData();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "getMessages", e, -1, context);
+        }finally {
+            return result;
+        }
+    }
+
+    // send message in chat
+    public static Message sendMessage(int UserID,int toID,String textMessage,String type,String media,Context context){
+        Message message=null;
+        try{
+            MessageSendParamaters messageSendParamaters = new MessageSendParamaters();
+            messageSendParamaters.setFromID(UserID);
+            messageSendParamaters.setToID(toID);
+            messageSendParamaters.setMessage(textMessage);
+            messageSendParamaters.setTypeMessage(type);
+            messageSendParamaters.setIsForward(0);
+            messageSendParamaters.setMedia(media);
+
+            String jsonString =post(API_MESSAGES_SEND,messageSendParamaters.toJson());
+            Gson gson = new Gson();
+            MessageSendResponse messageSendResponse = gson.fromJson(jsonString,MessageSendResponse.class);
+            if(messageSendResponse.getStatus()){
+                message=messageSendResponse.getData();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "sendMessage", e, -1, context);
+        }finally {
+            return message;
         }
     }
 
