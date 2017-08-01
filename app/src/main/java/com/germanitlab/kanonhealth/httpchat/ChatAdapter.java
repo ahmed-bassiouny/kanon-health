@@ -946,14 +946,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
         RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         if (mMessages.get(position).getFrom_id() == userID) {
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-            params.setMargins(200,0,0,0);
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+            params.setMarginStart(200);
             messageContainer.setLayoutParams(params);
             messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
 
         } else {
-            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-            params.setMargins(0,0,200,0);
+            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
+            params.setMarginEnd(200);
             messageContainer.setLayoutParams(params);
             messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
         }

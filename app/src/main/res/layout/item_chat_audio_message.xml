@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_margin="5dp"
-    android:layoutDirection="ltr"
     android:id="@+id/relative_main"
     android:layout_height="wrap_content">
 
@@ -11,6 +10,7 @@
         android:id="@+id/message_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layoutDirection="ltr"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/bubble_out_doc">

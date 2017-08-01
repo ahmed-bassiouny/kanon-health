@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_margin="5dp"
     android:id="@+id/relative_main"
-    android:layoutDirection="ltr"
     android:layout_height="wrap_content">
 
 
@@ -11,6 +10,7 @@
         android:id="@+id/message_container"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layoutDirection="ltr"
         android:layout_margin="5dp"
         android:background="@drawable/bubble_out_doc"
         android:paddingStart="7dp"
@@ -24,7 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="ddddd"
             android:layout_marginRight="5dp"
             android:textColor="@color/black" />
 
