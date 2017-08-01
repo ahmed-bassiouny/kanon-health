@@ -25,5 +25,35 @@ public class SupportedLang {
     @SerializedName(COUNTRY_CODE)
     private String countryCode;
 
+    public static String getLangTitle() {
+        return LANG_TITLE;
+    }
 
+    public void setLangTitle(String langTitle) {
+        this.langTitle = langTitle;
+    }
+
+    public String getLangIcon() {
+        return langIcon;
+    }
+
+    public void setLangIcon(String langIcon) {
+        this.langIcon = langIcon;
+    }
+
+    public String getLongShort() {
+        return longShort;
+    }
+
+    public void setLongShort(String longShort) {
+        this.longShort = longShort;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
 }

@@ -79,66 +79,6 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(PARAMETER_SUPPORTED_LANG)
     private ArrayList<SupportedLang> supportedLangs;
 
-    public static String getParameterUserId() {
-        return PARAMETER_USER_ID;
-    }
-
-    public static String getParameterName() {
-        return PARAMETER_NAME;
-    }
-
-    public static String getParameterSpeciality() {
-        return PARAMETER_SPECIALITY;
-    }
-
-    public static String getParameterRateNum() {
-        return PARAMETER_RATE_NUM;
-    }
-
-    public static String getParameterRatePercentage() {
-        return PARAMETER_RATE_PERCENTAGE;
-    }
-
-    public static String getParameterAddress() {
-        return PARAMETER_ADDRESS;
-    }
-
-    public static String getParameterStreetName() {
-        return PARAMETER_STREET_NAME;
-    }
-
-    public static String getParameterHouseNumber() {
-        return PARAMETER_HOUSE_NUMBER;
-    }
-
-    public static String getParameterZipCode() {
-        return PARAMETER_ZIP_CODE;
-    }
-
-    public static String getParameterCity() {
-        return PARAMETER_CITY;
-    }
-
-    public static String getParameterProvince() {
-        return PARAMETER_PROVINCE;
-    }
-
-    public static String getParameterCountry() {
-        return PARAMETER_COUNTRY;
-    }
-
-    public static String getParameterPhone() {
-        return PARAMETER_PHONE;
-    }
-
-    public static String getParameterFax() {
-        return PARAMETER_FAX;
-    }
-
-    public static String getParameterSupportedLang() {
-        return PARAMETER_SUPPORTED_LANG;
-    }
-
     public Integer getUserId() {
         return userId;
     }

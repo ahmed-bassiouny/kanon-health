@@ -11,11 +11,14 @@ import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
+import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParamaters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParamater;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
 import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
+import com.germanitlab.kanonhealth.api.responses.EditClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
+import com.germanitlab.kanonhealth.api.responses.GetClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
@@ -23,14 +26,12 @@ import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
 import com.germanitlab.kanonhealth.api.responses.SpecialityResponse;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.MimeUtils;
-import com.germanitlab.kanonhealth.httpchat.MessageResponse;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -50,6 +51,7 @@ public class ApiHelper {
     private static final String API_CLINICS_LIST = "clinics/list";
     private static final String API_CLINICS_ADD = "clinics/add";
     private static final String API_CLINICS_EDIT = "clinics/edit";
+    private static final String API_CLINICS_GET = "clinics/get";
 
     private static final String API_DOCTORS_ADD = "doctors/add";
     private static final String API_DOCTORS_UPDATE = "doctors/update";
@@ -172,7 +174,7 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postClinicAdd(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs,File file,Context context) {
+    public static Clinic postAddClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs,File file,Context context) {
         Clinic result = null;
         try {
             AddOrEditClinicParameters addOrEditClinicParameters= new AddOrEditClinicParameters();
@@ -191,23 +193,82 @@ public class ApiHelper {
             addOrEditClinicParameters.setPhone(phone);
             addOrEditClinicParameters.setFax(fax);
             addOrEditClinicParameters.setSupportedLangs(supportedLangs);
+            String jsonString ="";
+            if(file==null) {
+                jsonString=  post(API_CLINICS_ADD, addOrEditClinicParameters.toJson());
+            }else
+            {
+                jsonString = postWithFile(API_CLINICS_ADD, addOrEditClinicParameters.toJson(), file, addOrEditClinicParameters.PARAMETER_AVATAR);
+            }
 
-            String jsonString = postWithFile(API_CLINICS_ADD, addOrEditClinicParameters.toJson(),file,addOrEditClinicParameters.PARAMETER_AVATAR);
             Gson gson = new Gson();
             AddClinicResponse addClinicResponse= gson.fromJson(jsonString, AddClinicResponse.class);
             if (addClinicResponse.getStatus()) {
                 result = addClinicResponse.getData();
             }
         } catch (Exception e) {
-            Helper.handleError(TAG, "postGetClinicList", e, -1, context);
+            Helper.handleError(TAG, "postClinicAdd", e, -1, context);
         } finally {
             return result;
         }
     }
 
+    public static Clinic postGetClinic(Integer clinicId,Context context) {
+        Clinic result = null;
+        try {
+        GetClinicParameters getClinicParameters= new GetClinicParameters();
+        getClinicParameters.setClinicId(clinicId);
+        String jsonString = post(API_CLINICS_GET, getClinicParameters.toJson());
+        Gson gson = new Gson();
+        GetClinicResponse getClinicResponse = gson.fromJson(jsonString, GetClinicResponse.class);
+        if (getClinicResponse.getStatus()) {
+            result = getClinicResponse.getData();
+        }
+    } catch (Exception e) {
+        Helper.handleError(TAG, "postClinicGet", e, -1, context);
+    } finally {
+        return result;
+    }
+    }
 
+    public static Integer postEditClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs,File file,Context context) {
+        Integer result = -1;
+        try {
+            AddOrEditClinicParameters addOrEditClinicParameters= new AddOrEditClinicParameters();
+            addOrEditClinicParameters.setUserId(userId);
+            addOrEditClinicParameters.setName(name);
+            addOrEditClinicParameters.setSpeciality(speciality);
+            addOrEditClinicParameters.setRateNum(rateNum);
+            addOrEditClinicParameters.setRatePercentage(ratePercentage);
+            addOrEditClinicParameters.setAddress(address);
+            addOrEditClinicParameters.setStreetName(streetName);
+            addOrEditClinicParameters.setHouseNumber(houseNumber);
+            addOrEditClinicParameters.setZipCode(zipCode);
+            addOrEditClinicParameters.setCity(city);
+            addOrEditClinicParameters.setProvince(province);
+            addOrEditClinicParameters.setCountry(country);
+            addOrEditClinicParameters.setPhone(phone);
+            addOrEditClinicParameters.setFax(fax);
+            addOrEditClinicParameters.setSupportedLangs(supportedLangs);
 
+            String jsonString ="";
+            if(file==null) {
+                jsonString=  post(API_CLINICS_EDIT, addOrEditClinicParameters.toJson());
+            }else
+            {
+                jsonString = postWithFile(API_CLINICS_EDIT, addOrEditClinicParameters.toJson(), file, addOrEditClinicParameters.PARAMETER_AVATAR);
+            }
+            Gson gson = new Gson();
+            EditClinicResponse editClinicResponse=gson.fromJson(jsonString, EditClinicResponse.class);
+            Toast.makeText(context,editClinicResponse.getMsg(), Toast.LENGTH_LONG).show();
+            result=editClinicResponse.getData();
 
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postEditClinic", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
 
     // get all message in chat
     public static ArrayList<Message> getMessages(int UserID,int toID,Context context){

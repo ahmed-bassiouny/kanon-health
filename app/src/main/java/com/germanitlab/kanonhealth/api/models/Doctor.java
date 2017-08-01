@@ -61,4 +61,104 @@ public class Doctor {
     @SerializedName(KEY_RATE)
     private ArrayList<String> rate;
 
+
+    public static String getKeyId() {
+        return KEY_ID;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Float getRateNum() {
+        return rateNum;
+    }
+
+    public void setRateNum(Float rateNum) {
+        this.rateNum = rateNum;
+    }
+
+    public HashMap<String, String> getRatePercentage() {
+        return ratePercentage;
+    }
+
+    public void setRatePercentage(HashMap<String, String> ratePercentage) {
+        this.ratePercentage = ratePercentage;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
+    }
+
+    public ArrayList<SupportedLang> getSupportedLangs() {
+        return supportedLangs;
+    }
+
+    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
+        this.supportedLangs = supportedLangs;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public ArrayList<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(ArrayList<Document> documents) {
+        this.documents = documents;
+    }
+
+    public ArrayList<String> getRate() {
+        return rate;
+    }
+
+    public void setRate(ArrayList<String> rate) {
+        this.rate = rate;
+    }
 }

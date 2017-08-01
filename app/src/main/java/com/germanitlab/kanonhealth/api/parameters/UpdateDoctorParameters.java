@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by norhan on 8/1/17.
  */
 
-public class UpdateDoctor extends ParentParameters{
+public class UpdateDoctorParameters extends ParentParameters{
     public static final String PARAMETER_DOCTOR_ID="doc_id";
     public static final String PARAMETER_ADDRESS="address";
     public static final String PARAMETER_SUPPORTED_LANG= "supported_lang";

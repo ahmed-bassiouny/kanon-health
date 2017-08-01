@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by norhan on 8/1/17.
  */
 
-public class ChangeStatus extends ParentParameters{
+public class ChangeStatusParameters extends ParentParameters{
     public static final String PARAMETER_USER_ID ="user_id";
     public static final String PARAMETER_IS_AVAILABLE= "is_available";
 
