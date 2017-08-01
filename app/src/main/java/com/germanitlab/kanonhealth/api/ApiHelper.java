@@ -4,11 +4,16 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
+import com.germanitlab.kanonhealth.api.models.SupportedLang;
+import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParamaters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParamater;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
+import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
+import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
@@ -19,6 +24,8 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -84,6 +91,7 @@ public class ApiHelper {
 
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String EMPTY_JSON = "{}";
 
 
     private static String post(String url, String parameters) throws IOException {
@@ -142,6 +150,60 @@ public class ApiHelper {
             return result;
         }
     }
+
+    public static ArrayList<Clinic> postGetClinicList(Context context) {
+        ArrayList<Clinic>  result = new ArrayList<>();
+        try {
+
+            String jsonString = post(API_CLINICS_LIST, EMPTY_JSON);
+            Gson gson = new Gson();
+           GetClinicListResponse getClinicListResponse= gson.fromJson(jsonString, GetClinicListResponse.class);
+            if (getClinicListResponse.getStatus()) {
+                result = getClinicListResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postGetClinicList", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
+
+    public static Clinic postClinicAdd(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs,File file,Context context) {
+        Clinic result = null;
+        try {
+            AddOrEditClinicParameters addOrEditClinicParameters= new AddOrEditClinicParameters();
+            addOrEditClinicParameters.setUserId(userId);
+            addOrEditClinicParameters.setName(name);
+            addOrEditClinicParameters.setSpeciality(speciality);
+            addOrEditClinicParameters.setRateNum(rateNum);
+            addOrEditClinicParameters.setRatePercentage(ratePercentage);
+            addOrEditClinicParameters.setAddress(address);
+            addOrEditClinicParameters.setStreetName(streetName);
+            addOrEditClinicParameters.setHouseNumber(houseNumber);
+            addOrEditClinicParameters.setZipCode(zipCode);
+            addOrEditClinicParameters.setCity(city);
+            addOrEditClinicParameters.setProvince(province);
+            addOrEditClinicParameters.setCountry(country);
+            addOrEditClinicParameters.setPhone(phone);
+            addOrEditClinicParameters.setFax(fax);
+            addOrEditClinicParameters.setSupportedLangs(supportedLangs);
+
+            String jsonString = postWithFile(API_CLINICS_ADD, addOrEditClinicParameters.toJson(),file,addOrEditClinicParameters.PARAMETER_AVATAR);
+            Gson gson = new Gson();
+            AddClinicResponse addClinicResponse= gson.fromJson(jsonString, AddClinicResponse.class);
+            if (addClinicResponse.getStatus()) {
+                result = addClinicResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postGetClinicList", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
+
+
+
+
 
     // get all message in chat
     public static ArrayList<Message> getMessages(int UserID,int toID,Context context){

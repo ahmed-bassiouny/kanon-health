@@ -1,0 +1,33 @@
+package com.germanitlab.kanonhealth.api.models;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Created by norhan on 8/1/17.
+ */
+
+public class Document {
+    public static final String KEY_DOCUMENT_ID ="document_id";
+    public static final String KEY_TYPE="type";
+    public static final String KEY_DOCUMENT="document";
+    public static final String KEY_IMAGE="image";
+    public static final String KEY_PRIVACY="privacy";
+
+    @SerializedName(KEY_DOCUMENT_ID)
+    private Integer documentId;
+
+    @SerializedName(KEY_TYPE)
+    private String type;
+
+    @SerializedName(KEY_DOCUMENT)
+    private String document;
+
+    @SerializedName(KEY_IMAGE)
+    private String image;
+
+    @SerializedName(KEY_PRIVACY)
+    private Integer privacy;
+
+
+
+}
