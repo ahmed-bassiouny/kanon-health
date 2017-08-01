@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
+import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParamaters;
@@ -17,6 +18,7 @@ import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
+import com.germanitlab.kanonhealth.api.responses.SpecialityResponse;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.MimeUtils;
 import com.germanitlab.kanonhealth.httpchat.MessageResponse;
@@ -236,8 +238,12 @@ public class ApiHelper {
             messageSendParamaters.setMessage(textMessage);
             messageSendParamaters.setTypeMessage(type);
             messageSendParamaters.setIsForward(0);
-
-            String jsonString =postWithFile(API_MESSAGES_SEND,messageSendParamaters.toJson(),file,MessageSendParamaters.PARAMATER_MEDIA);
+            String jsonString="";
+            if(file!=null){
+                 jsonString =postWithFile(API_MESSAGES_SEND,messageSendParamaters.toJson(),file,MessageSendParamaters.PARAMATER_MEDIA);
+            }else{
+                 jsonString =post(API_MESSAGES_SEND,messageSendParamaters.toJson());
+            }
             Gson gson = new Gson();
             MessageSendResponse messageSendResponse = gson.fromJson(jsonString,MessageSendResponse.class);
             if(messageSendResponse.getStatus()){
@@ -250,6 +256,22 @@ public class ApiHelper {
         }
     }
 
+    // get all speciality
+    public static ArrayList<Speciality> getSpecialities(Context context){
+        ArrayList<Speciality> specialityArrayList= new ArrayList<>();
+        try{
+            String  jsonString =post(API_SPECIALITIES_LIST,EMPTY_JSON);
+            Gson gson = new Gson();
+            SpecialityResponse specialityResponse = gson.fromJson(jsonString,SpecialityResponse.class);
+            if(specialityResponse.getStatus()){
+                specialityArrayList=specialityResponse.getData();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "getSpecialities", e, -1, context);
+        }finally {
+            return specialityArrayList;
+        }
+    }
 
     //endregion
 }

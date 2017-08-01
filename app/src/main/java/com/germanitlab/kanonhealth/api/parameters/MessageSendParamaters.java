@@ -78,8 +78,5 @@ public class MessageSendParamaters extends ParentParameters {
         return media;
     }
 
-    public void setMedia(String media) {
-        this.media = media;
-    }
 
 }
