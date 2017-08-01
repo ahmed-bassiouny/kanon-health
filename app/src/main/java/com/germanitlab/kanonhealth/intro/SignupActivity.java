@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -31,6 +34,7 @@ import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
+import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -121,15 +125,14 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     private void getCountryFromSIM() {
         String countryAndCode;
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-        if(telephonyManager != null) {
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
             countryAndCode = telephonyManager.getSimCountryIso();
-            if(!TextUtils.isEmpty(countryAndCode))
+            if (!TextUtils.isEmpty(countryAndCode))
                 setCountryAndCode(countryAndCode);
             else
                 getCountryFromNetwork();
-        }
-        else
+        } else
             getCountryFromLocal();
     }
 
@@ -140,11 +143,10 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
             @Override
             public void onSuccess(Object response) {
                 try {
-                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1,((JsonObject) response).get("countryCode").toString().length()-1) ;
+                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1, ((JsonObject) response).get("countryCode").toString().length() - 1);
                     setCountryAndCode(countryAndCode);
                     util.dismissProgressDialog();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     getCountryFromLocal();
                     util.dismissProgressDialog();
                 }
@@ -163,9 +165,9 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     private void getCountryFromLocal() {
         String countryAndCode;
         countryAndCode = getResources().getConfiguration().locale.getCountry();
-        if(!TextUtils.isEmpty(countryAndCode))
+        if (!TextUtils.isEmpty(countryAndCode))
             setCountryAndCode(countryAndCode);
-        else 
+        else
             setDefaultCountry();
 
     }
@@ -173,8 +175,8 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
     private void setDefaultCountry() {
         etPostelCode.setText("+49");
         select_country.setText("germany");
-        country = "germany" ;
-        code = "+49" ;
+        country = "germany";
+        code = "+49";
         found = true;
     }
 
@@ -183,14 +185,12 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
         if (countryObject != null) {
             etPostelCode.setText(countryObject.getDialCode());
             select_country.setText(countryObject.getName());
-            country = countryObject.getName() ;
-            code = countryObject.getDialCode() ;
+            country = countryObject.getName();
+            code = countryObject.getDialCode();
             found = true;
-        }
-        else
+        } else
             setDefaultCountry();
     }
-
 
 
     private void initView() {
@@ -230,10 +230,18 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
 
     private void sendData() {
-        if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15)
-            registerUser(etMobileNumber.getText().toString(), code.toString());
-        else
+        if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
+//            registerUser(etMobileNumber.getText().toString(), code.toString());
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Register result = ApiHelper.postRegister(code.toString(), etMobileNumber.getText().toString(), SignupActivity.this);
+                    Log.d("", "");
+                }
+            });
+        } else {
             Toast.makeText(SignupActivity.this, getResources().getText(R.string.Invalid_country), Toast.LENGTH_SHORT).show();
+        }
     }
 
 

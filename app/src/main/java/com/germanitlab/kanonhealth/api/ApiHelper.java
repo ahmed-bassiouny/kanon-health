@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.api;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,9 +10,11 @@ import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -68,56 +71,68 @@ public class ApiHelper {
 
     //region Configuration
 
-    public static final String SERVER_API_URL = "";
+    public static final String SERVER_API_URL = "http://192.168.1.51:8000/V1/";
     public static final String SERVER_IMAGE_URL = "";
 
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 
-    private static String post(String url, String parameters) {
+    private static String post(String url, String parameters) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, parameters);
+        Request request = new Request.Builder()
+                .url(SERVER_API_URL + url)
+                .post(body)
+                .build();
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
+
+    private static String postWithFile(String url, String parameters, File file, String fileParameterName, String mediaType) throws IOException {
         String result = "";
-        try {
-            OkHttpClient client = new OkHttpClient();
-            RequestBody body = RequestBody.create(JSON, parameters);
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(body)
-                    .build();
-            Response response = client.newCall(request).execute();
-            result = response.body().string();
-        } catch (Exception e) {
-            Log.e(TAG, "post: ", e);
-        } finally {
-            return result;
-        }
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = MultipartBody.create(JSON, parameters);
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(mediaType), file))
+                .addPart(body)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(SERVER_API_URL + url)
+                .post(requestBody)
+                .build();
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+
     }
 
     //endregion
 
     //region Api Calls
 
-//    public static Register postRegister(String countryCode, String phone) {
-//        Register result = null;
-//        try {
-//            RegisterParameters registerParameters = new RegisterParameters();
-//            registerParameters.setCountryCode(countryCode);
-//            registerParameters.setPhone(phone);
-//
-//            String jsonString = post(API_USERS_REGISTER, registerParameters.toJson());
-//            Gson gson = new Gson();
-//            RegisterResponse registerResponse = gson.fromJson(jsonString, RegisterResponse.class);
-//            if (registerResponse.getStatus()) {
-//                result = registerResponse.getData();
-//            }
-//
-//
-//        } catch (Exception e) {
-//            Helper.handleError()
-//        } finally {
-//            return result;
-//        }
-//    }
+    public static Register postRegister(String countryCode, String phone, Context context) {
+        Register result = null;
+        try {
+            RegisterParameters registerParameters = new RegisterParameters();
+            registerParameters.setCountryCode(countryCode);
+            registerParameters.setPhone(phone);
+
+            String jsonString = post(API_USERS_REGISTER, registerParameters.toJson());
+            Gson gson = new Gson();
+            RegisterResponse registerResponse = gson.fromJson(jsonString, RegisterResponse.class);
+            if (registerResponse.getStatus()) {
+                result = registerResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postRegister", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
 
 
     //endregion
