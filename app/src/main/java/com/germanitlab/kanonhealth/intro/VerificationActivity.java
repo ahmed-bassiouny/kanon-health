@@ -21,6 +21,9 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Register;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
@@ -96,106 +99,62 @@ public class VerificationActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_verification_verify_code)
     public void verify() {
-        try {
             if (verification_Code.getText().toString().length() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.enter_the_correct_code, Toast.LENGTH_LONG).show();
                 return;
             } else {
                 verificationCode = verification_Code.getText().toString();
             }
-            final UserRegisterResponse registerResponse = (UserRegisterResponse) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
-            util.showProgressDialog();
-            new HttpCall(VerificationActivity.this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
+            final Register register= (Register) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
 
-                    JSONObject jsonObject = null;
+            prefManager.setLogin(true);
+            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
+            prefManager.put(PrefManager.USER_PASSWORD, register.getPassword());
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
                     try {
-                        Log.d("my response server ", response.toString());
-                        jsonObject = new JSONObject(response.toString());
-                        if (jsonObject.has("status") && jsonObject.getInt("active") == 1) {
-                            prefManager.setLogin(true);
-                            prefManager.put(PrefManager.USER_ID, String.valueOf(registerResponse.getUser_id()));
-                            prefManager.put(PrefManager.USER_PASSWORD, registerResponse.getPassword());
-                            //prefManager.put(prefManager.IS_DOC,registerResponse.get);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        FirebaseInstanceId.getInstance().deleteInstanceId();
-                                        FirebaseInstanceId.getInstance().getToken();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }).start();
-                            CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, registerResponse);
-                            util.dismissProgressDialog();
-                            if (oldUser) {
-                                UserRegisterResponse userRegisterResponse = new UserRegisterResponse( );
-                                userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-                                userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                                new HttpCall(VerificationActivity.this, new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        mPrefManager.put(mPrefManager.USER_KEY,new Gson().toJson(response));
-                                        UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                                        mPrefManager.put(PrefManager.IS_DOCTOR ,userInfoResponse.getUser().getIsDoc() == 1);
-                                        Log.d("json" , mPrefManager.getData(PrefManager.USER_KEY));
-
-                                        /*Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(i);
-                                        finish();*/
-                                        Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
-                                        intent.putExtra("checkPassword", false);
-                                        intent.putExtra("finish", false);
-                                        intent.putExtra("has_back", false);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-                                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }).getProfile(userRegisterResponse);
-                            } else {
-                                Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
-                                //i.putExtra("isfirst", "true");
-                                //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(i);
-                                finish();
-
-
-                            }
-                        } else {
-                            util.dismissProgressDialog();
-                            Snackbar snackbar = Snackbar
-                                    .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
-                            snackbar.show();
-
-                        }
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                        FirebaseInstanceId.getInstance().deleteInstanceId();
+                        FirebaseInstanceId.getInstance().getToken();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
                 }
-
-                @Override
-                public void onFailed(String error) {
-                    util.dismissProgressDialog();
-                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                }
-            }).activateUser(registerResponse.getUser_id(), registerResponse.getPassword(), verificationCode.toString());
-        } catch (Exception e) {
-            util.dismissProgressDialog();
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+            }).start();
+        try {
+            CacheJson.writeObject(VerificationActivity.this, Constants.REGISER_RESPONSE, register);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        if (oldUser) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        UserInfo userInfo= ApiHelper.getUserInfo(VerificationActivity.this,register.getId());
+                        if(userInfo==null || !userInfo.getUserID().equals(register.getId())){
+                            finish();
+                        }else{
+                            mPrefManager.put(mPrefManager.USER_KEY,new Gson().toJson(userInfo));
+                            if(userInfo.getUserType()==UserInfo.DOCTOR)
+                                mPrefManager.put(PrefManager.IS_DOCTOR ,true);
+                            Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
+                            intent.putExtra("checkPassword", false);
+                            intent.putExtra("finish", false);
+                            intent.putExtra("has_back", false);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }).start();
 
+            } else {
+                Intent i = new Intent(getApplicationContext(), ProfileDetails.class);
+                startActivity(i);
+                finish();
+
+
+            }
     }
 
     private void handelEvent() {

@@ -231,14 +231,31 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     private void sendData() {
         if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
-//            registerUser(etMobileNumber.getText().toString(), code.toString());
-            AsyncTask.execute(new Runnable() {
+            util.showProgressDialog();
+            new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   Register register= ApiHelper.postRegister(code.toString(),etMobileNumber.getText().toString(),SignupActivity.this);
+                   if(register!=null){
+                       prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
+                       prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
+                       Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
+                       intent.putExtra("number", etMobileNumber.getText().toString());
+                       intent.putExtra("codeNumber", code.toString());
+                       intent.putExtra(Constants.REGISER_RESPONSE, register);
+                       intent.putExtra("oldUser", register.getExists());
+                       startActivity(intent);
+                   }
+                   util.dismissProgressDialog();
+               }
+           }).start();
+            /*AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
                     Register result = ApiHelper.postRegister(code.toString(), etMobileNumber.getText().toString(), SignupActivity.this);
                     Log.d("", "");
                 }
-            });
+            });*/
         } else {
             Toast.makeText(SignupActivity.this, getResources().getText(R.string.Invalid_country), Toast.LENGTH_SHORT).show();
         }
@@ -247,7 +264,20 @@ public class SignupActivity extends AppCompatActivity implements ApiResponse {
 
     private void registerUser(String phone, String countryCode) {
         util.showProgressDialog();
-        new HttpCall(SignupActivity.this, this).registerUser(phone, countryCode);
+        //new HttpCall(SignupActivity.this, this).registerUser(phone, countryCode);
+        /*Register register= ApiHelper.postRegister(countryCode,phone,this);
+        if(register!=null){
+            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
+            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
+            Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
+            intent.putExtra("number", etMobileNumber.getText().toString());
+            intent.putExtra("codeNumber", code.toString());
+            intent.putExtra(Constants.REGISER_RESPONSE, register);
+            intent.putExtra("oldUser", register.getExists());
+            startActivity(intent);
+        }
+        util.dismissProgressDialog();*/
+
     }
 
 
