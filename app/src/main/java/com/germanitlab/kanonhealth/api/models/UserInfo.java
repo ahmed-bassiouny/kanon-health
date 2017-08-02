@@ -25,6 +25,9 @@ public class UserInfo extends ParentModel{
     public static final String KEY_CLINICS="clinics";
     public static final String KEY_DOCUMENTS="documents";
 
+    public static final int DOCTOR=2;
+    public static final int PATIENT=1;
+
     @SerializedName(KEY_USERID)
     private Integer userID;
     // usertype => 1 patient , 2 doctor

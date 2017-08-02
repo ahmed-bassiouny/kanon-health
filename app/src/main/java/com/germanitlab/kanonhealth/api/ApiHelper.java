@@ -116,7 +116,7 @@ public class ApiHelper {
 
     //region Configuration
 
-    public static final String SERVER_API_URL = "http://192.168.1.51:8000/V1/";
+    public static final String SERVER_API_URL = "http://192.168.1.35:8000/V1/";
     public static final String SERVER_IMAGE_URL = "";
 
     private static final String TAG = "ApiHelper";
