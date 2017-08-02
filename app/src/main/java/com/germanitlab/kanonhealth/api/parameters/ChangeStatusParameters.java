@@ -15,7 +15,7 @@ public class ChangeStatusParameters extends ParentParameters{
     private Integer userId;
 
     @SerializedName(PARAMETER_IS_AVAILABLE)
-    private Boolean isAvailable;
+    private Integer isAvailable;
 
     public Integer getUserId() {
         return userId;
@@ -25,11 +25,11 @@ public class ChangeStatusParameters extends ParentParameters{
         this.userId = userId;
     }
 
-    public Boolean getAvailable() {
+    public Integer getAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(Boolean available) {
+    public void setAvailable(Integer available) {
         isAvailable = available;
     }
 }

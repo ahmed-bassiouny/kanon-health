@@ -33,6 +33,10 @@ public class User {
     public static final String KEY_CLINICS="clinics";
     public static final String KEY_USER_TYPE="user_type";
 
+    public static final int DOCTOR=2;
+    public static final int PATIENT=1;
+
+
     @SerializedName(KEY_ID)
     private Integer id;
 
@@ -46,7 +50,7 @@ public class User {
     private String address;
 
     @SerializedName(KEY_IS_AVAILABLE)
-    private Boolean isAvailable;
+    private Integer isAvailable;
 
     @SerializedName(KEY_SUPPORTED_LANG)
     private ArrayList<SupportedLang> supportedLangs;
@@ -90,6 +94,11 @@ public class User {
     @SerializedName(KEY_SPECIALITYS)
     private ArrayList<Speciality> specialitys;
 
+    // usertype => 1 patient , 2 doctor
+    @SerializedName(KEY_USER_TYPE)
+    private Integer userType;
+
+
     public static String getKeyId() {
         return KEY_ID;
     }
@@ -126,11 +135,11 @@ public class User {
         this.address = address;
     }
 
-    public Boolean getAvailable() {
+    public Integer getAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(Boolean available) {
+    public void setAvailable(Integer available) {
         isAvailable = available;
     }
 
@@ -249,4 +258,15 @@ public class User {
     public void setSpecialitys(ArrayList<Speciality> specialitys) {
         this.specialitys = specialitys;
     }
+
+    public Integer getUserType() {
+        if(userType==null)
+            userType=1;
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
 }

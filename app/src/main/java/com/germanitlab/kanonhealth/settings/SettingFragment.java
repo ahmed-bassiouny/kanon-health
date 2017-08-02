@@ -36,6 +36,10 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.User;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -46,13 +50,11 @@ import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -71,7 +73,7 @@ public class SettingFragment extends Fragment {
     private TableRow profile, trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend, trHelp, trDrStatus, trWeblogin;
     private SettingResponse settingResponse;
     private PrefManager mPrefManager;
-    private User user;
+    private UserInfo user;
     private RecyclerView rvPracticies;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
      View vLineUnderClinics ;
@@ -83,7 +85,7 @@ public class SettingFragment extends Fragment {
 
     static private SettingFragment settingFragment;
     private StatusResponse statusResponse;
-    private String UserStatus;
+    private int UserStatus;
     private PrcticiesSAdapter mAdapter;
     PrefManager prefManager;
 
@@ -106,8 +108,7 @@ public class SettingFragment extends Fragment {
         mPrefManager = new PrefManager(getActivity());
         prefManager = new PrefManager(getContext());
         try {
-            String s = mPrefManager.getData(PrefManager.USER_KEY);
-            user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+            user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
         } catch (Exception e) {
         }
         initView();
@@ -116,11 +117,13 @@ public class SettingFragment extends Fragment {
     }
 
     private void setAdapter() {
-        try {
 
-            UserInfoResponse userInfoResponse = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
-            List<ChooseModel> clinicsList = userInfoResponse.getUser().getMembers_at();
-            if(userInfoResponse.getUser().getMembers_at().size() > 0){
+
+//            UserInfo userInfo= new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+//            List<ChooseModel> clinicsList = userInfo.get
+
+            List<Clinic> clinicsList = user.getClinics();
+            if(clinicsList.size() > 0){
                 vLineUnderClinics.setVisibility(View.VISIBLE);
             }
             else {
@@ -131,10 +134,7 @@ public class SettingFragment extends Fragment {
             rvPracticies.setLayoutManager(mLayoutManager);
             rvPracticies.setAdapter(mAdapter);
             rvPracticies.setNestedScrollingEnabled(false);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getContext(), R.string.error_while_loading_practice, Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     @Override
@@ -176,50 +176,79 @@ public class SettingFragment extends Fragment {
     private void loadData() {
         if (!Helper.isNetworkAvailable(getActivity()))
             return;
-        try {
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle(R.string.waiting_text);
-            progressDialog.setCancelable(false);
-            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            new HttpCall(getActivity(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    if (response != null) {
-                        Gson gson = new Gson();
-                        mPrefManager.put(PrefManager.USER_KEY, gson.toJson(response));
-                        user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
-                        progressDialog.dismiss();
 
-                    } else {
-                        user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
-                        Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                    initView();
-                    handelEvent();
-                    setHasOptionsMenu(true);
-                    setAdapter();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(R.string.waiting_text);
+        progressDialog.setCancelable(false);
+
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                UserInfo temp = user;
+                user=ApiHelper.getUserInfo(getContext(),user.getUserID());
+                if(user!=null)
+                {
+                    Gson gson = new Gson();
+                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
+
+                }else
+                {
+                   user=temp;
                 }
-
-                @Override
-                public void onFailed(String error) {
-                    user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
-                    progressDialog.dismiss();
-                    Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                    initView();
-                    handelEvent();
-                    setHasOptionsMenu(true);
-                    setAdapter();
-                }
-            }).getProfile(userRegisterResponse);
+                progressDialog.dismiss();
+                initView();
+                handelEvent();
+                setHasOptionsMenu(true);
+                setAdapter();
+            }
+        }).start();
 
 
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
+
+//
+//
+//        try {
+//            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setTitle(R.string.waiting_text);
+//            progressDialog.setCancelable(false);
+//            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+//            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+//            new HttpCall(getActivity(), new ApiResponse() {
+//                @Override
+//                public void onSuccess(Object response) {
+//                    if (response != null) {
+//
+//                        progressDialog.dismiss();
+//
+//                    } else {
+//                        user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+//                        Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
+//                        progressDialog.dismiss();
+//                    }
+//                    initView();
+//                    handelEvent();
+//                    setHasOptionsMenu(true);
+//                    setAdapter();
+//                }
+//
+//                @Override
+//                public void onFailed(String error) {
+//                    user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
+//                    progressDialog.dismiss();
+//                    Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+//                    initView();
+//                    handelEvent();
+//                    setHasOptionsMenu(true);
+//                    setAdapter();
+//                }
+//            }).getProfile(userRegisterResponse);
+//
+//
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
 
     }
 
@@ -232,7 +261,7 @@ public class SettingFragment extends Fragment {
             profile = (TableRow) view.findViewById(R.id.my_profile);
             trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
             vLineUnderDrStatus =  view.findViewById(R.id.v_under_dr_status);
-            if(prefManager.iamDoctor()) {
+            if(user.getUserType() == User.DOCTOR) {
                 trDrStatus.setVisibility(View.GONE);
                 vLineUnderDrStatus.setVisibility(View.GONE);
             }
@@ -331,7 +360,7 @@ public class SettingFragment extends Fragment {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (user.getIsDoc() == 1 || user.getIsClinic() == 1) {
+                    if (user.getUserType()==User.DOCTOR ){
                         Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", user);
                         startActivity(intent);
@@ -354,36 +383,35 @@ public class SettingFragment extends Fragment {
                 }
             });
 
-            UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
+            UserStatus = user.getAvailable();
 
-            if (UserStatus != null) {
                 checkStatus(UserStatus);
-            }
+
 
             btn_change_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (Helper.isNetworkAvailable(getContext())) {
-                        UserStatus = new PrefManager(getActivity()).getData(PrefManager.USER_STATUS);
-                        if (UserStatus.equals("1")) {
-                            changStatusService("0");
+                        UserStatus = user.getAvailable();
+                        if (UserStatus==1) {
+                            changStatusService(0);
 
                         } else {
 
-                            changStatusService("1");
+                            changStatusService(1);
                         }
                     } else
                         Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
                 }
             });
-            if (user.getIsDoc() == 1) {
+            if (user.getUserType() == User.DOCTOR) {
                 tvAddPractice.setVisibility(View.VISIBLE);
                 line.setVisibility(View.VISIBLE);
                 txt_status.setVisibility(View.VISIBLE);
                 btn_change_status.setVisibility(View.VISIBLE);
             }
-            if (user.getIsDoc() == 1) {
+            if (user.getUserType() == User.DOCTOR) {
                 rvPracticies.setVisibility(View.VISIBLE);
             } else {
                 rvPracticies.setVisibility(View.GONE);
@@ -395,33 +423,58 @@ public class SettingFragment extends Fragment {
 
     }
 
-    private void changStatusService(String isAvailable) {
-
-        new HttpCall(getActivity(), new ApiResponse() {
+    private void changStatusService(final int isAvailable) {
+        new Thread( new Runnable() {
             @Override
-            public void onSuccess(Object response) {
-                statusResponse = (StatusResponse) response;
-                new PrefManager(getActivity()).put(PrefManager.USER_STATUS, statusResponse.getIs_available());
+            public void run() {
+                int result= ApiHelper.postChangeStatus(Integer.valueOf(prefManager.getData(PrefManager.USER_ID)),isAvailable,getContext());
+                if(result!=-1)
+                {
+                    if (isAvailable==1) {
+                        txt_status.setText(R.string.you_are_now_online);
+                        btn_change_status.setText(R.string.go_offline);
+                        user.setAvailable(1);
 
-                if (statusResponse.getIs_available().equals("1")) {
-                    txt_status.setText(R.string.you_are_now_online);
-                    btn_change_status.setText(R.string.go_offline);
-                    user.setIs_available("1");
 
-                } else {
-                    txt_status.setText(R.string.you_are_now_offline);
-                    btn_change_status.setText(R.string.go_online);
-                    user.setIs_available("0");
+                    } else {
+                        txt_status.setText(R.string.you_are_now_offline);
+                        btn_change_status.setText(R.string.go_online);
+                        user.setAvailable(0);
+                    }
+                    Gson gson=new Gson();
+                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
                 }
             }
+        }).start();
 
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                Log.e("Error", error + "++");
 
-            }
-        }).goOnline(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), isAvailable);
+
+
+//        new HttpCall(getActivity(), new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                statusResponse = (StatusResponse) response;
+//                new PrefManager(getActivity()).put(PrefManager.USER_STATUS, statusResponse.getIs_available());
+//
+//                if (statusResponse.getIs_available().equals("1")) {
+//                    txt_status.setText(R.string.you_are_now_online);
+//                    btn_change_status.setText(R.string.go_offline);
+//                    user.setIs_available("1");
+//
+//                } else {
+//                    txt_status.setText(R.string.you_are_now_offline);
+//                    btn_change_status.setText(R.string.go_online);
+//                    user.setIs_available("0");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+//                Log.e("Error", error + "++");
+//
+//            }
+//        }).goOnline(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), isAvailable);
 
     }
 
@@ -443,27 +496,27 @@ public class SettingFragment extends Fragment {
 
     private void getSetting() {
 
-        new HttpCall(getActivity(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                settingResponse = (SettingResponse) response;
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-
-                Log.e("Error", error + "++");
-
-            }
-        }).getSetting();
+//        new HttpCall(getActivity(), new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                settingResponse = (SettingResponse) response;
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+//
+//                Log.e("Error", error + "++");
+//
+//            }
+//        }).getSetting();
 
     }
 
-    private void checkStatus(String userStatus) {
+    private void checkStatus(Integer userStatus) {
         // call rest to get data
 
-        if (userStatus.equals("1")) {
+        if (userStatus==1) {
             txt_status.setText(R.string.you_are_now_online);
             btn_change_status.setText(R.string.go_offline);
 

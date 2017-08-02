@@ -397,8 +397,8 @@ public class ApiHelper {
         }
     }
 
-    public static void postChangeStatus (Integer userId, Boolean isAvailable,Context context) {
-
+    public static int postChangeStatus (Integer userId, Integer isAvailable,Context context) {
+          int result=-1;
         try {
             ChangeStatusParameters changeStatusParameters= new ChangeStatusParameters();
             changeStatusParameters.setUserId(userId);
@@ -411,11 +411,15 @@ public class ApiHelper {
             Gson gson = new Gson();
             ChangeStatusResponse changeStatusResponse=gson.fromJson(jsonString, ChangeStatusResponse.class);
             Toast.makeText(context,changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
+            if(changeStatusResponse.getStatus())
+            {
+                result=1;
+            }
 
         } catch (Exception e) {
             Helper.handleError(TAG, "postChangeStatus", e, -1, context);
         } finally {
-
+           return result;
         }
     }
 
