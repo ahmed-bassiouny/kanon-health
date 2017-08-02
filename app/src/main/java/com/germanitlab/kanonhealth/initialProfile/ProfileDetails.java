@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -384,6 +385,9 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
 
     @Override
     public void deleteMyImage() {
+        file=null;
+        ImageHelper.setImage(imageProfile,"", R.drawable.profile_place_holder);
+        pickerDialog.dismiss();
 
     }
 
