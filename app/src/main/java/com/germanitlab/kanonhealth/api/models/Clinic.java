@@ -10,7 +10,8 @@ import java.util.HashMap;
  */
 
 public class Clinic {
-    public static final String KEY_ID = "ID";
+
+    public static final String KEY_ID = "clinic_id";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
@@ -68,7 +69,6 @@ public class Clinic {
 
     @SerializedName(KEY_CITY )
     private String city;
-
 
     @SerializedName(KEY_PROVINCE)
 

@@ -29,7 +29,9 @@ public class User {
     public static final String KEY_BIRTH_DAY =    "birh_day";
     public static final String KEY_EMAIL =    "email";
     public  static  final String KEY_SPECIALITYS = "specialitys";
-
+    public static final String KEY_DOCTOR="doctor";
+    public static final String KEY_CLINICS="clinics";
+    public static final String KEY_USER_TYPE="user_type";
 
     @SerializedName(KEY_ID)
     private Integer id;

@@ -76,7 +76,6 @@ public class ApiHelper {
     private static final String API_CLINICS_GET = "clinics/get";
 
     private static final String API_DOCTORS_ADD = "doctors/add";
-    private static final String API_DOCTORS_UPDATE = "doctors/update";
     private static final String API_DOCTORS_LIST = "doctors/list";
     private static final String API_DOCTORS_ANOTHER = "doctors/another";
     private static final String API_DOCTORS_CHANGE_STATUS = "doctors/change_status";
