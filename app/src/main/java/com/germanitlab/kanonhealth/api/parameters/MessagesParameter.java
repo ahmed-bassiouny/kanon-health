@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by bassiouny on 01/08/17.
  */
 
-public class MessagesParamater extends ParentParameters{
+public class MessagesParameter extends ParentParameters{
 
     public final static String PARAMATER_USER_ID="from_id";
     public final static String PARAMATER_TO_ID="to_id";
