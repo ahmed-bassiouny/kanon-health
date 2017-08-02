@@ -9,7 +9,7 @@ import java.util.HashMap;
  * Created by norhan on 8/1/17.
  */
 
-public class Doctor {
+public class User {
     public static final String KEY_ID="user_id";
     public static final String KEY_RATE_NUM = "rate_num";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
