@@ -52,8 +52,11 @@ public class Clinic {
     @SerializedName(KEY_RATE_NUM)
     private Float rateNum;
 
+//    @SerializedName(KEY_RATE_PERCENTAGE)
+//    private HashMap<String, String> ratePercentage;
+
     @SerializedName(KEY_RATE_PERCENTAGE)
-    private HashMap<String, String> ratePercentage;
+   private String ratePercentage;
 
     @SerializedName(KEY_ADDRESS)
     private String address;
@@ -143,13 +146,21 @@ public class Clinic {
         this.rateNum = rateNum;
     }
 
-    public HashMap<String, String> getRatePercentage() {
+    public String getRatePercentage() {
         return ratePercentage;
     }
 
-    public void setRatePercentage(HashMap<String, String> ratePercentage) {
+    public void setRatePercentage(String ratePercentage) {
         this.ratePercentage = ratePercentage;
     }
+
+//    public HashMap<String, String> getRatePercentage() {
+//        return ratePercentage;
+//    }
+//
+//    public void setRatePercentage(HashMap<String, String> ratePercentage) {
+//        this.ratePercentage = ratePercentage;
+//    }
 
     public String getAddress() {
         return address;

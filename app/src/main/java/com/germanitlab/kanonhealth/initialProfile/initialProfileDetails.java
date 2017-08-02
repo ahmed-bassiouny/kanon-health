@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -40,6 +42,7 @@ import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -58,6 +61,10 @@ public class initialProfileDetails extends AppCompatActivity {
     EditText editFirstName;
     @BindView(R.id.edit_last_name)
     EditText editLastName;
+
+    @BindView(R.id.et_title)
+    EditText title;
+
     @BindView(R.id.edit_birthday)
     TextView textBirthday;
     PrefManager mPrefManager;
@@ -66,6 +73,7 @@ public class initialProfileDetails extends AppCompatActivity {
     ProgressDialog progressDialog;
     PrefManager prefManager;
     Util util ;
+    File file;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,67 +153,104 @@ public class initialProfileDetails extends AppCompatActivity {
 
     @OnClick(R.id.button_submit)
     public void onSubmitClicked() {
-        try {
-            String lastName = editLastName.getText().toString();
-            String firstName = editFirstName.getText().toString();
-            String birthDate = textBirthday.getText().toString();
+//        try {
+            final String lastName = editLastName.getText().toString();
+            final String firstName = editFirstName.getText().toString();
+            final String birthDate = textBirthday.getText().toString();
+            final String userTitle = title.getText().toString();
 
 
             if (!firstName.equals("") && !lastName.equals("") && !birthDate.equals("")) {
+
                 util.showProgressDialog();
-                final User user = new User();
-                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-                user.setLast_name(lastName);
-                user.setFirst_name(firstName);
-                user.setBirthDate(birthDate);
-                if (uploadImageResponse != null) {
-                    user.setAvatar(uploadImageResponse.getFile_url());
-                }
 
-                new HttpCall(this, new ApiResponse() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onSuccess(Object response) {
-                        try {
-                            Log.e("Update user response :", user != null ? response.toString() : "no response found");
+                    public void run() {
 
+                        boolean result = ApiHelper.addUser(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), userTitle, firstName, lastName, birthDate, "1", file);
+                        if (result) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                                    if (user != null) {
+                                        Gson gson = new Gson();
+                                        mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
+                                        util.dismissProgressDialog();
+                                        Toast.makeText(getApplicationContext(),"jjjjjjj", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
 
-                            mPrefManager.put(mPrefManager.USER_KEY, response.toString());
-                            Gson gson = new Gson();
-                            UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
-                            Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
-                            mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
-
-                            mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
-                            util.dismissProgressDialog();
-//                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
-//                    intent.putExtra("status", 1);
-//                    startActivity(intent);
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-
-                            finish();
-                        } catch (Exception e) {
-                            Crashlytics.logException(e);
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).start();
                         }
 
-
                     }
+                }).start();
 
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                    }
-                }).editProfile(user);
+
             } else {
                 Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
             }
 
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
+
+
+//                final User user = new User();
+//                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//                user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+//                user.setLast_name(lastName);
+//                user.setFirst_name(firstName);
+//                user.setBirthDate(birthDate);
+//                if (uploadImageResponse != null) {
+//                    user.setAvatar(uploadImageResponse.getFile_url());
+//                }
+//
+//                new HttpCall(this, new ApiResponse() {
+//                    @Override
+//                    public void onSuccess(Object response) {
+//                        try {
+//                            Log.e("Update user response :", user != null ? response.toString() : "no response found");
+//
+//
+//                            mPrefManager.put(mPrefManager.USER_KEY, response.toString());
+//                            Gson gson = new Gson();
+//                            UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
+//                            Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
+//                            mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
+//
+//                            mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
+//                            util.dismissProgressDialog();
+////                    Intent intent = new Intent(getApplicationContext() , PasscodeActivty.class);
+////                    intent.putExtra("status", 1);
+////                    startActivity(intent);
+//                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                            startActivity(intent);
+//
+//                            finish();
+//                        } catch (Exception e) {
+//                            Crashlytics.logException(e);
+//                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                        }
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String error) {
+//                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+//                    }
+//                }).editProfile(user);
+//            } else {
+//                Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
+//            }
+//
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
 
 
     }
@@ -228,23 +273,26 @@ public class initialProfileDetails extends AppCompatActivity {
                     case Constants.IMAGE_REQUEST:
 
 
-                        Uri imageUri = data.getData();
-                        util.showProgressDialog();
-                        Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
-                        ImageHelper.setImage(imageProfile, imageUri);
-                        new HttpCall(this, new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                util.dismissProgressDialog();
-                                uploadImageResponse = (UploadImageResponse) response;
-                                Log.e("After Casting", uploadImageResponse.getFile_url());
-                            }
+                   Uri imageUri = data.getData();
+                   file= new File(getPathFromURI(imageUri));
+                   ImageHelper.setImage(imageProfile, imageUri);
 
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                            }
-                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(imageUri));
+
+//                        util.showProgressDialog();
+//                        Log.e("ImageUri", imageUri != null ? imageUri.toString() : "Empty Uri");
+//                        new HttpCall(this, new ApiResponse() {
+//                            @Override
+//                            public void onSuccess(Object response) {
+//                                util.dismissProgressDialog();
+//                                uploadImageResponse = (UploadImageResponse) response;
+//                                Log.e("After Casting", uploadImageResponse.getFile_url());
+//                            }
+//
+//                            @Override
+//                            public void onFailed(String error) {
+//                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+//                            }
+//                        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getPathFromURI(imageUri));
 
                         break;
 

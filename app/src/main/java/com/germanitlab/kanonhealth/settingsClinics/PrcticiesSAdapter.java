@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 
 import java.util.List;
@@ -24,11 +25,11 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
 
 {
     private Context mContext;
-    private List<ChooseModel> clinicsList;
+    private List<Clinic> clinicsList;
 
 //    LinkedHashMap<String , String> questionAnswer ;
 
-    public PrcticiesSAdapter(Context mContext, List<ChooseModel> clinicsList) {
+    public PrcticiesSAdapter(Context mContext, List<Clinic> clinicsList) {
 //        this.questionAnswer = questionAnswer ;
         this.mContext = mContext;
         this.clinicsList = clinicsList;
@@ -46,12 +47,12 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
     @Override
     public void onBindViewHolder(PrcticiesSAdapter.MyViewHolder holder, final int position) {
         try {
-            holder.tvPracticeName.setText(clinicsList.get(position).getFirst_nameMember() + "");
+            holder.tvPracticeName.setText(clinicsList.get(position).getName()+ "");
             holder.tvPracticeName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, AddPractics.class);
-                    intent.putExtra("PRACTICS_ID", clinicsList.get(position).getIdMember() + "");
+                    intent.putExtra("PRACTICS_ID", clinicsList.get(position).getId() + "");
                     mContext.startActivity(intent);
                 }
             });

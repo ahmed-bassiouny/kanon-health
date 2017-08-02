@@ -35,6 +35,8 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -45,6 +47,7 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.ApiResponse;
+import com.germanitlab.kanonhealth.main.MainActivity;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -52,6 +55,7 @@ import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,6 +97,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     PrefManager prefManager;
     Util util;
     Helper helper;
+    File file;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,10 +153,10 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
 
     @OnClick(R.id.image_profile_edit)
     public void onAddProfileImageClicked() {
-        if (!Helper.isNetworkAvailable(this)) {
-            Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (!Helper.isNetworkAvailable(this)) {
+//            Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         try {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
@@ -268,55 +273,90 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             Toast.makeText(this, getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
             return;
         }
-        String firstName = editFirstName.getText().toString();
-        String lastName = editLastName.getText().toString();
-        String birthDate = textBirthday.getText().toString();
+        final String firstName = editFirstName.getText().toString();
+        final String lastName = editLastName.getText().toString();
+        final String birthDate = textBirthday.getText().toString();
         gender_other = edGender.getText().toString();
+        final String title=et_title.getText().toString();
         if (gender == 3 && gender_other.trim().isEmpty()) {
             Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!firstName.trim().isEmpty() && !lastName.trim().isEmpty() && !birthDate.trim().isEmpty()) {
+        if (!firstName.trim().equals("") && !lastName.trim().equals("") && !birthDate.trim().equals("")) {
             util.showProgressDialog();
-            final User user = new User();
-            user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            user.setFirst_name(firstName);
-            user.setLast_name(lastName);
-            user.setSubTitle(et_title.getText().toString());
-            user.setBirthDate(birthdate);
-            user.setGender(gender);
-            user.setGender_other(gender_other);
-            if (uploadImageResponse != null) {
-                user.setAvatar(uploadImageResponse.getFile_url());
-            }
-
-            new HttpCall(this, new ApiResponse() {
+            new Thread(new Runnable() {
                 @Override
-                public void onSuccess(Object response) {
-                    Log.e("Update user response :", user != null ? response.toString() : "no response found");
+                public void run() {
+                    boolean result = ApiHelper.addUser(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), title, firstName, lastName, birthDate, String.valueOf(gender), file);
+                    if (result) {
 
-
-                    mPrefManager.put(mPrefManager.USER_KEY, response.toString());
-                    Gson gson = new Gson();
-                    UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
-                    Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
-                    mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
-                    mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
-                    loadData();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                                if (user != null) {
+                                    Gson gson = new Gson();
+                                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
+                                    Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
+                                    intent.putExtra("checkPassword", false);
+                                    intent.putExtra("finish", false);
+                                    intent.putExtra("has_back", true);
+                                    startActivity(intent);
+                                }
+                                util.dismissProgressDialog();
+                                finish();
+                            }
+                        }).start();
+                    }
 
                 }
+            }).start();
 
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                    util.dismissProgressDialog();
 
-                }
-            }).editProfile(user);
         } else {
             Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
         }
+
+//        util.showProgressDialog();
+//            final User user = new User();
+//            user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+//            user.setFirst_name(firstName);
+//            user.setLast_name(lastName);
+//            user.setSubTitle(et_title.getText().toString());
+//            user.setBirthDate(birthdate);
+//            user.setGender(gender);
+//            user.setGender_other(gender_other);
+//            if (uploadImageResponse != null) {
+//                user.setAvatar(uploadImageResponse.getFile_url());
+//            }
+//
+//            new HttpCall(this, new ApiResponse() {
+//                @Override
+//                public void onSuccess(Object response) {
+//                    Log.e("Update user response :", user != null ? response.toString() : "no response found");
+//
+//
+//                    mPrefManager.put(mPrefManager.USER_KEY, response.toString());
+//                    Gson gson = new Gson();
+//                    UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
+//                    Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
+//                    mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
+//                    mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
+//                    loadData();
+//
+//                }
+//
+//                @Override
+//                public void onFailed(String error) {
+//                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+//                    util.dismissProgressDialog();
+//
+//                }
+//            }).editProfile(user);
+//        } else {
+//            Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
+//        }
 
     }
 
@@ -347,50 +387,50 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
 
     }
 
-    private void loadData() {
-        try {
-            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            if (!Helper.isNetworkAvailable(this)) {
-                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            new HttpCall(this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    if (response != null) {
-                        Gson gson = new Gson();
-                        new PrefManager(ProfileDetails.this).put(PrefManager.USER_KEY, gson.toJson(response));
-                        util.dismissProgressDialog();
-                        Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
-                        intent.putExtra("checkPassword", false);
-                        intent.putExtra("finish", false);
-                        intent.putExtra("has_back", true);
-                        startActivity(intent);
-                    } else {
-                        onFailed("response is null");
-
-                    }
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Log.e("ProfileDetails", error);
-                    util.dismissProgressDialog();
-                    finish();
-                }
-            }).getProfile(userRegisterResponse);
-
-
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(this, getResources().getText(R.string.sorry_missing_data_please_contact_support), Toast.LENGTH_SHORT).show();
-            util.dismissProgressDialog();
-            finish();
-        }
-
-    }
+//    private void loadData() {
+//        try {
+//            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+//            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+//            if (!Helper.isNetworkAvailable(this)) {
+//                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            new HttpCall(this, new ApiResponse() {
+//                @Override
+//                public void onSuccess(Object response) {
+//                    if (response != null) {
+//                        Gson gson = new Gson();
+//                        new PrefManager(ProfileDetails.this).put(PrefManager.USER_KEY, gson.toJson(response));
+//                        util.dismissProgressDialog();
+//                        Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
+//                        intent.putExtra("checkPassword", false);
+//                        intent.putExtra("finish", false);
+//                        intent.putExtra("has_back", true);
+//                        startActivity(intent);
+//                    } else {
+//                        onFailed("response is null");
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailed(String error) {
+//                    Log.e("ProfileDetails", error);
+//                    util.dismissProgressDialog();
+//                    finish();
+//                }
+//            }).getProfile(userRegisterResponse);
+//
+//
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(this, getResources().getText(R.string.sorry_missing_data_please_contact_support), Toast.LENGTH_SHORT).show();
+//            util.dismissProgressDialog();
+//            finish();
+//        }
+//
+//    }
 
     @Override
     public void onBackPressed() {
@@ -399,25 +439,26 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
 
     @Override
     public void ImagePickerCallBack(Uri uri) {
-        util.showProgressDialog();
-        Log.e("ImageUri", uri != null ? uri.toString() : "Empty Uri");
+        //util.showProgressDialog();
+       // Log.e("ImageUri", uri != null ? uri.toString() : "Empty Uri");
         ImageHelper.setImage(imageProfile, uri);
+        file= new File(ImageFilePath.getPath(this, uri));
 
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                util.dismissProgressDialog();
-                uploadImageResponse = (UploadImageResponse) response;
-                Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
-                util.dismissProgressDialog();
-                imageProfile.setImageResource(R.drawable.profile_place_holder);
-            }
-        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
+//        new HttpCall(this, new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                util.dismissProgressDialog();
+//                uploadImageResponse = (UploadImageResponse) response;
+//                Toast.makeText(ProfileDetails.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                Toast.makeText(getApplicationContext(), R.string.image_not_save_error_while_uploading, Toast.LENGTH_SHORT).show();
+//                util.dismissProgressDialog();
+//                imageProfile.setImageResource(R.drawable.profile_place_holder);
+//            }
+//        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
         pickerDialog.dismiss();
 
     }
