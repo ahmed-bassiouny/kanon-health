@@ -5,20 +5,31 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
+import com.germanitlab.kanonhealth.api.models.User;
+import com.germanitlab.kanonhealth.api.parameters.AddDocumentParameters;
 import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
+import com.germanitlab.kanonhealth.api.parameters.ChangeStatusParameters;
+import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
+import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParamaters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParamater;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
 import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
+import com.germanitlab.kanonhealth.api.responses.AddDocumentResponse;
+import com.germanitlab.kanonhealth.api.responses.ChangeStatusResponse;
+import com.germanitlab.kanonhealth.api.responses.DocumentPrivacyResponse;
 import com.germanitlab.kanonhealth.api.responses.EditClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicResponse;
+import com.germanitlab.kanonhealth.api.responses.GetDoctorListResponse;
+import com.germanitlab.kanonhealth.api.responses.GetDocumentListResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
@@ -61,6 +72,8 @@ public class ApiHelper {
     private static final String API_DOCTORS_CHANGE_RATE = "doctors/rate";
 
     private static final String API_DOCUMENTS_ADD = "document/add";
+    private static final String API_DOCUMENTS_LIST = "document/list";
+    private static final String API_DOCUMENT_PRIVACY = "document/privacy";
 
     private static final String API_LANGUAGES_LIST = "langs/list";
 
@@ -350,6 +363,114 @@ public class ApiHelper {
             Helper.handleError(TAG, "getSpecialities", e, -1, context);
         }finally {
             return languageArrayList;
+        }
+    }
+
+    public static ArrayList<User> postGetDoctorList(Context context) {
+        ArrayList<User>  result = new ArrayList<>();
+        try {
+
+            String jsonString = post(API_DOCTORS_LIST, EMPTY_JSON);
+            Gson gson = new Gson();
+            GetDoctorListResponse getDoctorListResponse= gson.fromJson(jsonString,GetDoctorListResponse.class);
+            if (getDoctorListResponse.getStatus()) {
+                result = getDoctorListResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postGetDoctorList", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
+
+    public static void postChangeStatus (Integer userId, Boolean isAvailable,Context context) {
+
+        try {
+            ChangeStatusParameters changeStatusParameters= new ChangeStatusParameters();
+            changeStatusParameters.setUserId(userId);
+            changeStatusParameters.setAvailable(isAvailable);
+
+            String jsonString ="";
+
+            jsonString=  post(API_DOCTORS_CHANGE_STATUS, changeStatusParameters.toJson());
+
+            Gson gson = new Gson();
+            ChangeStatusResponse changeStatusResponse=gson.fromJson(jsonString, ChangeStatusResponse.class);
+            Toast.makeText(context,changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
+
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postChangeStatus", e, -1, context);
+        } finally {
+
+        }
+    }
+
+    public static Document postAddDocument(Integer userId, String type, String document,File file,Context context) {
+        Document result = null;
+        try {
+            AddDocumentParameters addDocumentParameters= new AddDocumentParameters();
+            addDocumentParameters.setUserId(userId);
+            addDocumentParameters.setDocument(document);
+            addDocumentParameters.setType(type);
+
+            String jsonString ="";
+            if(file==null) {
+                jsonString=  post(API_DOCUMENTS_ADD, addDocumentParameters.toJson());
+            }else
+            {
+                jsonString = postWithFile(API_DOCUMENTS_ADD, addDocumentParameters.toJson(), file, addDocumentParameters.PARAMETER_IMAGE);
+            }
+
+            Gson gson = new Gson();
+            AddDocumentResponse addDocumentResponse= gson.fromJson(jsonString,AddDocumentResponse.class);
+            if (addDocumentResponse.getStatus()) {
+                result = addDocumentResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postAddDocument", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
+
+    public static ArrayList<Document> postGetDocumentList(Integer userId,Context context) {
+        ArrayList<Document>  result = new ArrayList<>();
+        GetDocumentListParameters getDocumentListParameters = new GetDocumentListParameters();
+        getDocumentListParameters.setUserId(userId);
+        try {
+
+            String jsonString = post(API_DOCUMENTS_LIST, getDocumentListParameters.toJson());
+            Gson gson = new Gson();
+           GetDocumentListResponse getDocumentListResponse= gson.fromJson(jsonString, GetDocumentListResponse.class);
+            if (getDocumentListResponse.getStatus()) {
+                result = getDocumentListResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postGetDocumentList", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
+
+    public static void postDocumentPrivacy(Integer documentId, Integer privacy,Context context) {
+
+        try {
+            DocumentPrivacyParameters documentPrivacyParameters = new DocumentPrivacyParameters();
+            documentPrivacyParameters.setDocumentId(documentId);
+            documentPrivacyParameters.setPrivacy(privacy);
+
+            String jsonString ="";
+
+            jsonString=  post(API_DOCUMENT_PRIVACY, documentPrivacyParameters.toJson());
+
+            Gson gson = new Gson();
+         DocumentPrivacyResponse documentPrivacyResponse=gson.fromJson(jsonString, DocumentPrivacyResponse.class);
+            Toast.makeText(context,documentPrivacyResponse.getMsg(), Toast.LENGTH_LONG).show();
+
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postDocumentPrivacy", e, -1, context);
+        } finally {
+
         }
     }
 

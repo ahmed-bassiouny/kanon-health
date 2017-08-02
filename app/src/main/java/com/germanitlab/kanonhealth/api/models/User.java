@@ -28,7 +28,7 @@ public class User {
     public static final String KEY_GENDER =    "gender";
     public static final String KEY_BIRTH_DAY =    "birh_day";
     public static final String KEY_EMAIL =    "email";
-
+    public  static  final String KEY_SPECIALITYS = "specialitys";
 
 
     @SerializedName(KEY_ID)
@@ -85,6 +85,8 @@ public class User {
     @SerializedName(KEY_RATE)
     private ArrayList<String> rate;
 
+    @SerializedName(KEY_SPECIALITYS)
+    private ArrayList<Speciality> specialitys;
 
     public static String getKeyId() {
         return KEY_ID;
@@ -185,6 +187,7 @@ public class User {
     public void setRate(ArrayList<String> rate) {
         this.rate = rate;
     }
+
     public static String getKeyRateNum() {
         return KEY_RATE_NUM;
     }
@@ -237,4 +240,11 @@ public class User {
         this.gender = gender;
     }
 
+    public ArrayList<Speciality> getSpecialitys() {
+        return specialitys;
+    }
+
+    public void setSpecialitys(ArrayList<Speciality> specialitys) {
+        this.specialitys = specialitys;
+    }
 }

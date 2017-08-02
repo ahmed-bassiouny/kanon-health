@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class ChangeStatusParameters extends ParentParameters{
+
     public static final String PARAMETER_USER_ID ="user_id";
     public static final String PARAMETER_IS_AVAILABLE= "is_available";
 
@@ -16,4 +17,19 @@ public class ChangeStatusParameters extends ParentParameters{
     @SerializedName(PARAMETER_IS_AVAILABLE)
     private Boolean isAvailable;
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
+    }
 }
