@@ -15,16 +15,16 @@ import com.germanitlab.kanonhealth.api.models.User;
 import com.germanitlab.kanonhealth.api.parameters.AddDocumentParameters;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
+import com.germanitlab.kanonhealth.api.parameters.CloseSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.ChangeStatusParameters;
 import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditDoctorParameter;
 import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
-import com.germanitlab.kanonhealth.api.parameters.MessageSendParamaters;
-import com.germanitlab.kanonhealth.api.parameters.MessagesParamater;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
+import com.germanitlab.kanonhealth.api.parameters.OpenSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
 import com.germanitlab.kanonhealth.api.parameters.UserAddParameter;
 import com.germanitlab.kanonhealth.api.parameters.UserInfoParameter;
@@ -596,6 +596,43 @@ public class ApiHelper {
             Helper.handleError(TAG, "getUserInfo", e, -1, context);
         }finally {
             return userInfo;
+        }
+    }
+
+    public static boolean openSession(Context context, int userID , int doctorID){
+        boolean result=false;
+        try {
+            OpenSessionParameters openSessionParameters = new OpenSessionParameters();
+            openSessionParameters.setUserID(userID);
+            openSessionParameters.setDoctorID(doctorID);
+            String  jsonString =post(API_REQUESTS_OPEN,openSessionParameters.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
+            if(parentResponse.getStatus()){
+                result =true;
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "openSession", e, -1, context);
+        }finally {
+            return result;
+        }
+    }
+
+    public static boolean closeSession(Context context, int requestID ){
+        boolean result=false;
+        try {
+            CloseSessionParameters closeSessionParameters = new CloseSessionParameters();
+            closeSessionParameters.setRequestID(requestID);
+            String  jsonString =post(API_REQUESTS_CLOSE,closeSessionParameters.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
+            if(parentResponse.getStatus()){
+                result =true;
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "closeSession", e, -1, context);
+        }finally {
+            return result;
         }
     }
 
