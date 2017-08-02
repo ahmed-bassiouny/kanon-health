@@ -66,8 +66,18 @@ public class Util {
     }
 
     public void showProgressDialog() {
-        if(context != null)
-           progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
+     showProgressDialog(context);
+    }
+
+
+    public void showProgressDialog(Context ctx) {
+        if(progressDialog != null) {
+            if (ctx != null) {
+                progressDialog = ProgressDialog.show(ctx, "", ctx.getString(R.string.waiting_text), true);
+            } else if (context != null) {
+                progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
+            }
+        }
     }
 
     public void dismissProgressDialog() {

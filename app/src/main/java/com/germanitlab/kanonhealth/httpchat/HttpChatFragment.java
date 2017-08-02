@@ -123,7 +123,7 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     @BindView(R.id.img_chat_user_avatar)
     ImageView img_chat_user_avatar;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    LinearLayout toolbar;
     @BindView(R.id.button2)
     Button button2;
     @BindView(R.id.can_rate)
@@ -296,7 +296,6 @@ public class HttpChatFragment extends ParentFragment implements ApiResponse, Ser
     private void initObjects() {
         prefManager = new PrefManager(getContext());
         doctor = new User();
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
