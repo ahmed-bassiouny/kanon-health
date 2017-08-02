@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 
 public class Doctor {
-    public static final String KEY_ID="ID";
+    public static final String KEY_ID="user_id";
     public static final String KEY_RATE_NUM = "rate_num";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
     public static final String KEY_ADDRESS = "address";
@@ -19,9 +19,15 @@ public class Doctor {
     public static final String KEY_AVATAR = "avatar";
     public static final String KEY_FIRST_NAME =      "first_name";
     public static final String KEY_LAST_NAME=    "last_name";
+    public static final String KEY_TITLE=    "title";
     public static final String KEY_PHONE =   "phone";
+    public static final String KEY_COUNTRY_CODE =   "country_code";
     public static final String KEY_RATE =    "rate";
     public static final String KEY_DOCUMENTS =    "documents";
+    public static final String KEY_PASSWORD =    "password";
+    public static final String KEY_GENDER =    "gender";
+    public static final String KEY_BIRTH_DAY =    "birh_day";
+    public static final String KEY_EMAIL =    "email";
 
 
 
@@ -47,6 +53,9 @@ public class Doctor {
     private String avatar;
 
     @SerializedName(KEY_PHONE)
+    private String countryCode;
+
+    @SerializedName(KEY_COUNTRY_CODE)
     private String phone;
 
     @SerializedName(KEY_FIRST_NAME )
@@ -54,6 +63,21 @@ public class Doctor {
 
     @SerializedName(KEY_LAST_NAME )
     private String lastName;
+
+    @SerializedName(KEY_TITLE )
+    private String title;
+
+    @SerializedName(KEY_EMAIL)
+    private String email;
+
+    @SerializedName(KEY_BIRTH_DAY)
+    private String birthDay;
+
+    @SerializedName(KEY_PASSWORD )
+    private String password;
+
+    @SerializedName(KEY_GENDER)
+    private String gender;
 
     @SerializedName(KEY_DOCUMENTS )
     private ArrayList<Document> documents;
@@ -161,4 +185,56 @@ public class Doctor {
     public void setRate(ArrayList<String> rate) {
         this.rate = rate;
     }
+    public static String getKeyRateNum() {
+        return KEY_RATE_NUM;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
 }
