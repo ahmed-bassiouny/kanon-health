@@ -11,19 +11,23 @@ public class MessageOperationParameter extends ParentParameters {
     public final static String PARAMATER_USER_ID="user_id";
     public final static String PARAMATER_MSG_ID="msg_id";
 
+    public final static int DELETE=0;
+    public final static int DELIVER=1;
+    public final static int SEEN=2;
+
     // id user send message
     @SerializedName(PARAMATER_USER_ID)
-    private int fromID;
+    private int userID;
     // id message send from me to another user (multi messgaes)
     @SerializedName(PARAMATER_MSG_ID)
     private String messagesID;
 
-    public int getFromID() {
-        return fromID;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setFromID(int fromID) {
-        this.fromID = fromID;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getMessagesID() {

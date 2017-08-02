@@ -22,6 +22,8 @@ import com.germanitlab.kanonhealth.api.parameters.EditDoctorParameter;
 import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
+import com.germanitlab.kanonhealth.api.parameters.MessageForwardParameter;
+import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
 import com.germanitlab.kanonhealth.api.parameters.OpenSessionParameters;
@@ -635,7 +637,64 @@ public class ApiHelper {
             return result;
         }
     }
+    public static Message sendForward(Context context, int userID,String doctorID,String messageID ){
+        Message result=null;
+        try {
+            MessageForwardParameter messageForwardParameter = new MessageForwardParameter();
+            messageForwardParameter.setUserID(userID);
+            messageForwardParameter.setToID(doctorID);
+            messageForwardParameter.setMessagesID(messageID);
+            String  jsonString =post(API_MESSAGES_FORWARD,messageForwardParameter.toJson());
+            Gson gson = new Gson();
+            MessageSendResponse messageSendResponse =gson.fromJson(jsonString,MessageSendResponse.class);
+            if(messageSendResponse.getStatus()){
+                result =messageSendResponse.getData();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "sendForward", e, -1, context);
+        }finally {
+            return result;
+        }
+    }
+    private static boolean MessageOperation (Context context, int user_id , String msg_id ,int operationType){
+        boolean result=false;
+        try{
+                MessageOperationParameter messageOperationParameter = new MessageForwardParameter();
+                messageOperationParameter.setUserID(user_id);
+                messageOperationParameter.setMessagesID(msg_id);
+                String url;
+                if(operationType==MessageOperationParameter.SEEN) {
+                    url = API_MESSAGES_SEEN;
+                }
+                else if(operationType==MessageOperationParameter.DELIVER) {
+                    url = API_MESSAGES_DELIVER;
+                }else if(operationType==MessageOperationParameter.DELETE) {
+                    url=API_MESSAGES_DELETE;
+                }else {
+                    return false;
+                }
+            String  jsonString =post(url,messageOperationParameter.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse = gson.fromJson(jsonString,ParentResponse.class);
+            if(parentResponse.getStatus()){
+                result=true;
+            }
 
+        }catch (Exception e){
+            Helper.handleError(TAG, "MessageOperation", e, -1, context);
+        }finally {
+            return result;
+        }
+    }
+    public static boolean deleteMessgae(Context context, int user_id , String msg_id ){
+        return MessageOperation(context,user_id,msg_id,MessageOperationParameter.DELETE);
+    }
+    public static boolean seenMessgae(Context context, int user_id , String msg_id ){
+        return MessageOperation(context,user_id,msg_id,MessageOperationParameter.SEEN);
+    }
+    public static boolean deliveredMessgae(Context context, int user_id , String msg_id ){
+        return MessageOperation(context,user_id,msg_id,MessageOperationParameter.DELIVER);
+    }
 
     //endregion
 }
