@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.api.responses;
 
 import com.germanitlab.kanonhealth.api.models.User;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -13,13 +14,13 @@ public class GetDoctorListResponse extends ParentResponse{
 
     @SerializedName(KEY_DATA)
     private
-    ArrayList<User> data;
+    ArrayList<UserInfo> data;
 
-    public ArrayList<User> getData() {
+    public ArrayList<UserInfo> getData() {
         return data;
     }
 
-    public void setData(ArrayList<User> data) {
+    public void setData(ArrayList<UserInfo> data) {
         this.data = data;
     }
 }

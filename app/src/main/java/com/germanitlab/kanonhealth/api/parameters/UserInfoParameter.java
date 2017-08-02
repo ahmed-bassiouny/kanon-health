@@ -9,6 +9,11 @@ import com.google.gson.annotations.SerializedName;
 public class UserInfoParameter extends ParentParameters {
     public static final String PARAMETER_USERID = "user_id";
 
+    public static final int CHATDOCTOR=1;
+    public static final int CHATCLINIC=2;
+    public static final int CHATUSER=3;
+    public static final int CHATANOTHER=4;
+
 
     @SerializedName(PARAMETER_USERID)
     private Integer userID;

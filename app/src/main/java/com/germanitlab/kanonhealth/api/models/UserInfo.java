@@ -85,7 +85,7 @@ public class UserInfo extends ParentModel{
 
     @SerializedName(KEY_SUPPORTED_LANG)
 
-    private ArrayList<SupportedLang> supportedLangs;
+    //private ArrayList<SupportedLang> supportedLangs;
 
 
     /*
@@ -107,7 +107,7 @@ public class UserInfo extends ParentModel{
 
     public Integer getUserType() {
         if(userType==null)
-            userType=1;
+            userType=PATIENT;
         return userType;
     }
 
@@ -203,13 +203,13 @@ public class UserInfo extends ParentModel{
     }
 
 
-    public ArrayList<SupportedLang> getSupportedLangs() {
+    /*public ArrayList<SupportedLang> getSupportedLangs() {
         return supportedLangs;
     }
 
     public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
         this.supportedLangs = supportedLangs;
-    }
+    }*/
 
     public static String getKeyUserid() {
         return KEY_USERID;
@@ -269,5 +269,11 @@ public class UserInfo extends ParentModel{
 
     public void setRatePercentage(HashMap<String, String> ratePercentage) {
         this.ratePercentage = ratePercentage;
+    }
+    public int getIsOpen(){
+        return 0;
+    }
+    public void setIsOpen(int i){
+
     }
 }

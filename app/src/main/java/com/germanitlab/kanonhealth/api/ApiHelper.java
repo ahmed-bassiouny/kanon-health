@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Language;
@@ -33,6 +34,7 @@ import com.germanitlab.kanonhealth.api.parameters.UserInfoParameter;
 import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.AddDocumentResponse;
 import com.germanitlab.kanonhealth.api.responses.ChangeStatusResponse;
+import com.germanitlab.kanonhealth.api.responses.ChatResponse;
 import com.germanitlab.kanonhealth.api.responses.DocumentPrivacyResponse;
 import com.germanitlab.kanonhealth.api.responses.EditClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
@@ -380,8 +382,8 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<User> postGetDoctorList(Context context) {
-        ArrayList<User>  result = new ArrayList<>();
+    public static ArrayList<UserInfo> postGetDoctorList(Context context) {
+        ArrayList<UserInfo>  result = new ArrayList<>();
         try {
 
             String jsonString = post(API_DOCTORS_LIST, EMPTY_JSON);
@@ -699,5 +701,48 @@ public class ApiHelper {
         return MessageOperation(context,user_id,msg_id,MessageOperationParameter.DELIVER);
     }
 
+    private static ArrayList<ChatModel> getChatMessages(Context context,int userID,int chatType){
+        ArrayList<ChatModel> messageArrayList = new ArrayList<>();
+        try{
+            UserInfoParameter userInfoParameter = new UserInfoParameter();
+            userInfoParameter.setUserID(userID);
+            String url;
+            if(chatType==UserInfoParameter.CHATUSER) {
+                url = API_MESSAGES_CHAT_USER;
+            }
+            else if(chatType==UserInfoParameter.CHATCLINIC) {
+                url = API_MESSAGES_CHAT_CLINIC;
+            }else if(chatType==UserInfoParameter.CHATDOCTOR) {
+                url=API_MESSAGES_CHAT_DOCTOR;
+            }else if(chatType==UserInfoParameter.CHATANOTHER){
+                url=API_MESSAGES_CHAT_ANOTHER;
+            }
+            else{
+                return messageArrayList;
+            }
+            String  jsonString =post(url,userInfoParameter.toJson());
+            Gson gson = new Gson();
+            ChatResponse chatResponse = gson.fromJson(jsonString,ChatResponse.class);
+            if(chatResponse.getStatus()) {
+                messageArrayList=chatResponse.getChatModels();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "getChatMessages", e, -1, context);
+        }finally {
+            return messageArrayList;
+        }
+    }
+    public static ArrayList<ChatModel> getChatDoctor(Context context,int userID){
+        return getChatMessages(context,userID,UserInfoParameter.CHATDOCTOR);
+    }
+    public static ArrayList<ChatModel> getChatClinic(Context context,int userID){
+        return getChatMessages(context,userID,UserInfoParameter.CHATCLINIC);
+    }
+    public static ArrayList<ChatModel> getChatUser(Context context,int userID){
+        return getChatMessages(context,userID,UserInfoParameter.CHATUSER);
+    }
+    public static ArrayList<ChatModel> getChatAnother(Context context,int userID){
+        return getChatMessages(context,userID,UserInfoParameter.CHATANOTHER);
+    }
     //endregion
 }

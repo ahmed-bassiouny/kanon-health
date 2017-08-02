@@ -10,6 +10,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -103,7 +105,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
                 return;
             }
-            new HttpCall(this, new ApiResponse() {
+            /*new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {
                     if (response != null) {
@@ -134,7 +136,30 @@ public class SplashScreenActivity extends AppCompatActivity {
                     Log.e("Splash", error);
                     finish();
                 }
-            }).getProfile(userRegisterResponse);
+            }).getProfile(userRegisterResponse);*/
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UserInfo userInfo= ApiHelper.getUserInfo(SplashScreenActivity.this,Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+
+                    if(userInfo !=null){
+                        Gson gson = new Gson();
+                        new PrefManager(SplashScreenActivity.this).put(PrefManager.USER_KEY, gson.toJson(userInfo));
+                        if(userInfo.getUserType()==UserInfo.DOCTOR) {
+                            new PrefManager(SplashScreenActivity.this).put(PrefManager.IS_DOCTOR, true);
+                        }else{
+                            new PrefManager(SplashScreenActivity.this).put(PrefManager.IS_DOCTOR, false);
+                        }
+                    }
+                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
+                    intent.putExtra("checkPassword", true);
+                    intent.putExtra("finish", false);
+                    intent.putExtra("has_back", false);
+                    startActivity(intent);
+                    finish();
+                }
+            }).start();
+
 
 
         } catch (Exception e) {
