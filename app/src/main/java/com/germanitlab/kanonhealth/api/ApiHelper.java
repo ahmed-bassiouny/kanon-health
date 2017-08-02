@@ -367,7 +367,7 @@ public class ApiHelper {
     public static ArrayList<Language> getLanguage(Context context){
         ArrayList<Language> languageArrayList=null;
         try{
-            String  jsonString =post(API_SPECIALITIES_LIST,EMPTY_JSON);
+            String  jsonString =post(API_LANGUAGES_LIST,EMPTY_JSON);
             Gson gson = new Gson();
             LanguageResponse languageResponse = gson.fromJson(jsonString,LanguageResponse.class);
             if(languageResponse.getStatus()){
