@@ -12,7 +12,6 @@ import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
-import com.germanitlab.kanonhealth.api.models.User;
 import com.germanitlab.kanonhealth.api.parameters.AddDocumentParameters;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
