@@ -29,6 +29,7 @@ import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
 import com.germanitlab.kanonhealth.api.parameters.OpenSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
+import com.germanitlab.kanonhealth.api.parameters.TokenAddParameter;
 import com.germanitlab.kanonhealth.api.parameters.UserAddParameter;
 import com.germanitlab.kanonhealth.api.parameters.UserInfoParameter;
 import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
@@ -108,8 +109,11 @@ public class ApiHelper {
 
     private static final String API_USERS_LIST = "users/me";
     private static final String API_USERS_ADD = "users/add";
-    private static final String API_USERS_EDIT="users/edit";
+    private static final String API_USERS_EDIT = "users/edit";
     private static final String API_USERS_REGISTER = "users/register";
+
+
+    private static final String API_TOKEN_REGISTER = "token/add";
 
 
     private static final String API_UPLOAD = "upload";
@@ -184,12 +188,12 @@ public class ApiHelper {
     }
 
     public static ArrayList<Clinic> postGetClinicList(Context context) {
-        ArrayList<Clinic>  result = new ArrayList<>();
+        ArrayList<Clinic> result = new ArrayList<>();
         try {
 
             String jsonString = post(API_CLINICS_LIST, EMPTY_JSON);
             Gson gson = new Gson();
-           GetClinicListResponse getClinicListResponse= gson.fromJson(jsonString, GetClinicListResponse.class);
+            GetClinicListResponse getClinicListResponse = gson.fromJson(jsonString, GetClinicListResponse.class);
             if (getClinicListResponse.getStatus()) {
                 result = getClinicListResponse.getData();
             }
@@ -200,10 +204,10 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postAddClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs,File file,Context context) {
+    public static Clinic postAddClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs, File file, Context context) {
         Clinic result = null;
         try {
-            AddOrEditClinicParameters addOrEditClinicParameters= new AddOrEditClinicParameters();
+            AddOrEditClinicParameters addOrEditClinicParameters = new AddOrEditClinicParameters();
             addOrEditClinicParameters.setUserId(userId);
             addOrEditClinicParameters.setName(name);
             addOrEditClinicParameters.setSpeciality(speciality);
@@ -219,16 +223,15 @@ public class ApiHelper {
             addOrEditClinicParameters.setPhone(phone);
             addOrEditClinicParameters.setFax(fax);
             addOrEditClinicParameters.setSupportedLangs(supportedLangs);
-            String jsonString ="";
-            if(file==null) {
-                jsonString=  post(API_CLINICS_ADD, addOrEditClinicParameters.toJson());
-            }else
-            {
+            String jsonString = "";
+            if (file == null) {
+                jsonString = post(API_CLINICS_ADD, addOrEditClinicParameters.toJson());
+            } else {
                 jsonString = postWithFile(API_CLINICS_ADD, addOrEditClinicParameters.toJson(), file, addOrEditClinicParameters.PARAMETER_AVATAR);
             }
 
             Gson gson = new Gson();
-            AddClinicResponse addClinicResponse= gson.fromJson(jsonString, AddClinicResponse.class);
+            AddClinicResponse addClinicResponse = gson.fromJson(jsonString, AddClinicResponse.class);
             if (addClinicResponse.getStatus()) {
                 result = addClinicResponse.getData();
             }
@@ -239,28 +242,28 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postGetClinic(Integer clinicId,Context context) {
+    public static Clinic postGetClinic(Integer clinicId, Context context) {
         Clinic result = null;
         try {
-        GetClinicParameters getClinicParameters= new GetClinicParameters();
-        getClinicParameters.setClinicId(clinicId);
-        String jsonString = post(API_CLINICS_GET, getClinicParameters.toJson());
-        Gson gson = new Gson();
-        GetClinicResponse getClinicResponse = gson.fromJson(jsonString, GetClinicResponse.class);
-        if (getClinicResponse.getStatus()) {
-            result = getClinicResponse.getData();
+            GetClinicParameters getClinicParameters = new GetClinicParameters();
+            getClinicParameters.setClinicId(clinicId);
+            String jsonString = post(API_CLINICS_GET, getClinicParameters.toJson());
+            Gson gson = new Gson();
+            GetClinicResponse getClinicResponse = gson.fromJson(jsonString, GetClinicResponse.class);
+            if (getClinicResponse.getStatus()) {
+                result = getClinicResponse.getData();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "postClinicGet", e, -1, context);
+        } finally {
+            return result;
         }
-    } catch (Exception e) {
-        Helper.handleError(TAG, "postClinicGet", e, -1, context);
-    } finally {
-        return result;
-    }
     }
 
-    public static Integer postEditClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs,File file,Context context) {
+    public static Integer postEditClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs, File file, Context context) {
         Integer result = -1;
         try {
-            AddOrEditClinicParameters addOrEditClinicParameters= new AddOrEditClinicParameters();
+            AddOrEditClinicParameters addOrEditClinicParameters = new AddOrEditClinicParameters();
             addOrEditClinicParameters.setUserId(userId);
             addOrEditClinicParameters.setName(name);
             addOrEditClinicParameters.setSpeciality(speciality);
@@ -277,17 +280,16 @@ public class ApiHelper {
             addOrEditClinicParameters.setFax(fax);
             addOrEditClinicParameters.setSupportedLangs(supportedLangs);
 
-            String jsonString ="";
-            if(file==null) {
-                jsonString=  post(API_CLINICS_EDIT, addOrEditClinicParameters.toJson());
-            }else
-            {
+            String jsonString = "";
+            if (file == null) {
+                jsonString = post(API_CLINICS_EDIT, addOrEditClinicParameters.toJson());
+            } else {
                 jsonString = postWithFile(API_CLINICS_EDIT, addOrEditClinicParameters.toJson(), file, addOrEditClinicParameters.PARAMETER_AVATAR);
             }
             Gson gson = new Gson();
-            EditClinicResponse editClinicResponse=gson.fromJson(jsonString, EditClinicResponse.class);
-            Toast.makeText(context,editClinicResponse.getMsg(), Toast.LENGTH_LONG).show();
-            result=editClinicResponse.getData();
+            EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);
+            Toast.makeText(context, editClinicResponse.getMsg(), Toast.LENGTH_LONG).show();
+            result = editClinicResponse.getData();
 
         } catch (Exception e) {
             Helper.handleError(TAG, "postEditClinic", e, -1, context);
@@ -297,98 +299,98 @@ public class ApiHelper {
     }
 
     // get all message in chat
-    public static ArrayList<Message> getMessages(int UserID,int toID,Context context){
+    public static ArrayList<Message> getMessages(int UserID, int toID, Context context) {
         ArrayList<Message> result = null;
         try {
             MessagesParameter messagesParamater = new MessagesParameter();
             messagesParamater.setUserID(UserID);
             messagesParamater.setToID(toID);
 
-            String jsonString =post(API_MESSAGES_LIST,messagesParamater.toJson());
+            String jsonString = post(API_MESSAGES_LIST, messagesParamater.toJson());
             Gson gson = new Gson();
-            MessagesResponse messageResponse = gson.fromJson(jsonString,MessagesResponse.class);
-            if(messageResponse.getStatus()){
-                result=new ArrayList<>();
-                result=messageResponse.getData();
+            MessagesResponse messageResponse = gson.fromJson(jsonString, MessagesResponse.class);
+            if (messageResponse.getStatus()) {
+                result = new ArrayList<>();
+                result = messageResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "getMessages", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
 
     // send message in chat
-    public static Message sendMessage(int UserID,int toID,String textMessage,String type,File media,Context context){
-        Message message=null;
-        try{
+    public static Message sendMessage(int UserID, int toID, String textMessage, String type, File media, Context context) {
+        Message message = null;
+        try {
             MessageSendParameters messageSendParamaters = new MessageSendParameters();
             messageSendParamaters.setFromID(UserID);
             messageSendParamaters.setToID(toID);
             messageSendParamaters.setMessage(textMessage);
             messageSendParamaters.setTypeMessage(type);
             messageSendParamaters.setIsForward(0);
-            String jsonString="";
-            if(media!=null){
-                 jsonString =postWithFile(API_MESSAGES_SEND,messageSendParamaters.toJson(),media, MessageSendParameters.PARAMATER_MEDIA);
-            }else{
-                 jsonString =post(API_MESSAGES_SEND,messageSendParamaters.toJson());
+            String jsonString = "";
+            if (media != null) {
+                jsonString = postWithFile(API_MESSAGES_SEND, messageSendParamaters.toJson(), media, MessageSendParameters.PARAMATER_MEDIA);
+            } else {
+                jsonString = post(API_MESSAGES_SEND, messageSendParamaters.toJson());
             }
             Gson gson = new Gson();
-            MessageSendResponse messageSendResponse = gson.fromJson(jsonString,MessageSendResponse.class);
-            if(messageSendResponse.getStatus()){
-                message=messageSendResponse.getData();
+            MessageSendResponse messageSendResponse = gson.fromJson(jsonString, MessageSendResponse.class);
+            if (messageSendResponse.getStatus()) {
+                message = messageSendResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "sendMessage", e, -1, context);
-        }finally {
+        } finally {
             return message;
         }
     }
 
     // get all speciality
-    public static ArrayList<Speciality> getSpecialities(Context context){
-        ArrayList<Speciality> specialityArrayList= null;
-        try{
-            String  jsonString =post(API_SPECIALITIES_LIST,EMPTY_JSON);
+    public static ArrayList<Speciality> getSpecialities(Context context) {
+        ArrayList<Speciality> specialityArrayList = null;
+        try {
+            String jsonString = post(API_SPECIALITIES_LIST, EMPTY_JSON);
             Gson gson = new Gson();
-            SpecialityResponse specialityResponse = gson.fromJson(jsonString,SpecialityResponse.class);
-            if(specialityResponse.getStatus()){
-                specialityArrayList=new ArrayList<>();
-                specialityArrayList=specialityResponse.getData();
+            SpecialityResponse specialityResponse = gson.fromJson(jsonString, SpecialityResponse.class);
+            if (specialityResponse.getStatus()) {
+                specialityArrayList = new ArrayList<>();
+                specialityArrayList = specialityResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "getSpecialities", e, -1, context);
-        }finally {
+        } finally {
             return specialityArrayList;
         }
     }
 
     // get all Language
-    public static ArrayList<Language> getLanguage(Context context){
-        ArrayList<Language> languageArrayList=null;
-        try{
-            String  jsonString =post(API_LANGUAGES_LIST,EMPTY_JSON);
+    public static ArrayList<Language> getLanguage(Context context) {
+        ArrayList<Language> languageArrayList = null;
+        try {
+            String jsonString = post(API_LANGUAGES_LIST, EMPTY_JSON);
             Gson gson = new Gson();
-            LanguageResponse languageResponse = gson.fromJson(jsonString,LanguageResponse.class);
-            if(languageResponse.getStatus()){
-                languageArrayList=new ArrayList<>();
-                languageArrayList=languageResponse.getData();
+            LanguageResponse languageResponse = gson.fromJson(jsonString, LanguageResponse.class);
+            if (languageResponse.getStatus()) {
+                languageArrayList = new ArrayList<>();
+                languageArrayList = languageResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "getSpecialities", e, -1, context);
-        }finally {
+        } finally {
             return languageArrayList;
         }
     }
 
     public static ArrayList<UserInfo> postGetDoctorList(Context context) {
-        ArrayList<UserInfo>  result = new ArrayList<>();
+        ArrayList<UserInfo> result = new ArrayList<>();
         try {
 
             String jsonString = post(API_DOCTORS_LIST, EMPTY_JSON);
             Gson gson = new Gson();
-            GetDoctorListResponse getDoctorListResponse= gson.fromJson(jsonString,GetDoctorListResponse.class);
+            GetDoctorListResponse getDoctorListResponse = gson.fromJson(jsonString, GetDoctorListResponse.class);
             if (getDoctorListResponse.getStatus()) {
                 result = getDoctorListResponse.getData();
             }
@@ -399,50 +401,48 @@ public class ApiHelper {
         }
     }
 
-    public static int postChangeStatus (Integer userId, Integer isAvailable,Context context) {
-          int result=-1;
+    public static int postChangeStatus(Integer userId, Integer isAvailable, Context context) {
+        int result = -1;
         try {
-            ChangeStatusParameters changeStatusParameters= new ChangeStatusParameters();
+            ChangeStatusParameters changeStatusParameters = new ChangeStatusParameters();
             changeStatusParameters.setUserId(userId);
             changeStatusParameters.setAvailable(isAvailable);
 
-            String jsonString ="";
+            String jsonString = "";
 
-            jsonString=  post(API_DOCTORS_CHANGE_STATUS, changeStatusParameters.toJson());
+            jsonString = post(API_DOCTORS_CHANGE_STATUS, changeStatusParameters.toJson());
 
             Gson gson = new Gson();
-            ChangeStatusResponse changeStatusResponse=gson.fromJson(jsonString, ChangeStatusResponse.class);
-            Toast.makeText(context,changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
-            if(changeStatusResponse.getStatus())
-            {
-                result=1;
+            ChangeStatusResponse changeStatusResponse = gson.fromJson(jsonString, ChangeStatusResponse.class);
+            Toast.makeText(context, changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
+            if (changeStatusResponse.getStatus()) {
+                result = 1;
             }
 
         } catch (Exception e) {
             Helper.handleError(TAG, "postChangeStatus", e, -1, context);
         } finally {
-           return result;
+            return result;
         }
     }
 
-    public static Document postAddDocument(Integer userId, String type, String document,File file,Context context) {
+    public static Document postAddDocument(Integer userId, String type, String document, File file, Context context) {
         Document result = null;
         try {
-            AddDocumentParameters addDocumentParameters= new AddDocumentParameters();
+            AddDocumentParameters addDocumentParameters = new AddDocumentParameters();
             addDocumentParameters.setUserId(userId);
             addDocumentParameters.setDocument(document);
             addDocumentParameters.setType(type);
 
-            String jsonString ="";
-            if(file==null) {
-                jsonString=  post(API_DOCUMENTS_ADD, addDocumentParameters.toJson());
-            }else
-            {
+            String jsonString = "";
+            if (file == null) {
+                jsonString = post(API_DOCUMENTS_ADD, addDocumentParameters.toJson());
+            } else {
                 jsonString = postWithFile(API_DOCUMENTS_ADD, addDocumentParameters.toJson(), file, addDocumentParameters.PARAMETER_IMAGE);
             }
 
             Gson gson = new Gson();
-            AddDocumentResponse addDocumentResponse= gson.fromJson(jsonString,AddDocumentResponse.class);
+            AddDocumentResponse addDocumentResponse = gson.fromJson(jsonString, AddDocumentResponse.class);
             if (addDocumentResponse.getStatus()) {
                 result = addDocumentResponse.getData();
             }
@@ -453,15 +453,15 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<Document> postGetDocumentList(Integer userId,Context context) {
-        ArrayList<Document>  result = new ArrayList<>();
+    public static ArrayList<Document> postGetDocumentList(Integer userId, Context context) {
+        ArrayList<Document> result = new ArrayList<>();
         GetDocumentListParameters getDocumentListParameters = new GetDocumentListParameters();
         getDocumentListParameters.setUserId(userId);
         try {
 
             String jsonString = post(API_DOCUMENTS_LIST, getDocumentListParameters.toJson());
             Gson gson = new Gson();
-           GetDocumentListResponse getDocumentListResponse= gson.fromJson(jsonString, GetDocumentListResponse.class);
+            GetDocumentListResponse getDocumentListResponse = gson.fromJson(jsonString, GetDocumentListResponse.class);
             if (getDocumentListResponse.getStatus()) {
                 result = getDocumentListResponse.getData();
             }
@@ -472,20 +472,20 @@ public class ApiHelper {
         }
     }
 
-    public static void postDocumentPrivacy(Integer documentId, Integer privacy,Context context) {
+    public static void postDocumentPrivacy(Integer documentId, Integer privacy, Context context) {
 
         try {
             DocumentPrivacyParameters documentPrivacyParameters = new DocumentPrivacyParameters();
             documentPrivacyParameters.setDocumentId(documentId);
             documentPrivacyParameters.setPrivacy(privacy);
 
-            String jsonString ="";
+            String jsonString = "";
 
-            jsonString=  post(API_DOCUMENT_PRIVACY, documentPrivacyParameters.toJson());
+            jsonString = post(API_DOCUMENT_PRIVACY, documentPrivacyParameters.toJson());
 
             Gson gson = new Gson();
-         DocumentPrivacyResponse documentPrivacyResponse=gson.fromJson(jsonString, DocumentPrivacyResponse.class);
-            Toast.makeText(context,documentPrivacyResponse.getMsg(), Toast.LENGTH_LONG).show();
+            DocumentPrivacyResponse documentPrivacyResponse = gson.fromJson(jsonString, DocumentPrivacyResponse.class);
+            Toast.makeText(context, documentPrivacyResponse.getMsg(), Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
             Helper.handleError(TAG, "postDocumentPrivacy", e, -1, context);
@@ -495,9 +495,9 @@ public class ApiHelper {
     }
 
     // add user return true if user registered
-    public static boolean addUser(Context context,int userID,String password , String title ,String firstName ,String lastName ,String birthday ,String gender, File avatar){
-        boolean result=false;
-        try{
+    public static boolean addUser(Context context, int userID, String password, String title, String firstName, String lastName, String birthday, String gender, File avatar) {
+        boolean result = false;
+        try {
             UserAddParameter userAddParamater = new UserAddParameter();
             userAddParamater.setUserID(userID);
             userAddParamater.setPassword(password);
@@ -506,28 +506,29 @@ public class ApiHelper {
             userAddParamater.setLastName(lastName);
             userAddParamater.setBirthday(birthday);
             userAddParamater.setGender(gender);
-            String  jsonString;
-            if(avatar!=null){
-                jsonString =postWithFile(API_USERS_ADD,userAddParamater.toJson(),avatar, UserAddParameter.PARAMETER_AVATAR);
-            }else{
-                jsonString =post(API_USERS_ADD,userAddParamater.toJson());
+            String jsonString;
+            if (avatar != null) {
+                jsonString = postWithFile(API_USERS_ADD, userAddParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
+            } else {
+                jsonString = post(API_USERS_ADD, userAddParamater.toJson());
             }
             Gson gson = new Gson();
-            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
-            if(parentResponse.getStatus()){
-                result =true;
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
+                result = true;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "addUser", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
+
     // edit doctor return true if doctor edited
-    public static boolean editDoctor(Context context,int userID,String password , String title ,String firstName ,String lastName ,String birthday ,String gender, File avatar,String email , String address){
-        boolean result=false;
-        try{
+    public static boolean editDoctor(Context context, int userID, String password, String title, String firstName, String lastName, String birthday, String gender, File avatar, String email, String address) {
+        boolean result = false;
+        try {
             EditDoctorParameter editDoctorParamater = new EditDoctorParameter();
             editDoctorParamater.setUserID(userID);
             editDoctorParamater.setPassword(password);
@@ -538,29 +539,29 @@ public class ApiHelper {
             editDoctorParamater.setGender(gender);
             editDoctorParamater.setAddress(address);
             editDoctorParamater.setEmail(email);
-            String  jsonString;
-            if(avatar!=null){
-                jsonString =postWithFile(API_USERS_EDIT,editDoctorParamater.toJson(),avatar, UserAddParameter.PARAMETER_AVATAR);
-            }else{
-                jsonString =post(API_USERS_EDIT,editDoctorParamater.toJson());
+            String jsonString;
+            if (avatar != null) {
+                jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
+            } else {
+                jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
             }
             Gson gson = new Gson();
-            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
-            if(parentResponse.getStatus()){
-                result =true;
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
+                result = true;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "editDoctor", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
 
     // edit patient return true if doctor edited
-    public static boolean editPatient(Context context,int userID , String title ,String firstName ,String lastName ,String birthday ,String gender, File avatar,String countryCode , String phone){
-        boolean result=false;
-        try{
+    public static boolean editPatient(Context context, int userID, String title, String firstName, String lastName, String birthday, String gender, File avatar, String countryCode, String phone) {
+        boolean result = false;
+        try {
             EditPatientParameter editDoctorParamater = new EditPatientParameter();
             editDoctorParamater.setUserID(userID);
             editDoctorParamater.setFirstName(firstName);
@@ -570,179 +571,201 @@ public class ApiHelper {
             editDoctorParamater.setPhone(phone);
             editDoctorParamater.setGender(gender);
             editDoctorParamater.setBirthday(birthday);
-            String  jsonString;
-            if(avatar!=null){
-                jsonString =postWithFile(API_USERS_EDIT,editDoctorParamater.toJson(),avatar, UserAddParameter.PARAMETER_AVATAR);
-            }else{
-                jsonString =post(API_USERS_EDIT,editDoctorParamater.toJson());
+            String jsonString;
+            if (avatar != null) {
+                jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
+            } else {
+                jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
             }
             Gson gson = new Gson();
-            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
-            if(parentResponse.getStatus()){
-                result =true;
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
+                result = true;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "editPatient", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
-    public static UserInfo getUserInfo(Context context, int userID){
-        UserInfo userInfo=null;
+
+    public static UserInfo getUserInfo(Context context, int userID) {
+        UserInfo userInfo = null;
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userID);
-            String  jsonString =post(API_USERS_LIST,userInfoParameter.toJson());
+            String jsonString = post(API_USERS_LIST, userInfoParameter.toJson());
             Gson gson = new Gson();
-            UserInfoResponse userInfoResponse =gson.fromJson(jsonString,UserInfoResponse.class);
-            if(userInfoResponse.getStatus()){
-                userInfo =userInfoResponse.getData();
+            UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
+            if (userInfoResponse.getStatus()) {
+                userInfo = userInfoResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "getUserInfo", e, -1, context);
-        }finally {
+        } finally {
             return userInfo;
         }
     }
 
-    public static boolean openSession(Context context, int userID , int doctorID){
-        boolean result=false;
+    public static boolean openSession(Context context, int userID, int doctorID) {
+        boolean result = false;
         try {
             OpenSessionParameters openSessionParameters = new OpenSessionParameters();
             openSessionParameters.setUserID(userID);
             openSessionParameters.setDoctorID(doctorID);
-            String  jsonString =post(API_REQUESTS_OPEN,openSessionParameters.toJson());
+            String jsonString = post(API_REQUESTS_OPEN, openSessionParameters.toJson());
             Gson gson = new Gson();
-            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
-            if(parentResponse.getStatus()){
-                result =true;
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
+                result = true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "openSession", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
 
-    public static boolean closeSession(Context context, int requestID ){
-        boolean result=false;
+    public static boolean closeSession(Context context, int requestID) {
+        boolean result = false;
         try {
             CloseSessionParameters closeSessionParameters = new CloseSessionParameters();
             closeSessionParameters.setRequestID(requestID);
-            String  jsonString =post(API_REQUESTS_CLOSE,closeSessionParameters.toJson());
+            String jsonString = post(API_REQUESTS_CLOSE, closeSessionParameters.toJson());
             Gson gson = new Gson();
-            ParentResponse parentResponse =gson.fromJson(jsonString,ParentResponse.class);
-            if(parentResponse.getStatus()){
-                result =true;
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
+                result = true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "closeSession", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
-    public static Message sendForward(Context context, int userID,String doctorID,String messageID ){
-        Message result=null;
+
+    public static Message sendForward(Context context, String userID, String doctorID, String messageID) {
+        Message result = null;
         try {
             MessageForwardParameter messageForwardParameter = new MessageForwardParameter();
             messageForwardParameter.setUserID(userID);
             messageForwardParameter.setToID(doctorID);
             messageForwardParameter.setMessagesID(messageID);
-            String  jsonString =post(API_MESSAGES_FORWARD,messageForwardParameter.toJson());
+            String jsonString = post(API_MESSAGES_FORWARD, messageForwardParameter.toJson());
             Gson gson = new Gson();
-            MessageSendResponse messageSendResponse =gson.fromJson(jsonString,MessageSendResponse.class);
-            if(messageSendResponse.getStatus()){
-                result =messageSendResponse.getData();
+            MessageSendResponse messageSendResponse = gson.fromJson(jsonString, MessageSendResponse.class);
+            if (messageSendResponse.getStatus()) {
+                result = messageSendResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "sendForward", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
-    private static boolean MessageOperation (Context context, int user_id , String msg_id ,int operationType){
-        boolean result=false;
-        try{
-                MessageOperationParameter messageOperationParameter = new MessageForwardParameter();
-                messageOperationParameter.setUserID(user_id);
-                messageOperationParameter.setMessagesID(msg_id);
-                String url;
-                if(operationType==MessageOperationParameter.SEEN) {
-                    url = API_MESSAGES_SEEN;
-                }
-                else if(operationType==MessageOperationParameter.DELIVER) {
-                    url = API_MESSAGES_DELIVER;
-                }else if(operationType==MessageOperationParameter.DELETE) {
-                    url=API_MESSAGES_DELETE;
-                }else {
-                    return false;
-                }
-            String  jsonString =post(url,messageOperationParameter.toJson());
+
+    private static boolean MessageOperation(Context context, String user_id, String msg_id, int operationType) {
+        boolean result = false;
+        try {
+            MessageOperationParameter messageOperationParameter = new MessageForwardParameter();
+            messageOperationParameter.setUserID(user_id);
+            messageOperationParameter.setMessagesID(msg_id);
+            String url;
+            if (operationType == MessageOperationParameter.SEEN) {
+                url = API_MESSAGES_SEEN;
+            } else if (operationType == MessageOperationParameter.DELIVER) {
+                url = API_MESSAGES_DELIVER;
+            } else if (operationType == MessageOperationParameter.DELETE) {
+                url = API_MESSAGES_DELETE;
+            } else {
+                return false;
+            }
+            String jsonString = post(url, messageOperationParameter.toJson());
             Gson gson = new Gson();
-            ParentResponse parentResponse = gson.fromJson(jsonString,ParentResponse.class);
-            if(parentResponse.getStatus()){
-                result=true;
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
+                result = true;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "MessageOperation", e, -1, context);
-        }finally {
+        } finally {
             return result;
         }
     }
-    public static boolean deleteMessgae(Context context, int user_id , String msg_id ){
-        return MessageOperation(context,user_id,msg_id,MessageOperationParameter.DELETE);
-    }
-    public static boolean seenMessgae(Context context, int user_id , String msg_id ){
-        return MessageOperation(context,user_id,msg_id,MessageOperationParameter.SEEN);
-    }
-    public static boolean deliveredMessgae(Context context, int user_id , String msg_id ){
-        return MessageOperation(context,user_id,msg_id,MessageOperationParameter.DELIVER);
+
+    public static boolean deleteMessgae(Context context, String user_id, String msg_id) {
+        return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELETE);
     }
 
-    private static ArrayList<ChatModel> getChatMessages(Context context,int userID,int chatType){
+    public static boolean seenMessgae(Context context, String user_id, String msg_id) {
+        return MessageOperation(context, user_id, msg_id, MessageOperationParameter.SEEN);
+    }
+
+    public static boolean deliveredMessgae(Context context, String user_id, String msg_id) {
+        return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELIVER);
+    }
+
+    private static ArrayList<ChatModel> getChatMessages(Context context, int userID, int chatType) {
         ArrayList<ChatModel> messageArrayList = new ArrayList<>();
-        try{
+        try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userID);
             String url;
-            if(chatType==UserInfoParameter.CHATUSER) {
+            if (chatType == UserInfoParameter.CHATUSER) {
                 url = API_MESSAGES_CHAT_USER;
-            }
-            else if(chatType==UserInfoParameter.CHATCLINIC) {
+            } else if (chatType == UserInfoParameter.CHATCLINIC) {
                 url = API_MESSAGES_CHAT_CLINIC;
-            }else if(chatType==UserInfoParameter.CHATDOCTOR) {
-                url=API_MESSAGES_CHAT_DOCTOR;
-            }else if(chatType==UserInfoParameter.CHATANOTHER){
-                url=API_MESSAGES_CHAT_ANOTHER;
-            }
-            else{
+            } else if (chatType == UserInfoParameter.CHATDOCTOR) {
+                url = API_MESSAGES_CHAT_DOCTOR;
+            } else if (chatType == UserInfoParameter.CHATANOTHER) {
+                url = API_MESSAGES_CHAT_ANOTHER;
+            } else {
                 return messageArrayList;
             }
-            String  jsonString =post(url,userInfoParameter.toJson());
+            String jsonString = post(url, userInfoParameter.toJson());
             Gson gson = new Gson();
-            ChatResponse chatResponse = gson.fromJson(jsonString,ChatResponse.class);
-            if(chatResponse.getStatus()) {
-                messageArrayList=chatResponse.getChatModels();
+            ChatResponse chatResponse = gson.fromJson(jsonString, ChatResponse.class);
+            if (chatResponse.getStatus()) {
+                messageArrayList = chatResponse.getChatModels();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "getChatMessages", e, -1, context);
-        }finally {
+        } finally {
             return messageArrayList;
         }
     }
-    public static ArrayList<ChatModel> getChatDoctor(Context context,int userID){
-        return getChatMessages(context,userID,UserInfoParameter.CHATDOCTOR);
+
+    public static ArrayList<ChatModel> getChatDoctor(Context context, int userID) {
+        return getChatMessages(context, userID, UserInfoParameter.CHATDOCTOR);
     }
-    public static ArrayList<ChatModel> getChatClinic(Context context,int userID){
-        return getChatMessages(context,userID,UserInfoParameter.CHATCLINIC);
+
+    public static ArrayList<ChatModel> getChatClinic(Context context, int userID) {
+        return getChatMessages(context, userID, UserInfoParameter.CHATCLINIC);
     }
-    public static ArrayList<ChatModel> getChatUser(Context context,int userID){
-        return getChatMessages(context,userID,UserInfoParameter.CHATUSER);
+
+    public static ArrayList<ChatModel> getChatUser(Context context, int userID) {
+        return getChatMessages(context, userID, UserInfoParameter.CHATUSER);
     }
-    public static ArrayList<ChatModel> getChatAnother(Context context,int userID){
-        return getChatMessages(context,userID,UserInfoParameter.CHATANOTHER);
+
+    public static ArrayList<ChatModel> getChatAnother(Context context, int userID) {
+        return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
+    }
+
+    // Add or Update Push Notification Token
+    public static void addToken(Context context, String userId, String token) {
+        try {
+            TokenAddParameter parameter = new TokenAddParameter();
+            parameter.setUserId(userId);
+            parameter.setToken(token);
+            String jsonString = post(API_SPECIALITIES_LIST, parameter.toJson());
+            Gson gson = new Gson();
+            ParentResponse response = gson.fromJson(jsonString, ParentResponse.class);
+            Log.d(TAG, response.getMsg());
+        } catch (Exception e) {
+            Helper.handleError(TAG, "addToken", e, -1, context);
+        }
     }
     //endregion
 }

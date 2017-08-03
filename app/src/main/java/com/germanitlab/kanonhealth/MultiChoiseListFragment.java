@@ -18,10 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -32,7 +30,7 @@ import java.util.ArrayList;
  * Created by Geram IT Lab on 05/06/2017.
  */
 
-public class MultiChoiseListFragment extends DialogFragment implements ApiResponse {
+public class MultiChoiseListFragment extends DialogFragment {
     ProgressBar progressBar;
     RecyclerView recyclerView;
     TextView error_message;

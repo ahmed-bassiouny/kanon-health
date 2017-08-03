@@ -14,10 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
@@ -151,6 +150,14 @@ public class RateActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+
+//        (new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ApiHelper.
+//            }
+//        })).run();
+
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {

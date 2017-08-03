@@ -34,11 +34,9 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -53,7 +51,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 
-public class ChatsDoctorFragment extends Fragment implements ApiResponse {
+public class ChatsDoctorFragment extends Fragment {
 
     private View view;
     private RecyclerView recyclerView;

@@ -14,13 +14,12 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.httpchat.MessageRequest;
 import com.germanitlab.kanonhealth.httpchat.MessageRequestSeen;
 import com.germanitlab.kanonhealth.httpchat.Notification;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -50,36 +49,36 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         /*
         *
         * */
-         // notificationType ==  1 for new messagee ,2 for login , 3 for deliver message , 4 for close session ,6 for seen message  Andy
+        // notificationType ==  1 for new messagee ,2 for login , 3 for deliver message , 4 for close session ,6 for seen message  Andy
 
         try {
             int notificationType = Integer.parseInt(remoteMessage.getData().get("notificationtype"));
             switch (notificationType) {
                 case 1:
                     if (HttpChatFragment.chatRunning)
-                        getMessage(remoteMessage,notificationType);
+                        getMessage(remoteMessage, notificationType);
                     else //notify
-                    if(remoteMessage.getData().get("msg")!=null && remoteMessage.getData().get("from_id")!=null && remoteMessage.getData().get("to_id")!=null) {
-                        Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),remoteMessage.getData().get("from_id"),true);
-                        messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
-                    }else if(remoteMessage.getData().get("msg")!=null){
-                        messagesDeliver(remoteMessage.getData().get("from_id"),remoteMessage.getData().get("to_id"));
-                        Notification.showNotification(this, "title", remoteMessage.getData().get("msg"),"",false);
+                        if (remoteMessage.getData().get("msg") != null && remoteMessage.getData().get("from_id") != null && remoteMessage.getData().get("to_id") != null) {
+                            Notification.showNotification(this, "title", remoteMessage.getData().get("msg"), remoteMessage.getData().get("from_id"), true);
+                            messagesDeliver(remoteMessage.getData().get("from_id"), remoteMessage.getData().get("to_id"));
+                        } else if (remoteMessage.getData().get("msg") != null) {
+                            messagesDeliver(remoteMessage.getData().get("from_id"), remoteMessage.getData().get("to_id"));
+                            Notification.showNotification(this, "title", remoteMessage.getData().get("msg"), "", false);
 
-                    }
+                        }
                     break;
                 case 2:
-                    if(remoteMessage.getData().get("body")!=null &&remoteMessage.getData().get("title")!=null)
-                    Notification.showNotification(this, remoteMessage.getData().get("body"), remoteMessage.getData().get("title"),"",false);
+                    if (remoteMessage.getData().get("body") != null && remoteMessage.getData().get("title") != null)
+                        Notification.showNotification(this, remoteMessage.getData().get("body"), remoteMessage.getData().get("title"), "", false);
                     break;
                 case 3:
                 case 6:
                     if (HttpChatFragment.chatRunning)
-                        getMessageDeliveredSeen(remoteMessage,notificationType);
+                        getMessageDeliveredSeen(remoteMessage, notificationType);
                     break;
                 case 4: // for closeing session
-                    if(HttpChatFragment.chatRunning)
-                        getMessage(remoteMessage,notificationType);
+                    if (HttpChatFragment.chatRunning)
+                        getMessage(remoteMessage, notificationType);
 
             }
         } catch (Exception e) {
@@ -128,7 +127,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     }
 
-    private void getMessage(RemoteMessage remoteMessage,int notificationtype) {
+    private void getMessage(RemoteMessage remoteMessage, int notificationtype) {
         Message message = new Message();
         if (remoteMessage.getData().get("from_id") != null)
             message.setFrom_id(Integer.valueOf(remoteMessage.getData().get("from_id")));
@@ -141,7 +140,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         intent.putExtra("notificationtype", notificationtype);
         broadcaster.sendBroadcast(intent);
     }
-    private void getMessageDeliveredSeen(RemoteMessage remoteMessage,int notificationtype) {
+
+    private void getMessageDeliveredSeen(RemoteMessage remoteMessage, int notificationtype) {
         Intent intent = new Intent("MyData");
         intent.putExtra("notificationtype", notificationtype);
         broadcaster.sendBroadcast(intent);
@@ -184,21 +184,16 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     }
 
-    private void messagesDeliver(String userID,String doctorID){
+    private void messagesDeliver(final String userID, final String messageId) {
         // i sent request to make my msg seen
         try {
-            MessageRequestSeen messageRequest = new MessageRequestSeen(Integer.parseInt(userID),Integer.parseInt(doctorID));
-            new HttpCall(this, new ApiResponse() {
+            (new Thread(new Runnable() {
                 @Override
-                public void onSuccess(Object response) {
+                public void run() {
+                    ApiHelper.deliveredMessgae(getApplicationContext(), userID, messageId);
                 }
-
-                @Override
-                public void onFailed(String error) {
-
-                }
-            }).messagesDeliver(messageRequest);
-        }catch (Exception e){
+            })).run();
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("messagesDeliver", "messagesDeliver: ", e);
         }

@@ -19,13 +19,11 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
@@ -41,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity implements ApiResponse {
+public class ProfileActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_profile_edit)
     TextView tvEdit;

@@ -35,7 +35,6 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -47,7 +46,6 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -71,7 +69,7 @@ import butterknife.OnClick;
  * Created by Geram IT Lab on 21/02/2017.
  */
 
-public class EditUserProfileActivity extends ParentActivity implements Serializable, ApiResponse, DialogPickerCallBacks {
+public class EditUserProfileActivity extends ParentActivity implements Serializable, DialogPickerCallBacks {
 
     private static final int CROP_PIC = 5;
     private UserInfoResponse userInfoResponse;

@@ -5,9 +5,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.async.HttpCall;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.RequsetToken;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -33,20 +32,13 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     }
 
-    private void sendRegistrationToServer(String token) {
-        PrefManager prefManager = new PrefManager(getApplicationContext());
-        RequsetToken requsetToken = new RequsetToken(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), 1, token);
-        new HttpCall(getApplicationContext(), new ApiResponse() {
+    private void sendRegistrationToServer(final String token) {
+        (new Thread(new Runnable() {
             @Override
-            public void onSuccess(Object response) {
-
+            public void run() {
+                PrefManager prefManager = new PrefManager(getApplicationContext());
+                ApiHelper.addToken(getApplicationContext(),prefManager.getData(PrefManager.USER_ID),token);
             }
-
-            @Override
-            public void onFailed(String error) {
-
-            }
-        }).updateToken(requsetToken);
-
+        })).run();
     }
 }

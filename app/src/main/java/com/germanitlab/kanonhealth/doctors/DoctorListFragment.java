@@ -31,11 +31,9 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -54,7 +52,7 @@ import java.util.List;
 
 // Edit By Ahmed 29-5-2017
 
-public class DoctorListFragment extends Fragment implements ApiResponse {
+public class DoctorListFragment extends Fragment {
 
     private View view;
     private RecyclerView recyclerView;

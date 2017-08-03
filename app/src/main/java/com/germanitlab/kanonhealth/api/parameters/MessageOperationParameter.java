@@ -8,25 +8,25 @@ import com.google.gson.annotations.SerializedName;
 
 public class MessageOperationParameter extends ParentParameters {
 
-    public final static String PARAMATER_USER_ID="user_id";
-    public final static String PARAMATER_MSG_ID="msg_id";
+    public final static String PARAMATER_USER_ID = "user_id";
+    public final static String PARAMATER_MSG_ID = "msg_id";
 
-    public final static int DELETE=0;
-    public final static int DELIVER=1;
-    public final static int SEEN=2;
+    public final static int DELETE = 0;
+    public final static int DELIVER = 1;
+    public final static int SEEN = 2;
 
     // id user send message
     @SerializedName(PARAMATER_USER_ID)
-    private int userID;
+    private String userID;
     // id message send from me to another user (multi messgaes)
     @SerializedName(PARAMATER_MSG_ID)
     private String messagesID;
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

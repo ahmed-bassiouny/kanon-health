@@ -66,14 +66,12 @@ import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
@@ -102,7 +100,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class HttpChatFragment extends ParentFragment implements ApiResponse, Serializable, HoldingButtonLayoutListener {
+public class HttpChatFragment extends ParentFragment implements Serializable, HoldingButtonLayoutListener {
 
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;

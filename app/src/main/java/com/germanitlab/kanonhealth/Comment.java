@@ -14,11 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 

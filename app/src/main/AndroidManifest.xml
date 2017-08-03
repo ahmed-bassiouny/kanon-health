@@ -131,9 +131,6 @@
             android:name=".intro.VerificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Specilaities"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".RateActivity"
             android:screenOrientation="portrait" />
 

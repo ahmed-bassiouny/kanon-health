@@ -26,12 +26,10 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
 import com.google.android.gms.common.api.Api;
@@ -47,7 +45,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 
-public class SignupActivity extends AppCompatActivity implements ApiResponse {
+public class SignupActivity extends AppCompatActivity {
 
 
     Button btnSignUp;

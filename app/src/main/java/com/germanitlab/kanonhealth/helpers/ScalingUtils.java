@@ -1,4 +1,4 @@
-package com.germanitlab.kanonhealth.chat;
+package com.germanitlab.kanonhealth.helpers;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

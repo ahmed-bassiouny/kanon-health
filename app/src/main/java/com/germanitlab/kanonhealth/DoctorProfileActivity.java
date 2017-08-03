@@ -34,7 +34,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -46,7 +45,6 @@ import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.Info;
@@ -73,7 +71,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends ParentActivity implements Message<ChooseModel>, Serializable, ApiResponse, DialogPickerCallBacks {
+public class DoctorProfileActivity extends ParentActivity implements Message<ChooseModel>, Serializable,  DialogPickerCallBacks {
 
     private static final int CROP_PIC = 5;
     @BindView(R.id.speciality_recycleview)

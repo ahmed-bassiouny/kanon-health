@@ -30,9 +30,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.async.HttpCall;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.chat.MapsActivity;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -40,7 +38,6 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
 import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.interfaces.ApiResponse;
 import com.germanitlab.kanonhealth.models.messages.Message;
 
 import org.apache.commons.lang3.StringEscapeUtils;
