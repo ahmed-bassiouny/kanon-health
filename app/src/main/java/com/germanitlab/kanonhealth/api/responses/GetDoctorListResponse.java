@@ -1,6 +1,5 @@
 package com.germanitlab.kanonhealth.api.responses;
 
-import com.germanitlab.kanonhealth.api.models.User;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.google.gson.annotations.SerializedName;
 

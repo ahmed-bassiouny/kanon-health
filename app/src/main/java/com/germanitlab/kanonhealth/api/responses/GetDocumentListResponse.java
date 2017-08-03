@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth.api.responses;
 
 import com.germanitlab.kanonhealth.api.models.Document;
-import com.germanitlab.kanonhealth.api.models.User;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
