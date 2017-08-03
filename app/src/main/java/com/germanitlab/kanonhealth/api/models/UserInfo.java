@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class UserInfo extends ParentModel{
 
+     //region key
     public static final String KEY_USERID="user_id";
     public static final String KEY_USERTYPE="user_type";
     public static final String KEY_FIRSTNAME="first_name";
@@ -23,22 +24,26 @@ public class UserInfo extends ParentModel{
     public static final String KEY_BIRTHDAY="birh_day";
     public static final String KEY_AVATAR="avatar";
     public static final String KEY_DOCTOR_ID="doctor_id";
-    public static final String KEY_CLINICS="clinics";
     public static final String KEY_DOCUMENTS="documents";
-    public static final String KEY_EMAIL =    "email";
+    public static final String KEY_EMAIL = "email";
     public static final String KEY_RATE_NUM = "rate_num";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
     public static final String KEY_ADDRESS = "address";
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
     public static final String KEY_IS_AVAILABLE= "is_available";
+    public static final String KEY_ACTIVATED="activated";
+    public static final String KEY_SPECIALITIES="specialitys";
+    public static final String Clinics ="membar_at";
+    // endregion
 
-
+    // region constraints
     public static final int DOCTOR=2;
     public static final int PATIENT=1;
+    // endregion
 
+    // region Attributes
     @SerializedName(KEY_USERID)
     private Integer userID;
-
     @SerializedName(KEY_DOCTOR_ID)
     private Integer doctorID;
     // usertype => 1 patient , 2 doctor
@@ -59,42 +64,35 @@ public class UserInfo extends ParentModel{
     @SerializedName(KEY_GENDER)
     private String  gender;
     @SerializedName(KEY_BIRTHDAY)
-    private String  birh_day;
+    private String birthday;
     @SerializedName(KEY_AVATAR)
     private String  avatar;
     @SerializedName(KEY_IS_AVAILABLE)
     private Integer isAvailable;
-
     @SerializedName(KEY_DOCUMENTS )
     private ArrayList<Document> documents;
-
-    @SerializedName(KEY_CLINICS)
-    private ArrayList<Clinic> clinics;
-
     @SerializedName(KEY_EMAIL)
     private String email;
-
     @SerializedName(KEY_RATE_NUM)
     private Float rateNum;
-
     @SerializedName(KEY_RATE_PERCENTAGE)
-    private HashMap<String, String> ratePercentage;
-
+    private HashMap<String, Integer> ratePercentage;
     @SerializedName(KEY_ADDRESS)
     private String address;
-
     @SerializedName(KEY_SUPPORTED_LANG)
+    private ArrayList<SupportedLang> supportedLangs;
 
-    //private ArrayList<SupportedLang> supportedLangs;
+    @SerializedName(KEY_ACTIVATED)
+    private Integer isActive;
+    @SerializedName(KEY_SPECIALITIES)
+    private ArrayList<Speciality> specialities;
+    @SerializedName(Clinics)
+    private ArrayList<Clinic> clinics;
+    // endregion
 
 
-    /*
-    // i need some data to make model
-    * clinic
-    * document
-    * doctor
-    * */
 
+    // region setter and getter
     public Integer getUserID() {
         if(userID==null)
             userID=0;
@@ -171,12 +169,12 @@ public class UserInfo extends ParentModel{
         this.gender = gender;
     }
 
-    public String getBirh_day() {
-        return birh_day;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirh_day(String birh_day) {
-        this.birh_day = birh_day;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getAvatar() {
@@ -203,13 +201,13 @@ public class UserInfo extends ParentModel{
     }
 
 
-    /*public ArrayList<SupportedLang> getSupportedLangs() {
+    public ArrayList<SupportedLang> getSupportedLangs() {
         return supportedLangs;
     }
 
     public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
         this.supportedLangs = supportedLangs;
-    }*/
+    }
 
     public static String getKeyUserid() {
         return KEY_USERID;
@@ -263,17 +261,28 @@ public class UserInfo extends ParentModel{
         this.rateNum = rateNum;
     }
 
-    public HashMap<String, String> getRatePercentage() {
+    public HashMap<String, Integer> getRatePercentage() {
         return ratePercentage;
     }
 
-    public void setRatePercentage(HashMap<String, String> ratePercentage) {
+    public void setRatePercentage(HashMap<String, Integer> ratePercentage) {
         this.ratePercentage = ratePercentage;
     }
-    public int getIsOpen(){
-        return 0;
-    }
-    public void setIsOpen(int i){
 
+    public Integer getIsActive() {
+        return isActive;
     }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
+    public ArrayList<Speciality> getSpecialities() {
+        return specialities;
+    }
+
+    public void setSpecialities(ArrayList<Speciality> specialities) {
+        this.specialities = specialities;
+    }
+    //endregion
 }

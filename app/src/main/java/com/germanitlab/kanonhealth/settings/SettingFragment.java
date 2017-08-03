@@ -8,14 +8,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.PasscodeActivty;
@@ -38,21 +35,17 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
-import com.germanitlab.kanonhealth.api.models.User;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
 import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -259,7 +252,7 @@ public class SettingFragment extends Fragment {
             profile = (TableRow) view.findViewById(R.id.my_profile);
             trDrStatus = (TableRow) view.findViewById(R.id.dr_status);
             vLineUnderDrStatus =  view.findViewById(R.id.v_under_dr_status);
-            if(user.getUserType() == User.DOCTOR) {
+            if(user.getUserType() == UserInfo.DOCTOR) {
                 trDrStatus.setVisibility(View.GONE);
                 vLineUnderDrStatus.setVisibility(View.GONE);
             }
@@ -358,7 +351,7 @@ public class SettingFragment extends Fragment {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (user.getUserType()==User.DOCTOR ){
+                    if (user.getUserType()==UserInfo.DOCTOR ){
                         Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                         intent.putExtra("doctor_data", user);
                         startActivity(intent);
@@ -403,13 +396,13 @@ public class SettingFragment extends Fragment {
 
                 }
             });
-            if (user.getUserType() == User.DOCTOR) {
+            if (user.getUserType() == UserInfo.DOCTOR) {
                 tvAddPractice.setVisibility(View.VISIBLE);
                 line.setVisibility(View.VISIBLE);
                 txt_status.setVisibility(View.VISIBLE);
                 btn_change_status.setVisibility(View.VISIBLE);
             }
-            if (user.getUserType() == User.DOCTOR) {
+            if (user.getUserType() == UserInfo.DOCTOR) {
                 rvPracticies.setVisibility(View.VISIBLE);
             } else {
                 rvPracticies.setVisibility(View.GONE);
