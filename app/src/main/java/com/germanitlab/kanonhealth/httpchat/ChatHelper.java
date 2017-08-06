@@ -77,7 +77,7 @@ public class ChatHelper {
     protected int creatDummyMessage() {
         Message message = new Message();
         message.setDateTime(getDateTimeNow());
-        message.setType(Constants.UNDEFINED);
+        message.setType(Message.MESSAGE_TYPE_UNDEFINED);
         message.setFromID(userID);
         messages.add(message);
         chatAdapter.setList(messages);
@@ -89,7 +89,7 @@ public class ChatHelper {
     protected int creatDummyDocument() {
         Document document=new Document();
         document.setDateTime(getDateTimeNow());
-        document.setType(Constants.UNDEFINED);
+        document.setType(Message.MESSAGE_TYPE_UNDEFINED);
         documents.add(document);
         documentChatAdapter.setList(documents);
         documentChatAdapter.notifyDataSetChanged();
@@ -112,7 +112,7 @@ public class ChatHelper {
         message.setToID(doctorID);
         message.setDateTime(getDateTimeNow());
         message.setMedia("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
-        message.setType(Constants.LOCATION);
+        message.setType(Message.MESSAGE_TYPE_LOCATION);
 
         new Thread(new Runnable() {
             @Override
@@ -137,7 +137,7 @@ public class ChatHelper {
         final Document document = new Document();
         document.setDateTime(getDateTimeNow());
         document.setMedia("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
-        document.setType(Constants.LOCATION);
+        document.setType(Message.MESSAGE_TYPE_LOCATION);
 
         new Thread(new Runnable() {
             @Override
@@ -198,7 +198,7 @@ public class ChatHelper {
         message.setFromID(userID);
         message.setToID(doctorID);
         message.setMessage(textMsg);
-        message.setType(Constants.TEXT);
+        message.setType(Message.MESSAGE_TYPE_TEXT);
         message.setDateTime(getDateTimeNow());
         messages.add(message);
         chatAdapter.setList(messages);
@@ -228,7 +228,7 @@ public class ChatHelper {
     protected void sendTextDocument(String textMsg){
         final Document document = new Document();
         document.setDocument(textMsg);
-        document.setType(Constants.TEXT);
+        document.setType(Message.MESSAGE_TYPE_TEXT);
         document.setDateTime(getDateTimeNow());
         documents.add(document);
         documentChatAdapter.setList(documents);

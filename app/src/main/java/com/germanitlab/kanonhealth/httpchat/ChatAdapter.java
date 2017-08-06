@@ -98,17 +98,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
 
         switch (type) {
-            case Constants.IMAGE_MESSAGE:
-            case Constants.LOCATION_MESSAGE:
-            case Constants.VIDEO_MESSAGE:
+            case Message.MESSAGE_TYPE_IMAGE_NUM:
+            case Message.MESSAGE_TYPE_LOCATION_NUM:
+            case Message.MESSAGE_TYPE_VIDEO_NUM:
                 ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
                 ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
                 return imageMessageViewHolder;
-            case Constants.AUDIO_MESSAGE:
+            case Message.MESSAGE_TYPE_AUDIO_NUM:
                 ViewGroup audioMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_audio_message, parent, false);
                 AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
                 return audioMessageViewHolder;
-            case Constants.UNDEFINED_MESSAGE:
+            case Message.MESSAGE_TYPE_UNDEFINED_NUM:
                 ViewGroup undefined = (ViewGroup) mInflater.inflate(R.layout.item_chat_undefined_message, parent, false);
                 UndefinedViewHolder undefinedViewHolder = new UndefinedViewHolder(undefined);
                 return undefinedViewHolder;
@@ -123,23 +123,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position) {
         if (mMessages.get(position).getType() != null)
             switch (mMessages.get(position).getType()) {
-                case Constants.IMAGE:
+                case Message.MESSAGE_TYPE_IMAGE:
                     ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
                     setImageMessage(imageViewHolder, position);
                     break;
-                case Constants.AUDIO:
+                case Message.MESSAGE_TYPE_AUDIO:
                     AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
                     setAudioMessage(audioViewHolder, position);
                     break;
-                case Constants.VIDEO:
+                case Message.MESSAGE_TYPE_VIDEO:
                     ImageViewHolder VideoViewHolder = (ImageViewHolder) baseViewHolder;
                     setVideoMessage(VideoViewHolder, position);
                     break;
-                case Constants.LOCATION:
+                case Message.MESSAGE_TYPE_LOCATION:
                     ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
                     setLocationMessage(locationViewHolder, position);
                     break;
-                case Constants.UNDEFINED:
+                case Message.MESSAGE_TYPE_UNDEFINED:
                     UndefinedViewHolder undefinedViewHolder = (UndefinedViewHolder) baseViewHolder;
                     setUndefinedMessage(undefinedViewHolder, position);
                     break;
@@ -154,18 +154,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     public int getItemViewType(int position) {
         if (mMessages.get(position).getType() != null) {
             switch (mMessages.get(position).getType()) {
-                case Constants.AUDIO:
-                    return Constants.AUDIO_MESSAGE;
-                case Constants.VIDEO:
-                    return Constants.VIDEO_MESSAGE;
-                case Constants.IMAGE:
-                    return Constants.IMAGE_MESSAGE;
-                case Constants.LOCATION:
-                    return Constants.LOCATION_MESSAGE;
-                case Constants.UNDEFINED:
-                    return Constants.UNDEFINED_MESSAGE;
+                case Message.MESSAGE_TYPE_AUDIO:
+                    return Message.MESSAGE_TYPE_AUDIO_NUM;
+                case Message.MESSAGE_TYPE_VIDEO:
+                    return Message.MESSAGE_TYPE_VIDEO_NUM;
+                case Message.MESSAGE_TYPE_IMAGE:
+                    return Message.MESSAGE_TYPE_IMAGE_NUM;
+                case Message.MESSAGE_TYPE_LOCATION:
+                    return Message.MESSAGE_TYPE_LOCATION_NUM;
+                case Message.MESSAGE_TYPE_UNDEFINED:
+                    return Message.MESSAGE_TYPE_UNDEFINED_NUM;
                 default:
-                    return Constants.TEXT_MESSAGE;
+                    return Message.MESSAGE_TYPE_TEXT_NUM;
             }
         } else {
             return -1;
@@ -820,106 +820,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             unselectItem(select_item, textMessage, position);
     }
 
-    public void setImagePrivacy(int privacy, ImageView image, TextView txtPrivacy) {
-        if (privacy == 0) {
-//            image.setBackgroundResource(R.drawable.red);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red, activity.getTheme()));
-            } else {
-                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red));
-            }
-            txtPrivacy.setText(R.string.privacy_private);
-        } else if (privacy == 1) {
-//            image.setBackgroundResource(R.drawable.blue);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue, activity.getTheme()));
-            } else {
-                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue));
-            }
-            txtPrivacy.setText(R.string.doctor);
-        } else if (privacy == 2) {
-//            image.setBackgroundResource(R.drawable.green);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green, activity.getTheme()));
-            } else {
-                image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green));
-            }
-            txtPrivacy.setText(R.string.privacy_public);
-        }
-    }
-
-//    private void changePrivacy(final ImageView imagePrivacy, final int pos, final TextView txtPrivacy, final ProgressBar progressBar) {
-//        View.OnClickListener clickPrivacy = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-//                builder1.setMessage(R.string.change_privacy_msg);
-//                builder1.setCancelable(true);
-//
-//                builder1.setPositiveButton(
-//                        R.string.yes,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, final int position) {
-//                                dialog.cancel();
-//                                progressBar.setVisibility(View.VISIBLE);
-//                                imagePrivacy.setVisibility(View.GONE);
-//                                txtPrivacy.setVisibility(View.GONE);
-//                                new HttpCall(activity, new ApiResponse() {
-//                                    @Override
-//                                    public void onSuccess(Object response) {
-//                                        if (mMessages.get(pos).getPrivacy() == 0)
-//                                            mMessages.get(pos).setPrivacy(1);
-//
-//                                        else if (mMessages.get(pos).getPrivacy() == 1)
-//                                            mMessages.get(pos).setPrivacy(2);
-//
-//                                        else
-//                                            mMessages.get(pos).setPrivacy(0);
-//                                        progressBar.setVisibility(View.GONE);
-//                                        setImagePrivacy(mMessages.get(pos).getPrivacy(), imagePrivacy, txtPrivacy);
-//                                        notifyDataSetChanged();
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailed(String error) {
-//                                        Toast.makeText(activity, activity.getResources().getString(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-//                                        progressBar.setVisibility(View.GONE);
-//                                        imagePrivacy.setVisibility(View.VISIBLE);
-//                                        txtPrivacy.setVisibility(View.VISIBLE);
-//
-//                                    }
-//                                }).updatePrivacy(String.valueOf(userID), passowrd, mMessages.get(pos).get_Id(), (mMessages.get(pos).getPrivacy() + 1));
-//                            }
-//                        });
-//
-//                builder1.setNegativeButton(
-//                        R.string.no,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
-//                            }
-//                        });
-//
-//                AlertDialog alert11 = builder1.create();
-//                alert11.show();
-//            }
-//        };
-//        txtPrivacy.setOnClickListener(clickPrivacy);
-//        imagePrivacy.setOnClickListener(clickPrivacy);
-//
-//    }
 
     private void showLayout_Privacy(Message message, final int position, final ImageView imagePrivacy, final FrameLayout messageContainer, final ImageView status, final TextView txtPrivacy, TextView date, ProgressBar progressBar, final RelativeLayout relative_main) {
-        /*if (show_privacy) {
-            setImagePrivacy(message.getPrivacy(), imagePrivacy, txtPrivacy);
-            changePrivacy(imagePrivacy, position, txtPrivacy, progressBar);
-            imagePrivacy.setVisibility(View.VISIBLE);
-            txtPrivacy.setVisibility(View.VISIBLE);
-        } else {
-            imagePrivacy.setVisibility(View.GONE);
-            txtPrivacy.setVisibility(View.GONE);
-        }*/
         imagePrivacy.setVisibility(View.GONE);
         txtPrivacy.setVisibility(View.GONE);
         RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -938,11 +841,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
         if (mMessages.get(position).getFromID() == userID) {
             status.setVisibility(View.VISIBLE);
-            if (mMessages.get(position).getStatus() == 3) {
+            if (mMessages.get(position).getStatus() == Message.SEEN) {
                 status.setImageResource(R.drawable.readnew);
-            } else if (mMessages.get(position).getStatus() == 2) {
+            } else if (mMessages.get(position).getStatus() == Message.DELIVERED) {
                 status.setImageResource(R.drawable.receivenew);
-            } else if (mMessages.get(position).getStatus() == 1) {
+            } else if (mMessages.get(position).getStatus() == Message.SENT) {
                 status.setImageResource(R.drawable.sentnew);
             } else
                 status.setImageResource(R.drawable.pending);

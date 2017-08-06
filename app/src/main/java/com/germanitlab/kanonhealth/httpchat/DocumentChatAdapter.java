@@ -32,6 +32,7 @@ import com.germanitlab.kanonhealth.MapsActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Document;
+import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
@@ -102,17 +103,17 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
 
         switch (type) {
-            case Constants.IMAGE_MESSAGE:
-            case Constants.LOCATION_MESSAGE:
-            case Constants.VIDEO_MESSAGE:
+            case Message.MESSAGE_TYPE_IMAGE_NUM:
+            case Message.MESSAGE_TYPE_LOCATION_NUM:
+            case Message.MESSAGE_TYPE_VIDEO_NUM:
                 ViewGroup imageMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_image_message, parent, false);
                 ImageViewHolder imageMessageViewHolder = new ImageViewHolder(imageMessage);
                 return imageMessageViewHolder;
-            case Constants.AUDIO_MESSAGE:
+            case Message.MESSAGE_TYPE_AUDIO_NUM:
                 ViewGroup audioMessage = (ViewGroup) mInflater.inflate(R.layout.item_chat_audio_message, parent, false);
                 AudioViewHolder audioMessageViewHolder = new AudioViewHolder(audioMessage);
                 return audioMessageViewHolder;
-            case Constants.UNDEFINED_MESSAGE:
+            case Message.MESSAGE_TYPE_UNDEFINED_NUM:
                 ViewGroup undefined = (ViewGroup) mInflater.inflate(R.layout.item_chat_undefined_message, parent, false);
                 UndefinedViewHolder undefinedViewHolder = new UndefinedViewHolder(undefined);
                 return undefinedViewHolder;
@@ -127,23 +128,23 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position) {
         if (documents.get(position).getType() != null)
             switch (documents.get(position).getType()) {
-                case Constants.IMAGE:
+                case Message.MESSAGE_TYPE_IMAGE:
                     ImageViewHolder imageViewHolder = (ImageViewHolder) baseViewHolder;
                     setImageMessage(imageViewHolder, position);
                     break;
-                case Constants.AUDIO:
+                case Message.MESSAGE_TYPE_AUDIO:
                     AudioViewHolder audioViewHolder = (AudioViewHolder) baseViewHolder;
                     setAudioMessage(audioViewHolder, position);
                     break;
-                case Constants.VIDEO:
+                case Message.MESSAGE_TYPE_VIDEO:
                     ImageViewHolder VideoViewHolder = (ImageViewHolder) baseViewHolder;
                     setVideoMessage(VideoViewHolder, position);
                     break;
-                case Constants.LOCATION:
+                case Message.MESSAGE_TYPE_LOCATION:
                     ImageViewHolder locationViewHolder = (ImageViewHolder) baseViewHolder;
                     setLocationMessage(locationViewHolder, position);
                     break;
-                case Constants.UNDEFINED:
+                case Message.MESSAGE_TYPE_UNDEFINED:
                     UndefinedViewHolder undefinedViewHolder = (UndefinedViewHolder) baseViewHolder;
                     setUndefinedMessage(undefinedViewHolder, position);
                     break;
@@ -158,18 +159,18 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     public int getItemViewType(int position) {
         if (documents.get(position).getType() != null) {
             switch (documents.get(position).getType()) {
-                case Constants.AUDIO:
-                    return Constants.AUDIO_MESSAGE;
-                case Constants.VIDEO:
-                    return Constants.VIDEO_MESSAGE;
-                case Constants.IMAGE:
-                    return Constants.IMAGE_MESSAGE;
-                case Constants.LOCATION:
-                    return Constants.LOCATION_MESSAGE;
-                case Constants.UNDEFINED:
-                    return Constants.UNDEFINED_MESSAGE;
+                case Message.MESSAGE_TYPE_AUDIO:
+                    return Message.MESSAGE_TYPE_AUDIO_NUM;
+                case Message.MESSAGE_TYPE_VIDEO:
+                    return Message.MESSAGE_TYPE_VIDEO_NUM;
+                case Message.MESSAGE_TYPE_IMAGE:
+                    return Message.MESSAGE_TYPE_IMAGE_NUM;
+                case Message.MESSAGE_TYPE_LOCATION:
+                    return Message.MESSAGE_TYPE_LOCATION_NUM;
+                case Message.MESSAGE_TYPE_UNDEFINED:
+                    return Message.MESSAGE_TYPE_UNDEFINED_NUM;
                 default:
-                    return Constants.TEXT_MESSAGE;
+                    return Message.MESSAGE_TYPE_TEXT_NUM;
             }
         } else {
             return -1;

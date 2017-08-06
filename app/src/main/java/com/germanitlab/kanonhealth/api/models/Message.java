@@ -58,6 +58,18 @@ public class Message extends ParentModel {
     public final static String MESSAGE_TYPE_VIDEO="video";
     public final static String MESSAGE_TYPE_AUDIO="audio";
     public final static String MESSAGE_TYPE_LOCATION="location";
+    public final static String MESSAGE_TYPE_UNDEFINED="undefined";
+
+    public final static int MESSAGE_TYPE_TEXT_NUM=1;
+    public final static int MESSAGE_TYPE_IMAGE_NUM=2;
+    public final static int MESSAGE_TYPE_VIDEO_NUM=3;
+    public final static int MESSAGE_TYPE_AUDIO_NUM=4;
+    public final static int MESSAGE_TYPE_LOCATION_NUM=5;
+    public final static int MESSAGE_TYPE_UNDEFINED_NUM=6;
+
+    public final static int SEEN=3;
+    public final static int DELIVERED=2;
+    public final static int SENT=1;
     //endregion
 
     // region Setter and Getter
@@ -72,7 +84,7 @@ public class Message extends ParentModel {
 
     public Integer getStatus() {
         if(status==null || status==0)
-            status= 1;
+            status= SENT;
         return status;
     }
 

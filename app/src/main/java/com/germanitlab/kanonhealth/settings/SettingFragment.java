@@ -39,6 +39,8 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ProgressHelper;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.SettingResponse;
 import com.germanitlab.kanonhealth.models.StatusResponse;
@@ -149,9 +151,6 @@ public class SettingFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null && isVisibleToUser) {
             loadData();
-            if (Helper.isNetworkAvailable(getContext())) {
-                getSetting();
-            }
         }
     }
 
@@ -159,19 +158,13 @@ public class SettingFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadData();
-        if (Helper.isNetworkAvailable(getContext())) {
-            getSetting();
-        }
     }
 
     private void loadData() {
         if (!Helper.isNetworkAvailable(getActivity()))
             return;
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle(R.string.waiting_text);
-        progressDialog.setCancelable(false);
-
+        ProgressHelper.showProgressBar(getContext());
         new Thread( new Runnable() {
             @Override
             public void run() {
@@ -186,7 +179,7 @@ public class SettingFragment extends Fragment {
                 {
                    user=temp;
                 }
-                progressDialog.dismiss();
+                ProgressHelper.hideProgressBar();
                 initView();
                 handelEvent();
                 setHasOptionsMenu(true);
@@ -194,52 +187,6 @@ public class SettingFragment extends Fragment {
             }
         }).start();
 
-
-
-//
-//
-//        try {
-//            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//            progressDialog.setTitle(R.string.waiting_text);
-//            progressDialog.setCancelable(false);
-//            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-//            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-//            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-//            new HttpCall(getActivity(), new ApiResponse() {
-//                @Override
-//                public void onSuccess(Object response) {
-//                    if (response != null) {
-//
-//                        progressDialog.dismiss();
-//
-//                    } else {
-//                        user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
-//                        Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
-//                        progressDialog.dismiss();
-//                    }
-//                    initView();
-//                    handelEvent();
-//                    setHasOptionsMenu(true);
-//                    setAdapter();
-//                }
-//
-//                @Override
-//                public void onFailed(String error) {
-//                    user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser();
-//                    progressDialog.dismiss();
-//                    Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-//                    initView();
-//                    handelEvent();
-//                    setHasOptionsMenu(true);
-//                    setAdapter();
-//                }
-//            }).getProfile(userRegisterResponse);
-//
-//
-//        } catch (Exception e) {
-//            Crashlytics.logException(e);
-//            Toast.makeText(getContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-//        }
 
     }
 
@@ -321,14 +268,6 @@ public class SettingFragment extends Fragment {
             trDrStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    //Edit ahmed
-                    /*Intent intent = new Intent(getActivity(), HttpChatActivity.class);
-                    intent.putExtra("doctorID", 1);
-                    intent.putExtra("doctorName", "Support");
-                    intent.putExtra("doctorUrl", "");
-                    intent.putExtra("userType", user.isClinic == 1 ? 3 : user.getIsDoc() == 1 ? 2 : 1);
-                    startActivity(intent);*/
                     startActivity(new Intent(getContext(), CustomerSupportActivity.class));
                 }
             });
@@ -437,35 +376,6 @@ public class SettingFragment extends Fragment {
                 }
             }
         }).start();
-
-
-
-
-//        new HttpCall(getActivity(), new ApiResponse() {
-//            @Override
-//            public void onSuccess(Object response) {
-//                statusResponse = (StatusResponse) response;
-//                new PrefManager(getActivity()).put(PrefManager.USER_STATUS, statusResponse.getIs_available());
-//
-//                if (statusResponse.getIs_available().equals("1")) {
-//                    txt_status.setText(R.string.you_are_now_online);
-//                    btn_change_status.setText(R.string.go_offline);
-//                    user.setIs_available("1");
-//
-//                } else {
-//                    txt_status.setText(R.string.you_are_now_offline);
-//                    btn_change_status.setText(R.string.go_online);
-//                    user.setIs_available("0");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailed(String error) {
-//                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-//                Log.e("Error", error + "++");
-//
-//            }
-//        }).goOnline(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), isAvailable);
 
     }
 
