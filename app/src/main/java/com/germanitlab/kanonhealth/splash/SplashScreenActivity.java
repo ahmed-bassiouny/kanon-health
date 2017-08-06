@@ -81,6 +81,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         finish();
                     } else {
                         startActivity(new Intent(SplashScreenActivity.this, SignupActivity.class));
+                        prefManager.put(PrefManager.IS_OLD ,false);
                         finish();
                     }
                 }

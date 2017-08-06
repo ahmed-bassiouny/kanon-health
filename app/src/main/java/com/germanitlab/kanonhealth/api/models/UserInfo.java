@@ -50,11 +50,11 @@ public class UserInfo extends ParentModel{
     @SerializedName(KEY_USERTYPE)
     private Integer userType;
     @SerializedName(KEY_FIRSTNAME)
-    private String  firstName;
+    private String  firstName="";
     @SerializedName(KEY_LASTNAME)
-    private String  lastName;
+    private String  lastName="";
     @SerializedName(KEY_TITLE)
-    private String  title;
+    private String  title="";
     @SerializedName(KEY_PASSWORD)
     private String  password;
     @SerializedName(KEY_COUNTRY_CODE)
@@ -77,13 +77,14 @@ public class UserInfo extends ParentModel{
     private Float rateNum;
     @SerializedName(KEY_RATE_PERCENTAGE)
     private HashMap<String, Integer> ratePercentage;
-    @SerializedName(KEY_ADDRESS)
-    private String address;
+//    @SerializedName(KEY_ADDRESS)
+//    private String address;
     @SerializedName(KEY_SUPPORTED_LANG)
     private ArrayList<SupportedLang> supportedLangs;
 
     @SerializedName(KEY_ACTIVATED)
     private Integer isActive;
+
     @SerializedName(KEY_SPECIALITIES)
     private ArrayList<Speciality> specialities;
     @SerializedName(Clinics)
@@ -192,13 +193,13 @@ public class UserInfo extends ParentModel{
         isAvailable = available;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(String address) {
+//        this.address = address;
+//    }
 
 
     public ArrayList<SupportedLang> getSupportedLangs() {
@@ -285,4 +286,9 @@ public class UserInfo extends ParentModel{
         this.specialities = specialities;
     }
     //endregion
+
+    public String getFullName()
+    {
+    return    title+" "+firstName+" "+lastName;
+    }
 }

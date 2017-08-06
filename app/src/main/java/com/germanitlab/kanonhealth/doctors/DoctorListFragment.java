@@ -2,10 +2,12 @@ package com.germanitlab.kanonhealth.doctors;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -29,10 +31,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
@@ -61,12 +71,18 @@ public class DoctorListFragment extends Fragment {
     /*
     private TextView filter_to_list;
 */
-    List<User> doctorList;
+    ArrayList<UserInfo> doctorList;
+    ArrayList<Clinic> clinics;
+
+
+    ArrayList<ChatModel> chatModel;
     private Button btnLeftList, btnRightList;
     int speciality_id;
     String jsonString;
     int type;
     PrefManager prefManager;
+    private PrefManager mPrefManager;
+    UserInfo user;
     Gson gson;
     private UserRepository mDoctorRepository;
     private EditText edtDoctorListFilter;
@@ -76,17 +92,17 @@ public class DoctorListFragment extends Fragment {
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = false, is_chat_data_right = false;
     LinearLayoutManager llm;
-    boolean is_doc;
-    private static int firstVisibleItemPositionForRightTab = 0;
-    private static int firstVisibleItemPositionForLeftTab = 0;
+
+
+    private  static boolean leftTabVisible=true;
 
     public DoctorListFragment() {
     }
 
-    public static DoctorListFragment newInstance(int mspeciality_id, int mtype) {
+    public static DoctorListFragment newInstance() {
         Bundle bundle = new Bundle();
-        bundle.putInt("speciality_id", mspeciality_id);
-        bundle.putInt("type", mtype);
+//        bundle.putInt("speciality_id", mspeciality_id);
+//        bundle.putInt("type", mtype);
         if (doctorListFragment == null) {
             doctorListFragment = new DoctorListFragment();
             doctorListFragment.setArguments(bundle);
@@ -103,20 +119,26 @@ public class DoctorListFragment extends Fragment {
         try {
             view = inflater.inflate(R.layout.fragment_doctor_list, container, false);
             setHasOptionsMenu(true);
+            mPrefManager = new PrefManager(getActivity());
             prefManager = new PrefManager(getActivity());
+            try {
+                user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+            } catch (Exception e) {
+            }
             util = Util.getInstance(getActivity());
             initView();
-            is_doc = prefManager.get(PrefManager.IS_DOCTOR);
+           // is_doc = prefManager.get(PrefManager.IS_DOCTOR);
             gson = new Gson();
             btnLeftList.setText(R.string.doctors);
             btnRightList.setText(R.string.practices);
-            type = User.DOCTOR_TYPE;
+          //  type = User.DOCTOR_TYPE;
             doctorList = new ArrayList<>();
+            clinics= new ArrayList<>();
+            chatModel= new ArrayList<>();
+
             mDoctorRepository = new UserRepository(getContext());
-            if (!prefManager.get(PrefManager.IS_OLD))
-                loadFirstTime();
-            else
-                loadData();
+
+
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -126,11 +148,10 @@ public class DoctorListFragment extends Fragment {
 
     private void loadFirstTime() {
         util.showProgressDialog();
-        type = User.CLINICS_TYPE;
-        getBySpeciality(true, type);
-        type = User.DOCTOR_TYPE;
-        getBySpeciality(true, type);
-        getChatData();
+                setDoctorList();
+                setClinicList();
+                getChatData();
+
     }
 
 
@@ -166,11 +187,25 @@ public class DoctorListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        btnLeftList.setBackgroundResource(R.color.blue);
-        btnLeftList.setTextColor(getResources().getColor(R.color.white));
-        btnRightList.setBackgroundResource(R.color.gray);
-        btnRightList.setTextColor(getResources().getColor(R.color.black));
-        loadData();
+        if(leftTabVisible) {
+            btnLeftList.setBackgroundResource(R.color.blue);
+            btnLeftList.setTextColor(getResources().getColor(R.color.white));
+            btnRightList.setBackgroundResource(R.color.gray);
+            btnRightList.setTextColor(getResources().getColor(R.color.black));
+        }else
+        {
+            btnRightList.setBackgroundResource(R.color.blue);
+            btnRightList.setTextColor(getResources().getColor(R.color.white));
+            btnLeftList.setBackgroundResource(R.color.gray);
+            btnLeftList.setTextColor(getResources().getColor(R.color.black));
+        }
+        if (!prefManager.get(PrefManager.IS_OLD)) {
+            loadFirstTime();
+        }
+
+        else{
+            loadData();
+        }
     }
 
     public void requestPermissionForCamera() {
@@ -187,57 +222,106 @@ public class DoctorListFragment extends Fragment {
     }
 
     public void getChatData() {
-        new HttpCall(getActivity(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                doctorList = (List<User>) response;
-                updateDataBase(doctorList);
-                is_chat_data_left = true;
-                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-                    util.dismissProgressDialog();
-                    prefManager.put(PrefManager.IS_OLD, true);
-                }
-            }
+        if(user.getUserType()==user.PATIENT) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatDoctor(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    is_chat_data_left = true;
+                    isAllDataLoaded();
 
-            @Override
-            public void onFailed(String error) {
-                is_chat_data_left = true;
-                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-                    util.dismissProgressDialog();
-                    prefManager.put(PrefManager.IS_OLD, true);
                 }
-//                            tvLoadingError.setVisibility(View.VISIBLE);
-//                            if (error != null && error.length() > 0)
-//                                tvLoadingError.setText(error);
-//                            else tvLoadingError.setText("Some thing went wrong");
-            }
-        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
-        new HttpCall(getActivity(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                doctorList = (List<User>) response;
-                updateDataBase(doctorList);
-                is_chat_data_right = true;
-                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-                    util.dismissProgressDialog();
-                    prefManager.put(PrefManager.IS_OLD, true);
-                }
-            }
+            }).start();
 
-            @Override
-            public void onFailed(String error) {
-                is_chat_data_right = true;
-                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-                    util.dismissProgressDialog();
-                    prefManager.put(PrefManager.IS_OLD, true);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatClinic(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    is_chat_data_right = true;
+                    isAllDataLoaded();
+
                 }
-//                            tvLoadingError.setVisibility(View.VISIBLE);
-//                            if (error != null && error.length() > 0)
-//                                tvLoadingError.setText(error);
-//                            else tvLoadingError.setText("Some thing went wrong");
-//                            chat_layout.setVisibility(View.GONE);
-            }
-        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
+            }).start();
+        }else
+        {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatAnother(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    is_chat_data_left = true;
+                    isAllDataLoaded();
+
+                }
+            }).start();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatClinic(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    is_chat_data_right = true;
+                    isAllDataLoaded();
+
+                }
+            }).start();
+
+        }
+
+
+
+
+//
+//        new HttpCall(getActivity(), new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                doctorList = (List<User>) response;
+//                updateDataBase(doctorList);
+//                is_chat_data_left = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                is_chat_data_left = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+////                            tvLoadingError.setVisibility(View.VISIBLE);
+////                            if (error != null && error.length() > 0)
+////                                tvLoadingError.setText(error);
+////                            else tvLoadingError.setText("Some thing went wrong");
+//            }
+//        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
+//
+//        new HttpCall(getActivity(), new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                doctorList = (List<User>) response;
+//                updateDataBase(doctorList);
+//                is_chat_data_right = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                is_chat_data_right = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+////                            tvLoadingError.setVisibility(View.VISIBLE);
+////                            if (error != null && error.length() > 0)
+////                                tvLoadingError.setText(error);
+////                            else tvLoadingError.setText("Some thing went wrong");
+////                            chat_layout.setVisibility(View.GONE);
+//            }
+//        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
     }
 
     private void updateDataBase(List<User> doctorList) {
@@ -289,27 +373,27 @@ public class DoctorListFragment extends Fragment {
 
         Button btnShowProfile = (Button) dialog.findViewById(R.id.btn_show_profile);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                new HttpCall(getActivity(), new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-
-                        Log.d("Response", response.toString());
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                        Log.d("Response", error);
-                        dialog.dismiss();
-                    }
-                }).login(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), qr);
-            }
-        });
+//        btnLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                new HttpCall(getActivity(), new ApiResponse() {
+//                    @Override
+//                    public void onSuccess(Object response) {
+//
+//                        Log.d("Response", response.toString());
+//                        dialog.dismiss();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String error) {
+//                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                        Log.d("Response", error);
+//                        dialog.dismiss();
+//                    }
+//                }).login(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), qr);
+//            }
+//        });
 
 
         btnShowProfile.setOnClickListener(new View.OnClickListener() {
@@ -325,128 +409,133 @@ public class DoctorListFragment extends Fragment {
     }
 
 
-    private void getBySpeciality(final boolean first_time, final int typeNumber) {
-        new HttpCall(getActivity(), new ApiResponse() {
+
+
+    private void setDoctorList ()
+    {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(Object response) {
-                try {
-                    jsonString = gson.toJson(response);
-                    prefManager.put(PrefManager.DOCTOR_LIST, jsonString);
-                    doctorList = (List<User>) response;
-                    updateDatabase(doctorList);
-                    if (first_time) {
-                        if (typeNumber == User.DOCTOR_TYPE) {
-                            is_doctor_data = true;
-                            setAdapter(doctorList);
-                        } else if (typeNumber == User.CLINICS_TYPE)
-                            is_clinic_data = true;
-                        if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-                            util.dismissProgressDialog();
-                            prefManager.put(PrefManager.IS_OLD, true);
-                        }
+            public void run() {
+             doctorList= ApiHelper.postGetDoctorList(getContext());
 
-                    } else {
-                        setAdapter(doctorList);
-                        CheckTabToScrollTo();
+                if (!prefManager.get(PrefManager.IS_OLD)) {
+                    is_doctor_data = true;
+                    if(leftTabVisible) {
+                        setDoctorAdapter(doctorList);
                     }
-
-                } catch (Exception e) {
-                    if (first_time) {
-                        if (typeNumber == User.DOCTOR_TYPE) {
-                            is_doctor_data = true;
-                        } else if (typeNumber == User.CLINICS_TYPE)
-                            is_clinic_data = true;
-                        if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-                            util.dismissProgressDialog();
-                            prefManager.put(PrefManager.IS_OLD, true);
-                        }
-
+                       isAllDataLoaded();
+                } else {
+                    if(leftTabVisible) {
+                        setDoctorAdapter(doctorList);
                     }
-                    Crashlytics.logException(e);
-                    Log.e("tag about Exception", "msg about Exception ", e);
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                  //  CheckTabToScrollTo();
                 }
 
-
             }
+        }).start();
+    }
 
+    private void setClinicList()
+    {
+        new Thread(new Runnable() {
             @Override
-            public void onFailed(String error) {
-                if (first_time)
-                    util.dismissProgressDialog();
+            public void run() {
+                clinics= ApiHelper.postGetClinicList(getContext());
+                if (!prefManager.get(PrefManager.IS_OLD)) {
+                    is_clinic_data = true;
+                    if(!leftTabVisible) {
+                        setClinicsAdapter(clinics);
+                    }
+                    isAllDataLoaded();
+                } else {
+                    if(!leftTabVisible) {
+                        setClinicsAdapter(clinics);
+                    }
+                   // CheckTabToScrollTo();
+                }
+
             }
-        }).getlocations(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
-                speciality_id, type);
-    }
+        }).start();
 
-    private void CheckTabToScrollTo() {
-        if (type == User.DOCTOR_TYPE) {
-            scrollToPosition(firstVisibleItemPositionForLeftTab);
-        } else {
-            scrollToPosition(firstVisibleItemPositionForRightTab);
-        }
-    }
-
-    private void scrollToPosition(int mScrollPosition) {
-        try {
-            recyclerView.scrollToPosition(mScrollPosition);
-        } catch (Exception e) {
-        }
 
     }
 
-    private void updateDatabase(List<User> doctorList) {
-        for (User user : doctorList) {
-            User temp = mDoctorRepository.getDoctor(user);
-            if (temp != null) {
-                user.setIs_chat(temp.getIs_chat());
-            }
-            mDoctorRepository.create(user);
-        }
-    }
+//    private void CheckTabToScrollTo() {
+//        if (type == User.DOCTOR_TYPE) {
+//            scrollToPosition(firstVisibleItemPositionForLeftTab);
+//        } else {
+//            scrollToPosition(firstVisibleItemPositionForRightTab);
+//        }
+//    }
+
+//    private void scrollToPosition(int mScrollPosition) {
+//        try {
+//            recyclerView.scrollToPosition(mScrollPosition);
+//        } catch (Exception e) {
+//        }
+//
+//    }
+
+//    private void updateDatabase(List<User> doctorList) {
+//        for (User user : doctorList) {
+//            User temp = mDoctorRepository.getDoctor(user);
+//            if (temp != null) {
+//                user.setIs_chat(temp.getIs_chat());
+//            }
+//            mDoctorRepository.create(user);
+//        }
+//    }
 
 
-    private void setAdapter(List<User> doctorList) {
+    private void setDoctorAdapter(List<UserInfo> doctorList) {
         if (doctorList != null) {
-            DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), View.VISIBLE, 1);
-            recyclerView.setAdapter(doctorListAdapter);
+            final DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity());
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.setAdapter(doctorListAdapter);
+
+                }
+            });
+        }
+    }
+
+    private void setClinicsAdapter(List<Clinic> clinicList) {
+        if (clinicList != null) {
+            final ClinicListAdapter clinicListAdapter = new ClinicListAdapter(clinicList, getActivity());
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.setAdapter(clinicListAdapter);
+
+                }
+            });
         }
     }
 
 
-    @Override
-    public void onSuccess(Object response) {
-        try {
-            doctorList = (List<User>) response;
-            updateDatabase(doctorList);
-            setAdapter(doctorList);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onFailed(String error) {
-
-    }
-
-    @Override
-    public void onPause() {
-        if (type == User.DOCTOR_TYPE) {
-            firstVisibleItemPositionForLeftTab = getScrolled();
-        } else {
-            firstVisibleItemPositionForRightTab = getScrolled();
-        }
-        super.onPause();
-    }
+//    @Override
+//    public void onPause() {
+//        if (type == User.DOCTOR_TYPE) {
+//            firstVisibleItemPositionForLeftTab = getScrolled();
+//        } else {
+//            firstVisibleItemPositionForRightTab = getScrolled();
+//        }
+//        super.onPause();
+//    }
 
     private void loadData() {
-        doctorList = mDoctorRepository.getAll(type);
-        setAdapter(doctorList);
-        CheckTabToScrollTo();
+//        doctorList = mDoctorRepository.getAll(type);
+//        setAdapter(doctorList);
+  //      CheckTabToScrollTo();
         if (Helper.isNetworkAvailable(getContext())) {
-            getBySpeciality(false, 0);
+         if(leftTabVisible)
+         {
+          setDoctorList();
+         }else
+         {
+             setClinicList();
+         }
         }
     }
 
@@ -476,22 +565,40 @@ public class DoctorListFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (doctorList != null) {
+                if(leftTabVisible) {
+                    if (doctorList != null) {
 
+                        if (charSequence.toString().trim().length() > 0) {
+                            List<UserInfo> fileDoctorResponses = new ArrayList<>();
+                            for (int j = 0; j < doctorList.size(); j++) {
+
+                                String name = doctorList.get(j).getFullName();
+
+                                if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+
+                                    fileDoctorResponses.add(doctorList.get(j));
+                                }
+                            }
+                            setDoctorAdapter(fileDoctorResponses);
+                        } else setDoctorAdapter(doctorList);
+                    }
+                }else
+                {
                     if (charSequence.toString().trim().length() > 0) {
-                        List<User> fileDoctorResponses = new ArrayList<>();
-                        for (int j = 0; j < doctorList.size(); j++) {
+                        List<Clinic> fileClinicResponses = new ArrayList<>();
+                        for (int j = 0; j < clinics.size(); j++) {
 
-                            String name = doctorList.get(j).getFullName();
+                            String name = clinics.get(j).getName();
 
                             if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
-                                fileDoctorResponses.add(doctorList.get(j));
+                                fileClinicResponses.add(clinics.get(j));
                             }
                         }
-                        setAdapter(fileDoctorResponses);
-                    } else setAdapter(doctorList);
+                        setClinicsAdapter(fileClinicResponses);
+                    } else  setClinicsAdapter(clinics);
                 }
+
             }
 
             @Override
@@ -539,59 +646,39 @@ public class DoctorListFragment extends Fragment {
         btnRightList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                leftTabVisible=false;
                 btnRightList.setBackgroundResource(R.color.blue);
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
-                firstVisibleItemPositionForLeftTab = getScrolled();
-                if (type != User.CLINICS_TYPE) {
-                    type = User.CLINICS_TYPE;
                     loadData();
 
 
-                }
             }
         });
         btnLeftList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                leftTabVisible=true;
                 btnRightList.setBackgroundResource(R.color.gray);
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
-                firstVisibleItemPositionForRightTab = getScrolled();
 
-                if (type != User.DOCTOR_TYPE) {
-                    type = User.DOCTOR_TYPE;
                     loadData();
-
-                }
             }
         });
     }
 
-    private int getScrolled() {
-        if (llm != null && llm instanceof LinearLayoutManager) {
-            try {
-                return llm.findFirstVisibleItemPosition();
-            } catch (Exception e) {
-                return 0;
-            }
-        } else {
-            return 0;
+
+
+    private void isAllDataLoaded(){
+        if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+            util.dismissProgressDialog();
+            prefManager.put(PrefManager.IS_OLD, true);
         }
 
     }
 
-    private String getIam() {
-        Gson gson = new Gson();
-        if (gson.fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1)
-            return "doc";
-        else if (gson.fromJson(prefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1)
-            return "clinic";
-        else
-            return "user";
-    }
-
-
 }
+

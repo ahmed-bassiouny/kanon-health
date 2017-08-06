@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 
 public class AddOrEditClinicParameters extends ParentParameters{
-    public static final String PARAMETER_USER_ID ="user_id";
+    public static final String PARAMETER_ID ="user_id";
     public static final String PARAMETER_NAME="name";
     public static final String PARAMETER_AVATAR ="avatar";
     public static final String PARAMETER_SPECIALITY="speciality";
@@ -29,8 +29,8 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_SUPPORTED_LANG= "supported_lang";
 
 
-
-    @SerializedName(PARAMETER_USER_ID)
+// user id in case of add or clinic id in case of edit
+    @SerializedName(PARAMETER_ID)
     private Integer userId;
 
     @SerializedName(PARAMETER_NAME)

@@ -24,6 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -46,16 +47,16 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ItemView> {
+public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.ItemView> {
     private MessageRepositry mMessageRepositry;
-    private List<UserInfo> doctorContactsList;
+    private List<Clinic> clinicContactList;
     Activity activity;
     int userID;
     PrefManager prefManager;
 
-    public DoctorListAdapter(List<UserInfo> doctorContactsList, Activity activity) {
+    public ClinicListAdapter(List<Clinic> clinicContactList, Activity activity) {
         try {
-            this.doctorContactsList = doctorContactsList;
+            this.clinicContactList = clinicContactList;
             this.activity = activity;
             prefManager = new PrefManager(activity);
             mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
@@ -64,7 +65,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.e("DoctorListAdapter", "DoctorListAdapter: ", e);
+            Log.e("clinicListAdapter", "clinicListAdapter: ", e);
         }
     }
 
@@ -82,7 +83,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
     @Override
     public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_contact, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_contact, parent, false);
         return new ItemView(view);
     }
 
@@ -95,11 +96,11 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 /* data base
                 // tab poition is for tabs from 1 to 4
          */
-            final UserInfo doctor = doctorContactsList.get(position);
+            final Clinic clinic = clinicContactList.get(position);
 
             if (holder.tvDoctorName != null) {
-                if (!TextUtils.isEmpty(doctor.getFullName()))
-                    holder.tvDoctorName.setText(doctor.getFullName());
+                if (!TextUtils.isEmpty(clinic .getName()))
+                    holder.tvDoctorName.setText(clinic.getName());
             }
             //----------------------------------------------------------------------------------set Specialist -------------------------//
 //            if (holder.tvSpecialist != null) {
@@ -148,33 +149,33 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
             //--------------------------------------------------------------------------------------------------//
 
-            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL+ "/" + doctor.getAvatar(), R.drawable.placeholder);
+            if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
             }
 
-                holder.imgAvatar.setBorderWidth(0);
-                holder.imgAvatar.setBorderOverlay(false);
+            holder.imgAvatar.setBorderWidth(0);
+            holder.imgAvatar.setBorderOverlay(false);
 
 
-                if (doctor.getAvailable() != null) {
-                    if (doctor.getAvailable()==0) {
-                        final int newColor = activity.getResources().getColor(R.color.medium_grey);
-                        holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-                    } else {
-                        final int newColor = activity.getResources().getColor(R.color.new_green);
-                        holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-                    }
+            if (clinic.getAvailable() != null) {
+                if (clinic.getAvailable()==0) {
+                    final int newColor = activity.getResources().getColor(R.color.medium_grey);
+                    holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    final int newColor = activity.getResources().getColor(R.color.new_green);
+                    holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
                 }
+            }
 
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     /****** jira task number 208 **************************/
-                        Intent intent = new Intent(activity, DoctorProfileActivity.class);
-                        intent.putExtra("doctor_data", doctor);
-                        intent.putExtra("tab", "");
-                        activity.startActivity(intent);
+                    Intent intent = new Intent(activity, DoctorProfileActivity.class);
+                    intent.putExtra("doctor_data", clinic);
+                    intent.putExtra("tab", "");
+                    activity.startActivity(intent);
 
                 }
             });
@@ -189,7 +190,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
 
     @Override
     public int getItemCount() {
-        return doctorContactsList.size();
+        return clinicContactList.size();
     }
 
     public class ItemView extends RecyclerView.ViewHolder {

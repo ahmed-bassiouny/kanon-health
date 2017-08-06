@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by bassiouny on 02/08/17.
  */
 
-public class TokenAddParameter extends UserParameter {
+public class TokenAddParameter extends ParentParameters {
 
     public static final String PARAMETER_USER_ID = "user_id";
     public static final String PARAMETER_TOKEN = "token";

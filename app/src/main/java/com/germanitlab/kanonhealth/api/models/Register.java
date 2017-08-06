@@ -22,6 +22,8 @@ public class Register extends ParentModel {
     private Boolean exists;
 
     public Integer getId() {
+        if(id==null)
+            id=0;
         return id;
     }
 

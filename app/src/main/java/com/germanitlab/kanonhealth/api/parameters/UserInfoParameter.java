@@ -17,6 +17,7 @@ public class UserInfoParameter extends ParentParameters {
 
     @SerializedName(PARAMETER_USERID)
     private Integer userID;
+
     public Integer getUserID() {
         return userID;
     }

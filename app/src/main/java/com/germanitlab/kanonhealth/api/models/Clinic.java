@@ -9,7 +9,7 @@ import java.util.HashMap;
  * Created by norhan on 8/1/17.
  */
 
-public class Clinic {
+public class Clinic extends ParentModel{
 
     public static final String KEY_ID = "clinic_id";
     public static final String KEY_USER_ID = "user_id";
@@ -29,6 +29,7 @@ public class Clinic {
     public static final String KEY_PHONE = "phone";
     public static final String KEY_FAX = "fax";
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
+    public static final String KEY_IS_AVAILABLE= "is_available";
 
 
     @SerializedName(KEY_ID)
@@ -74,7 +75,6 @@ public class Clinic {
     private String city;
 
     @SerializedName(KEY_PROVINCE)
-
     private String province;
 
     @SerializedName(KEY_COUNTRY)
@@ -86,9 +86,11 @@ public class Clinic {
     @SerializedName(KEY_FAX)
     private String fax;
 
-    @SerializedName(KEY_SUPPORTED_LANG)
-    private ArrayList<SupportedLang> supportedLangs;
+//    @SerializedName(KEY_SUPPORTED_LANG)
+//    private ArrayList<SupportedLang> supportedLangs;
 
+    @SerializedName(KEY_IS_AVAILABLE)
+    private Integer isAvailable;
 
     public Integer getId() {
         return id;
@@ -234,13 +236,22 @@ public class Clinic {
         this.fax = fax;
     }
 
-    public ArrayList<SupportedLang> getSupportedLangs() {
-        return supportedLangs;
+//    public ArrayList<SupportedLang> getSupportedLangs() {
+//        return supportedLangs;
+//    }
+//
+//    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
+//        this.supportedLangs = supportedLangs;
+//    }
+
+    public Integer getAvailable() {
+        return isAvailable;
     }
 
-    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
-        this.supportedLangs = supportedLangs;
+    public void setAvailable(Integer available) {
+        isAvailable = available;
     }
+
 
 
 }

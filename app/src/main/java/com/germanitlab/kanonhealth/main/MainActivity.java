@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
 
             myviewpager.setCurrentItem(0);
 
-            speciality_id = intent.getIntExtra("speciality_id", 0);
-            type = intent.getIntExtra("type", 2);
+//            speciality_id = intent.getIntExtra("speciality_id", 0);
+//            type = intent.getIntExtra("type", 2);
 
 
             myviewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
             switch (pos) {
 
                 case 0:
-                    return DoctorListFragment.newInstance(speciality_id, type);
+                    return DoctorListFragment.newInstance();
                 case 1:
                     return HttpChatFragment.newInstance(new PrefManager(MainActivity.this).getInt(PrefManager.USER_ID));
                 case 2:
