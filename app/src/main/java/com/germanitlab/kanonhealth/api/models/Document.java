@@ -12,6 +12,8 @@ public class Document {
     public static final String KEY_DOCUMENT="document";
     public static final String KEY_IMAGE="image";
     public static final String KEY_PRIVACY="privacy";
+    public static final String KEY_CREATED_AT = "created_at";
+
 
     @SerializedName(KEY_DOCUMENT_ID)
     private Integer documentId;
@@ -23,10 +25,13 @@ public class Document {
     private String document;
 
     @SerializedName(KEY_IMAGE)
-    private String image;
+    private String media;
 
     @SerializedName(KEY_PRIVACY)
     private Integer privacy;
+    // date time of message (UTC)
+    @SerializedName(KEY_CREATED_AT)
+    private String dateTime;
 
     public Integer getDocumentId() {
         return documentId;
@@ -52,13 +57,6 @@ public class Document {
         this.document = document;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public Integer getPrivacy() {
         return privacy;
@@ -66,5 +64,21 @@ public class Document {
 
     public void setPrivacy(Integer privacy) {
         this.privacy = privacy;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public void setMedia(String media) {
+        this.media = media;
     }
 }

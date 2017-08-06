@@ -17,16 +17,16 @@ public class MessageOperationParameter extends ParentParameters {
 
     // id user send message
     @SerializedName(PARAMATER_USER_ID)
-    private String userID;
+    private Integer userID;
     // id message send from me to another user (multi messgaes)
     @SerializedName(PARAMATER_MSG_ID)
     private String messagesID;
 
-    public String getUserID() {
+    public Integer getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(Integer userID) {
         this.userID = userID;
     }
 

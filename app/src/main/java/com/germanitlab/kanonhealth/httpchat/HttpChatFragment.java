@@ -6,7 +6,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,18 +22,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,7 +41,6 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -66,25 +60,28 @@ import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.Document;
+import com.germanitlab.kanonhealth.api.models.Message;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
-import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
-import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.ormLite.ChatModelRepositry;
+import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
+import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -148,20 +145,19 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     int userID;
     String userPassword;
     int doctorID;
-
     private static final int SELECT_VIDEO = 2;
     private static final int RECORD_VIDEO = 3;
     private Uri selectedImageUri = null;
     private boolean show_privacy = false;
-    User doctor;
-    UserRepository userRepository;
+    ChatModel chatModel;
+    ChatModelRepositry chatModelRepositry;
 
 
-    ArrayList<Message> messages;
     PrefManager prefManager;
     ChatAdapter chatAdapter;
+    DocumentChatAdapter documentChatAdapter;
     static HttpChatFragment httpChatFragment;
-    MessageRepositry messageRepositry;
+
 
     boolean iamDoctor = false;
     boolean iamClinic = false;
@@ -185,12 +181,16 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private long mStartTime;
     private Runnable mTimerRunnable;
     FCViewPager vp;
-    boolean flagLongPress=false;
-    long timeDifference=0;
+    boolean flagLongPress = false;
+    long timeDifference = 0;
     boolean showAttachmentDialog = false;
-    HoldingButtonLayoutListener fragment= this;
-    boolean expand=false;
-
+    HoldingButtonLayoutListener fragment = this;
+    boolean expand = false;
+    ChatHelper chatHelper;
+    ArrayList<Message> messages;
+    HttpMessageRepositry messageRepositry;
+    ArrayList<Document> documents;
+    HttpDocumentRepositry documentRepositry;
 
 
     @Override
@@ -201,7 +201,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mHoldingButtonLayout = (HoldingButtonLayout) view.findViewById(R.id.chat_bar);
         mHoldingButtonLayout.addListener(this);
@@ -215,8 +215,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Comment.class);
-                intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-                intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
+                intent.putExtra("doc_id", String.valueOf(chatModel.getUserID()));
+                intent.putExtra("request_id", String.valueOf(chatModel.getRequestID()));
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -228,7 +228,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 view.getWindowVisibleDisplayFrame(r);
                 if (view.getRootView().getHeight() - (r.bottom - r.top) > 500) { // if more than 100 pixels, its probably a keyboard...
                     img_send_txt.setVisibility(View.VISIBLE);
-                  //  mHoldingButtonLayout.removeListener(fragment);
+                    //  mHoldingButtonLayout.removeListener(fragment);
 
                 } else {
                     if (etMessage.getText().toString().trim().length() > 0) {
@@ -245,20 +245,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             }
         });
 
-
-//        mHoldingButtonLayout.getHoldingView().setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if(event.getAction() == MotionEvent.ACTION_DOWN){
-//
-//
-//                    // Do what you want
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//
 
         return view;
     }
@@ -293,15 +279,21 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     // declare objects in this fragment
     private void initObjects() {
         prefManager = new PrefManager(getContext());
-        doctor = new User();
+        chatModel = new ChatModel();
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-        messageRepositry = new MessageRepositry(getActivity());
-        messages = new ArrayList<>();
-        userRepository = new UserRepository(getActivity());
+        if (userID == doctorID) {
+            documents = new ArrayList<>();
+            documentRepositry = new HttpDocumentRepositry(getActivity());
+        } else {
+            messages = new ArrayList<>();
+            messageRepositry = new HttpMessageRepositry(getActivity());
+        }
+        chatModelRepositry = new ChatModelRepositry(getActivity());
+        chatHelper = new ChatHelper(this, getActivity(), messages, documents, recyclerView, userID, doctorID, chatAdapter, documentChatAdapter, messageRepositry, documentRepositry);
     }
 
     // set data in object
@@ -314,39 +306,84 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         doctorID = getArguments().getInt("doctorID");
         if (userID == doctorID) {
-            doctor.setLast_name(getResources().getString(R.string.documents));
-            doctor.setFirst_name(" ");
+            chatModel.setLastName(getResources().getString(R.string.documents));
+            chatModel.setFirstName(" ");
             show_privacy = true;
             toolbar.setVisibility(View.GONE);
         } else if (doctorID == CustomerSupportActivity.supportID) {
-            doctor.setId(doctorID);
-            doctor.setLast_name(getResources().getString(R.string.support));
-            doctor.setIsOpen(1);
-            doctor.setFirst_name(" ");
+            chatModel.setUserID(doctorID);
+            chatModel.setLastName(getResources().getString(R.string.support));
+            chatModel.setFirstName(" ");
+            chatModel.setOpen(1);
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
         } else {
             // get data of doctor i talk with him from database
             try {
-                doctor.setId(doctorID);
-                doctor = userRepository.getDoctor(doctor);
+                chatModel = chatModelRepositry.getDoctor(userID);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
             }
         }
 
-        if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
-        if (doctor.getFullName() != null) {
-            tv_chat_user_name.setText(doctor.getFullName());
+        if (chatModel.getAvatar() != null && !chatModel.getAvatar().isEmpty())
+            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + chatModel.getAvatar());
+        if (chatModel.getFirstName() != null &&chatModel.getLastName() != null) {
+            tv_chat_user_name.setText(chatModel.getLastName()+" "+chatModel.getFirstName());
         }
 
     }
 
     private void loadChatOnline() {
-        MessageRequest messageRequest = new MessageRequest(userID, doctorID);
-        new HttpCall(getActivity(), this).loadChat(messageRequest);
-        // request seen all msg
+        // request to get all messages
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                messages = ApiHelper.getMessages(userID, doctorID, getContext());
+                if (messages != null || messages.size() > 0) {
+                    // if arraylist have message set data in adapter and save in database and request message seen
+                    isStoragePermissionGranted();
+                    if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (Message message : messages) {
+                                    // update satabase
+                                    messageRepositry.createOrUpate(message);
+                                }
+                            }
+                        });
+                    // request seen all msg
+                    messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
+
+                }
+                pbar_loading.setVisibility(View.GONE);
+            }
+        }).start();
+    }
+
+    private void loadDocumentOnline() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                documents = ApiHelper.postGetDocumentList(userID, getContext());
+                if (documents != null || documents.size() > 0) {
+                    // if arraylist have message set data in adapter and save in database and request message seen
+                    isStoragePermissionGranted();
+                    if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (Document document : documents) {
+                                    // update satabase
+                                    documentRepositry.createOrUpate(document);
+                                }
+                            }
+                        });
+                }
+                pbar_loading.setVisibility(View.GONE);
+            }
+        }).start();
     }
 
     private void loadChatOffline() {
@@ -354,33 +391,23 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             @Override
             public void run() {
 
-                messages = (ArrayList) messageRepositry.getAll(userID, doctorID);
+                messages = (ArrayList) messageRepositry.getAllMessageChat(userID, doctorID);
                 isStoragePermissionGranted();
                 pbar_loading.setVisibility(View.GONE);
             }
         });
     }
 
-    @Override
-    public void onSuccess(Object response) {
-        messages = (ArrayList<Message>) response;
-        isStoragePermissionGranted();
+    private void loadDocumentOffline() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    for (Message message : messages) {
-                        messageRepositry.createOrUpate(message);
-                    }
-                }
-            });
-    }
-
-    @Override
-    public void onFailed(String error) {
-        Toast.makeText(getActivity(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-        pbar_loading.setVisibility(View.GONE);
+                documents = (ArrayList) documentRepositry.getAllDocumentChat();
+                isStoragePermissionGranted();
+                pbar_loading.setVisibility(View.GONE);
+            }
+        });
     }
 
     public boolean isStoragePermissionGranted() {
@@ -412,26 +439,16 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         //takePhoto();
                         break;
                     case Constants.READ_EXTERNAL_STORARE_PERMISSION_CODE:
-                       // pickImage();
+                        // pickImage();
                         break;
                     case Constants.VIDEO_PERMISSION_CODE:
-                       // recordVideo();
+                        // recordVideo();
                         break;
                     case Constants.AUDIO_PERMISSION_CODE:
                         setData();
                         break;
                     case Constants.LAST_LOCATION_PERMISSION_CODE:
                         getMyLocation();
-                        break;
-                    case 13:
-//                        startRecording();
-                        break;
-                }
-            } else {
-                switch (requestCode) {
-
-                    case 13:
-//                        mHoldingButtonLayout.cancel();
                         break;
                 }
             }
@@ -441,12 +458,18 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private void setData() {
         if (getActivity() == null)
             return;
-        chatAdapter = new ChatAdapter(messages, getActivity(), show_privacy);
-        recyclerView.setAdapter(chatAdapter);
-        pbar_loading.setVisibility(View.GONE);
-        recyclerView.scrollToPosition(messages.size() - 1);
+        if (userID == doctorID) {
+            documentChatAdapter = new DocumentChatAdapter(documents, getActivity());
+            recyclerView.setAdapter(documentChatAdapter);
+            recyclerView.scrollToPosition(documents.size() - 1);
+        } else {
+            chatAdapter = new ChatAdapter(messages, getActivity());
+            recyclerView.setAdapter(chatAdapter);
+            recyclerView.scrollToPosition(messages.size() - 1);
+        }
     }
-//
+
+    //
     @OnTextChanged(R.id.et_chat_message)
     public void changeText() {
         if (etMessage.getText().toString().trim().length() > 0) {
@@ -462,39 +485,20 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         }
     }
 
-//    @OnClick(R.id.et_chat_message)
-//    public void clickOnTextView()
-//    {
-//        img_send_txt.setVisibility(View.VISIBLE);
-//        mHoldingButtonLayout.setButtonEnabled(false);
-//        mHoldingButtonLayout.removeListener(this);
-//        start_record.setVisibility(View.GONE);
-//    }
-
-
 
     @OnClick(R.id.img_send_txt)
     public void img_send_txt() {
-        try {
-            // declare object and set attribute
-            final Message message = new Message();
-            message.setUser_id(userID);
-            message.setFrom_id(userID);
-            message.setTo(doctorID);
-            message.setMsg(etMessage.getText().toString());
-            message.setType(Constants.TEXT);
-            message.setDate(getDateTimeNow());
-            message.setSent_at(getDateTimeNow());
-            etMessage.setText("");
-            message.setIs_send(false);
-            etMessage.setHint(R.string.write_a_message);
-            messages.add(message);
-            chatAdapter.setList(messages);
-            chatAdapter.notifyDataSetChanged();
-            final int index = messages.size() - 1;
-            recyclerView.scrollToPosition(index);
 
-            if (iamDoctor && doctorID != userID && doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
+        // declare object and set attribute
+        if (userID == doctorID) {
+            chatHelper.sendTextDocument(etMessage.getText().toString());
+        } else {
+            chatHelper.sendTextMessage(etMessage.getText().toString());
+        }
+        etMessage.setText("");
+        etMessage.setHint(R.string.write_a_message);
+
+            /*if (iamDoctor && doctorID != userID && doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
                 new HttpCall(getActivity(), new ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
@@ -538,38 +542,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     }
                 }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
                         String.valueOf(doctor.getId()), "2");
-            } else {
+            } else {*/
 
-                new HttpCall(getContext(), new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Message temp = messages.get(index);
-                        temp.setIs_send(true);
-                        messages.set(index, temp);
-                        chatAdapter.setList(messages);
-                        chatAdapter.notifyDataSetChanged();
-                        recyclerView.scrollToPosition(messages.size() - 1);
-                        messageRepositry.create((Message) response);
-
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                        removeDummyMessage(index);
-                    }
-                }).sendMessage(message);
-
-
-            }
-
-            //request
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), R.string.msg_not_send, Toast.LENGTH_SHORT).show();
-            Crashlytics.logException(e);
-            Log.e("send msg", "img_send_txt: ", e);
-        }
+        //request
     }
 
     @OnClick(R.id.imgbtn_chat_attach)
@@ -605,47 +580,17 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         String ext1 = filepath.substring(filepath.lastIndexOf(".")); // Extension with dot .jpg, .png
                         final String type;
                         if (ext1.equals(".mp4") || ext1.equals(".3gp"))
-                            type = Constants.VIDEO;
+                            type = Message.MESSAGE_TYPE_VIDEO;
                         else {
                             Toast.makeText(getActivity(), R.string.this_file_is_not_supported, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        final int index2 = creatDummyMessage();
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                final Message message = new Message();
-                                message.setUser_id(userID);
-                                message.setFrom_id(userID);
-                                message.setTo(doctorID);
-                                message.setIs_url(1);
-                                message.setMsg((String) response);
-                                message.setType(type);
-                                message.setIs_send(false);
-                                message.setSent_at(getDateTimeNow());
-                                //request
-                                new HttpCall(getActivity(), new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        creatRealMessage((Message) response, index2);
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-                                        Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                        removeDummyMessage(index2);
-                                    }
-                                }).sendMessage(message);
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                                removeDummyMessage(index2);
-                            }
-                        }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), data.getData())).getPath());
+                        if (userID == doctorID) {
+                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "");
+                        } else {
+                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "");
+                        }
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), R.string.msg_not_send, Toast.LENGTH_SHORT).show();
                         Crashlytics.logException(e);
                         Log.e("send msg", "on Activity result: ", e);
                     }
@@ -660,13 +605,17 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA);
+                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA, HttpChatFragment.this);
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
         getActivity().findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY);
+                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY, HttpChatFragment.this);
+                attachment.setVisibility(View.INVISIBLE);
+                showAttachmentDialog = false;
             }
         });
 
@@ -730,6 +679,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         });
 
     }
+
     public void getMyLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             askForLocationPermission();
@@ -739,7 +689,11 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (location != null) {
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
-            getLocationandSend(longitude, latitude);
+            if (userID == doctorID) {
+                chatHelper.sendLocationDocument(longitude, latitude);
+            } else {
+                chatHelper.sendLocationMessage(longitude, latitude);
+            }
         }
 
     }
@@ -769,19 +723,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
     }
-    private int creatDummyMessage() {
-        Message message = new Message();
-        message.setSent_at(getDateTimeNow());
-        message.setType(Constants.UNDEFINED);
-        message.setFrom_id(userID);
-        message.setIs_send(false);
-        messages.add(message);
-        chatAdapter.setList(messages);
-        chatAdapter.notifyDataSetChanged();
-        int index = messages.size() - 1;
-        recyclerView.scrollToPosition(index);
-        return index;
-    }
+
 
     private String getDateTimeNow() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -833,13 +775,13 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             int notificationType = intent.getIntExtra("notificationtype", 0);
             if (notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
-                if (message.getFrom_id() == doctorID) {
-                    creatRealMessage(message, 0);
-                    messageSeen();
+                if (message.getFromID() == doctorID) {
+                    chatHelper.creatRealMessage(message, 0);
+                    messageSeen(message.getMessageID().toString());
                     // seen request for specific msg
                 } else {
                     // show notification
-                    messagesDeliver();
+                    messagesDeliver(message.getMessageID().toString());
                 }
 
             } else if (notificationType == 4) {
@@ -847,16 +789,16 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 // checkSessionOpen(iamDoctor);
                 //  Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
                 Message message = (Message) intent.getSerializableExtra("extra");
-                if ((message.getFrom_id() == userID || message.getFrom_id() == doctorID) && (message.getTo() == userID || message.getTo() == doctorID)) {
-                    doctor.setIsOpen(0);
-                    userRepository.update(doctor);
+                if ((message.getFromID() == userID || message.getFromID() == doctorID) && (message.getToID() == userID || message.getToID() == doctorID)) {
+                    chatModel.setOpen(0);
+                    chatModelRepositry.createOrUpdate(chatModel);
                     checkSessionOpen(iamDoctor);
                     getActivity().invalidateOptionsMenu();
 
                 }
             } else if (notificationType == 3) {
                 //handle Deliverd Message here /// Andy
-                getActivity().runOnUiThread(new Runnable() {
+                /*getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         for (Message message : messages) {
@@ -870,10 +812,10 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             }
                         }
                     }
-                });
+                });*/
             } else if (notificationType == 6) {
-                //handle Deliverd Message here /// Andy
-                getActivity().runOnUiThread(new Runnable() {
+                //handle seen Message here /// Andy
+               /* getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         for (Message message : messages) {
@@ -887,53 +829,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             }
                         }
                     }
-                });
+                });*/
             }
 
 
         }
     };
-
-
-    private void getLocationandSend(double longitude, double latitude) {
-        //create dummy message
-        final int index2 = creatDummyMessage();
-        final Message message = new Message();
-        message.setUser_id(userID);
-        message.setFrom_id(userID);
-        message.setTo(doctorID);
-        message.setSent_at(getDateTimeNow());
-        message.setMsg("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
-        message.setType(Constants.LOCATION);
-
-
-        //request
-        new HttpCall(getActivity(), new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                creatRealMessage((Message) response, index2);
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                removeDummyMessage(index2);
-            }
-        }).sendMessage(message);
-    }
-
-
-//    private void setButtonToTextMsg(Boolean comingFromVoiceRecording) {
-//
-//        if (!comingFromVoiceRecording) {
-//            start_record.setBackgroundResource(R.drawable.ic_send_black_24dp);
-//            start_record.setOnTouchListener(null);
-//        }
-//
-//        linearTextMsg.setVisibility(View.VISIBLE);
-//        layout_chat_attach.setVisibility(View.VISIBLE);
-//        relativeAudio.setVisibility(View.GONE);
-//    }
 
 
     private void checkSessionOpen(final boolean iamDoctor) {
@@ -942,21 +843,21 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             // i talk with my self in document
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
-        } else if (iamDoctor && doctor.isClinic == 0 && doctor.getIsDoc() == 0) {
+        } else if (iamDoctor && chatModel.getUserType() == UserInfo.PATIENT) {
             // i chat with client and sssion closed
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
-            if (doctor.getIsOpen() == 0) {
+            if (chatModel.getOpen() == 0) {
                 imgbtn_chat_attach.setEnabled(false);
                 mHoldingButtonLayout.setButtonEnabled(false);
                 // img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
             }
-        } else if (doctor.getIsClinic() == 1) {
+        } else if (chatModel.getUserType() == UserInfo.CLINIC) {
             // client chat with clinics
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
-        } else if (doctor.getIsOpen() == 0) {
+        } else if (chatModel.getOpen() == 0) {
             // client chat with doctor and session closed
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
@@ -977,7 +878,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if (doctorID == 1 || doctor.getIsOpen() == 0) {
+        if (doctorID == 1 || chatModel.getOpen() == 0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
@@ -1005,36 +906,38 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     adb_end.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            new HttpCall(getActivity(), new ApiResponse() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
-                                public void onSuccess(Object response) {
+                                public void run() {
+                                    // i need request ID
+                                    boolean result = ApiHelper.closeSession(getContext(),chatModel.getRequestID() );
+                                    if (result) {
+                                        // success
+                                        // we must handle this
 
+                                        Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                        /*doctor.setIsOpen(0);
+                                        userRepository.update(doctor);
+                                        checkSessionOpen(iamDoctor);
+                                        getActivity().invalidateOptionsMenu();
+                                        if (doctor.isClinic == 1) {
+                                            Intent intent = new Intent(getActivity(), InquiryActivity.class);
+                                            UserInfoResponse userInfoResponse = new UserInfoResponse();
+                                            userInfoResponse.setUser(doctor);
+                                            Gson gson = new Gson();
+                                            intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
+                                            startActivity(intent);
+                                        } else if (doctor.getIsDoc() == 1) {
+                                            openPayment();
+                                        } else {
+                                            Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
 
-                                    Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                    doctor.setIsOpen(0);
-                                    userRepository.update(doctor);
-                                    checkSessionOpen(iamDoctor);
-                                    getActivity().invalidateOptionsMenu();
-                                    if (doctor.isClinic == 1) {
-                                        Intent intent = new Intent(getActivity(), InquiryActivity.class);
-                                        UserInfoResponse userInfoResponse = new UserInfoResponse();
-                                        userInfoResponse.setUser(doctor);
-                                        Gson gson = new Gson();
-                                        intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
-                                        startActivity(intent);
-                                    } else if (doctor.getIsDoc() == 1) {
-                                        openPayment();
+                                        }*/
                                     } else {
-                                        Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-
+                                        // failed
                                     }
                                 }
-
-                                @Override
-                                public void onFailed(String error) {
-                                    Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
-                                }
-                            }).closeSession(String.valueOf(doctor.getId()));
+                            });
                         }
 
                     });
@@ -1059,65 +962,54 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     adb_end.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            new HttpCall(getActivity(), new ApiResponse() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
-                                public void onSuccess(Object response) {
-                                    try {
+                                public void run() {
+                                    // i need request ID
+                                    boolean result = ApiHelper.closeSession(getContext(),chatModel.getRequestID());
+                                    if (result) {
+                                        // success
+                                        // we must handle this
+                                           /* Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                            doctor.setIsOpen(0);
+                                            userRepository.update(doctor);
+                                            checkSessionOpen(iamDoctor);
+                                            canRate.setVisibility(View.GONE);
+                                            getActivity().invalidateOptionsMenu();
+                                            if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
+                                                AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                                                adb.setTitle(R.string.rate_conversation);
+                                                adb.setCancelable(false);
+                                                adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                                        Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                        doctor.setIsOpen(0);
-                                        userRepository.update(doctor);
-                                        checkSessionOpen(iamDoctor);
-                                        canRate.setVisibility(View.GONE);
-                                        getActivity().invalidateOptionsMenu();
-                                        if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
-                                            AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                                            adb.setTitle(R.string.rate_conversation);
-                                            adb.setCancelable(false);
-                                            adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    new HttpCall(getActivity(), new ApiResponse() {
-                                                        @Override
-                                                        public void onSuccess(Object response) {
-                                                            Intent intent = new Intent(getActivity(), Comment.class);
-                                                            intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-                                                            intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
-                                                            startActivity(intent);
-                                                            getActivity().finish();
-                                                        }
-
-                                                        @Override
-                                                        public void onFailed(String error) {
-                                                            Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }).closeSession(String.valueOf(doctor.getId()));
-                                                }
-                                            });
-                                            adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    if (iamDoctor == false && iamClinic == false) {
-                                                       // doctor.setHave_rate(0);
-                                                        //userRepository.update(doctor);
-                                                        canRate.setVisibility(View.VISIBLE);
+                                                        Intent intent = new Intent(getActivity(), Comment.class);
+                                                        intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
+                                                        intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
+                                                        startActivity(intent);
+                                                        getActivity().finish();
                                                     }
-                                                }
-                                            });
-                                            adb.show();
-                                        }
-                                    } catch (Exception e) {
-                                        Crashlytics.logException(e);
-                                        Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                                });
+                                                adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        if (iamDoctor == false && iamClinic == false) {
+                                                            canRate.setVisibility(View.VISIBLE);
+                                                        }
+                                                    }
+                                                });
+                                                adb.show();
+                                            }
+                                       */
+
+                                    } else {
+                                        // failed
                                     }
-
                                 }
+                            });
 
-                                @Override
-                                public void onFailed(String error) {
-                                    Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
-                                }
-                            }).closeSession(String.valueOf(doctor.getId()));
+
                         }
 
                     });
@@ -1141,7 +1033,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
-            if (doctor.isClinic == 1) {
+            if (chatModel.getUserType()==UserInfo.CLINIC) {
                 Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                 intent.putExtra("doctor_data", doctor);
                 startActivity(intent);
@@ -1164,7 +1056,11 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     private void checkMode() {
         if (Helper.isNetworkAvailable(getContext())) {
-            loadChatOnline();
+            if (userID == doctorID) {
+                loadDocumentOnline();
+            } else {
+                loadChatOnline();
+            }
             imgbtn_chat_attach.setEnabled(true);
             etMessage.setEnabled(true);
             mHoldingButtonLayout.setButtonEnabled(true);
@@ -1172,11 +1068,14 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             button2.setEnabled(true);
             button2.setText(R.string.start_new_request);
             etMessage.setHint(R.string.write_message);
-            messageSeen();
-            if (doctor != null)
+            if (chatModel != null)
                 checkSessionOpen(iamDoctor);
         } else {
-            loadChatOffline();
+            if (userID == doctorID) {
+                loadDocumentOffline();
+            } else {
+                loadChatOffline();
+            }
             mHoldingButtonLayout.setButtonEnabled(false);
             imgbtn_chat_attach.setEnabled(false);
             etMessage.setEnabled(false);
@@ -1187,67 +1086,26 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         }
     }
 
-    private void creatRealMessage(Message message, int index) {
-        try {
-            if (index >= 0)
-                messages.remove(index);
-            messages.add(message);
-            chatAdapter.setList(messages);
-            chatAdapter.notifyDataSetChanged();
-            recyclerView.scrollToPosition(messages.size() - 1);
-            messageRepositry.create(message);
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-            Crashlytics.logException(e);
-        }
-    }
 
-    private void removeDummyMessage(int index) {
-        messages.remove(index);
-        chatAdapter.setList(messages);
-        chatAdapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(messages.size() - 1);
-    }
-
-
-    private void messageSeen() {
+    private void messageSeen(final String msgID) {
         // i sent request to make my msg seen
-        MessageRequestSeen messageRequest = new MessageRequestSeen(userID, userPassword, doctorID);
-        try {
-            new HttpCall(getActivity(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ApiHelper.seenMessage(getContext(), userID, msgID);
+            }
+        }).start();
 
-                @Override
-                public void onFailed(String error) {
-
-                }
-            }).messagesSeen(messageRequest);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e("messageSeen", "messageSeen: ", e);
-        }
     }
 
-    private void messagesDeliver() {
-        // i sent request to make my msg seen
-        try {
-            MessageRequestSeen messageRequest = new MessageRequestSeen(userID, doctorID);
-            new HttpCall(getActivity(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                }
-
-                @Override
-                public void onFailed(String error) {
-
-                }
-            }).messagesDeliver(messageRequest);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e("messagesDeliver", "messagesDeliver: ", e);
-        }
+    private void messagesDeliver(final String msgID) {
+        // i sent request to make my msg deliver
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ApiHelper.deliveredMessgae(getContext(), userID, msgID);
+            }
+        }).start();
     }
 
     @Override
@@ -1264,7 +1122,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @OnClick({R.id.img_chat_user_avatar, R.id.tv_chat_user_name})
     public void openProfile() {
-        if (doctor != null && (doctor.isClinic == 1 || doctor.getIsDoc() == 1)) {
+        if (chatModel != null && (chatModel.getUserType()!= UserInfo.PATIENT)) {
             Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", doctor);
             getActivity().startActivity(intent);
@@ -1286,48 +1144,46 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             }
         }, 700);
 
-            timeDifference = 0;
-            flagLongPress = false;
-            expand = true;
-            vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
-            if (vp != null) {
-                vp.setEnableSwipe(false);
+        timeDifference = 0;
+        flagLongPress = false;
+        expand = true;
+        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+        if (vp != null) {
+            vp.setEnableSwipe(false);
+        }
+
+        cancelAllAnimations();
+        mSlideToCancel.setTranslationX(0f);
+        mSlideToCancel.setAlpha(0f);
+        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+        mSlideToCancelAnimator.start();
+
+        mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+        mInputAnimator.setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mInput.setVisibility(View.INVISIBLE);
+                mInputAnimator.setListener(null);
             }
+        });
+        mInputAnimator.start();
 
-            cancelAllAnimations();
-            mSlideToCancel.setTranslationX(0f);
-            mSlideToCancel.setAlpha(0f);
-            mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
-            mSlideToCancelAnimator.start();
-
-            mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
-            mInputAnimator.setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mInput.setVisibility(View.INVISIBLE);
-                    mInputAnimator.setListener(null);
-                }
-            });
-            mInputAnimator.start();
-
-            mTime.setTranslationY(mTime.getHeight());
-            mTime.setAlpha(0f);
-            // mTime.setVisibility(View.VISIBLE);
-            mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
-            mTimeAnimator.start();
-            mStartTime = System.currentTimeMillis();
+        mTime.setTranslationY(mTime.getHeight());
+        mTime.setAlpha(0f);
+        // mTime.setVisibility(View.VISIBLE);
+        mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+        mTimeAnimator.start();
+        mStartTime = System.currentTimeMillis();
 
     }
 
     @Override
     public void onExpand() {
         expand = true;
-    // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-    invalidateTimer();
-    // }
-}
-
-
+        // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+        invalidateTimer();
+        // }
+    }
 
 
     @Override
@@ -1362,8 +1218,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onCollapse(boolean isCancel) {
 
-        if(expand) {
-            expand=false;
+        if (expand) {
+            expand = false;
             vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
             if (vp != null) {
                 vp.setEnableSwipe(true);
@@ -1380,45 +1236,16 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 //            Toast.makeText(getActivity(), "Recording canceled!", Toast.LENGTH_SHORT).show();
                     } else {
                         if (flagLongPress == true) {
-                            if (System.currentTimeMillis()-mStartTime > 1000) {
+                            if (System.currentTimeMillis() - mStartTime > 1000) {
                                 stopRecording(true);
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
-                                final int index2 = creatDummyMessage();
-                                new HttpCall(getActivity(), new ApiResponse() {
-                                    @Override
-                                    public void onSuccess(Object response) {
-                                        final Message message = new Message();
-                                        message.setUser_id(userID);
-                                        message.setFrom_id(userID);
-                                        message.setTo(doctorID);
-                                        message.setIs_url(1);
-                                        message.setMsg((String) response);
-                                        message.setType(Constants.AUDIO);
-                                        message.setIs_send(false);
-                                        message.setSent_at(getDateTimeNow());
+                                if (userID == doctorID) {
+                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "");
+                                } else {
+                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "");
+                                }
 
-                                        //request
-                                        new HttpCall(getActivity(), new ApiResponse() {
-                                            @Override
-                                            public void onSuccess(Object response) {
-                                                creatRealMessage((Message) response, index2);
-                                            }
-
-                                            @Override
-                                            public void onFailed(String error) {
-                                                removeDummyMessage(index2);
-                                                Toast.makeText(getActivity(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                            }
-                                        }).sendMessage(message);
-                                    }
-
-                                    @Override
-                                    public void onFailed(String error) {
-                                        Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                                        removeDummyMessage(index2);
-                                    }
-                                }).uploadMedia(mOutputFile.getPath());
                             } else {
                                 stopRecording(false);
                             }
@@ -1446,24 +1273,21 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             public void run() {
                 mTime.setText(getFormattedTime());
                 invalidateTimer();
-                if(timeDifference>1000&&flagLongPress==false)
-                {
-                    flagLongPress=true;
+                if (timeDifference > 1000 && flagLongPress == false) {
+                    flagLongPress = true;
 
-                    if(Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-
-
-                                mStartTime = System.currentTimeMillis();
-                                mTime.setVisibility(View.VISIBLE);
-                                mSlideToCancel.setVisibility(View.VISIBLE);
-                                mTime.setText(getFormattedTime());
-                                startRecording();
+                    if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
 
+                        mStartTime = System.currentTimeMillis();
+                        mTime.setVisibility(View.VISIBLE);
+                        mSlideToCancel.setVisibility(View.VISIBLE);
+                        mTime.setText(getFormattedTime());
+                        startRecording();
 
-                    }
-                    else{
-                      onBeforeCollapse();
+
+                    } else {
+                        onBeforeCollapse();
 //                      onCollapse(true);
                         requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.AUDIO_PERMISSION_CODE);
                     }
@@ -1583,62 +1407,10 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void ImagePickerCallBack(Uri uri) {
 
-        try {
-            final int index = creatDummyMessage();
-            new HttpCall(getContext(), new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    final Message message = new Message();
-                    message.setUser_id(userID);
-                    message.setFrom_id(userID);
-                    message.setTo(doctorID);
-                    message.setIs_url(1);
-                    message.setMsg((String) response);
-                    message.setType(Constants.IMAGE);
-                    message.setIs_send(false);
-                    message.setSent_at(getDateTimeNow());
-
-                    //request
-                    new HttpCall(getContext(), new ApiResponse() {
-                        @Override
-                        public void onSuccess(Object response) {
-                            creatRealMessage((Message) response, index);
-                        }
-
-                        @Override
-                        public void onFailed(String error) {
-                            Toast.makeText(getContext(), R.string.picture_not_send, Toast.LENGTH_SHORT).show();
-                            removeDummyMessage(index);
-                        }
-                    }).sendMessage(message);
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getActivity(), R.string.cant_upload, Toast.LENGTH_SHORT).show();
-                    removeDummyMessage(index);
-                }
-            }).uploadMedia(new File(ImageFilePath.getPath(getActivity(), uri)).getPath());
-        } catch (Exception e) {
-            Toast.makeText(getContext(), R.string.msg_not_send, Toast.LENGTH_SHORT).show();
-            Crashlytics.logException(e);
-            Log.e("send msg", "on Activity result: ", e);
+        if (userID == doctorID) {
+            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "");
+        } else {
+            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "");
         }
     }
-    private void takeAndSelectImage(int type){
-        // type = PickerBuilder.SELECT_FROM_GALLERY or PickerBuilder.SELECT_FROM_CAMERA
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (getActivity().checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), PickerBuilder.SELECT_FROM_GALLERY);
-            } else
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
-        } else
-            Helper.getCroppedImageFromCamera(HttpChatFragment.this,getActivity(), type);
-
-        attachment.setVisibility(View.INVISIBLE);
-        showAttachmentDialog = false;
-    }
-
-
-
 }

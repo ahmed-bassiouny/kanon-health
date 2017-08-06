@@ -1,8 +1,6 @@
 package com.germanitlab.kanonhealth.api.responses;
 
 import com.germanitlab.kanonhealth.api.models.ChatModel;
-import com.germanitlab.kanonhealth.api.models.ChatUserInfo;
-import com.germanitlab.kanonhealth.api.models.Message;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

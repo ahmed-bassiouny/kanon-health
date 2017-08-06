@@ -9,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 public class Message extends ParentModel {
 
     //region key name
+    public static final String KEY_FROMID="from_id";
+    public static final String KEY_TOID="to_id";
     public static final String KEY_MESSAGE = "massage";
     public static final String KEY_STATUS = "status";
     public static final String KEY_TYPE = "type";
@@ -16,12 +18,13 @@ public class Message extends ParentModel {
     public static final String KEY_IS_FORWARD = "is_forward";
     public static final String KEY_CREATED_AT = "created_at";
     public static final String KEY_ID = "massage_id";
+
     // endregion
 
     //region attribute
     // id of message
     @SerializedName(KEY_ID)
-    private Integer id;
+    private Integer messageID;
     // body of messgae or url of media
     @SerializedName(KEY_MESSAGE)
     private String message;
@@ -41,6 +44,12 @@ public class Message extends ParentModel {
     // date time of message (UTC)
     @SerializedName(KEY_CREATED_AT)
     private String dateTime;
+
+    @SerializedName(KEY_FROMID)
+    private Integer fromID;
+    @SerializedName(KEY_FROMID)
+    private Integer toID;
+
     //endregion
 
     //region constraints message type
@@ -52,15 +61,6 @@ public class Message extends ParentModel {
     //endregion
 
     // region Setter and Getter
-    public Integer getId() {
-        if(id==null)
-            return 0;
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getMessage() {
         return message;
@@ -118,5 +118,30 @@ public class Message extends ParentModel {
         this.dateTime = dateTime;
     }
 
-    //endregion
+    public Integer getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(Integer messageID) {
+        this.messageID = messageID;
+    }
+
+    public Integer getFromID() {
+        return fromID;
+    }
+
+    public void setFromID(Integer fromID) {
+        this.fromID = fromID;
+    }
+
+    public Integer getToID() {
+        return toID;
+    }
+
+    public void setToID(Integer toID) {
+        this.toID = toID;
+    }
+
+
+//endregion
 }
