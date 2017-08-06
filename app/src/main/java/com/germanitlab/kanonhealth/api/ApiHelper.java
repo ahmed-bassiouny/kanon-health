@@ -106,7 +106,7 @@ public class ApiHelper {
 
     private static final String API_SPECIALITIES_LIST = "speciality/list";
 
-    private static final String API_USERS_LIST = "users/me";
+    private static final String API_USERS_ME = "users/me";
     private static final String API_USERS_ADD = "users/add";
     private static final String API_USERS_EDIT = "users/edit";
     private static final String API_USERS_REGISTER = "users/register";
@@ -594,7 +594,7 @@ public class ApiHelper {
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userID);
-            String jsonString = post(API_USERS_LIST, userInfoParameter.toJson());
+            String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             Gson gson = new Gson();
             UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
             if (userInfoResponse.getStatus()) {

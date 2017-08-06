@@ -19,6 +19,10 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Document;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.parameters.UserInfoParameter;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
@@ -28,11 +32,14 @@ import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
+import com.mukesh.countrypicker.Country;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
     ScrollView scrollView;
 
 
-    private UserInfoResponse userInfoResponse = new UserInfoResponse();
+    private UserInfo userInfoResponse = new UserInfo();
     private PrefManager mPrefManager;
 
     private QuestionAdapter mAdapter;
@@ -85,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 //    public static int indexFromIntent=0;
 
-    ArrayList<Message> images;
+//    ArrayList<Document> images;
     Dialog dialog;
     boolean is_doctor;
 
@@ -106,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
             Boolean from = intent.getBooleanExtra("from", false);
             if (!from) {
 
-                userInfoResponse = (UserInfoResponse) intent.getSerializableExtra("userInfoResponse");
+                userInfoResponse = (UserInfo) intent.getSerializableExtra("userInfoResponse");
                 mPrefManager.put(PrefManager.USER_KEY, new Gson().toJson(userInfoResponse));
                 bindData();
                 progressBar.setVisibility(View.GONE);
@@ -115,17 +122,56 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 tvEdit.setVisibility(View.GONE);
                 if (Helper.isNetworkAvailable(getApplicationContext())) {
-                    UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-                    userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                    userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-                    new HttpCall(this, this).getProfile(userRegisterResponse);
+                    (new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+                            if (userInfo != null) {
+                                try {
+                                    Gson gson = new Gson();
+                                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(userInfo));
+                                    ProfileActivity.this.userInfoResponse = userInfo;
+                                    ProfileActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            bindData();
+                                            linearProfileContent.setVisibility(View.VISIBLE);
+                                            tvLoadingError.setVisibility(View.GONE);
+                                            tvEdit.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                ProfileActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvEdit.setVisibility(View.GONE);
+                                        linearProfileContent.setVisibility(View.GONE);
+                                        tvLoadingError.setVisibility(View.GONE);
+                                    }
+                                });
+                            }
+                            ProfileActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    })).run();
                 } else {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
                 }
 
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
         }
@@ -171,39 +217,46 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void bindData() {
 
-        if (userInfoResponse.getUser().getAvatar() != null && !userInfoResponse.getUser().getAvatar().isEmpty()) {
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar());
+        if (userInfoResponse.getAvatar() != null && !userInfoResponse.getAvatar().isEmpty()) {
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getAvatar());
         }
 
-        if (userInfoResponse.getUser().getIsDoc() == 1)
+        if (userInfoResponse.getUserType() == UserInfo.DOCTOR)
             is_doctor = true;
         else
             is_doctor = false;
 
 
-        tvName.setText(userInfoResponse.getUser().getFullName());
-        tvPhone.setText(userInfoResponse.getUser().getCountryCOde() + userInfoResponse.getUser().getPhone());
-        try {
-            userInfoResponse.getUser().setBirthDate(userInfoResponse.getUser().getBirth_date().toString());
-        } catch (Exception e) {
+        tvName.setText(userInfoResponse.getFullName());
+        tvPhone.setText(userInfoResponse.getCountry_code() + userInfoResponse.getPhone());
 
+        tvBirthDate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getBirthday())));
+
+
+        tvStreet.setText(userInfoResponse.getAddress());
+        tvHouseNumber.setText(userInfoResponse.get);
+        tvZipCode.setText(userInfoResponse.get());
+        tvProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
+
+        String temp = userInfoResponse.getCountry_code().replaceAll(Pattern.quote("+"), "");
+        Country found = null;
+        for (Country e : Country.getAllCountries()) {
+            if (e.getDialCode().toLowerCase().equals("+" + temp)) {
+                found = e;
+            }
+        }
+
+        if (found != null) {
+            Locale locale = new Locale("", found.getCode());
+            if (locale != null) {
+                tvCounty.setText(locale.getDisplayCountry(Locale.getDefault()));
+            }
         }
 
 
-        if (userInfoResponse.getUser().getBirth_date() != null) {
-            tvBirthDate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getUser().getBirth_date().toString())));
-        } else
-            tvBirthDate.setText("");
-
-
-        tvStreet.setText(userInfoResponse.getUser().getInfo().getStreetname());
-        tvHouseNumber.setText(userInfoResponse.getUser().getInfo().getHouseNumber());
-        tvZipCode.setText(userInfoResponse.getUser().getInfo().getZip_code());
-        tvProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
-        tvCounty.setText(userInfoResponse.getUser().getInfo().getCountry());
         if (!is_doctor) {
-            questionAnswer = userInfoResponse.getUser().getQuestions();
-            images = userInfoResponse.getUser().getDocuments();
+            questionAnswer = userInfoResponse.get();
+//            images = userInfoResponse.getDocuments();
             createAdapter();
         }
 
@@ -225,47 +278,6 @@ public class ProfileActivity extends AppCompatActivity {
         i.putExtra("userInfoResponse", userInfoResponse);
         startActivity(i);
         finish();
-    }
-
-    @Override
-    public void onSuccess(Object response) {
-
-
-        try {
-            progressBar.setVisibility(View.GONE);
-
-            if (response != null) {
-
-                userInfoResponse = (UserInfoResponse) response;
-                Gson gson = new Gson();
-                mPrefManager.put(PrefManager.USER_KEY, gson.toJson(response));
-                bindData();
-
-                linearProfileContent.setVisibility(View.VISIBLE);
-                tvEdit.setVisibility(View.VISIBLE);
-
-            } else {
-                tvLoadingError.setVisibility(View.VISIBLE);
-                tvLoadingError.setText(R.string.something_went_wrong);
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onFailed(String error) {
-        tvEdit.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
-        tvLoadingError.setVisibility(View.VISIBLE);
-        if (error != null && error.length() > 0)
-            tvLoadingError.setText(error);
-        else
-            tvLoadingError.setText(R.string.something_went_wrong);
-        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-
     }
 
 
