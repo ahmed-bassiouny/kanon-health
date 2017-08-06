@@ -529,19 +529,22 @@ public class ApiHelper {
     }
 
     // edit doctor return true if doctor edited
-    public static boolean editDoctor(Context context, int userID, String password, String title, String firstName, String lastName, String birthday, String gender, File avatar, String email, String address) {
+    public static boolean editDoctor(Context context, UserInfo userInfo,File avatar) {
         boolean result = false;
         try {
             EditDoctorParameter editDoctorParamater = new EditDoctorParameter();
-            editDoctorParamater.setUserID(userID);
-            editDoctorParamater.setPassword(password);
-            editDoctorParamater.setTitle(title);
-            editDoctorParamater.setFirstName(firstName);
-            editDoctorParamater.setLastName(lastName);
-            editDoctorParamater.setBirthday(birthday);
-            editDoctorParamater.setGender(gender);
-            editDoctorParamater.setAddress(address);
-            editDoctorParamater.setEmail(email);
+            editDoctorParamater.setUserID(userInfo.getUserID());
+            editDoctorParamater.setPassword(userInfo.getPassword());
+            editDoctorParamater.setTitle(userInfo.getTitle());
+            editDoctorParamater.setFirstName(userInfo.getFirstName());
+            editDoctorParamater.setLastName(userInfo.getLastName());
+            editDoctorParamater.setBirthday(userInfo.getBirthday());
+            editDoctorParamater.setGender(userInfo.getGender());
+            editDoctorParamater.setEmail(userInfo.getEmail());
+            editDoctorParamater.setHouseNumber(userInfo.getHouseNumber());
+            editDoctorParamater.setProvidence(userInfo.getProvidence());
+            editDoctorParamater.setStreetName(userInfo.getStreetName());
+            editDoctorParamater.setZipCode(userInfo.getZipCode());
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);

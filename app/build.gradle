@@ -59,6 +59,9 @@ dependencies {
     //Dagger 2
 
     //// heart image view
+    compile 'com.android.support:percent:25.3.1'
+    compile 'com.brucetoo.pickview:library:1.2.3'
+
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.kenglxn.QRGen:android:2.3.0'
     compile 'com.brucetoo.pickview:library:1.2.3'
@@ -90,15 +93,9 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.46'
     compile 'gun0912.ted:tedbottompicker:1.0.3'
     compile 'me.biubiubiu.justifytext:library:1.1'
-    compile 'com.android.support:percent:25.3.1'
     compile 'com.nex3z:flow-layout:0.1.4'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
-    provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
-    compile 'com.brucetoo.pickview:library:1.2.3'
     compile 'com.android.support:support-compat:25.1.1'
     compile 'com.daimajia.easing:library:2.0@aar'
     compile 'com.daimajia.androidanimations:library:2.3@aar'
@@ -106,6 +103,9 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     compile 'com.github.d-max:spots-dialog:0.7@aar'
-
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    provided 'javax.annotation:jsr250-api:1.0'
 }
 apply plugin: 'com.google.gms.google-services'

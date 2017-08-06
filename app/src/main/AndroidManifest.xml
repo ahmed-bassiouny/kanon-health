@@ -22,10 +22,10 @@
         android:name=".application.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
+        android:installLocation="auto"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:installLocation="auto">
+        android:theme="@style/AppTheme">
 
         <!-- tools:replace="android:icon,android:theme" -->
         <meta-data
@@ -44,8 +44,7 @@
         <activity
             android:name=".splash.SplashScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
-
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,9 +90,9 @@
             android:name=".profile.ProfileActivity"
             android:screenOrientation="portrait" />
 
-        <!--<activity-->
-        <!--android:name=".initialProfile.initialProfileDetails"-->
-        <!--android:screenOrientation="portrait" />-->
+        <!-- <activity -->
+        <!-- android:name=".initialProfile.initialProfileDetails" -->
+        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".intro.Information"
             android:screenOrientation="portrait" />
@@ -105,8 +104,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".payment.PaymentActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Specialities"
             android:screenOrientation="portrait" />
@@ -116,7 +115,6 @@
         <activity
             android:name=".intro.StartQrScan"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".profile.EditUserProfileActivity"
             android:screenOrientation="portrait" />
@@ -152,14 +150,12 @@
             android:name=".Comment"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".initialProfile.ProfileDetails"
             android:screenOrientation="portrait" />
         <activity
             android:name=".forward.ForwardActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".PasscodeActivty"
             android:screenOrientation="portrait" />
@@ -194,21 +190,21 @@
         <activity
             android:name=".TimeTable"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".AddPractics"
             android:screenOrientation="portrait" />
         <activity
             android:name=".httpchat.HttpChatActivity"
-            android:screenOrientation="portrait"
-            android:label="">
-        </activity>
+            android:label=""
+            android:screenOrientation="portrait"></activity>
 
         <receiver
             android:name=".httpchat.MyReceiverChat"
             android:enabled="true">
             <action android:name="my.action.string" />
         </receiver>
+
+        <activity android:name=".ClinicProfileActivity"></activity>
     </application>
 
 </manifest>
