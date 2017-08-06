@@ -32,12 +32,16 @@ public class UserInfo extends ParentModel {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_RATE_NUM = "rate_num";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
-    public static final String KEY_ADDRESS = "address";
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
     public static final String KEY_IS_AVAILABLE = "is_available";
     public static final String KEY_ACTIVATED = "activated";
     public static final String KEY_SPECIALITIES = "specialitys";
     public static final String Clinics = "membar_at";
+    public static final String KEY_STREET_NAME = "street_name";
+    public static final String KEY_HOUSE_NUMBER = "house_number";
+    public static final String KEY_PROVIDENCE = "providence";
+    public static final String KEY_ZIP_CODE = "zip_code";
+
     // endregion
 
     // region constraints
@@ -81,8 +85,14 @@ public class UserInfo extends ParentModel {
     private Float rateNum;
     @SerializedName(KEY_RATE_PERCENTAGE)
     private HashMap<String, Integer> ratePercentage;
-    @SerializedName(KEY_ADDRESS)
-    private String address;
+    @SerializedName(KEY_STREET_NAME)
+    private String streetName;
+    @SerializedName(KEY_HOUSE_NUMBER)
+    private String houseNumber;
+    @SerializedName(KEY_PROVIDENCE)
+    private String providence;
+    @SerializedName(KEY_ZIP_CODE)
+    private String zipCode;
     @SerializedName(KEY_SUPPORTED_LANG)
     private ArrayList<SupportedLang> supportedLangs;
 
@@ -202,14 +212,6 @@ public class UserInfo extends ParentModel {
         isAvailable = available;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
 
     public ArrayList<SupportedLang> getSupportedLangs() {
         return supportedLangs;
@@ -307,6 +309,38 @@ public class UserInfo extends ParentModel {
             fullName += " " + lastName;
         }
         return fullName.trim();
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+
+    public String getProvidence() {
+        return providence;
+    }
+
+    public void setProvidence(String providence) {
+        this.providence = providence;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
     //endregion
 }
