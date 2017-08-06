@@ -321,14 +321,14 @@ public class ApiHelper {
     }
 
     // send message in chat
-    public static Message sendMessage(int UserID, int toID, String textMessage, String type, File media, Context context) {
+    public static Message sendMessage(Message msg, File media, Context context) {
         Message message = null;
         try {
             MessageSendParameters messageSendParamaters = new MessageSendParameters();
-            messageSendParamaters.setFromID(UserID);
-            messageSendParamaters.setToID(toID);
-            messageSendParamaters.setMessage(textMessage);
-            messageSendParamaters.setTypeMessage(type);
+            messageSendParamaters.setFromID(msg.getFromID());
+            messageSendParamaters.setToID(msg.getToID());
+            messageSendParamaters.setMessage(msg.getMessage());
+            messageSendParamaters.setTypeMessage(msg.getType());
             messageSendParamaters.setIsForward(0);
             String jsonString = "";
             if (media != null) {
@@ -426,13 +426,13 @@ public class ApiHelper {
         }
     }
 
-    public static Document postAddDocument(Integer userId, String type, String document, File file, Context context) {
+    public static Document postAddDocument(Integer userId, Document doc, File file, Context context) {
         Document result = null;
         try {
             AddDocumentParameters addDocumentParameters = new AddDocumentParameters();
             addDocumentParameters.setUserId(userId);
-            addDocumentParameters.setDocument(document);
-            addDocumentParameters.setType(type);
+            addDocumentParameters.setDocument(doc.getDocument());
+            addDocumentParameters.setType(doc.getType());
 
             String jsonString = "";
             if (file == null) {
@@ -472,8 +472,8 @@ public class ApiHelper {
         }
     }
 
-    public static void postDocumentPrivacy(Integer documentId, Integer privacy, Context context) {
-
+    public static boolean postDocumentPrivacy(Integer documentId, Integer privacy, Context context) {
+        boolean result=false;
         try {
             DocumentPrivacyParameters documentPrivacyParameters = new DocumentPrivacyParameters();
             documentPrivacyParameters.setDocumentId(documentId);
@@ -485,12 +485,13 @@ public class ApiHelper {
 
             Gson gson = new Gson();
             DocumentPrivacyResponse documentPrivacyResponse = gson.fromJson(jsonString, DocumentPrivacyResponse.class);
-            Toast.makeText(context, documentPrivacyResponse.getMsg(), Toast.LENGTH_LONG).show();
-
+            if(documentPrivacyResponse.getStatus()){
+                result=true;
+            }
         } catch (Exception e) {
             Helper.handleError(TAG, "postDocumentPrivacy", e, -1, context);
         } finally {
-
+            return result;
         }
     }
 
@@ -648,7 +649,7 @@ public class ApiHelper {
         }
     }
 
-    public static Message sendForward(Context context, String userID, String doctorID, String messageID) {
+    public static Message sendForward(Context context, int userID, String doctorID, String messageID) {
         Message result = null;
         try {
             MessageForwardParameter messageForwardParameter = new MessageForwardParameter();
@@ -668,7 +669,7 @@ public class ApiHelper {
         }
     }
 
-    private static boolean MessageOperation(Context context, String user_id, String msg_id, int operationType) {
+    private static boolean MessageOperation(Context context, int user_id, String msg_id, int operationType) {
         boolean result = false;
         try {
             MessageOperationParameter messageOperationParameter = new MessageForwardParameter();
@@ -698,15 +699,15 @@ public class ApiHelper {
         }
     }
 
-    public static boolean deleteMessgae(Context context, String user_id, String msg_id) {
+    public static boolean deleteMessgae(Context context, int user_id, String msg_id) {
         return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELETE);
     }
 
-    public static boolean seenMessgae(Context context, String user_id, String msg_id) {
+    public static boolean seenMessage(Context context, int user_id, String msg_id) {
         return MessageOperation(context, user_id, msg_id, MessageOperationParameter.SEEN);
     }
 
-    public static boolean deliveredMessgae(Context context, String user_id, String msg_id) {
+    public static boolean deliveredMessgae(Context context, int user_id, String msg_id) {
         return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELIVER);
     }
 

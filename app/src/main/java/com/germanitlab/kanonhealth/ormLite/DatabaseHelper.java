@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.User;
@@ -30,8 +32,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Context context;
     // the DAO object we use to access the SimpleData table
     private Dao<User, Integer> doctorsDao = null;
+    private Dao<ChatModel, Integer> chatModel = null;
     private Dao<Table, Integer> tablesDao = null;
     private Dao<Message, Integer> messagesDao = null;
+    private Dao<Document, Integer> documentsDao = null;
+    private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> httpMessagesDao = null;
+    private Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> httpdocumentsDao = null;
     private RuntimeExceptionDao<User, Integer> doctorsRuntimeDao = null;
     private RuntimeExceptionDao<Message, Integer> messagesRuntimeDao = null;
 
@@ -84,6 +90,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return doctorsDao;
     }
+    public Dao<ChatModel, Integer> getChatModelsDao() throws SQLException {
+        if (chatModel == null) {
+            chatModel = getDao(ChatModel.class);
+        }
+        return chatModel;
+    }
 
     public Dao<Table, Integer> getTablesDao() throws SQLException {
         if (tablesDao == null) {
@@ -97,6 +109,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             messagesDao = getDao(Message.class);
         }
         return messagesDao;
+    }
+    public Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> getHttpMessagesDao() throws SQLException {
+        if (messagesDao == null) {
+            messagesDao = getDao(com.germanitlab.kanonhealth.api.models.Message.class);
+        }
+        return httpMessagesDao;
+    }
+    public Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> getHttpDocumentDao() throws SQLException {
+        if (doctorsDao == null) {
+            doctorsDao = getDao(com.germanitlab.kanonhealth.api.models.Document.class);
+        }
+        return httpdocumentsDao;
     }
 
     /**

@@ -45,8 +45,9 @@ public class UserInfo extends ParentModel {
     // endregion
 
     // region constraints
-    public static final int DOCTOR = 2;
-    public static final int PATIENT = 1;
+    public static final int CLINIC=3    ;
+    public static final int DOCTOR=2;
+    public static final int PATIENT=1;
     // endregion
 
     // region Attributes

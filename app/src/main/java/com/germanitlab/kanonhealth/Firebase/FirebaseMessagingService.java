@@ -190,7 +190,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             (new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ApiHelper.deliveredMessgae(getApplicationContext(), userID, messageId);
+                    ApiHelper.deliveredMessgae(getApplicationContext(), Integer.parseInt(userID), messageId);
                 }
             })).run();
         } catch (Exception e) {
