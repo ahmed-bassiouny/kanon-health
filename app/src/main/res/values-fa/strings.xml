@@ -521,6 +521,7 @@ Canutoa.</string>
     <string name="support">حمایت کردن</string>
     <string name="label_slide_to_cancel">اسلاید برای لغو</string>
     <string name="hint_type_your_msg">پیام خود را تایپ کنید</string>
+    <string name="loading">بارگیری ...</string>
 
 
 </resources>

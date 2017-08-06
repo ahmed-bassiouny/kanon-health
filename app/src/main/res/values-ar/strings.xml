@@ -520,6 +520,7 @@
     <string name="support">الدعم</string>
     <string name="label_slide_to_cancel">مرر للإلغاء</string>
     <string name="hint_type_your_msg">اكتب رسالتك</string>
+    <string name="loading">جار التحميل...</string>
 
 
 </resources>

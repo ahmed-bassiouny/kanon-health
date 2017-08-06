@@ -105,5 +105,7 @@ dependencies {
     compile 'com.dewarder:holdingbutton:0.0.9'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    compile 'com.github.d-max:spots-dialog:0.7@aar'
+
 }
 apply plugin: 'com.google.gms.google-services'
