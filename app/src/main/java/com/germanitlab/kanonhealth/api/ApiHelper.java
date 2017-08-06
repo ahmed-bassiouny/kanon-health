@@ -44,6 +44,7 @@ import com.germanitlab.kanonhealth.api.responses.GetDocumentListResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
+import com.germanitlab.kanonhealth.api.responses.OpenSessionResponse;
 import com.germanitlab.kanonhealth.api.responses.ParentResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
 import com.germanitlab.kanonhealth.api.responses.SpecialityResponse;
@@ -106,7 +107,7 @@ public class ApiHelper {
 
     private static final String API_SPECIALITIES_LIST = "speciality/list";
 
-    private static final String API_USERS_LIST = "users/me";
+    private static final String API_USERS_ME = "users/me";
     private static final String API_USERS_ADD = "users/add";
     private static final String API_USERS_EDIT = "users/edit";
     private static final String API_USERS_REGISTER = "users/register";
@@ -610,17 +611,17 @@ public class ApiHelper {
         }
     }
 
-    public static boolean openSession(Context context, int userID, int doctorID) {
-        boolean result = false;
+    public static int openSession(Context context, String userID, String doctorID) {
+        int result = -1;
         try {
             OpenSessionParameters openSessionParameters = new OpenSessionParameters();
             openSessionParameters.setUserID(userID);
             openSessionParameters.setDoctorID(doctorID);
             String jsonString = post(API_REQUESTS_OPEN, openSessionParameters.toJson());
             Gson gson = new Gson();
-            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);
             if (parentResponse.getStatus()) {
-                result = true;
+                result = Integer.parseInt(parentResponse.getData().get(OpenSessionResponse.KEY_REQUEST_ID));
             }
         } catch (Exception e) {
             Helper.handleError(TAG, "openSession", e, -1, context);

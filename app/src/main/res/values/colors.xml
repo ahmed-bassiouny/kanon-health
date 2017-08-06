@@ -33,4 +33,7 @@
     //chat color
     <color name="chatbackground_gray">#e0e0e0</color>
     <color name="select_item_chat">#88b3f7</color>
+
+    <color name="spots_dialog_color">@color/colorAccent</color>
+
 </resources>

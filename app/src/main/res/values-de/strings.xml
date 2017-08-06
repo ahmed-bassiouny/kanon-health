@@ -545,5 +545,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="nine_euro">9.90 Euro</string>
     <string name="Heart_listen">Herz abhorchen</string>
     <string name="laboratory_examination">Laboruntersuchung (Blut, Urin etc.)</string>
+    <string name="loading">Loading...</string>
 
 </resources>

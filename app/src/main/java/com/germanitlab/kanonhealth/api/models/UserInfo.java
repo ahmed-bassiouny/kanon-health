@@ -1,44 +1,52 @@
 package com.germanitlab.kanonhealth.api.models;
 
+import android.text.TextUtils;
+
+import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by bassiouny on 02/08/17.
  */
 
-public class UserInfo extends ParentModel{
+public class UserInfo extends ParentModel {
 
-     //region key
-    public static final String KEY_USERID="user_id";
-    public static final String KEY_USERTYPE="user_type";
-    public static final String KEY_FIRSTNAME="first_name";
-    public static final String KEY_LASTNAME="last_name";
-    public static final String KEY_TITLE="title";
-    public static final String KEY_PASSWORD="password";
-    public static final String KEY_COUNTRY_CODE="country_code";
-    public static final String KEY_PHONE="phone";
-    public static final String KEY_GENDER="gender";
-    public static final String KEY_BIRTHDAY="birh_day";
-    public static final String KEY_AVATAR="avatar";
-    public static final String KEY_DOCTOR_ID="doctor_id";
-    public static final String KEY_DOCUMENTS="documents";
+    //region key
+    public static final String KEY_USERID = "user_id";
+    public static final String KEY_USERTYPE = "user_type";
+    public static final String KEY_FIRSTNAME = "first_name";
+    public static final String KEY_LASTNAME = "last_name";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_PASSWORD = "password";
+    public static final String KEY_COUNTRY_CODE = "country_code";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_GENDER = "gender";
+    public static final String KEY_BIRTHDAY = "birh_day";
+    public static final String KEY_AVATAR = "avatar";
+    public static final String KEY_DOCTOR_ID = "doctor_id";
+    public static final String KEY_DOCUMENTS = "documents";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_RATE_NUM = "rate_num";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
-    public static final String KEY_ADDRESS = "address";
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
-    public static final String KEY_IS_AVAILABLE= "is_available";
-    public static final String KEY_ACTIVATED="activated";
-    public static final String KEY_SPECIALITIES="specialitys";
-    public static final String Clinics ="membar_at";
+    public static final String KEY_IS_AVAILABLE = "is_available";
+    public static final String KEY_ACTIVATED = "activated";
+    public static final String KEY_SPECIALITIES = "specialitys";
+    public static final String Clinics = "membar_at";
+    public static final String KEY_STREET_NAME = "street_name";
+    public static final String KEY_HOUSE_NUMBER = "house_number";
+    public static final String KEY_PROVIDENCE = "providence";
+    public static final String KEY_ZIP_CODE = "zip_code";
+
     // endregion
 
     // region constraints
-    public static final int DOCTOR=2;
-    public static final int PATIENT=1;
+    public static final int DOCTOR = 2;
+    public static final int PATIENT = 1;
     // endregion
 
     // region Attributes
@@ -56,20 +64,20 @@ public class UserInfo extends ParentModel{
     @SerializedName(KEY_TITLE)
     private String  title="";
     @SerializedName(KEY_PASSWORD)
-    private String  password;
+    private String password;
     @SerializedName(KEY_COUNTRY_CODE)
-    private String  country_code;
+    private String country_code;
     @SerializedName(KEY_PHONE)
-    private String  phone;
+    private String phone;
     @SerializedName(KEY_GENDER)
-    private String  gender;
+    private String gender;
     @SerializedName(KEY_BIRTHDAY)
     private String birthday;
     @SerializedName(KEY_AVATAR)
-    private String  avatar;
+    private String avatar;
     @SerializedName(KEY_IS_AVAILABLE)
     private Integer isAvailable;
-    @SerializedName(KEY_DOCUMENTS )
+    @SerializedName(KEY_DOCUMENTS)
     private ArrayList<Document> documents;
     @SerializedName(KEY_EMAIL)
     private String email;
@@ -77,8 +85,14 @@ public class UserInfo extends ParentModel{
     private Float rateNum;
     @SerializedName(KEY_RATE_PERCENTAGE)
     private HashMap<String, Integer> ratePercentage;
-//    @SerializedName(KEY_ADDRESS)
-//    private String address;
+    @SerializedName(KEY_STREET_NAME)
+    private String streetName;
+    @SerializedName(KEY_HOUSE_NUMBER)
+    private String houseNumber;
+    @SerializedName(KEY_PROVIDENCE)
+    private String providence;
+    @SerializedName(KEY_ZIP_CODE)
+    private String zipCode;
     @SerializedName(KEY_SUPPORTED_LANG)
     private ArrayList<SupportedLang> supportedLangs;
 
@@ -92,11 +106,10 @@ public class UserInfo extends ParentModel{
     // endregion
 
 
-
     // region setter and getter
     public Integer getUserID() {
-        if(userID==null)
-            userID=0;
+        if (userID == null)
+            userID = 0;
         return userID;
     }
 
@@ -105,8 +118,8 @@ public class UserInfo extends ParentModel{
     }
 
     public Integer getUserType() {
-        if(userType==null)
-            userType=PATIENT;
+        if (userType == null)
+            userType = PATIENT;
         return userType;
     }
 
@@ -171,7 +184,13 @@ public class UserInfo extends ParentModel{
     }
 
     public String getBirthday() {
-        return birthday;
+        String displayString = "";
+        Date bd = new Date();
+        if (!TextUtils.isEmpty(birthday)) {
+            bd = DateHelper.FromServerDateStringToServer(birthday);
+        }
+        displayString = DateHelper.FromDisplayDateToBirthDateString(bd);
+        return displayString;
     }
 
     public void setBirthday(String birthday) {
@@ -185,6 +204,7 @@ public class UserInfo extends ParentModel{
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
     public Integer getAvailable() {
         return isAvailable;
     }
@@ -192,14 +212,6 @@ public class UserInfo extends ParentModel{
     public void setAvailable(Integer available) {
         isAvailable = available;
     }
-
-//    public String getAddress() {
-//        return address;
-//    }
-//
-//    public void setAddress(String address) {
-//        this.address = address;
-//    }
 
 
     public ArrayList<SupportedLang> getSupportedLangs() {
@@ -285,10 +297,51 @@ public class UserInfo extends ParentModel{
     public void setSpecialities(ArrayList<Speciality> specialities) {
         this.specialities = specialities;
     }
-    //endregion
 
-    public String getFullName()
-    {
-    return    title+" "+firstName+" "+lastName;
+    public String getFullName() {
+        String fullName = "";
+        if (!TextUtils.isEmpty(title)) {
+            fullName += title;
+        }
+        if (!TextUtils.isEmpty(firstName)) {
+            fullName += " " + firstName;
+        }
+        if (!TextUtils.isEmpty(lastName)) {
+            fullName += " " + lastName;
+        }
+        return fullName.trim();
     }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+
+    public String getProvidence() {
+        return providence;
+    }
+
+    public void setProvidence(String providence) {
+        this.providence = providence;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+    //endregion
 }

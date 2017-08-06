@@ -516,6 +516,7 @@
     <string name="gallery">Gallery</string>
     <string name="select_video">Select Video</string>
     <string name="Heart_listen">Listen heart</string>
+    <string name="loading">Loading...</string>
 
 
 </resources>

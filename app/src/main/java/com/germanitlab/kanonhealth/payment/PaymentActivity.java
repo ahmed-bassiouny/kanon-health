@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -50,7 +51,7 @@ public class PaymentActivity extends AppCompatActivity {
     RatingBar ratingBar;
 
     @BindView(R.id.rb_free)
-    RadioButton rbFree ;
+    RadioButton rbFree;
 
     @BindView(R.id.rb_euro)
     RadioButton rbEuro;
@@ -62,7 +63,7 @@ public class PaymentActivity extends AppCompatActivity {
     RadioButton rbVoucher;
 
     @BindView(R.id.rg_payment)
-    RadioGroup rgPayment ;
+    RadioGroup rgPayment;
     User doctor;
     private String type;
     PrefManager prefManager;
@@ -84,11 +85,10 @@ public class PaymentActivity extends AppCompatActivity {
             radioButtons.add((RadioButton) findViewById(R.id.rb_free));
             handleRadioButtons();
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
-            doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT),User.class);
-            if(doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR)) {
+            doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT), User.class);
+            if (doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR)) {
                 rbFree.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 rbFree.setVisibility(View.GONE);
             }
         /*
@@ -171,7 +171,7 @@ public class PaymentActivity extends AppCompatActivity {
     @OnClick(R.id.next)
     public void nextClicked() {
         try {
-            if(rgPayment.getCheckedRadioButtonId() == -1){
+            if (rgPayment.getCheckedRadioButtonId() == -1) {
                 if (!rbVoucher.isChecked()) {
                     Toast.makeText(this, R.string.please_choose_one_of_these_methods, Toast.LENGTH_SHORT).show();
                     return;
@@ -181,50 +181,21 @@ public class PaymentActivity extends AppCompatActivity {
                 }
 
             }
-
-
-            new HttpCall(PaymentActivity.this, new ApiResponse() {
+            (new Thread(new Runnable() {
                 @Override
-                public void onSuccess(Object response) {
-                    JsonObject j= (JsonObject) response;
-                    JsonElement req_id=j.get("id");
-                    int req=req_id.getAsInt();
-
-//                    Intent intent = new Intent(PaymentActivity.this, Comment.class);
-//                    intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-//                    startActivity(intent);
-
-                    // last code
-                    /*
-                    final Gson gson = new Gson();
-                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-
-                    if (doctor != null) {
+                public void run() {
+                    int requestId = ApiHelper.openSession(PaymentActivity.this, prefManager.getData(PrefManager.USER_ID), String.valueOf(doctor.getId()));
+                    if (requestId != -1) {
+                        Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
+                        intent.putExtra("doctorID", doctor.get_Id());
                         doctor.setIsOpen(1);
+                        doctor.setRequest_id(requestId);
+                        new UserRepository(PaymentActivity.this).update(doctor);
+                        startActivity(intent);
+                        finish();
                     }
-                    //intent.putExtra("doctor_data", gson.toJson(doctor));
-                    prefManager.put(prefManager.USER_INTENT,gson.toJson(doctor));
-                    intent.putExtra("from", true);
-                    startActivity(intent);*/
-                    // edit ahmed
-                    //Edit ahmed
-                    Intent intent= new Intent(PaymentActivity.this, HttpChatActivity.class);
-                    intent.putExtra("doctorID", doctor.get_Id());
-                    doctor.setIsOpen(1);
-                    doctor.setRequest_id(req);
-                    new UserRepository(PaymentActivity.this).update(doctor);
-                    startActivity(intent);
-                    finish();
                 }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                }
-            }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
-                    String.valueOf(doctor.getId()), "2");
-
-
+            })).run();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
