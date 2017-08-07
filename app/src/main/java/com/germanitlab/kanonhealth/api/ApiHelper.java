@@ -27,6 +27,7 @@ import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
 import com.germanitlab.kanonhealth.api.parameters.OpenSessionParameters;
+import com.germanitlab.kanonhealth.api.parameters.RateDoctorParameter;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
 import com.germanitlab.kanonhealth.api.parameters.TokenAddParameter;
 import com.germanitlab.kanonhealth.api.parameters.UserAddParameter;
@@ -46,6 +47,7 @@ import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
 import com.germanitlab.kanonhealth.api.responses.OpenSessionResponse;
 import com.germanitlab.kanonhealth.api.responses.ParentResponse;
+import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
 import com.germanitlab.kanonhealth.api.responses.SpecialityResponse;
 import com.germanitlab.kanonhealth.api.responses.UserInfoResponse;
@@ -82,7 +84,7 @@ public class ApiHelper {
     private static final String API_DOCTORS_LIST = "doctors/list";
     private static final String API_DOCTORS_ANOTHER = "doctors/another";
     private static final String API_DOCTORS_CHANGE_STATUS = "doctors/change_status";
-    private static final String API_DOCTORS_CHANGE_RATE = "doctors/rate";
+    private static final String API_DOCTORS_RATE = "doctors/rate";
 
     private static final String API_DOCUMENTS_ADD = "document/add";
     private static final String API_DOCUMENTS_LIST = "document/list";
@@ -527,19 +529,22 @@ public class ApiHelper {
     }
 
     // edit doctor return true if doctor edited
-    public static boolean editDoctor(Context context, int userID, String password, String title, String firstName, String lastName, String birthday, String gender, File avatar, String email, String address) {
+    public static boolean editDoctor(Context context, UserInfo userInfo,File avatar) {
         boolean result = false;
         try {
             EditDoctorParameter editDoctorParamater = new EditDoctorParameter();
-            editDoctorParamater.setUserID(userID);
-            editDoctorParamater.setPassword(password);
-            editDoctorParamater.setTitle(title);
-            editDoctorParamater.setFirstName(firstName);
-            editDoctorParamater.setLastName(lastName);
-            editDoctorParamater.setBirthday(birthday);
-            editDoctorParamater.setGender(gender);
-            editDoctorParamater.setAddress(address);
-            editDoctorParamater.setEmail(email);
+            editDoctorParamater.setUserID(userInfo.getUserID());
+            editDoctorParamater.setPassword(userInfo.getPassword());
+            editDoctorParamater.setTitle(userInfo.getTitle());
+            editDoctorParamater.setFirstName(userInfo.getFirstName());
+            editDoctorParamater.setLastName(userInfo.getLastName());
+            editDoctorParamater.setBirthday(userInfo.getBirthday());
+            editDoctorParamater.setGender(userInfo.getGender());
+            editDoctorParamater.setEmail(userInfo.getEmail());
+            editDoctorParamater.setHouseNumber(userInfo.getHouseNumber());
+            editDoctorParamater.setProvidence(userInfo.getProvidence());
+            editDoctorParamater.setStreetName(userInfo.getStreetName());
+            editDoctorParamater.setZipCode(userInfo.getZipCode());
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
@@ -771,5 +776,28 @@ public class ApiHelper {
             Helper.handleError(TAG, "addToken", e, -1, context);
         }
     }
+
+    public static RateDoctorResponse rateDoctor(Context context, String userId, String doctorId, String requestId, String comment, String rate) {
+        RateDoctorResponse result = null;
+        try {
+            RateDoctorParameter rateDoctorParameter = new RateDoctorParameter();
+            rateDoctorParameter.setUserId(userId);
+            rateDoctorParameter.setDoctorId(doctorId);
+            rateDoctorParameter.setRequestId(requestId);
+            rateDoctorParameter.setComment(comment);
+            rateDoctorParameter.setRate(rate);
+            String jsonString = post(API_USERS_ME, rateDoctorParameter.toJson());
+            Gson gson = new Gson();
+            RateDoctorResponse rateDoctorResponse = gson.fromJson(jsonString, RateDoctorResponse.class);
+            if (rateDoctorResponse.getStatus()) {
+                result = rateDoctorResponse;
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "rateDoctor", e, -1, context);
+        } finally {
+            return result;
+        }
+    }
+
     //endregion
 }

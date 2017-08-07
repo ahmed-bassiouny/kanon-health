@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
@@ -41,11 +44,11 @@ public class Comment extends AppCompatActivity {
     ImageView img_chat_user_avatar;
 
 
-    @BindView(R.id. img_back)
-    ImageView  img_back;
+    @BindView(R.id.img_back)
+    ImageView img_back;
 
     String doc_id = "";
-    String req_id="";
+    String req_id = "";
     UserRepository userRepository;
     User doctor;
 
@@ -55,16 +58,14 @@ public class Comment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
-        userRepository=new UserRepository(getApplicationContext());
-        doctor=new User();
-img_back.setOnClickListener(new View.OnClickListener()
-{
-    @Override
-    public void onClick(View v)
-    {
-onBackPressed();
-    }
-});
+        userRepository = new UserRepository(getApplicationContext());
+        doctor = new User();
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         try {
             doc_id = getIntent().getStringExtra("doc_id");
@@ -78,7 +79,7 @@ onBackPressed();
 
         } catch (Exception e) {
             doc_id = "";
-            req_id="";
+            req_id = "";
         }
         edt_comment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -101,24 +102,29 @@ onBackPressed();
     public void submit() {
         try {
             if (validationInput()) {
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
-                        doctor.setHave_rate(1);
-                        userRepository.update(doctor);
-                        Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
-                        intent.putExtra("doctorID", Integer.valueOf(doc_id));
-                        startActivity(intent);
-                        finish();
-                    }
 
+                (new Thread(new Runnable() {
                     @Override
-                    public void onFailed(String error) {
-                        Log.e("Comment Tag", error);
-                        Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                    public void run() {
+                        PrefManager prefManager = new PrefManager(Comment.this);
+                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, prefManager.getData(PrefManager.USER_ID), doctor.getId().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
+                        if (result != null) {
+                            if (result.getData()) {
+                                Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
+                                doctor.setHave_rate(1);
+                                userRepository.update(doctor);
+                                Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
+                                intent.putExtra("doctorID", Integer.valueOf(doc_id));
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(Comment.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }).rateDoctor(doc_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()),req_id);
+                })).run();
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -130,7 +136,7 @@ onBackPressed();
 
     @Override
     public void onBackPressed() {
-       // doctor.setHave_rate(1);
+        // doctor.setHave_rate(1);
         //userRepository.update(doctor);
         Intent intent = new Intent(this, HttpChatActivity.class);
         intent.putExtra("doctorID", Integer.valueOf(doc_id));
