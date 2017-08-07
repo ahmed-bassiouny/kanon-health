@@ -603,7 +603,7 @@ public class ApiHelper {
             userInfoParameter.setUserID(userID);
             System.out.println(userInfoParameter.toJson());
 
-            String jsonString = post(API_USERS_LIST, userInfoParameter.toJson());
+            String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             System.out.println(jsonString);
             Gson gson = new Gson();
             UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);

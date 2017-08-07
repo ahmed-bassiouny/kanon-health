@@ -2,22 +2,18 @@ package com.germanitlab.kanonhealth.doctors;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,9 +25,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
@@ -40,14 +34,9 @@ import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.interfaces.FilterCallBackClickListener;
+import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -74,7 +63,6 @@ public class DoctorListFragment extends Fragment {
     ArrayList<UserInfo> doctorList;
     ArrayList<Clinic> clinics;
 
-
     ArrayList<ChatModel> chatModel;
     private Button btnLeftList, btnRightList;
     int speciality_id;
@@ -86,9 +74,7 @@ public class DoctorListFragment extends Fragment {
     Gson gson;
     private UserRepository mDoctorRepository;
     private EditText edtDoctorListFilter;
-    private FilterCallBackClickListener filterCallBackClickListener;
     static DoctorListFragment doctorListFragment;
-    private Util util;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = false, is_chat_data_right = false;
     LinearLayoutManager llm;
@@ -125,7 +111,6 @@ public class DoctorListFragment extends Fragment {
                 user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
             } catch (Exception e) {
             }
-            util = Util.getInstance(getActivity());
             initView();
            // is_doc = prefManager.get(PrefManager.IS_DOCTOR);
             gson = new Gson();
@@ -147,7 +132,7 @@ public class DoctorListFragment extends Fragment {
     }
 
     private void loadFirstTime() {
-        util.showProgressDialog();
+        ProgressHelper.showProgressBar(getActivity());
                 setDoctorList();
                 setClinicList();
                 getChatData();
@@ -324,12 +309,12 @@ public class DoctorListFragment extends Fragment {
 //        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
     }
 
-    private void updateDataBase(List<User> doctorList) {
-        for (User user : doctorList) {
-            user.setIs_chat(1);
-            mDoctorRepository.create(user);
-        }
-    }
+//    private void updateDataBase(List<User> doctorList) {
+//        for (User user : doctorList) {
+//            user.setIs_chat(1);
+//            mDoctorRepository.create(user);
+//        }
+//    }
 
     public boolean checkPermissionForCamera() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
@@ -544,18 +529,6 @@ public class DoctorListFragment extends Fragment {
         btnLeftList = (Button) view.findViewById(R.id.doctor_list);
         btnRightList = (Button) view.findViewById(R.id.praxis_list);
 
-        if (type == User.DOCTOR_TYPE) {
-            btnLeftList.setBackgroundResource(R.color.blue);
-            btnLeftList.setTextColor(getResources().getColor(R.color.white));
-            btnRightList.setBackgroundResource(R.color.gray);
-            btnRightList.setTextColor(getResources().getColor(R.color.black));
-        }
-        if (type == User.CLINICS_TYPE) {
-            btnLeftList.setBackgroundResource(R.color.gray);
-            btnLeftList.setTextColor(getResources().getColor(R.color.black));
-            btnRightList.setBackgroundResource(R.color.blue);
-            btnRightList.setTextColor(getResources().getColor(R.color.white));
-        }
 
         edtDoctorListFilter.addTextChangedListener(new TextWatcher() {
             @Override
@@ -619,8 +592,6 @@ public class DoctorListFragment extends Fragment {
 /*
         filter_to_list = (TextView) view.findViewById(R.id.filter_to_list);
 */
-        btnLeftList = (Button) view.findViewById(R.id.doctor_list);
-        btnRightList = (Button) view.findViewById(R.id.praxis_list);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_chat);
         recyclerView.setHasFixedSize(true);
@@ -664,7 +635,6 @@ public class DoctorListFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
-
                     loadData();
             }
         });
@@ -674,7 +644,7 @@ public class DoctorListFragment extends Fragment {
 
     private void isAllDataLoaded(){
         if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-            util.dismissProgressDialog();
+           ProgressHelper.hideProgressBar();
             prefManager.put(PrefManager.IS_OLD, true);
         }
 
