@@ -16,7 +16,7 @@ public class Clinic extends ParentModel{
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_AVATAR = "avatar";
-    public static final String KEY_SPECIALITY = "speciality";
+    public static final String KEY_SPECIALITY = "specialitys";
     public static final String KEY_RATE_NUM = "rate_num";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
     public static final String KEY_ADDRESS = "address";
@@ -30,7 +30,7 @@ public class Clinic extends ParentModel{
     public static final String KEY_FAX = "fax";
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
     public static final String KEY_IS_AVAILABLE= "is_available";
-
+    public static final String KEY_MEMBER_AT= "member_at";
 
     @SerializedName(KEY_ID)
     private Integer id;
@@ -48,7 +48,7 @@ public class Clinic extends ParentModel{
     private String avatar;
 
     @SerializedName(KEY_SPECIALITY)
-    private String speciality;
+    private ArrayList<Speciality> speciality;
 
     @SerializedName(KEY_RATE_NUM)
     private Float rateNum;
@@ -86,8 +86,11 @@ public class Clinic extends ParentModel{
     @SerializedName(KEY_FAX)
     private String fax;
 
-//    @SerializedName(KEY_SUPPORTED_LANG)
-//    private ArrayList<SupportedLang> supportedLangs;
+    @SerializedName(KEY_SUPPORTED_LANG)
+    private ArrayList<SupportedLang> supportedLangs;
+
+    @SerializedName(KEY_MEMBER_AT)
+    private ArrayList<UserInfo> doctors;
 
     @SerializedName(KEY_IS_AVAILABLE)
     private Integer isAvailable;
@@ -132,11 +135,15 @@ public class Clinic extends ParentModel{
         this.avatar = avatar;
     }
 
-    public String getSpeciality() {
+    public ArrayList<Speciality> getSpeciality() {
+        if(speciality==null)
+        {
+            speciality= new ArrayList<>();
+        }
         return speciality;
     }
 
-    public void setSpeciality(String speciality) {
+    public void setSpeciality(ArrayList<Speciality> speciality) {
         this.speciality = speciality;
     }
 
@@ -236,13 +243,17 @@ public class Clinic extends ParentModel{
         this.fax = fax;
     }
 
-//    public ArrayList<SupportedLang> getSupportedLangs() {
-//        return supportedLangs;
-//    }
-//
-//    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
-//        this.supportedLangs = supportedLangs;
-//    }
+    public ArrayList<SupportedLang> getSupportedLangs() {
+        if(supportedLangs==null)
+        {
+            supportedLangs= new ArrayList<>();
+        }
+        return supportedLangs;
+    }
+
+    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
+        this.supportedLangs = supportedLangs;
+    }
 
     public Integer getAvailable() {
         return isAvailable;
@@ -252,6 +263,21 @@ public class Clinic extends ParentModel{
         isAvailable = available;
     }
 
+    public ArrayList<UserInfo> getDoctors() {
+        return doctors;
+    }
+
+    public void setDoctors(ArrayList<UserInfo> doctors) {
+        this.doctors = doctors;
+    }
+
+    public Integer getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Integer isAvailable) {
+        this.isAvailable = isAvailable;
+    }
 
 
 }

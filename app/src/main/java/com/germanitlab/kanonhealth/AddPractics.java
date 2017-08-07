@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -29,7 +28,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
-import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -42,17 +43,16 @@ import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.user.Info;
-import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     @BindView(R.id.ed_name)
     EditText etName;
     @BindView(R.id.fl_language)
-    FlowLayout flLanguages ;
+    FlowLayout flLanguages;
 
 
     @BindView(R.id.et_telephone)
@@ -111,23 +111,27 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     @BindView(R.id.location_img)
     ImageView location_img;
     @BindView(R.id.flowlayout_speciality)
-    FlowLayout flSpecilities ;
+    FlowLayout flSpecilities;
     @BindView(R.id.flowlayout_invite)
     FlowLayout flInvite;
 
     // additional data
-    User user;
     Info info;
     RecyclerView recyclerView;
     PickerDialog pickerDialog;
     PrefManager prefManager;
+    private PrefManager mPrefManager;
     //    private Uri selectedImageUri;
     Util util;
-    UploadImageResponse uploadImageResponse;
+    UserInfo user;
     private static final int TAKE_PICTURE = 1;
     private static final int CROP_PIC = 55;
     int PLACE_PICKER_REQUEST = 22;
     String practics_id = "";
+    Clinic clinic;
+    String specialityIds;
+    String langIds;
+    File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,10 +139,15 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         setContentView(R.layout.activity_add_practics);
         ButterKnife.bind(this);
         initTB();
-        user = new User();
-        info = new Info();
-        pickerDialog = new PickerDialog(true);
+        mPrefManager = new PrefManager(this);
         prefManager = new PrefManager(this);
+        try {
+            user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+        } catch (Exception e) {
+        }
+
+        clinic = new Clinic();
+        pickerDialog = new PickerDialog(true);
         util = Util.getInstance(this);
         handleImoAction();
         try {
@@ -160,40 +169,70 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         progressDialog.setCancelable(false);
         progressDialog.show();
         //Integer.parseInt(prefManager.getData(PrefManager.USER_ID))
-        new HttpCall(this, new ApiResponse() {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(Object response) {
-                try {
-                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                    user = userInfoResponse.getUser();
-                    if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
-                        ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar());
+            public void run() {
+                clinic = ApiHelper.postGetClinic(Integer.valueOf(practics_id), getApplicationContext());
+                if (clinic != null) {
+                    if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
+                        ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
                     }
-                    etName.setText(user.getFullName());
-                    etLocation.setText(user.getAddress());
-                    etHouseNumber.setText(user.getInfo().getHouseNumber());
-                    etZipCode.setText(user.getInfo().getZip_code());
-                    etProvince.setText(user.getInfo().getProvinz());
-                    etCountry.setText(user.getInfo().getCountry());
-                    etTelephone.setText(user.getPhone());
-                    if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
-                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
-                        location_img.setVisibility(View.VISIBLE);
-                    }
-                    progressDialog.dismiss();
-                } catch (Exception e) {
-                    onFailed(e.getLocalizedMessage());
+                    etName.setText(clinic.getName());
+                    etLocation.setText(clinic.getAddress());
+                    etHouseNumber.setText(clinic.getHouseNumber());
+                    etZipCode.setText(clinic.getZipCode());
+                    etProvince.setText(clinic.getProvince());
+                    etCountry.setText(clinic.getCountry());
+                    etTelephone.setText(clinic.getPhone());
+                    //--------------------------------------------------------------------------location------------------------------------------------------//
+//                    if (clinic.get != null && !user.getLocation_img().isEmpty()) {
+//                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
+//                        location_img.setVisibility(View.VISIBLE);
+//                    }
+                } else {
+                    Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                    finish();
                 }
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Crashlytics.log(error);
-                Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
-                finish();
             }
-        }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), practics_id);
+        }).start();
+
+
+//
+//        new HttpCall(this, new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                try {
+//                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+//                    user = userInfoResponse.getUser();
+//                    if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+//                        ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar());
+//                    }
+//                    etName.setText(user.getFullName());
+//                    etLocation.setText(user.getAddress());
+//                    etHouseNumber.setText(user.getInfo().getHouseNumber());
+//                    etZipCode.setText(user.getInfo().getZip_code());
+//                    etProvince.setText(user.getInfo().getProvinz());
+//                    etCountry.setText(user.getInfo().getCountry());
+//                    etTelephone.setText(user.getPhone());
+//                    if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
+//                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
+//                        location_img.setVisibility(View.VISIBLE);
+//                    }
+//                    progressDialog.dismiss();
+//                } catch (Exception e) {
+//                    onFailed(e.getLocalizedMessage());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                Crashlytics.log(error);
+//                Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+//                progressDialog.dismiss();
+//                finish();
+//            }
+//        }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), practics_id);
     }
 
     private void initTB() {
@@ -238,58 +277,82 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     }
 
     public void save() {
-        try {
-            if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry))
-                return;
-            user.setFirst_name(etName.getText().toString());
-            user.setAddress(etLocation.getText().toString());
-            info.setHouseNumber(etHouseNumber.getText().toString());
-            info.setZip_code(etZipCode.getText().toString());
-            info.setProvinz(etProvince.getText().toString());
-            info.setCountry(etCountry.getText().toString());
-            info.setStreetname(etStreetName.getText().toString());
-            info.setCity(etCity.getText().toString());
-            user.setInfo(info);
-            user.setPhone(etTelephone.getText().toString());
-            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            if (practics_id == null) {
-                user.setUserID_request(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
-                        finish();
-                    }
+        // try {
+        if (!isvalid(etName) || !isvalid(etLocation) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry))
+            return;
 
-                    @Override
-                    public void onFailed(String error) {
-                        Log.e("Add Practics Add", error);
-                        Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
-                    }
-                }).addClinic(user);
-            } else {
-                user.setUserID_request(Integer.valueOf(practics_id));
-                user.setId(Integer.valueOf(practics_id));
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
+        if (practics_id != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Integer result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), langIds, file, getApplicationContext());
+                    if (result != -1) {
                         Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
                         finish();
                     }
 
-                    @Override
-                    public void onFailed(String error) {
-                        Log.e("Add Practics Edit", error);
-                        Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
-                    }
-                }).editClinic(user);
+                }
+            }).start();
+        } else {
+            Clinic clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), langIds, file, getApplicationContext());
+
+            if (clinic != null) {
+                Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
+                finish();
             }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
+
+//
+//
+//            user.setFirst_name(etName.getText().toString());
+//            user.setAddress(etLocation.getText().toString());
+//            info.setHouseNumber(etHouseNumber.getText().toString());
+//            info.setZip_code(etZipCode.getText().toString());
+//            info.setProvinz(etProvince.getText().toString());
+//            info.setCountry(etCountry.getText().toString());
+//            info.setStreetname(etStreetName.getText().toString());
+//            info.setCity(etCity.getText().toString());
+//            user.setInfo(info);
+//            user.setPhone(etTelephone.getText().toString());
+//            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+//            if (practics_id == null) {
+//                user.setUserID_request(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//                new HttpCall(this, new ApiResponse() {
+//                    @Override
+//                    public void onSuccess(Object response) {
+//                        Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String error) {
+//                        Log.e("Add Practics Add", error);
+//                        Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
+//                    }
+//                }).addClinic(user);
+//            } else {
+//                user.setUserID_request(Integer.valueOf(practics_id));
+//                user.setId(Integer.valueOf(practics_id));
+//                new HttpCall(this, new ApiResponse() {
+//                    @Override
+//                    public void onSuccess(Object response) {
+//                        Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String error) {
+//                        Log.e("Add Practics Edit", error);
+//                        Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
+//                    }
+//                }).editClinic(user);
+//            }
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
+//            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
 
 
     }
@@ -299,14 +362,13 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         try {
             Bundle bundle = new Bundle();
             bundle.putInt("Constants", Constants.SPECIALITIES);
-            bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSpecialities());
+            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getSpeciality());
             showDialogFragment(bundle);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Add Practics Tag", "Add Practics about Exception ", e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
 
     }
 
@@ -315,7 +377,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         try {
             Bundle bundle = new Bundle();
             bundle.putInt("Constants", Constants.LANGUAUGE);
-            bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getSupported_lang());
+            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getSupportedLangs());
             showDialogFragment(bundle);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -382,7 +444,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         try {
             Bundle bundle = new Bundle();
             bundle.putInt("Constants", Constants.DoctorAll);
-            bundle.putSerializable(Constants.CHOSED_LIST, (Serializable) user.getMembers_at());
+            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getDoctors());
             showDialogFragment(bundle);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -423,6 +485,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     private void askForPermission(String[] permission, Integer requestCode) {
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
+    ////----------------------------------------------------------------------------working hours----------------------------------------------///
 
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
@@ -468,7 +531,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
                             tvSpecilities.append(", ");
                     }
 
-              //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+                    //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
                     setCircles(user.getSpecialities(), flSpecilities, 1);
 
                     break;
@@ -491,7 +554,7 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
                             templist.add(item);
                     }
                     user.setMembers_at(templist);
-               //     setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+                    //     setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                     setCircles(templist, flInvite, 2);
                     break;
             }
@@ -502,26 +565,26 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         }
 
     }
+
     private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
         flowLayout.removeAllViews();
         tvLanguages.setText("");
         int size = 0;
         for (ChooseModel chooseModel : supported_lang) {
-                String country_code = chooseModel.getCountry_code();
-                if (!TextUtils.isEmpty(country_code)) {
-                    tvLanguages.append(chooseModel.getLang_title());
-                    if (supported_lang.size() > size + 1) {
-                        tvLanguages.append(" , ");
-                        size++;
-                    }
-                    Country country = Country.getCountryByISO(country_code);
-                    if (country != null) {
-                        flowLayout.addView(ImageHelper.setImageHeart(country.getFlag() , getApplicationContext()));
-                    }
-                    else {
-                        Log.d("Country " + chooseModel.getLang_title().toString()  , "code " + chooseModel.getCountry_code().toString());
-                    }
+            String country_code = chooseModel.getCountry_code();
+            if (!TextUtils.isEmpty(country_code)) {
+                tvLanguages.append(chooseModel.getLang_title());
+                if (supported_lang.size() > size + 1) {
+                    tvLanguages.append(" , ");
+                    size++;
                 }
+                Country country = Country.getCountryByISO(country_code);
+                if (country != null) {
+                    flowLayout.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
+                } else {
+                    Log.d("Country " + chooseModel.getLang_title().toString(), "code " + chooseModel.getCountry_code().toString());
+                }
+            }
         }
     }
 
@@ -529,17 +592,15 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
     private void setCircles(List<ChooseModel> specialities, FlowLayout flowLayout, int type) {
         // type = 1 for specialities , type = 2 for members
         flowLayout.removeAllViews();
-        for (ChooseModel chooseModel: specialities
-             ) {
+        for (ChooseModel chooseModel : specialities
+                ) {
             if (type == 1)
-            flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon() , this));
+                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon(), this));
             else if (type == 2)
                 flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getAvatarMember(), this));
 
         }
     }
-
-
 
 
     @Override

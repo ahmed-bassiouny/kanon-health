@@ -11,7 +11,6 @@ import java.util.HashMap;
  */
 
 public class AddOrEditClinicParameters extends ParentParameters{
-    public static final String PARAMETER_ID ="user_id";
     public static final String PARAMETER_NAME="name";
     public static final String PARAMETER_AVATAR ="avatar";
     public static final String PARAMETER_SPECIALITY="speciality";
@@ -30,8 +29,7 @@ public class AddOrEditClinicParameters extends ParentParameters{
 
 
 // user id in case of add or clinic id in case of edit
-    @SerializedName(PARAMETER_ID)
-    private Integer userId;
+
 
     @SerializedName(PARAMETER_NAME)
     private String name;
@@ -43,14 +41,6 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(PARAMETER_SPECIALITY)
     private String speciality;
 
-    @SerializedName(PARAMETER_RATE_NUM)
-    private Float rateNum;
-
-    @SerializedName(PARAMETER_RATE_PERCENTAGE)
-    private HashMap<String, String> ratePercentage;
-
-    @SerializedName(PARAMETER_ADDRESS)
-    private String address;
 
     @SerializedName(PARAMETER_STREET_NAME)
     private String streetName;
@@ -73,19 +63,10 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(PARAMETER_PHONE)
     private String phone;
 
-    @SerializedName(PARAMETER_FAX)
-    private String fax;
-
     @SerializedName(PARAMETER_SUPPORTED_LANG)
-    private ArrayList<SupportedLang> supportedLangs;
+    private String supportedLangs;
 
-    public Integer getUserId() {
-        return userId;
-    }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public String getName() {
         return name;
@@ -101,30 +82,6 @@ public class AddOrEditClinicParameters extends ParentParameters{
 
     public void setSpeciality(String speciality) {
         this.speciality = speciality;
-    }
-
-    public Float getRateNum() {
-        return rateNum;
-    }
-
-    public void setRateNum(Float rateNum) {
-        this.rateNum = rateNum;
-    }
-
-    public HashMap<String, String> getRatePercentage() {
-        return ratePercentage;
-    }
-
-    public void setRatePercentage(HashMap<String, String> ratePercentage) {
-        this.ratePercentage = ratePercentage;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getStreetName() {
@@ -183,19 +140,11 @@ public class AddOrEditClinicParameters extends ParentParameters{
         this.phone = phone;
     }
 
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
-    public ArrayList<SupportedLang> getSupportedLangs() {
+    public String getSupportedLangs() {
         return supportedLangs;
     }
 
-    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
+    public void setSupportedLangs(String supportedLangs) {
         this.supportedLangs = supportedLangs;
     }
 }

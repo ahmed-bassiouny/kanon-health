@@ -12,12 +12,14 @@ import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
+import com.germanitlab.kanonhealth.api.parameters.AddClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.AddDocumentParameters;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.CloseSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.ChangeStatusParameters;
 import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
+import com.germanitlab.kanonhealth.api.parameters.EditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditDoctorParameter;
 import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
@@ -206,30 +208,27 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postAddClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs, File file, Context context) {
+    public static Clinic postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String supportedLangs, File file, Context context) {
         Clinic result = null;
         try {
-            AddOrEditClinicParameters addOrEditClinicParameters = new AddOrEditClinicParameters();
-            addOrEditClinicParameters.setUserId(userId);
-            addOrEditClinicParameters.setName(name);
-            addOrEditClinicParameters.setSpeciality(speciality);
-            addOrEditClinicParameters.setRateNum(rateNum);
-            addOrEditClinicParameters.setRatePercentage(ratePercentage);
-            addOrEditClinicParameters.setAddress(address);
-            addOrEditClinicParameters.setStreetName(streetName);
-            addOrEditClinicParameters.setHouseNumber(houseNumber);
-            addOrEditClinicParameters.setZipCode(zipCode);
-            addOrEditClinicParameters.setCity(city);
-            addOrEditClinicParameters.setProvince(province);
-            addOrEditClinicParameters.setCountry(country);
-            addOrEditClinicParameters.setPhone(phone);
-            addOrEditClinicParameters.setFax(fax);
-            addOrEditClinicParameters.setSupportedLangs(supportedLangs);
+            AddClinicParameters addClinicParameters = new AddClinicParameters();
+            addClinicParameters.setUserId(userId);
+            addClinicParameters.setName(name);
+            addClinicParameters.setSpeciality(speciality);
+
+            addClinicParameters.setStreetName(streetName);
+            addClinicParameters.setHouseNumber(houseNumber);
+            addClinicParameters.setZipCode(zipCode);
+            addClinicParameters.setCity(city);
+            addClinicParameters.setProvince(province);
+            addClinicParameters.setCountry(country);
+            addClinicParameters.setPhone(phone);
+            addClinicParameters.setSupportedLangs(supportedLangs);
             String jsonString = "";
             if (file == null) {
-                jsonString = post(API_CLINICS_ADD, addOrEditClinicParameters.toJson());
+                jsonString = post(API_CLINICS_ADD, addClinicParameters.toJson());
             } else {
-                jsonString = postWithFile(API_CLINICS_ADD, addOrEditClinicParameters.toJson(), file, addOrEditClinicParameters.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_CLINICS_ADD, addClinicParameters.toJson(), file, addClinicParameters.PARAMETER_AVATAR);
             }
 
             Gson gson = new Gson();
@@ -262,31 +261,27 @@ public class ApiHelper {
         }
     }
 
-    public static Integer postEditClinic(Integer userId, String name, String speciality, Float rateNum, HashMap<String, String> ratePercentage, String address, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String fax, ArrayList<SupportedLang> supportedLangs, File file, Context context) {
+    public static Integer postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String supportedLangs, File file, Context context) {
         Integer result = -1;
         try {
-            AddOrEditClinicParameters addOrEditClinicParameters = new AddOrEditClinicParameters();
-            addOrEditClinicParameters.setUserId(userId);
-            addOrEditClinicParameters.setName(name);
-            addOrEditClinicParameters.setSpeciality(speciality);
-            addOrEditClinicParameters.setRateNum(rateNum);
-            addOrEditClinicParameters.setRatePercentage(ratePercentage);
-            addOrEditClinicParameters.setAddress(address);
-            addOrEditClinicParameters.setStreetName(streetName);
-            addOrEditClinicParameters.setHouseNumber(houseNumber);
-            addOrEditClinicParameters.setZipCode(zipCode);
-            addOrEditClinicParameters.setCity(city);
-            addOrEditClinicParameters.setProvince(province);
-            addOrEditClinicParameters.setCountry(country);
-            addOrEditClinicParameters.setPhone(phone);
-            addOrEditClinicParameters.setFax(fax);
-            addOrEditClinicParameters.setSupportedLangs(supportedLangs);
+            EditClinicParameters EditClinicParameters = new EditClinicParameters();
+            EditClinicParameters.setUserId(clinicId);
+            EditClinicParameters.setName(name);
+            EditClinicParameters.setSpeciality(speciality);
+            EditClinicParameters.setStreetName(streetName);
+            EditClinicParameters.setHouseNumber(houseNumber);
+            EditClinicParameters.setZipCode(zipCode);
+            EditClinicParameters.setCity(city);
+            EditClinicParameters.setProvince(province);
+            EditClinicParameters.setCountry(country);
+            EditClinicParameters.setPhone(phone);
+            EditClinicParameters.setSupportedLangs(supportedLangs);
 
             String jsonString = "";
             if (file == null) {
-                jsonString = post(API_CLINICS_EDIT, addOrEditClinicParameters.toJson());
+                jsonString = post(API_CLINICS_EDIT, EditClinicParameters.toJson());
             } else {
-                jsonString = postWithFile(API_CLINICS_EDIT, addOrEditClinicParameters.toJson(), file, addOrEditClinicParameters.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toJson(), file, EditClinicParameters.PARAMETER_AVATAR);
             }
             Gson gson = new Gson();
             EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);
