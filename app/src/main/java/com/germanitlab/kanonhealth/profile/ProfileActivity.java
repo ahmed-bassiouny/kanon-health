@@ -29,8 +29,6 @@ import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 
@@ -92,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 //    public static int indexFromIntent=0;
 
-//    ArrayList<Document> images;
+    //    ArrayList<Document> images;
     Dialog dialog;
     boolean is_doctor;
 
@@ -233,10 +231,10 @@ public class ProfileActivity extends AppCompatActivity {
         tvBirthDate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getBirthday())));
 
 
-        tvStreet.setText(userInfoResponse.getAddress());
-        tvHouseNumber.setText(userInfoResponse.get);
-        tvZipCode.setText(userInfoResponse.get());
-        tvProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
+        tvStreet.setText(userInfoResponse.getStreetName());
+        tvHouseNumber.setText(userInfoResponse.getHouseNumber());
+        tvZipCode.setText(userInfoResponse.getZipCode());
+        tvProvinz.setText(userInfoResponse.getProvidence());
 
         String temp = userInfoResponse.getCountry_code().replaceAll(Pattern.quote("+"), "");
         Country found = null;
@@ -255,7 +253,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         if (!is_doctor) {
-            questionAnswer = userInfoResponse.get();
+            questionAnswer = userInfoResponse.getQuestionsAnswers();
 //            images = userInfoResponse.getDocuments();
             createAdapter();
         }

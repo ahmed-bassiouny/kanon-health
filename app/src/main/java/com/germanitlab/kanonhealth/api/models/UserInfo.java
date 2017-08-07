@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by bassiouny on 02/08/17.
@@ -41,13 +42,14 @@ public class UserInfo extends ParentModel {
     public static final String KEY_HOUSE_NUMBER = "house_number";
     public static final String KEY_PROVIDENCE = "providence";
     public static final String KEY_ZIP_CODE = "zip_code";
+    public static final String KEY_QUESTIONS_ANSWERS = "questions_answers";
 
     // endregion
 
     // region constraints
-    public static final int CLINIC=3    ;
-    public static final int DOCTOR=2;
-    public static final int PATIENT=1;
+    public static final int CLINIC = 3;
+    public static final int DOCTOR = 2;
+    public static final int PATIENT = 1;
     // endregion
 
     // region Attributes
@@ -103,6 +105,8 @@ public class UserInfo extends ParentModel {
     private ArrayList<Speciality> specialities;
     @SerializedName(Clinics)
     private ArrayList<Clinic> clinics;
+
+    private LinkedHashMap<String, String> questionsAnswers;
     // endregion
 
 
@@ -342,6 +346,17 @@ public class UserInfo extends ParentModel {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public LinkedHashMap<String, String> getQuestionsAnswers() {
+        if (questionsAnswers == null) {
+            questionsAnswers = new LinkedHashMap<>();
+        }
+        return questionsAnswers;
+    }
+
+    public void setQuestionsAnswers(LinkedHashMap<String, String> questionsAnswers) {
+        this.questionsAnswers = questionsAnswers;
     }
     //endregion
 }
