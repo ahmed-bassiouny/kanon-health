@@ -2,18 +2,13 @@ package com.germanitlab.kanonhealth.doctors;
 
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -25,24 +20,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
+import com.germanitlab.kanonhealth.adapters.ChatListAdapter;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Helper;
-import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
-
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,30 +44,31 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 
+// Edit By Ahmed 29-5-2017
+
 public class ChatsDoctorFragment extends Fragment {
 
     private View view;
     private RecyclerView recyclerView;
-    List<User> doctorList;
+    private EditText edtFilter;
+    //    private ImageButton imgScan;
 
-    private TextView tvLoadingError;
-    private LinearLayout linearLayoutContent;
-    private LinearLayout chat_layout;
+    /*
+    private TextView filter_to_list;
+*/
+
+    ArrayList<ChatModel> chatModel;
+    private Button btnLeftList, btnRightList;
+    PrefManager prefManager;
     private PrefManager mPrefManager;
+    UserInfo user;
     Gson gson;
     private UserRepository mDoctorRepository;
-    LinearLayoutManager llm;
+    static ChatsDoctorFragment chatsDoctorFragment;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
+    LinearLayoutManager llm;
 
-
-    private EditText edtFilter;
-    private Button btnLeftList, btnRightList;
-    private static ChatsDoctorFragment chatsDoctorFragment;
-    Util util;
-    boolean is_doc;
-    private static int firstVisibleItemPositionForRightTab;
-    private static int firstVisibleItemPositionForLeftTab;
-    int type;
+    private  static boolean leftTabVisible=true;
 
     public static ChatsDoctorFragment newInstance() {
         if (chatsDoctorFragment == null)
@@ -82,113 +76,37 @@ public class ChatsDoctorFragment extends Fragment {
         return chatsDoctorFragment;
     }
 
-    public ChatsDoctorFragment() {
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        try {
-            if (getView() != null && isVisibleToUser) {
-                gettingData();
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getActivity(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onPause() {
-        if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE)
-            firstVisibleItemPositionForLeftTab = getScrolled();
-        else
-            firstVisibleItemPositionForRightTab = getScrolled();
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        try {
-            mPrefManager = new PrefManager(getContext());
-            gettingData();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-        changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnLeftList, btnRightList);
-    }
-
-    private void gettingData() {
-        if (!is_doc) {
-            doctorList = mDoctorRepository.getChat(User.DOCTOR_TYPE);
-            setAdapter(doctorList);
-            checkTabToScrollTo();
-            if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
-            }
-        } else {
-            doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
-            setAdapter(doctorList);
-            checkTabToScrollTo();
-            if (Helper.isNetworkAvailable(getContext())) {
-                new HttpCall(getActivity(), this).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
-            }
-        }
-        scrollToPosition(firstVisibleItemPositionForLeftTab);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         try {
-            if (view != null) {
-
-                ViewGroup parent = (ViewGroup) view.getParent();
-                if (parent != null) {
-
-                    parent.removeView(view);
-                }
-                return view;
-            }
-            firstVisibleItemPositionForLeftTab = 0;
-            firstVisibleItemPositionForRightTab = 0;
-
-            util = Util.getInstance(getActivity());
-            gson = new Gson();
-            mPrefManager = new PrefManager(getActivity());
-            mDoctorRepository = new UserRepository(getContext());
             view = inflater.inflate(R.layout.fragment_chats_doctor, container, false);
-            initView();
-            is_doc = mPrefManager.get(PrefManager.IS_DOCTOR);
-            if (!is_doc) {
-                btnLeftList.setText(R.string.doctors);
-                btnRightList.setText(R.string.practices);
-                type = User.CLIENT_TYPE;
-            } else {
-                btnLeftList.setText(R.string.clients);
-                btnRightList.setText(R.string.others);
-                type = User.DOCTOR_TYPE;
-            }
-            handelEvent();
             setHasOptionsMenu(true);
+            mPrefManager = new PrefManager(getActivity());
+            prefManager = new PrefManager(getActivity());
+            try {
+                user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+            } catch (Exception e) {
+            }
+            initView();
+            gson = new Gson();
+            chatModel= new ArrayList<>();
+            mDoctorRepository = new UserRepository(getContext());
+
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
-
         return view;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.contacts_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
 
     @Override
@@ -209,18 +127,147 @@ public class ChatsDoctorFragment extends Fragment {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(leftTabVisible) {
+            btnLeftList.setBackgroundResource(R.color.blue);
+            btnLeftList.setTextColor(getResources().getColor(R.color.white));
+            btnRightList.setBackgroundResource(R.color.gray);
+            btnRightList.setTextColor(getResources().getColor(R.color.black));
+        }else
+        {
+            btnRightList.setBackgroundResource(R.color.blue);
+            btnRightList.setTextColor(getResources().getColor(R.color.white));
+            btnLeftList.setBackgroundResource(R.color.gray);
+            btnLeftList.setTextColor(getResources().getColor(R.color.black));
+        }
+            getChatData();
     }
 
     public void requestPermissionForCamera() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-            Toast.makeText(getContext().getApplicationContext(), R.string.camera_permission_needed_please_allow_in_app_settings_for_additional_functionality, Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
-            startActivity(new Intent(getActivity(), StartQrScan.class));
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && permissions.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                startActivity(new Intent(getActivity(), StartQrScan.class));
         }
     }
 
+    public void getChatData() {
+        if(leftTabVisible)
+        {
+        if(user.getUserType()==user.PATIENT) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatAnother(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    setChatListAdapter(chatModel);
+                }
+            }).start();
+
+        }else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatUser(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    setChatListAdapter(chatModel);
+                }
+            }).start();
+        }
+        }else
+            {
+                if(user.getUserType()==user.PATIENT) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatModel = ApiHelper.getChatClinic(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                           setChatListAdapter(chatModel);
+                        }
+                    }).start();
+                }else
+                {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    chatModel = ApiHelper.getChatAnother(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    setChatListAdapter(chatModel);
+                }
+            }).start();
+        }
+        }
+
+
+
+
+//
+//        new HttpCall(getActivity(), new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                doctorList = (List<User>) response;
+//                updateDataBase(doctorList);
+//                is_chat_data_left = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                is_chat_data_left = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+////                            tvLoadingError.setVisibility(View.VISIBLE);
+////                            if (error != null && error.length() > 0)
+////                                tvLoadingError.setText(error);
+////                            else tvLoadingError.setText("Some thing went wrong");
+//            }
+//        }).getChatDoctors(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
+//
+//        new HttpCall(getActivity(), new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                doctorList = (List<User>) response;
+//                updateDataBase(doctorList);
+//                is_chat_data_right = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                is_chat_data_right = true;
+//                if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
+//                    util.dismissProgressDialog();
+//                    prefManager.put(PrefManager.IS_OLD, true);
+//                }
+////                            tvLoadingError.setVisibility(View.VISIBLE);
+////                            if (error != null && error.length() > 0)
+////                                tvLoadingError.setText(error);
+////                            else tvLoadingError.setText("Some thing went wrong");
+////                            chat_layout.setVisibility(View.GONE);
+//            }
+//        }).getChatClinics(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), getIam());
+    }
+
+//    private void updateDataBase(List<User> doctorList) {
+//        for (User user : doctorList) {
+//            user.setIs_chat(1);
+//            mDoctorRepository.create(user);
+//        }
+//    }
 
     public boolean checkPermissionForCamera() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
@@ -232,331 +279,217 @@ public class ChatsDoctorFragment extends Fragment {
     }
 
 
-    private void handelEvent() {
-        edtFilter.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    return true;
-                }
-                return false;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            showDialog(scanResult.getContents());
+        } else {
+            Toast.makeText(getActivity(), R.string.invalid_qr_please_try_again, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void showDialog(final String qr) {
+
+        // custom dialog
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+        dialog.setContentView(R.layout.custom_dialog);
+
+        Button btnLogin = (Button) dialog.findViewById(R.id.btn_login);
+
+        Button btnShowProfile = (Button) dialog.findViewById(R.id.btn_show_profile);
+
+//        btnLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                new HttpCall(getActivity(), new ApiResponse() {
+//                    @Override
+//                    public void onSuccess(Object response) {
+//
+//                        Log.d("Response", response.toString());
+//                        dialog.dismiss();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String error) {
+//                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                        Log.d("Response", error);
+//                        dialog.dismiss();
+//                    }
+//                }).login(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), qr);
+//            }
+//        });
+
+
+        btnShowProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
             }
         });
 
-        edtFilter.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        dialog.show();
 
-            }
+    }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (doctorList != null) {
+//    private void CheckTabToScrollTo() {
+//        if (type == User.DOCTOR_TYPE) {
+//            scrollToPosition(firstVisibleItemPositionForLeftTab);
+//        } else {
+//            scrollToPosition(firstVisibleItemPositionForRightTab);
+//        }
+//    }
 
-                    if (charSequence.toString().trim().length() > 0) {
-                        List<User> fileDoctorResponses = new ArrayList<>();
-                        for (int j = 0; j < doctorList.size(); j++) {
+//    private void scrollToPosition(int mScrollPosition) {
+//        try {
+//            recyclerView.scrollToPosition(mScrollPosition);
+//        } catch (Exception e) {
+//        }
+//
+//    }
 
-                            String name = doctorList.get(j).getFullName();
+//    private void updateDatabase(List<User> doctorList) {
+//        for (User user : doctorList) {
+//            User temp = mDoctorRepository.getDoctor(user);
+//            if (temp != null) {
+//                user.setIs_chat(temp.getIs_chat());
+//            }
+//            mDoctorRepository.create(user);
+//        }
+//    }
 
-                            if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
 
-                                fileDoctorResponses.add(doctorList.get(j));
-                            }
-                        }
-                        setAdapter(fileDoctorResponses);
-                    } else setAdapter(doctorList);
+    private void setChatListAdapter(List<ChatModel> chatModels) {
+        if (chatModels != null) {
+            final ChatListAdapter chatListAdapter= new ChatListAdapter(chatModels,getActivity());
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.setAdapter(chatListAdapter);
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+            });
+        }
     }
 
 
-    //alert dialog for downloadDialog
-    private static AlertDialog showDialog(final Activity act, CharSequence title, CharSequence message, CharSequence buttonYes, CharSequence buttonNo) {
-        AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
-
-        downloadDialog.setTitle(title);
-
-        downloadDialog.setMessage(message);
-
-        downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-
-                try {
-
-                    act.startActivity(intent);
-
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Toast.makeText(act, act.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-        downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        return downloadDialog.show();
-    }
+//    @Override
+//    public void onPause() {
+//        if (type == User.DOCTOR_TYPE) {
+//            firstVisibleItemPositionForLeftTab = getScrolled();
+//        } else {
+//            firstVisibleItemPositionForRightTab = getScrolled();
+//        }
+//        super.onPause();
+//    }
 
     private void initView() {
-        btnRightList = (Button) view.findViewById(R.id.praxis_list);
-        chat_layout = (LinearLayout) view.findViewById(R.id.chat_layout);
-        btnLeftList = (Button) view.findViewById(R.id.doctor_list);
-        btnLeftList.setBackgroundResource(R.color.blue);
-        btnLeftList.setTextColor(getResources().getColor(R.color.white));
-        btnRightList.setBackgroundResource(R.color.gray);
-        btnRightList.setTextColor(getResources().getColor(R.color.black));
-//        toolbar = (Toolbar) view.findViewById(R.id.doctor_list_toolbar);
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+
         btnLeftList = (Button) view.findViewById(R.id.doctor_list);
         btnRightList = (Button) view.findViewById(R.id.praxis_list);
-//        myQr = (ImageButton) toolbar.findViewById(R.id.my_Qr);
-//        imgbtnScan = (ImageButton) toolbar.findViewById(R.id.scan);
-//        Helper.ImportQr(mPrefManager, getActivity(), myQr);
+        edtFilter = (EditText) view.findViewById(R.id.img_filter);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_doctor_list);
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
-
-        tvLoadingError = (TextView) view.findViewById(R.id.tv_chats_doctor_error);
-        linearLayoutContent = (LinearLayout) view.findViewById(R.id.linear_layout_content);
-
-
-        edtFilter = (EditText) view.findViewById(R.id.img_filter);
         edtFilter.setVisibility(View.GONE);
+
+        if(user.getUserType()==user.PATIENT) {
+            btnLeftList.setText(R.string.doctors);
+            btnRightList.setText(R.string.practices);
+        }else
+        {
+            btnLeftList.setText(R.string.clients);
+            btnRightList.setText(R.string.others);
+        }
+
+            edtFilter.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            edtFilter.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    if (chatModel != null) {
+                        if (charSequence.toString().trim().length() > 0) {
+                            List<ChatModel> fileDoctorResponses = new ArrayList<>();
+                            for (int j = 0; j < chatModel.size(); j++) {
+                                String name = chatModel.get(j).getFullName();
+                                if (name != null && name.toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                                    fileDoctorResponses.add(chatModel.get(j));
+                                }
+                            }
+                            setChatListAdapter(fileDoctorResponses);
+                        } else setChatListAdapter(chatModel);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
         btnRightList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firstVisibleItemPositionForLeftTab = getScrolled();
-                if (!is_doc) {
-                    doctorList = mDoctorRepository.getChat(User.CLINICS_TYPE);
-                    setAdapter(doctorList);
-                    type = User.CLINICS_TYPE;
-                    checkTabToScrollTo();
-                    changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnRightList, btnLeftList);
-                    if (Helper.isNetworkAvailable(getContext())) {
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                doctorList = (List<User>) response;
-                                int m = getScrolled();
-                                setAdapter(doctorList);
-                                updateDataBase(doctorList);
-                                chat_layout.setVisibility(View.VISIBLE);
-                                tvLoadingError.setVisibility(View.GONE);
-                                checkTabToScrollTo();
-                            }
+                leftTabVisible=false;
+                btnRightList.setBackgroundResource(R.color.blue);
+                btnRightList.setTextColor(getResources().getColor(R.color.white));
+                btnLeftList.setBackgroundResource(R.color.gray);
+                btnLeftList.setTextColor(getResources().getColor(R.color.black));
+                getChatData();
 
-                            @Override
-                            public void onFailed(String error) {
-//                            tvLoadingError.setVisibility(View.VISIBLE);
-//                            if (error != null && error.length() > 0)
-//                                tvLoadingError.setText(error);
-//                            else tvLoadingError.setText("Some thing went wrong");
-//                            chat_layout.setVisibility(View.GONE);
-                            }
-                        }).getChatClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
-                    }
-                } else {
-                    doctorList = mDoctorRepository.getChat(User.DOCTOR_AND_CLINICS_TYPE);
-                    setAdapter(doctorList);
-                    type = User.DOCTOR_AND_CLINICS_TYPE;
-                    checkTabToScrollTo();
-                    changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnRightList, btnLeftList);
-                    if (Helper.isNetworkAvailable(getContext())) {
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                doctorList = (List<User>) response;
-                                int m = getScrolled();
-                                setAdapter(doctorList);
-                                updateDataBase(doctorList);
-                                chat_layout.setVisibility(View.VISIBLE);
-                                tvLoadingError.setVisibility(View.GONE);
-                                checkTabToScrollTo();
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-//                            tvLoadingError.setVisibility(View.VISIBLE);
-//                            if (error != null && error.length() > 0)
-//                                tvLoadingError.setText(error);
-//                            else tvLoadingError.setText("Some thing went wrong");
-//                            chat_layout.setVisibility(View.GONE);
-                            }
-                        }).getChatDoctorAndClinics(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
-                    }
-                }
             }
         });
         btnLeftList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firstVisibleItemPositionForRightTab = getScrolled();
-                if (!is_doc) {
-                    doctorList = mDoctorRepository.getChat(User.DOCTOR_TYPE);
-                    setAdapter(doctorList);
-                    type = User.DOCTOR_TYPE;
-                    checkTabToScrollTo();
-                    changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnLeftList, btnRightList);
-                    if (Helper.isNetworkAvailable(getContext())) {
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                doctorList = (List<User>) response;
-                                updateDataBase(doctorList);
-                                setAdapter(doctorList);
-                                linearLayoutContent.setVisibility(View.VISIBLE);
-                                checkTabToScrollTo();
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-//                            tvLoadingError.setVisibility(View.VISIBLE);
-//                            if (error != null && error.length() > 0)
-//                                tvLoadingError.setText(error);
-//                            else tvLoadingError.setText("Some thing went wrong");
-                            }
-                        }).getChatDoctors(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
-                    }
-                } else {
-                    doctorList = mDoctorRepository.getChat(User.CLIENT_TYPE);
-                    setAdapter(doctorList);
-                    type = User.CLIENT_TYPE;
-                    checkTabToScrollTo();
-                    changeColors(R.color.blue, R.color.white, R.color.gray, R.color.black, btnLeftList, btnRightList);
-                    if (Helper.isNetworkAvailable(getContext())) {
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                doctorList = (List<User>) response;
-                                updateDataBase(doctorList);
-                                setAdapter(doctorList);
-                                linearLayoutContent.setVisibility(View.VISIBLE);
-                                checkTabToScrollTo();
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-//                            tvLoadingError.setVisibility(View.VISIBLE);
-//                            if (error != null && error.length() > 0)
-//                                tvLoadingError.setText(error);
-//                            else tvLoadingError.setText("Some thing went wrong");
-                            }
-                        }).getChatClient(mPrefManager.getData(PrefManager.USER_ID), mPrefManager.getData(PrefManager.USER_PASSWORD), getIam());
-                    }
-                }
-
+                leftTabVisible=true;
+                btnRightList.setBackgroundResource(R.color.gray);
+                btnRightList.setTextColor(getResources().getColor(R.color.black));
+                btnLeftList.setBackgroundResource(R.color.blue);
+                btnLeftList.setTextColor(getResources().getColor(R.color.white));
+                getChatData();
             }
         });
+/*
+        filter_to_list = (TextView) view.findViewById(R.id.filter_to_list);
+*/
 
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-    }
-
-    private void checkTabToScrollTo() {
-        if (type == User.CLIENT_TYPE || type == User.DOCTOR_TYPE) {
-            scrollToPosition(firstVisibleItemPositionForLeftTab);
-        } else {
-            scrollToPosition(firstVisibleItemPositionForRightTab);
-        }
-    }
-
-    public void changeColors(int backColorSelected, int textSelected, int backColorUnSelected, int textUnSelected, Button btnSelected, Button btnUnSelected) {
-        btnUnSelected.setBackgroundResource(backColorUnSelected);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            btnUnSelected.setTextColor(getResources().getColor(textUnSelected, null));
-            btnSelected.setTextColor(getResources().getColor(textSelected, null));
-        } else {
-            btnUnSelected.setTextColor(getResources().getColor(textUnSelected));
-            btnSelected.setTextColor(getResources().getColor(textSelected));
-        }
-        btnSelected.setBackgroundResource(backColorSelected);
-    }
-
-    DoctorListAdapter doctorListAdapter;
-
-    private void setAdapter(List<User> doctorList) {
-        if (doctorList != null) {
-            doctorListAdapter = new DoctorListAdapter(doctorList, getActivity(), view.VISIBLE, 3);
-            recyclerView.setAdapter(doctorListAdapter);
-        }
-    }
-
-
-    @Override
-    public void onSuccess(Object response) {
-        try {
-            doctorList = (List<User>) response;
-            Gson gson = new Gson();
-            updateDataBase(doctorList);
-            setAdapter(doctorList);
-            checkTabToScrollTo();
-            linearLayoutContent.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getContext(), getContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private int getScrolled() {
-        if (llm != null && llm instanceof LinearLayoutManager) {
-            try {
-                return llm.findFirstVisibleItemPosition();
-            } catch (Exception e) {
-                return 0;
+/*         filter_to_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("from", false);
+                SpecialitiesFragment fragment = new SpecialitiesFragment();
+                fragment.setArguments(bundle);
+                new Helper(getActivity()).replaceFragments(fragment,
+                        R.id.doctor_list_continer, "Specialty");
             }
-        } else {
-            return 0;
-        }
+        });*/
+
 
     }
 
-    private void scrollToPosition(int mScrollPosition) {
-        try {
-            recyclerView.scrollToPosition(mScrollPosition);
-        } catch (Exception e) {
-        }
 
-    }
-
-    private void updateDataBase(List<User> doctorList) {
-        for (User user : doctorList) {
-            user.setIs_chat(1);
-            mDoctorRepository.create(user);
-        }
-    }
-
-    @Override
-    public void onFailed(String error) {
-//        linearLayoutContent.setVisibility(View.GONE);
-//        tvLoadingError.setVisibility(View.VISIBLE);
-//        if (error != null && error.length() > 0)
-//            tvLoadingError.setText(error);
-//        else tvLoadingError.setText("Some thing went wrong");
-    }
-
-    private String getIam() {
-        Gson gson = new Gson();
-        if (gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1)
-            return "doc";
-        else if (gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1)
-            return "clinic";
-        else
-            return "user";
-    }
 }
+
