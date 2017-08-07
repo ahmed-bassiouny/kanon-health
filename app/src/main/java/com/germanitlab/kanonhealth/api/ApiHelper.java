@@ -124,8 +124,8 @@ public class ApiHelper {
 
     //region Configuration
 
-    public static final String SERVER_API_URL = "http://192.168.1.35:8000/V1/";
-    public static final String SERVER_IMAGE_URL = "";
+    public static final String SERVER_API_URL = "http://api.gagabay.com/V1/";
+    public static final String SERVER_IMAGE_URL = "http://api.gagabay.com/";
 
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
