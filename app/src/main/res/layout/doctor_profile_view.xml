@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -37,914 +36,486 @@
         android:background="@color/black"
         android:visibility="visible" />
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:id="@+id/nsv_soctor_profile_scroll"
         android:layout_height="match_parent">
-
-
-        <LinearLayout
-            android:id="@+id/activity_profile"
+        <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/placeholder"
+                app:civ_border_color="@color/black"
+                android:layout_margin="10dp"
+                app:civ_border_width="1dp" />
 
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/edit_image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignEnd="@+id/img_edit_avatar"
+                android:src="@drawable/camera"
+                android:layout_margin="10dp"
+                android:visibility="gone" />
+            <EditText
+                android:id="@+id/tv_online"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:visibility="gone">
+                android:layout_margin="5dp"
+                android:background="@drawable/custom_textview_with_border_gray_background"
+                android:ellipsize="end"
+                android:layout_toEndOf="@+id/avatar"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/status_online"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/ed_add_to_favourite"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:background="@drawable/custom_textview_with_border_gray_background"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:layout_below="@+id/tv_online"
+                android:focusableInTouchMode="false"
+                android:layout_toEndOf="@+id/avatar"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/add_to_my_doctors"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp" />
 
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/my_profile"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/edit"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="52dp"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/edit_icon"
-                        android:visibility="visible" />
-
-                    <ImageView
-                        android:id="@+id/save"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="52dp"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/ic_done_all_white_24dp"
-                        android:tint="@color/black"
-                        android:visibility="gone" />
-                </FrameLayout>
-
-
-            </android.support.v7.widget.Toolbar>
+            <EditText
+                android:id="@+id/tv_contact"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:layout_below="@+id/ed_add_to_favourite"
+                android:background="@drawable/custom_textview_with_border_gray_background"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:layout_toEndOf="@+id/avatar"
+                android:inputType="textPersonName"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@string/contact_by_chat"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:layout_below="@+id/avatar"
+                android:layout_marginBottom="2dp"
+                android:id="@+id/view_below_avatar"
+                android:background="@color/gray_black" />
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/view_below_avatar"
+                android:layout_height="wrap_content"
+                android:text="@string/rating"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/image_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_below_avatar"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_arrow_forward_black_24dp" />
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:layout_below="@+id/tv_rating"
+                android:isIndicator="true"
+                android:numStars="5" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/ratingBar"
+                android:id="@+id/view_below_ratingbar"
+                android:background="@color/gray_black" />
+            <TextView
+                android:id="@+id/specilities_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_below="@+id/view_below_ratingbar"
+                android:text="@string/specialities"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/speciality_recycleview"
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_below="@+id/view_below_ratingbar"
+                android:layout_toEndOf="@+id/specilities_text"
+                android:layout_margin="5dp"
+                android:background="@android:color/white"
+                app:layout_horizontalSpacing="50dp"
+                f:layout_newLine="true"></com.nex3z.flowlayout.FlowLayout>
+
+            <ImageView
+                android:id="@+id/edit_speciality_list"
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/view_below_ratingbar"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/edit"
+                android:textColor="@android:color/background_dark"
                 android:visibility="gone" />
 
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/nsv_soctor_profile_scroll"
+            <TextView
+                android:id="@+id/tv_specilities"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/background_dark"
+                android:textStyle="bold"
+                android:layout_margin="5dp"
+                android:layout_below="@+id/speciality_recycleview"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/tv_specilities"
+                android:id="@+id/view_below_specilities"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray_black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/location"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/view_below_specilities"
+                android:id="@+id/tv_location_name"
+                android:textStyle="bold" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_location"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_below="@+id/view_below_specilities"
+                android:layout_toEndOf="@+id/tv_location_name"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@+id/img_location"
+                android:layout_below="@+id/view_below_specilities"
+                android:id="@+id/tv_location_value"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/street_name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_street_name"
+                android:layout_below="@+id/tv_location_value"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/ed_street_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName"
+                android:layout_below="@+id/tv_location_value"
+                android:maxLines="1"
+                android:textSize="10sp"
+                android:layout_toEndOf="@+id/tv_street_name"
+                android:textColor="@color/black" />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/house_number"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/ed_street_name"
+                android:textSize="16sp"
+                android:id="@+id/tv_houser_numebr"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/ed_house_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLines="1"
+                android:layout_below="@+id/ed_street_name"
+                android:nextFocusForward="@+id/ed_zip_code"
+                android:textColor="@color/black"
+                android:layout_toEndOf="@+id/tv_houser_numebr"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zip_code"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_zip_code"
+                android:layout_below="@+id/ed_house_number"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/ed_zip_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:layout_toEndOf="@+id/tv_zip_code"
+                android:maxLines="1"
+                android:layout_below="@+id/ed_house_number"
+                android:nextFocusForward="@+id/ed_city"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/province"
+                android:layout_below="@+id/ed_zip_code"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_province"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+
+                android:id="@+id/ed_province"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/ed_zip_code"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:layout_toEndOf="@+id/tv_province"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/ed_province"
+                android:id="@+id/view_below_province"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray_black" />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phone"
+                android:layout_below="@+id/view_below_province"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_phone_name"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_below_province"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/tv_phone_name"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_phone_value"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/tv_phone_value"
+                android:id="@+id/view_below_phone"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray_black" />
+
+            <TextView
+                android:id="@+id/language_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/languages"
+                android:layout_below="@+id/view_below_phone"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/fl_language"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/size_5dp"
+                android:layout_toEndOf="@+id/language_text"
+                android:layout_margin="10dp"
+                android:layout_below="@+id/view_below_phone"
+                android:orientation="horizontal"
+                app:layout_horizontalSpacing="50dp"
+                app:layout_verticalSpacing="50dp"
+                f:layout_newLine="true">
+
+            </com.nex3z.flowlayout.FlowLayout>
+
+
+            <ImageView
+                android:id="@+id/edit_languages_list"
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:layout_alignTop="@id/fl_language"
+                android:layout_below="@+id/view_below_phone"
+                android:src="@drawable/edit"
+                android:layout_alignParentEnd="true"
+                android:textColor="@android:color/background_dark"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/fl_language"
+                android:id="@+id/view_below_language"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray_black" />
+
+            <TextView
+                android:id="@+id/member_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_below="@+id/view_below_language"
+                android:text="@string/member_in_practice"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/member_recycleview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_below="@+id/member_text"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+            <ImageView
+                android:id="@+id/edit_member_list"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@+id/member_text"
+                android:src="@drawable/edit"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/background_dark"
+                android:visibility="gone" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/member_recycleview"
+                android:id="@+id/view_below_member_recycleview"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray_black" />
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:layout_below="@+id/view_below_member_recycleview"
+                android:text="@string/working_hours"
+                android:layout_margin="5dp"
+                android:id="@+id/tv_working_hours"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <ImageView
+
+                android:id="@+id/edit_time_table"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center|end"
+                android:layout_margin="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_below="@+id/tv_working_hours"
+                android:gravity="bottom"
+                android:src="@drawable/edit"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/ll_time"
+                android:orientation="vertical"
+                android:layout_below="@+id/tv_working_hours"/>
+        </android.support.percent.PercentRelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <RelativeLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                                android:layout_marginTop="@dimen/edit_profile_liner_layout_bottom_margin"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:padding="@dimen/edit_profile_liner_layout_bottom_margin">
-
-                                <de.hdodenhof.circleimageview.CircleImageView
-                                    android:id="@+id/img_edit_avatar"
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/placeholder"
-                                    app:civ_border_color="@color/black"
-                                    app:civ_border_width="1dp" />
-
-                                <de.hdodenhof.circleimageview.CircleImageView
-                                    android:id="@+id/edit_image"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_alignEnd="@+id/img_edit_avatar"
-                                    android:src="@drawable/camera"
-                                    android:visibility="gone" />
-
-
-                            </RelativeLayout>
-
-                            <LinearLayout
-                                android:id="@+id/ll_doctor_data"
-                                android:layout_width="@dimen/size_10dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <EditText
-                                    android:id="@+id/tv_online"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_margin="5dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/custom_textview_with_border_gray_background"
-                                    android:ellipsize="end"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:gravity="center"
-                                    android:inputType="textPersonName"
-                                    android:lines="1"
-                                    android:maxLines="1"
-                                    android:text="@string/status_online"
-                                    android:textColor="@color/black"
-                                    android:textSize="15sp" />
-
-                                <EditText
-                                    android:id="@+id/ed_add_to_favourite"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_gravity="center"
-                                    android:layout_margin="5dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/custom_textview_with_border_gray_background"
-                                    android:clickable="true"
-                                    android:ellipsize="end"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:gravity="center"
-                                    android:inputType="textPersonName"
-                                    android:lines="1"
-                                    android:maxLines="1"
-                                    android:text="@string/add_to_my_doctors"
-                                    android:textColor="@android:color/background_dark"
-                                    android:textSize="15sp" />
-
-                                <EditText
-                                    android:id="@+id/tv_contact"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_margin="5dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/custom_textview_with_border_gray_background"
-                                    android:clickable="true"
-                                    android:ellipsize="end"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:gravity="center"
-                                    android:inputType="textPersonName"
-                                    android:lines="1"
-                                    android:maxLines="1"
-                                    android:text="@string/contact_by_chat"
-                                    android:textColor="@android:color/background_dark"
-                                    android:textSize="15sp" />
-
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/black" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_rating"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rating"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:id="@+id/image_star"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentTop="true"
-                                android:src="@drawable/ic_arrow_forward_black_24dp" />
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                            android:orientation="horizontal">
-
-                            <android.support.v7.widget.AppCompatRatingBar
-                                android:id="@+id/ratingBar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                android:isIndicator="true"
-                                android:numStars="5" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/black" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/specilities_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
-                                android:text="@string/specialities"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/speciality_recycleview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginStart="5dp"
-                                android:layout_toEndOf="@+id/specilities_text"
-                                android:background="@android:color/white"
-                                app:layout_horizontalSpacing="50dp"
-                                f:layout_newLine="true"></com.nex3z.flowlayout.FlowLayout>
-
-
-                            <ImageView
-                                android:id="@+id/edit_speciality_list"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_marginStart="5dp"
-                                android:layout_marginEnd="10dp"
-                                android:src="@drawable/edit"
-                                android:textColor="@android:color/background_dark"
-                                android:visibility="gone" />
-                        </RelativeLayout>
-
-                        <TextView
-                            android:id="@+id/tv_specilities"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/background_dark"
-                            android:textStyle="bold"
-                            android:textSize="16dp" />
-
-                        <View
-                            android:id="@+id/border"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black"
-                            android:visibility="gone" />
-
-                        <LinearLayout
-                            android:id="@+id/linear_practice_profile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/location"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/ed_location"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textPersonName"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/ed_street_name"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/street_name"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/ed_street_name"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textPersonName"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/ed_house_number"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/house_number"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/ed_house_number"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="number"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/ed_zip_code"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/zip_code"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/ed_zip_code"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="number"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/ed_city"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/city"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-
-                                    android:id="@+id/ed_city"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textPersonName"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/ed_province"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/province"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-
-                                    android:id="@+id/ed_province"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textPersonName"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/ed_country"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/country"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/ed_country"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:enabled="false"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textPersonName"
-                                    android:maxLines="1"
-                                    android:nextFocusForward="@+id/et_telephone"
-                                    android:textColor="@color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
-                        </LinearLayout>
-
-
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/black" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/tv_location_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
-                                android:text="@string/location"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/iv_location"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_margin="5dp"
-                                android:layout_alignTop="@+id/tv_location_text"
-                                android:layout_gravity="center"
-                                android:layout_toEndOf="@+id/tv_location_text"
-                                android:textColor="@android:color/background_dark"
-                                app:civ_border_color="@android:color/transparent"
-                                app:civ_border_width="0dp" />
-
-                            <TextView
-                                android:id="@+id/tv_locations"
-                                android:layout_width="match_parent"
-                                android:layout_height="30dp"
-                                android:layout_alignTop="@+id/iv_location"
-                                android:layout_toEndOf="@+id/iv_location"
-                                android:gravity="start|center_vertical"
-                                android:text=""
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp" />
-
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/mapContanier"
-                            android:layout_width="343dp"
-                            android:layout_height="150dp"
-                            android:orientation="vertical">
-                            <!--loading map in container-->
-                            <!--
-                        <fragment
-                            android:id="@+id/map"
-                            android:name="com.google.android.gms.maps.SupportMapFragment"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            tools:context=".DoctorProfileActivity" />-->
-                            <ImageView
-                                android:id="@+id/location_img"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-                        </RelativeLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black"
-                            android:visibility="gone" />
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/language_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
-                                android:text="@string/languages"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/fl_language"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginStart="@dimen/size_5dp"
-                                android:layout_toEndOf="@+id/language_text"
-                                android:orientation="horizontal"
-                                app:layout_horizontalSpacing="50dp"
-                                app:layout_verticalSpacing="50dp"
-                                f:layout_newLine="true">
-
-                            </com.nex3z.flowlayout.FlowLayout>
-
-
-                            <ImageView
-                                android:id="@+id/edit_languages_list"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignTop="@id/fl_language"
-                                android:layout_marginEnd="10dp"
-                                android:src="@drawable/edit"
-                                android:textColor="@android:color/background_dark"
-                                android:visibility="gone" />
-                        </RelativeLayout>
-
-
-                        <TextView
-                            android:id="@+id/txt_language_names"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/language_text"
-                            android:text=""
-                            android:textColor="@android:color/background_dark" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/member_text"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentTop="true"
-                                android:text="@string/member_in_practice"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/member_recycleview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_alignParentEnd="true"
-                                android:layout_below="@+id/member_text"
-                                android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
-
-                            <ImageView
-                                android:id="@+id/edit_member_list"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignTop="@id/member_recycleview"
-                                android:layout_marginEnd="10dp"
-                                android:src="@drawable/edit"
-                                android:textColor="@android:color/background_dark"
-                                android:visibility="gone" />
-                        </RelativeLayout>
-
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black"
-                            android:visibility="gone" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="3dp"
-                                android:text="@string/important_information"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="200dp"
-                                android:layout_height="2dp"
-                                android:layout_marginBottom="3dp"
-                                android:background="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/black"
-                            android:id="@+id/view_no_clinic_line"/>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                            android:orientation="horizontal">
-
-                            <TextView
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="bottom"
-                                android:hint="@string/first_name"
-                                android:text="@string/working_hours"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-
-                            <ImageView
-
-                                android:id="@+id/edit_time_table"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_gravity="center|end"
-                                android:layout_marginStart="8dp"
-                                android:gravity="bottom"
-                                android:src="@drawable/edit"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:visibility="gone" />
-                        </RelativeLayout>
-
-
-                        <LinearLayout
-                            android:id="@+id/no_time"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_no_time"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:padding="@dimen/size_5dp"
-                                android:text="@string/no_time_has_set"
-                                android:textColor="@color/red"
-                                android:textCursorDrawable="@color/black"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <TableLayout
-                            android:id="@+id/tablelayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"></TableLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/black"
-                            android:visibility="gone" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <TextView
-
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="start"
-                                android:hint="@string/first_name"
-                                android:text="@string/telephone"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp" />
-
-
-                            <TextView
-                                android:id="@+id/tv_telephone"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="5"
-                                android:gravity="start"
-                                android:text=""
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp" />
-
-                            <EditText
-                                android:id="@+id/et_telephone"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="5"
-                                android:gravity="start"
-                                android:imeOptions="actionNext"
-                                android:inputType="phone"
-                                android:maxLines="1"
-                                android:nextFocusForward="@+id/et_location"
-                                android:text=""
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp"
-                                android:visibility="gone" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="start"
-                                android:hint="@string/first_name"
-                                android:text="@string/location"
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp" />
-
-
-                            <EditText
-                                android:id="@+id/et_location"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="5"
-                                android:gravity="center"
-                                android:imeOptions="actionSend"
-                                android:inputType="textPersonName"
-                                android:maxLines="1"
-                                android:nextFocusForward="@+id/ed_street_name"
-                                android:text=""
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/tv_location"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="start"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="5"
-                                android:gravity="bottom"
-                                android:text=""
-                                android:textColor="@android:color/background_dark"
-                                android:textSize="16dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:id="@+id/v_document_line"
-                        android:layout_marginTop="2dp"
-                        android:background="@color/black" />
-
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/document_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp" />
-
-                    <!--<ImageView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:src="@drawable/doc"-->
-                        <!--android:visibility="gone" />-->
-                </LinearLayout>
-
-            </android.support.v4.widget.NestedScrollView>
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>
