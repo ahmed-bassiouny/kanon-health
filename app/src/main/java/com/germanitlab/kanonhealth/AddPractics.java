@@ -30,6 +30,8 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.Language;
+import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -62,7 +64,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AddPractics extends ParentActivity implements Message<ChooseModel>, DialogPickerCallBacks {
+public class AddPractics extends ParentActivity implements Message , DialogPickerCallBacks {
 
     //Edit text
     @BindView(R.id.ed_location)
@@ -509,62 +511,62 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
         dialogFragment.show(ft, "list");
     }
 
-    @Override
-    public void Response(ArrayList<ChooseModel> specialitiesArrayList, int type) {
-        try {
-            ArrayList<ChooseModel> templist = new ArrayList<>();
-            switch (type) {
-                case Constants.SPECIALITIES:
-                    user.getSpecialities().clear();
-                    for (ChooseModel item : specialitiesArrayList) {
-                        if (item.getIsMyChoise())
-                            templist.add(item);
-                    }
-                    user.setSpecialities(templist);
-
-                    tvSpecilities.setText("");
-                    int size = 0;
-                    for (ChooseModel speciality : user.getSpecialities()) {
-                        tvSpecilities.append(speciality.getSpeciality_title());
-                        size++;
-                        if (size < user.getSpecialities().size())
-                            tvSpecilities.append(", ");
-                    }
-
-                    //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
-                    setCircles(user.getSpecialities(), flSpecilities, 1);
-
-                    break;
-                case Constants.LANGUAUGE:
-                    user.getSupported_lang().clear();
-                    for (ChooseModel item : specialitiesArrayList) {
-                        if (item.getIsMyChoise())
-                            templist.add(item);
-                    }
-                    user.setSupported_lang(templist);
-                    tvLanguages.setText("");
-                    setImage(user.getSupported_lang(), flLanguages, 0);
-                    //  setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
-                    break;
-                case Constants.MEMBERAT:
-                case Constants.DoctorAll:
-                    user.getMembers_at().clear();
-                    for (ChooseModel item : specialitiesArrayList) {
-                        if (item.getIsMyChoise())
-                            templist.add(item);
-                    }
-                    user.setMembers_at(templist);
-                    //     setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-                    setCircles(templist, flInvite, 2);
-                    break;
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//    @Override
+//    public void Response(ArrayList<ChooseModel> specialitiesArrayList, int type) {
+//        try {
+//            ArrayList<ChooseModel> templist = new ArrayList<>();
+//            switch (type) {
+//                case Constants.SPECIALITIES:
+//                    user.getSpecialities().clear();
+//                    for (ChooseModel item : specialitiesArrayList) {
+//                        if (item.getIsMyChoise())
+//                            templist.add(item);
+//                    }
+//                    user.setSpecialities(templist);
+//
+//                    tvSpecilities.setText("");
+//                    int size = 0;
+//                    for (ChooseModel speciality : user.getSpecialities()) {
+//                        tvSpecilities.append(speciality.getSpeciality_title());
+//                        size++;
+//                        if (size < user.getSpecialities().size())
+//                            tvSpecilities.append(", ");
+//                    }
+//
+//                    //      setRecyclerView(templist, R.id.speciality_recycleview, LinearLayoutManager.HORIZONTAL, Constants.SPECIALITIES);
+//                    setCircles(user.getSpecialities(), flSpecilities, 1);
+//
+//                    break;
+//                case Constants.LANGUAUGE:
+//                    user.getSupported_lang().clear();
+//                    for (ChooseModel item : specialitiesArrayList) {
+//                        if (item.getIsMyChoise())
+//                            templist.add(item);
+//                    }
+//                    user.setSupported_lang(templist);
+//                    tvLanguages.setText("");
+//                    setImage(user.getSupported_lang(), flLanguages, 0);
+//                    //  setRecyclerView(templist, R.id.language_recycleview, LinearLayoutManager.HORIZONTAL, Constants.LANGUAUGE);
+//                    break;
+//                case Constants.MEMBERAT:
+//                case Constants.DoctorAll:
+//                    user.getMembers_at().clear();
+//                    for (ChooseModel item : specialitiesArrayList) {
+//                        if (item.getIsMyChoise())
+//                            templist.add(item);
+//                    }
+//                    user.setMembers_at(templist);
+//                    //     setRecyclerView(templist, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+//                    setCircles(templist, flInvite, 2);
+//                    break;
+//            }
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
+//            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
         flowLayout.removeAllViews();
@@ -743,25 +745,26 @@ public class AddPractics extends ParentActivity implements Message<ChooseModel>,
 
     @Override
     public void ImagePickerCallBack(Uri uri) {
-        util.showProgressDialog();
-        ImageHelper.setImage(civImageAvatar, uri);
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                util.dismissProgressDialog();
-                uploadImageResponse = (UploadImageResponse) response;
-                user.setAvatar(uploadImageResponse.getFile_url());
-                Log.e("After Casting", uploadImageResponse.getFile_url());
-            }
 
-            @Override
-            public void onFailed(String error) {
-                util.dismissProgressDialog();
-                Toast.makeText(AddPractics.this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-                Log.e("upload image failed :", error);
-            }
-        }).uploadImage(prefManager.getData(PrefManager.USER_ID)
-                , prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
+        file= new File(ImageFilePath.getPath(this, uri));
+        ImageHelper.setImage(civImageAvatar, uri);
         pickerDialog.dismiss();
+    }
+
+
+    @Override
+    public void returnChoseSpecialityList(ArrayList<Speciality> specialitiesArrayList) {
+        user.getSpecialities().clear();
+
+    }
+
+    @Override
+    public void returnChoseLanguageList(ArrayList<Language> languageArrayList) {
+
+    }
+
+    @Override
+    public void returnChoseDoctorList(ArrayList<UserInfo> doctorArrayList) {
+
     }
 }

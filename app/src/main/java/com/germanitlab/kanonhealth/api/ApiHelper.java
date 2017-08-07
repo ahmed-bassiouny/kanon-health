@@ -347,13 +347,12 @@ public class ApiHelper {
 
     // get all speciality
     public static ArrayList<Speciality> getSpecialities(Context context) {
-        ArrayList<Speciality> specialityArrayList = null;
+        ArrayList<Speciality> specialityArrayList = new ArrayList<>();
         try {
             String jsonString = post(API_SPECIALITIES_LIST, EMPTY_JSON);
             Gson gson = new Gson();
             SpecialityResponse specialityResponse = gson.fromJson(jsonString, SpecialityResponse.class);
             if (specialityResponse.getStatus()) {
-                specialityArrayList = new ArrayList<>();
                 specialityArrayList = specialityResponse.getData();
             }
         } catch (Exception e) {
@@ -365,13 +364,12 @@ public class ApiHelper {
 
     // get all Language
     public static ArrayList<Language> getLanguage(Context context) {
-        ArrayList<Language> languageArrayList = null;
+        ArrayList<Language> languageArrayList = new ArrayList<>();
         try {
             String jsonString = post(API_LANGUAGES_LIST, EMPTY_JSON);
             Gson gson = new Gson();
             LanguageResponse languageResponse = gson.fromJson(jsonString, LanguageResponse.class);
             if (languageResponse.getStatus()) {
-                languageArrayList = new ArrayList<>();
                 languageArrayList = languageResponse.getData();
             }
         } catch (Exception e) {

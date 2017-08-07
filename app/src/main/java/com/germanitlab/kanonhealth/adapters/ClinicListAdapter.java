@@ -2,48 +2,26 @@ package com.germanitlab.kanonhealth.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
-import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.germanitlab.kanonhealth.models.ChooseModel;
-import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
-import com.germanitlab.kanonhealth.widget.SquareImageView;
-import com.github.siyamed.shapeimageview.CircularImageView;
-import com.google.gson.Gson;
 import com.nex3z.flowlayout.FlowLayout;
-
-
 import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
