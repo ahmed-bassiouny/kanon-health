@@ -65,27 +65,9 @@ public class Util {
         context.startActivity(intent);
     }
 
-    public void showProgressDialog() {
-     showProgressDialog(context);
-    }
 
 
-    public void showProgressDialog(Context ctx) {
-        if(progressDialog != null) {
-            if (ctx != null) {
-                progressDialog = ProgressDialog.show(ctx, "", ctx.getString(R.string.waiting_text), true);
-            } else if (context != null) {
-                progressDialog = ProgressDialog.show(context, "", context.getString(R.string.waiting_text), true);
-            }
-        }
-    }
-
-    public void dismissProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
-    public void setupUI(View view , final Activity activity) {
+    public void setupUI(View view, final Activity activity) {
 
         // Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
@@ -101,12 +83,13 @@ public class Util {
         if (view instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                 View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView , activity);
+                setupUI(innerView, activity);
             }
         }
     }
+
     public static void hideSoftKeyboard(Activity activity) {
-        if(activity != null) {
+        if (activity != null) {
             InputMethodManager inputMethodManager =
                     (InputMethodManager) activity.getSystemService(
                             Activity.INPUT_METHOD_SERVICE);

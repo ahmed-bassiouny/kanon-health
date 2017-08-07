@@ -37,7 +37,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_IS_AVAILABLE = "is_available";
     public static final String KEY_ACTIVATED = "activated";
     public static final String KEY_SPECIALITIES = "specialitys";
-    public static final String Clinics = "membar_at";
+    public static final String Clinics = "member_at";
     public static final String KEY_STREET_NAME = "street_name";
     public static final String KEY_HOUSE_NUMBER = "house_number";
     public static final String KEY_PROVIDENCE = "providence";
