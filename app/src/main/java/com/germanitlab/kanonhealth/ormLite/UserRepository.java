@@ -10,7 +10,6 @@ import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
 import com.germanitlab.kanonhealth.models.user.Info;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.dao.Dao;
@@ -31,7 +30,7 @@ import java.util.Map;
  */
 
 public class UserRepository {
-    private DatabaseHelper db;
+    /*private DatabaseHelper db;
     Dao<User, Integer> doctorsDao;
     private Context context;
 
@@ -102,7 +101,7 @@ public class UserRepository {
             updateBuilder.where().eq("id", doctor.get_Id());
             Gson gson = new Gson();
             String json = gson.toJson(doctor.getDocuments());
-            updateBuilder.updateColumnValue("jsonDocument" /* column */, json/* value */);
+            updateBuilder.updateColumnValue("jsonDocument" /* column  json value );
 
             updateBuilder.update();
         } catch (Exception e) {
@@ -119,7 +118,7 @@ public class UserRepository {
             updateBuilder.where().eq("id", doctor.get_Id());
             String json = new Gson().toJson(doctor.getDocuments());
 // update the value of your field(s)
-            updateBuilder.updateColumnValue("jsonDocument" /* column */, json/* value */);
+            updateBuilder.updateColumnValue("jsonDocument" /* column , json/* value );
             updateBuilder.update();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -262,5 +261,5 @@ public class UserRepository {
             Crashlytics.logException(e);
         }
         return null;
-    }
+    }*/
 }

@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.api.models;
 import android.text.TextUtils;
 
 import com.germanitlab.kanonhealth.helpers.DateHelper;
+import com.germanitlab.kanonhealth.models.Table;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -108,6 +109,10 @@ public class UserInfo extends ParentModel {
     private ArrayList<Clinic> clinics;
 
     private LinkedHashMap<String, String> questionsAnswers;
+    // i need key name from backend
+    private Integer openType;
+    private Table timeTable;
+    private Integer isMyDoc;
     // endregion
 
 
@@ -363,6 +368,30 @@ public class UserInfo extends ParentModel {
 
     public void setQuestionsAnswers(LinkedHashMap<String, String> questionsAnswers) {
         this.questionsAnswers = questionsAnswers;
+    }
+
+    public Integer getOpenType() {
+        return openType;
+    }
+
+    public void setOpenType(Integer openType) {
+        this.openType = openType;
+    }
+
+    public Table getTimeTable() {
+        return timeTable;
+    }
+
+    public void setTimeTable(Table timeTable) {
+        this.timeTable = timeTable;
+    }
+
+    public Integer getIsMyDoc() {
+        return isMyDoc;
+    }
+
+    public void setIsMyDoc(Integer isMyDoc) {
+        this.isMyDoc = isMyDoc;
     }
     //endregion
 }

@@ -443,7 +443,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_below="@+id/view_below_language"
-                android:text="@string/member_in_practice"
+                android:text="ask milad"
                 android:textColor="@android:color/background_dark"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -508,11 +508,11 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:id="@+id/ll_time"
+                android:id="@+id/table_layout_time"
                 android:orientation="vertical"
                 android:layout_below="@+id/tv_working_hours"/>
         </android.support.percent.PercentRelativeLayout>

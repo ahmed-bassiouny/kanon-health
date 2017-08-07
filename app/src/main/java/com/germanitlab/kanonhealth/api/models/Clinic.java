@@ -1,5 +1,7 @@
 package com.germanitlab.kanonhealth.api.models;
 
+import com.germanitlab.kanonhealth.TimeTable;
+import com.germanitlab.kanonhealth.models.Table;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -94,6 +96,13 @@ public class Clinic extends ParentModel{
 
     @SerializedName(KEY_IS_AVAILABLE)
     private Integer isAvailable;
+
+    // i need key name from backend
+    private Double locationLat;
+    private Double locationLong;
+    private Integer openType;
+    private Table timeTable;
+    private Integer isMyDoc;
 
     public Integer getId() {
         return id;
@@ -279,6 +288,48 @@ public class Clinic extends ParentModel{
         this.isAvailable = isAvailable;
     }
 
+    public Double getLocationLat() {
+        if(locationLat==null)
+            locationLat=0.0;
+        return locationLat;
+    }
 
+    public void setLocationLat(Double locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public Double getLocationLong() {
+        if(locationLong==null)
+            locationLong=0.0;
+        return locationLong;
+    }
+
+    public void setLocationLong(Double locationLong) {
+        this.locationLong = locationLong;
+    }
+
+    public Integer getOpenType() {
+        return openType;
+    }
+
+    public void setOpenType(Integer openType) {
+        this.openType = openType;
+    }
+
+    public Table getTimeTable() {
+        return timeTable;
+    }
+
+    public void setTimeTable(Table timeTable) {
+        this.timeTable = timeTable;
+    }
+
+    public Integer getIsMyDoc() {
+        return isMyDoc;
+    }
+
+    public void setIsMyDoc(Integer isMyDoc) {
+        this.isMyDoc = isMyDoc;
+    }
 }
 
