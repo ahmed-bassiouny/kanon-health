@@ -1,13 +1,12 @@
 package com.germanitlab.kanonhealth.intro;
 
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Util;
@@ -64,30 +63,30 @@ public class StartQrScan extends AppCompatActivity {
 
     private void sendRequest(String key) {
         //Getting the doctor's data
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                try {
-                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                    Intent intent = new Intent(StartQrScan.this, DoctorProfileActivity.class);
-                    intent.putExtra("doctor_data", userInfoResponse.getUser());
-                    intent.putExtra("tab", "");
-                    startActivity(intent);
-                    finish();
-                    util.dismissProgressDialog();
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-                util.dismissProgressDialog();
-                Log.e("My error ", error.toString());
-            }
-        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
+//        new HttpCall(this, new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                try {
+//                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
+//                    Intent intent = new Intent(StartQrScan.this, DoctorProfileActivity.class);
+//                    intent.putExtra("doctor_data", userInfoResponse.getUser());
+//                    intent.putExtra("tab", "");
+//                    startActivity(intent);
+//                    finish();
+//                    util.dismissProgressDialog();
+//                } catch (Exception e) {
+//                    Crashlytics.logException(e);
+//                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//                util.dismissProgressDialog();
+//                Log.e("My error ", error.toString());
+//            }
+//        }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
     }
 
 
@@ -98,18 +97,18 @@ public class StartQrScan extends AppCompatActivity {
             webLogin.setUser_id(prefManager.getData(PrefManager.USER_ID));
             webLogin.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
             webLogin.setCode(qrCode);
-
-            new HttpCall(StartQrScan.this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    StartQrScan.this.finish();
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Toast.makeText(StartQrScan.this, R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                }
-            }).sendQrCode(webLogin);
+//
+//            new HttpCall(StartQrScan.this, new ApiResponse() {
+//                @Override
+//                public void onSuccess(Object response) {
+//                    StartQrScan.this.finish();
+//                }
+//
+//                @Override
+//                public void onFailed(String error) {
+//                    Toast.makeText(StartQrScan.this, R.string.message_not_send, Toast.LENGTH_SHORT).show();
+//                }
+//            }).sendQrCode(webLogin);
 
         } catch (Exception e) {
             Log.e("Httpcall", "sen web login : ", e);

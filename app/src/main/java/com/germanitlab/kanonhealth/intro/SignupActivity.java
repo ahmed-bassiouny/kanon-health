@@ -1,10 +1,8 @@
 package com.germanitlab.kanonhealth.intro;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
@@ -21,27 +19,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
-import com.germanitlab.kanonhealth.splash.SplashScreenActivity;
-import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.mukesh.countrypicker.Country;
-
 import org.json.JSONObject;
-
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 
@@ -49,7 +39,6 @@ public class SignupActivity extends AppCompatActivity {
 
 
     Button btnSignUp;
-    ProgressDialog progressDialog;
     private EditText etMobileNumber, etPostelCode;
     private LinearLayout layout;
     private TextView select_country;
@@ -135,30 +124,47 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void getCountryFromNetwork() {
-        util.showProgressDialog();
+     //   util.showProgressDialog();
 
-        new HttpCall(this, new ApiResponse() {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(Object response) {
-                try {
-                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1, ((JsonObject) response).get("countryCode").toString().length() - 1);
-                    setCountryAndCode(countryAndCode);
-                    util.dismissProgressDialog();
-                } catch (Exception e) {
+            public void run() {
+
+                String result = ApiHelper.getNetworkCountryCode();
+
+                if (result.equals(""))
+                {
                     getCountryFromLocal();
-                    util.dismissProgressDialog();
+            }else {
+                    setCountryAndCode(result);
                 }
-
             }
 
-            @Override
-            public void onFailed(String error) {
-                getCountryFromLocal();
-                util.dismissProgressDialog();
+        }).start();
             }
-        }).getLocation();
 
-    }
+//        new HttpCall(this, new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                try {
+//                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1, ((JsonObject) response).get("countryCode").toString().length() - 1);
+//
+//                    util.dismissProgressDialog();
+//                } catch (Exception e) {
+//
+//                    util.dismissProgressDialog();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                getCountryFromLocal();
+//                util.dismissProgressDialog();
+//            }
+//        }).getLocation();
+
+
 
     private void getCountryFromLocal() {
         String countryAndCode;
@@ -229,7 +235,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void sendData() {
         if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
-            util.showProgressDialog();
+            ProgressHelper.showProgressBar(this);
             new Thread(new Runnable() {
                @Override
                public void run() {
@@ -244,7 +250,7 @@ public class SignupActivity extends AppCompatActivity {
                        intent.putExtra("oldUser", register.getExists());
                        startActivity(intent);
                    }
-                   util.dismissProgressDialog();
+                  ProgressHelper.hideProgressBar();
                }
            }).start();
             /*AsyncTask.execute(new Runnable() {
@@ -261,7 +267,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
     private void registerUser(String phone, String countryCode) {
-        util.showProgressDialog();
+      //  util.showProgressDialog();
         //new HttpCall(SignupActivity.this, this).registerUser(phone, countryCode);
         /*Register register= ApiHelper.postRegister(countryCode,phone,this);
         if(register!=null){
@@ -279,47 +285,47 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onSuccess(Object response) {
-        //-- Response : {"password":"831558a6e65a225c710b084742f407b6","user_id":97,"sucess":true}
-        try {
-
-            Log.d("Response", response.toString());
-            UserRegisterResponse registerResponse = (UserRegisterResponse) response;
-            if (String.valueOf(registerResponse.getUser_id()).isEmpty() || registerResponse.getUser_id() == 0 || String.valueOf(registerResponse.getUser_id()).equals(null)) {
-                Toast.makeText(this, getResources().getText(R.string.error_in_registeration), Toast.LENGTH_SHORT).show();
-                System.exit(0);
-            }
-            prefManager.put(PrefManager.USER_ID, String.valueOf(registerResponse.getUser_id()));
-            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(registerResponse.getPassword()));
-            JSONObject jsonObject = null;
-            Boolean oldUser = false;
-            if (registerResponse.is_exist()) {
-                oldUser = true;
-            }
-            if (registerResponse.isSucess()) {
-                util.dismissProgressDialog();
-                Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
-                intent.putExtra("number", etMobileNumber.getText().toString());
-                intent.putExtra("codeNumber", code.toString());
-                intent.putExtra(Constants.REGISER_RESPONSE, registerResponse);
-                intent.putExtra("oldUser", oldUser);
-                startActivity(intent);
-
-            } else {
-
-                util.dismissProgressDialog();
-                Snackbar snackbar = Snackbar
-                        .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
-                snackbar.show();
-
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//    @Override
+//    public void onSuccess(Object response) {
+//        //-- Response : {"password":"831558a6e65a225c710b084742f407b6","user_id":97,"sucess":true}
+//        try {
+//
+//            Log.d("Response", response.toString());
+//            UserRegisterResponse registerResponse = (UserRegisterResponse) response;
+//            if (String.valueOf(registerResponse.getUser_id()).isEmpty() || registerResponse.getUser_id() == 0 || String.valueOf(registerResponse.getUser_id()).equals(null)) {
+//                Toast.makeText(this, getResources().getText(R.string.error_in_registeration), Toast.LENGTH_SHORT).show();
+//                System.exit(0);
+//            }
+//            prefManager.put(PrefManager.USER_ID, String.valueOf(registerResponse.getUser_id()));
+//            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(registerResponse.getPassword()));
+//            JSONObject jsonObject = null;
+//            Boolean oldUser = false;
+//            if (registerResponse.is_exist()) {
+//                oldUser = true;
+//            }
+//            if (registerResponse.isSucess()) {
+//                util.dismissProgressDialog();
+//                Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
+//                intent.putExtra("number", etMobileNumber.getText().toString());
+//                intent.putExtra("codeNumber", code.toString());
+//                intent.putExtra(Constants.REGISER_RESPONSE, registerResponse);
+//                intent.putExtra("oldUser", oldUser);
+//                startActivity(intent);
+//
+//            } else {
+//
+//                util.dismissProgressDialog();
+//                Snackbar snackbar = Snackbar
+//                        .make(layout, getResources().getString(R.string.error_message), Snackbar.LENGTH_LONG);
+//                snackbar.show();
+//
+//            }
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -332,11 +338,11 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onFailed(String error) {
-        util.dismissProgressDialog();
-        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-    }
+//    @Override
+//    public void onFailed(String error) {
+//        util.dismissProgressDialog();
+//        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+//    }
 
     @Override
     protected void onDestroy() {
