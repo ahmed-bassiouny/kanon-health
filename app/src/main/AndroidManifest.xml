@@ -90,9 +90,6 @@
             android:name=".profile.ProfileActivity"
             android:screenOrientation="portrait" />
 
-        <!-- <activity -->
-        <!-- android:name=".initialProfile.initialProfileDetails" -->
-        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".intro.Information"
             android:screenOrientation="portrait" />
