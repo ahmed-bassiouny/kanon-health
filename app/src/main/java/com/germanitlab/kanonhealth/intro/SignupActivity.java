@@ -1,17 +1,14 @@
 package com.germanitlab.kanonhealth.intro;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -29,9 +26,7 @@ import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.mukesh.countrypicker.Country;
-import org.json.JSONObject;
 import java.util.regex.Pattern;
 
 
@@ -115,12 +110,16 @@ public class SignupActivity extends AppCompatActivity {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         if (telephonyManager != null) {
             countryAndCode = telephonyManager.getSimCountryIso();
-            if (!TextUtils.isEmpty(countryAndCode))
+            if (!TextUtils.isEmpty(countryAndCode)) {
                 setCountryAndCode(countryAndCode);
-            else
+            } else {
                 getCountryFromNetwork();
-        } else
-            getCountryFromLocal();
+            }
+
+        }else
+        {
+            getCountryFromNetwork();
+        }
     }
 
     private void getCountryFromNetwork() {
@@ -185,13 +184,19 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void setCountryAndCode(String countryAndCode) {
-        Country countryObject = Country.getCountryByISO(countryAndCode);
+        final Country countryObject = Country.getCountryByISO(countryAndCode);
         if (countryObject != null) {
-            etPostelCode.setText(countryObject.getDialCode());
-            select_country.setText(countryObject.getName());
-            country = countryObject.getName();
-            code = countryObject.getDialCode();
-            found = true;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    etPostelCode.setText(countryObject.getDialCode());
+                    select_country.setText(countryObject.getName());
+                    country = countryObject.getName();
+                    code = countryObject.getDialCode();
+                    found = true;
+                }
+            });
+
         } else
             setDefaultCountry();
     }
