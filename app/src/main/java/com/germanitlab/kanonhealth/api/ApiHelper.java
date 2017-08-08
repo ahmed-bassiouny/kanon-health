@@ -168,20 +168,22 @@ public class ApiHelper {
     }
 
 
-    private static String postWithFile(String url, String parameters, File file, String fileParameterName) throws IOException {
+    private static String postWithFile(String url, HashMap<String, Object> parameters, File file, String fileParameterName) throws IOException {
         String result = "";
         OkHttpClient client = new OkHttpClient();
-        RequestBody body = MultipartBody.create(JSON, parameters);
 
-        RequestBody requestBody = new MultipartBody.Builder()
+        MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(MimeUtils.getType(file.getName())), file))
-                .addPart(body)
-                .build();
+                .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(MimeUtils.getType(file.getName())), file));
+
+        for (String s : parameters.keySet()) {
+            requestBody.addFormDataPart(s, parameters.get(s).toString());
+        }
+
 
         Request request = new Request.Builder()
                 .url(SERVER_API_URL + url)
-                .post(requestBody)
+                .post(requestBody.build())
                 .build();
         Response response = client.newCall(request).execute();
         return response.body().string();
@@ -248,7 +250,7 @@ public class ApiHelper {
             if (file == null) {
                 jsonString = post(API_CLINICS_ADD, addClinicParameters.toJson());
             } else {
-                jsonString = postWithFile(API_CLINICS_ADD, addClinicParameters.toJson(), file, addClinicParameters.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_CLINICS_ADD, addClinicParameters.toHashMap(), file, addClinicParameters.PARAMETER_AVATAR);
             }
 
             Gson gson = new Gson();
@@ -301,7 +303,7 @@ public class ApiHelper {
             if (file == null) {
                 jsonString = post(API_CLINICS_EDIT, EditClinicParameters.toJson());
             } else {
-                jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toJson(), file, EditClinicParameters.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toHashMap(), file, EditClinicParameters.PARAMETER_AVATAR);
             }
             Gson gson = new Gson();
             EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);
@@ -349,7 +351,7 @@ public class ApiHelper {
             messageSendParamaters.setIsForward(0);
             String jsonString = "";
             if (media != null) {
-                jsonString = postWithFile(API_MESSAGES_SEND, messageSendParamaters.toJson(), media, MessageSendParameters.PARAMATER_MEDIA);
+                jsonString = postWithFile(API_MESSAGES_SEND, messageSendParamaters.toHashMap(), media, MessageSendParameters.PARAMATER_MEDIA);
             } else {
                 jsonString = post(API_MESSAGES_SEND, messageSendParamaters.toJson());
             }
@@ -453,7 +455,7 @@ public class ApiHelper {
             if (file == null) {
                 jsonString = post(API_DOCUMENTS_ADD, addDocumentParameters.toJson());
             } else {
-                jsonString = postWithFile(API_DOCUMENTS_ADD, addDocumentParameters.toJson(), file, addDocumentParameters.PARAMETER_IMAGE);
+                jsonString = postWithFile(API_DOCUMENTS_ADD, addDocumentParameters.toHashMap(), file, addDocumentParameters.PARAMETER_IMAGE);
             }
 
             Gson gson = new Gson();
@@ -524,7 +526,7 @@ public class ApiHelper {
             userAddParamater.setGender(gender);
             String jsonString;
             if (avatar != null) {
-                jsonString = postWithFile(API_USERS_ADD, userAddParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_USERS_ADD, userAddParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
             } else {
                 jsonString = post(API_USERS_ADD, userAddParamater.toJson());
             }
@@ -560,7 +562,7 @@ public class ApiHelper {
             editDoctorParamater.setZipCode(userInfo.getZipCode());
             String jsonString;
             if (avatar != null) {
-                jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
             } else {
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
             }
@@ -592,7 +594,7 @@ public class ApiHelper {
             editDoctorParamater.setBirthday(userInfo.getBirthday());
             String jsonString;
             if (avatar != null) {
-                jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);
+                jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
             } else {
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
             }
