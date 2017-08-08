@@ -17,9 +17,11 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.nex3z.flowlayout.FlowLayout;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -81,6 +83,26 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
                     holder.tvDoctorName.setText(clinic.getName());
             }
             //----------------------------------------------------------------------------------set Specialist -------------------------//
+            if (holder.tvSpecialist != null) {
+                holder.tvSpecialist.setText("");
+                holder.linearLayoutSpecialist.removeAllViews();
+                SquareImageView image = new SquareImageView(activity);
+                holder.tvSpecialist.setLines(1);
+                holder.tvSpecialist.setMaxLines(1);
+                holder.tvSpecialist.setSingleLine(true);
+                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);;
+            int size = 0;
+            for (Speciality speciality : clinic.getSpeciality()) {
+                holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircle(speciality.getImage(), activity));
+                holder.tvSpecialist.append(speciality.getTitle());
+
+                if (size <  clinic.getSpeciality().size()) {
+                    holder.tvSpecialist.append(", ");
+                    size++;
+                }
+            }
+
+
 //            if (holder.tvSpecialist != null) {
 //                holder.tvSpecialist.setText("");
 //                int size = 0;
@@ -112,18 +134,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
 ////                image.setBackgroundResource(R.drawable.doctor_icon);
 ////                        int width = holder.linearLayoutSpecialist.getHeight();
 ////                        int height = holder.linearLayoutSpecialist.getHeight();
-//                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                    parms.setMargins(5, 0, 5, 0);
-//                    image.setLayoutParams(parms);
-//                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                    holder.linearLayoutSpecialist.addView(image);
-//                }
-//                holder.tvSpecialist.setLines(1);
-//                holder.tvSpecialist.setMaxLines(1);
-//                holder.tvSpecialist.setSingleLine(true);
-//                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
-//            }
+            }
 
             //--------------------------------------------------------------------------------------------------//
 
@@ -159,6 +170,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
             });
         } catch (Exception e) {
             Crashlytics.logException(e);
+            e.printStackTrace();
             Toast.makeText(activity, activity.getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
             Log.e("DoctorListAdapter", "onBindViewHolder: ", e);
         }

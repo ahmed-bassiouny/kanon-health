@@ -621,6 +621,7 @@ public class DoctorListFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
+                setClinicsAdapter(new ArrayList<Clinic>())  ;
                     loadData();
 
 
@@ -634,6 +635,7 @@ public class DoctorListFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
+                setDoctorAdapter(new ArrayList<UserInfo>());
                     loadData();
             }
         });
