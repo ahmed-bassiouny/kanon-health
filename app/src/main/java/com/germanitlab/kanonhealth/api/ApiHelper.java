@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.api;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import com.germanitlab.kanonhealth.api.responses.GetDocumentListResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
+import com.germanitlab.kanonhealth.api.responses.NetworkLocationResponse;
 import com.germanitlab.kanonhealth.api.responses.OpenSessionResponse;
 import com.germanitlab.kanonhealth.api.responses.ParentResponse;
 import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
@@ -119,12 +121,15 @@ public class ApiHelper {
     private static final String API_USERS_REGISTER = "users/register";
 
 
-    private static final String API_RATE_REVIEW="users/rate_reviews";
+    private static final String API_RATE_REVIEW = "users/rate_reviews";
 
     private static final String API_TOKEN_REGISTER = "token/add";
 
 
     private static final String API_UPLOAD = "upload";
+
+
+    private static final String API_NETWORK_LOCATION = "http://ip-api.com/json";
 
     //endregion
 
@@ -143,6 +148,18 @@ public class ApiHelper {
         RequestBody body = RequestBody.create(JSON, parameters);
         Request request = new Request.Builder()
                 .url(SERVER_API_URL + url)
+                .post(body)
+                .build();
+        Log.i(TAG, request.toString());
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
+    private static String postWithoutServerPath(String url, String parameters) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, parameters);
+        Request request = new Request.Builder()
+                .url(url)
                 .post(body)
                 .build();
         Log.i(TAG, request.toString());
@@ -472,7 +489,7 @@ public class ApiHelper {
     }
 
     public static boolean postDocumentPrivacy(Integer documentId, Integer privacy, Context context) {
-        boolean result=false;
+        boolean result = false;
         try {
             DocumentPrivacyParameters documentPrivacyParameters = new DocumentPrivacyParameters();
             documentPrivacyParameters.setDocumentId(documentId);
@@ -484,8 +501,8 @@ public class ApiHelper {
 
             Gson gson = new Gson();
             DocumentPrivacyResponse documentPrivacyResponse = gson.fromJson(jsonString, DocumentPrivacyResponse.class);
-            if(documentPrivacyResponse.getStatus()){
-                result=true;
+            if (documentPrivacyResponse.getStatus()) {
+                result = true;
             }
         } catch (Exception e) {
             Helper.handleError(TAG, "postDocumentPrivacy", e, -1, context);
@@ -526,7 +543,7 @@ public class ApiHelper {
     }
 
     // edit doctor return true if doctor edited
-    public static boolean editDoctor(Context context, UserInfo userInfo,File avatar) {
+    public static boolean editDoctor(Context context, UserInfo userInfo, File avatar) {
         boolean result = false;
         try {
             EditDoctorParameter editDoctorParamater = new EditDoctorParameter();
@@ -562,7 +579,7 @@ public class ApiHelper {
     }
 
     // edit patient return true if doctor edited
-    public static boolean editPatient(Context context,UserInfo userInfo , File avatar) {
+    public static boolean editPatient(Context context, UserInfo userInfo, File avatar) {
         boolean result = false;
         try {
             EditPatientParameter editDoctorParamater = new EditPatientParameter();
@@ -593,7 +610,7 @@ public class ApiHelper {
         }
     }
 
-    public static UserInfo getUserInfo(Context context, String  userID) {
+    public static UserInfo getUserInfo(Context context, String userID) {
         UserInfo userInfo = null;
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
@@ -713,7 +730,7 @@ public class ApiHelper {
         return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELIVER);
     }
 
-    private static ArrayList<ChatModel> getChatMessages(Context context, String  userID, int chatType) {
+    private static ArrayList<ChatModel> getChatMessages(Context context, String userID, int chatType) {
         ArrayList<ChatModel> messageArrayList = new ArrayList<>();
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
@@ -743,19 +760,19 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<ChatModel> getChatDoctor(Context context, String  userID) {
+    public static ArrayList<ChatModel> getChatDoctor(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATDOCTOR);
     }
 
-    public static ArrayList<ChatModel> getChatClinic(Context context, String  userID) {
+    public static ArrayList<ChatModel> getChatClinic(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATCLINIC);
     }
 
-    public static ArrayList<ChatModel> getChatUser(Context context, String  userID) {
+    public static ArrayList<ChatModel> getChatUser(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATUSER);
     }
 
-    public static ArrayList<ChatModel> getChatAnother(Context context, String  userID) {
+    public static ArrayList<ChatModel> getChatAnother(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
     }
 
@@ -796,22 +813,40 @@ public class ApiHelper {
         }
     }
 
-    public static Review getReview(String userId,Context context){
-        Review review=null;
-        try{
+    public static Review getReview(String userId, Context context) {
+        Review review = null;
+        try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userId);
             String jsonString = post(API_RATE_REVIEW, userInfoParameter.toJson());
             Gson gson = new Gson();
-            ReviewResponse reviewResponse=gson.fromJson(jsonString,ReviewResponse.class);
-            if(reviewResponse.getStatus()){
-                review=reviewResponse.getData();
+            ReviewResponse reviewResponse = gson.fromJson(jsonString, ReviewResponse.class);
+            if (reviewResponse.getStatus()) {
+                review = reviewResponse.getData();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Helper.handleError(TAG, "getReview", e, -1, context);
 
-        }finally {
+        } finally {
             return review;
+        }
+    }
+
+
+    public static String getNetworkCountryCode() {
+        String result = "";
+        try {
+
+            String jsonString = postWithoutServerPath(API_NETWORK_LOCATION, EMPTY_JSON);
+            Gson gson = new Gson();
+            NetworkLocationResponse networkLocationResponse = gson.fromJson(jsonString, NetworkLocationResponse.class);
+            if (networkLocationResponse != null && !TextUtils.isEmpty(networkLocationResponse.getCountryCode())) {
+                result = networkLocationResponse.getCountryCode();
+            }
+        } catch (Exception e) {
+            Helper.handleError(TAG, "getNetworkCountryCode", e, -1, null);
+        } finally {
+            return result;
         }
     }
 
