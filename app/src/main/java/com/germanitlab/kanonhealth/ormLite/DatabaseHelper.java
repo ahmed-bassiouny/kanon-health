@@ -9,9 +9,9 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Document;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -31,15 +31,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private Context context;
     // the DAO object we use to access the SimpleData table
-    private Dao<User, Integer> doctorsDao = null;
+    private Dao<UserInfo, Integer> doctorsDao = null;
     private Dao<ChatModel, Integer> chatModel = null;
     private Dao<Table, Integer> tablesDao = null;
     private Dao<Message, Integer> messagesDao = null;
     private Dao<Document, Integer> documentsDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> httpMessagesDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> httpdocumentsDao = null;
-    private RuntimeExceptionDao<User, Integer> doctorsRuntimeDao = null;
-    private RuntimeExceptionDao<Message, Integer> messagesRuntimeDao = null;
+    private RuntimeExceptionDao<UserInfo, Integer> doctorsRuntimeDao = null;
+    private RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesRuntimeDao = null;
+    private RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> documentsRuntimeDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,7 +51,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
-            TableUtils.createTable(connectionSource, User.class);
+            TableUtils.createTable(connectionSource, UserInfo.class);
             TableUtils.createTable(connectionSource, Message.class);
         } catch (Exception e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
@@ -61,8 +62,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
         // here we try inserting data in the on-create as a test
-        RuntimeExceptionDao<User, Integer> dao = getUsersDataDao();
-        RuntimeExceptionDao<Message, Integer> daos = getMessagesDataDao();
+//        RuntimeExceptionDao<UserInfo, Integer> dao = getUsersDataDao();
+//        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDataDao = getMessagesDataDao();
+//        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> daos = getDocumentDataDao();
         // create some entries in the onCreate
         Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate");
     }
@@ -71,7 +73,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
-            TableUtils.dropTable(connectionSource, User.class, true);
+            TableUtils.dropTable(connectionSource, UserInfo.class, true);
             TableUtils.dropTable(connectionSource, Message.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource);
@@ -84,9 +86,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public Dao<User, Integer> getUsersDao() throws SQLException {
+    public Dao<UserInfo, Integer> getUsersDao() throws SQLException {
         if (doctorsDao == null) {
-            doctorsDao = getDao(User.class);
+            doctorsDao = getDao(UserInfo.class);
         }
         return doctorsDao;
     }
@@ -127,19 +129,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SimpleData class. It will
      * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
      */
-    public RuntimeExceptionDao<User, Integer> getUsersDataDao() {
+    public RuntimeExceptionDao<UserInfo, Integer> getUsersDataDao() {
         if (doctorsRuntimeDao == null) {
-            doctorsRuntimeDao = getRuntimeExceptionDao(User.class);
+            doctorsRuntimeDao = getRuntimeExceptionDao(UserInfo.class);
         }
         return doctorsRuntimeDao;
     }
 
-    public RuntimeExceptionDao<Message, Integer> getMessagesDataDao() {
+    public RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> getMessagesDataDao() {
         if (messagesRuntimeDao == null) {
-            messagesRuntimeDao = getRuntimeExceptionDao(Message.class);
+            messagesRuntimeDao = getRuntimeExceptionDao(com.germanitlab.kanonhealth.api.models.Message.class);
         }
         return messagesRuntimeDao;
     }
 
+    public RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> getDocumentDataDao() {
+        if (documentsRuntimeDao == null) {
+            documentsRuntimeDao = getRuntimeExceptionDao(Document.class);
+        }
+        return documentsRuntimeDao;
+    }
 
 }

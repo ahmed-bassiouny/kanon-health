@@ -1122,7 +1122,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     public void openProfile() {
         if (chatModel != null && (chatModel.getUserType()!= UserInfo.PATIENT)) {
             Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-            intent.putExtra("doctor_data", do);
+            intent.putExtra("doctor_data", doctor);
             getActivity().startActivity(intent);
         } else {
             // this object is user and should open ProfileActivity

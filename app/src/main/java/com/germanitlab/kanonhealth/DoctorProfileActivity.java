@@ -63,7 +63,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends ParentActivity implements Message<ChooseModel>, DialogPickerCallBacks {
+public class DoctorProfileActivity extends ParentActivity implements DialogPickerCallBacks {
 
     @BindView(R.id.toolbar_name)
     TextView tvToolbarName;
@@ -485,7 +485,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
 
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
-        if (is_me)
+        /*if (is_me)
             return;
         if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
             if (user.getIs_my_doctor().equals("0")) {
@@ -521,7 +521,7 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
                     }
                 }).removeFromMyDoctor(user.get_Id() + "");
             }
-
+*/
     }
 
     private void checkDoctor() {
@@ -599,8 +599,8 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
                     set(adapter, userInfo.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
                 }
                 break;
-        }*/
-    }
+        }
+    }*/
 
 
     @Override
