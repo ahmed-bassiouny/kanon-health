@@ -289,7 +289,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             messageRepositry = new HttpMessageRepositry(getActivity());
         }
         chatModelRepositry = new ChatModelRepositry(getActivity());
-        chatHelper = new ChatHelper(this, getActivity(), messages, documents, recyclerView, userID, doctorID, chatAdapter, documentChatAdapter, messageRepositry, documentRepositry);
     }
 
     // set data in object
@@ -326,7 +325,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (chatModel.getFirstName() != null &&chatModel.getLastName() != null) {
             tv_chat_user_name.setText(chatModel.getLastName()+" "+chatModel.getFirstName());
         }
-
     }
 
     private void loadChatOnline() {
@@ -337,7 +335,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 messages = ApiHelper.getMessages(userID, doctorID, getContext());
                 if (messages != null || messages.size() > 0) {
                     // if arraylist have message set data in adapter and save in database and request message seen
-                    isStoragePermissionGranted();
+                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            isStoragePermissionGranted();
+                        }
+                    });
                     if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -358,15 +361,21 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     }
 
     private void loadDocumentOnline() {
-        /*getActivity().runOnUiThread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 documents = ApiHelper.postGetDocumentList(userID, getContext());
                 if (documents != null || documents.size() > 0) {
                     // if arraylist have message set data in adapter and save in database and request message seen
-                    isStoragePermissionGranted();
+                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            isStoragePermissionGranted();
+                            pbar_loading.setVisibility(View.GONE);
+                        }
+                    });
                     if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
-                        new Thread(new Runnable() {
+                        HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 for (Document document : documents) {
@@ -374,11 +383,10 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                     documentRepositry.createOrUpate(document);
                                 }
                             }
-                        }).start();
+                        });
                 }
-                pbar_loading.setVisibility(View.GONE);
             }
-        });*/
+        }).start();
     }
 
     private void loadChatOffline() {
@@ -453,6 +461,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private void setData() {
         if (getActivity() == null)
             return;
+        chatHelper = new ChatHelper(this, getActivity(), messages, documents, recyclerView, userID, doctorID, chatAdapter, messageRepositry, documentRepositry);
         if (userID == doctorID) {
             documentChatAdapter = new DocumentChatAdapter(documents, getActivity());
             recyclerView.setAdapter(documentChatAdapter);
@@ -486,7 +495,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         // declare object and set attribute
         if (userID == doctorID) {
-            chatHelper.sendTextDocument(etMessage.getText().toString());
+            chatHelper.sendTextDocument(etMessage.getText().toString(),documentChatAdapter);
         } else {
             chatHelper.sendTextMessage(etMessage.getText().toString());
         }
@@ -581,7 +590,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             return;
                         }
                         if (userID == doctorID) {
-                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "");
+                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "",documentChatAdapter);
                         } else {
                             chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "");
                         }
@@ -685,7 +694,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
             if (userID == doctorID) {
-                chatHelper.sendLocationDocument(longitude, latitude);
+                chatHelper.sendLocationDocument(longitude, latitude,documentChatAdapter);
             } else {
                 chatHelper.sendLocationMessage(longitude, latitude);
             }
@@ -1234,7 +1243,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
                                 if (userID == doctorID) {
-                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "");
+                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "",documentChatAdapter);
                                 } else {
                                     chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "");
                                 }
@@ -1401,7 +1410,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     public void ImagePickerCallBack(Uri uri) {
 
         if (userID == doctorID) {
-            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "");
+            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",documentChatAdapter);
         } else {
             chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "");
         }

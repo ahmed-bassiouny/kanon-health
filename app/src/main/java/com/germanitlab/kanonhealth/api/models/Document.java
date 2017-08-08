@@ -68,6 +68,8 @@ public class Document extends ParentModel{
 
 
     public Integer getPrivacy() {
+        if(privacy==null)
+            privacy=0;
         return privacy;
     }
 
