@@ -1,11 +1,13 @@
 package com.germanitlab.kanonhealth.api.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by bassiouny on 08/08/17.
  */
 
+@DatabaseTable(tableName = "comment")
 public class Comment extends ParentModel {
     /*
     * */

@@ -10,16 +10,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
+import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.nex3z.flowlayout.FlowLayout;
 
 
@@ -84,49 +89,35 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                     holder.tvDoctorName.setText(doctor.getFullName());
             }
             //----------------------------------------------------------------------------------set Specialist -------------------------//
-//            if (holder.tvSpecialist != null) {
-//                holder.tvSpecialist.setText("");
-//                int size = 0;
-//                for (ChooseModel chooseModel : doctor.getSpecialities()) {
-//                    if (TextUtils.isEmpty(holder.tvSpecialist.getText())) {
-//                        holder.tvSpecialist.append(chooseModel.getSpeciality_title());
-//                    } else {
-//                        holder.tvSpecialist.append(", " + chooseModel.getSpeciality_title());
-//                    }
-////                    // ellipsize text
-////                    ViewTreeObserver vto = holder.tvSpecialist.getViewTreeObserver();
-////                    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-////
-////                        @Override
-////                        public void onGlobalLayout() {
-////                            ViewTreeObserver obs = holder.tvSpecialist.getViewTreeObserver();
-////                            obs.removeGlobalOnLayoutListener(this);
-////                            if (holder.tvSpecialist.getLineCount() > 1) {
-////                                int lineEndIndex = holder.tvSpecialist.getLayout().getLineEnd(0);
-////                                String text = holder.tvSpecialist.getText().subSequence(0, lineEndIndex - 3 ) + "...";
-////                                holder.tvSpecialist.setText(text);
-////                            }
-////                        }
-////                    });
-//
-//                    size++;
-//
-//                    SquareImageView image = new SquareImageView(activity);
-////                image.setBackgroundResource(R.drawable.doctor_icon);
-////                        int width = holder.linearLayoutSpecialist.getHeight();
-////                        int height = holder.linearLayoutSpecialist.getHeight();
-//                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                    parms.setMargins(5, 0, 5, 0);
-//                    image.setLayoutParams(parms);
-//                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                    holder.linearLayoutSpecialist.addView(image);
-//                }
-//                holder.tvSpecialist.setLines(1);
-//                holder.tvSpecialist.setMaxLines(1);
-//                holder.tvSpecialist.setSingleLine(true);
-//                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
-//            }
+            if (holder.tvSpecialist != null) {
+                holder.tvSpecialist.setText("");
+                int size = 0;
+                for (Speciality speciality : doctor.getSpecialities()) {
+                    if (TextUtils.isEmpty(holder.tvSpecialist.getText())) {
+                        holder.tvSpecialist.append(speciality .getTitle());
+                    } else {
+                        holder.tvSpecialist.append(", " + speciality .getTitle());
+                    }
+
+
+                    size++;
+
+                    SquareImageView image = new SquareImageView(activity);
+//                image.setBackgroundResource(R.drawable.doctor_icon);
+//                        int width = holder.linearLayoutSpecialist.getHeight();
+//                        int height = holder.linearLayoutSpecialist.getHeight();
+                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality.getImage());
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    parms.setMargins(5, 0, 5, 0);
+                    image.setLayoutParams(parms);
+                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    holder.linearLayoutSpecialist.addView(image);
+                }
+                holder.tvSpecialist.setLines(1);
+                holder.tvSpecialist.setMaxLines(1);
+                holder.tvSpecialist.setSingleLine(true);
+                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
+            }
 
             //--------------------------------------------------------------------------------------------------//
 

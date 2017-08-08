@@ -135,8 +135,7 @@ public class DoctorListFragment extends Fragment {
         ProgressHelper.showProgressBar(getActivity());
                 setDoctorList();
                 setClinicList();
-                getChatData();
-
+                //getChatData();
     }
 
 

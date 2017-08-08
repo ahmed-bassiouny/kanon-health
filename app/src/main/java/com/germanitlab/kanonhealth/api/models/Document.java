@@ -1,11 +1,14 @@
 package com.germanitlab.kanonhealth.api.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by norhan on 8/1/17.
  */
 
+@DatabaseTable(tableName = "document")
 public class Document {
     public static final String KEY_DOCUMENT_ID ="document_id";
     public static final String KEY_TYPE="type";
@@ -16,21 +19,27 @@ public class Document {
 
 
     @SerializedName(KEY_DOCUMENT_ID)
+    @DatabaseField
     private Integer documentId;
 
     @SerializedName(KEY_TYPE)
+    @DatabaseField
     private String type;
 
     @SerializedName(KEY_DOCUMENT)
+    @DatabaseField
     private String document;
 
     @SerializedName(KEY_IMAGE)
+    @DatabaseField
     private String media;
 
     @SerializedName(KEY_PRIVACY)
+    @DatabaseField
     private Integer privacy;
     // date time of message (UTC)
     @SerializedName(KEY_CREATED_AT)
+    @DatabaseField
     private String dateTime;
 
     public Integer getDocumentId() {

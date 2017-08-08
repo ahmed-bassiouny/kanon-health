@@ -1,11 +1,12 @@
 package com.germanitlab.kanonhealth.api.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by bassiouny on 01/08/17.
  */
-
+@DatabaseTable(tableName = "message")
 public class Message extends ParentModel {
 
     //region key name
