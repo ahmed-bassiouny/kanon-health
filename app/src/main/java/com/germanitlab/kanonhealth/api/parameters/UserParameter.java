@@ -1,6 +1,11 @@
 package com.germanitlab.kanonhealth.api.parameters;
 
+import android.text.TextUtils;
+
+import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Date;
 
 /**
  * Created by bassiouny on 02/08/17.
@@ -67,11 +72,17 @@ public  abstract class UserParameter extends ParentParameters {
     }
 
     public String getBirthday() {
-        return birthday;
+        String displayString = "";
+        Date bd = new Date();
+        if (!TextUtils.isEmpty(birthday)) {
+            bd = DateHelper.FromServerDateStringToServer(birthday);
+        }
+        displayString = DateHelper.FromDisplayDateToBirthDateString(bd);
+        return displayString;
     }
 
     public void setBirthday(String birthday) {
-        this.birthday = birthday;
+        this.birthday = DateHelper.FromDisplayDateToServerString(DateHelper.FromBirthDateStringToDisplay(birthday));
     }
 
     public String getGender() {

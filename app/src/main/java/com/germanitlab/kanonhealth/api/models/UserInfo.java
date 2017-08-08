@@ -210,7 +210,7 @@ public class UserInfo extends ParentModel {
     }
 
     public void setBirthday(String birthday) {
-        this.birthday = birthday;
+        this.birthday = DateHelper.FromDisplayDateToServerString(DateHelper.FromBirthDateStringToDisplay(birthday));
     }
 
     public String getAvatar() {

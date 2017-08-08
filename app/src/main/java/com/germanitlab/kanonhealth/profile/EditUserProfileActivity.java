@@ -107,7 +107,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     PrefManager prefManager;
     Uri imageUri;
     PickerDialog pickerDialog;
-    private String birthdate;
     private static final int TAKE_PICTURE = 1;
     Util util;
     Helper helper;
@@ -179,9 +178,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         etLastName.setText(userInfo.getLastName());
         etTitle.setText(userInfo.getTitle());
         etCountryCode.setText(userInfo.getCountry_code());
-        birthdate = userInfo.getBirthday();
         etPhone.setText(userInfo.getPhone());
-        etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfo.getBirthday().toString())));
+        etBirthday.setText(userInfo.getBirthday().toString());
         etStreet.setText(userInfo.getStreetName());
         etHousePhone.setText(userInfo.getHouseNumber());
         etZip.setText(userInfo.getZipCode());
@@ -237,14 +235,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     }
 
-    private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            arg2 = arg2 + 1;
-            birthdate = arg1 + "-" + arg2 + "-" + arg3;
-            etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(birthdate)));
-        }
-    };
 
     @OnClick(R.id.et_edit_birthday)
     public void viewBirthdate(View v) {
@@ -321,7 +311,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         userInfo.setLastName(etLastName.getText().toString());
         userInfo.setTitle(etTitle.getText().toString());
         userInfo.setPhone(etPhone.getText().toString());
-        userInfo.setBirthday(birthdate);
+        userInfo.setBirthday(etBirthday.getText().toString());
         userInfo.setStreetName(etStreet.getText().toString());
         userInfo.setZipCode(etZip.getText().toString());
         userInfo.setHouseNumber(etHousePhone.getText().toString());
@@ -339,12 +329,17 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             public void run() {
                 boolean result =ApiHelper.editPatient(EditUserProfileActivity.this,userInfo,avatar);
                 if(result){
-                    Toast.makeText(EditUserProfileActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(EditUserProfileActivity.this, ProfileActivity.class);
-                    i.putExtra("userInfoResponse", userInfo);
-                    i.putExtra("from", false);
-                    startActivity(i);
-                    finish();
+                    EditUserProfileActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(EditUserProfileActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(EditUserProfileActivity.this, ProfileActivity.class);
+                            i.putExtra("userInfoResponse", userInfo);
+                            i.putExtra("from", false);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
                 }else{
                     Toast.makeText(EditUserProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
                 }
