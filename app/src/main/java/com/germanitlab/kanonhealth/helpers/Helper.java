@@ -256,12 +256,17 @@ public class Helper {
     }
 
 
-    public static void handleError(String tag, String errorMsg, Throwable e, int errorCode, Context context) {
+    public static void handleError(String tag, final String errorMsg, Throwable e, final int errorCode, final Context context) {
         Crashlytics.setInt("Error_Code", errorCode);
         Crashlytics.logException(e);
-        if ((!TextUtils.isEmpty(tag)) && (!TextUtils.isEmpty(errorMsg)) && context != null) {
+        if ((!TextUtils.isEmpty(tag)) && (!TextUtils.isEmpty(errorMsg)) && context != null && context instanceof AppCompatActivity) {
             Log.e(tag, errorMsg + " Error Code : " + errorCode, e);
-            Toast.makeText(context, errorMsg + " Error Code : " + errorCode, Toast.LENGTH_LONG).show();
+            ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, errorMsg + " Error Code : " + errorCode, Toast.LENGTH_LONG).show();
+                }
+            });
         } else {
             Log.e("handleError", " Error Code : " + errorCode, e);
         }

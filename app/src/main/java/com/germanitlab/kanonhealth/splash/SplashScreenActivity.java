@@ -23,7 +23,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
     private long timeOut = 1000;
-    private String storedDoctor;
     private boolean isLogin;
     private String storedUser;
     PrefManager prefManager;
@@ -95,45 +94,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void loadData() {
         try {
-//            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-//            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-//            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-//            if (!Helper.isNetworkAvailable(this)) {
-//                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-            /*new HttpCall(this, new ApiResponse() {
-                @Override
-                public void onSuccess(Object response) {
-                    if (response != null) {
-                        Gson gson = new Gson();
-                        new PrefManager(SplashScreenActivity.this).put(PrefManager.USER_KEY, gson.toJson(response));
-                        UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-                        new PrefManager(SplashScreenActivity.this).put(PrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
-                        Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                        intent.putExtra("checkPassword", true);
-                        intent.putExtra("finish", false);
-                        intent.putExtra("has_back", false);
-                        startActivity(intent);
-                        finish();
-
-                    } else {
-                        onFailed("response is null");
-
-                    }
-                }
-
-                @Override
-                public void onFailed(String error) {
-                    Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
-                    intent.putExtra("checkPassword", true);
-                    intent.putExtra("finish", false);
-                    intent.putExtra("has_back", false);
-                    startActivity(intent);
-                    Log.e("Splash", error);
-                    finish();
-                }
-            }).getProfile(userRegisterResponse);*/
             new Thread(new Runnable() {
                 @Override
                 public void run() {

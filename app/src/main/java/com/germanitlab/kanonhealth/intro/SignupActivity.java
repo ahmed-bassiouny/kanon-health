@@ -1,17 +1,14 @@
 package com.germanitlab.kanonhealth.intro;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -29,9 +26,7 @@ import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.mukesh.countrypicker.Country;
-import org.json.JSONObject;
 import java.util.regex.Pattern;
 
 
@@ -59,8 +54,6 @@ public class SignupActivity extends AppCompatActivity {
         util.setupUI(findViewById(R.id.signup_layout), this);
         signupActivity = this;
         try {
-            Intent intent = getIntent();
-            Gson gson = new Gson();
             constants = new Constants();
             prefManager = new PrefManager(this);
             found = true;
@@ -115,16 +108,20 @@ public class SignupActivity extends AppCompatActivity {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         if (telephonyManager != null) {
             countryAndCode = telephonyManager.getSimCountryIso();
-            if (!TextUtils.isEmpty(countryAndCode))
+            if (!TextUtils.isEmpty(countryAndCode)) {
                 setCountryAndCode(countryAndCode);
-            else
+            } else {
                 getCountryFromNetwork();
-        } else
-            getCountryFromLocal();
+            }
+
+        }else
+        {
+            getCountryFromNetwork();
+        }
     }
 
     private void getCountryFromNetwork() {
-     //   util.showProgressDialog();
+        ProgressHelper.showProgressBar(getApplicationContext());
 
         new Thread(new Runnable() {
             @Override
@@ -138,32 +135,11 @@ public class SignupActivity extends AppCompatActivity {
             }else {
                     setCountryAndCode(result);
                 }
+                ProgressHelper.hideProgressBar();
             }
 
         }).start();
             }
-
-//        new HttpCall(this, new ApiResponse() {
-//            @Override
-//            public void onSuccess(Object response) {
-//                try {
-//                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1, ((JsonObject) response).get("countryCode").toString().length() - 1);
-//
-//                    util.dismissProgressDialog();
-//                } catch (Exception e) {
-//
-//                    util.dismissProgressDialog();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailed(String error) {
-//                getCountryFromLocal();
-//                util.dismissProgressDialog();
-//            }
-//        }).getLocation();
-
 
 
     private void getCountryFromLocal() {
@@ -185,13 +161,19 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void setCountryAndCode(String countryAndCode) {
-        Country countryObject = Country.getCountryByISO(countryAndCode);
+        final Country countryObject = Country.getCountryByISO(countryAndCode);
         if (countryObject != null) {
-            etPostelCode.setText(countryObject.getDialCode());
-            select_country.setText(countryObject.getName());
-            country = countryObject.getName();
-            code = countryObject.getDialCode();
-            found = true;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    etPostelCode.setText(countryObject.getDialCode());
+                    select_country.setText(countryObject.getName());
+                    country = countryObject.getName();
+                    code = countryObject.getDialCode();
+                    found = true;
+                }
+            });
+
         } else
             setDefaultCountry();
     }
@@ -266,24 +248,6 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    private void registerUser(String phone, String countryCode) {
-      //  util.showProgressDialog();
-        //new HttpCall(SignupActivity.this, this).registerUser(phone, countryCode);
-        /*Register register= ApiHelper.postRegister(countryCode,phone,this);
-        if(register!=null){
-            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
-            Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
-            intent.putExtra("number", etMobileNumber.getText().toString());
-            intent.putExtra("codeNumber", code.toString());
-            intent.putExtra(Constants.REGISER_RESPONSE, register);
-            intent.putExtra("oldUser", register.getExists());
-            startActivity(intent);
-        }
-        util.dismissProgressDialog();*/
-
-    }
-
 
 //    @Override
 //    public void onSuccess(Object response) {
@@ -337,12 +301,6 @@ public class SignupActivity extends AppCompatActivity {
             select_country.setText(data.getStringExtra("country"));
         }
     }
-
-//    @Override
-//    public void onFailed(String error) {
-//        util.dismissProgressDialog();
-//        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-//    }
 
     @Override
     protected void onDestroy() {
