@@ -89,7 +89,7 @@ public class Clinic extends ParentModel{
     private String fax;
 
     @SerializedName(KEY_SUPPORTED_LANG)
-    private ArrayList<SupportedLang> supportedLangs;
+    private ArrayList<Language> supportedLangs;
 
     @SerializedName(KEY_MEMBER_AT)
     private ArrayList<UserInfo> doctors;
@@ -252,7 +252,7 @@ public class Clinic extends ParentModel{
         this.fax = fax;
     }
 
-    public ArrayList<SupportedLang> getSupportedLangs() {
+    public ArrayList<Language> getSupportedLangs() {
         if(supportedLangs==null)
         {
             supportedLangs= new ArrayList<>();
@@ -260,7 +260,7 @@ public class Clinic extends ParentModel{
         return supportedLangs;
     }
 
-    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
+    public void setSupportedLangs(ArrayList<Language> supportedLangs) {
         this.supportedLangs = supportedLangs;
     }
 
