@@ -827,8 +827,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
 
     public void setImagePrivacy(int privacy, ImageView image, TextView txtPrivacy) {
         if (privacy == 0) {
-//            image.setBackgroundResource(R.drawable.red);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.red, activity.getTheme()));
             } else {
@@ -836,7 +834,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
             }
             txtPrivacy.setText(R.string.privacy_private);
         } else if (privacy == 1) {
-//            image.setBackgroundResource(R.drawable.blue);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.blue, activity.getTheme()));
             } else {
@@ -844,7 +841,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
             }
             txtPrivacy.setText(R.string.doctor);
         } else if (privacy == 2) {
-//            image.setBackgroundResource(R.drawable.green);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 image.setImageDrawable(activity.getResources().getDrawable(R.drawable.green, activity.getTheme()));
             } else {
@@ -920,8 +916,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
         changePrivacy(imagePrivacy, position, txtPrivacy, progressBar);
         imagePrivacy.setVisibility(View.VISIBLE);
         txtPrivacy.setVisibility(View.VISIBLE);
-        imagePrivacy.setVisibility(View.GONE);
-        txtPrivacy.setVisibility(View.GONE);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);

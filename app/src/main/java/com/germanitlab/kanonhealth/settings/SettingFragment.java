@@ -400,24 +400,6 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    private void getSetting() {
-
-//        new HttpCall(getActivity(), new ApiResponse() {
-//            @Override
-//            public void onSuccess(Object response) {
-//                settingResponse = (SettingResponse) response;
-//            }
-//
-//            @Override
-//            public void onFailed(String error) {
-//                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-//
-//                Log.e("Error", error + "++");
-//
-//            }
-//        }).getSetting();
-
-    }
 
     private void checkStatus(Integer userStatus) {
         // call rest to get data
