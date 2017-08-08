@@ -179,11 +179,16 @@ public class SettingFragment extends Fragment {
                 {
                    user=temp;
                 }
-                ProgressHelper.hideProgressBar();
-                initView();
-                handelEvent();
-                setHasOptionsMenu(true);
-                setAdapter();
+                SettingFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProgressHelper.hideProgressBar();
+                        initView();
+                        handelEvent();
+                        setHasOptionsMenu(true);
+                        setAdapter();
+                    }
+                });
             }
         }).start();
 

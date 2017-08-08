@@ -263,7 +263,7 @@ public class UserInfo extends ParentModel {
     }
 
     public ArrayList<Clinic> getClinics() {
-        if(Clinics==null) {
+        if(clinics==null) {
             clinics = new ArrayList<>();
         }
         return clinics;

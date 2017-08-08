@@ -68,6 +68,8 @@ public class Document {
 
 
     public Integer getPrivacy() {
+        if(privacy==null)
+            privacy=0;
         return privacy;
     }
 

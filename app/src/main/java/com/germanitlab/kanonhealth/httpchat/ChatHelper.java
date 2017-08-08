@@ -42,12 +42,11 @@ public class ChatHelper {
     int userID;
     int doctorID;
     ChatAdapter chatAdapter;
-    DocumentChatAdapter documentChatAdapter;
     HttpMessageRepositry messageRepositry;
     HttpDocumentRepositry documentRepositry;
 
     public ChatHelper(Fragment fragment, FragmentActivity fragmentActivity, ArrayList<Message> messages, ArrayList<Document> documents,
-                      RecyclerView recyclerView,int userID,int doctorID,ChatAdapter chatAdapter,DocumentChatAdapter documentChatAdapter,
+                      RecyclerView recyclerView,int userID,int doctorID,ChatAdapter chatAdapter,
                       HttpMessageRepositry messageRepositry,HttpDocumentRepositry documentRepositry) {
         this.fragment = fragment;
         this.fragmentActivity = fragmentActivity;
@@ -57,9 +56,8 @@ public class ChatHelper {
         this.userID=userID;
         this.doctorID=doctorID;
         this.chatAdapter=chatAdapter;
-        this.documentChatAdapter=documentChatAdapter;
+        this.documentRepositry=documentRepositry;
         this.messageRepositry=messageRepositry;
-        this.documentChatAdapter=documentChatAdapter;
     }
 
     protected void takeAndSelectImage(int type, ParentFragment parentFragment) {
@@ -86,7 +84,7 @@ public class ChatHelper {
         recyclerView.scrollToPosition(index);
         return index;
     }
-    protected int creatDummyDocument() {
+    protected int creatDummyDocument(DocumentChatAdapter documentChatAdapter) {
         Document document=new Document();
         document.setDateTime(getDateTimeNow());
         document.setType(Message.MESSAGE_TYPE_UNDEFINED);
@@ -131,9 +129,9 @@ public class ChatHelper {
     }
 
     // send Location Document
-    protected void sendLocationDocument(double longitude, double latitude) {
+    protected void sendLocationDocument(double longitude, double latitude, final DocumentChatAdapter documentChatAdapter) {
         //create dummy message
-        final int index = creatDummyDocument();
+        final int index = creatDummyDocument(documentChatAdapter);
         final Document document = new Document();
         document.setDateTime(getDateTimeNow());
         document.setMedia("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
@@ -145,10 +143,10 @@ public class ChatHelper {
                 Document result = ApiHelper.postAddDocument(userID, document, null, fragmentActivity);
                 if (result != null) {
                     // success
-                    creatRealDocument(result, index);
+                    creatRealDocument(result, index,documentChatAdapter);
                 } else {
                     // failed
-                    removeDummyDocument(index);
+                    removeDummyDocument(index,documentChatAdapter);
                 }
             }
         }).start();
@@ -159,7 +157,7 @@ public class ChatHelper {
         chatAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(messages.size() - 1);
     }
-    private void removeDummyDocument(int index) {
+    private void removeDummyDocument(int index,DocumentChatAdapter documentChatAdapter) {
         documents.remove(index);
         documentChatAdapter.setList(documents);
         documentChatAdapter.notifyDataSetChanged();
@@ -179,7 +177,7 @@ public class ChatHelper {
             e.printStackTrace();
         }
     }
-    private void creatRealDocument(Document document, int index) {
+    private void creatRealDocument(Document document, int index,DocumentChatAdapter documentChatAdapter) {
         try {
             if (index >= 0)
                 documents.remove(index);
@@ -225,10 +223,11 @@ public class ChatHelper {
             }
         }).start();
     }
-    protected void sendTextDocument(String textMsg){
+    protected void sendTextDocument(String textMsg,DocumentChatAdapter documentChatAdapter){
         final Document document = new Document();
         document.setDocument(textMsg);
         document.setType(Message.MESSAGE_TYPE_TEXT);
+        document.setPrivacy(0);
         document.setDateTime(getDateTimeNow());
         documents.add(document);
         documentChatAdapter.setList(documents);
@@ -272,8 +271,8 @@ public class ChatHelper {
             }
         }).start();
     }
-    protected void sendMediaDocument(final File file, String type, String textMsg){
-        final int index = creatDummyDocument();
+    protected void sendMediaDocument(final File file, String type, String textMsg, final DocumentChatAdapter documentChatAdapter){
+        final int index = creatDummyDocument(documentChatAdapter);
         final Document document=new Document();
         document.setDocument(textMsg);
         document.setType(type);
@@ -281,7 +280,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 Document result=ApiHelper.postAddDocument(userID,document,file,fragmentActivity);
-                removeDummyDocument(index);
+                removeDummyDocument(index,documentChatAdapter);
                 if(result !=null){
                     //success
                     documents.add(result);
