@@ -54,8 +54,6 @@ public class SignupActivity extends AppCompatActivity {
         util.setupUI(findViewById(R.id.signup_layout), this);
         signupActivity = this;
         try {
-            Intent intent = getIntent();
-            Gson gson = new Gson();
             constants = new Constants();
             prefManager = new PrefManager(this);
             found = true;
@@ -123,7 +121,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void getCountryFromNetwork() {
-     //   util.showProgressDialog();
+        ProgressHelper.showProgressBar(getApplicationContext());
 
         new Thread(new Runnable() {
             @Override
@@ -137,32 +135,11 @@ public class SignupActivity extends AppCompatActivity {
             }else {
                     setCountryAndCode(result);
                 }
+                ProgressHelper.hideProgressBar();
             }
 
         }).start();
             }
-
-//        new HttpCall(this, new ApiResponse() {
-//            @Override
-//            public void onSuccess(Object response) {
-//                try {
-//                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1, ((JsonObject) response).get("countryCode").toString().length() - 1);
-//
-//                    util.dismissProgressDialog();
-//                } catch (Exception e) {
-//
-//                    util.dismissProgressDialog();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailed(String error) {
-//                getCountryFromLocal();
-//                util.dismissProgressDialog();
-//            }
-//        }).getLocation();
-
 
 
     private void getCountryFromLocal() {
@@ -271,24 +248,6 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    private void registerUser(String phone, String countryCode) {
-      //  util.showProgressDialog();
-        //new HttpCall(SignupActivity.this, this).registerUser(phone, countryCode);
-        /*Register register= ApiHelper.postRegister(countryCode,phone,this);
-        if(register!=null){
-            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
-            Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
-            intent.putExtra("number", etMobileNumber.getText().toString());
-            intent.putExtra("codeNumber", code.toString());
-            intent.putExtra(Constants.REGISER_RESPONSE, register);
-            intent.putExtra("oldUser", register.getExists());
-            startActivity(intent);
-        }
-        util.dismissProgressDialog();*/
-
-    }
-
 
 //    @Override
 //    public void onSuccess(Object response) {
@@ -342,12 +301,6 @@ public class SignupActivity extends AppCompatActivity {
             select_country.setText(data.getStringExtra("country"));
         }
     }
-
-//    @Override
-//    public void onFailed(String error) {
-//        util.dismissProgressDialog();
-//        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-//    }
 
     @Override
     protected void onDestroy() {
