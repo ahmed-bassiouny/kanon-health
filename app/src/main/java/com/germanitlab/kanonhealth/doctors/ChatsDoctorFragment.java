@@ -92,7 +92,7 @@ public class ChatsDoctorFragment extends Fragment {
             initView();
             gson = new Gson();
             chatModel= new ArrayList<>();
-            mDoctorRepository = new UserRepository(getContext());
+            //mDoctorRepository = new UserRepository(getContext());
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -167,7 +167,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -176,7 +176,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatUser(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatUser(getContext(), prefManager.getData(PrefManager.USER_ID));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -187,7 +187,7 @@ public class ChatsDoctorFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            chatModel = ApiHelper.getChatClinic(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                            chatModel = ApiHelper.getChatClinic(getContext(), prefManager.getData(PrefManager.USER_ID));
                            setChatListAdapter(chatModel);
                         }
                     }).start();
@@ -197,7 +197,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
                     setChatListAdapter(chatModel);
                 }
             }).start();

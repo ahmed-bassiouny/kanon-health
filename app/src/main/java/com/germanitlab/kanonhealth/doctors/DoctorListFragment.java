@@ -121,7 +121,7 @@ public class DoctorListFragment extends Fragment {
             clinics= new ArrayList<>();
             chatModel= new ArrayList<>();
 
-            mDoctorRepository = new UserRepository(getContext());
+            //mDoctorRepository = new UserRepository(getActivity());
 
 
         } catch (Exception e) {
@@ -211,7 +211,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatDoctor(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatDoctor(getContext(), prefManager.getData(PrefManager.USER_ID));
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -221,7 +221,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatClinic(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatClinic(getContext(),prefManager.getData(PrefManager.USER_ID));
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
@@ -232,7 +232,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -242,7 +242,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatClinic(getContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                    chatModel = ApiHelper.getChatClinic(getContext(), prefManager.getData(PrefManager.USER_ID));
                     is_chat_data_right = true;
                     isAllDataLoaded();
 

@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
     @Override
     public void OnImgDoctorListMapClick() {
 
-        new Helper(MainActivity.this).replaceFragments(new DoctorListMapFragment(MainActivity.this),
+        new Helper(MainActivity.this).replaceFragments(new DoctorListMapFragment(),
                 R.id.doctor_list_continer, "DoctorListMapFragment");
     }
 

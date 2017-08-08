@@ -18,9 +18,9 @@ import java.util.List;
  */
 
 public class MessageRepositry {
-
+/*
     private DatabaseHelper db;
-    Dao<Message, Integer> messagesDao;
+    Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDao;
     private Context context;
 
     public MessageRepositry(Context context) {
@@ -34,9 +34,9 @@ public class MessageRepositry {
         }
     }
 
-    public  void create(Message message) {
+    public  void create(com.germanitlab.kanonhealth.api.models.Message message) {
         try {
-            if (!messagesDao.idExists(message.get_Id()))
+            if (!messagesDao.idExists(message.getMessageID()))
                  messagesDao.create(message);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -44,7 +44,7 @@ public class MessageRepositry {
         }
     }
 
-    public void createOrUpate(Message message){
+    public void createOrUpate(com.germanitlab.kanonhealth.api.models.Message message){
         try {
             messagesDao.createOrUpdate(message);
         } catch (SQLException e) {
@@ -82,7 +82,7 @@ public class MessageRepositry {
         }
         return null;
     }*/
-
+/*
     public List<Message> getAll(int userID,int doctorID) {
         try {
 
@@ -102,5 +102,5 @@ public class MessageRepositry {
             Toast.makeText(context, context.getResources().getText(R.string.error_getting_database), Toast.LENGTH_SHORT).show();
         }
         return null;
-    }
+    }*/
 }

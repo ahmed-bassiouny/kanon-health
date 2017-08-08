@@ -37,7 +37,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
             this.clinicContactList = clinicContactList;
             this.activity = activity;
             prefManager = new PrefManager(activity);
-            mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
+            //mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
             userID = prefManager.getInt(PrefManager.USER_ID);
 
         } catch (Exception e) {

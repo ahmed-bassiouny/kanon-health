@@ -40,7 +40,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
             prefManager = new PrefManager(activity);
-            mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
+            //mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
             userID = prefManager.getInt(PrefManager.USER_ID);
 
         } catch (Exception e) {

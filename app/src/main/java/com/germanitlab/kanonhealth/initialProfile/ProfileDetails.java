@@ -267,7 +267,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
                 public void run() {
                     boolean result = ApiHelper.addUser(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), title, firstName, lastName, birthDate, String.valueOf(gender), file);
                     if (result) {
-                                UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
+                                UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), prefManager.getData(PrefManager.USER_ID));
                                 if (user != null) {
                                     Gson gson = new Gson();
                                     mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));

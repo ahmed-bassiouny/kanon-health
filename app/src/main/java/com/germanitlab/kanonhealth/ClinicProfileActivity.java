@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.db.PrefManager;
@@ -243,8 +244,8 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
 
         if (clinic.getSupportedLangs() != null) {
-            for (SupportedLang supportedLang : clinic.getSupportedLangs()) {
-                String country_code = supportedLang.getCountryCode();
+            for (Language supportedLang : clinic.getSupportedLangs()) {
+                String country_code = supportedLang.getLanguageCountryCode();
                 Country country = Country.getCountryByISO(country_code);
                 if (country != null) {
                     flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
@@ -283,9 +284,9 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
-        if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
+        /*if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
             if (user.getIs_my_doctor().equals("0")) {
-                new HttpCall(this, new ApiResponse() {
+                new HttpCall(this, new #ApiResponse() {
                     @Override
                     public void onSuccess(Object response) {
                         if (response != null && user != null) {
@@ -317,7 +318,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
                     }
                 }).removeFromMyDoctor(user.get_Id() + "");
             }
-
+*/
     }
 
     private void checkDoctor() {
