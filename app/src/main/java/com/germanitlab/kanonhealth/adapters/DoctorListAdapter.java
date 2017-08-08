@@ -32,8 +32,6 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.messages.Message;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.github.siyamed.shapeimageview.CircularImageView;

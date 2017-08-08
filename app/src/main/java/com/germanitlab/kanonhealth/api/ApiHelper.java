@@ -10,6 +10,7 @@ import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
+import com.germanitlab.kanonhealth.api.models.Review;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.api.parameters.AddClinicParameters;
@@ -51,6 +52,7 @@ import com.germanitlab.kanonhealth.api.responses.OpenSessionResponse;
 import com.germanitlab.kanonhealth.api.responses.ParentResponse;
 import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
 import com.germanitlab.kanonhealth.api.responses.RegisterResponse;
+import com.germanitlab.kanonhealth.api.responses.ReviewResponse;
 import com.germanitlab.kanonhealth.api.responses.SpecialityResponse;
 import com.germanitlab.kanonhealth.api.responses.UserInfoResponse;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -116,6 +118,8 @@ public class ApiHelper {
     private static final String API_USERS_EDIT = "users/edit";
     private static final String API_USERS_REGISTER = "users/register";
 
+
+    private static final String API_RATE_REVIEW="users/rate_reviews";
 
     private static final String API_TOKEN_REGISTER = "token/add";
 
@@ -589,7 +593,7 @@ public class ApiHelper {
         }
     }
 
-    public static UserInfo getUserInfo(Context context, int userID) {
+    public static UserInfo getUserInfo(Context context, String  userID) {
         UserInfo userInfo = null;
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
@@ -709,7 +713,7 @@ public class ApiHelper {
         return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELIVER);
     }
 
-    private static ArrayList<ChatModel> getChatMessages(Context context, int userID, int chatType) {
+    private static ArrayList<ChatModel> getChatMessages(Context context, String  userID, int chatType) {
         ArrayList<ChatModel> messageArrayList = new ArrayList<>();
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
@@ -739,19 +743,19 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<ChatModel> getChatDoctor(Context context, int userID) {
+    public static ArrayList<ChatModel> getChatDoctor(Context context, String  userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATDOCTOR);
     }
 
-    public static ArrayList<ChatModel> getChatClinic(Context context, int userID) {
+    public static ArrayList<ChatModel> getChatClinic(Context context, String  userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATCLINIC);
     }
 
-    public static ArrayList<ChatModel> getChatUser(Context context, int userID) {
+    public static ArrayList<ChatModel> getChatUser(Context context, String  userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATUSER);
     }
 
-    public static ArrayList<ChatModel> getChatAnother(Context context, int userID) {
+    public static ArrayList<ChatModel> getChatAnother(Context context, String  userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
     }
 
@@ -789,6 +793,25 @@ public class ApiHelper {
             Helper.handleError(TAG, "rateDoctor", e, -1, context);
         } finally {
             return result;
+        }
+    }
+
+    public static Review getReview(String userId,Context context){
+        Review review=null;
+        try{
+            UserInfoParameter userInfoParameter = new UserInfoParameter();
+            userInfoParameter.setUserID(userId);
+            String jsonString = post(API_RATE_REVIEW, userInfoParameter.toJson());
+            Gson gson = new Gson();
+            ReviewResponse reviewResponse=gson.fromJson(jsonString,ReviewResponse.class);
+            if(reviewResponse.getStatus()){
+                review=reviewResponse.getData();
+            }
+        }catch (Exception e){
+            Helper.handleError(TAG, "getReview", e, -1, context);
+
+        }finally {
+            return review;
         }
     }
 

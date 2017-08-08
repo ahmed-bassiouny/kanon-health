@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.models;
 
-import com.germanitlab.kanonhealth.models.user.User;
+
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class Table implements Serializable {
     private List<Times> fri;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true ,columnName = "id")
-    private User uid ;
+    private UserInfo uid ;
 
     public List<Times> getSat() {
         return sat;

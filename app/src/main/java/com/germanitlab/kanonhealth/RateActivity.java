@@ -15,10 +15,12 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Review;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.responses.UserInfoResponse;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.doctors.Comment;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 
 import java.util.HashMap;
@@ -84,16 +86,14 @@ public class RateActivity extends AppCompatActivity {
     int height, width, sum_rate_number;
     float sum_rate_result, rate_result;
 
-    UserRepository userRepository;
-    User doctor;
+    UserInfo doctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
-        userRepository=new UserRepository(getApplicationContext());
-         doctor = new User();
+         doctor = new UserInfo();
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +118,8 @@ public class RateActivity extends AppCompatActivity {
             }
             loadData();
 
-            doctor.setId(Integer.valueOf(doc_id));
-            doctor = userRepository.getDoctor(doctor);
+            doctor.setUserID(Integer.valueOf(doc_id));
+            //doctor = userRepository.(doctor);
             txt_doctor_name.setText(doctor.getFullName());
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
@@ -151,27 +151,15 @@ public class RateActivity extends AppCompatActivity {
 
     private void loadData() {
 
-//        (new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                ApiHelper.
-//            }
-//        })).run();
-
-        new HttpCall(this, new ApiResponse() {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(Object response) {
-                List<Comment> comments = (List<Comment>) response;
-                rateAdapter = new RateAdapter(comments, RateActivity.this);
-                recycler_view.setAdapter(rateAdapter);
-            }
+            public void run() {
+                Review review= ApiHelper.getReview(doc_id,RateActivity.this);
+                if(review!=null){
 
-            @Override
-            public void onFailed(String error) {
-                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                Log.e("Rate Activity", error);
+                }
             }
-        }).getrating(doc_id);
+        }).start();
     }
 
     private void setRate(String position, int rate) {

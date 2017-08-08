@@ -20,12 +20,13 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -35,10 +36,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class QrActivity extends AppCompatActivity {
-    PrefManager prefManager;
+    /*PrefManager prefManager;
     @BindView(R.id.button_qr_scanning)
     ImageButton buttonQrScanning;
-    User doctor;
+    UserInfo doctor;
     @BindView(R.id.layout)
     LinearLayout linearLayout;
     @BindView(R.id.error)
@@ -82,7 +83,7 @@ public class QrActivity extends AppCompatActivity {
     }
 
     public void sendRequest(String key ) {
-        util.showProgressDialog();
+        ProgressHelper.showProgressBar(QrActivity.this);
         new HttpCall(this, new ApiResponse() {
             @Override
             public void onSuccess(Object response) {
@@ -94,8 +95,8 @@ public class QrActivity extends AppCompatActivity {
                     Intent i = new Intent(getApplicationContext(), InquiryActivity.class);
                     i.putExtra("doctor_data", json);
                     startActivity(i);
+                    ProgressHelper.hideProgressBar();
                     finish();
-                    util.dismissProgressDialog();
 
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -113,6 +114,7 @@ public class QrActivity extends AppCompatActivity {
                 errortxt.setVisibility(View.VISIBLE);
             }
         }).getDoctor(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), key);
+
     }
 
     @Override
@@ -191,5 +193,5 @@ public class QrActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-    }
+    }*/
 }

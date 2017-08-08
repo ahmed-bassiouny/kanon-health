@@ -70,8 +70,6 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.ormLite.ChatModelRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;

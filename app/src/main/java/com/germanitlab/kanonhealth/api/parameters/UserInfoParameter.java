@@ -16,13 +16,13 @@ public class UserInfoParameter extends ParentParameters {
 
 
     @SerializedName(PARAMETER_USERID)
-    private Integer userID;
+    private String  userID;
 
-    public Integer getUserID() {
+    public String  getUserID() {
         return userID;
     }
 
-    public void setUserID(Integer userID) {
+    public void setUserID(String  userID) {
         this.userID = userID;
     }
 
