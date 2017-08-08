@@ -169,7 +169,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void run() {
                 UserInfo temp = user;
-                user=ApiHelper.getUserInfo(getContext(),user.getUserID());
+                user=ApiHelper.getUserInfo(getContext(),String.valueOf(user.getUserID()));
                 if(user!=null)
                 {
                     Gson gson = new Gson();

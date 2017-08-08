@@ -120,7 +120,7 @@ public class VerificationActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        UserInfo userInfo= ApiHelper.getUserInfo(VerificationActivity.this,register.getId());
+                        UserInfo userInfo= ApiHelper.getUserInfo(VerificationActivity.this,String.valueOf(register.getId()));
                         if(userInfo==null || !userInfo.getUserID().equals(register.getId())){
                             finish();
                         }else{

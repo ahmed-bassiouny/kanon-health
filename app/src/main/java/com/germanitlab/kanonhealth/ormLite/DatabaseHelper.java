@@ -34,7 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<UserInfo, Integer> doctorsDao = null;
     private Dao<ChatModel, Integer> chatModel = null;
     private Dao<Table, Integer> tablesDao = null;
-    private Dao<Message, Integer> messagesDao = null;
+    private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDao = null;
     private Dao<Document, Integer> documentsDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> httpMessagesDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> httpdocumentsDao = null;
@@ -106,9 +106,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return tablesDao;
     }
 
-    public Dao<Message, Integer> getMessagesDao() throws SQLException {
+    public Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> getMessagesDao() throws SQLException {
         if (messagesDao == null) {
-            messagesDao = getDao(Message.class);
+            messagesDao = getDao(com.germanitlab.kanonhealth.api.models.Message.class);
         }
         return messagesDao;
     }
@@ -119,8 +119,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return httpMessagesDao;
     }
     public Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> getHttpDocumentDao() throws SQLException {
-        if (doctorsDao == null) {
-            doctorsDao = getDao(com.germanitlab.kanonhealth.api.models.Document.class);
+        if (httpdocumentsDao == null) {
+            httpdocumentsDao = getDao(com.germanitlab.kanonhealth.api.models.Document.class);
         }
         return httpdocumentsDao;
     }
