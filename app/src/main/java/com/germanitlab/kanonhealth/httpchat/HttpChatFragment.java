@@ -358,7 +358,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     }
 
     private void loadDocumentOnline() {
-        getActivity().runOnUiThread(new Runnable() {
+        /*getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 documents = ApiHelper.postGetDocumentList(userID, getContext());
@@ -366,7 +366,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     // if arraylist have message set data in adapter and save in database and request message seen
                     isStoragePermissionGranted();
                     if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
-                        getActivity().runOnUiThread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 for (Document document : documents) {
@@ -374,11 +374,11 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                     documentRepositry.createOrUpate(document);
                                 }
                             }
-                        });
+                        }).start();
                 }
                 pbar_loading.setVisibility(View.GONE);
             }
-        });
+        });*/
     }
 
     private void loadChatOffline() {
