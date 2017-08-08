@@ -114,13 +114,13 @@ public class SignupActivity extends AppCompatActivity {
                 getCountryFromNetwork();
             }
 
-        }else
-        {
+        } else {
             getCountryFromNetwork();
         }
     }
 
     private void getCountryFromNetwork() {
+        //   util.showProgressDialog();
         ProgressHelper.showProgressBar(getApplicationContext());
 
         new Thread(new Runnable() {
@@ -129,10 +129,9 @@ public class SignupActivity extends AppCompatActivity {
 
                 String result = ApiHelper.getNetworkCountryCode();
 
-                if (result.equals(""))
-                {
+                if (result.equals("")) {
                     getCountryFromLocal();
-            }else {
+                } else {
                     setCountryAndCode(result);
                 }
                 ProgressHelper.hideProgressBar();
@@ -140,6 +139,28 @@ public class SignupActivity extends AppCompatActivity {
 
         }).start();
             }
+
+//        new HttpCall(this, new ApiResponse() {
+//            @Override
+//            public void onSuccess(Object response) {
+//                try {
+//                    String countryAndCode = ((JsonObject) response).get("countryCode").toString().substring(1, ((JsonObject) response).get("countryCode").toString().length() - 1);
+//
+//                    util.dismissProgressDialog();
+//                } catch (Exception e) {
+//
+//                    util.dismissProgressDialog();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailed(String error) {
+//                getCountryFromLocal();
+//                util.dismissProgressDialog();
+//            }
+//        }).getLocation();
+
 
 
     private void getCountryFromLocal() {
@@ -219,22 +240,22 @@ public class SignupActivity extends AppCompatActivity {
         if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
             ProgressHelper.showProgressBar(this);
             new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   Register register= ApiHelper.postRegister(code.toString(),etMobileNumber.getText().toString(),SignupActivity.this);
-                   if(register!=null){
-                       prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-                       prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
-                       Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
-                       intent.putExtra("number", etMobileNumber.getText().toString());
-                       intent.putExtra("codeNumber", code.toString());
-                       intent.putExtra(Constants.REGISER_RESPONSE, register);
-                       intent.putExtra("oldUser", register.getExists());
-                       startActivity(intent);
-                   }
-                  ProgressHelper.hideProgressBar();
-               }
-           }).start();
+                @Override
+                public void run() {
+                    Register register = ApiHelper.postRegister(code.toString(), etMobileNumber.getText().toString(), SignupActivity.this);
+                    if (register != null) {
+                        prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
+                        prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
+                        Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
+                        intent.putExtra("number", etMobileNumber.getText().toString());
+                        intent.putExtra("codeNumber", code.toString());
+                        intent.putExtra(Constants.REGISER_RESPONSE, register);
+                        intent.putExtra("oldUser", register.getExists());
+                        startActivity(intent);
+                    }
+                    ProgressHelper.hideProgressBar();
+                }
+            }).start();
             /*AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {

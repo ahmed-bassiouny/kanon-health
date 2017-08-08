@@ -358,7 +358,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     }
 
     private void loadDocumentOnline() {
-        new Thread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 documents = ApiHelper.postGetDocumentList(userID, getContext());
@@ -378,7 +378,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 }
                 pbar_loading.setVisibility(View.GONE);
             }
-        }).start();
+        });
     }
 
     private void loadChatOffline() {
