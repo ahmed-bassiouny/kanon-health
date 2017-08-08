@@ -3,24 +3,16 @@ package com.germanitlab.kanonhealth.initialProfile;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,35 +22,24 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
+import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
-
 import java.io.File;
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -87,8 +68,6 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     PrefManager mPrefManager;
     @BindView(R.id.et_title)
     EditText et_title;
-    UploadImageResponse uploadImageResponse;
-    ProgressDialog progressDialog;
     PickerDialog pickerDialog;
     String birthdate = "";
     String gender_other = "Male";
@@ -282,16 +261,12 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             return;
         }
         if (!firstName.trim().equals("") && !lastName.trim().equals("") && !birthDate.trim().equals("")) {
-            util.showProgressDialog();
+            ProgressHelper.showProgressBar(this);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     boolean result = ApiHelper.addUser(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), title, firstName, lastName, birthDate, String.valueOf(gender), file);
                     if (result) {
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
                                 UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)));
                                 if (user != null) {
                                     Gson gson = new Gson();
@@ -302,10 +277,8 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
                                     intent.putExtra("has_back", true);
                                     startActivity(intent);
                                 }
-                                util.dismissProgressDialog();
+                                ProgressHelper.hideProgressBar();
                                 finish();
-                            }
-                        }).start();
                     }
 
                 }

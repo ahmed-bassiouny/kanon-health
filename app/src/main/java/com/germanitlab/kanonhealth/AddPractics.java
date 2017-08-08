@@ -131,8 +131,9 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     int PLACE_PICKER_REQUEST = 22;
     String practics_id = "";
     Clinic clinic;
-    String specialityIds;
-    String langIds;
+    String specialityIds="";
+    String langIds="";
+    String doctorIds="";
     File file;
 
     @Override
@@ -186,6 +187,9 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                     etProvince.setText(clinic.getProvince());
                     etCountry.setText(clinic.getCountry());
                     etTelephone.setText(clinic.getPhone());
+                    setSpecialities();
+                    setLanguages();
+                    setMemberDoctors();
                     //--------------------------------------------------------------------------location------------------------------------------------------//
 //                    if (clinic.get != null && !user.getLocation_img().isEmpty()) {
 //                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
@@ -489,19 +493,20 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     }
     ////----------------------------------------------------------------------------working hours----------------------------------------------///
 
-    @OnClick(R.id.edit_time_table)
-    public void editTimeTable(View view) {
-        try {
-            Intent intent = new Intent(this, TimeTable.class);
-            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
-            startActivityForResult(intent, Constants.HOURS_CODE);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-    }
+ //======================================================================>//
+//   @OnClick(R.id.edit_time_table)
+//    public void editTimeTable(View view) {
+//        try {
+//            Intent intent = new Intent(this, TimeTable.class);
+//            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
+//            startActivityForResult(intent, Constants.HOURS_CODE);
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
+//            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     public void showDialogFragment(Bundle bundle) {
         MultiChoiseListFragment dialogFragment = new MultiChoiseListFragment();
@@ -638,21 +643,22 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 //                        pickerDialog.dismiss();
 //
 //                        break;
-                    case Constants.HOURS_CODE:
-                        user.setOpen_time((Table) data.getSerializableExtra(Constants.DATA));
-                        user.setOpen_Type(data.getIntExtra("type", 0));
-                        getTimaTableData(user.getOpen_time());
-                        break;
-                    case Constants.HOURS_TYPE_CODE:
-                        user.setOpen_Type(data.getIntExtra("type", 0));
-                        break;
-                }
-            } else if (requestCode == PLACE_PICKER_REQUEST) {
-                if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace(this, data);
-                    user.setLocation_lat(place.getLatLng().latitude);
-                    user.setLocation_long(place.getLatLng().longitude);
-                }
+                    //=================================================================================================>//
+//                    case Constants.HOURS_CODE:
+//                        user.setOpen_time((Table) data.getSerializableExtra(Constants.DATA));
+//                        user.setOpen_Type(data.getIntExtra("type", 0));
+//                        getTimaTableData(user.getOpen_time());
+//                        break;
+//                    case Constants.HOURS_TYPE_CODE:
+//                        user.setOpen_Type(data.getIntExtra("type", 0));
+//                        break;
+//                }
+//            } else if (requestCode == PLACE_PICKER_REQUEST) {
+//                if (resultCode == RESULT_OK) {
+//                    Place place = PlacePicker.getPlace(this, data);
+//                    user.setLocation_lat(place.getLatLng().latitude);
+//                    user.setLocation_long(place.getLatLng().longitude);
+               }
             }
 
         } catch (Exception e) {
@@ -663,22 +669,22 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 
     }
 
-
-    private void getTimaTableData(Table list) {
-        if (user.getOpen_Type() == 3)
-            tvNoTime.setText(R.string.permenant_closed);
-        else
-            tvNoTime.setText(R.string.always_open);
-
-        if (list != null) {
-            llNo.setVisibility(View.GONE);
-            tablelayout.removeAllViews();
-            com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-            timeTable.creatTimeTable(list, this, tablelayout);
-        } else
-            llNo.setVisibility(View.VISIBLE);
-
-    }
+//====================================================================================================================>//
+//    private void getTimaTableData(Table list) {
+//        if (user.getOpen_Type() == 3)
+//            tvNoTime.setText(R.string.permenant_closed);
+//        else
+//            tvNoTime.setText(R.string.always_open);
+//
+//        if (list != null) {
+//            llNo.setVisibility(View.GONE);
+//            tablelayout.removeAllViews();
+//            com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
+//            timeTable.creatTimeTable(list, this, tablelayout);
+//        } else
+//            llNo.setVisibility(View.VISIBLE);
+//
+//    }
 
     @Override
     public void onGalleryClicked(Intent intent) {
@@ -696,7 +702,8 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     public void deleteMyImage() {
         try {
             user.setAvatar("");
-            ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar(), R.drawable.placeholder);
+            file=null;
+            ImageHelper.setImage(civImageAvatar, "", R.drawable.placeholder);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
         } catch (Exception e) {
@@ -735,12 +742,76 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             return true;
     }
 
-    @OnClick(R.id.location_img)
-    public void openMap() {
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-        intent.putExtra("long", user.getLocation_long());
-        intent.putExtra("lat", user.getLocation_lat());
-        startActivity(intent);
+    //======================================================================================================================================>
+
+//    @OnClick(R.id.location_img)
+//    public void openMap() {
+//        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+//        intent.putExtra("long", user.getLocation_long());
+//        intent.putExtra("lat", user.getLocation_lat());
+//        startActivity(intent);
+//    }
+
+
+
+
+    private void setSpecialities()
+    {
+        tvSpecilities.setText("");
+        specialityIds="";
+        flSpecilities.removeAllViews();
+                    int size = 0;
+                    for (Speciality speciality : clinic.getSpeciality()) {
+                        flSpecilities.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+                        tvSpecilities.append(speciality.getTitle());
+                        specialityIds= specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
+                        size++;
+                        if (size <  clinic.getSpeciality().size()) {
+                            tvSpecilities.append(", ");
+                            specialityIds = specialityIds.concat(",");
+                        }
+                    }
+
+    }
+
+    private void setLanguages()
+    {
+        tvLanguages.setText("");
+        langIds="";
+        flLanguages.removeAllViews();
+        int size = 0;
+        for (Language  language : clinic.getSupportedLangs()) {
+            if (!TextUtils.isEmpty(language.getLanguageCountryCode())) {
+                Country country = Country.getCountryByISO(language.getLanguageCountryCode());
+                if (country != null) {
+                    flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
+                }
+                tvLanguages.append(language.getLanguageTitle());
+                langIds = langIds.concat(String.valueOf(language.getLanguageID()));
+                if (clinic.getSupportedLangs().size() > size + 1) {
+                    tvLanguages.append(" , ");
+                    langIds = langIds.concat(",");
+                    size++;
+                }
+            }
+        }
+
+    }
+
+    private void setMemberDoctors()
+    {
+        doctorIds="";
+        flInvite.removeAllViews();
+        int size = 0;
+        for (UserInfo doctor : clinic.getDoctors()) {
+            flInvite.addView(ImageHelper.setImageCircle(doctor.getAvatar(), this));
+            doctorIds= doctorIds.concat(String.valueOf(doctor.getUserID()));
+            size++;
+            if (size <  clinic.getDoctors().size()) {
+                doctorIds= doctorIds.concat(",");
+            }
+        }
+
     }
 
     @Override
@@ -754,17 +825,21 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 
     @Override
     public void returnChoseSpecialityList(ArrayList<Speciality> specialitiesArrayList) {
-        user.getSpecialities().clear();
-
+     clinic.setSpeciality(specialitiesArrayList);
+        setSpecialities();
     }
 
     @Override
     public void returnChoseLanguageList(ArrayList<Language> languageArrayList) {
+        clinic.setSupportedLangs(languageArrayList);
+        setLanguages();
 
     }
 
     @Override
     public void returnChoseDoctorList(ArrayList<UserInfo> doctorArrayList) {
+        clinic.setDoctors(doctorArrayList);
+        setMemberDoctors();
 
     }
 }

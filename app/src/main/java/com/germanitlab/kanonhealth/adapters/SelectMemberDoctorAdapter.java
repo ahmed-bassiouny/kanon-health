@@ -63,7 +63,7 @@ public class SelectMemberDoctorAdapter extends RecyclerView.Adapter<SelectMember
                                 holder.img_icon.setImageResource(R.drawable.placeholder);
                             }
                         }
-                        if (model.getAvailable().equals("1"))
+                        if (model.getAvailable()==1)
                             holder.status.setImageResource(R.color.green);
                         else
                             holder.status.setImageResource(R.color.gray);
