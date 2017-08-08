@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth.interfaces;
 
-import com.germanitlab.kanonhealth.models.user.User;
-
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import java.util.ArrayList;
 
 /**
@@ -9,5 +8,5 @@ import java.util.ArrayList;
  */
 
 public interface FilterCallBackClickListener {
-    void filterClick(ArrayList<User> doctor);
+    void filterClick(ArrayList<UserInfo> doctor);
 }

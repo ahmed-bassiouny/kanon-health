@@ -15,12 +15,12 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 
 import butterknife.BindView;
@@ -50,7 +50,7 @@ public class Comment extends AppCompatActivity {
     String doc_id = "";
     String req_id = "";
     UserRepository userRepository;
-    User doctor;
+    UserInfo doctor;
 
 
     @Override
@@ -58,8 +58,8 @@ public class Comment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
-        userRepository = new UserRepository(getApplicationContext());
-        doctor = new User();
+        userRepository = new UserRepository();
+        doctor = new UserInfo();
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,8 +70,8 @@ public class Comment extends AppCompatActivity {
         try {
             doc_id = getIntent().getStringExtra("doc_id");
             req_id = getIntent().getStringExtra("request_id");
-            doctor.setId(Integer.valueOf(doc_id));
-            doctor = userRepository.getDoctor(doctor);
+            doctor.setUserID(Integer.valueOf(doc_id));
+            //doctor = userRepository.get(doctor);
             txt_doctor_name.setText(doctor.getFullName());
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
@@ -107,12 +107,12 @@ public class Comment extends AppCompatActivity {
                     @Override
                     public void run() {
                         PrefManager prefManager = new PrefManager(Comment.this);
-                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, prefManager.getData(PrefManager.USER_ID), doctor.getId().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
+                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, prefManager.getData(PrefManager.USER_ID), doctor.getUserID().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
                         if (result != null) {
                             if (result.getData()) {
                                 Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
-                                doctor.setHave_rate(1);
-                                userRepository.update(doctor);
+                                //doctor.setHave_rate(1);
+                                //userRepository.update(doctor);
                                 Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
                                 intent.putExtra("doctorID", Integer.valueOf(doc_id));
                                 startActivity(intent);

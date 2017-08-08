@@ -16,8 +16,6 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
-import com.germanitlab.kanonhealth.models.user.UserRegisterResponse;
 import com.google.gson.Gson;
 
 
@@ -97,13 +95,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void loadData() {
         try {
-            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-            if (!Helper.isNetworkAvailable(this)) {
-                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
+//            userRegisterResponse.setUser_id(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+//            userRegisterResponse.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+//            if (!Helper.isNetworkAvailable(this)) {
+//                Toast.makeText(this, R.string.error_connection, Toast.LENGTH_SHORT).show();
+//                return;
+//            }
             /*new HttpCall(this, new ApiResponse() {
                 @Override
                 public void onSuccess(Object response) {

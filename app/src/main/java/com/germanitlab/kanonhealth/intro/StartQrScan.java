@@ -1,6 +1,5 @@
 package com.germanitlab.kanonhealth.intro;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class StartQrScan extends AppCompatActivity {
     PrefManager prefManager;
-    ProgressDialog progressDialog;
     Util util;
 
     @Override
@@ -65,7 +63,6 @@ public class StartQrScan extends AppCompatActivity {
     }
 
     private void sendRequest(String key) {
-        util.showProgressDialog();
         //Getting the doctor's data
         new HttpCall(this, new ApiResponse() {
             @Override
