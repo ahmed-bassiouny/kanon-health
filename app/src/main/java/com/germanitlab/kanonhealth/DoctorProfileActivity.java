@@ -558,9 +558,9 @@ public class DoctorProfileActivity extends ParentActivity implements Message<Cho
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
 
-    @Override
+    /*@Override
     public void Response(ArrayList<ChooseModel> specialitiesArrayList, int type) {
-        /*ArrayList<ChooseModel> templist = new ArrayList<>();
+        ArrayList<ChooseModel> templist = new ArrayList<>();
         RecyclerView recyclerView = new RecyclerView(getApplicationContext());
         switch (type) {
             case Constants.SPECIALITIES:

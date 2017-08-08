@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class InquiryMainFragment extends Fragment {
     Button buttonUntersuchung;
     @BindView(R.id.button_submit)
     FloatingActionButton floatingActionButton;
-    UserInfoResponse doctor;
+    UserInfo doctor;
 
     private PrefManager prefManager;
     Util util;
@@ -164,7 +164,7 @@ public class InquiryMainFragment extends Fragment {
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_4), secondLevelFragment);
                 break;
             case R.id.button_submit:
-                try {
+                /*try {
                     if (InquiryActivity.inquiryResult.size() > 0) {
                         final Gson gson = new Gson();
                         doctor = gson.fromJson(jsonString, UserInfoResponse.class);
@@ -200,7 +200,6 @@ public class InquiryMainFragment extends Fragment {
                                 String.valueOf(doctor.getUser().get_Id()),
                                 InquiryActivity.inquiryResult);
 
-
                         break;
                     } else {
                         Toast.makeText(getActivity(), R.string.please_choose_an_option_cancel_via_back, Toast.LENGTH_LONG).show();
@@ -209,7 +208,7 @@ public class InquiryMainFragment extends Fragment {
                     Crashlytics.logException(e);
                     Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
 
-                }
+                }*/
         }
     }
 

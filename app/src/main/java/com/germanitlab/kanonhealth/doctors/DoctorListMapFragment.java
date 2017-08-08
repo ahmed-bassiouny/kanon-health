@@ -24,8 +24,6 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.LocationServicesTurn;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -44,7 +42,9 @@ import com.google.gson.Gson;
 import java.util.List;
 
 
-public class DoctorListMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class DoctorListMapFragment extends Fragment {
+
+} /*implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private MainActivity activity;
     MapView mapView;
@@ -302,4 +302,4 @@ public class DoctorListMapFragment extends Fragment implements GoogleApiClient.C
         else
             return "user";
     }
-}
+}*/

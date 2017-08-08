@@ -30,9 +30,8 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
 
@@ -98,30 +97,24 @@ public class Helper {
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT);
         ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
-        /*if (mPrefManager.getData(PrefManager.PROFILE_QR) != null) {
-            ImageHelper.setImage(imageView, Constants.CHAT_SERVER_URL + "/" + mPrefManager.getData(PrefManager.PROFILE_QR), R.drawable.qr, activity);
-        }*/
         Gson gson = new Gson();
-        Log.d("user data", mPrefManager.getData(PrefManager.USER_KEY));
-        UserInfoResponse userInfoResponse = gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfoResponse.class);
+        UserInfo userInfo = gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
         TextView name = (TextView) dialog.findViewById(R.id.name);
-//                TextView last_name = (TextView) dialog.findViewById(R.id.last_name);
         TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
 
-        String idEncrypt = getMd5(String.valueOf(userInfoResponse.getUser().getId()));
+        String idEncrypt = getMd5(String.valueOf(userInfo.getUserID()));
         if (!idEncrypt.isEmpty()) {
-            Bitmap myBitmap = QRCode.from(userInfoResponse.getUser().getId() + ":" + idEncrypt).bitmap();
+            Bitmap myBitmap = QRCode.from(userInfo.getUserID()+ ":" + idEncrypt).bitmap();
             imageView.setImageBitmap(myBitmap);
         }
         CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
-        if (userInfoResponse.getUser().getAvatar() != null && userInfoResponse.getUser().getAvatar() != "") {
-            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), -1);
+        if (userInfo.getAvatar() != null && userInfo.getAvatar() != "") {
+            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfo.getAvatar(), -1);
         }
-        if (userInfoResponse != null && !TextUtils.isEmpty(userInfoResponse.getUser().getFullName())) {
-            name.setText(userInfoResponse.getUser().getFullName());
-        }
-        birthdate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getUser().getBirthDate().toString())));
+        name.setText(userInfo.getFirstName()+userInfo.getLastName());
+
+        birthdate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfo.getBirthday())));
         dialog.show();
     }
 

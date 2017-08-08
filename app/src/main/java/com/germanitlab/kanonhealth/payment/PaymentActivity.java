@@ -17,12 +17,12 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.models.Payment;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -64,7 +64,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     @BindView(R.id.rg_payment)
     RadioGroup rgPayment;
-    User doctor;
+    UserInfo doctor;
     private String type;
     PrefManager prefManager;
     List<RadioButton> radioButtons = new ArrayList<>();
@@ -85,8 +85,8 @@ public class PaymentActivity extends AppCompatActivity {
             radioButtons.add((RadioButton) findViewById(R.id.rb_free));
             handleRadioButtons();
             //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
-            doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT), User.class);
-            if (doctor.getIsDoc() == 1 && prefManager.get(PrefManager.IS_DOCTOR)) {
+            doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT), UserInfo.class);
+            if (doctor.getUserType() == UserInfo.DOCTOR && prefManager.get(PrefManager.IS_DOCTOR)) {
                 rbFree.setVisibility(View.VISIBLE);
             } else {
                 rbFree.setVisibility(View.GONE);
@@ -124,15 +124,15 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
-    private void handelUI(User doctorObj) {
+    private void handelUI(UserInfo doctorObj) {
         try {
             if (doctorObj != null) {
                 tvDoctorName.setText(doctorObj.getFullName());
 
                 ImageHelper.setImage(ivDoctor, Constants.CHAT_SERVER_URL + "/" + doctorObj.getAvatar(), R.drawable.placeholder);
 
-                if (doctorObj.getRate() != null) {
-                    ratingBar.setRating(Float.parseFloat(doctorObj.getRate()));
+                if (doctorObj.getRateNum() != null) {
+                    ratingBar.setRating(Float.parseFloat(String.valueOf(doctorObj.getRateNum())));
                 } else {
                     ratingBar.setRating(0);
                 }
@@ -184,13 +184,14 @@ public class PaymentActivity extends AppCompatActivity {
             (new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int requestId = ApiHelper.openSession(PaymentActivity.this, prefManager.getData(PrefManager.USER_ID), String.valueOf(doctor.getId()));
+                    int requestId = ApiHelper.openSession(PaymentActivity.this, prefManager.getData(PrefManager.USER_ID), String.valueOf(doctor.getUserID()));
                     if (requestId != -1) {
                         Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
-                        intent.putExtra("doctorID", doctor.get_Id());
-                        doctor.setIsOpen(1);
-                        doctor.setRequest_id(requestId);
-                        new UserRepository(PaymentActivity.this).update(doctor);
+                        intent.putExtra("doctorID", doctor.getUserID());
+                        // -------------- this need handle
+                        //doctor.setIsOpen(1);
+                        //doctor.setRequest_id(requestId);
+                        //new UserRepository(PaymentActivity.this).update(doctor);
                         startActivity(intent);
                         finish();
                     }
@@ -203,8 +204,4 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
-//    @OnClick(R.id.cancel)
-//    public void cancelClicked(View view){
-//        startActivity(new Intent(this , MainActivity.class));
-//    }
 }

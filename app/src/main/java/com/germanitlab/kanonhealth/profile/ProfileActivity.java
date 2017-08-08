@@ -123,7 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
                     (new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
+                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, prefManager.getData(PrefManager.USER_ID));
                             if (userInfo != null) {
                                 try {
                                     Gson gson = new Gson();

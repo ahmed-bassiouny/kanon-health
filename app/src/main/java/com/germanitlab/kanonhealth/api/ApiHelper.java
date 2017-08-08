@@ -562,18 +562,18 @@ public class ApiHelper {
     }
 
     // edit patient return true if doctor edited
-    public static boolean editPatient(Context context, int userID, String title, String firstName, String lastName, String birthday, String gender, File avatar, String countryCode, String phone) {
+    public static boolean editPatient(Context context,UserInfo userInfo , File avatar) {
         boolean result = false;
         try {
             EditPatientParameter editDoctorParamater = new EditPatientParameter();
-            editDoctorParamater.setUserID(userID);
-            editDoctorParamater.setFirstName(firstName);
-            editDoctorParamater.setLastName(lastName);
-            editDoctorParamater.setTitle(title);
-            editDoctorParamater.setCountryCode(countryCode);
-            editDoctorParamater.setPhone(phone);
-            editDoctorParamater.setGender(gender);
-            editDoctorParamater.setBirthday(birthday);
+            editDoctorParamater.setUserID(userInfo.getUserID());
+            editDoctorParamater.setFirstName(userInfo.getFirstName());
+            editDoctorParamater.setLastName(userInfo.getLastName());
+            editDoctorParamater.setTitle(userInfo.getTitle());
+            editDoctorParamater.setCountryCode(userInfo.getCountry_code());
+            editDoctorParamater.setPhone(userInfo.getPhone());
+            editDoctorParamater.setGender(userInfo.getGender());
+            editDoctorParamater.setBirthday(userInfo.getBirthday());
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toJson(), avatar, UserAddParameter.PARAMETER_AVATAR);

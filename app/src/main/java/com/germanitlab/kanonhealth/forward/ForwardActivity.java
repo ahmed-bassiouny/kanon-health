@@ -25,7 +25,6 @@ import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 import com.germanitlab.kanonhealth.main.MainActivity;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -38,7 +37,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class ForwardActivity extends AppCompatActivity {
-    private List<User> ListDoctors;
+    /*private List<User> ListDoctors;
     private List<User> ChooseList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ForwardAdapter mAdapter;
@@ -307,7 +306,7 @@ public class ForwardActivity extends AppCompatActivity {
 /*
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 */
-                    final String key = result.getContents();
+     /*               final String key = result.getContents();
                     sendRequest(key);
 
                 }
@@ -353,5 +352,5 @@ public class ForwardActivity extends AppCompatActivity {
         }
         return result.substring(0, (result.length() - 1));
     }
-
+*/
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 import com.google.gson.Gson;
 
 
@@ -115,19 +114,5 @@ public class PrefManager {
             }
         }else return 0 ;
     }
-    public String getIam(){
-        if(gson.fromJson(getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsDoc()==1)
-            return "doc";
-        else if(gson.fromJson(getData(PrefManager.USER_KEY),UserInfoResponse.class).getUser().getIsClinic()==1)
-            return "clinic";
-        else
-            return "user";
-    }
 
-    public boolean iamDoctor(){
-        return gson.fromJson(getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
-    }
-    public boolean iamclinic(){
-        return gson.fromJson(getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
-    }
 }

@@ -35,6 +35,8 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -47,10 +49,8 @@ import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.models.user.Info;
-import com.germanitlab.kanonhealth.models.user.UploadImageResponse;
-import com.germanitlab.kanonhealth.models.user.User;
-import com.germanitlab.kanonhealth.models.user.UserInfoResponse;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,7 +72,6 @@ import butterknife.OnClick;
 public class EditUserProfileActivity extends ParentActivity implements Serializable, DialogPickerCallBacks {
 
     private static final int CROP_PIC = 5;
-    private UserInfoResponse userInfoResponse;
 
     private EditQuestionAdapter mAdapter;
 
@@ -103,7 +102,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     ProgressDialog progressDialog;
-    User user;
+    UserInfo userInfo;
     Info info;
     PrefManager prefManager;
     Uri imageUri;
@@ -114,11 +113,10 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     Helper helper;
 
 
-    UploadImageResponse uploadImageResponse;
-
     LinkedHashMap<String, String> questionAnswer;
 
     Calendar myCalendar = Calendar.getInstance();
+    File avatar=null;
 
 
     @Override
@@ -133,11 +131,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             ButterKnife.bind(this);
             etFirstName.setSelected(false);
             Intent i = getIntent();
-            userInfoResponse = (UserInfoResponse) i.getSerializableExtra("userInfoResponse");
-
-            user = userInfoResponse.getUser();
-            Log.e("My user ", String.valueOf(user.get_Id()));
-            info = user.getInfo();
+            userInfo = (UserInfo) i.getSerializableExtra("userInfoResponse");
             bindData();
             createAdapter();
 
@@ -170,8 +164,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     }
 
     private void bindData() {
-        if (userInfoResponse.getUser().getAvatar() != null && !userInfoResponse.getUser().getAvatar().isEmpty())
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfoResponse.getUser().getAvatar());
+        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -181,19 +175,19 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             }
         });
 
-        etFirstName.setText(userInfoResponse.getUser().getFirst_name());
-        etLastName.setText(userInfoResponse.getUser().getLast_name());
-        etTitle.setText(userInfoResponse.getUser().getSubTitle());
-        etCountryCode.setText(userInfoResponse.getUser().getCountryCOde());
-        birthdate = userInfoResponse.getUser().getBirth_date();
-        etPhone.setText(userInfoResponse.getUser().getPhone());
-        etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getUser().getBirth_date().toString())));
-        etStreet.setText(userInfoResponse.getUser().getInfo().getStreetname());
-        etHousePhone.setText(userInfoResponse.getUser().getInfo().getHouseNumber());
-        etZip.setText(userInfoResponse.getUser().getInfo().getZip_code());
-        etProvinz.setText(userInfoResponse.getUser().getInfo().getProvinz());
-        etCountry.setText(userInfoResponse.getUser().getInfo().getCountry());
-        questionAnswer = userInfoResponse.getUser().getQuestions();
+        etFirstName.setText(userInfo.getFirstName());
+        etLastName.setText(userInfo.getLastName());
+        etTitle.setText(userInfo.getTitle());
+        etCountryCode.setText(userInfo.getCountry_code());
+        birthdate = userInfo.getBirthday();
+        etPhone.setText(userInfo.getPhone());
+        etBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfo.getBirthday().toString())));
+        etStreet.setText(userInfo.getStreetName());
+        etHousePhone.setText(userInfo.getHouseNumber());
+        etZip.setText(userInfo.getZipCode());
+        etProvinz.setText(userInfo.getProvidence());
+
+        questionAnswer = userInfo.getQuestionsAnswers();
         etCountry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -219,7 +213,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             if (imageUri != null)
                 outState.putString("imageURI", imageUri.toString());
             setUserObject();
-            outState.putSerializable("userdata", userInfoResponse);
+            outState.putSerializable("userdata", userInfo);
             super.onSaveInstanceState(outState);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -228,34 +222,11 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     }
 
-
-    @Override
-    public void onSuccess(Object response) {
-        try {
-            Intent i = new Intent(this, ProfileActivity.class);
-            i.putExtra("userInfoResponse", userInfoResponse);
-            i.putExtra("from", false);
-            startActivity(i);
-            finish();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onFailed(String error) {
-        Log.d("Update User1 failes", "on Failed");
-        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-
-    }
-
     @Override
     public void onBackPressed() {
         try {
             Intent i = new Intent(this, ProfileActivity.class);
-            i.putExtra("userInfoResponse", userInfoResponse);
+            i.putExtra("userInfoResponse", userInfo);
             i.putExtra("from", false);
             startActivity(i);
             finish();
@@ -283,32 +254,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-        //  Calendar calender = Calendar.getInstance();
-       /* Dialog mDialog = new DatePickerDialog(EditUserProfileActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog,
-                mDateSetListener, calender.get(Calendar.YEAR),
-                calender.get(Calendar.MONTH), calender
-                .get(Calendar.DAY_OF_MONTH));
-
-        mDialog.show();*/
-           /* final Context themedContext = new ContextThemeWrapper(
-                    EditUserProfileActivity.this,
-                    android.R.style.Theme_Holo_Light_Dialog
-            );
-
-            final DatePickerDialog mDialog = new FixedHoloDatePickerDialog(
-                    themedContext,
-                    mDateSetListener,
-                    calender.get(Calendar.YEAR),
-                    calender.get(Calendar.MONTH),
-                    calender.get(Calendar.DAY_OF_MONTH));
-
-            mDialog.show();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }*/
-
         if (helper == null)
             helper = new Helper(this);
         helper.showDatePicker(etBirthday);
@@ -334,21 +279,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
                                 Manifest.permission.CAMERA},
                         Constants.GALLERY_PERMISSION_CODE);
             }
-/*        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            getIntent.setType("image*//*");
-
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickIntent.setType("image*//*");
-
-            Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-            startActivityForResult(chooserIntent, Constants.IMAGE_REQUEST);
-        } else {
-            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_PERMISSION_CODE);
-        }*/
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -382,36 +312,44 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     @OnClick(R.id.btn_edit_save)
     public void submit() {
-        try {
-            setUserObject();
-            new HttpCall(this, this).editProfile(user);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
+      setUserObject();
 
     }
 
     private void setUserObject() {
-        user.setFirst_name(etFirstName.getText().toString());
-        user.setLast_name(etLastName.getText().toString());
-        user.setSubTitle(etTitle.getText().toString());
-        user.setPlatform("3");
-        user.setPhone(etPhone.getText().toString());
-        user.setBirthDate(birthdate);
-        info.setStreetname(etStreet.getText().toString());
-        info.setZip_code(etZip.getText().toString());
-        info.setHouseNumber(etHousePhone.getText().toString());
-        info.setProvinz(etProvinz.getText().toString());
-        info.setCountry(etCountry.getText().toString());
+        userInfo.setFirstName(etFirstName.getText().toString());
+        userInfo.setLastName(etLastName.getText().toString());
+        userInfo.setTitle(etTitle.getText().toString());
+        userInfo.setPhone(etPhone.getText().toString());
+        userInfo.setBirthday(birthdate);
+        userInfo.setStreetName(etStreet.getText().toString());
+        userInfo.setZipCode(etZip.getText().toString());
+        userInfo.setHouseNumber(etHousePhone.getText().toString());
+        userInfo.setProvidence(etProvinz.getText().toString());
+        //userInfo.setCountry(etCountry.getText().toString());
         ArrayList<String> answers = iterateOverRecyclerView();
         Set<String> questions = questionAnswer.keySet();
         ArrayList<String> questionsArray = new ArrayList<>(questions);
         for (int i = 0; i < answers.size(); i++) {
             questionAnswer.put(questionsArray.get(i), answers.get(i));
         }
-
-        user.setInfo(info);
+        userInfo.setQuestionsAnswers(questionAnswer);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean result =ApiHelper.editPatient(EditUserProfileActivity.this,userInfo,avatar);
+                if(result){
+                    Toast.makeText(EditUserProfileActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(EditUserProfileActivity.this, ProfileActivity.class);
+                    i.putExtra("userInfoResponse", userInfo);
+                    i.putExtra("from", false);
+                    startActivity(i);
+                    finish();
+                }else{
+                    Toast.makeText(EditUserProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).start();
     }
 
 
@@ -428,47 +366,16 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     @Override
     public void deleteMyImage() {
-        try {
-            user.setAvatar("");
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfoResponse.getUser().getAvatar(), R.drawable.profile_place_holder);
+            userInfo.setAvatar("");
+            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfo.getAvatar(), R.drawable.profile_place_holder);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
             pickerDialog.dismiss();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
     public void ImagePickerCallBack(Uri uri) {
         prefManager.put(PrefManager.PROFILE_IMAGE, uri.toString());
-        util.showProgressDialog();
         ImageHelper.setImage(imgAvatar, uri);
-        new HttpCall(this, new ApiResponse() {
-            @Override
-            public void onSuccess(Object response) {
-                try {
-                    util.dismissProgressDialog();
-                    uploadImageResponse = (UploadImageResponse) response;
-                    user.setAvatar(uploadImageResponse.getFile_url());
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    util.dismissProgressDialog();
-                    Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
-                    imgAvatar.setImageResource(R.drawable.profile_place_holder);
-
-                }
-
-            }
-
-            @Override
-            public void onFailed(String error) {
-                util.dismissProgressDialog();
-                Toast.makeText(getApplicationContext(), "image not save error while uploading", Toast.LENGTH_SHORT).show();
-                imgAvatar.setImageResource(R.drawable.profile_place_holder);
-
-            }
-        }).uploadImage(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), ImageFilePath.getPath(this, uri));
-        pickerDialog.dismiss();
+        avatar = new File(ImageFilePath.getPath(EditUserProfileActivity.this, uri));
     }
 }
