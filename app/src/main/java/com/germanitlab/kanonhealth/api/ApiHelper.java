@@ -617,7 +617,6 @@ public class ApiHelper {
             System.out.println(userInfoParameter.toJson());
 
             String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
-            System.out.println(jsonString);
             Gson gson = new Gson();
             UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
             if (userInfoResponse.getStatus()) {

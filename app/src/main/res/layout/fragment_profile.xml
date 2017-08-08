@@ -358,6 +358,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/voluntary_information"
+                        android:padding="10dp"
                         android:textColor="@android:color/background_dark"
                         android:textSize="@dimen/size_15sp"
                         android:textStyle="bold" />
@@ -369,7 +370,7 @@
                         android:layout_marginBottom="@dimen/size_15dp"
                         android:layout_marginStart="@dimen/size_5dp"
                         android:layout_marginEnd="@dimen/size_5dp"
-                        android:paddingTop="@dimen/size_5dp">
+                        android:layout_marginTop="10dp">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler_view"

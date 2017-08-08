@@ -120,12 +120,11 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 tvEdit.setVisibility(View.GONE);
                 if (Helper.isNetworkAvailable(getApplicationContext())) {
-                    (new Thread(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
                             UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, prefManager.getData(PrefManager.USER_ID));
                             if (userInfo != null) {
-                                try {
                                     Gson gson = new Gson();
                                     mPrefManager.put(PrefManager.USER_KEY, gson.toJson(userInfo));
                                     ProfileActivity.this.userInfoResponse = userInfo;
@@ -138,17 +137,15 @@ public class ProfileActivity extends AppCompatActivity {
                                             tvEdit.setVisibility(View.VISIBLE);
                                         }
                                     });
-                                } catch (Exception e) {
-                                    Crashlytics.logException(e);
-                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-                                }
+
                             } else {
                                 ProfileActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        tvEdit.setVisibility(View.GONE);
-                                        linearProfileContent.setVisibility(View.GONE);
-                                        tvLoadingError.setVisibility(View.GONE);
+//                                        tvEdit.setVisibility(View.GONE);
+//                                        linearProfileContent.setVisibility(View.GONE);
+//                                        tvLoadingError.setVisibility(View.GONE);
+                                        finish();
                                     }
                                 });
                             }
@@ -159,10 +156,9 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    })).run();
+                    }).start();
                 } else {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-
                 }
 
             }
