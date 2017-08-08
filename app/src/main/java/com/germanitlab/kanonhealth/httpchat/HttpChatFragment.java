@@ -132,7 +132,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     private MediaRecorder mRecorder;
     private File mOutputFile;
-    private long startTimeForRecording = 0, endTimeForRecording = 0;
     private Handler mHandler = new Handler();
     private long startTime = 0;
     private int[] amplitudes = new int[100];
@@ -146,7 +145,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private static final int SELECT_VIDEO = 2;
     private static final int RECORD_VIDEO = 3;
     private Uri selectedImageUri = null;
-    private boolean show_privacy = false;
     ChatModel chatModel;
     ChatModelRepositry chatModelRepositry;
 
@@ -296,8 +294,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // set data in object
     private void initData() {
-        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsDoc() == 1;
-        iamClinic = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), UserInfoResponse.class).getUser().getIsClinic() == 1;
+        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), ChatModel.class).getUserType() == UserInfo.DOCTOR;
+        iamClinic = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), ChatModel.class).getUserType() == UserInfo.CLINIC;
 
         userID = prefManager.getInt(PrefManager.USER_ID);
         userPassword = prefManager.getData(prefManager.USER_PASSWORD);
@@ -306,7 +304,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (userID == doctorID) {
             chatModel.setLastName(getResources().getString(R.string.documents));
             chatModel.setFirstName(" ");
-            show_privacy = true;
             toolbar.setVisibility(View.GONE);
         } else if (doctorID == CustomerSupportActivity.supportID) {
             chatModel.setUserID(doctorID);
@@ -752,8 +749,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
                     new IntentFilter("MyData"));
         }
-        if (userID == doctorID)
-            show_privacy = true;
     }
 
 
@@ -860,7 +855,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
             if (iamDoctor == false && iamClinic == false) {
-                if (doctor.getHave_rate() != 1) {
+                if (chatModel.getHaveRate() != 1) {
                     canRate.setVisibility(View.VISIBLE);
                 } else {
                     canRate.setVisibility(View.GONE);
@@ -1033,14 +1028,14 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         try {
             if (chatModel.getUserType()==UserInfo.CLINIC) {
                 Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-                intent.putExtra("doctor_data", doctor);
+                intent.putExtra("doctor_data", chatModel);
                 startActivity(intent);
                 getActivity().finish();
             } else {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 Gson gson = new Gson();
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(doctor));
-                intent.putExtra("doctor_obj", doctor);
+                prefManager.put(prefManager.USER_INTENT, gson.toJson(chatModel));
+                intent.putExtra("doctor_obj", chatModel);
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -1122,7 +1117,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     public void openProfile() {
         if (chatModel != null && (chatModel.getUserType()!= UserInfo.PATIENT)) {
             Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-            intent.putExtra("doctor_data", doctor);
+            intent.putExtra("doctor_data", chatModel);
             getActivity().startActivity(intent);
         } else {
             // this object is user and should open ProfileActivity
@@ -1327,7 +1322,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private void startRecording() {
         //  Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));خى
 
-        startTimeForRecording = mStartTime;
+        long startTimeForRecording = mStartTime;
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -1383,7 +1378,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     protected void stopRecording(boolean saveFile) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        endTimeForRecording = cal.getTimeInMillis();
+        long endTimeForRecording = cal.getTimeInMillis();
 
         try {
             mRecorder.stop();

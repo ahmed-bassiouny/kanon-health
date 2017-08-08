@@ -11,10 +11,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.models.ChooseModel;
-import com.germanitlab.kanonhealth.models.user.User;
 import com.nex3z.flowlayout.FlowLayout;
 
 import java.util.List;
@@ -27,10 +26,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView> {
 
-    private List<User> doctorContactsList;
+    private List<UserInfo> doctorContactsList;
     Activity activity;
 
-    public ForwardAdapter(List<User> doctorContactsList, Activity activity) {
+    public ForwardAdapter(List<UserInfo> doctorContactsList, Activity activity) {
 
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
@@ -60,7 +59,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
         try {
 
 
-            final User doctor = doctorContactsList.get(position);
+            final UserInfo doctor = doctorContactsList.get(position);
 
             holder.tvDoctorName.setText(doctor.getFullName());
             holder.tvSpecialist.setVisibility(View.GONE);

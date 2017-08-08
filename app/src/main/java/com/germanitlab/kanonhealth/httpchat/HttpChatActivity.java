@@ -13,7 +13,6 @@ import android.widget.EditText;
 
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.models.user.User;
 
 public class HttpChatActivity extends AppCompatActivity {
 

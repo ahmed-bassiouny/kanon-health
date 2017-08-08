@@ -13,8 +13,7 @@ public class ChatModel extends UserInfo {
     public static final String KEY_MESSAGE_TYPE="type";
     public static final String KEY_IS_FORWARD="is_forward";
     public static final String KEY_TIME="time";
-    public static final String KEY_ISOPEN="open";
-
+    public static final String KEY_ISOPEN="is_open";
 
     @SerializedName(KEY_ROOM_ID)
     private Integer roomID;
@@ -28,6 +27,8 @@ public class ChatModel extends UserInfo {
     private String time;
     @SerializedName(KEY_ISOPEN)
     private int open;
+    private int requestID;
+    private int haveRate;
 
     public Integer getRoomID() {
         return roomID;
@@ -76,5 +77,21 @@ public class ChatModel extends UserInfo {
 
     public void setOpen(int open) {
         this.open = open;
+    }
+
+    public int getRequestID() {
+        return requestID;
+    }
+
+    public void setRequestID(int requestID) {
+        this.requestID = requestID;
+    }
+
+    public int getHaveRate() {
+        return haveRate;
+    }
+
+    public void setHaveRate(int haveRate) {
+        this.haveRate = haveRate;
     }
 }
