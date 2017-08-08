@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.github.siyamed.shapeimageview.HeartImageView;
 import com.nex3z.flowlayout.FlowLayout;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -192,7 +193,7 @@ public class ImageHelper {
         if (TextUtils.isEmpty(speciality_icon)) {
             circularImageView.setImageResource(R.drawable.placeholder);
         } else {
-            setImage(circularImageView, Constants.CHAT_SERVER_URL_IMAGE + "/" + speciality_icon, -1);
+            setImage(circularImageView, ApiHelper.SERVER_IMAGE_URL + "/" + speciality_icon, -1);
         }
         circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30), helper.dpToPx(30)));
         circularImageView.setPadding(7, 4, 7, 4);

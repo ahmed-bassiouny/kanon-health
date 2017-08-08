@@ -437,23 +437,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/gray_black" />
 
-            <TextView
-                android:id="@+id/member_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_below="@+id/view_below_language"
-                android:text="ask milad"
-                android:textColor="@android:color/background_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/member_recycleview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_below="@+id/member_text"
+                android:layout_below="@+id/view_below_language"
                 android:layout_alignParentEnd="true"
                 android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
 

@@ -39,6 +39,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_ACTIVATED = "activated";
     public static final String KEY_SPECIALITIES = "specialitys";
     public static final String Clinics = "member_at";
+    public  static final String  KEY_MY_CLINICS="my_clinic";
     public static final String KEY_STREET_NAME = "street_name";
     public static final String KEY_HOUSE_NUMBER = "house_number";
     public static final String KEY_PROVIDENCE = "providence";
@@ -98,15 +99,20 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_ZIP_CODE)
     private String zipCode;
     @SerializedName(KEY_SUPPORTED_LANG)
-    private ArrayList<SupportedLang> supportedLangs;
+    private ArrayList<Language> supportedLangs;
 
     @SerializedName(KEY_ACTIVATED)
     private Integer isActive;
 
     @SerializedName(KEY_SPECIALITIES)
     private ArrayList<Speciality> specialities;
+
     @SerializedName(Clinics)
     private ArrayList<Clinic> clinics;
+
+    @SerializedName(KEY_MY_CLINICS)
+    private ArrayList<Clinic> myClinics;
+
 
     private LinkedHashMap<String, String> questionsAnswers;
     // i need key name from backend
@@ -226,11 +232,11 @@ public class UserInfo extends ParentModel {
     }
 
 
-    public ArrayList<SupportedLang> getSupportedLangs() {
+    public ArrayList<Language> getSupportedLangs() {
         return supportedLangs;
     }
 
-    public void setSupportedLangs(ArrayList<SupportedLang> supportedLangs) {
+    public void setSupportedLangs(ArrayList<Language> supportedLangs) {
         this.supportedLangs = supportedLangs;
     }
 
@@ -263,7 +269,7 @@ public class UserInfo extends ParentModel {
     }
 
     public ArrayList<Clinic> getClinics() {
-        if(Clinics==null) {
+        if(clinics==null) {
             clinics = new ArrayList<>();
         }
         return clinics;
@@ -387,11 +393,28 @@ public class UserInfo extends ParentModel {
     }
 
     public Integer getIsMyDoc() {
+        if(isMyDoc==null)
+        {
+            isMyDoc=0;
+        }
         return isMyDoc;
     }
 
     public void setIsMyDoc(Integer isMyDoc) {
         this.isMyDoc = isMyDoc;
     }
+
+    public ArrayList<Clinic> getMyClinics() {
+        if(myClinics==null)
+        {
+            myClinics= new ArrayList<>();
+        }
+        return myClinics;
+    }
+
+    public void setMyClinics(ArrayList<Clinic> myClinics) {
+        this.myClinics = myClinics;
+    }
+
     //endregion
 }

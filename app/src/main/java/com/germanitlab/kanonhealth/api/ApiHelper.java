@@ -236,7 +236,6 @@ public class ApiHelper {
             addClinicParameters.setUserId(userId);
             addClinicParameters.setName(name);
             addClinicParameters.setSpeciality(speciality);
-
             addClinicParameters.setStreetName(streetName);
             addClinicParameters.setHouseNumber(houseNumber);
             addClinicParameters.setZipCode(zipCode);

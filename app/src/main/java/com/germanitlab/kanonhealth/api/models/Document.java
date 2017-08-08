@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 
 @DatabaseTable(tableName = "document")
-public class Document {
+public class Document extends ParentModel{
     public static final String KEY_DOCUMENT_ID ="document_id";
     public static final String KEY_TYPE="type";
     public static final String KEY_DOCUMENT="document";

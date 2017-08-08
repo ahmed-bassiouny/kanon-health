@@ -28,8 +28,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
+import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
@@ -114,6 +117,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     UserInfo userInfo;
     File avatar = null;
     SpecilaitiesAdapter adapter;
+    ClinicListAdapter clinicListAdapter;
     Boolean is_me = false;
     PrefManager prefManager;
     PickerDialog pickerDialog;
@@ -128,16 +132,17 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initToolbar();
         try {
-            is_me = userInfo.getUserID() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID));
-            userInfo = new UserInfo();
-            userInfo = (UserInfo) getIntent().getSerializableExtra("doctor_data");
             prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
+            userInfo = new UserInfo();
+            userInfo = (UserInfo) getIntent().getSerializableExtra("doctor_data");
+            is_me = userInfo.getUserID() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID));
             bindData();
             setVisiblitiy();
 
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
             finish();
         }
 
@@ -261,7 +266,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     }
 
     private void setVisiblitiy() {
-        if (!is_me) {
+        if (is_me) {
             tvOnline.setFocusableInTouchMode(true);
             edAddToFavourite.setFocusableInTouchMode(true);
             tvContact.setFocusableInTouchMode(true);
@@ -358,7 +363,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
 
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar());
         }
         if (is_me) {
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
@@ -381,7 +386,9 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         // set specialities
         if (userInfo.getSpecialities() != null) {
             String specialities = "";
+            flSpeciliaty.removeAllViews();
             for (Speciality speciality : userInfo.getSpecialities()) {
+                flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
                 specialities += speciality.getTitle() + ", ";
             }
             specialities = specialities.substring(0, specialities.length() - 2);
@@ -414,8 +421,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
 
         if (userInfo.getSupportedLangs() != null) {
-            for (SupportedLang supportedLang : userInfo.getSupportedLangs()) {
-                String country_code = supportedLang.getCountryCode();
+            for (Language supportedLang : userInfo.getSupportedLangs()) {
+                String country_code = supportedLang.getLanguageCountryCode();
                 Country country = Country.getCountryByISO(country_code);
                 if (country != null) {
                     flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
@@ -424,15 +431,17 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         }
 
         // member at need handle
-        if (userInfo.getClinics().size() > 0) {
-            /*set(adapter, userInfo.getClinics(), R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
+        ArrayList<Clinic> allClinics= new ArrayList<>();
+        allClinics.addAll(userInfo.getClinics());
+        allClinics.addAll(userInfo.getMyClinics());
+        if (allClinics.size()> 0) {
             RecyclerView recyclerVie;
-            adapter = new SpecilaitiesAdapter(list, getApplicationContext(), type);
-            recyclerVie = (RecyclerView) findViewById(id);
+            clinicListAdapter = new ClinicListAdapter(allClinics, this);
+            recyclerVie = (RecyclerView) findViewById(R.id.member_recycleview);
             recyclerVie.setHasFixedSize(true);
-            recyclerVie.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
+            recyclerVie.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
             recyclerVie.setNestedScrollingEnabled(false);
-            recyclerVie.setAdapter(adapter);*/
+            recyclerVie.setAdapter(clinicListAdapter);
         }
         // TimeTable
         getTimeTableData(userInfo.getTimeTable());
@@ -617,7 +626,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     @Override
     public void deleteMyImage() {
         userInfo.setAvatar("");
-        ImageHelper.setImage(circleImageViewAvatar, Constants.CHAT_SERVER_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+        ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }
