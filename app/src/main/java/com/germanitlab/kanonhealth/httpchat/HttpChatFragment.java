@@ -282,6 +282,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
+        chatHelper=new ChatHelper();
     }
 
     // set data in object
@@ -341,6 +342,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         @Override
                         public void run() {
                             isStoragePermissionGranted();
+                            pbar_loading.setVisibility(View.GONE);
                         }
                     });
                         new Thread(new Runnable() {
@@ -348,20 +350,24 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             public void run() {
                                 for (Message message : messages) {
                                     // update satabase
-                                    messageRepositry.createOrUpate(message);
+                                    //messageRepositry.createOrUpate(message);
                                 }
                             }
                         }).start();
                     // request seen all msg
                     messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
 
+                }else{
+                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            messages=new ArrayList<>();
+                            setData();
+                            pbar_loading.setVisibility(View.GONE);
+
+                        }
+                    });
                 }
-                HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pbar_loading.setVisibility(View.GONE);
-                    }
-                });
             }
         }).start();
     }
@@ -377,26 +383,29 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         @Override
                         public void run() {
                             isStoragePermissionGranted();
+                            pbar_loading.setVisibility(View.GONE);
 
                         }
                     });
-                    if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 for (Document document : documents) {
                                     // update satabase
-                                    documentRepositry.createOrUpate(document);
+                                    //documentRepositry.createOrUpate(document);
                                 }
                             }
                         }).start();
+                }else{
+                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            documents=new ArrayList<>();
+                            setData();
+                            pbar_loading.setVisibility(View.GONE);
+                        }
+                    });
                 }
-                HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pbar_loading.setVisibility(View.GONE);
-                    }
-                });
             }
         }).start();
     }
@@ -473,7 +482,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private void setData() {
         if (getActivity() == null)
             return;
-        chatHelper = new ChatHelper(this, getActivity(), messages, documents, recyclerView, userID, doctorID, chatAdapter, messageRepositry, documentRepositry);
         if (userID == doctorID) {
             documentChatAdapter = new DocumentChatAdapter(documents, getActivity());
             recyclerView.setAdapter(documentChatAdapter);
@@ -507,9 +515,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         // declare object and set attribute
         if (userID == doctorID) {
-            chatHelper.sendTextDocument(etMessage.getText().toString(),documentChatAdapter);
+            chatHelper.sendTextDocument(etMessage.getText().toString(),documentChatAdapter,documents,recyclerView,userID,getActivity());
         } else {
-            chatHelper.sendTextMessage(etMessage.getText().toString());
+            chatHelper.sendTextMessage(etMessage.getText().toString(),messages,userID,doctorID,chatAdapter,getActivity(),recyclerView);
         }
         etMessage.setText("");
         etMessage.setHint(R.string.write_a_message);
@@ -602,9 +610,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             return;
                         }
                         if (userID == doctorID) {
-                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "",documentChatAdapter);
+                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
                         } else {
-                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "");
+                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
                         }
                     } catch (Exception e) {
                         Crashlytics.logException(e);
@@ -621,7 +629,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA, HttpChatFragment.this);
+                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA, HttpChatFragment.this,getActivity());
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
             }
@@ -629,7 +637,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         getActivity().findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY, HttpChatFragment.this);
+                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY, HttpChatFragment.this,getActivity());
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
             }
@@ -706,9 +714,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
             if (userID == doctorID) {
-                chatHelper.sendLocationDocument(longitude, latitude,documentChatAdapter);
+                chatHelper.sendLocationDocument(longitude, latitude,documentChatAdapter,getActivity(),userID,documents,recyclerView);
             } else {
-                chatHelper.sendLocationMessage(longitude, latitude);
+                chatHelper.sendLocationMessage(longitude, latitude,userID,doctorID,getActivity(),messages,chatAdapter,recyclerView);
             }
         }
 
@@ -790,7 +798,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             if (notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFromID() == doctorID) {
-                    chatHelper.creatRealMessage(message, 0);
+                    chatHelper.creatRealMessage(message, 0,messages,chatAdapter,recyclerView);
                     messageSeen(message.getMessageID().toString());
                     // seen request for specific msg
                 } else {
@@ -1258,9 +1266,9 @@ if(onBeforeExpand==false) {
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
                                 if (userID == doctorID) {
-                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "",documentChatAdapter);
+                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
                                 } else {
-                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "");
+                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
                                 }
 
                             } else {
@@ -1424,9 +1432,9 @@ if(onBeforeExpand==false) {
     public void ImagePickerCallBack(Uri uri) {
 
         if (userID == doctorID) {
-            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",documentChatAdapter);
+            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
         } else {
-            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "");
+            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
         }
     }
 }

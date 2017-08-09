@@ -48,7 +48,7 @@ public class Message extends ParentModel {
 
     @SerializedName(KEY_FROMID)
     private Integer fromID;
-    @SerializedName(KEY_FROMID)
+    @SerializedName(KEY_TOID)
     private Integer toID;
 
     //endregion

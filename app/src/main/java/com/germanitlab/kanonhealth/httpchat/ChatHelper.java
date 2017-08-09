@@ -34,45 +34,22 @@ import java.util.Calendar;
 
 public class ChatHelper {
 
-    Fragment fragment;
-    FragmentActivity fragmentActivity;
-    ArrayList<Message> messages;
-    ArrayList<Document> documents;
-    RecyclerView recyclerView;
-    int userID;
-    int doctorID;
-    ChatAdapter chatAdapter;
-    HttpMessageRepositry messageRepositry;
-    HttpDocumentRepositry documentRepositry;
 
-    public ChatHelper(Fragment fragment, FragmentActivity fragmentActivity, ArrayList<Message> messages, ArrayList<Document> documents,
-                      RecyclerView recyclerView,int userID,int doctorID,ChatAdapter chatAdapter,
-                      HttpMessageRepositry messageRepositry,HttpDocumentRepositry documentRepositry) {
-        this.fragment = fragment;
-        this.fragmentActivity = fragmentActivity;
-        this.messages=messages;
-        this.documents=documents;
-        this.recyclerView=recyclerView;
-        this.userID=userID;
-        this.doctorID=doctorID;
-        this.chatAdapter=chatAdapter;
-        this.documentRepositry=documentRepositry;
-        this.messageRepositry=messageRepositry;
-    }
 
-    protected void takeAndSelectImage(int type, ParentFragment parentFragment) {
+
+    protected void takeAndSelectImage(int type, ParentFragment parentFragment,FragmentActivity fragmentActivity) {
         // type = PickerBuilder.SELECT_FROM_GALLERY or PickerBuilder.SELECT_FROM_CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (fragmentActivity.checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 Helper.getCroppedImageFromCamera(parentFragment, fragmentActivity, type);
             } else
-                fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
+                parentFragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
         } else
             Helper.getCroppedImageFromCamera(parentFragment, fragmentActivity, type);
         //attachment.setVisibility(View.INVISIBLE);
         //showAttachmentDialog = false;
     }
-    protected int creatDummyMessage() {
+    protected int creatDummyMessage(int userID,ArrayList<Message> messages,ChatAdapter chatAdapter,RecyclerView recyclerView) {
         Message message = new Message();
         message.setDateTime(getDateTimeNow());
         message.setType(Message.MESSAGE_TYPE_UNDEFINED);
@@ -84,7 +61,7 @@ public class ChatHelper {
         recyclerView.scrollToPosition(index);
         return index;
     }
-    protected int creatDummyDocument(DocumentChatAdapter documentChatAdapter) {
+    protected int creatDummyDocument(DocumentChatAdapter documentChatAdapter,ArrayList<Document> documents,RecyclerView recyclerView) {
         Document document=new Document();
         document.setDateTime(getDateTimeNow());
         document.setType(Message.MESSAGE_TYPE_UNDEFINED);
@@ -102,9 +79,9 @@ public class ChatHelper {
     }
 
     // send Location Message
-    protected void sendLocationMessage(double longitude, double latitude) {
+    protected void sendLocationMessage(double longitude, double latitude, int userID, int doctorID, final FragmentActivity fragmentActivity, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
         //create dummy message
-        final int index = creatDummyMessage();
+        final int index = creatDummyMessage(userID,messages,chatAdapter,recyclerView);
         final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
@@ -118,10 +95,10 @@ public class ChatHelper {
                 Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
                 if(result!=null){
                     // success
-                    creatRealMessage(result, index);
+                    creatRealMessage(result, index,messages,chatAdapter,recyclerView);
                 }else{
                     // failed
-                    removeDummyMessage(index);
+                    removeDummyMessage(index,messages,recyclerView,chatAdapter);
                 }
             }
         }).start();
@@ -129,9 +106,9 @@ public class ChatHelper {
     }
 
     // send Location Document
-    protected void sendLocationDocument(double longitude, double latitude, final DocumentChatAdapter documentChatAdapter) {
+    protected void sendLocationDocument(double longitude, double latitude, final DocumentChatAdapter documentChatAdapter, final FragmentActivity fragmentActivity, final int userID, final ArrayList<Document>documents, final RecyclerView recyclerView) {
         //create dummy message
-        final int index = creatDummyDocument(documentChatAdapter);
+        final int index = creatDummyDocument(documentChatAdapter,documents,recyclerView);
         final Document document = new Document();
         document.setDateTime(getDateTimeNow());
         document.setMedia("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
@@ -146,29 +123,29 @@ public class ChatHelper {
                     public void run() {
                         if (result != null) {
                             // success
-                            creatRealDocument(result, index,documentChatAdapter);
+                            creatRealDocument(result, index,documentChatAdapter,documents,recyclerView);
                         } else {
                             // failed
-                            removeDummyDocument(index,documentChatAdapter);
+                            removeDummyDocument(index,documentChatAdapter,documents,recyclerView);
                         }
                     }
                 });
             }
         }).start();
     }
-    private void removeDummyMessage(int index) {
+    private void removeDummyMessage(int index,ArrayList<Message>messages, RecyclerView recyclerView,ChatAdapter chatAdapter) {
         messages.remove(index);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(messages.size() - 1);
     }
-    private void removeDummyDocument(int index,DocumentChatAdapter documentChatAdapter) {
+    private void removeDummyDocument(int index,DocumentChatAdapter documentChatAdapter ,ArrayList<Document>documents , final RecyclerView recyclerView) {
         documents.remove(index);
         documentChatAdapter.setList(documents);
         documentChatAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(documents.size() - 1);
     }
-    protected void creatRealMessage(Message message, int index) {
+    protected void creatRealMessage(Message message, int index, final ArrayList<Message> messages, final ChatAdapter chatAdapter,  final RecyclerView recyclerView) {
         try {
             if (index >= 0)
                 messages.remove(index);
@@ -176,13 +153,13 @@ public class ChatHelper {
             chatAdapter.setList(messages);
             chatAdapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(messages.size() - 1);
-            messageRepositry.createOrUpate(message);
+            //messageRepositry.createOrUpate(message);
         } catch (Exception e) {
             Crashlytics.logException(e);
             e.printStackTrace();
         }
     }
-    private void creatRealDocument(Document document, int index,DocumentChatAdapter documentChatAdapter) {
+    private void creatRealDocument(Document document, int index,DocumentChatAdapter documentChatAdapter, ArrayList<Document> documents, final RecyclerView recyclerView ) {
         try {
             if (index >= 0)
                 documents.remove(index);
@@ -190,19 +167,19 @@ public class ChatHelper {
             documentChatAdapter.setList(documents);
             documentChatAdapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(documents.size() - 1);
-            documentRepositry.createOrUpate(document);
+            //documentRepositry.createOrUpate(document);
         } catch (Exception e) {
             Crashlytics.logException(e);
             e.printStackTrace();
         }
     }
-    protected void sendTextMessage(String textMsg){
+    protected void sendTextMessage(String textMsg, final ArrayList<Message> messages, int userID, int doctorID, final ChatAdapter chatAdapter, final FragmentActivity fragmentActivity, final RecyclerView recyclerView){
         final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
         message.setMessage(textMsg);
         message.setType(Message.MESSAGE_TYPE_TEXT);
-        message.setDateTime(getDateTimeNow());
+        //message.setDateTime(getDateTimeNow());
         messages.add(message);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
@@ -214,21 +191,26 @@ public class ChatHelper {
                 Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
                 if(result!=null){
                     //success
-                    Message temp = messages.get(index);
-                    temp.setStatus(1);
-                    messages.set(index, temp);
-                    chatAdapter.setList(messages);
-                    chatAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(messages.size() - 1);
-                    messageRepositry.createOrUpate(result);
+                    fragmentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message temp = messages.get(index);
+                            temp.setStatus(1);
+                            messages.set(index, temp);
+                            chatAdapter.setList(messages);
+                            chatAdapter.notifyDataSetChanged();
+                            recyclerView.scrollToPosition(messages.size() - 1);
+                        }
+                    });
+                    //messageRepositry.createOrUpate(result);
                 }else {
                     // failed
-                    removeDummyMessage(index);
+                    removeDummyMessage(index,messages,recyclerView,chatAdapter);
                 }
             }
         }).start();
     }
-    protected void sendTextDocument(String textMsg,DocumentChatAdapter documentChatAdapter){
+    protected void sendTextDocument(String textMsg, final DocumentChatAdapter documentChatAdapter, final ArrayList<Document> documents, final RecyclerView recyclerView, final int userID, final FragmentActivity fragmentActivity){
         final Document document = new Document();
         document.setDocument(textMsg);
         document.setType(Message.MESSAGE_TYPE_TEXT);
@@ -247,13 +229,13 @@ public class ChatHelper {
                     //success
                 }else {
                     // failed
-                    removeDummyMessage(index);
+                    removeDummyDocument(index,documentChatAdapter,documents,recyclerView);
                 }
             }
         }).start();
     }
-    protected void sendMediaMessage(final File file, String type, String textMsg){
-        final int index = creatDummyMessage();
+    protected void sendMediaMessage(final File file, String type, String textMsg, final FragmentActivity fragmentActivity, int userID, int doctorID, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView){
+        final int index = creatDummyMessage(userID,messages,chatAdapter,recyclerView);
         final Message message=new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
@@ -263,7 +245,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 Message result=ApiHelper.sendMessage(message,file,fragmentActivity);
-                removeDummyMessage(index);
+                removeDummyMessage(index,messages,recyclerView,chatAdapter);
                 if(result !=null){
                     //success
                     messages.add(result);
@@ -276,8 +258,8 @@ public class ChatHelper {
             }
         }).start();
     }
-    protected void sendMediaDocument(final File file, String type, String textMsg, final DocumentChatAdapter documentChatAdapter){
-        final int index = creatDummyDocument(documentChatAdapter);
+    protected void sendMediaDocument(final File file, String type, String textMsg, final DocumentChatAdapter documentChatAdapter, final ArrayList<Document> documents, final RecyclerView recyclerView, final FragmentActivity fragmentActivity, final int userID){
+        final int index = creatDummyDocument(documentChatAdapter,documents,recyclerView);
         final Document document=new Document();
         document.setDocument(textMsg);
         document.setType(type);
@@ -298,7 +280,7 @@ public class ChatHelper {
                             // failed
                             Toast.makeText(fragmentActivity, R.string.msg_not_send, Toast.LENGTH_SHORT).show();
                         }
-                        removeDummyDocument(index,documentChatAdapter);
+                        removeDummyDocument(index,documentChatAdapter,documents,recyclerView);
                     }
                 });
             }

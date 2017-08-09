@@ -879,14 +879,24 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
 
                                             else
                                                 documents.get(pos).setPrivacy(0);
-                                            progressBar.setVisibility(View.GONE);
-                                            setImagePrivacy(documents.get(pos).getPrivacy(), imagePrivacy, txtPrivacy);
-                                            notifyDataSetChanged();
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    setImagePrivacy(documents.get(pos).getPrivacy(), imagePrivacy, txtPrivacy);
+                                                    notifyDataSetChanged();
+                                                }
+                                            });
                                         } else {
-                                            Toast.makeText(activity, activity.getResources().getString(R.string.privacy_not_change), Toast.LENGTH_SHORT).show();
-                                            progressBar.setVisibility(View.GONE);
-                                            imagePrivacy.setVisibility(View.VISIBLE);
-                                            txtPrivacy.setVisibility(View.VISIBLE);
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(activity, activity.getResources().getString(R.string.privacy_not_change), Toast.LENGTH_SHORT).show();
+                                                    progressBar.setVisibility(View.GONE);
+                                                    imagePrivacy.setVisibility(View.VISIBLE);
+                                                    txtPrivacy.setVisibility(View.VISIBLE);
+                                                }
+                                            });
                                         }
                                     }
                                 }).start();
