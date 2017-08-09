@@ -64,7 +64,7 @@ public class ChatHelper {
         // type = PickerBuilder.SELECT_FROM_GALLERY or PickerBuilder.SELECT_FROM_CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (fragmentActivity.checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Helper.getCroppedImageFromCamera(parentFragment, fragmentActivity, PickerBuilder.SELECT_FROM_GALLERY);
+                Helper.getCroppedImageFromCamera(parentFragment, fragmentActivity, type);
             } else
                 fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, Constants.CAMERA_PERMISSION_CODE);
         } else
@@ -140,14 +140,19 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Document result = ApiHelper.postAddDocument(userID, document, null, fragmentActivity);
-                if (result != null) {
-                    // success
-                    creatRealDocument(result, index,documentChatAdapter);
-                } else {
-                    // failed
-                    removeDummyDocument(index,documentChatAdapter);
-                }
+                final Document result = ApiHelper.postAddDocument(userID, document, null, fragmentActivity);
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result != null) {
+                            // success
+                            creatRealDocument(result, index,documentChatAdapter);
+                        } else {
+                            // failed
+                            removeDummyDocument(index,documentChatAdapter);
+                        }
+                    }
+                });
             }
         }).start();
     }
@@ -279,18 +284,23 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Document result=ApiHelper.postAddDocument(userID,document,file,fragmentActivity);
-                removeDummyDocument(index,documentChatAdapter);
-                if(result !=null){
-                    //success
-                    documents.add(result);
-                    documentChatAdapter.setList(documents);
-                    documentChatAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(index);
-                }else{
-                    // failed
-                    Toast.makeText(fragmentActivity, R.string.msg_not_send, Toast.LENGTH_SHORT).show();
-                }
+                final Document result=ApiHelper.postAddDocument(userID,document,file,fragmentActivity);
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result !=null){
+                            //success
+                            documents.add(result);
+                            documentChatAdapter.setList(documents);
+                            documentChatAdapter.notifyDataSetChanged();
+                            recyclerView.scrollToPosition(index);
+                        }else{
+                            // failed
+                            Toast.makeText(fragmentActivity, R.string.msg_not_send, Toast.LENGTH_SHORT).show();
+                        }
+                        removeDummyDocument(index,documentChatAdapter);
+                    }
+                });
             }
         }).start();
     }

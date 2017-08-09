@@ -282,14 +282,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-        if (userID == doctorID) {
-            documents = new ArrayList<>();
-            documentRepositry = new HttpDocumentRepositry(getActivity());
-        } else {
-            messages = new ArrayList<>();
-            messageRepositry = new HttpMessageRepositry(getActivity());
-        }
-        chatModelRepositry = new ChatModelRepositry(getActivity());
     }
 
     // set data in object
@@ -301,6 +293,15 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userPassword = prefManager.getData(prefManager.USER_PASSWORD);
 
         doctorID = getArguments().getInt("doctorID");
+        if (userID == doctorID) {
+            documents = new ArrayList<>();
+            documentRepositry = new HttpDocumentRepositry(getActivity());
+        } else {
+            messages = new ArrayList<>();
+            messageRepositry = new HttpMessageRepositry(getActivity());
+        }
+        chatModelRepositry = new ChatModelRepositry(getActivity());
+
         if (userID == doctorID) {
             chatModel.setLastName(getResources().getString(R.string.documents));
             chatModel.setFirstName(" ");
@@ -334,7 +335,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             @Override
             public void run() {
                 messages = ApiHelper.getMessages(userID, doctorID, getContext());
-                if (messages != null || messages.size() > 0) {
+                if (messages != null) {
                     // if arraylist have message set data in adapter and save in database and request message seen
                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -342,8 +343,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             isStoragePermissionGranted();
                         }
                     });
-                    if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
-                        getActivity().runOnUiThread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 for (Message message : messages) {
@@ -351,12 +351,17 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                     messageRepositry.createOrUpate(message);
                                 }
                             }
-                        });
+                        }).start();
                     // request seen all msg
                     messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
 
                 }
-                pbar_loading.setVisibility(View.GONE);
+                HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pbar_loading.setVisibility(View.GONE);
+                    }
+                });
             }
         }).start();
     }
@@ -366,17 +371,17 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             @Override
             public void run() {
                 documents = ApiHelper.postGetDocumentList(userID, getContext());
-                if (documents != null || documents.size() > 0) {
+                if (documents != null) {
                     // if arraylist have message set data in adapter and save in database and request message seen
                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             isStoragePermissionGranted();
-                            pbar_loading.setVisibility(View.GONE);
+
                         }
                     });
                     if (getActivity() != null) // I'm almost sure that this is caused when the thread finish its work but the activity is no longer visible.
-                        HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 for (Document document : documents) {
@@ -384,8 +389,14 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                     documentRepositry.createOrUpate(document);
                                 }
                             }
-                        });
+                        }).start();
                 }
+                HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pbar_loading.setVisibility(View.GONE);
+                    }
+                });
             }
         }).start();
     }
