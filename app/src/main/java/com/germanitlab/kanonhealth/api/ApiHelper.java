@@ -231,7 +231,7 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String supportedLangs, File file, Context context) {
+    public static Clinic postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, File file, Context context) {
         Clinic result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -245,7 +245,6 @@ public class ApiHelper {
             addClinicParameters.setProvince(province);
             addClinicParameters.setCountry(country);
             addClinicParameters.setPhone(phone);
-            addClinicParameters.setSupportedLangs(supportedLangs);
             String jsonString = "";
             if (file == null) {
                 jsonString = post(API_CLINICS_ADD, addClinicParameters.toJson());
@@ -283,7 +282,7 @@ public class ApiHelper {
         }
     }
 
-    public static Integer postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String supportedLangs, File file, Context context) {
+    public static Integer postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, File file, Context context) {
         Integer result = -1;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -297,7 +296,7 @@ public class ApiHelper {
             EditClinicParameters.setProvince(province);
             EditClinicParameters.setCountry(country);
             EditClinicParameters.setPhone(phone);
-            EditClinicParameters.setSupportedLangs(supportedLangs);
+             //EditClinicParameters.setSupportedLangs(supportedLangs);
 
             String jsonString = "";
             if (file == null) {

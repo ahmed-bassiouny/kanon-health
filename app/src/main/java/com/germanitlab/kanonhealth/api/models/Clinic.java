@@ -265,6 +265,10 @@ public class Clinic extends ParentModel{
     }
 
     public Integer getAvailable() {
+        if(isAvailable==null)
+        {
+            isAvailable=0;
+        }
         return isAvailable;
     }
 

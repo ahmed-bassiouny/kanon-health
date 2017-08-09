@@ -17,11 +17,11 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_RATE_NUM="rate_num";
     public static final String  PARAMETER_RATE_PERCENTAGE="rate_percentage";
     public static final String  PARAMETER_ADDRESS="address";
-    public static final String  PARAMETER_STREET_NAME="streetname";
+    public static final String  PARAMETER_STREET_NAME="street_name";
     public static final String  PARAMETER_HOUSE_NUMBER="house_number";
     public static final String  PARAMETER_ZIP_CODE= "zip_code";
     public static final String  PARAMETER_CITY= "city";
-    public static final String PARAMETER_PROVINCE=  "province";
+    public static final String PARAMETER_PROVINCE=  "providence";
     public static final String PARAMETER_COUNTRY="county";
     public static final String PARAMETER_PHONE= "phone";
     public static final String PARAMETER_FAX= "fax";
@@ -63,8 +63,8 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(PARAMETER_PHONE)
     private String phone;
 
-    @SerializedName(PARAMETER_SUPPORTED_LANG)
-    private String supportedLangs;
+//    @SerializedName(PARAMETER_SUPPORTED_LANG)
+//    private String supportedLangs;
 
 
 
@@ -139,12 +139,12 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public String getSupportedLangs() {
-        return supportedLangs;
-    }
-
-    public void setSupportedLangs(String supportedLangs) {
-        this.supportedLangs = supportedLangs;
-    }
+//
+//    public String getSupportedLangs() {
+//        return supportedLangs;
+//    }
+//
+//    public void setSupportedLangs(String supportedLangs) {
+//        this.supportedLangs = supportedLangs;
+//    }
 }

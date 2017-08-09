@@ -118,6 +118,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
             finish();
         }
     }
@@ -197,7 +198,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
 
         if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(),R.drawable.placeholder);
         }
 
             tvToolbarName.setText(clinic.getName());
@@ -212,14 +213,19 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
         // set specialities
         if (clinic.getSpeciality() != null) {
-            String specialities = "";
-            flSpeciliaty.removeAllViews();
-            for (Speciality speciality : clinic.getSpeciality()) {
-                specialities += speciality.getTitle() + ", ";
-                flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+        tvSpecilities.setText("");
+        flSpeciliaty.removeAllViews();
+        int size = 0;
+        for (Speciality speciality : clinic.getSpeciality()) {
+            flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+            tvSpecilities.append(speciality.getTitle());
+            size++;
+            if (size <  clinic.getSpeciality().size()) {
+                tvSpecilities.append(", ");
             }
-            specialities = specialities.substring(0, specialities.length() - 2);
-            tvSpecilities.setText(specialities);
+        }
+
+
         }
         // end specialities
         // set country

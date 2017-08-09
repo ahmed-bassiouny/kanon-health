@@ -48,6 +48,7 @@ import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.germanitlab.kanonhealth.settingsClinics.PrcticiesSAdapter;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -115,14 +116,16 @@ public class SettingFragment extends Fragment {
 //            UserInfo userInfo= new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
 //            List<ChooseModel> clinicsList = userInfo.get
 
-            List<Clinic> clinicsList = user.getClinics();
-            if(clinicsList.size() > 0){
+        ArrayList<Clinic> allClinics= new ArrayList<>();
+        allClinics.addAll(user.getClinics());
+        allClinics.addAll(user.getMyClinics());
+        if (allClinics.size()> 0) {
                 vLineUnderClinics.setVisibility(View.VISIBLE);
             }
             else {
                 vLineUnderClinics.setVisibility(View.GONE);
             }
-            mAdapter = new PrcticiesSAdapter(getContext(), clinicsList);
+            mAdapter = new PrcticiesSAdapter(getContext(), allClinics);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             rvPracticies.setLayoutManager(mLayoutManager);
             rvPracticies.setAdapter(mAdapter);

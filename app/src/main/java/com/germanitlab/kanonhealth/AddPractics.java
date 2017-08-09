@@ -303,10 +303,17 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Integer result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), langIds, file, getApplicationContext());
+                    Integer result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), file, getApplicationContext());
                     if (result != -1) {
-                        Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
-                        finish();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
+                                finish();
+
+                            }
+                        });
+
                     }
 
                 }
@@ -315,11 +322,17 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-            Clinic clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), langIds, file, getApplicationContext());
+            Clinic clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), file, getApplicationContext());
 
             if (clinic != null) {
-                Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
-                finish();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+
             }
                 }
 

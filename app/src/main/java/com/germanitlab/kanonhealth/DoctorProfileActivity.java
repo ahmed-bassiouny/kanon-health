@@ -181,6 +181,12 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                tvContact.setFocusableInTouchMode(true);
                 ivLanguagesList.setVisibility(View.VISIBLE);
                 ivSpecialityList.setVisibility(View.VISIBLE);
+                etStreetName.setEnabled(true);
+                etHouseNumber.setEnabled(true);
+                etZipCode.setEnabled(true);
+                etProvince.setEnabled(true);
+                textViewPhone.setEnabled(true);
+
 //                ivMemberList.setVisibility(View.VISIBLE);
                 break;
             case R.id.mi_save:
@@ -190,6 +196,14 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 ivLanguagesList.setVisibility(View.GONE);
                 ivSpecialityList.setVisibility(View.GONE);
 //                ivMemberList.setVisibility(View.GONE);
+                etStreetName.setEnabled(false);
+                etHouseNumber.setEnabled(false);
+                etZipCode.setEnabled(false);
+                etProvince.setEnabled(false);
+                textViewPhone.setEnabled(false);
+                tvOnline.setFocusable(false);
+                edAddToFavourite.setFocusable(false);
+                tvContact.setFocusable(false);
                 handleNewData();
                 bindData();
                 break;
@@ -239,26 +253,40 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
         ProgressHelper.showProgressBar(DoctorProfileActivity.this);
        // pickerDialog.dismiss();
-        ImageHelper.setImage(circleImageViewAvatar, avatar.getAbsolutePath());
+//        ImageHelper.setImage(circleImageViewAvatar, avatar.getAbsolutePath());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar);
                 if (result) {
                     // success
-                    ProgressHelper.hideProgressBar();
-                    Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
-                    menu.findItem(R.id.mi_edit).setVisible(true);
-                    menu.findItem(R.id.mi_save).setVisible(false);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ProgressHelper.hideProgressBar();
+                            Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
+                            menu.findItem(R.id.mi_edit).setVisible(true);
+                            menu.findItem(R.id.mi_save).setVisible(false);
+
+                        }
+                    });
+
 
                     // get url and save it in sharePref
                     //user.setAvatar(uploadImageResponse.getFile_url());
                     //prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
                 } else {
                     // falied
-                    ProgressHelper.hideProgressBar();
-                    circleImageViewAvatar.setImageResource(R.drawable.profile_place_holder);
-                    Toast.makeText(DoctorProfileActivity.this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ProgressHelper.hideProgressBar();
+                            circleImageViewAvatar.setImageResource(R.drawable.profile_place_holder);
+                            Toast.makeText(DoctorProfileActivity.this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
 
                 }
             }
@@ -656,6 +684,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     @Override
     public void deleteMyImage() {
         userInfo.setAvatar("");
+        avatar=null;
         ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
         prefManager.put(PrefManager.PROFILE_IMAGE, "");
         pickerDialog.dismiss();
@@ -695,7 +724,9 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     @Override
     public void ImagePickerCallBack(final Uri uri) {
-        avatar = new File(ImageFilePath.getPath(DoctorProfileActivity.this, uri));
+        avatar = new File(ImageFilePath.getPath(this, uri));
+        ImageHelper.setImage(circleImageViewAvatar, uri);
+        pickerDialog.dismiss();
     }
 
     @Override
