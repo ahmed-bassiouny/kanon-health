@@ -167,7 +167,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    chatModel = ApiHelper.getChatDoctor(getContext(), prefManager.getData(PrefManager.USER_ID));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -454,6 +454,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
+                setChatListAdapter(new ArrayList<ChatModel>());
                 getChatData();
 
             }
@@ -466,6 +467,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
+                setChatListAdapter(new ArrayList<ChatModel>());
                 getChatData();
             }
         });

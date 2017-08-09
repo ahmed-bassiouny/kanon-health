@@ -273,6 +273,10 @@ public class Clinic extends ParentModel{
     }
 
     public ArrayList<UserInfo> getDoctors() {
+        if(doctors==null)
+        {
+            doctors= new ArrayList<>();
+        }
         return doctors;
     }
 

@@ -421,12 +421,15 @@
                 android:id="@+id/edit_languages_list"
                 android:layout_width="20dp"
                 android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_alignTop="@id/fl_language"
                 android:layout_below="@+id/view_below_phone"
                 android:src="@drawable/edit"
-                android:layout_alignParentEnd="true"
                 android:textColor="@android:color/background_dark"
-                android:visibility="gone" />
+                android:visibility="gone"
+                />
 
             <View
                 android:layout_width="match_parent"
@@ -453,7 +456,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
-                android:layout_below="@+id/member_text"
+                android:layout_below="@+id/view_below_language"
                 android:src="@drawable/edit"
                 android:layout_margin="5dp"
                 android:textColor="@android:color/background_dark"

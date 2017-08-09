@@ -124,7 +124,14 @@ public class MultiChoiseListFragment extends DialogFragment {
                     public void run() {
                          allSpecialList= ApiHelper.getSpecialities(getActivity().getApplicationContext());
                          selectSpecialityAdapter = new SelectSpecialityAdapter(getContext(),allSpecialList,mySpecialList);
-                         initRecyclerView(selectSpecialityAdapter);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                initRecyclerView(selectSpecialityAdapter);
+
+                            }
+                        });
+
                     }
                 }).start();
 
@@ -135,7 +142,13 @@ public class MultiChoiseListFragment extends DialogFragment {
                     public void run() {
                         allLanguageList= ApiHelper.getLanguage(getActivity().getApplicationContext());
                         selectLanguageAdapter= new SelectLanguageAdapter(getContext(),allLanguageList,myLanguageList);
-                        initRecyclerView(selectLanguageAdapter);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                initRecyclerView(selectLanguageAdapter);
+                            }
+                        });
+
                     }
                 }).start();
                 break;
@@ -145,7 +158,13 @@ public class MultiChoiseListFragment extends DialogFragment {
                     public void run() {
                         allDoctorList= ApiHelper.postGetDoctorList(getActivity().getApplicationContext());
                         selectMemberDoctorAdapter= new SelectMemberDoctorAdapter(getContext(),allDoctorList,myDoctorList);
-                        initRecyclerView(selectMemberDoctorAdapter);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                initRecyclerView(selectMemberDoctorAdapter);
+                            }
+                        });
+
                     }
                 }).start();
                 break;
@@ -168,7 +187,7 @@ private void initRecyclerView(RecyclerView.Adapter adapter)
             switch (type) {
                 case Constants.SPECIALITIES:
 
-                    if(rbtn.isChecked())
+                    if(!rbtn.isChecked())
                     {
                         selectSpecialityAdapter.mySpecialList.add(selectSpecialityAdapter.allSpecialList.get(position));
                     }else
@@ -178,7 +197,7 @@ private void initRecyclerView(RecyclerView.Adapter adapter)
 
                     break;
                 case Constants.LANGUAUGE:
-                    if(rbtn.isChecked())
+                    if(!rbtn.isChecked())
                     {
                         selectLanguageAdapter.myLanguages.add(selectLanguageAdapter.allLanguages.get(position));
                     }else
@@ -189,7 +208,7 @@ private void initRecyclerView(RecyclerView.Adapter adapter)
 
                     break;
                 case Constants.DoctorAll:
-                    if(rbtn.isChecked())
+                    if(!rbtn.isChecked())
                     {
                         selectMemberDoctorAdapter.myDoctors.add(selectMemberDoctorAdapter.allDoctors.get(position));
                     }else

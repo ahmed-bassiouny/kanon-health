@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class SelectMemberDoctorAdapter extends RecyclerView.Adapter<SelectMember
                         holder.tv_title.setText(model.getFullName());
                         if (holder.img_icon != null) {
                             if (model.getAvatar()!= null && !TextUtils.isEmpty(model.getAvatar())) {
-                                ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_URL + "/" + model.getAvatar(), -1);
+                                ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_URL + "/" + model.getAvatar(),R.drawable.placeholder);
                             } else {
                                 holder.img_icon.setImageResource(R.drawable.placeholder);
                             }
@@ -68,6 +69,7 @@ public class SelectMemberDoctorAdapter extends RecyclerView.Adapter<SelectMember
                         else
                             holder.status.setImageResource(R.color.gray);
 
+                holder.tv_specialities.setText("");
 
             }
         } catch (Exception e) {
@@ -97,10 +99,12 @@ public class SelectMemberDoctorAdapter extends RecyclerView.Adapter<SelectMember
         public RelativeLayout relativeLayout;
         public CircleImageView img_icon, status;
         public CheckBox rbtn;
+        public  TextView tv_specialities;
 
         public MyViewHolder(View view) {
             super(view);
             tv_title = (TextView) view.findViewById(R.id.tv_title);
+            tv_specialities=(TextView) view.findViewById(R.id.tv_specilities);
             img_icon = (CircleImageView) view.findViewById(R.id.img_icon);
             status = (CircleImageView) view.findViewById(R.id.status);
             relativeLayout = (RelativeLayout) view.findViewById(R.id.multi_choise_layout);

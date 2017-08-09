@@ -180,23 +180,35 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                     if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
                         ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
                     }
-                    etName.setText(clinic.getName());
-                    etLocation.setText(clinic.getAddress());
-                    etHouseNumber.setText(clinic.getHouseNumber());
-                    etZipCode.setText(clinic.getZipCode());
-                    etProvince.setText(clinic.getProvince());
-                    etCountry.setText(clinic.getCountry());
-                    etTelephone.setText(clinic.getPhone());
-                    setSpecialities();
-                    setLanguages();
-                    setMemberDoctors();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            etName.setText(clinic.getName());
+                            etLocation.setText(clinic.getAddress());
+                            etHouseNumber.setText(clinic.getHouseNumber());
+                            etZipCode.setText(clinic.getZipCode());
+                            etProvince.setText(clinic.getProvince());
+                            etCountry.setText(clinic.getCountry());
+                            etTelephone.setText(clinic.getPhone());
+                            setSpecialities();
+                            setLanguages();
+                            setMemberDoctors();
+
+                        }
+                    });
+
                     //--------------------------------------------------------------------------location------------------------------------------------------//
 //                    if (clinic.get != null && !user.getLocation_img().isEmpty()) {
 //                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
 //                        location_img.setVisibility(View.VISIBLE);
 //                    }
                 } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
                     Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     finish();
                 }
                 progressDialog.dismiss();
@@ -300,12 +312,18 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                 }
             }).start();
         } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
             Clinic clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), langIds, file, getApplicationContext());
 
             if (clinic != null) {
                 Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
                 finish();
             }
+                }
+
+        }).start();
         }
 
 //
