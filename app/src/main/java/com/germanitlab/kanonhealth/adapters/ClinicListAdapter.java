@@ -86,7 +86,6 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
             if (holder.tvSpecialist != null) {
                 holder.tvSpecialist.setText("");
                 holder.linearLayoutSpecialist.removeAllViews();
-                SquareImageView image = new SquareImageView(activity);
                 holder.tvSpecialist.setLines(1);
                 holder.tvSpecialist.setMaxLines(1);
                 holder.tvSpecialist.setSingleLine(true);

@@ -182,6 +182,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     boolean showAttachmentDialog = false;
     HoldingButtonLayoutListener fragment = this;
     boolean expand = false;
+    boolean onBeforeExpand=false;
     ChatHelper chatHelper;
     ArrayList<Message> messages;
     HttpMessageRepositry messageRepositry;
@@ -1136,60 +1137,63 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @Override
     public void onBeforeExpand() {
-
-        mHoldingButtonLayout.setButtonEnabled(false);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mHoldingButtonLayout.setButtonEnabled(true);
-            }
-        }, 700);
-
-        timeDifference = 0;
-        flagLongPress = false;
-        expand = true;
-        vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
-        if (vp != null) {
-            vp.setEnableSwipe(false);
+if(onBeforeExpand==false) {
+    onBeforeExpand=true;
+    mHoldingButtonLayout.setButtonEnabled(false);
+    new Handler().postDelayed(new Runnable() {
+        @Override
+        public void run() {
+            mHoldingButtonLayout.setButtonEnabled(true);
         }
+    }, 700);
 
-        cancelAllAnimations();
-        mSlideToCancel.setTranslationX(0f);
-        mSlideToCancel.setAlpha(0f);
-        mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
-        mSlideToCancelAnimator.start();
+    timeDifference = 0;
+    flagLongPress = false;
+    expand = true;
+    vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+    if (vp != null) {
+        vp.setEnableSwipe(false);
+    }
 
-        mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
-        mInputAnimator.setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mInput.setVisibility(View.INVISIBLE);
-                mInputAnimator.setListener(null);
-            }
-        });
-        mInputAnimator.start();
+    cancelAllAnimations();
+    mSlideToCancel.setTranslationX(0f);
+    mSlideToCancel.setAlpha(0f);
+    mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+    mSlideToCancelAnimator.start();
 
-        mTime.setTranslationY(mTime.getHeight());
-        mTime.setAlpha(0f);
-        // mTime.setVisibility(View.VISIBLE);
-        mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
-        mTimeAnimator.start();
-        mStartTime = System.currentTimeMillis();
+    mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+    mInputAnimator.setListener(new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mInput.setVisibility(View.INVISIBLE);
+            mInputAnimator.setListener(null);
+        }
+    });
+    mInputAnimator.start();
+
+    mTime.setTranslationY(mTime.getHeight());
+    mTime.setAlpha(0f);
+    // mTime.setVisibility(View.VISIBLE);
+    mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+    mTimeAnimator.start();
+    mStartTime = System.currentTimeMillis();
+    invalidateTimer();
+}
 
     }
 
     @Override
     public void onExpand() {
+        onBeforeExpand=false;
         expand = true;
         // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-        invalidateTimer();
+
         // }
     }
 
-
     @Override
     public void onBeforeCollapse() {
+        onBeforeExpand=false;
         cancelAllAnimations();
         mSlideToCancelAnimator = mSlideToCancel.animate().alpha(0f).setDuration(mAnimationDuration);
         mSlideToCancelAnimator.setListener(new AnimatorListenerAdapter() {
@@ -1219,7 +1223,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @Override
     public void onCollapse(boolean isCancel) {
-
+        onBeforeExpand=false;
         if (expand) {
             expand = false;
             vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
@@ -1279,7 +1283,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     flagLongPress = true;
 
                     if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-
 
                         mStartTime = System.currentTimeMillis();
                         mTime.setVisibility(View.VISIBLE);
