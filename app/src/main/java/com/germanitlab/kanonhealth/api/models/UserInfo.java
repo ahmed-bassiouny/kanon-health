@@ -312,6 +312,10 @@ public class UserInfo extends ParentModel {
     }
 
     public ArrayList<Speciality> getSpecialities() {
+        if(specialities==null)
+        {
+            specialities= new ArrayList<>();
+        }
         return specialities;
     }
 

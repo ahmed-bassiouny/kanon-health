@@ -6,6 +6,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,12 +21,16 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
+import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
@@ -92,6 +98,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
     PrefManager prefManager;
     PickerDialog pickerDialog;
     int PLACE_PICKER_REQUEST = 7;
+    DoctorListAdapter doctorListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +120,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
-
-
-
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_new);
@@ -137,10 +140,9 @@ public class ClinicProfileActivity extends AppCompatActivity {
     }
 
     private void setVisiblitiy() {
-            tvOnline.setFocusableInTouchMode(true);
-            edAddToFavourite.setFocusableInTouchMode(true);
-            tvContact.setFocusableInTouchMode(true);
-
+        tvOnline.setFocusable(false);
+        edAddToFavourite.setFocusable(false);
+        tvContact.setFocusable(false);
     }
 
 
@@ -195,7 +197,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
 
         if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + clinic.getAvatar());
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
         }
 
             tvToolbarName.setText(clinic.getName());
@@ -211,8 +213,10 @@ public class ClinicProfileActivity extends AppCompatActivity {
         // set specialities
         if (clinic.getSpeciality() != null) {
             String specialities = "";
+            flSpeciliaty.removeAllViews();
             for (Speciality speciality : clinic.getSpeciality()) {
                 specialities += speciality.getTitle() + ", ";
+                flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
             }
             specialities = specialities.substring(0, specialities.length() - 2);
             tvSpecilities.setText(specialities);
@@ -255,14 +259,13 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
         // member at need handle
         if (clinic.getDoctors().size() > 0) {
-            /*set(adapter, userInfo.getClinics(), R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
             RecyclerView recyclerVie;
-            adapter = new SpecilaitiesAdapter(list, getApplicationContext(), type);
-            recyclerVie = (RecyclerView) findViewById(id);
+            doctorListAdapter=   new DoctorListAdapter(clinic.getDoctors(), this);
+            recyclerVie = (RecyclerView) findViewById(R.id.member_recycleview);
             recyclerVie.setHasFixedSize(true);
-            recyclerVie.setLayoutManager(new LinearLayoutManager(this, linearLayoutManager, false));
+            recyclerVie.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
             recyclerVie.setNestedScrollingEnabled(false);
-            recyclerVie.setAdapter(adapter);*/
+            recyclerVie.setAdapter(doctorListAdapter);
         }
 
         if(clinic.getLocationLat()>0.0 &&clinic.getLocationLong()>0.0){

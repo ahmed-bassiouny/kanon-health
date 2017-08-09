@@ -361,9 +361,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     private void bindData() {
 
-
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar());
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.placeholder);
         }
         if (is_me) {
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
@@ -372,7 +371,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             tvOnline.setText(userInfo.getTitle());
 
         } else {
-            tvToolbarName.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
+            tvToolbarName.setText(userInfo.getFullName());
             checkDoctor();
             tvContact.setText(R.string.contact_by_chat);
             if (userInfo.getAvailable() == 1)

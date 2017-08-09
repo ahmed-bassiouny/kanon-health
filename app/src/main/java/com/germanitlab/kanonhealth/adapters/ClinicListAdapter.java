@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.ClinicProfileActivity;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
@@ -160,8 +161,8 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
                 @Override
                 public void onClick(View view) {
                     /****** jira task number 208 **************************/
-                    Intent intent = new Intent(activity, DoctorProfileActivity.class);
-                    intent.putExtra("doctor_data", clinic);
+                    Intent intent = new Intent(activity, ClinicProfileActivity.class);
+                    intent.putExtra("clinic_data", clinic);
                     intent.putExtra("tab", "");
                     activity.startActivity(intent);
 

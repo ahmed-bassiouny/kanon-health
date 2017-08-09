@@ -91,32 +91,21 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             //----------------------------------------------------------------------------------set Specialist -------------------------//
             if (holder.tvSpecialist != null) {
                 holder.tvSpecialist.setText("");
-                int size = 0;
-                for (Speciality speciality : doctor.getSpecialities()) {
-                    if (TextUtils.isEmpty(holder.tvSpecialist.getText())) {
-                        holder.tvSpecialist.append(speciality .getTitle());
-                    } else {
-                        holder.tvSpecialist.append(", " + speciality .getTitle());
-                    }
-
-
-                    size++;
-
-                    SquareImageView image = new SquareImageView(activity);
-//                image.setBackgroundResource(R.drawable.doctor_icon);
-//                        int width = holder.linearLayoutSpecialist.getHeight();
-//                        int height = holder.linearLayoutSpecialist.getHeight();
-                    ImageHelper.setImage(image, ApiHelper.SERVER_IMAGE_URL + "/" + speciality.getImage());
-                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    parms.setMargins(5, 0, 5, 0);
-                    image.setLayoutParams(parms);
-                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    holder.linearLayoutSpecialist.addView(image);
-                }
+                holder.linearLayoutSpecialist.removeAllViews();
                 holder.tvSpecialist.setLines(1);
                 holder.tvSpecialist.setMaxLines(1);
                 holder.tvSpecialist.setSingleLine(true);
-                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
+                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);;
+                int size = 0;
+                for (Speciality speciality : doctor.getSpecialities()) {
+                    holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircle(speciality.getImage(), activity));
+                    holder.tvSpecialist.append(speciality.getTitle());
+
+                    if (size < doctor.getSpecialities().size()) {
+                        holder.tvSpecialist.append(", ");
+                        size++;
+                    }
+                }
             }
 
             //--------------------------------------------------------------------------------------------------//

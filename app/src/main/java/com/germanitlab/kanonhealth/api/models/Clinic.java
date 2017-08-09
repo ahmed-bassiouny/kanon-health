@@ -325,6 +325,10 @@ public class Clinic extends ParentModel{
     }
 
     public Integer getIsMyDoc() {
+        if(isMyDoc==null)
+        {
+            isMyDoc=0;
+        }
         return isMyDoc;
     }
 
