@@ -29,6 +29,7 @@ import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
+import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -41,6 +42,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -350,13 +352,13 @@ public class ClinicProfileActivity extends AppCompatActivity {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
     }
-    private void getTimeTableData(Table list) {
+    private void getTimeTableData(ArrayList<WorkingHours> list) {
         if (clinic != null) {
             if (list != null) {
-                if (list != null) {
+                if (list.size()> 0) {
                     tableLayoutTime.removeAllViews();
                     com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                    timeTable.creatTimeTable(list, this, tableLayoutTime);
+                    timeTable.creatTimeTable(list.get(0), this, tableLayoutTime);
                 }
             }
         }

@@ -164,7 +164,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     private void bindData() {
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.profile_place_holder);
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -204,21 +204,21 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
     }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        try {
-            if (imageUri != null)
-                outState.putString("imageURI", imageUri.toString());
-            setUserObject();
-            outState.putSerializable("userdata", userInfo);
-            super.onSaveInstanceState(outState);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        try {
+//            if (imageUri != null)
+//                outState.putString("imageURI", imageUri.toString());
+//            setUserObject();
+//            outState.putSerializable("userdata", userInfo);
+//            super.onSaveInstanceState(outState);
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     @Override
     public void onBackPressed() {
@@ -341,7 +341,13 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
                         }
                     });
                 }else{
-                    Toast.makeText(EditUserProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                    EditUserProfileActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(EditUserProfileActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
                 }
             }
         }).start();
@@ -362,8 +368,9 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     @Override
     public void deleteMyImage() {
             userInfo.setAvatar("");
-            ImageHelper.setImage(imgAvatar, Constants.CHAT_SERVER_URL + "/" + userInfo.getAvatar(), R.drawable.profile_place_holder);
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL+ "/" + "", R.drawable.profile_place_holder);
             prefManager.put(PrefManager.PROFILE_IMAGE, "");
+            avatar=null;
             pickerDialog.dismiss();
     }
 
@@ -372,5 +379,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         prefManager.put(PrefManager.PROFILE_IMAGE, uri.toString());
         ImageHelper.setImage(imgAvatar, uri);
         avatar = new File(ImageFilePath.getPath(EditUserProfileActivity.this, uri));
+        pickerDialog.dismiss();
     }
 }

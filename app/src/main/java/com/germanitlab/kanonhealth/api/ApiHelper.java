@@ -64,6 +64,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -595,11 +596,17 @@ public class ApiHelper {
             editDoctorParamater.setPhone(userInfo.getPhone());
             editDoctorParamater.setGender(userInfo.getGender());
             editDoctorParamater.setBirthday(userInfo.getBirthday());
+            editDoctorParamater.setProvidence(userInfo.getProvidence());
+            editDoctorParamater.setStreetName(userInfo.getStreetName());
+            editDoctorParamater.setHouseNumber(userInfo.getHouseNumber());
+            editDoctorParamater.setZipCode(userInfo.getZipCode());
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
+
             } else {
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
+                System.out.println(editDoctorParamater.toJson());
             }
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);

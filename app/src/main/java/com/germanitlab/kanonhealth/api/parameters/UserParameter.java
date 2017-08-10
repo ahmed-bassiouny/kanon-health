@@ -20,6 +20,11 @@ public  abstract class UserParameter extends ParentParameters {
     public static final String PARAMETER_BIRTHDAY = "birh_day";
     public static final String PARAMETER_GENDER = "gender";
     public static final String PARAMETER_AVATAR = "avatar";
+    public static final String KEY_STREET_NAME = "street_name";
+    public static final String KEY_HOUSE_NUMBER = "house_number";
+    public static final String KEY_PROVIDENCE = "providence";
+    public static final String KEY_ZIP_CODE = "zip_code";
+
 
     @SerializedName(PARAMETER_USER_ID)
     private Integer userID;
@@ -34,6 +39,14 @@ public  abstract class UserParameter extends ParentParameters {
     private String birthday;
     @SerializedName(PARAMETER_GENDER)
     private String gender;
+    @SerializedName(KEY_STREET_NAME)
+    private String streetName;
+    @SerializedName(KEY_HOUSE_NUMBER)
+    private String houseNumber;
+    @SerializedName(KEY_PROVIDENCE)
+    private String providence;
+    @SerializedName(KEY_ZIP_CODE)
+    private String zipCode;
 
 
     public Integer getUserID() {
@@ -91,5 +104,41 @@ public  abstract class UserParameter extends ParentParameters {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public static String getParameterUserId() {
+        return PARAMETER_USER_ID;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+
+    public String getProvidence() {
+        return providence;
+    }
+
+    public void setProvidence(String providence) {
+        this.providence = providence;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 }

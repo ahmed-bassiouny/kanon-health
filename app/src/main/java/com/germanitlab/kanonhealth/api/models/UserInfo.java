@@ -45,6 +45,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_PROVIDENCE = "providence";
     public static final String KEY_ZIP_CODE = "zip_code";
     public static final String KEY_QUESTIONS_ANSWERS = "questions_answers";
+    public static final String KEY_TIME_TABLE= "working_hours";
 
     // endregion
 
@@ -113,11 +114,13 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_MY_CLINICS)
     private ArrayList<Clinic> myClinics;
 
+    @SerializedName(KEY_TIME_TABLE)
+    private ArrayList<WorkingHours> timeTable;
+
 
     private LinkedHashMap<String, String> questionsAnswers;
     // i need key name from backend
     private Integer openType;
-    private Table timeTable;
     private Integer isMyDoc;
     // endregion
 
@@ -388,13 +391,18 @@ public class UserInfo extends ParentModel {
         this.openType = openType;
     }
 
-    public Table getTimeTable() {
+    public ArrayList<WorkingHours> getTimeTable() {
+        if(timeTable==null)
+        {
+            timeTable= new ArrayList<>();
+        }
         return timeTable;
     }
 
-    public void setTimeTable(Table timeTable) {
+    public void setTimeTable(ArrayList<WorkingHours> timeTable) {
         this.timeTable = timeTable;
     }
+
 
     public Integer getIsMyDoc() {
         if(isMyDoc==null)

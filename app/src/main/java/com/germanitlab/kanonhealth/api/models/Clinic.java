@@ -33,6 +33,7 @@ public class Clinic extends ParentModel{
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
     public static final String KEY_IS_AVAILABLE= "is_available";
     public static final String KEY_MEMBER_AT= "member_at";
+    public static final String KEY_TIME_TABLE= "working_hours";
 
     @SerializedName(KEY_ID)
     private Integer id;
@@ -97,11 +98,14 @@ public class Clinic extends ParentModel{
     @SerializedName(KEY_IS_AVAILABLE)
     private Integer isAvailable;
 
+    @SerializedName(KEY_TIME_TABLE)
+    private ArrayList<WorkingHours> timeTable;
+
     // i need key name from backend
     private Double locationLat;
     private Double locationLong;
     private Integer openType;
-    private Table timeTable;
+
     private Integer isMyDoc;
 
     public Integer getId() {
@@ -324,11 +328,15 @@ public class Clinic extends ParentModel{
         this.openType = openType;
     }
 
-    public Table getTimeTable() {
+    public ArrayList<WorkingHours> getTimeTable() {
+        if(timeTable==null)
+        {
+            timeTable= new ArrayList<>();
+        }
         return timeTable;
     }
 
-    public void setTimeTable(Table timeTable) {
+    public void setTimeTable(ArrayList<WorkingHours> timeTable) {
         this.timeTable = timeTable;
     }
 

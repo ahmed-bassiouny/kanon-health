@@ -32,6 +32,7 @@ import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -377,7 +378,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                         break;*/
 
                     case Constants.HOURS_CODE:
-                        userInfo.setTimeTable((Table) data.getSerializableExtra(Constants.DATA));
+                    //    userInfo.setTimeTable((Table) data.getSerializableExtra(Constants.DATA));
                         userInfo.setOpenType(data.getIntExtra("type", 0));
                         getTimeTableData(userInfo.getTimeTable());
                         break;
@@ -474,13 +475,13 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         showDialogFragment(bundle);
     }
 
-    private void getTimeTableData(Table list) {
+    private void getTimeTableData(ArrayList<WorkingHours> list) {
         if (userInfo != null) {
             if (list != null) {
-                if (list != null) {
+                if (list.size()>0 ) {
                     tableLayoutTime.removeAllViews();
                     com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                    timeTable.creatTimeTable(list, this, tableLayoutTime);
+                    timeTable.creatTimeTable(list.get(0), this, tableLayoutTime);
                 }
             }
         }
