@@ -26,6 +26,7 @@ import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.callback.Message;
+import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
@@ -156,7 +157,7 @@ public class MultiChoiseListFragment extends DialogFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        allDoctorList= ApiHelper.postGetDoctorList(getActivity().getApplicationContext());
+                        allDoctorList= ApiHelper.postGetDoctorList(getActivity().getApplicationContext(),new PrefManager(getContext()).getData(PrefManager.USER_ID));
                         selectMemberDoctorAdapter= new SelectMemberDoctorAdapter(getContext(),allDoctorList,myDoctorList);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

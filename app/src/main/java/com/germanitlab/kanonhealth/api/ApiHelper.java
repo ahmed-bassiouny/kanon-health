@@ -24,6 +24,7 @@ import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditDoctorParameter;
 import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
+import com.germanitlab.kanonhealth.api.parameters.FavouriteParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageForwardParameter;
@@ -122,6 +123,7 @@ public class ApiHelper {
 
 
     private static final String API_RATE_REVIEW = "users/rate_reviews";
+    private static final String API_FAVOURITE="favourite";
 
     private static final String API_TOKEN_REGISTER = "token/add";
 
@@ -400,11 +402,13 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<UserInfo> postGetDoctorList(Context context) {
+    public static ArrayList<UserInfo> postGetDoctorList(Context context,String userId) {
         ArrayList<UserInfo> result = new ArrayList<>();
         try {
 
-            String jsonString = post(API_DOCTORS_LIST, EMPTY_JSON);
+            UserInfoParameter userInfoParameter = new UserInfoParameter();
+            userInfoParameter.setUserID(userId);
+            String jsonString = post(API_DOCTORS_LIST, userInfoParameter.toJson());
             Gson gson = new Gson();
             GetDoctorListResponse getDoctorListResponse = gson.fromJson(jsonString, GetDoctorListResponse.class);
             if (getDoctorListResponse.getStatus()) {
@@ -849,5 +853,23 @@ public class ApiHelper {
         }
     }
 
+    public static boolean setFavouriteOperation(String fromID,String toID,int toType,boolean type){
+        boolean result=false;
+        try {
+            FavouriteParameters favouriteParameters=new FavouriteParameters();
+            favouriteParameters.setUserId(fromID);
+            favouriteParameters.setToId(toID);
+            favouriteParameters.setToType(toType);
+            favouriteParameters.setType(type);
+            String jsonString = post(API_FAVOURITE, favouriteParameters.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse=gson.fromJson(jsonString, ParentResponse.class);
+            result=parentResponse.getStatus();
+        }catch (Exception e){
+            Helper.handleError(TAG, "setFavouriteOperation", e, -1, null);
+        }finally {
+            return result;
+        }
+    }
     //endregion
 }

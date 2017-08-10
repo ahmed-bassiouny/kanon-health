@@ -17,6 +17,7 @@ public class ProgressHelper {
     public static void showProgressBar(Context context) {
         if (currentProgress == null) {
             currentProgress = new SpotsDialog(context, R.style.CustomProgressDialog);
+            currentProgress.show();
         }
     }
 

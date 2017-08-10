@@ -76,7 +76,7 @@ public class DoctorListFragment extends Fragment {
     private EditText edtDoctorListFilter;
     static DoctorListFragment doctorListFragment;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
-    public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = false, is_chat_data_right = false;
+    public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = true, is_chat_data_right = true;
     LinearLayoutManager llm;
 
 
@@ -400,7 +400,7 @@ public class DoctorListFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-             doctorList= ApiHelper.postGetDoctorList(getContext());
+             doctorList= ApiHelper.postGetDoctorList(getContext(),user.getUserID().toString());
 
                 if (!prefManager.get(PrefManager.IS_OLD)) {
                     is_doctor_data = true;

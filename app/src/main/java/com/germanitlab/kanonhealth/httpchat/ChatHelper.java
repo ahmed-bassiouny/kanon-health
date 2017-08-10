@@ -92,14 +92,19 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
-                if(result!=null){
-                    // success
-                    creatRealMessage(result, index,messages,chatAdapter,recyclerView);
-                }else{
-                    // failed
-                    removeDummyMessage(index,messages,recyclerView,chatAdapter);
-                }
+                final Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result!=null){
+                            // success
+                            creatRealMessage(result, index,messages,chatAdapter,recyclerView);
+                        }else{
+                            // failed
+                            removeDummyMessage(index,messages,recyclerView,chatAdapter);
+                        }
+                    }
+                });
             }
         }).start();
 
@@ -179,7 +184,7 @@ public class ChatHelper {
         message.setToID(doctorID);
         message.setMessage(textMsg);
         message.setType(Message.MESSAGE_TYPE_TEXT);
-        //message.setDateTime(getDateTimeNow());
+        message.setDateTime(getDateTimeNow());
         messages.add(message);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
@@ -244,17 +249,22 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Message result=ApiHelper.sendMessage(message,file,fragmentActivity);
-                removeDummyMessage(index,messages,recyclerView,chatAdapter);
-                if(result !=null){
-                    //success
-                    messages.add(result);
-                    chatAdapter.setList(messages);
-                    chatAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(index);
-                }else{
-                    // failed
-                }
+                final Message result=ApiHelper.sendMessage(message,file,fragmentActivity);
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeDummyMessage(index,messages,recyclerView,chatAdapter);
+                        if(result !=null){
+                            //success
+                            messages.add(result);
+                            chatAdapter.setList(messages);
+                            chatAdapter.notifyDataSetChanged();
+                            recyclerView.scrollToPosition(index);
+                        }else{
+                            // failed
+                        }
+                    }
+                });
             }
         }).start();
     }

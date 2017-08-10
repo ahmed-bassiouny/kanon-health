@@ -496,43 +496,35 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
-        /*if (is_me)
+        if(is_me)
             return;
-        if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
-            if (user.getIs_my_doctor().equals("0")) {
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        if (response != null && user != null) {
-                            user.setIs_my_doctor("1");
-                            checkDoctor();
+        ProgressHelper.showProgressBar(DoctorProfileActivity.this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final boolean result ;
+                if(userInfo.getIsMyDoc()==1){
+                    result = ApiHelper.setFavouriteOperation(prefManager.getData(PrefManager.USER_ID),userInfo.getUserID().toString(),userInfo.getUserType(),false);
+                    if(result)
+                        userInfo.setIsMyDoc(0);
+                }else{
+                    result = ApiHelper.setFavouriteOperation(prefManager.getData(PrefManager.USER_ID),userInfo.getUserID().toString(),userInfo.getUserType(),true);
+                    if(result)
+                        userInfo.setIsMyDoc(1);
+                }
+                    DoctorProfileActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(result) {
+                                checkDoctor();
+                            } else{
+                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+                            }
+                            ProgressHelper.hideProgressBar();
                         }
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                        Log.i("Doctor Profile  ", " Activity " + error);
-                    }
-                }).addToMyDoctor(user.get_Id() + "");
-            } else {
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        if (response != null && user != null) {
-                            user.setIs_my_doctor("0");
-                            checkDoctor();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                        Log.i("Doctor Profile  ", " Activity " + error);
-                    }
-                }).removeFromMyDoctor(user.get_Id() + "");
+                    });
             }
-*/
+        }).start();
     }
 
     private void checkDoctor() {
