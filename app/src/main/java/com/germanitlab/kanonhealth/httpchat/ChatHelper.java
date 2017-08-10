@@ -86,7 +86,7 @@ public class ChatHelper {
         message.setFromID(userID);
         message.setToID(doctorID);
         message.setDateTime(getDateTimeNow());
-        message.setMedia("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
+        message.setMessage("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
         message.setType(Message.MESSAGE_TYPE_LOCATION);
 
         new Thread(new Runnable() {
@@ -116,7 +116,7 @@ public class ChatHelper {
         final int index = creatDummyDocument(documentChatAdapter,documents,recyclerView);
         final Document document = new Document();
         document.setDateTime(getDateTimeNow());
-        document.setMedia("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
+        document.setDocument("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
         document.setType(Message.MESSAGE_TYPE_LOCATION);
 
         new Thread(new Runnable() {

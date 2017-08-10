@@ -26,9 +26,7 @@ public class ChatModel extends UserInfo {
     @SerializedName(KEY_TIME)
     private String time;
     @SerializedName(KEY_ISOPEN)
-    private int open;
-    private int requestID;
-    private int haveRate;
+
 
     public Integer getRoomID() {
         return roomID;
@@ -71,27 +69,5 @@ public class ChatModel extends UserInfo {
         this.time = time;
     }
 
-    public int getOpen() {
-        return open;
-    }
 
-    public void setOpen(int open) {
-        this.open = open;
-    }
-
-    public int getRequestID() {
-        return requestID;
-    }
-
-    public void setRequestID(int requestID) {
-        this.requestID = requestID;
-    }
-
-    public int getHaveRate() {
-        return haveRate;
-    }
-
-    public void setHaveRate(int haveRate) {
-        this.haveRate = haveRate;
-    }
 }

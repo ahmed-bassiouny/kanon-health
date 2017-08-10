@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.models.Table;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.LinkedHashMap;
  * Created by bassiouny on 02/08/17.
  */
 
+@DatabaseTable
 public class UserInfo extends ParentModel {
 
     //region key
@@ -57,60 +60,76 @@ public class UserInfo extends ParentModel {
 
     // region Attributes
     @SerializedName(KEY_USERID)
+    @DatabaseField(id = true)
     private Integer userID;
     @SerializedName(KEY_DOCTOR_ID)
+    @DatabaseField
     private Integer doctorID;
     // usertype => 1 patient , 2 doctor
     @SerializedName(KEY_USERTYPE)
+    @DatabaseField
     private Integer userType;
     @SerializedName(KEY_FIRSTNAME)
+    @DatabaseField
     private String  firstName="";
     @SerializedName(KEY_LASTNAME)
+    @DatabaseField
     private String  lastName="";
     @SerializedName(KEY_TITLE)
+    @DatabaseField
     private String  title="";
     @SerializedName(KEY_PASSWORD)
+    @DatabaseField
     private String password;
     @SerializedName(KEY_COUNTRY_CODE)
+    @DatabaseField
     private String country_code;
     @SerializedName(KEY_PHONE)
+    @DatabaseField
     private String phone;
     @SerializedName(KEY_GENDER)
+    @DatabaseField
     private String gender;
     @SerializedName(KEY_BIRTHDAY)
+    @DatabaseField
     private String birthday;
     @SerializedName(KEY_AVATAR)
+    @DatabaseField
     private String avatar;
     @SerializedName(KEY_IS_AVAILABLE)
+    @DatabaseField
     private Integer isAvailable;
     @SerializedName(KEY_DOCUMENTS)
     private ArrayList<Document> documents;
     @SerializedName(KEY_EMAIL)
+    @DatabaseField
     private String email;
     @SerializedName(KEY_RATE_NUM)
+    @DatabaseField
     private Float rateNum;
     @SerializedName(KEY_RATE_PERCENTAGE)
     private HashMap<String, Integer> ratePercentage;
     @SerializedName(KEY_STREET_NAME)
+    @DatabaseField
     private String streetName;
     @SerializedName(KEY_HOUSE_NUMBER)
+    @DatabaseField
     private String houseNumber;
     @SerializedName(KEY_PROVIDENCE)
+    @DatabaseField
     private String providence;
     @SerializedName(KEY_ZIP_CODE)
+    @DatabaseField
     private String zipCode;
     @SerializedName(KEY_SUPPORTED_LANG)
     private ArrayList<Language> supportedLangs;
-
     @SerializedName(KEY_ACTIVATED)
+    @DatabaseField
     private Integer isActive;
-
     @SerializedName(KEY_SPECIALITIES)
     private ArrayList<Speciality> specialities;
-
     @SerializedName(Clinics)
     private ArrayList<Clinic> clinics;
-
     @SerializedName(KEY_MY_CLINICS)
     private ArrayList<Clinic> myClinics;
 
@@ -120,8 +139,17 @@ public class UserInfo extends ParentModel {
 
     private LinkedHashMap<String, String> questionsAnswers;
     // i need key name from backend
+    @DatabaseField
     private Integer openType;
+    private Table timeTable;
+    @DatabaseField
     private Integer isMyDoc;
+    @DatabaseField
+    private int open;
+    @DatabaseField
+    private int requestID;
+    @DatabaseField
+    private int haveRate;
     // endregion
 
 
@@ -428,5 +456,28 @@ public class UserInfo extends ParentModel {
         this.myClinics = myClinics;
     }
 
+    public int getOpen() {
+        return open;
+    }
+
+    public void setOpen(int open) {
+        this.open = open;
+    }
+
+    public int getRequestID() {
+        return requestID;
+    }
+
+    public void setRequestID(int requestID) {
+        this.requestID = requestID;
+    }
+
+    public int getHaveRate() {
+        return haveRate;
+    }
+
+    public void setHaveRate(int haveRate) {
+        this.haveRate = haveRate;
+    }
     //endregion
 }

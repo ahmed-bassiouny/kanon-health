@@ -647,7 +647,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 @Override
                 public void onClick(View v) {
                     try {
-                        JSONObject jsonObject = new JSONObject(locationMessage.getMedia());
+                        JSONObject jsonObject = new JSONObject(locationMessage.getMessage());
                         Intent intent = new Intent(activity, MapsActivity.class);
                         intent.putExtra("lat", jsonObject.getString("lat"));
                         intent.putExtra("long", jsonObject.getString("long"));
@@ -681,7 +681,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                 }
             });
             imageViewHolder.image_message.setImageBitmap(null);
-            JSONObject jsonObject = new JSONObject(locationMessage.getMedia());
+            JSONObject jsonObject = new JSONObject(locationMessage.getMessage());
             double lat = jsonObject.getDouble("lat");
             double lng = jsonObject.getDouble("long");
             String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(lat) + "," + String.valueOf(lng) + "&zoom=15&size=200x200&sensor=false";

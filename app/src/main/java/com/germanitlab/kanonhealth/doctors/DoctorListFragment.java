@@ -37,6 +37,8 @@ import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
+import com.germanitlab.kanonhealth.models.ChooseModel;
+import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -63,7 +65,6 @@ public class DoctorListFragment extends Fragment {
     ArrayList<UserInfo> doctorList;
     ArrayList<Clinic> clinics;
 
-    ArrayList<ChatModel> chatModel;
     private Button btnLeftList, btnRightList;
     int speciality_id;
     String jsonString;
@@ -78,7 +79,7 @@ public class DoctorListFragment extends Fragment {
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = true, is_chat_data_right = true;
     LinearLayoutManager llm;
-
+    public UserInfoRepositry chatModelRepositry;
 
     private  static boolean leftTabVisible=true;
 
@@ -119,10 +120,9 @@ public class DoctorListFragment extends Fragment {
           //  type = User.DOCTOR_TYPE;
             doctorList = new ArrayList<>();
             clinics= new ArrayList<>();
-            chatModel= new ArrayList<>();
 
             //mDoctorRepository = new UserRepository(getActivity());
-
+            chatModelRepositry=new UserInfoRepositry(getActivity());
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -210,7 +210,10 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatDoctor(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel= ApiHelper.getChatDoctor(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    for(UserInfo userInfo:chatModel){
+                        chatModelRepositry.createOrUpdate(userInfo);
+                    }
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -220,7 +223,10 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatClinic(getContext(),prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(),prefManager.getData(PrefManager.USER_ID));
+                    for(UserInfo userInfo:chatModel){
+                        chatModelRepositry.createOrUpdate(userInfo);
+                    }
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
@@ -231,7 +237,10 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    for(UserInfo userInfo:chatModel){
+                        chatModelRepositry.createOrUpdate(userInfo);
+                    }
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -241,7 +250,10 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatClinic(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    for(UserInfo userInfo:chatModel){
+                        chatModelRepositry.createOrUpdate(userInfo);
+                    }
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
@@ -401,7 +413,9 @@ public class DoctorListFragment extends Fragment {
             @Override
             public void run() {
              doctorList= ApiHelper.postGetDoctorList(getContext(),user.getUserID().toString());
-
+                for(UserInfo userInfo:doctorList){
+                    chatModelRepositry.createOrUpdate(userInfo);
+                }
                 if (!prefManager.get(PrefManager.IS_OLD)) {
                     is_doctor_data = true;
                     if(leftTabVisible) {

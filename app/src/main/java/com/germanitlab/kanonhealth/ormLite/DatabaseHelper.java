@@ -62,9 +62,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
         // here we try inserting data in the on-create as a test
-//        RuntimeExceptionDao<UserInfo, Integer> dao = getUsersDataDao();
-//        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDataDao = getMessagesDataDao();
-//        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> daos = getDocumentDataDao();
+        RuntimeExceptionDao<UserInfo, Integer> dao = getUsersDataDao();
+        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDataDao = getMessagesDataDao();
+        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> daos = getDocumentDataDao();
         // create some entries in the onCreate
         Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate");
     }

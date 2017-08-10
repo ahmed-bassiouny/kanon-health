@@ -18,6 +18,7 @@ public class DatabaseManager {
             databaseHelper =
                     OpenHelperManager.getHelper(context, DatabaseHelper.class);
         }
+        databaseHelper.setWriteAheadLoggingEnabled(true);
         return databaseHelper;
     }
 

@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.api.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -25,30 +26,39 @@ public class Message extends ParentModel {
     //region attribute
     // id of message
     @SerializedName(KEY_ID)
+    @DatabaseField(id = true)
     private Integer messageID;
     // body of messgae or url of media
     @SerializedName(KEY_MESSAGE)
+    @DatabaseField
     private String message;
     // status of message => 1 delivered to server  , 2 delivered to user , 3 seen by user
     @SerializedName(KEY_STATUS)
+    @DatabaseField
     private Integer status;
 
     // url of image or video or audio , etc
     @SerializedName(KEY_MEDIA)
+    @DatabaseField
     private String media;
     // type of messgae image or video or audio , etc
     @SerializedName(KEY_TYPE)
+    @DatabaseField
     private String type;
     //
     @SerializedName(KEY_IS_FORWARD)
+    @DatabaseField
     private Integer forward;
     // date time of message (UTC)
     @SerializedName(KEY_CREATED_AT)
+    @DatabaseField
     private String dateTime;
 
     @SerializedName(KEY_FROMID)
+    @DatabaseField
     private Integer fromID;
     @SerializedName(KEY_TOID)
+    @DatabaseField
     private Integer toID;
 
     //endregion
