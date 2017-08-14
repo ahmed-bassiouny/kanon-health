@@ -19,11 +19,10 @@ import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import java.util.LinkedHashMap;
@@ -72,12 +71,10 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private UserInfo userInfoResponse = new UserInfo();
-    private PrefManager mPrefManager;
 
     private QuestionAdapter mAdapter;
     private DoctorDocumentAdapter mAdapter2;
     LinkedHashMap<String, String> questionAnswer;
-    PrefManager prefManager;
 
 //    public static int indexFromIntent=0;
 
@@ -92,18 +89,16 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_profile);
         ButterKnife.bind(this);
         initTB();
-        prefManager = new PrefManager(this);
 
         try {
 
 
-            mPrefManager = new PrefManager(this);
             Intent intent = getIntent();
             Boolean from = intent.getBooleanExtra("from", false);
             if (!from) {
 
                 userInfoResponse = (UserInfo) intent.getSerializableExtra("userInfoResponse");
-                mPrefManager.put(PrefManager.USER_KEY, new Gson().toJson(userInfoResponse));
+                PrefHelper.put(ProfileActivity.this,PrefHelper.KEY_USER_KEY,new Gson().toJson(userInfoResponse));
                 bindData();
                 progressBar.setVisibility(View.GONE);
                 linearProfileContent.setVisibility(View.VISIBLE);
@@ -114,10 +109,10 @@ public class ProfileActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, prefManager.getData(PrefManager.USER_ID));
+                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, PrefHelper.get(ProfileActivity.this,PrefHelper.KEY_USER_ID,""));
                             if (userInfo != null) {
                                     Gson gson = new Gson();
-                                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(userInfo));
+                                PrefHelper.put(ProfileActivity.this,PrefHelper.KEY_USER_KEY,gson.toJson(userInfo));
                                     ProfileActivity.this.userInfoResponse = userInfo;
                                     ProfileActivity.this.runOnUiThread(new Runnable() {
                                         @Override
@@ -273,6 +268,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.img_profile_qr)
     public void qrcode() {
-        new Helper(this).ImportQr(mPrefManager);
+        new Helper(this).ImportQr();
     }
 }

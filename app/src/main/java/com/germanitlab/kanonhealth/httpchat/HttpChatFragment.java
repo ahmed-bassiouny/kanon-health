@@ -30,6 +30,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -115,7 +116,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @BindView(R.id.img_chat_user_avatar)
     ImageView img_chat_user_avatar;
     @BindView(R.id.toolbar)
-    LinearLayout toolbar;
+    Toolbar toolbar;
     @BindView(R.id.button2)
     Button button2;
     @BindView(R.id.can_rate)
