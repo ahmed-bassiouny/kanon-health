@@ -49,6 +49,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_ZIP_CODE = "zip_code";
     public static final String KEY_QUESTIONS_ANSWERS = "questions_answers";
     public static final String KEY_TIME_TABLE= "working_hours";
+    public static final String KEY_ISOPEN="is_open";
 
     // endregion
 
@@ -132,9 +133,11 @@ public class UserInfo extends ParentModel {
     private ArrayList<Clinic> clinics;
     @SerializedName(KEY_MY_CLINICS)
     private ArrayList<Clinic> myClinics;
-
     @SerializedName(KEY_TIME_TABLE)
     private ArrayList<WorkingHours> timeTable;
+    @SerializedName(KEY_ISOPEN)
+    @DatabaseField
+    private int isSessionOpen;
 
 
     private LinkedHashMap<String, String> questionsAnswers;
@@ -143,8 +146,6 @@ public class UserInfo extends ParentModel {
     private Integer openType;
     @DatabaseField
     private Integer isMyDoc;
-    @DatabaseField
-    private int open;
     @DatabaseField
     private int requestID;
     @DatabaseField
@@ -455,13 +456,6 @@ public class UserInfo extends ParentModel {
         this.myClinics = myClinics;
     }
 
-    public int getOpen() {
-        return open;
-    }
-
-    public void setOpen(int open) {
-        this.open = open;
-    }
 
     public int getRequestID() {
         return requestID;
@@ -477,6 +471,14 @@ public class UserInfo extends ParentModel {
 
     public void setHaveRate(int haveRate) {
         this.haveRate = haveRate;
+    }
+
+    public int getIsSessionOpen() {
+        return isSessionOpen;
+    }
+
+    public void setIsSessionOpen(int isSessionOpen) {
+        this.isSessionOpen = isSessionOpen;
     }
     //endregion
 }

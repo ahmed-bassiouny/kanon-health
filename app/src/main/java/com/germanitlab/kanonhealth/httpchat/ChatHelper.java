@@ -184,6 +184,7 @@ public class ChatHelper {
         message.setToID(doctorID);
         message.setMessage(textMsg);
         message.setType(Message.MESSAGE_TYPE_TEXT);
+        message.setStatus(0);
         message.setDateTime(getDateTimeNow());
         messages.add(message);
         chatAdapter.setList(messages);

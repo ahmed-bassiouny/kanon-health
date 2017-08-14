@@ -415,6 +415,8 @@ public class ApiHelper {
             if (getDoctorListResponse.getStatus()) {
                 result = getDoctorListResponse.getData();
             }
+
+            Log.i("UserInformation:" , result.get(1).getIsMyDoc()+"");
         } catch (Exception e) {
             Helper.handleError(TAG, "postGetDoctorList", e, -1, context);
         } finally {
@@ -626,8 +628,6 @@ public class ApiHelper {
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userID);
-            System.out.println(userInfoParameter.toJson());
-
             String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             Gson gson = new Gson();
             UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);

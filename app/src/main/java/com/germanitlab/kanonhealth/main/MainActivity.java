@@ -47,7 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainActivity extends ParentActivity implements OnImgDoctorListMapClick {
+public class MainActivity extends ParentActivity {
 
 
     private TabLayout mytablayout;
@@ -161,12 +161,12 @@ public class MainActivity extends ParentActivity implements OnImgDoctorListMapCl
     }
 
 
-    @Override
+    /*@Override
     public void OnImgDoctorListMapClick() {
 
         new Helper(MainActivity.this).replaceFragments(new DoctorListMapFragment(),
                 R.id.doctor_list_continer, "DoctorListMapFragment");
-    }
+    }*/
 
 
     private void setupTabIcons() {

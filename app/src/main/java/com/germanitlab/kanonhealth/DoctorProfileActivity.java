@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -232,6 +233,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         if (is_me)
             return;
         Intent intent = new Intent(this, HttpChatActivity.class);
+        intent.putExtra("userInfo",userInfo);
         intent.putExtra("doctorID", userInfo.getUserID());
         startActivity(intent);
     }
@@ -522,8 +524,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                         public void run() {
                             if(result) {
                                 checkDoctor();
-                            } else{
-                                Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
                            hideProgressBar();
                         }

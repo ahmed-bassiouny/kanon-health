@@ -13,7 +13,6 @@ public class ChatModel extends UserInfo {
     public static final String KEY_MESSAGE_TYPE="type";
     public static final String KEY_IS_FORWARD="is_forward";
     public static final String KEY_TIME="time";
-    public static final String KEY_ISOPEN="is_open";
 
     @SerializedName(KEY_ROOM_ID)
     private Integer roomID;
@@ -25,7 +24,6 @@ public class ChatModel extends UserInfo {
     private String isForward;
     @SerializedName(KEY_TIME)
     private String time;
-    @SerializedName(KEY_ISOPEN)
 
 
     public Integer getRoomID() {

@@ -27,6 +27,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -240,8 +241,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 }
             }
         });
-
-
         return view;
     }
 
@@ -274,13 +273,13 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // declare objects in this fragment
     private void initObjects() {
-        userInfo = new ChatModel();
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
         chatHelper=new ChatHelper();
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
     // set data in object
@@ -293,6 +292,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userPassword = PrefHelper.get(getContext(),PrefHelper.KEY_USER_PASSWORD,"");
 
         doctorID = getArguments().getInt("doctorID");
+        userInfo = new UserInfo();
+        if(userID != doctorID)
+            userInfo=(UserInfo) getArguments().getSerializable("userInfo");
         if (userID == doctorID) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());
@@ -306,33 +308,23 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setLastName(getResources().getString(R.string.documents));
             userInfo.setFirstName(" ");
             toolbar.setVisibility(View.GONE);
-            setDatainToolbar();
         } else if (doctorID == CustomerSupportActivity.supportID) {
             userInfo.setUserID(doctorID);
             userInfo.setLastName(getResources().getString(R.string.support));
             userInfo.setFirstName(" ");
-            userInfo.setOpen(1);
+            userInfo.setIsSessionOpen(1);
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
-            setDatainToolbar();
-        } else {
+        }
             // get data of doctor i talk with him from database
             //userInfo = chatModelRepositry.getDoctor(userID);
                 //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    userInfo = ApiHelper.getUserInfo(getContext(),String.valueOf(doctorID));
-                    if(userInfo!=null){
-                        setDatainToolbar();
-                    }else{
-                        Toast.makeText(getContext(), "Sorry can't get information about user", Toast.LENGTH_SHORT).show();
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
-                }
-            }).start();
-        }
-
+                //-------- get user from intent instead of database
+            if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
+                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
+            if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
+                tv_chat_user_name.setText(userInfo.getLastName()+" "+ userInfo.getFirstName());
+            }
     }
 
     private void loadChatOnline() {
@@ -816,7 +808,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 //  Toast.makeText(context, "Session Closed", Toast.LENGTH_SHORT).show();
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if ((message.getFromID() == userID || message.getFromID() == doctorID) && (message.getToID() == userID || message.getToID() == doctorID)) {
-                    userInfo.setOpen(0);
+                    userInfo.setIsSessionOpen(0);
                     chatModelRepositry.createOrUpdate(userInfo);
                     checkSessionOpen(iamDoctor);
                     getActivity().invalidateOptionsMenu();
@@ -873,7 +865,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             // i chat with client and sssion closed
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
-            if (userInfo.getOpen() == 0) {
+            if (userInfo.getIsSessionOpen() == 0) {
                 imgbtn_chat_attach.setEnabled(false);
                 mHoldingButtonLayout.setButtonEnabled(false);
                 // img_requestpermission.setEnabled(false);
@@ -883,7 +875,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             // client chat with clinics
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
-        } else if (userInfo.getOpen() == 0) {
+        } else if (userInfo.getIsSessionOpen() == 0) {
             // client chat with doctor and session closed
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
@@ -904,7 +896,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if (doctorID == 1 || userInfo.getOpen() == 0) {
+        if (doctorID == 1 || userInfo.getIsSessionOpen() == 0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
@@ -1411,9 +1403,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
 
     protected void stopRecording(boolean saveFile) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long endTimeForRecording = cal.getTimeInMillis();
-
         try {
             mRecorder.stop();
         } catch (RuntimeException stopException) {
@@ -1441,10 +1430,11 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         }
     }
     private void setDatainToolbar(){
-        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
-        if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
-            tv_chat_user_name.setText(userInfo.getLastName()+" "+ userInfo.getFirstName());
-        }
+        HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 }
