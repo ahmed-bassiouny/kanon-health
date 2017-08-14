@@ -37,8 +37,6 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.custom.FixedHoloDatePickerDialog;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -104,7 +102,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     ProgressDialog progressDialog;
     UserInfo userInfo;
     Info info;
-    PrefManager prefManager;
     Uri imageUri;
     PickerDialog pickerDialog;
     private static final int TAKE_PICTURE = 1;
@@ -124,7 +121,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_edit_profile);
         try {
-            prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
             util = Util.getInstance(this);
             ButterKnife.bind(this);
@@ -368,14 +364,12 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     public void deleteMyImage() {
             userInfo.setAvatar("");
             ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL+ "/" + "", R.drawable.profile_place_holder);
-            prefManager.put(PrefManager.PROFILE_IMAGE, "");
             avatar=null;
             pickerDialog.dismiss();
     }
 
     @Override
     public void ImagePickerCallBack(Uri uri) {
-        prefManager.put(PrefManager.PROFILE_IMAGE, uri.toString());
         ImageHelper.setImage(imgAvatar, uri);
         avatar = new File(ImageFilePath.getPath(EditUserProfileActivity.this, uri));
         pickerDialog.dismiss();
