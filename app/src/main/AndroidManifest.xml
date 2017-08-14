@@ -125,6 +125,9 @@
         <activity
             android:name=".intro.VerificationActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".RateActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".Firebase.FirebaseMessagingService">
             <intent-filter>
