@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.main.MainActivity;
 
 import butterknife.BindView;
@@ -30,7 +30,6 @@ public class PasscodeActivty extends AppCompatActivity {
     boolean has_back; // go back to the previuos activity
     String tempPasscode = "";
     String passcode = "";
-    PrefManager prefManager;
     int pinCircle=0;
 
     @BindView(R.id.pass_text)
@@ -58,7 +57,6 @@ public class PasscodeActivty extends AppCompatActivity {
         views=new Button[]{ind_one,ind_two,ind_three,ind_four,ind_five,ind_six};
         colorCircles();
         try {
-            prefManager = new PrefManager(this);
             checkPassword = getIntent().getBooleanExtra("checkPassword", true);
             finish = getIntent().getBooleanExtra("finish", true);
             has_back = getIntent().getBooleanExtra("has_back", false);
@@ -220,7 +218,7 @@ public class PasscodeActivty extends AppCompatActivity {
 
                 } else if (tempPasscode.equals(passcode)) {
                     //enter passcode second time to save it
-                    prefManager.put(PrefManager.PASSCODE, passcode);
+                    PrefHelper.put(getApplicationContext(),PrefHelper.KEY_PASSCODE, passcode);
                     Toast.makeText(this, R.string.your_password_saved, Toast.LENGTH_SHORT).show();
                     finishActivity();
                 } else if (!tempPasscode.equals(passcode)) {
@@ -250,7 +248,7 @@ public class PasscodeActivty extends AppCompatActivity {
     }
 
     private void checkPasscode() {
-        if (passcode.equals(prefManager.getData(PrefManager.PASSCODE)))
+        if (passcode.equals(PrefHelper.get(getApplicationContext(),PrefHelper.KEY_PASSCODE,"")))
             finishActivity();
         else {
             new Handler().postDelayed(new Runnable() {
