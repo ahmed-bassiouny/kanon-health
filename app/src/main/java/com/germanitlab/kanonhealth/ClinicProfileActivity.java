@@ -30,7 +30,6 @@ import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.api.models.WorkingHours;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -97,7 +96,6 @@ public class ClinicProfileActivity extends AppCompatActivity {
     //---------------------
     Clinic clinic;
     SpecilaitiesAdapter adapter;
-    PrefManager prefManager;
     PickerDialog pickerDialog;
     int PLACE_PICKER_REQUEST = 7;
     DoctorListAdapter doctorListAdapter;
@@ -112,7 +110,6 @@ public class ClinicProfileActivity extends AppCompatActivity {
         try {
             clinic = new Clinic();
             clinic = (Clinic) getIntent().getSerializableExtra("clinic_data");
-            prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
 
             bindData();
