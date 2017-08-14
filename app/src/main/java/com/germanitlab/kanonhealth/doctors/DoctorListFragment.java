@@ -33,7 +33,6 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
@@ -182,7 +181,7 @@ public class DoctorListFragment extends Fragment {
             btnLeftList.setBackgroundResource(R.color.gray);
             btnLeftList.setTextColor(getResources().getColor(R.color.black));
         }
-        if (!prefManager.get(PrefManager.IS_OLD)) {
+        if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
             loadFirstTime();
         }
 
@@ -209,7 +208,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel= ApiHelper.getChatDoctor(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel= ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -222,7 +221,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(),prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -236,7 +235,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -249,7 +248,7 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -415,7 +414,7 @@ public class DoctorListFragment extends Fragment {
                 for(UserInfo userInfo:doctorList){
                     chatModelRepositry.createOrUpdate(userInfo);
                 }
-                if (!prefManager.get(PrefManager.IS_OLD)) {
+                if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
                     is_doctor_data = true;
                     if(leftTabVisible) {
                         setDoctorAdapter(doctorList);
@@ -438,7 +437,7 @@ public class DoctorListFragment extends Fragment {
             @Override
             public void run() {
                 clinics= ApiHelper.postGetClinicList(getContext());
-                if (!prefManager.get(PrefManager.IS_OLD)) {
+                if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
                     is_clinic_data = true;
                     if(!leftTabVisible) {
                         setClinicsAdapter(clinics);
@@ -659,7 +658,7 @@ public class DoctorListFragment extends Fragment {
     private void isAllDataLoaded(){
         if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
            ProgressHelper.hideProgressBar();
-            prefManager.put(PrefManager.IS_OLD, true);
+            PrefHelper.put(getActivity(),PrefHelper.KEY_IS_OLD,true);
         }
 
     }
