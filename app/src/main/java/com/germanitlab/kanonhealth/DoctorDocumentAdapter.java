@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
@@ -58,12 +57,10 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
 
     private List<Message> mMessages;
     private Activity activity;
-    private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
 
     public DoctorDocumentAdapter(List<Message> messages, Activity activity) {
         this.activity = activity;
-        prefManager = new PrefManager(activity);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(messages);
     }
