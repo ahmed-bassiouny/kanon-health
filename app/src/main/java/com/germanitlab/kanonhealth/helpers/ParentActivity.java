@@ -32,4 +32,10 @@ public class ParentActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        hideProgressBar();
+    }
 }
