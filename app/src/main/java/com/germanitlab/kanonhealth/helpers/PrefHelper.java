@@ -36,6 +36,9 @@ public class PrefHelper {
     public static final String KEY_USER_INTENT = "user_intent";
     public static final String KEY_USER_STATUS = "userStatus";
     public static final String KEY_IS_CLINIC = "is_clinic";
+    public final static String KEY_IS_FIRST_LAUNCH = "true";
+    public final static String KEY_IS_LOGIN = "true";
+
 
     //endregion
 

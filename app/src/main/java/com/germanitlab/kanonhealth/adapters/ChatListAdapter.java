@@ -18,9 +18,9 @@ package com.germanitlab.kanonhealth.adapters;
         import com.germanitlab.kanonhealth.api.ApiHelper;
         import com.germanitlab.kanonhealth.api.models.ChatModel;
         import com.germanitlab.kanonhealth.api.models.UserInfo;
-        import com.germanitlab.kanonhealth.db.PrefManager;
         import com.germanitlab.kanonhealth.helpers.Constants;
         import com.germanitlab.kanonhealth.helpers.ImageHelper;
+        import com.germanitlab.kanonhealth.helpers.PrefHelper;
         import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
         import com.google.gson.Gson;
         import com.nex3z.flowlayout.FlowLayout;
@@ -31,18 +31,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
 
     private List<ChatModel> chatList;
     Activity activity;
-    PrefManager prefManager;
-    private PrefManager mPrefManager;
     UserInfo user;
 
     public ChatListAdapter(List<ChatModel> chatList, Activity activity) {
         try {
             this.chatList = chatList;
             this.activity = activity;
-            mPrefManager = new PrefManager(activity);
-            prefManager = new PrefManager(activity);
             try {
-                user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+                user = new Gson().fromJson(PrefHelper.get(activity,PrefHelper.KEY_USER_KEY,""), UserInfo.class);
             } catch (Exception e) {
             }
 

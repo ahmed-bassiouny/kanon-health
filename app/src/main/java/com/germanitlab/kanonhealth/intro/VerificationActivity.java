@@ -21,9 +21,9 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -43,12 +43,10 @@ public class VerificationActivity extends AppCompatActivity {
     private TextView tv_toolbar_mobile_number;
     String number, code;
     String verificationCode;
-    PrefManager mPrefManager;
 
     @BindView(R.id.verification_Code)
     EditText verification_Code;
     Boolean oldUser;
-    PrefManager prefManager;
     Util util ;
 
     @Override
@@ -59,11 +57,9 @@ public class VerificationActivity extends AppCompatActivity {
         util.setupUI(findViewById(R.id.verifiction_layout) , this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         try {
-            prefManager = new PrefManager(VerificationActivity.this);
             Intent intent = getIntent();
             number = intent.getStringExtra("number");
             code = intent.getStringExtra("codeNumber");
-            mPrefManager = new PrefManager(this);
             oldUser = intent.getBooleanExtra("oldUser", false);
             tv_toolbar_mobile_number = (TextView) findViewById(R.id.tv_toolbar_mobile_number);
             tv_toolbar_mobile_number.append("  " + code + " " + number);
@@ -96,9 +92,10 @@ public class VerificationActivity extends AppCompatActivity {
             }
             final Register register= (Register) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
 
-            prefManager.setLogin(true);
-            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-            prefManager.put(PrefManager.USER_PASSWORD, register.getPassword());
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_IS_LOGIN,true);
+
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_ID, register.getId());
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_PASSWORD, register.getPassword());
 
             new Thread(new Runnable() {
                 @Override
@@ -124,9 +121,9 @@ public class VerificationActivity extends AppCompatActivity {
                         if(userInfo==null || !userInfo.getUserID().equals(register.getId())){
                             finish();
                         }else{
-                            mPrefManager.put(mPrefManager.USER_KEY,new Gson().toJson(userInfo));
+                            PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_KEY, userInfo);
                             if(userInfo.getUserType()==UserInfo.DOCTOR)
-                                mPrefManager.put(PrefManager.IS_DOCTOR ,true);
+                                PrefHelper.put(getApplicationContext(),PrefHelper.KEY_IS_DOCTOR, true);
                             Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
                             intent.putExtra("checkPassword", false);
                             intent.putExtra("finish", false);
