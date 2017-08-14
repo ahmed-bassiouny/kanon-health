@@ -105,6 +105,12 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     NestedScrollView nestedScrollView;
     @BindView(R.id.tv_rating)
     TextView textViewRating;
+    @BindView(R.id.edit_image)
+    CircleImageView editImage;
+
+
+
+
     UserInfo userInfo;
     File avatar = null;
     SpecilaitiesAdapter adapter;
@@ -187,7 +193,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 etZipCode.setEnabled(true);
                 etProvince.setEnabled(true);
                 textViewPhone.setEnabled(true);
-
+                editImage.setVisibility(View.VISIBLE);
 //                ivMemberList.setVisibility(View.VISIBLE);
                 break;
             case R.id.mi_save:
@@ -205,6 +211,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 tvOnline.setFocusable(false);
                 edAddToFavourite.setFocusable(false);
                 tvContact.setFocusable(false);
+                editImage.setVisibility(View.GONE);
                 handleNewData();
                 bindData();
                 break;
@@ -277,12 +284,12 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                     //user.setAvatar(uploadImageResponse.getFile_url());
                     //prefManager.put(PrefManager.PROFILE_IMAGE, uploadImageResponse.getFile_url());
                 } else {
-                    // falied
+                    // failed
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             ProgressHelper.hideProgressBar();
-                            circleImageViewAvatar.setImageResource(R.drawable.profile_place_holder);
+                            circleImageViewAvatar.setImageResource(R.drawable.placeholder);
                             Toast.makeText(DoctorProfileActivity.this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -491,7 +498,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     @OnClick(R.id.image_star)
     public void image_star() {
         Intent intent = new Intent(this, RateActivity.class);
-        intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
+        intent.putExtra("doctor_info",   userInfo);
         startActivity(intent);
     }
 

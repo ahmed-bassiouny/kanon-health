@@ -9,19 +9,13 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.models.doctors.Comment;
-
 import java.util.List;
-
+import com.germanitlab.kanonhealth.api.models.Comment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by Geram IT Lab on 22/04/2017.
- */
 
 public class RateAdapter extends RecyclerView.Adapter<RateAdapter.MyViewHolder> {
 
@@ -45,15 +39,18 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.MyViewHolder> 
     public void onBindViewHolder(RateAdapter.MyViewHolder holder, int position) {
         try {
             Comment comment = commentList.get(position);
-            holder.txt_person_name.setText(comment.getFirst_name() + " " + comment.getLast_name());
+            holder.txt_person_name.setText(comment.getFirstName() + " " + comment.getLastName());
             holder.txt_comment.setText(comment.getComment());
             holder.rb_person_rate.setRating(Float.valueOf(comment.getRate()));
             if (comment.getAvatar() != null && comment.getAvatar() != "") {
-                ImageHelper.setImage(holder.img_person_image, Constants.CHAT_SERVER_URL + "/" + comment.getAvatar(), R.drawable.profile_place_holder);
+                ImageHelper.setImage(holder.img_person_image, ApiHelper.SERVER_IMAGE_URL + "/" + comment.getAvatar(), R.drawable.placeholder);
+            }else
+            {
+                ImageHelper.setImage(holder.img_person_image, "", R.drawable.placeholder);
             }
-            if (comment.getCountry_flag() != null && comment.getCountry_flag() != "") {
-                ImageHelper.setImage(holder.img_country_image, Constants.CHAT_SERVER_URL + "/" + comment.getCountry_flag(), R.drawable.profile_place_holder);
-            }
+//            if (comment.getCountry_flag() != null && comment.getCountry_flag() != "") {
+//                ImageHelper.setImage(holder.img_country_image, Constants.CHAT_SERVER_URL + "/" + comment.getCountry_flag(), R.drawable.profile_place_holder);
+//            }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(activity, activity.getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();

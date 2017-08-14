@@ -15,14 +15,12 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Review;
-import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.api.responses.UserInfoResponse;
-import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.api.models.*;
+import com.germanitlab.kanonhealth.api.models.Comment;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.models.doctors.Comment;
-import com.germanitlab.kanonhealth.ormLite.UserRepository;
+import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
@@ -83,8 +81,10 @@ public class RateActivity extends AppCompatActivity {
     String doc_id = "14";
     RateAdapter rateAdapter;
     private HashMap<String, Integer> rate_percentages;
-    int height, width, sum_rate_number;
-    float sum_rate_result, rate_result;
+    private ArrayList<Comment> comments;
+    private  float rate;
+    private  int rateCount;
+    int height, width;
 
     UserInfo doctor;
 
@@ -93,7 +93,7 @@ public class RateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
-         doctor = new UserInfo();
+         doctor = (UserInfo) getIntent().getSerializableExtra("doctor_info");
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,41 +105,11 @@ public class RateActivity extends AppCompatActivity {
 
         try {
             recycler_view.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            rate_percentages = new HashMap<>();
-            rate_percentages.put("r1", 22);
-            rate_percentages.put("r2", 33);
-            rate_percentages.put("r3", 44);
-            rate_percentages.put("r4", 2);
-            rate_percentages.put("r5", 18);
-
-            doc_id = getIntent().getStringExtra("doc_id");
-            if (doc_id.isEmpty()) {
+            if ( doctor==null) {
                 finish();
             }
+            ProgressHelper.showProgressBar(this);
             loadData();
-
-            doctor.setUserID(Integer.valueOf(doc_id));
-            //doctor = userRepository.(doctor);
-            txt_doctor_name.setText(doctor.getFullName());
-            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
-            }
-
-            txt_one_star.post(new TimerTask() {
-                @Override
-                public void run() {
-
-                    height = temp.getHeight();
-                    width = temp.getWidth();
-                    for (String key : rate_percentages.keySet())
-                        setRate(key, rate_percentages.get(key));
-                    rate_result = (sum_rate_result / sum_rate_number);
-                    txt_reviews_1.setText(String.format("%.02f", rate_result));
-                    txt_reviews_3.setText(String.valueOf(sum_rate_number)); // android.content.res.Resources$NotFoundException: String resource ID #0x77
-                    rb_doctor_rate.setRating(rate_result);
-
-                }
-            });
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
@@ -154,8 +124,56 @@ public class RateActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Review review= ApiHelper.getReview(doc_id,RateActivity.this);
+
+                final Review review= ApiHelper.getReview( String.valueOf(doctor.getUserID()),RateActivity.this);
                 if(review!=null){
+                    RateActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(review.getRatePercentage().size()>0)
+                            {
+                                rate_percentages= review.getRatePercentage().get(0) ;
+                                rate=review.getRate();
+                                rateCount=review.getRateCount();
+                                txt_one_star.post(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        height = temp.getHeight();
+                                        width = temp.getWidth();
+                                        if(rateCount>0) {
+                                            for (String key : rate_percentages.keySet())
+                                                setRate(key, rate_percentages.get(key));
+                                        }
+                                        txt_reviews_1.setText(String.format("%.02f", rate));
+                                        txt_reviews_3.setText(String.valueOf(rateCount)); // android.content.res.Resources$NotFoundException: String resource ID #0x77
+                                        rb_doctor_rate.setRating(rate);
+
+
+                                    }
+                                });
+
+                            }
+
+                            comments=review.getComments();
+                            if(comments!=null&&comments.size()>0)
+                            {
+                                RecyclerView recyclerVie;
+                                RateAdapter rateAdapter=   new RateAdapter(comments,RateActivity.this);
+                                recyclerVie = (RecyclerView) findViewById(R.id.recycler_view);
+                                recyclerVie.setHasFixedSize(true);
+                                recyclerVie.setLayoutManager(new LinearLayoutManager(RateActivity.this,LinearLayoutManager.VERTICAL, false));
+                                recyclerVie.setNestedScrollingEnabled(false);
+                                recyclerVie.setAdapter(rateAdapter);
+                            }
+
+                            txt_doctor_name.setText(doctor.getFullName());
+                            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
+                                ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + doctor.getAvatar(),R.drawable.placeholder);
+                            }
+                         ProgressHelper.hideProgressBar();
+
+                        }
+                    });
 
                 }
             }
@@ -164,35 +182,35 @@ public class RateActivity extends AppCompatActivity {
 
     private void setRate(String position, int rate) {
         int result;
-        result = (rate * width) / 100;
+        result = (rate * width) / rateCount;
+        boolean check=(rate * width) / rateCount==width;
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(result, height);
         switch (position) {
             case "r5":
+                if(!check)
                 btn_five_stars.setLayoutParams(lp);
                 txt_five_stars.setText(rate + "");
-                sum_rate_result += rate * 5;
                 break;
             case "r4":
+                if(!check)
                 btn_four_stars.setLayoutParams(lp);
                 txt_four_stars.setText(rate + "");
-                sum_rate_result += rate * 4;
                 break;
             case "r3":
+                if(!check)
                 btn_three_stars.setLayoutParams(lp);
                 txt_three_stars.setText(rate + "");
-                sum_rate_result += rate * 3;
                 break;
             case "r2":
+                if(!check)
                 btn_two_stars.setLayoutParams(lp);
                 txt_two_stars.setText(rate + "");
-                sum_rate_result += rate * 2;
                 break;
             case "r1":
+                if(!check)
                 btn_one_star.setLayoutParams(lp);
                 txt_one_star.setText(rate + "");
-                sum_rate_result += rate * 1;
                 break;
         }
-        sum_rate_number += rate;
     }
 }
