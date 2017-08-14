@@ -21,9 +21,9 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.CacheJson;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -43,12 +43,10 @@ public class VerificationActivity extends AppCompatActivity {
     private TextView tv_toolbar_mobile_number;
     String number, code;
     String verificationCode;
-    PrefManager mPrefManager;
 
     @BindView(R.id.verification_Code)
     EditText verification_Code;
     Boolean oldUser;
-    PrefManager prefManager;
     Util util ;
 
     @Override
@@ -59,11 +57,9 @@ public class VerificationActivity extends AppCompatActivity {
         util.setupUI(findViewById(R.id.verifiction_layout) , this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         try {
-            prefManager = new PrefManager(VerificationActivity.this);
             Intent intent = getIntent();
             number = intent.getStringExtra("number");
             code = intent.getStringExtra("codeNumber");
-            mPrefManager = new PrefManager(this);
             oldUser = intent.getBooleanExtra("oldUser", false);
             tv_toolbar_mobile_number = (TextView) findViewById(R.id.tv_toolbar_mobile_number);
             tv_toolbar_mobile_number.append("  " + code + " " + number);
@@ -96,6 +92,7 @@ public class VerificationActivity extends AppCompatActivity {
             }
             final Register register= (Register) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
 
+        PrefHelper.put(getApplicationContext(),Pr);
             prefManager.setLogin(true);
             prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
             prefManager.put(PrefManager.USER_PASSWORD, register.getPassword());

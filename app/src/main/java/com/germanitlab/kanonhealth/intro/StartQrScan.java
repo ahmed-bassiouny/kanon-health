@@ -8,20 +8,19 @@ import android.util.Log;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.models.WebLogin;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 public class StartQrScan extends AppCompatActivity {
-    PrefManager prefManager;
     Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefManager = new PrefManager(this);
+
         new IntentIntegrator(this).initiateScan();
         util = Util.getInstance(this);
 
@@ -94,8 +93,8 @@ public class StartQrScan extends AppCompatActivity {
         try {
 
             WebLogin webLogin = new WebLogin();
-            webLogin.setUser_id(prefManager.getData(PrefManager.USER_ID));
-            webLogin.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
+            webLogin.setUser_id(String.valueOf(PrefHelper.get(getApplicationContext(),PrefHelper.KEY_USER_ID,-1)));
+            webLogin.setPassword(PrefHelper.get(getApplicationContext(),PrefHelper.KEY_USER_PASSWORD,""));
             webLogin.setCode(qrCode);
 //
 //            new HttpCall(StartQrScan.this, new ApiResponse() {
