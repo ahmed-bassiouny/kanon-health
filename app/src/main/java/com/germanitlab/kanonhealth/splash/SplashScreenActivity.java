@@ -44,6 +44,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             Log.e("isLogin", String.valueOf(isLogin));
 
 
+
+            
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
