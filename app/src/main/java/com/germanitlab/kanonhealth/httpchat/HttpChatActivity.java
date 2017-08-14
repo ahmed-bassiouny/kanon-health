@@ -4,18 +4,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 
 public class HttpChatActivity extends AppCompatActivity {
 
     int doctorID;
     HttpChatFragment fr;
+    UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_chat);
         doctorID = getIntent().getIntExtra("doctorID", 0);
-
+        userInfo=new UserInfo();
+        userInfo=(UserInfo) getIntent().getSerializableExtra("userInfo");
 
         if (doctorID == 0) {
             finish();
@@ -23,7 +26,7 @@ public class HttpChatActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
-        bundle.putSerializable("userInfo",getIntent().getSerializableExtra("userInfo"));
+        bundle.putSerializable("userInfo",userInfo);
         fr = new HttpChatFragment();
         fr.setArguments(bundle);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();

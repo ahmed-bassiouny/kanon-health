@@ -292,8 +292,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userPassword = PrefHelper.get(getContext(),PrefHelper.KEY_USER_PASSWORD,"");
 
         doctorID = getArguments().getInt("doctorID");
-        userInfo=(UserInfo) getArguments().getSerializable("userInfo");
         userInfo = new UserInfo();
+        if(userID != doctorID)
+            userInfo=(UserInfo) getArguments().getSerializable("userInfo");
         if (userID == doctorID) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());
