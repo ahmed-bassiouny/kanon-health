@@ -19,8 +19,8 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Speciality;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.nex3z.flowlayout.FlowLayout;
@@ -33,15 +33,13 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
     private List<Clinic> clinicContactList;
     Activity activity;
     int userID;
-    PrefManager prefManager;
 
     public ClinicListAdapter(List<Clinic> clinicContactList, Activity activity) {
         try {
             this.clinicContactList = clinicContactList;
             this.activity = activity;
-            prefManager = new PrefManager(activity);
             //mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
-            userID = prefManager.getInt(PrefManager.USER_ID);
+            userID = PrefHelper.get(activity,PrefHelper.KEY_USER_ID,0);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
