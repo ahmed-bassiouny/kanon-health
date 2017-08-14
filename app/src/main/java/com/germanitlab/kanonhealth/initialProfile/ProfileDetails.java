@@ -22,24 +22,27 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
+
 import java.io.File;
 import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -65,14 +68,12 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     EditText editLastName;
     @BindView(R.id.edit_birthday)
     TextView textBirthday;
-    PrefManager mPrefManager;
     @BindView(R.id.et_title)
     EditText et_title;
     PickerDialog pickerDialog;
     String birthdate = "";
     String gender_other = "Male";
     int gender = 1;
-    PrefManager prefManager;
     Util util;
     Helper helper;
     File file;
@@ -81,12 +82,10 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            mPrefManager = new PrefManager(this);
             pickerDialog = new PickerDialog();
             util = Util.getInstance(this);
             setContentView(R.layout.profile_details_activity);
             ButterKnife.bind(this);
-            prefManager = new PrefManager(this);
 //            if (savedInstanceState != null) {
 //                textBirthday.setText(savedInstanceState.getString("birthdate"));
 //                selectedImageUri = Uri.parse(savedInstanceState.getString("imageURI"));
@@ -255,7 +254,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
         final String lastName = editLastName.getText().toString();
         final String birthDate = textBirthday.getText().toString();
         gender_other = edGender.getText().toString();
-        final String title=et_title.getText().toString();
+        final String title = et_title.getText().toString();
         if (gender == 3 && gender_other.trim().isEmpty()) {
             Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
             return;
@@ -265,20 +264,19 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    boolean result = ApiHelper.addUser(getApplicationContext(), Integer.valueOf(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD), title, firstName, lastName, birthDate, String.valueOf(gender), file);
+                    boolean result = ApiHelper.addUser(getApplicationContext(), PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_ID, -1), PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_PASSWORD, ""), title, firstName, lastName, birthDate, String.valueOf(gender), file);
                     if (result) {
-                                UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), prefManager.getData(PrefManager.USER_ID));
-                                if (user != null) {
-                                    Gson gson = new Gson();
-                                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
-                                    Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
-                                    intent.putExtra("checkPassword", false);
-                                    intent.putExtra("finish", false);
-                                    intent.putExtra("has_back", true);
-                                    startActivity(intent);
-                                }
-                                ProgressHelper.hideProgressBar();
-                                finish();
+                        UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), String.valueOf(PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_ID, -1)));
+                        if (user != null) {
+                            PrefHelper.put(getApplicationContext(), PrefHelper.KEY_USER_KEY, user);
+                            Intent intent = new Intent(getApplicationContext(), PasscodeActivty.class);
+                            intent.putExtra("checkPassword", false);
+                            intent.putExtra("finish", false);
+                            intent.putExtra("has_back", true);
+                            startActivity(intent);
+                        }
+                        ProgressHelper.hideProgressBar();
+                        finish();
                     }
 
                 }
@@ -356,8 +354,8 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
 
     @Override
     public void deleteMyImage() {
-        file=null;
-        ImageHelper.setImage(imageProfile,"", R.drawable.profile_place_holder);
+        file = null;
+        ImageHelper.setImage(imageProfile, "", R.drawable.profile_place_holder);
         pickerDialog.dismiss();
 
     }
@@ -415,9 +413,9 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     @Override
     public void ImagePickerCallBack(Uri uri) {
         //util.showProgressDialog();
-       // Log.e("ImageUri", uri != null ? uri.toString() : "Empty Uri");
+        // Log.e("ImageUri", uri != null ? uri.toString() : "Empty Uri");
         ImageHelper.setImage(imageProfile, uri);
-        file= new File(ImageFilePath.getPath(this, uri));
+        file = new File(ImageFilePath.getPath(this, uri));
 
 //        new HttpCall(this, new ApiResponse() {
 //            @Override
