@@ -35,6 +35,7 @@ import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListMapFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.interfaces.OnImgDoctorListMapClick;
@@ -46,7 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainActivity extends AppCompatActivity implements OnImgDoctorListMapClick {
+public class MainActivity extends ParentActivity implements OnImgDoctorListMapClick {
 
 
     private TabLayout mytablayout;
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 case 0:
                     return DoctorListFragment.newInstance();
                 case 1:
-                    return HttpChatFragment.newInstance(PrefHelper.get(MainActivity.this,PrefHelper.KEY_USER_ID,-1));
+                    return HttpChatFragment.newInstance(PrefHelper.get(MainActivity.this, PrefHelper.KEY_USER_ID, -1));
                 case 2:
                     return ChatsDoctorFragment.newInstance();
                 case 3:
