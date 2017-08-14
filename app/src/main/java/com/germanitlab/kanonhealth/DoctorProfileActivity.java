@@ -34,16 +34,15 @@ import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.callback.Message;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.models.Table;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
@@ -116,7 +115,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     SpecilaitiesAdapter adapter;
     ClinicListAdapter clinicListAdapter;
     Boolean is_me = false;
-    PrefManager prefManager;
     PickerDialog pickerDialog;
     int PLACE_PICKER_REQUEST = 7;
     private Menu menu;
@@ -131,11 +129,10 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initToolbar();
         try {
-            prefManager = new PrefManager(this);
             pickerDialog = new PickerDialog(true);
             userInfo = new UserInfo();
             userInfo = (UserInfo) getIntent().getSerializableExtra("doctor_data");
-            is_me = userInfo.getUserID() == Integer.parseInt(prefManager.getData(PrefManager.USER_ID));
+            is_me = userInfo.getUserID() == PrefHelper.get(this,PrefHelper.KEY_USER_ID,-1);
             bindData();
             setVisiblitiy();
 
@@ -512,11 +509,11 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             public void run() {
                 final boolean result ;
                 if(userInfo.getIsMyDoc()==1){
-                    result = ApiHelper.setFavouriteOperation(prefManager.getData(PrefManager.USER_ID),userInfo.getUserID().toString(),userInfo.getUserType(),false);
+                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(DoctorProfileActivity.this,PrefHelper.KEY_USER_ID,-1)),userInfo.getUserID().toString(),userInfo.getUserType(),false);
                     if(result)
                         userInfo.setIsMyDoc(0);
                 }else{
-                    result = ApiHelper.setFavouriteOperation(prefManager.getData(PrefManager.USER_ID),userInfo.getUserID().toString(),userInfo.getUserType(),true);
+                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(DoctorProfileActivity.this,PrefHelper.KEY_USER_ID,-1)),userInfo.getUserID().toString(),userInfo.getUserType(),true);
                     if(result)
                         userInfo.setIsMyDoc(1);
                 }
@@ -686,7 +683,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         userInfo.setAvatar("");
         avatar=null;
         ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
-        prefManager.put(PrefManager.PROFILE_IMAGE, "");
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_PROFILE_IMAGE,"");
         pickerDialog.dismiss();
     }
 
