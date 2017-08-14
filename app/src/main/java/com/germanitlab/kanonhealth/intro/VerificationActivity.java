@@ -88,10 +88,10 @@ public class VerificationActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_verification_verify_code)
     public void verify() {
-            if (verification_Code.getText().toString().length() == 0) {
+            if (verification_Code.getText().toString().length() == 0 || verification_Code.getText().toString().length() <6) {
                 Toast.makeText(getApplicationContext(), R.string.enter_the_correct_code, Toast.LENGTH_LONG).show();
                 return;
-            } else {
+            }else {
                 verificationCode = verification_Code.getText().toString();
             }
             final Register register= (Register) getIntent().getExtras().get(Constants.REGISER_RESPONSE);

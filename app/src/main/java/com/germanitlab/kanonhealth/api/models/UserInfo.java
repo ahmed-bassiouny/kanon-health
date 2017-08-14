@@ -141,7 +141,6 @@ public class UserInfo extends ParentModel {
     // i need key name from backend
     @DatabaseField
     private Integer openType;
-    private Table timeTable;
     @DatabaseField
     private Integer isMyDoc;
     @DatabaseField

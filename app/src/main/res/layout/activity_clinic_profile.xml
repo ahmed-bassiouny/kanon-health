@@ -172,7 +172,7 @@
                 android:layout_margin="5dp"
                 android:background="@android:color/white"
                 app:layout_horizontalSpacing="50dp"
-                f:layout_newLine="true"></com.nex3z.flowlayout.FlowLayout>
+                f:layout_newLine="true"/>
 
 
             <TextView
@@ -406,9 +406,8 @@
                 android:orientation="horizontal"
                 app:layout_horizontalSpacing="50dp"
                 app:layout_verticalSpacing="50dp"
-                f:layout_newLine="true">
+                f:layout_newLine="true"/>
 
-            </com.nex3z.flowlayout.FlowLayout>
 
 
             <View
@@ -438,7 +437,7 @@
                 android:layout_margin="5dp"
                 android:layout_below="@+id/member_text"
                 android:layout_alignParentEnd="true"
-                android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+                android:background="@android:color/white"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

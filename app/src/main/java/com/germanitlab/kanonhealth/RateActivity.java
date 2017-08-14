@@ -105,6 +105,7 @@ public class RateActivity extends AppCompatActivity {
 
         try {
             recycler_view.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
             rate_percentages = new HashMap<>();
             rate_percentages.put("r1", 22);
             rate_percentages.put("r2", 33);

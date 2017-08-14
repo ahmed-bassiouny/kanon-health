@@ -22,10 +22,10 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
-import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import java.util.regex.Pattern;
 
@@ -237,25 +237,30 @@ public class SignupActivity extends AppCompatActivity {
 
 
     private void sendData() {
-        if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
-            ProgressHelper.showProgressBar(this);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Register register = ApiHelper.postRegister(code.toString(), etMobileNumber.getText().toString(), SignupActivity.this);
-                    if (register != null) {
-                        prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-                        prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
-                        Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
-                        intent.putExtra("number", etMobileNumber.getText().toString());
-                        intent.putExtra("codeNumber", code.toString());
-                        intent.putExtra(Constants.REGISER_RESPONSE, register);
-                        intent.putExtra("oldUser", register.getExists());
-                        startActivity(intent);
+
+        if (Helper.isNetworkAvailable(this)) {
+            //internet is connected do something
+            if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
+                ProgressHelper.showProgressBar(this);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Register register = ApiHelper.postRegister(code.toString(), etMobileNumber.getText().toString(), SignupActivity.this);
+                        if (register != null) {
+                            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
+                            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
+                            Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
+                            intent.putExtra("number", etMobileNumber.getText().toString());
+                            intent.putExtra("codeNumber", code.toString());
+                            intent.putExtra(Constants.REGISER_RESPONSE, register);
+                            intent.putExtra("oldUser", register.getExists());
+                            startActivity(intent);
+                            finish();
+                        }
+                        ProgressHelper.hideProgressBar();
                     }
-                    ProgressHelper.hideProgressBar();
-                }
-            }).start();
+                }).start();
+
             /*AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -263,9 +268,15 @@ public class SignupActivity extends AppCompatActivity {
                     Log.d("", "");
                 }
             });*/
+            } else {
+                Toast.makeText(SignupActivity.this, getResources().getText(R.string.error_please_enter_number), Toast.LENGTH_SHORT).show();
+            }
+
         } else {
-            Toast.makeText(SignupActivity.this, getResources().getText(R.string.Invalid_country), Toast.LENGTH_SHORT).show();
+            //do something, net is not connected
+            Toast.makeText(SignupActivity.this, getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 

@@ -103,12 +103,12 @@
             android:name=".payment.PaymentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".Specialities"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".chat.MapsActivity"
-            android:screenOrientation="portrait" />
+        <!--<activity-->
+            <!--android:name=".Specialities"-->
+            <!--android:screenOrientation="portrait" />-->
+        <!--<activity-->
+            <!--android:name=".chat.MapsActivity"-->
+            <!--android:screenOrientation="portrait" />-->
         <activity
             android:name=".intro.StartQrScan"
             android:screenOrientation="portrait" />
@@ -193,7 +193,7 @@
         <activity
             android:name=".httpchat.HttpChatActivity"
             android:label=""
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <receiver
             android:name=".httpchat.MyReceiverChat"
@@ -201,7 +201,7 @@
             <action android:name="my.action.string" />
         </receiver>
 
-        <activity android:name=".ClinicProfileActivity"></activity>
+        <activity android:name=".ClinicProfileActivity"/>
     </application>
 
 </manifest>

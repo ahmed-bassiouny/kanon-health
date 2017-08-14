@@ -122,6 +122,8 @@
     <string name="enter_your_verification_code">Enter your verification code.</string>
     <string name="verify">Verify.</string>
     <string name="resend">Resend.</string>
+    <string name="action_enter_number_phone">Enter number phone </string>
+    <string name="error_please_enter_number">Please Enter Number Phone at least 8 Characters and less than 15 Character </string>
     <string name="if_you_did_not_receive_an_sms_tab_the_resend_button_below">If you did not receive an sms tab the resend button below.</string>
 
 

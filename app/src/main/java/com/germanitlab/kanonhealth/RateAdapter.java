@@ -31,6 +31,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.MyViewHolder> 
     public RateAdapter(List<Comment> rateList, Activity activity) {
         this.commentList = rateList;
         this.activity = activity;
+        Log.i("length of comments" , commentList.size()+"");
     }
 
     @Override
