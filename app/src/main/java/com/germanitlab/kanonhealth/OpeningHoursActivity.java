@@ -11,7 +11,6 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.models.Table;
 
@@ -37,7 +36,6 @@ public class OpeningHoursActivity extends AppCompatActivity {
     Toolbar toolbar;
     public static TimeTable instance = null;
     public static Boolean active = false;
-    PrefManager prefManager;
     List<Table> list;
     int type;
 
@@ -46,7 +44,6 @@ public class OpeningHoursActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_hours);
         try {
-            prefManager = new PrefManager(this);
             ButterKnife.bind(this);
             list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
             type = getIntent().getIntExtra("type", 0);
