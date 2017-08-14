@@ -148,7 +148,7 @@ public class PrefHelper {
 
     //region remove
 
-    public static void put(Context context, String key) {
+    public static void remove(Context context, String key) {
         SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         SharedPreferences.Editor editor = pref.edit();
         editor.remove(key);
