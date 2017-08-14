@@ -92,10 +92,10 @@ public class VerificationActivity extends AppCompatActivity {
             }
             final Register register= (Register) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
 
-        PrefHelper.put(getApplicationContext(),Pr);
-            prefManager.setLogin(true);
-            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-            prefManager.put(PrefManager.USER_PASSWORD, register.getPassword());
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_IS_LOGIN,true);
+
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_ID, register.getId());
+        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_PASSWORD, register.getPassword());
 
             new Thread(new Runnable() {
                 @Override
@@ -121,9 +121,9 @@ public class VerificationActivity extends AppCompatActivity {
                         if(userInfo==null || !userInfo.getUserID().equals(register.getId())){
                             finish();
                         }else{
-                            mPrefManager.put(mPrefManager.USER_KEY,new Gson().toJson(userInfo));
+                            PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_KEY, userInfo);
                             if(userInfo.getUserType()==UserInfo.DOCTOR)
-                                mPrefManager.put(PrefManager.IS_DOCTOR ,true);
+                                PrefHelper.put(getApplicationContext(),PrefHelper.KEY_IS_DOCTOR, true);
                             Intent intent = new Intent(VerificationActivity.this, PasscodeActivty.class);
                             intent.putExtra("checkPassword", false);
                             intent.putExtra("finish", false);
