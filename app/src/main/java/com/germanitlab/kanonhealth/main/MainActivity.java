@@ -250,7 +250,7 @@ public class MainActivity extends ParentActivity implements OnImgDoctorListMapCl
                 case 0:
                     return DoctorListFragment.newInstance();
                 case 1:
-                    return HttpChatFragment.newInstance(PrefHelper.get(MainActivity.this,PrefHelper.KEY_USER_ID,-1));
+                    return HttpChatFragment.newInstance(PrefHelper.get(MainActivity.this, PrefHelper.KEY_USER_ID, -1));
                 case 2:
                     return ChatsDoctorFragment.newInstance();
                 case 3:
