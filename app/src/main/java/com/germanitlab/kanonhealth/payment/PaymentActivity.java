@@ -18,9 +18,9 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.models.Payment;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
@@ -66,7 +66,6 @@ public class PaymentActivity extends AppCompatActivity {
     RadioGroup rgPayment;
     UserInfo doctor;
     private String type;
-    PrefManager prefManager;
     List<RadioButton> radioButtons = new ArrayList<>();
 
 
@@ -76,7 +75,6 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.new_activity_payment);
         ButterKnife.bind(this);
         initTB();
-        prefManager = new PrefManager(this);
         try {
             radioButtons = new ArrayList<RadioButton>();
             radioButtons.add((RadioButton) findViewById(R.id.rb_paypal));
@@ -84,9 +82,8 @@ public class PaymentActivity extends AppCompatActivity {
             radioButtons.add((RadioButton) findViewById(R.id.rb_euro));
             radioButtons.add((RadioButton) findViewById(R.id.rb_free));
             handleRadioButtons();
-            //        doctor = new Gson().fromJson(getIntent().getStringExtra("doctor_data") , User.class);
-            doctor = new Gson().fromJson(prefManager.getData(PrefManager.USER_INTENT), UserInfo.class);
-            if (doctor.getUserType() == UserInfo.DOCTOR && prefManager.get(PrefManager.IS_DOCTOR)) {
+            doctor = new Gson().fromJson(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_INTENT, ""), UserInfo.class);
+            if (doctor.getUserType() == UserInfo.DOCTOR && PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)) {
                 rbFree.setVisibility(View.VISIBLE);
             } else {
                 rbFree.setVisibility(View.GONE);
@@ -184,7 +181,7 @@ public class PaymentActivity extends AppCompatActivity {
             (new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int requestId = ApiHelper.openSession(PaymentActivity.this, prefManager.getData(PrefManager.USER_ID), String.valueOf(doctor.getUserID()));
+                    int requestId = ApiHelper.openSession(PaymentActivity.this, PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,""), String.valueOf(doctor.getUserID()));
                     if (requestId != -1) {
                         Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
                         intent.putExtra("doctorID", doctor.getUserID());

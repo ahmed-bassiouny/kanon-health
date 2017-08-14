@@ -193,25 +193,30 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
-                if(result!=null){
-                    //success
-                    fragmentActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Message temp = messages.get(index);
-                            temp.setStatus(1);
-                            messages.set(index, temp);
-                            chatAdapter.setList(messages);
-                            chatAdapter.notifyDataSetChanged();
-                            recyclerView.scrollToPosition(messages.size() - 1);
+                final Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result!=null){
+                            //success
+                            fragmentActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Message temp = messages.get(index);
+                                    temp.setStatus(1);
+                                    messages.set(index, temp);
+                                    chatAdapter.setList(messages);
+                                    chatAdapter.notifyDataSetChanged();
+                                    recyclerView.scrollToPosition(messages.size() - 1);
+                                }
+                            });
+                            //messageRepositry.createOrUpate(result);
+                        }else {
+                            // failed
+                            removeDummyMessage(index,messages,recyclerView,chatAdapter);
                         }
-                    });
-                    //messageRepositry.createOrUpate(result);
-                }else {
-                    // failed
-                    removeDummyMessage(index,messages,recyclerView,chatAdapter);
-                }
+                    }
+                });
             }
         }).start();
     }

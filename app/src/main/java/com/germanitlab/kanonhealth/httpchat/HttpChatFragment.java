@@ -65,11 +65,11 @@ import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
@@ -148,7 +148,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     UserInfoRepositry chatModelRepositry;
 
 
-    PrefManager prefManager;
     ChatAdapter chatAdapter;
     DocumentChatAdapter documentChatAdapter;
     static HttpChatFragment httpChatFragment;
@@ -274,7 +273,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // declare objects in this fragment
     private void initObjects() {
-        prefManager = new PrefManager(getContext());
         userInfo = new ChatModel();
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -286,11 +284,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // set data in object
     private void initData() {
-        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), ChatModel.class).getUserType() == UserInfo.DOCTOR;
-        iamClinic = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), ChatModel.class).getUserType() == UserInfo.CLINIC;
+        iamDoctor = PrefHelper.get(getContext(),PrefHelper.KEY_IS_DOCTOR,false);
 
-        userID = prefManager.getInt(PrefManager.USER_ID);
-        userPassword = prefManager.getData(prefManager.USER_PASSWORD);
+        iamClinic = PrefHelper.get(getContext(),PrefHelper.KEY_IS_CLINIC,false);
+
+        userID = PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,0);
+        userPassword = PrefHelper.get(getContext(),PrefHelper.KEY_USER_PASSWORD,"");
 
         doctorID = getArguments().getInt("doctorID");
         if (userID == doctorID) {
@@ -306,6 +305,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setLastName(getResources().getString(R.string.documents));
             userInfo.setFirstName(" ");
             toolbar.setVisibility(View.GONE);
+            setDatainToolbar();
         } else if (doctorID == CustomerSupportActivity.supportID) {
             userInfo.setUserID(doctorID);
             userInfo.setLastName(getResources().getString(R.string.support));
@@ -313,16 +313,25 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setOpen(1);
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
+            setDatainToolbar();
         } else {
             // get data of doctor i talk with him from database
-                userInfo = chatModelRepositry.getDoctor(userID);
+            //userInfo = chatModelRepositry.getDoctor(userID);
+                //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    userInfo = ApiHelper.getUserInfo(getContext(),String.valueOf(doctorID));
+                    if(userInfo!=null){
+                        setDatainToolbar();
+                    }else{
+                        Toast.makeText(getContext(), "Sorry can't get information about user", Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                }
+            }).start();
         }
 
-        /*if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
-        if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
-            tv_chat_user_name.setText(userInfo.getLastName()+" "+ userInfo.getFirstName());
-        }*/
     }
 
     private void loadChatOnline() {
@@ -1057,7 +1066,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             } else {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 Gson gson = new Gson();
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(userInfo));
+                PrefHelper.put(getContext(),PrefHelper.KEY_USER_INTENT,gson.toJson(userInfo));
                 intent.putExtra("doctor_obj", userInfo);
                 startActivity(intent);
                 getActivity().finish();
@@ -1428,6 +1437,13 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
         } else {
             chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
+        }
+    }
+    private void setDatainToolbar(){
+        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
+            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
+        if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
+            tv_chat_user_name.setText(userInfo.getLastName()+" "+ userInfo.getFirstName());
         }
     }
 }

@@ -40,12 +40,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             storedUser = prefManager.getData(prefManager.USER_KEY);
             isLogin = prefManager.isLogin();
 
-            Log.e("User1 =", storedUser.equals("") ? storedUser : "Empty User1");
-            Log.e("isLogin", String.valueOf(isLogin));
-
-
-
-            
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
