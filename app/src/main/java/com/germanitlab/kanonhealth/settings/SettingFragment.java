@@ -36,9 +36,9 @@ import com.germanitlab.kanonhealth.TimeTable;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
@@ -66,7 +66,6 @@ public class SettingFragment extends Fragment {
     private VideoView videoView;
     private TableRow profile, trChangePassCode, tvChangeMobileNumber, trSound, trTerms, trFaq, trSupport, trRecommend, trHelp, trDrStatus, trWeblogin;
     private SettingResponse settingResponse;
-    private PrefManager mPrefManager;
     private UserInfo user;
     private RecyclerView rvPracticies;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
@@ -81,7 +80,6 @@ public class SettingFragment extends Fragment {
     private StatusResponse statusResponse;
     private int UserStatus;
     private PrcticiesSAdapter mAdapter;
-    PrefManager prefManager;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -99,10 +97,8 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
-        mPrefManager = new PrefManager(getActivity());
-        prefManager = new PrefManager(getContext());
         try {
-            user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+            user = new Gson().fromJson(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_KEY,""), UserInfo.class);
         } catch (Exception e) {
         }
         initView();
@@ -143,7 +139,7 @@ public class SettingFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mi_qr_code:
-                new Helper(getActivity()).ImportQr(mPrefManager);
+                new Helper(getActivity()).ImportQr();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -176,7 +172,7 @@ public class SettingFragment extends Fragment {
                 if(user!=null)
                 {
                     Gson gson = new Gson();
-                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
+                    PrefHelper.put(getActivity(),PrefHelper.KEY_USER_KEY,gson.toJson(user));
 
                 }else
                 {
@@ -365,7 +361,7 @@ public class SettingFragment extends Fragment {
         new Thread( new Runnable() {
             @Override
             public void run() {
-                int result= ApiHelper.postChangeStatus(Integer.valueOf(prefManager.getData(PrefManager.USER_ID)),isAvailable,getContext());
+                int result= ApiHelper.postChangeStatus(Integer.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,0)),isAvailable,getContext());
                 if(result!=-1)
                 {
                     if (isAvailable==1) {
@@ -380,7 +376,7 @@ public class SettingFragment extends Fragment {
                         user.setAvailable(0);
                     }
                     Gson gson=new Gson();
-                    mPrefManager.put(PrefManager.USER_KEY, gson.toJson(user));
+                    PrefHelper.put(getActivity(),PrefHelper.KEY_USER_KEY,gson.toJson(user));
                 }
             }
         }).start();

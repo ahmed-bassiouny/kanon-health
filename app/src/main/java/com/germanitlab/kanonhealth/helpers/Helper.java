@@ -31,8 +31,6 @@ import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
-import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
 
 import net.glxn.qrgen.android.QRCode;
@@ -82,7 +80,7 @@ public class Helper {
                 .commit();
     }
 
-    public void ImportQr(final PrefManager mPrefManager) {
+    public void ImportQr() {
 
 /*        if (mPrefManager.getData(PrefManager.Image_data) != "" &&mPrefManager.getData(PrefManager.Image_data) != null) {
             Picasso.with(activity).load(Constants.CHAT_SERVER_URL
@@ -98,7 +96,7 @@ public class Helper {
                 WindowManager.LayoutParams.MATCH_PARENT);
         ImageView imageView = (ImageView) dialog.findViewById(R.id.image);
         Gson gson = new Gson();
-        UserInfo userInfo = gson.fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+        UserInfo userInfo = gson.fromJson(PrefHelper.get(activity,PrefHelper.KEY_USER_KEY,""), UserInfo.class);
         TextView name = (TextView) dialog.findViewById(R.id.name);
         TextView birthdate = (TextView) dialog.findViewById(R.id.birthdate);
 
