@@ -52,10 +52,7 @@ public class PrefHelper {
     }
 
     public static void put(Context context, String key, Boolean value) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(key, value);
-        editor.commit();
+        put(context, key, (boolean) value);
     }
 
     public static void put(Context context, String key, float value) {
@@ -73,10 +70,7 @@ public class PrefHelper {
     }
 
     public static void put(Context context, String key, Integer value) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putInt(key, value);
-        editor.commit();
+        put(context, key, (int) value);
     }
 
     public static void put(Context context, String key, long value) {
