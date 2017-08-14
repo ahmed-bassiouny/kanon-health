@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.StrictMode;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -30,7 +29,6 @@ public class AppController extends Application {
 
     private static AppController mInstance;
     //   private UserRegisterResponse clientInfo;
-    PrefManager prefManager;
     protected AppComponent appComponent;
 
 
@@ -46,7 +44,6 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 
-        prefManager = new PrefManager(this);
         Fabric.with(this, new Crashlytics());
         StrictMode.VmPolicy.Builder sbuilder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(sbuilder.build());
