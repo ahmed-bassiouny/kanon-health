@@ -32,12 +32,12 @@ import com.germanitlab.kanonhealth.MapsActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -64,15 +64,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     List<Integer> list = new ArrayList<>();
     HashSet<Integer> selectedPositions = new HashSet<>();
     private boolean selected = false;
-    private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
     private final int FORWARDMSG = 5;
     ImageView forward;
 
     public ChatAdapter(List<Message> messages, final Activity activity) {
         this.activity = activity;
-        prefManager = new PrefManager(activity);
-        userID = prefManager.getInt(PrefManager.USER_ID);
+        userID = PrefHelper.get(activity,PrefHelper.KEY_USER_ID,-1);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(messages);
         forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
