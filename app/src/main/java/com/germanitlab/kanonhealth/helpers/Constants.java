@@ -17,8 +17,6 @@ public class Constants {
     public static final String UPLOAD_URL = "https://chat.gagabay.com/upload";
 
 
-    public final static String IS_FIRST_LAUNCH = "true";
-    public final static String IS_LOGIN = "true";
 
 
     public static final String REGISER_RESPONSE = "registerResponse";
