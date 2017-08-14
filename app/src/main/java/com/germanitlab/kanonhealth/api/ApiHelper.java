@@ -505,8 +505,8 @@ public class ApiHelper {
             jsonString = post(API_DOCUMENT_PRIVACY, documentPrivacyParameters.toJson());
 
             Gson gson = new Gson();
-            DocumentPrivacyResponse documentPrivacyResponse = gson.fromJson(jsonString, DocumentPrivacyResponse.class);
-            if (documentPrivacyResponse.getStatus()) {
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            if (parentResponse.getStatus()) {
                 result = true;
             }
         } catch (Exception e) {

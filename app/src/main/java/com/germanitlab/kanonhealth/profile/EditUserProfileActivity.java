@@ -184,7 +184,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         etHousePhone.setText(userInfo.getHouseNumber());
         etZip.setText(userInfo.getZipCode());
         etProvinz.setText(userInfo.getProvidence());
-
         questionAnswer = userInfo.getQuestionsAnswers();
         etCountry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

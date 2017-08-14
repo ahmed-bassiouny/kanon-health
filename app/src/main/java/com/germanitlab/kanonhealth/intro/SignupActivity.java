@@ -121,7 +121,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void getCountryFromNetwork() {
         //   util.showProgressDialog();
-        ProgressHelper.showProgressBar(getApplicationContext());
+        ProgressHelper.showProgressBar(SignupActivity.this);
 
         new Thread(new Runnable() {
             @Override
