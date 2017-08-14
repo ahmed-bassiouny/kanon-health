@@ -154,7 +154,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                 ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + chatModel.getAvatar(), R.drawable.placeholder);
             }
 
-            if (chatModel.getOpen() != 1) {
+            if (chatModel.getIsSessionOpen() != 1) {
                 holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
             } else if (chatModel.getUserType() == user.DOCTOR) {
                 holder.imgAvatar.setBorderColor(Color.BLUE);
@@ -209,6 +209,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
 
     private void gotoChat(ChatModel doctor) {
         Intent intent = new Intent(activity, HttpChatActivity.class);
+        intent.putExtra("userInfo",doctor);
         intent.putExtra("doctorID", doctor.getUserID());
         activity.startActivity(intent);
     }

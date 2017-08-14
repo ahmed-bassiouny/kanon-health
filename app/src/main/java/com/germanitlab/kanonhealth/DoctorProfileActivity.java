@@ -233,6 +233,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         if (is_me)
             return;
         Intent intent = new Intent(this, HttpChatActivity.class);
+        intent.putExtra("userInfo",userInfo);
         intent.putExtra("doctorID", userInfo.getUserID());
         startActivity(intent);
     }

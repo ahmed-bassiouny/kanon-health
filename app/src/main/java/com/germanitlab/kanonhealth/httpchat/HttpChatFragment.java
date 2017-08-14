@@ -273,7 +273,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // declare objects in this fragment
     private void initObjects() {
-        userInfo = new UserInfo();
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -294,6 +293,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         doctorID = getArguments().getInt("doctorID");
         userInfo=(UserInfo) getArguments().getSerializable("userInfo");
+        userInfo = new UserInfo();
         if (userID == doctorID) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());

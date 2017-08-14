@@ -114,6 +114,7 @@ public class Comment extends AppCompatActivity {
                                 //userRepository.update(doctor);
                                 Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
                                 intent.putExtra("doctorID", Integer.valueOf(doc_id));
+                                intent.putExtra("userInfo",doctor);
                                 startActivity(intent);
                                 finish();
                             } else {
@@ -139,6 +140,7 @@ public class Comment extends AppCompatActivity {
         //userRepository.update(doctor);
         Intent intent = new Intent(this, HttpChatActivity.class);
         intent.putExtra("doctorID", Integer.valueOf(doc_id));
+        intent.putExtra("userInfo",doctor);
         startActivity(intent);
         finish();
 

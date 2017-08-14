@@ -628,8 +628,6 @@ public class ApiHelper {
         try {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userID);
-            System.out.println(userInfoParameter.toJson());
-
             String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             Gson gson = new Gson();
             UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);

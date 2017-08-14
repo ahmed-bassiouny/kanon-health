@@ -178,7 +178,7 @@ public class PaymentActivity extends AppCompatActivity {
                 }
 
             }
-            (new Thread(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()));
@@ -193,7 +193,7 @@ public class PaymentActivity extends AppCompatActivity {
                         finish();
                     }
                 }
-            })).run();
+            }).start();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();

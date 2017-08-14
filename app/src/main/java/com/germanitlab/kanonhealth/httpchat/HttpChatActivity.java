@@ -16,13 +16,14 @@ public class HttpChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_http_chat);
         doctorID = getIntent().getIntExtra("doctorID", 0);
 
+
         if (doctorID == 0) {
             finish();
         }
 
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
-
+        bundle.putSerializable("userInfo",getIntent().getSerializableExtra("userInfo"));
         fr = new HttpChatFragment();
         fr.setArguments(bundle);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();

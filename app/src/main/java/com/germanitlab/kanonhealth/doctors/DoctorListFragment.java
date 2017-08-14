@@ -406,6 +406,18 @@ public class DoctorListFragment extends Fragment {
 
     private void setDoctorList ()
     {
+        if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
+            is_doctor_data = true;
+            if(leftTabVisible) {
+                setDoctorAdapter(doctorList);
+            }
+            isAllDataLoaded();
+        } else {
+            if(leftTabVisible) {
+                setDoctorAdapter(doctorList);
+            }
+            //  CheckTabToScrollTo();
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -413,18 +425,7 @@ public class DoctorListFragment extends Fragment {
                 for(UserInfo userInfo:doctorList){
                     chatModelRepositry.createOrUpdate(userInfo);
                 }
-                if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
-                    is_doctor_data = true;
-                    if(leftTabVisible) {
-                        setDoctorAdapter(doctorList);
-                    }
-                       isAllDataLoaded();
-                } else {
-                    if(leftTabVisible) {
-                        setDoctorAdapter(doctorList);
-                    }
-                  //  CheckTabToScrollTo();
-                }
+
 
             }
         }).start();
@@ -432,22 +433,22 @@ public class DoctorListFragment extends Fragment {
 
     private void setClinicList()
     {
+        if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
+            is_clinic_data = true;
+            if(!leftTabVisible) {
+                setClinicsAdapter(clinics);
+            }
+            isAllDataLoaded();
+        } else {
+            if(!leftTabVisible) {
+                setClinicsAdapter(clinics);
+            }
+            // CheckTabToScrollTo();
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
                 clinics= ApiHelper.postGetClinicList(getContext());
-                if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
-                    is_clinic_data = true;
-                    if(!leftTabVisible) {
-                        setClinicsAdapter(clinics);
-                    }
-                    isAllDataLoaded();
-                } else {
-                    if(!leftTabVisible) {
-                        setClinicsAdapter(clinics);
-                    }
-                   // CheckTabToScrollTo();
-                }
 
             }
         }).start();
