@@ -35,6 +35,7 @@ import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -69,8 +70,6 @@ public class DoctorListFragment extends Fragment {
     int speciality_id;
     String jsonString;
     int type;
-    PrefManager prefManager;
-    private PrefManager mPrefManager;
     UserInfo user;
     Gson gson;
     private UserRepository mDoctorRepository;
@@ -106,10 +105,10 @@ public class DoctorListFragment extends Fragment {
         try {
             view = inflater.inflate(R.layout.fragment_doctor_list, container, false);
             setHasOptionsMenu(true);
-            mPrefManager = new PrefManager(getActivity());
-            prefManager = new PrefManager(getActivity());
+
             try {
-                user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+                user= PrefHelper.get(getActivity(),PrefHelper.KEY_USER_KEY,UserInfo.class);
+                int id = PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1);
             } catch (Exception e) {
             }
             initView();

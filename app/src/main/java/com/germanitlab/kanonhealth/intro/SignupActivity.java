@@ -20,9 +20,9 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
@@ -41,7 +41,6 @@ public class SignupActivity extends AppCompatActivity {
     String country, code;
     Constants constants;
     public SignupActivity signupActivity;
-    PrefManager prefManager;
     final int REQUEST_CODE = 10;
     Util util;
 
@@ -55,7 +54,6 @@ public class SignupActivity extends AppCompatActivity {
         signupActivity = this;
         try {
             constants = new Constants();
-            prefManager = new PrefManager(this);
             found = true;
             initView();
             handelEvent();
@@ -247,8 +245,9 @@ public class SignupActivity extends AppCompatActivity {
                     public void run() {
                         Register register = ApiHelper.postRegister(code.toString(), etMobileNumber.getText().toString(), SignupActivity.this);
                         if (register != null) {
-                            prefManager.put(PrefManager.USER_ID, String.valueOf(register.getId()));
-                            prefManager.put(PrefManager.USER_PASSWORD, String.valueOf(register.getPassword()));
+                            PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_ID, register.getId());
+                            PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_PASSWORD, register.getPassword());
+
                             Intent intent = new Intent(SignupActivity.this, VerificationActivity.class);
                             intent.putExtra("number", etMobileNumber.getText().toString());
                             intent.putExtra("codeNumber", code.toString());
