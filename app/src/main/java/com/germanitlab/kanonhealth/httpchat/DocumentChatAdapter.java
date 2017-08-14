@@ -34,12 +34,12 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -67,17 +67,13 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     List<Integer> list = new ArrayList<>();
     HashSet<Integer> selectedPositions = new HashSet<>();
     private boolean selected = false;
-    private boolean show_privacy = false; // it's attribte to decide if it's document (show prrivacy) or chat (disappear privacy)
-    private PrefManager prefManager;
     private InternetFilesOperations internetFilesOperations;
     private final int FORWARDMSG = 5;
     ImageView forward;
 
     public DocumentChatAdapter(List<Document> documents, final Activity activity) {
         this.activity = activity;
-        this.show_privacy = show_privacy;
-        prefManager = new PrefManager(activity);
-        userID = prefManager.getInt(PrefManager.USER_ID);
+        userID = PrefHelper.get(activity, PrefHelper.KEY_USER_ID,0);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(documents);
         forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
@@ -627,9 +623,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                             unselectItem(audioViewHolder.select_item, mediaMessage, position);
                             selectedPositions.remove(position);
                         }
-                    else {
-
-                    }
                 }
             });
         } catch (Exception e) {
@@ -702,8 +695,9 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     private void setVideoMessage(final ImageViewHolder imageViewHolder, final int position) {
 
         try {
-            imageViewHolder.image_message.setImageBitmap(null);
             final Document message = documents.get(position);
+            imageViewHolder.play_video.setVisibility(View.GONE);
+            imageViewHolder.image_message.setImageBitmap(null);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading, imageViewHolder.relative_main);
             final String fileName = message.getMedia().substring(message.getMedia().lastIndexOf("/") + 1);
@@ -756,6 +750,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                         MediaStore.Video.Thumbnails.MICRO_KIND);
                 imageViewHolder.image_message.setImageBitmap(videoThumbnail);
                 playViedo(imageViewHolder.play_video, file.getPath());
+                imageViewHolder.play_video.setVisibility(View.VISIBLE);
             }
             imageViewHolder.relative_main.setOnClickListener(new View.OnClickListener() {
                 @Override

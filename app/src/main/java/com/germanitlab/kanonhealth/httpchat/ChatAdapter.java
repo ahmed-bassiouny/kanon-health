@@ -698,15 +698,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
         try {
             final Message message = mMessages.get(position);
+            imageViewHolder.play_video.setVisibility(View.GONE);
+            imageViewHolder.image_message.setImageBitmap(null);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading, imageViewHolder.relative_main);
+            final String fileName = message.getMedia().substring(message.getMedia().lastIndexOf("/") + 1);
+            final File file = new File(folder, fileName);
             if (!new File(message.getMedia()).exists()) {
-                final String fileName = message.getMedia().substring(message.getMedia().lastIndexOf("/") + 1);
-                final File file = new File(folder, fileName);
-
                 if (file.exists()) {
-//                    message.setLoaded(true);
-//                    message.setLoading(false);
                     message.setMedia(file.getPath());
                     imageViewHolder.progress_view_download.setVisibility(View.GONE);
 
@@ -721,7 +720,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
 
                 } else {
                     imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-                    imageViewHolder.image_message.setImageBitmap(null);
                     internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progress_view_download, message.getType(), message.getMedia(), new DownloadListener() {
                         @Override
                         public void onDownloadFinish(final String pathOFDownloadedFile) {
@@ -749,6 +747,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                         }
                     });
                 }
+            }else{
+                message.setMedia(file.getPath());
+                Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
+                        MediaStore.Video.Thumbnails.MICRO_KIND);
+                imageViewHolder.image_message.setImageBitmap(videoThumbnail);
+                playViedo(imageViewHolder.play_video, file.getPath());
+                imageViewHolder.play_video.setVisibility(View.VISIBLE);
             }
             imageViewHolder.relative_main.setOnClickListener(new View.OnClickListener() {
                 @Override

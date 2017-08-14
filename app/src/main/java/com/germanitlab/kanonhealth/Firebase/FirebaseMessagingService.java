@@ -15,7 +15,6 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.httpchat.MessageRequest;
 import com.germanitlab.kanonhealth.httpchat.MessageRequestSeen;

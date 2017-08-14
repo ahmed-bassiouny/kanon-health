@@ -13,7 +13,6 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.callback.UploadListener;
-import com.germanitlab.kanonhealth.db.PrefManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,7 +40,6 @@ public class InternetFilesOperations {
 
     private static InternetFilesOperations internetFilesOperations;
     private Context context;
-    PrefManager prefManager;
 
     public static InternetFilesOperations getInstance(Context context) {
         if (internetFilesOperations != null)
@@ -53,7 +51,6 @@ public class InternetFilesOperations {
 
     private InternetFilesOperations(Context context) {
         this.context = context;
-        prefManager = new PrefManager(context);
 
     }
 
@@ -159,7 +156,7 @@ public class InternetFilesOperations {
                 entity.addPart("file", new FileBody(sourceFile, "application/octet"));
 
                 try {
-                    entity.addPart("token", new StringBody(prefManager.getData(PrefManager.USER_PASSWORD)));
+                    entity.addPart("token", new StringBody(PrefHelper.get(context,PrefHelper.KEY_USER_PASSWORD,"")));
 
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
