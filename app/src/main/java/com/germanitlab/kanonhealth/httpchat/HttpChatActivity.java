@@ -1,18 +1,9 @@
 package com.germanitlab.kanonhealth.httpchat;
 
-
-import android.content.Context;
-import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.db.PrefManager;
 
 public class HttpChatActivity extends AppCompatActivity {
 

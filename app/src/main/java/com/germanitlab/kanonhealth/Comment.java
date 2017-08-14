@@ -17,9 +17,9 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 
@@ -106,8 +106,7 @@ public class Comment extends AppCompatActivity {
                 (new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        PrefManager prefManager = new PrefManager(Comment.this);
-                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, prefManager.getData(PrefManager.USER_ID), doctor.getUserID().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
+                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,""), doctor.getUserID().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
                         if (result != null) {
                             if (result.getData()) {
                                 Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
