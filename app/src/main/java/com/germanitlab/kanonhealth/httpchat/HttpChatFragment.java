@@ -332,6 +332,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             public void run() {
                 messages = ApiHelper.getMessages(userID, doctorID, getContext());
                 if (messages != null) {
+                    if(getActivity()!=null)
                     // if arraylist have message set data in adapter and save in database and request message seen
                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -353,6 +354,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
 
                 }else{
+                    if(getActivity()!=null)
                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -746,11 +748,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     }
 
 
-    private String getDateTimeNow() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
-        return dateFormat.format(cal.getTime()).toString();
-    }
 
     private void pickVideo() {
         Intent intent = new Intent();
@@ -1153,7 +1150,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @Override
     public void onBeforeExpand() {
-if(onBeforeExpand==false) {
+        if(onBeforeExpand==false) {
     onBeforeExpand=true;
     mHoldingButtonLayout.setButtonEnabled(false);
     new Handler().postDelayed(new Runnable() {
@@ -1350,23 +1347,22 @@ if(onBeforeExpand==false) {
     private void startRecording() {
         //  Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));خى
 
-        long startTimeForRecording = mStartTime;
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-
-        mRecorder.setAudioEncodingBitRate(16);
-        mRecorder.setAudioSamplingRate(44100);
-        mOutputFile = getOutputFile();
-        mOutputFile.getParentFile().mkdirs();
-        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
-
         try {
+            long startTimeForRecording = mStartTime;
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+            mRecorder.setAudioEncodingBitRate(16);
+            mRecorder.setAudioSamplingRate(44100);
+            mOutputFile = getOutputFile();
+            mOutputFile.getParentFile().mkdirs();
+            mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
             mRecorder.prepare();
             mRecorder.start();
-            startTime = SystemClock.elapsedRealtime();
-            mHandler.postDelayed(mTickExecutor, 100);
+            //startTime = SystemClock.elapsedRealtime();
+            //mHandler.postDelayed(mTickExecutor, 100);
         } catch (Exception e) {
         }
 

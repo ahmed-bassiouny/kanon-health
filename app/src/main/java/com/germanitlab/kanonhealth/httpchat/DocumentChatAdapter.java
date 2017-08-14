@@ -686,7 +686,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                 }
             });
             imageViewHolder.image_message.setImageBitmap(null);
-            JSONObject jsonObject = new JSONObject(locationMessage.getMedia());
+            JSONObject jsonObject = new JSONObject(locationMessage.getDocument());
             double lat = jsonObject.getDouble("lat");
             double lng = jsonObject.getDouble("long");
             String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(lat) + "," + String.valueOf(lng) + "&zoom=15&size=200x200&sensor=false";
@@ -702,19 +702,17 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     private void setVideoMessage(final ImageViewHolder imageViewHolder, final int position) {
 
         try {
+            imageViewHolder.image_message.setImageBitmap(null);
             final Document message = documents.get(position);
             showLayout_Privacy(message, position, imageViewHolder.privacy_image, imageViewHolder.messageContainer
                     , imageViewHolder.status, imageViewHolder.privacy_txt, imageViewHolder.date, imageViewHolder.pbar_loading, imageViewHolder.relative_main);
+            final String fileName = message.getMedia().substring(message.getMedia().lastIndexOf("/") + 1);
+            final File file = new File(folder, fileName);
+            imageViewHolder.progress_view_download.setVisibility(View.GONE);
+
             if (!new File(message.getMedia()).exists()) {
-                final String fileName = message.getMedia().substring(message.getMedia().lastIndexOf("/") + 1);
-                final File file = new File(folder, fileName);
-
                 if (file.exists()) {
-//                    message.setLoaded(true);
-//                    message.setLoading(false);
                     message.setMedia(file.getPath());
-                    imageViewHolder.progress_view_download.setVisibility(View.GONE);
-
                     Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
                             MediaStore.Video.Thumbnails.MICRO_KIND);
 
@@ -726,7 +724,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
 
                 } else {
                     imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-                    imageViewHolder.image_message.setImageBitmap(null);
                     internetFilesOperations.downloadUrlWithProgress(imageViewHolder.progress_view_download, message.getType(), message.getMedia(), new DownloadListener() {
                         @Override
                         public void onDownloadFinish(final String pathOFDownloadedFile) {
@@ -734,7 +731,6 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                                 @Override
                                 public void run() {
                                     message.setMedia(pathOFDownloadedFile);
-//                                    message.setLoaded(true);
                                     imageViewHolder.image_message.setImageBitmap(ThumbnailUtils.createVideoThumbnail(message.getMedia(),
                                             MediaStore.Video.Thumbnails.MICRO_KIND));
 
@@ -754,6 +750,12 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                         }
                     });
                 }
+            }else{
+                message.setMedia(file.getPath());
+                Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(file.getPath(),
+                        MediaStore.Video.Thumbnails.MICRO_KIND);
+                imageViewHolder.image_message.setImageBitmap(videoThumbnail);
+                playViedo(imageViewHolder.play_video, file.getPath());
             }
             imageViewHolder.relative_main.setOnClickListener(new View.OnClickListener() {
                 @Override
