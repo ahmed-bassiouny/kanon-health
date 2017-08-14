@@ -30,7 +30,7 @@ import com.germanitlab.kanonhealth.adapters.ChatListAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -59,8 +59,6 @@ public class ChatsDoctorFragment extends Fragment {
 
     ArrayList<ChatModel> chatModel;
     private Button btnLeftList, btnRightList;
-    PrefManager prefManager;
-    private PrefManager mPrefManager;
     UserInfo user;
     Gson gson;
     private UserRepository mDoctorRepository;
@@ -83,10 +81,8 @@ public class ChatsDoctorFragment extends Fragment {
         try {
             view = inflater.inflate(R.layout.fragment_chats_doctor, container, false);
             setHasOptionsMenu(true);
-            mPrefManager = new PrefManager(getActivity());
-            prefManager = new PrefManager(getActivity());
             try {
-                user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+                user = new Gson().fromJson(PrefHelper.get(getContext(),PrefHelper.KEY_USER_KEY,""), UserInfo.class);
             } catch (Exception e) {
             }
             initView();
@@ -167,7 +163,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatDoctor(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    chatModel = ApiHelper.getChatDoctor(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -176,7 +172,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatUser(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    chatModel = ApiHelper.getChatUser(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -187,7 +183,7 @@ public class ChatsDoctorFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            chatModel = ApiHelper.getChatClinic(getContext(), prefManager.getData(PrefManager.USER_ID));
+                            chatModel = ApiHelper.getChatClinic(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
                            setChatListAdapter(chatModel);
                         }
                     }).start();
@@ -197,7 +193,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), prefManager.getData(PrefManager.USER_ID));
+                    chatModel = ApiHelper.getChatAnother(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
                     setChatListAdapter(chatModel);
                 }
             }).start();

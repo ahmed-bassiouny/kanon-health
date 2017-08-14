@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
@@ -42,7 +41,7 @@ public class PreRequest extends AppCompatActivity {
         try {
             Intent intent = new Intent(this, PaymentActivity.class);
             intent.putExtra("doctor_data", doctorJson);
-            PrefHelper.put(getBaseContext() , PrefHelper.KEY_USER_INTENT , doctorJson);
+            PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_INTENT,doctorJson);
             startActivity(intent);
         } catch (Exception e) {
             Crashlytics.logException(e);
