@@ -8,22 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.Toast;
-
-import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Util;
-import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -62,8 +54,6 @@ public class InquiryMainFragment extends Fragment {
     @BindView(R.id.button_submit)
     FloatingActionButton floatingActionButton;
     UserInfo doctor;
-
-    private PrefManager prefManager;
     Util util;
 
     @Nullable
@@ -72,7 +62,6 @@ public class InquiryMainFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.questions, container, false);
         ButterKnife.bind(this, root);
-        prefManager = new PrefManager(getActivity());
         util = Util.getInstance(getActivity());
 
         //hide the keyboard
