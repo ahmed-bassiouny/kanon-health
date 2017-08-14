@@ -495,6 +495,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public void image_star() {
         Intent intent = new Intent(this, RateActivity.class);
         intent.putExtra("doctor_info",   userInfo);
+        intent.putExtra("type", "doctor");
         startActivity(intent);
     }
 

@@ -85,13 +85,22 @@ public class RateActivity extends ParentActivity{
     int height, width;
 
     UserInfo doctor;
+    Clinic clinic;
+    boolean isClinic;
+    Review review;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
         ButterKnife.bind(this);
-         doctor = (UserInfo) getIntent().getSerializableExtra("doctor_info");
+        isClinic=getIntent().getStringExtra("type").equals("clinic");
+        if(!isClinic) {
+            doctor = (UserInfo) getIntent().getSerializableExtra("doctor_info");
+        }else
+        {
+            clinic=(Clinic)getIntent().getSerializableExtra("clinic_info");
+        }
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +112,10 @@ public class RateActivity extends ParentActivity{
 
         try {
             recycler_view.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            if ( doctor==null) {
+            if ( (isClinic&&clinic==null)||(!isClinic&&doctor==null)) {
                 finish();
             }
+
            showProgressBar();
             loadData();
         } catch (Exception e) {
@@ -122,8 +132,12 @@ public class RateActivity extends ParentActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                final Review review= ApiHelper.getReview( String.valueOf(doctor.getUserID()),RateActivity.this);
+                       if(isClinic)
+                       {
+                          review = ApiHelper.getReview(String.valueOf(clinic.getId()), RateActivity.this);
+                       }else {
+                            review = ApiHelper.getReview(String.valueOf(doctor.getUserID()), RateActivity.this);
+                       }
                 if(review!=null){
                     RateActivity.this.runOnUiThread(new Runnable() {
                         @Override
@@ -163,17 +177,27 @@ public class RateActivity extends ParentActivity{
                                 recyclerVie.setNestedScrollingEnabled(false);
                                 recyclerVie.setAdapter(rateAdapter);
                             }
+                            if(isClinic)
+                            {
 
-                            txt_doctor_name.setText(doctor.getFullName());
-                            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                                ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + doctor.getAvatar(),R.drawable.placeholder);
+                                txt_doctor_name.setText(clinic.getName());
+                                if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
+                                    ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
+                                }
+                            }else {
+
+                                txt_doctor_name.setText(doctor.getFullName());
+                                if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
+                                    ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + doctor.getAvatar(), R.drawable.placeholder);
+                                }
                             }
-                        hideProgressBar();
+
 
                         }
                     });
 
                 }
+                hideProgressBar();
             }
         }).start();
     }

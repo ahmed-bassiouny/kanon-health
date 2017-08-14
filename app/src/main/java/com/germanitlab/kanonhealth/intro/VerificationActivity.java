@@ -93,7 +93,6 @@ public class VerificationActivity extends AppCompatActivity {
             final Register register= (Register) getIntent().getExtras().get(Constants.REGISER_RESPONSE);
 
         PrefHelper.put(getApplicationContext(),PrefHelper.KEY_IS_LOGIN,true);
-
         PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_ID, register.getId());
         PrefHelper.put(getApplicationContext(),PrefHelper.KEY_USER_PASSWORD, register.getPassword());
 

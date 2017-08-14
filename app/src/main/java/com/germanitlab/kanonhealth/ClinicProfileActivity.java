@@ -281,14 +281,13 @@ public class ClinicProfileActivity extends AppCompatActivity {
     }
 
 
-
     @OnClick(R.id.image_star)
     public void image_star() {
         Intent intent = new Intent(this, RateActivity.class);
-        intent.putExtra("doc_id", String.valueOf(clinic.getId()));
+        intent.putExtra("clinic_info",  clinic);
+        intent.putExtra("type", "clinic");
         startActivity(intent);
     }
-
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
         /*if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))

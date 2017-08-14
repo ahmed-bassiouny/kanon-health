@@ -372,6 +372,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     public void ImagePickerCallBack(Uri uri) {
         ImageHelper.setImage(imgAvatar, uri);
         avatar = new File(ImageFilePath.getPath(EditUserProfileActivity.this, uri));
+        System.out.println(avatar);
         pickerDialog.dismiss();
     }
 }

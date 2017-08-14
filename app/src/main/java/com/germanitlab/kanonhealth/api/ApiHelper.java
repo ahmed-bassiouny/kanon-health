@@ -829,6 +829,7 @@ public class ApiHelper {
             UserInfoParameter userInfoParameter = new UserInfoParameter();
             userInfoParameter.setUserID(userId);
             String jsonString = post(API_RATE_REVIEW, userInfoParameter.toJson());
+            System.out.println(userInfoParameter.toJson());
             Gson gson = new Gson();
             ReviewResponse reviewResponse = gson.fromJson(jsonString, ReviewResponse.class);
             if (reviewResponse.getStatus()) {

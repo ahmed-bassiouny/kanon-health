@@ -14,7 +14,7 @@ import dmax.dialog.SpotsDialog;
 
 public class ParentActivity extends AppCompatActivity {
 
-    public  void ImagePickerCallBack(Uri uri){};
+    public  void ImagePickerCallBack(Uri uri){}
 
     private SpotsDialog currentProgress = null;
 
