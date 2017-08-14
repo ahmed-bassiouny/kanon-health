@@ -91,7 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UserInfo userInfo= ApiHelper.getUserInfo(SplashScreenActivity.this,PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_USER_ID , ""));
+                    UserInfo userInfo= ApiHelper.getUserInfo(SplashScreenActivity.this,String.valueOf(PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_USER_ID ,-1)));
 
                     if(userInfo !=null){
                         Gson gson = new Gson();

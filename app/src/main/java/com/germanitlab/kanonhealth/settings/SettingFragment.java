@@ -38,8 +38,8 @@ import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
 import com.germanitlab.kanonhealth.models.SettingResponse;
@@ -163,7 +163,7 @@ public class SettingFragment extends Fragment {
         if (!Helper.isNetworkAvailable(getActivity()))
             return;
 
-        ProgressHelper.showProgressBar(getContext());
+        ((ParentActivity) getActivity()).showProgressBar();
         new Thread( new Runnable() {
             @Override
             public void run() {
@@ -181,7 +181,7 @@ public class SettingFragment extends Fragment {
                 SettingFragment.this.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ProgressHelper.hideProgressBar();
+                        ((ParentActivity) getActivity()).hideProgressBar();
                         initView();
                         handelEvent();
                         setHasOptionsMenu(true);
@@ -361,7 +361,7 @@ public class SettingFragment extends Fragment {
         new Thread( new Runnable() {
             @Override
             public void run() {
-                int result= ApiHelper.postChangeStatus(Integer.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,0)),isAvailable,getContext());
+                int result= ApiHelper.postChangeStatus(Integer.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)),isAvailable,getContext());
                 if(result!=-1)
                 {
                     if (isAvailable==1) {

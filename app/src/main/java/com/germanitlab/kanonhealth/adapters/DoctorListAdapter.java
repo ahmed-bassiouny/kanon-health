@@ -43,7 +43,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             this.doctorContactsList = doctorContactsList;
             this.activity = activity;
 
-            userID = PrefHelper.get(activity,PrefHelper.KEY_USER_ID,0);
+            userID = PrefHelper.get(activity,PrefHelper.KEY_USER_ID,-1);
 
         } catch (Exception e) {
             Crashlytics.logException(e);

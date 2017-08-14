@@ -181,7 +181,7 @@ public class PaymentActivity extends AppCompatActivity {
             (new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int requestId = ApiHelper.openSession(PaymentActivity.this, PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,""), String.valueOf(doctor.getUserID()));
+                    int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()));
                     if (requestId != -1) {
                         Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
                         intent.putExtra("doctorID", doctor.getUserID());

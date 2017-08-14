@@ -106,7 +106,7 @@ public class Comment extends AppCompatActivity {
                 (new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,""), doctor.getUserID().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
+                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, String.valueOf(PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,-1)), doctor.getUserID().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
                         if (result != null) {
                             if (result.getData()) {
                                 Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();

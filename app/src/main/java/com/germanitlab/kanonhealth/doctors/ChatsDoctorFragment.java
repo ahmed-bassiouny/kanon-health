@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.ChatListAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
@@ -163,7 +164,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatDoctor(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
+                    chatModel = ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -172,7 +173,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatUser(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
+                    chatModel = ApiHelper.getChatUser(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     setChatListAdapter(chatModel);
                 }
             }).start();
@@ -183,7 +184,7 @@ public class ChatsDoctorFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            chatModel = ApiHelper.getChatClinic(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
+                            chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                            setChatListAdapter(chatModel);
                         }
                     }).start();
@@ -193,7 +194,7 @@ public class ChatsDoctorFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    chatModel = ApiHelper.getChatAnother(getContext(), PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,""));
+                    chatModel = ApiHelper.getChatAnother(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     setChatListAdapter(chatModel);
                 }
             }).start();

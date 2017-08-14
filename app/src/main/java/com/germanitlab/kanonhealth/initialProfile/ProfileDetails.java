@@ -35,7 +35,6 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.gson.Gson;
@@ -260,7 +259,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             return;
         }
         if (!firstName.trim().equals("") && !lastName.trim().equals("") && !birthDate.trim().equals("") && !title.trim().equals("")) {
-            ProgressHelper.showProgressBar(this);
+          showProgressBar();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -275,7 +274,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
                             intent.putExtra("has_back", true);
                             startActivity(intent);
                         }
-                        ProgressHelper.hideProgressBar();
+                      hideProgressBar();
                         finish();
                     }
 

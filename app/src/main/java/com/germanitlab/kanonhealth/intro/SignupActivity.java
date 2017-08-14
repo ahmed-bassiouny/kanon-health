@@ -22,15 +22,15 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.mukesh.countrypicker.Country;
 import java.util.regex.Pattern;
 
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends ParentActivity {
 
 
     Button btnSignUp;
@@ -119,7 +119,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void getCountryFromNetwork() {
         //   util.showProgressDialog();
-        ProgressHelper.showProgressBar(SignupActivity.this);
+        showProgressBar();
 
         new Thread(new Runnable() {
             @Override
@@ -132,7 +132,7 @@ public class SignupActivity extends AppCompatActivity {
                 } else {
                     setCountryAndCode(result);
                 }
-                ProgressHelper.hideProgressBar();
+                hideProgressBar();
             }
 
         }).start();
@@ -239,7 +239,7 @@ public class SignupActivity extends AppCompatActivity {
         if (Helper.isNetworkAvailable(this)) {
             //internet is connected do something
             if (found && (!select_country.equals("") || !select_country.equals(null)) && code != null && !etMobileNumber.getText().equals("") && etMobileNumber.getText().length() >= 8 && etMobileNumber.getText().length() <= 15) {
-                ProgressHelper.showProgressBar(this);
+                showProgressBar();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -256,7 +256,7 @@ public class SignupActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
-                        ProgressHelper.hideProgressBar();
+                        hideProgressBar();
                     }
                 }).start();
 

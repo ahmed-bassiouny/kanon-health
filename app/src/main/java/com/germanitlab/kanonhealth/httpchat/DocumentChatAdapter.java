@@ -73,7 +73,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
 
     public DocumentChatAdapter(List<Document> documents, final Activity activity) {
         this.activity = activity;
-        userID = PrefHelper.get(activity, PrefHelper.KEY_USER_ID,0);
+        userID = PrefHelper.get(activity, PrefHelper.KEY_USER_ID,-1);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
         setList(documents);
         forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);

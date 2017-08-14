@@ -289,7 +289,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         iamClinic = PrefHelper.get(getContext(),PrefHelper.KEY_IS_CLINIC,false);
 
-        userID = PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,0);
+        userID = PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,-1);
         userPassword = PrefHelper.get(getContext(),PrefHelper.KEY_USER_PASSWORD,"");
 
         doctorID = getArguments().getInt("doctorID");

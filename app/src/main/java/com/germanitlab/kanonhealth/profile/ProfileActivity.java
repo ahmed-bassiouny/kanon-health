@@ -109,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, PrefHelper.get(ProfileActivity.this,PrefHelper.KEY_USER_ID,""));
+                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, String.valueOf(PrefHelper.get(ProfileActivity.this,PrefHelper.KEY_USER_ID,-1)));
                             if (userInfo != null) {
                                     Gson gson = new Gson();
                                 PrefHelper.put(ProfileActivity.this,PrefHelper.KEY_USER_KEY,gson.toJson(userInfo));

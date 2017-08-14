@@ -12,9 +12,9 @@ import dmax.dialog.SpotsDialog;
  * Created by andy on 7/25/17.
  */
 
-public abstract class ParentActivity extends AppCompatActivity {
+public class ParentActivity extends AppCompatActivity {
 
-    public abstract void ImagePickerCallBack(Uri uri);
+    public  void ImagePickerCallBack(Uri uri){};
 
     private SpotsDialog currentProgress = null;
 

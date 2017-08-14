@@ -39,7 +39,6 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -256,7 +255,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     private void sendDataToserver() {
 
-        ProgressHelper.showProgressBar(DoctorProfileActivity.this);
+    showProgressBar();
        // pickerDialog.dismiss();
 //        ImageHelper.setImage(circleImageViewAvatar, avatar.getAbsolutePath());
         new Thread(new Runnable() {
@@ -268,7 +267,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ProgressHelper.hideProgressBar();
+                          hideProgressBar();
                             Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
                             menu.findItem(R.id.mi_edit).setVisible(true);
                             menu.findItem(R.id.mi_save).setVisible(false);
@@ -285,7 +284,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ProgressHelper.hideProgressBar();
+                         hideProgressBar();
                             circleImageViewAvatar.setImageResource(R.drawable.placeholder);
                             Toast.makeText(DoctorProfileActivity.this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
                         }
@@ -503,7 +502,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public void addToMyDoctor() {
         if(is_me)
             return;
-        ProgressHelper.showProgressBar(DoctorProfileActivity.this);
+       showProgressBar();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -525,7 +524,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                             } else{
                                 Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                             }
-                            ProgressHelper.hideProgressBar();
+                           hideProgressBar();
                         }
                     });
             }

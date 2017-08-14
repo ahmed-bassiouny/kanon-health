@@ -34,10 +34,9 @@ import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.helpers.ProgressHelper;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -130,7 +129,7 @@ public class DoctorListFragment extends Fragment {
     }
 
     private void loadFirstTime() {
-        ProgressHelper.showProgressBar(getActivity());
+        ((ParentActivity)getActivity()).showProgressBar();
                 setDoctorList();
                 setClinicList();
                 //getChatData();
@@ -657,7 +656,7 @@ public class DoctorListFragment extends Fragment {
 
     private void isAllDataLoaded(){
         if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-           ProgressHelper.hideProgressBar();
+            ((ParentActivity)getActivity()).hideProgressBar();
             PrefHelper.put(getActivity(),PrefHelper.KEY_IS_OLD,true);
         }
 

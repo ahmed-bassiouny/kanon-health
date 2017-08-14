@@ -18,18 +18,16 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.*;
 import com.germanitlab.kanonhealth.api.models.Comment;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
-import com.germanitlab.kanonhealth.helpers.ProgressHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TimerTask;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class RateActivity extends AppCompatActivity {
+public class RateActivity extends ParentActivity{
 
     // doctor name , rate , reviews number
     @BindView(R.id.txt_doctor_name)
@@ -108,7 +106,7 @@ public class RateActivity extends AppCompatActivity {
             if ( doctor==null) {
                 finish();
             }
-            ProgressHelper.showProgressBar(this);
+           showProgressBar();
             loadData();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -170,7 +168,7 @@ public class RateActivity extends AppCompatActivity {
                             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                                 ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + doctor.getAvatar(),R.drawable.placeholder);
                             }
-                         ProgressHelper.hideProgressBar();
+                        hideProgressBar();
 
                         }
                     });
