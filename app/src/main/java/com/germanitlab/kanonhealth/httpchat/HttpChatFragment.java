@@ -65,11 +65,11 @@ import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
@@ -148,7 +148,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     UserInfoRepositry chatModelRepositry;
 
 
-    PrefManager prefManager;
     ChatAdapter chatAdapter;
     DocumentChatAdapter documentChatAdapter;
     static HttpChatFragment httpChatFragment;
@@ -274,7 +273,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // declare objects in this fragment
     private void initObjects() {
-        prefManager = new PrefManager(getContext());
         userInfo = new ChatModel();
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -286,11 +284,11 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     // set data in object
     private void initData() {
-        iamDoctor = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), ChatModel.class).getUserType() == UserInfo.DOCTOR;
-        iamClinic = new Gson().fromJson(new PrefManager(getContext()).getData(PrefManager.USER_KEY), ChatModel.class).getUserType() == UserInfo.CLINIC;
+        iamDoctor = PrefHelper.get(getContext() ,PrefHelper.KEY_USER_KEY , UserInfo.class).getUserType() == UserInfo.DOCTOR;
+        iamDoctor = PrefHelper.get(getContext() ,PrefHelper.KEY_USER_KEY , ChatModel.class).getUserType() == UserInfo.CLINIC;
 
-        userID = prefManager.getInt(PrefManager.USER_ID);
-        userPassword = prefManager.getData(prefManager.USER_PASSWORD);
+        userID = PrefHelper.get(getContext() , PrefHelper.KEY_USER_ID , -1);
+        userPassword = PrefHelper.get(getContext() , PrefHelper.KEY_USER_PASSWORD , "");
 
         doctorID = getArguments().getInt("doctorID");
         if (userID == doctorID) {
@@ -1057,7 +1055,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             } else {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 Gson gson = new Gson();
-                prefManager.put(prefManager.USER_INTENT, gson.toJson(userInfo));
+                PrefHelper.put(getContext() , PrefHelper.KEY_USER_INTENT , gson.toJson(userInfo));
                 intent.putExtra("doctor_obj", userInfo);
                 startActivity(intent);
                 getActivity().finish();
