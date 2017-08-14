@@ -34,11 +34,11 @@ import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.callback.Message;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -121,8 +121,6 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     Info info;
     RecyclerView recyclerView;
     PickerDialog pickerDialog;
-    PrefManager prefManager;
-    private PrefManager mPrefManager;
     //    private Uri selectedImageUri;
     Util util;
     UserInfo user;
@@ -142,10 +140,9 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         setContentView(R.layout.activity_add_practics);
         ButterKnife.bind(this);
         initTB();
-        mPrefManager = new PrefManager(this);
-        prefManager = new PrefManager(this);
+
         try {
-            user = new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
+            user = new Gson().fromJson(PrefHelper.get(getBaseContext() , PrefHelper.KEY_USER_KEY , ""), UserInfo.class);
         } catch (Exception e) {
         }
 
@@ -735,7 +732,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             user.setAvatar("");
             file=null;
             ImageHelper.setImage(civImageAvatar, "", R.drawable.placeholder);
-            prefManager.put(PrefManager.PROFILE_IMAGE, "");
+            PrefHelper.put(getBaseContext() , PrefHelper.KEY_PROFILE_IMAGE , "");
             pickerDialog.dismiss();
         } catch (Exception e) {
             Crashlytics.logException(e);
