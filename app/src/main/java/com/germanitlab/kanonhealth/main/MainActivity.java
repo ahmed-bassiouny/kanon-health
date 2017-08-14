@@ -30,12 +30,12 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.application.AppController;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.doctors.ChatsDoctorFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.doctors.DoctorListMapFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
 import com.germanitlab.kanonhealth.interfaces.OnImgDoctorListMapClick;
 import com.germanitlab.kanonhealth.models.messages.Message;
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnImgDoctorListMa
                 case 0:
                     return DoctorListFragment.newInstance();
                 case 1:
-                    return HttpChatFragment.newInstance(new PrefManager(MainActivity.this).getInt(PrefManager.USER_ID));
+                    return HttpChatFragment.newInstance(PrefHelper.get(MainActivity.this,PrefHelper.KEY_USER_ID,0));
                 case 2:
                     return ChatsDoctorFragment.newInstance();
                 case 3:

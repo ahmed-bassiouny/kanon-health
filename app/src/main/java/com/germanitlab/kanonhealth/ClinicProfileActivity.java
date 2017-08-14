@@ -95,7 +95,6 @@ public class ClinicProfileActivity extends AppCompatActivity {
     ImageView imageViewMap;
     //---------------------
     Clinic clinic;
-    SpecilaitiesAdapter adapter;
     PickerDialog pickerDialog;
     int PLACE_PICKER_REQUEST = 7;
     DoctorListAdapter doctorListAdapter;
