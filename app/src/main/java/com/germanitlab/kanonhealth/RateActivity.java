@@ -120,7 +120,6 @@ public class RateActivity extends AppCompatActivity {
             loadData();
 
             doctor.setUserID(Integer.valueOf(doc_id));
-            //doctor = userRepository.(doctor);
             txt_doctor_name.setText(doctor.getFullName());
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
                 ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
