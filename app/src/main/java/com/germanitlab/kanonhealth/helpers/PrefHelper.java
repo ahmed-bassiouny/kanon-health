@@ -51,6 +51,13 @@ public class PrefHelper {
         editor.commit();
     }
 
+    public static void put(Context context, String key, Boolean value) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
     public static void put(Context context, String key, float value) {
         SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         SharedPreferences.Editor editor = pref.edit();
@@ -59,6 +66,13 @@ public class PrefHelper {
     }
 
     public static void put(Context context, String key, int value) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(key, value);
+        editor.commit();
+    }
+
+    public static void put(Context context, String key, Integer value) {
         SharedPreferences pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt(key, value);
