@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.LocationServicesTurn;
 import com.germanitlab.kanonhealth.main.MainActivity;
 import com.google.android.gms.common.ConnectionResult;
