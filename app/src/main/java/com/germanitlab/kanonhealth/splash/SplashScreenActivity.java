@@ -12,8 +12,8 @@ import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.db.PrefManager;
 import com.germanitlab.kanonhealth.helpers.Helper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.initialProfile.ProfileDetails;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
 import com.google.gson.Gson;
@@ -25,7 +25,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     private long timeOut = 1000;
     private boolean isLogin;
     private String storedUser;
-    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +35,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_splash_screen);
         try {
-            prefManager = new PrefManager(this);
-            storedUser = prefManager.getData(prefManager.USER_KEY);
-            isLogin = prefManager.isLogin();
+            storedUser = PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_USER_KEY , "");
+            isLogin = PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_IS_LOGIN , false);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
 
                     // to check passcode
-                    if (isLogin && !storedUser.equals("") && prefManager.getData(PrefManager.PASSCODE).length() == 6) {
+                    if (isLogin && !storedUser.equals("") && PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_PASSCODE, "").length() == 6) {
                         if (Helper.isNetworkAvailable(SplashScreenActivity.this))
                             loadData();
                         else {
@@ -64,7 +62,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         finish();
                     }
                     // all data saved but no passcode set
-                    else if (isLogin && prefManager.getData(PrefManager.PASSCODE).length() != 6) {
+                    else if (isLogin && PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_PASSCODE, "").length() != 6) {
 
                         Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
                         intent.putExtra("checkPassword", false);
@@ -74,7 +72,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         finish();
                     } else {
                         startActivity(new Intent(SplashScreenActivity.this, SignupActivity.class));
-                        prefManager.put(PrefManager.IS_OLD ,false);
+                        PrefHelper.put(SplashScreenActivity.this , PrefHelper.KEY_IS_OLD , false);
                         finish();
                     }
                 }
@@ -93,15 +91,15 @@ public class SplashScreenActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UserInfo userInfo= ApiHelper.getUserInfo(SplashScreenActivity.this,prefManager.getData(PrefManager.USER_ID));
+                    UserInfo userInfo= ApiHelper.getUserInfo(SplashScreenActivity.this,PrefHelper.get(SplashScreenActivity.this , PrefHelper.KEY_USER_ID , ""));
 
                     if(userInfo !=null){
                         Gson gson = new Gson();
-                        new PrefManager(SplashScreenActivity.this).put(PrefManager.USER_KEY, gson.toJson(userInfo));
+                        PrefHelper.put(SplashScreenActivity.this , PrefHelper.KEY_USER_KEY , gson.toJson(userInfo));
                         if(userInfo.getUserType()==UserInfo.DOCTOR) {
-                            new PrefManager(SplashScreenActivity.this).put(PrefManager.IS_DOCTOR, true);
+                            PrefHelper.put(SplashScreenActivity.this , PrefHelper.KEY_IS_DOCTOR , true);
                         }else{
-                            new PrefManager(SplashScreenActivity.this).put(PrefManager.IS_DOCTOR, false);
+                            PrefHelper.put(SplashScreenActivity.this , PrefHelper.KEY_IS_DOCTOR , false);
                         }
                     }
                     Intent intent = new Intent(SplashScreenActivity.this, PasscodeActivty.class);
