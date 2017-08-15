@@ -678,8 +678,8 @@ public class ApiHelper {
         }
     }
 
-    public static Message sendForward(Context context, int userID, String doctorID, String messageID) {
-        Message result = null;
+    public static boolean sendForward(Context context, int userID, String doctorID, String messageID) {
+        boolean result = false;
         try {
             MessageForwardParameter messageForwardParameter = new MessageForwardParameter();
             messageForwardParameter.setUserID(userID);
@@ -687,10 +687,8 @@ public class ApiHelper {
             messageForwardParameter.setMessagesID(messageID);
             String jsonString = post(API_MESSAGES_FORWARD, messageForwardParameter.toJson());
             Gson gson = new Gson();
-            MessageSendResponse messageSendResponse = gson.fromJson(jsonString, MessageSendResponse.class);
-            if (messageSendResponse.getStatus()) {
-                result = messageSendResponse.getData();
-            }
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            result=parentResponse.getStatus();
         } catch (Exception e) {
             Helper.handleError(TAG, "sendForward", e, -1, context);
         } finally {
