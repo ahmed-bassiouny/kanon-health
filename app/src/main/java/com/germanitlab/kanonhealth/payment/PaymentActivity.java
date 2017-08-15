@@ -183,14 +183,24 @@ public class PaymentActivity extends AppCompatActivity {
                 public void run() {
                     int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()));
                     if (requestId != -1) {
+                        doctor.setIsSessionOpen(1);
+                        doctor.setRequestID(requestId);
                         Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
                         intent.putExtra("doctorID", doctor.getUserID());
+                        intent.putExtra("userInfo",doctor);
                         // -------------- this need handle
                         //doctor.setIsOpen(1);
                         //doctor.setRequest_id(requestId);
                         //new UserRepository(PaymentActivity.this).update(doctor);
                         startActivity(intent);
                         finish();
+                    }else{
+                        PaymentActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(PaymentActivity.this, R.string.session_already_open, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             }).start();
@@ -200,5 +210,6 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
     }
+
 
 }

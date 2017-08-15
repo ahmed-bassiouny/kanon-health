@@ -293,7 +293,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         doctorID = getArguments().getInt("doctorID");
         userInfo = new UserInfo();
-        if(userID != doctorID)
+        if(userID != doctorID && doctorID != CustomerSupportActivity.supportID)
             userInfo=(UserInfo) getArguments().getSerializable("userInfo");
         if (userID == doctorID) {
             documents = new ArrayList<>();
