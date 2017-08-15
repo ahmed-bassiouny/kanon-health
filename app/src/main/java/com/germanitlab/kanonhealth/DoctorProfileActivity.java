@@ -417,6 +417,11 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
         textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(userInfo.getRateNum()) + " (" + String.valueOf(userInfo.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
 
+        //setRate
+        Float rate=userInfo.getRateNum();
+        ratingBar.setRating(rate);
+
+        
         // set specialities
         setSpecialities();
         setLanguages();
