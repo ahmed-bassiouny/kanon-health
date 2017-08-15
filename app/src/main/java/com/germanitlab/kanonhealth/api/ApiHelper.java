@@ -434,6 +434,7 @@ public class ApiHelper {
             String jsonString = "";
 
             jsonString = post(API_DOCTORS_CHANGE_STATUS, changeStatusParameters.toJson());
+            Log.i("jsson:" , jsonString);
 
             Gson gson = new Gson();
             ChangeStatusResponse changeStatusResponse = gson.fromJson(jsonString, ChangeStatusResponse.class);
@@ -524,6 +525,7 @@ public class ApiHelper {
         try {
             UserAddParameter userAddParamater = new UserAddParameter();
             userAddParamater.setUserID(userID);
+            Log.i("UserIdValue:" , userID+"");
             userAddParamater.setPassword(password);
             userAddParamater.setTitle(title);
             userAddParamater.setFirstName(firstName);

@@ -261,12 +261,19 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         super.onActivityCreated(savedInstanceState);
 
         try {
-            initObjects();
-            initData();
-            showAttachmentDialog();
-            checkMode();
+            if (Helper.isNetworkAvailable(getContext())) {
+                initObjects();
+                initData();
+                showAttachmentDialog();
+                checkMode();
+            }else {
+                Toast.makeText(getContext(), R.string.error_connection, Toast.LENGTH_SHORT).show();
+
+            }
+
+
         } catch (Exception e) {
-            Toast.makeText(getContext(), R.string.please_open_chat_again, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }

@@ -421,7 +421,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         Float rate=userInfo.getRateNum();
         ratingBar.setRating(rate);
 
-        
+
         // set specialities
         setSpecialities();
         setLanguages();

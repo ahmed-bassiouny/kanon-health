@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -181,7 +182,8 @@ public class PaymentActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()));
+                    int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)));
+                    Log.i("requestID:" , requestId+"");
                     if (requestId != -1) {
                         doctor.setIsSessionOpen(1);
                         doctor.setRequestID(requestId);
