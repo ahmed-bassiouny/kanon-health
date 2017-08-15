@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -249,6 +250,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
         etZipCode.setText(clinic.getZipCode());
         etProvince.setText(clinic.getProvince());
         textViewPhone.setText(clinic.getPhone());
+        ratingBar.setRating(clinic.getRateNum());
 
 
         if (clinic.getSupportedLangs() != null) {
@@ -358,5 +360,18 @@ public class ClinicProfileActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
 
 }

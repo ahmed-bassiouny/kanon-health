@@ -520,6 +520,7 @@
     <string name="privacy_not_change">Sorry Privacy Not change</string>
     <string name="loading">Loading...</string>
     <string name="phone">Phone</string>
+    <string name="session_already_open">Session already open</string>
 
 
 </resources>

@@ -135,6 +135,7 @@ public class RateActivity extends ParentActivity{
                        if(isClinic)
                        {
                           review = ApiHelper.getReview(String.valueOf(clinic.getId()), RateActivity.this);
+                           Log.i("ReviewId", clinic.getId()+"");
                        }else {
                             review = ApiHelper.getReview(String.valueOf(doctor.getUserID()), RateActivity.this);
                        }
