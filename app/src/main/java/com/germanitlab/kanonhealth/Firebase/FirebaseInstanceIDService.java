@@ -36,6 +36,8 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
         (new Thread(new Runnable() {
             @Override
             public void run() {
+                if(PrefHelper.get(FirebaseInstanceIDService.this,PrefHelper.KEY_USER_ID,-1)==-1)
+                    return;
                 ApiHelper.addToken(getApplicationContext(), String.valueOf(PrefHelper.get(FirebaseInstanceIDService.this,PrefHelper.KEY_USER_ID,-1)),token);
             }
         })).run();

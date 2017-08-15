@@ -79,6 +79,11 @@ public class Constants {
     public static final String CHOSED_LIST = "Chosed_list";
 
 
+    // when i get notication from backend i need know number to handle this notification
+    // i get this number from notificationtype
+    public static final String notificationType="notificationtype";
+
+
 
 
 

@@ -13,11 +13,9 @@ import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Review;
 import com.germanitlab.kanonhealth.api.models.Speciality;
-import com.germanitlab.kanonhealth.api.models.SupportedLang;
 import com.germanitlab.kanonhealth.api.parameters.AddClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.AddDocumentParameters;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.api.parameters.AddOrEditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.CloseSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.ChangeStatusParameters;
 import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
@@ -27,7 +25,6 @@ import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.FavouriteParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
-import com.germanitlab.kanonhealth.api.parameters.MessageForwardParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
@@ -41,7 +38,6 @@ import com.germanitlab.kanonhealth.api.responses.AddClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.AddDocumentResponse;
 import com.germanitlab.kanonhealth.api.responses.ChangeStatusResponse;
 import com.germanitlab.kanonhealth.api.responses.ChatResponse;
-import com.germanitlab.kanonhealth.api.responses.DocumentPrivacyResponse;
 import com.germanitlab.kanonhealth.api.responses.EditClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicResponse;
@@ -64,7 +60,6 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -673,7 +668,7 @@ public class ApiHelper {
     public static boolean sendForward(Context context, int userID, String doctorID, String messageID) {
         boolean result = false;
         try {
-            MessageForwardParameter messageForwardParameter = new MessageForwardParameter();
+            MessageOperationParameter messageForwardParameter = new MessageOperationParameter();
             messageForwardParameter.setUserID(userID);
             messageForwardParameter.setToID(doctorID);
             messageForwardParameter.setMessagesID(messageID);
@@ -688,12 +683,13 @@ public class ApiHelper {
         }
     }
 
-    private static boolean MessageOperation(Context context, int user_id, String msg_id, int operationType) {
+    private static boolean MessageOperation(Context context, int user_id, String msg_id,String toId, int operationType) {
         boolean result = false;
         try {
-            MessageOperationParameter messageOperationParameter = new MessageForwardParameter();
+            MessageOperationParameter messageOperationParameter = new MessageOperationParameter();
             messageOperationParameter.setUserID(user_id);
             messageOperationParameter.setMessagesID(msg_id);
+            messageOperationParameter.setToID(toId);
             String url;
             if (operationType == MessageOperationParameter.SEEN) {
                 url = API_MESSAGES_SEEN;
@@ -718,16 +714,16 @@ public class ApiHelper {
         }
     }
 
-    public static boolean deleteMessgae(Context context, int user_id, String msg_id) {
-        return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELETE);
+    public static boolean deleteMessgae(Context context, int user_id,String toId, String msg_id) {
+        return MessageOperation(context, user_id, msg_id,toId, MessageOperationParameter.DELETE);
     }
 
-    public static boolean seenMessage(Context context, int user_id, String msg_id) {
-        return MessageOperation(context, user_id, msg_id, MessageOperationParameter.SEEN);
+    public static boolean seenMessage(Context context, int user_id,String toId, String msg_id) {
+        return MessageOperation(context, user_id, msg_id,toId, MessageOperationParameter.SEEN);
     }
 
-    public static boolean deliveredMessgae(Context context, int user_id, String msg_id) {
-        return MessageOperation(context, user_id, msg_id, MessageOperationParameter.DELIVER);
+    public static boolean deliveredMessgae(Context context, int user_id,String toId, String msg_id) {
+        return MessageOperation(context, user_id, msg_id,toId, MessageOperationParameter.DELIVER);
     }
 
     private static ArrayList<ChatModel> getChatMessages(Context context, String userID, int chatType) {
@@ -782,7 +778,7 @@ public class ApiHelper {
             TokenAddParameter parameter = new TokenAddParameter();
             parameter.setUserId(userId);
             parameter.setToken(token);
-            String jsonString = post(API_SPECIALITIES_LIST, parameter.toJson());
+            String jsonString = post(API_TOKEN_REGISTER, parameter.toJson());
             Gson gson = new Gson();
             ParentResponse response = gson.fromJson(jsonString, ParentResponse.class);
             Log.d(TAG, response.getMsg());

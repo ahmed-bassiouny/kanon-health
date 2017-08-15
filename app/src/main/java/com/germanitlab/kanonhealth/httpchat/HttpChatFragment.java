@@ -63,7 +63,6 @@ import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.FCViewPager;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
@@ -72,9 +71,9 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
+import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
@@ -85,11 +84,9 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -182,7 +179,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     boolean showAttachmentDialog = false;
     HoldingButtonLayoutListener fragment = this;
     boolean expand = false;
-    boolean onBeforeExpand=false;
+    boolean onBeforeExpand = false;
     ChatHelper chatHelper;
     ArrayList<Message> messages;
     HttpMessageRepositry messageRepositry;
@@ -285,23 +282,23 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-        chatHelper=new ChatHelper();
+        chatHelper = new ChatHelper();
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
     // set data in object
     private void initData() {
-        iamDoctor = PrefHelper.get(getContext(),PrefHelper.KEY_IS_DOCTOR,false);
+        iamDoctor = PrefHelper.get(getContext(), PrefHelper.KEY_IS_DOCTOR, false);
 
-        iamClinic = PrefHelper.get(getContext(),PrefHelper.KEY_IS_CLINIC,false);
+        iamClinic = PrefHelper.get(getContext(), PrefHelper.KEY_IS_CLINIC, false);
 
-        userID = PrefHelper.get(getContext(),PrefHelper.KEY_USER_ID,-1);
-        userPassword = PrefHelper.get(getContext(),PrefHelper.KEY_USER_PASSWORD,"");
+        userID = PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, -1);
+        userPassword = PrefHelper.get(getContext(), PrefHelper.KEY_USER_PASSWORD, "");
 
         doctorID = getArguments().getInt("doctorID");
         userInfo = new UserInfo();
-        if(userID != doctorID && doctorID != CustomerSupportActivity.supportID)
-            userInfo=(UserInfo) getArguments().getSerializable("userInfo");
+        if (userID != doctorID && doctorID != CustomerSupportActivity.supportID)
+            userInfo = (UserInfo) getArguments().getSerializable("userInfo");
         if (userID == doctorID) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());
@@ -323,15 +320,15 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
         }
-            // get data of doctor i talk with him from database
-            //userInfo = chatModelRepositry.getDoctor(userID);
-                //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
-                //-------- get user from intent instead of database
-            if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
-            if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
-                tv_chat_user_name.setText(userInfo.getLastName()+" "+ userInfo.getFirstName());
-            }
+        // get data of doctor i talk with him from database
+        //userInfo = chatModelRepositry.getDoctor(userID);
+        //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
+        //-------- get user from intent instead of database
+        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
+            ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + userInfo.getAvatar());
+        if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
+            tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
+        }
     }
 
     private void loadChatOnline() {
@@ -341,38 +338,39 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             public void run() {
                 messages = ApiHelper.getMessages(userID, doctorID, getContext());
                 if (messages != null) {
-                    if(getActivity()!=null)
-                    // if arraylist have message set data in adapter and save in database and request message seen
-                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            isStoragePermissionGranted();
-                            pbar_loading.setVisibility(View.GONE);
-                        }
-                    });
-                        new Thread(new Runnable() {
+                    if (getActivity() != null)
+                        // if arraylist have message set data in adapter and save in database and request message seen
+                        HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                for (Message message : messages) {
-                                    // update satabase
-                                    //messageRepositry.createOrUpate(message);
-                                }
+                                isStoragePermissionGranted();
+                                pbar_loading.setVisibility(View.GONE);
                             }
-                        }).start();
-                    // request seen all msg
-                    messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
-
-                }else{
-                    if(getActivity()!=null)
-                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                        });
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            messages=new ArrayList<>();
-                            setData();
-                            pbar_loading.setVisibility(View.GONE);
-
+                            for (Message message : messages) {
+                                // update satabase
+                                //messageRepositry.createOrUpate(message);
+                            }
                         }
-                    });
+                    }).start();
+                    // request seen all msg
+                    if(messages.size()>0)
+                        messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
+
+                } else {
+                    if (getActivity() != null)
+                        HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                messages = new ArrayList<>();
+                                setData();
+                                pbar_loading.setVisibility(View.GONE);
+
+                            }
+                        });
                 }
             }
         }).start();
@@ -393,20 +391,20 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
                         }
                     });
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (Document document : documents) {
-                                    // update satabase
-                                    //documentRepositry.createOrUpate(document);
-                                }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (Document document : documents) {
+                                // update satabase
+                                //documentRepositry.createOrUpate(document);
                             }
-                        }).start();
-                }else{
+                        }
+                    }).start();
+                } else {
                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            documents=new ArrayList<>();
+                            documents = new ArrayList<>();
                             setData();
                             pbar_loading.setVisibility(View.GONE);
                         }
@@ -519,11 +517,13 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @OnClick(R.id.img_send_txt)
     public void img_send_txt() {
 
+        if(etMessage.getText().toString().trim().isEmpty())
+            return;
         // declare object and set attribute
         if (userID == doctorID) {
-            chatHelper.sendTextDocument(etMessage.getText().toString(),documentChatAdapter,documents,recyclerView,userID,getActivity());
+            chatHelper.sendTextDocument(etMessage.getText().toString(), documentChatAdapter, documents, recyclerView, userID, getActivity());
         } else {
-            chatHelper.sendTextMessage(etMessage.getText().toString(),messages,userID,doctorID,chatAdapter,getActivity(),recyclerView);
+            chatHelper.sendTextMessage(etMessage.getText().toString(), messages, userID, doctorID, chatAdapter, getActivity(), recyclerView);
         }
         etMessage.setText("");
         etMessage.setHint(R.string.write_a_message);
@@ -616,9 +616,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             return;
                         }
                         if (userID == doctorID) {
-                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
+                            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
                         } else {
-                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
+                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView);
                         }
                     } catch (Exception e) {
                         Crashlytics.logException(e);
@@ -635,7 +635,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         getActivity().findViewById(R.id.img_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA, HttpChatFragment.this,getActivity());
+                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_CAMERA, HttpChatFragment.this, getActivity());
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
             }
@@ -643,7 +643,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         getActivity().findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY, HttpChatFragment.this,getActivity());
+                chatHelper.takeAndSelectImage(PickerBuilder.SELECT_FROM_GALLERY, HttpChatFragment.this, getActivity());
                 attachment.setVisibility(View.INVISIBLE);
                 showAttachmentDialog = false;
             }
@@ -720,11 +720,11 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
             if (userID == doctorID) {
-                chatHelper.sendLocationDocument(longitude, latitude,documentChatAdapter,getActivity(),userID,documents,recyclerView);
+                chatHelper.sendLocationDocument(longitude, latitude, documentChatAdapter, getActivity(), userID, documents, recyclerView);
             } else {
-                chatHelper.sendLocationMessage(longitude, latitude,userID,doctorID,getActivity(),messages,chatAdapter,recyclerView);
+                chatHelper.sendLocationMessage(longitude, latitude, userID, doctorID, getActivity(), messages, chatAdapter, recyclerView);
             }
-        }else{
+        } else {
             Toast.makeText(getActivity(), R.string.cant_find_location, Toast.LENGTH_SHORT).show();
         }
 
@@ -755,7 +755,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         requestPermissions(permission, Constants.LAST_LOCATION_PERMISSION_CODE);
     }
-
 
 
     private void pickVideo() {
@@ -801,7 +800,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             if (notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFromID() == doctorID) {
-                    chatHelper.creatRealMessage(message, 0,messages,chatAdapter,recyclerView);
+                    chatHelper.creatRealMessage(message, 0, messages, chatAdapter, recyclerView);
                     messageSeen(message.getMessageID().toString());
                     // seen request for specific msg
                 } else {
@@ -821,40 +820,46 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     getActivity().invalidateOptionsMenu();
 
                 }
+            } else if (notificationType == 2) {
+                int id = Integer.parseInt(intent.getStringExtra("extra"));
+                if (doctorID != id)
+                    return;
+                //handle Deliverd Message here
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Message message : messages) {
+                            if (message.getStatus() == 1) {
+                                int index = messages.indexOf(message);
+                                message.setStatus(2);
+                                messages.set(index, message);
+                                chatAdapter.setList(messages);
+                                chatAdapter.notifyDataSetChanged();
+                                // messageRepositry.createOrUpate(message);
+                            }
+                        }
+                    }
+                });
             } else if (notificationType == 3) {
-                //handle Deliverd Message here /// Andy
-                /*getActivity().runOnUiThread(new Runnable() {
+                //handle seen Message here
+                int id = Integer.parseInt(intent.getStringExtra("extra"));
+                if (doctorID != id)
+                    return;
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         for (Message message : messages) {
-                            if (message.getSeen() == 0) {
+                            if (message.getStatus() == 1 || message.getStatus() == 2) {
                                 int index = messages.indexOf(message);
-                                message.setSeen(1);
+                                message.setStatus(3);
                                 messages.set(index, message);
                                 chatAdapter.setList(messages);
                                 chatAdapter.notifyDataSetChanged();
-                                messageRepositry.createOrUpate(message);
+                                //messageRepositry.createOrUpate(message);
                             }
                         }
                     }
-                });*/
-            } else if (notificationType == 6) {
-                //handle seen Message here /// Andy
-               /* getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Message message : messages) {
-                            if (message.getSeen() == 1 || message.getSeen() == 0) {
-                                int index = messages.indexOf(message);
-                                message.setSeen(2);
-                                messages.set(index, message);
-                                chatAdapter.setList(messages);
-                                chatAdapter.notifyDataSetChanged();
-                                messageRepositry.createOrUpate(message);
-                            }
-                        }
-                    }
-                });*/
+                });
             }
 
 
@@ -935,7 +940,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                 @Override
                                 public void run() {
                                     // i need request ID
-                                    boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID() );
+                                    boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID());
                                     if (result) {
                                         // success
                                         // we must handle this
@@ -1058,7 +1063,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @OnClick(R.id.button2)
     public void openPayment() {
         try {
-            if (userInfo.getUserType()==UserInfo.CLINIC) {
+            if (userInfo.getUserType() == UserInfo.CLINIC) {
                 Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
                 intent.putExtra("doctor_data", userInfo);
                 startActivity(intent);
@@ -1066,7 +1071,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             } else {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 Gson gson = new Gson();
-                PrefHelper.put(getContext(),PrefHelper.KEY_USER_INTENT,gson.toJson(userInfo));
+                PrefHelper.put(getContext(), PrefHelper.KEY_USER_INTENT, gson.toJson(userInfo));
                 intent.putExtra("doctor_obj", userInfo);
                 startActivity(intent);
                 getActivity().finish();
@@ -1117,7 +1122,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.seenMessage(getContext(), userID, msgID);
+                ApiHelper.seenMessage(getContext(), userID,String.valueOf(doctorID), msgID);
             }
         }).start();
 
@@ -1128,7 +1133,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.deliveredMessgae(getContext(), userID, msgID);
+                ApiHelper.deliveredMessgae(getContext(), userID,String.valueOf(doctorID), msgID);
             }
         }).start();
     }
@@ -1147,7 +1152,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @OnClick({R.id.img_chat_user_avatar, R.id.tv_chat_user_name})
     public void openProfile() {
-        if (userInfo != null && (userInfo.getUserType()!= UserInfo.PATIENT)) {
+        if (userInfo != null && (userInfo.getUserType() != UserInfo.PATIENT)) {
             Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", userInfo);
             getActivity().startActivity(intent);
@@ -1159,54 +1164,54 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @Override
     public void onBeforeExpand() {
-        if(onBeforeExpand==false) {
-    onBeforeExpand=true;
-    mHoldingButtonLayout.setButtonEnabled(false);
-    new Handler().postDelayed(new Runnable() {
-        @Override
-        public void run() {
-            mHoldingButtonLayout.setButtonEnabled(true);
+        if (onBeforeExpand == false) {
+            onBeforeExpand = true;
+            mHoldingButtonLayout.setButtonEnabled(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mHoldingButtonLayout.setButtonEnabled(true);
+                }
+            }, 700);
+
+            timeDifference = 0;
+            flagLongPress = false;
+            expand = true;
+            vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
+            if (vp != null) {
+                vp.setEnableSwipe(false);
+            }
+
+            cancelAllAnimations();
+            mSlideToCancel.setTranslationX(0f);
+            mSlideToCancel.setAlpha(0f);
+            mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
+            mSlideToCancelAnimator.start();
+
+            mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
+            mInputAnimator.setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mInput.setVisibility(View.INVISIBLE);
+                    mInputAnimator.setListener(null);
+                }
+            });
+            mInputAnimator.start();
+
+            mTime.setTranslationY(mTime.getHeight());
+            mTime.setAlpha(0f);
+            // mTime.setVisibility(View.VISIBLE);
+            mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
+            mTimeAnimator.start();
+            mStartTime = System.currentTimeMillis();
+            invalidateTimer();
         }
-    }, 700);
-
-    timeDifference = 0;
-    flagLongPress = false;
-    expand = true;
-    vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
-    if (vp != null) {
-        vp.setEnableSwipe(false);
-    }
-
-    cancelAllAnimations();
-    mSlideToCancel.setTranslationX(0f);
-    mSlideToCancel.setAlpha(0f);
-    mSlideToCancelAnimator = mSlideToCancel.animate().alpha(1f).setDuration(mAnimationDuration);
-    mSlideToCancelAnimator.start();
-
-    mInputAnimator = mInput.animate().alpha(0f).setDuration(mAnimationDuration);
-    mInputAnimator.setListener(new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mInput.setVisibility(View.INVISIBLE);
-            mInputAnimator.setListener(null);
-        }
-    });
-    mInputAnimator.start();
-
-    mTime.setTranslationY(mTime.getHeight());
-    mTime.setAlpha(0f);
-    // mTime.setVisibility(View.VISIBLE);
-    mTimeAnimator = mTime.animate().translationY(0f).alpha(1f).setDuration(mAnimationDuration);
-    mTimeAnimator.start();
-    mStartTime = System.currentTimeMillis();
-    invalidateTimer();
-}
 
     }
 
     @Override
     public void onExpand() {
-        onBeforeExpand=false;
+        onBeforeExpand = false;
         expand = true;
         // if (Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
@@ -1215,7 +1220,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @Override
     public void onBeforeCollapse() {
-        onBeforeExpand=false;
+        onBeforeExpand = false;
         cancelAllAnimations();
         mSlideToCancelAnimator = mSlideToCancel.animate().alpha(0f).setDuration(mAnimationDuration);
         mSlideToCancelAnimator.setListener(new AnimatorListenerAdapter() {
@@ -1245,7 +1250,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @Override
     public void onCollapse(boolean isCancel) {
-        onBeforeExpand=false;
+        onBeforeExpand = false;
         if (expand) {
             expand = false;
             vp = (FCViewPager) getActivity().findViewById(R.id.myviewpager);
@@ -1269,9 +1274,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
                                 if (userID == doctorID) {
-                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
+                                    chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
                                 } else {
-                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
+                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView);
                                 }
 
                             } else {
@@ -1431,12 +1436,13 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     public void ImagePickerCallBack(Uri uri) {
 
         if (userID == doctorID) {
-            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",documentChatAdapter,documents,recyclerView,getActivity(),userID);
+            chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
         } else {
-            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "",getActivity(),userID,doctorID,messages,chatAdapter,recyclerView);
+            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView);
         }
     }
-    private void setDatainToolbar(){
+
+    private void setDatainToolbar() {
         HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
