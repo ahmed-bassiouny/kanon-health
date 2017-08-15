@@ -82,24 +82,19 @@ import okhttp3.Response;
 public class ApiHelper {
 
     //region Api Urls
-
     private static final String API_CLINICS_LIST = "clinics/list";
     private static final String API_CLINICS_ADD = "clinics/add";
     private static final String API_CLINICS_EDIT = "clinics/edit";
     private static final String API_CLINICS_GET = "clinics/get";
-
     private static final String API_DOCTORS_ADD = "doctors/add";
     private static final String API_DOCTORS_LIST = "doctors/list";
     private static final String API_DOCTORS_ANOTHER = "doctors/another";
     private static final String API_DOCTORS_CHANGE_STATUS = "doctors/change_status";
     private static final String API_DOCTORS_RATE = "doctors/rate";
-
     private static final String API_DOCUMENTS_ADD = "document/add";
     private static final String API_DOCUMENTS_LIST = "document/list";
     private static final String API_DOCUMENT_PRIVACY = "document/privacy";
-
     private static final String API_LANGUAGES_LIST = "langs/list";
-
     private static final String API_MESSAGES_SEND = "messages/send";
     private static final String API_MESSAGES_FORWARD = "messages/forward";
     private static final String API_MESSAGES_DELETE = "messages/delete";
@@ -110,28 +105,19 @@ public class ApiHelper {
     private static final String API_MESSAGES_CHAT_CLINIC = "messages/chat/clinic";
     private static final String API_MESSAGES_CHAT_DOCTOR = "messages/chat/doctor";
     private static final String API_MESSAGES_CHAT_USER = "messages/chat/users";
-
     private static final String API_REQUESTS_OPEN = "requests/open";
     private static final String API_REQUESTS_CLOSE = "requests/close";
     private static final String API_REQUESTS_LIST = "requests/list";
-
     private static final String API_SPECIALITIES_LIST = "speciality/list";
-
     private static final String API_USERS_ME = "users/me";
     private static final String API_USERS_ADD = "users/add";
     private static final String API_USERS_EDIT = "users/edit";
     private static final String API_USERS_REGISTER = "users/register";
-
-
     private static final String API_RATE_REVIEW = "users/rate_reviews";
     private static final String API_FAVOURITE="favourite";
-
     private static final String API_TOKEN_REGISTER = "token/add";
-
-
     private static final String API_UPLOAD = "upload";
-
-
+    private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
     private static final String API_NETWORK_LOCATION = "http://ip-api.com/json";
 
     //endregion
@@ -194,6 +180,7 @@ public class ApiHelper {
     }
 
     //endregion
+
 
     //region Api Calls
 
@@ -307,10 +294,13 @@ public class ApiHelper {
             } else {
                 jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toHashMap(), file, EditClinicParameters.PARAMETER_AVATAR);
             }
+            System.out.println(jsonString);
             Gson gson = new Gson();
             EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);
-            Toast.makeText(context, editClinicResponse.getMsg(), Toast.LENGTH_LONG).show();
-            result = editClinicResponse.getData();
+
+            if(editClinicResponse.getStatus()) {
+                result = editClinicResponse.getData();
+            }
 
         } catch (Exception e) {
             Helper.handleError(TAG, "postEditClinic", e, -1, context);
@@ -822,6 +812,8 @@ public class ApiHelper {
             return result;
         }
     }
+    
+
 
     public static Review getReview(String userId, Context context) {
         Review review = null;

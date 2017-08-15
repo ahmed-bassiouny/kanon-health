@@ -34,6 +34,7 @@ public class Clinic extends ParentModel{
     public static final String KEY_IS_AVAILABLE= "is_available";
     public static final String KEY_MEMBER_AT= "member_at";
     public static final String KEY_TIME_TABLE= "working_hours";
+    public static final String KEY_OPEN_TYPE = "open_type";
 
     @SerializedName(KEY_ID)
     private Integer id;
@@ -104,6 +105,8 @@ public class Clinic extends ParentModel{
     // i need key name from backend
     private Double locationLat;
     private Double locationLong;
+
+    @SerializedName(KEY_OPEN_TYPE)
     private Integer openType;
 
     private Integer isMyDoc;

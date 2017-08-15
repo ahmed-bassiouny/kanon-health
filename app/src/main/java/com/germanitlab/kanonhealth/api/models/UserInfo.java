@@ -50,6 +50,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_QUESTIONS_ANSWERS = "questions_answers";
     public static final String KEY_TIME_TABLE= "working_hours";
     public static final String KEY_ISOPEN="is_open";
+    public static final String KEY_OPEN_TYPE = "open_type";
 
     // endregion
 
@@ -142,6 +143,7 @@ public class UserInfo extends ParentModel {
 
     private LinkedHashMap<String, String> questionsAnswers;
     // i need key name from backend
+    @SerializedName(KEY_OPEN_TYPE)
     @DatabaseField
     private Integer openType;
     @DatabaseField

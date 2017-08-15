@@ -33,6 +33,7 @@ import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -52,6 +53,7 @@ import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -517,19 +519,20 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     ////----------------------------------------------------------------------------working hours----------------------------------------------///
 
  //======================================================================>//
-//   @OnClick(R.id.edit_time_table)
-//    public void editTimeTable(View view) {
-//        try {
-//            Intent intent = new Intent(this, TimeTable.class);
-//            intent.putExtra(Constants.DATA, (Serializable) user.getOpen_time());
-//            startActivityForResult(intent, Constants.HOURS_CODE);
-//        } catch (Exception e) {
-//            Crashlytics.logException(e);
-//            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
-//            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
+   @OnClick(R.id.edit_time_table)
+    public void editTimeTable(View view) {
+        try {
+            Intent intent = new Intent(this, TimeTable.class);
+            intent.putExtra(Constants.DATA, user.getTimeTable());
+            intent.putExtra("type", user.getOpenType());
+            startActivityForResult(intent, Constants.HOURS_CODE);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     public void showDialogFragment(Bundle bundle) {
         MultiChoiseListFragment dialogFragment = new MultiChoiseListFragment();
@@ -667,22 +670,23 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 //
 //                        break;
                     //=================================================================================================>//
-//                    case Constants.HOURS_CODE:
-//                        user.setOpen_time((Table) data.getSerializableExtra(Constants.DATA));
-//                        user.setOpen_Type(data.getIntExtra("type", 0));
-//                        getTimaTableData(user.getOpen_time());
-//                        break;
-//                    case Constants.HOURS_TYPE_CODE:
-//                        user.setOpen_Type(data.getIntExtra("type", 0));
-//                        break;
-//                }
+                    case Constants.HOURS_CODE:
+                        ArrayList<WorkingHours> n=    (ArrayList<WorkingHours>) data.getSerializableExtra("list");
+                        user.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
+                        user.setOpenType(data.getIntExtra("type", 0));
+                        getTimaTableData();
+                        break;
+                    case Constants.HOURS_TYPE_CODE:
+                        user.setOpenType(data.getIntExtra("type", 0));
+                        break;
+                }
 //            } else if (requestCode == PLACE_PICKER_REQUEST) {
 //                if (resultCode == RESULT_OK) {
 //                    Place place = PlacePicker.getPlace(this, data);
 //                    user.setLocation_lat(place.getLatLng().latitude);
 //                    user.setLocation_long(place.getLatLng().longitude);
                }
-            }
+
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -693,21 +697,29 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     }
 
 //====================================================================================================================>//
-//    private void getTimaTableData(Table list) {
-//        if (user.getOpen_Type() == 3)
-//            tvNoTime.setText(R.string.permenant_closed);
-//        else
-//            tvNoTime.setText(R.string.always_open);
-//
-//        if (list != null) {
-//            llNo.setVisibility(View.GONE);
-//            tablelayout.removeAllViews();
-//            com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-//            timeTable.creatTimeTable(list, this, tablelayout);
-//        } else
-//            llNo.setVisibility(View.VISIBLE);
-//
-//    }
+    private void getTimaTableData() {
+        tablelayout.removeAllViews();
+        llNo.setVisibility(View.VISIBLE);
+        if (user.getOpenType() == 3) {
+            tvNoTime.setText(R.string.permenant_closed);
+        }
+        else if(user.getOpenType() == 1) {
+            tvNoTime.setText(R.string.always_open);
+        }
+        else if(user.getOpenType()==2) {
+            tvNoTime.setText(R.string.no_hours_available);
+        }else {
+
+            if (user.getTimeTable() != null && user.getTimeTable().size() > 0) {
+                llNo.setVisibility(View.GONE);
+                tablelayout.removeAllViews();
+                com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
+                timeTable.creatTimeTable(user.getTimeTable().get(0), this, tablelayout);
+            } else
+                llNo.setVisibility(View.VISIBLE);
+                tvNoTime.setText(R.string.no_time_has_set);
+        }
+    }
 
     @Override
     public void onGalleryClicked(Intent intent) {

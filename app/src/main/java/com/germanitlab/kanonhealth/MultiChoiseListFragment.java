@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.adapters.SelectLanguageAdapter;
 import com.germanitlab.kanonhealth.adapters.SelectMemberDoctorAdapter;
@@ -30,7 +29,6 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 
 import java.util.ArrayList;
 
@@ -157,7 +155,7 @@ public class MultiChoiseListFragment extends DialogFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        allDoctorList= ApiHelper.postGetDoctorList(getActivity().getApplicationContext(), PrefHelper.get(getContext() , PrefHelper.KEY_USER_ID , ""));
+                        allDoctorList= ApiHelper.postGetDoctorList(getActivity().getApplicationContext(), String.valueOf(PrefHelper.get(getContext() , PrefHelper.KEY_USER_ID , -1)));
                         selectMemberDoctorAdapter= new SelectMemberDoctorAdapter(getContext(),allDoctorList,myDoctorList);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

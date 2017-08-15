@@ -25,6 +25,8 @@ import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
@@ -106,6 +108,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     TextView textViewRating;
     @BindView(R.id.edit_image)
     CircleImageView editImage;
+    @BindView(R.id.tv_no_time)
+    TextView tvNoTime;
 
 
 
@@ -191,6 +195,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 etProvince.setEnabled(true);
                 textViewPhone.setEnabled(true);
                 editImage.setVisibility(View.VISIBLE);
+                ivTimeTable.setVisibility(View.VISIBLE);
 //                ivMemberList.setVisibility(View.VISIBLE);
                 break;
             case R.id.mi_save:
@@ -209,6 +214,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 edAddToFavourite.setFocusable(false);
                 tvContact.setFocusable(false);
                 editImage.setVisibility(View.GONE);
+                ivTimeTable.setVisibility(View.GONE);
                 handleNewData();
                 bindData();
                 break;
@@ -314,15 +320,15 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
-        if (userInfo.getOpenType() == 0) {
+        try {
             Intent intent = new Intent(this, TimeTable.class);
             intent.putExtra(Constants.DATA, userInfo.getTimeTable());
-            startActivityForResult(intent, Constants.HOURS_CODE);
-        } else {
-            Intent intent = new Intent(this, OpeningHoursActivity.class);
             intent.putExtra("type", userInfo.getOpenType());
-            intent.putExtra(Constants.DATA, userInfo.getTimeTable());
-            startActivityForResult(intent, Constants.HOURS_TYPE_CODE);
+            startActivityForResult(intent, Constants.HOURS_CODE);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -383,9 +389,10 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                         break;*/
 
                     case Constants.HOURS_CODE:
-                    //    userInfo.setTimeTable((Table) data.getSerializableExtra(Constants.DATA));
+                        ArrayList<WorkingHours> n=    (ArrayList<WorkingHours>) data.getSerializableExtra("list");
+                        userInfo.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
                         userInfo.setOpenType(data.getIntExtra("type", 0));
-                        getTimeTableData(userInfo.getTimeTable());
+                        getTimaTableData();
                         break;
                     case Constants.HOURS_TYPE_CODE:
                         userInfo.setOpenType(data.getIntExtra("type", 0));
@@ -452,7 +459,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         // member at need handle
 
         // TimeTable
-        getTimeTableData(userInfo.getTimeTable());
+        getTimaTableData();
     }
 
 
@@ -480,17 +487,30 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         showDialogFragment(bundle);
     }
 
-    private void getTimeTableData(ArrayList<WorkingHours> list) {
-        if (userInfo != null) {
-            if (list != null) {
-                if (list.size()>0 ) {
-                    tableLayoutTime.removeAllViews();
-                    com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                    timeTable.creatTimeTable(list.get(0), this, tableLayoutTime);
-                }
-            }
+    private void getTimaTableData() {
+        tableLayoutTime.removeAllViews();
+        tvNoTime.setVisibility(View.VISIBLE);
+        if (userInfo.getOpenType() == 3) {
+            tvNoTime.setText(R.string.permenant_closed);
+        }
+        else if(userInfo.getOpenType() == 1) {
+            tvNoTime.setText(R.string.always_open);
+        }
+        else if(userInfo.getOpenType()==2) {
+            tvNoTime.setText(R.string.no_hours_available);
+        }else {
+
+            if (userInfo.getTimeTable() != null && userInfo.getTimeTable().size() > 0) {
+                tvNoTime.setVisibility(View.GONE);
+                tableLayoutTime.removeAllViews();
+                com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
+                timeTable.creatTimeTable(userInfo.getTimeTable().get(0), this, tableLayoutTime);
+            } else
+                tvNoTime.setVisibility(View.VISIBLE);
+            tvNoTime.setText(R.string.no_time_has_set);
         }
     }
+
 
 
     @OnClick(R.id.image_star)

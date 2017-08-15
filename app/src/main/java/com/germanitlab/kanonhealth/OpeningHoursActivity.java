@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.models.Table;
 
 import java.io.Serializable;
@@ -56,6 +58,45 @@ public class OpeningHoursActivity extends AppCompatActivity {
             Log.e("Opening Hours", "Activity ", e);
         }
 
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radios);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+
+                Intent intent = new Intent();
+                if (first.isChecked()) {
+//                if (TimeTable.active) {
+                    intent.putExtra("type", 0);
+                    //  setResult(RESULT_OK, intent);
+                    // finish();
+                    //  }
+                    // else {
+//                    Intent intent1 = new Intent(this, TimeTable.class);
+//                    intent1.putExtra(Constants.DATA, (Serializable) list);
+//                    intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+//                    startActivity(intent1);
+//                    finish();
+                    //  }
+                } else {
+                    if (second.isChecked())
+                        intent.putExtra("type", 1);
+                    else if (third.isChecked())
+                        intent.putExtra("type", 2);
+                    else if (fourth.isChecked())
+                        intent.putExtra("type", 3);
+                    // intent.putExtra(Constants.DATA, (Serializable) list);
+
+                    // if (TimeTable.active)
+//                instance.finish();
+                    //   TimetableInstance.finish();
+                }
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
 
     }
 
@@ -80,44 +121,45 @@ public class OpeningHoursActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.save)
-    public void save(View view) {
-        try {
-            Intent intent = new Intent();
-            if (first.isChecked()) {
-                if (TimeTable.active) {
-                    intent.putExtra("type", 0);
-                    intent.putExtra(Constants.DATA, (Serializable) list);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                } else {
-                    Intent intent1 = new Intent(this, TimeTable.class);
-                    intent1.putExtra(Constants.DATA, (Serializable) list);
-                    intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                    startActivity(intent1);
-                    finish();
-                }
-            } else {
-                if (second.isChecked())
-                    intent.putExtra("type", 1);
-                else if (third.isChecked())
-                    intent.putExtra("type", 2);
-                else if (fourth.isChecked())
-                    intent.putExtra("type", 3);
-                intent.putExtra(Constants.DATA, (Serializable) list);
-                setResult(RESULT_OK, intent);
-                if (TimeTable.active)
-//                instance.finish();
-                    TimetableInstance.finish();
-                finish();
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-            Log.e("Opening Hours", "Activity ", e);
-        }
-
-    }
+//    @OnClick(R.id.save)
+//    public void save(View view) {
+//        try {
+//            Intent intent = new Intent();
+//            if (first.isChecked()) {
+////                if (TimeTable.active) {
+//                    intent.putExtra("type", 0);
+//                 //  setResult(RESULT_OK, intent);
+//                   // finish();
+//              //  }
+//               // else {
+////                    Intent intent1 = new Intent(this, TimeTable.class);
+////                    intent1.putExtra(Constants.DATA, (Serializable) list);
+////                    intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+////                    startActivity(intent1);
+////                    finish();
+//              //  }
+//            } else {
+//                if (second.isChecked())
+//                    intent.putExtra("type", 1);
+//                else if (third.isChecked())
+//                    intent.putExtra("type", 2);
+//                else if (fourth.isChecked())
+//                    intent.putExtra("type", 3);
+//               // intent.putExtra(Constants.DATA, (Serializable) list);
+//
+//               // if (TimeTable.active)
+////                instance.finish();
+//                 //   TimetableInstance.finish();
+//            }
+//            setResult(RESULT_OK, intent);
+//            finish();
+//        } catch (Exception e) {
+//            Crashlytics.logException(e);
+//            Toast.makeText(this, getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
+//            Log.e("Opening Hours", "Activity ", e);
+//        }
+//
+//    }
 
     @Override
     protected void onResume() {

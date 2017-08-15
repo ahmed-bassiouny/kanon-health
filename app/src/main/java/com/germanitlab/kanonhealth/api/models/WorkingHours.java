@@ -10,14 +10,13 @@ import java.util.List;
 
 public class WorkingHours  implements Serializable {
 
-    public static final String KEY_SATURDAY = "saturday";
-    public static final String KEY_SUNDAY = "sunday";
-    public static final String KEY_MONDAY = "monday";
-    public static final String KEY_TUESDAY = "tuesday";
-    public static final String KEY_WEDNESDAY = "wednesday";
-    public static final String KEY_THURSDAY = "thursday";
-    public static final String KEY_FRIDAY = "friday";
-    public static final String KEY_OPEN_TYPE = "open_type";
+    public static final String KEY_SATURDAY = "Sat";
+    public static final String KEY_SUNDAY = "Sun";
+    public static final String KEY_MONDAY = "Mon";
+    public static final String KEY_TUESDAY = "Tue";
+    public static final String KEY_WEDNESDAY = "Wed";
+    public static final String KEY_THURSDAY = "Thu";
+    public static final String KEY_FRIDAY = "Fri";
 
 
     @SerializedName(KEY_SATURDAY)
@@ -35,8 +34,6 @@ public class WorkingHours  implements Serializable {
     @SerializedName(KEY_FRIDAY)
     private List<Times> friday;
 
-    @SerializedName(KEY_OPEN_TYPE)
-    private Integer OpenType;
 
     public List<Times> getSaturday() {
         return saturday;
@@ -92,13 +89,5 @@ public class WorkingHours  implements Serializable {
 
     public void setFriday(List<Times> friday) {
         this.friday = friday;
-    }
-
-    public Integer getOpenType() {
-        return OpenType;
-    }
-
-    public void setOpenType(Integer openType) {
-        OpenType = openType;
     }
 }
