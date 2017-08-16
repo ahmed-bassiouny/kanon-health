@@ -214,7 +214,7 @@ public class ApiHelper {
         }
     }
 
-    public static UserInfo postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, File file, Context context) {
+    public static UserInfo postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
         UserInfo result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -228,6 +228,9 @@ public class ApiHelper {
             addClinicParameters.setProvince(province);
             addClinicParameters.setCountry(country);
             addClinicParameters.setPhone(phone);
+            addClinicParameters.setMemberDoctors(memberDoctors);
+            addClinicParameters.setOpenType(openType);
+            addClinicParameters.setSupportedLangs(languages);
             String jsonString = "";
             if (file == null) {
                 jsonString = post(API_CLINICS_ADD, addClinicParameters.toJson());
@@ -265,7 +268,7 @@ public class ApiHelper {
         }
     }
 
-    public static Integer postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, File file, Context context) {
+    public static Integer postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
         Integer result = -1;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -279,7 +282,9 @@ public class ApiHelper {
             EditClinicParameters.setProvince(province);
             EditClinicParameters.setCountry(country);
             EditClinicParameters.setPhone(phone);
-            //EditClinicParameters.setSupportedLangs(supportedLangs);
+            EditClinicParameters.setMemberDoctors(memberDoctors);
+            EditClinicParameters.setOpenType(openType);
+            EditClinicParameters.setSupportedLangs(languages);
 
             String jsonString = "";
             if (file == null) {

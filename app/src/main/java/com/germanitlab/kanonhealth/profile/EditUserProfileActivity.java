@@ -99,12 +99,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     ImageView imgAvatar;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    ProgressDialog progressDialog;
     UserInfo userInfo;
-    Info info;
-    Uri imageUri;
     PickerDialog pickerDialog;
-    private static final int TAKE_PICTURE = 1;
     Util util;
     Helper helper;
 
@@ -199,22 +195,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
     }
-//
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        try {
-//            if (imageUri != null)
-//                outState.putString("imageURI", imageUri.toString());
-//            setUserObject();
-//            outState.putSerializable("userdata", userInfo);
-//            super.onSaveInstanceState(outState);
-//        } catch (Exception e) {
-//            Crashlytics.logException(e);
-//            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
-
     @Override
     public void onBackPressed() {
         try {
@@ -319,15 +299,17 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             questionAnswer.put(questionsArray.get(i), answers.get(i));
         }
         userInfo.setQuestionsAnswers(questionAnswer);
+        this.showProgressBar();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean result =ApiHelper.editPatient(EditUserProfileActivity.this,userInfo,avatar);
+                EditUserProfileActivity.this.hideProgressBar();
                 if(result){
                     EditUserProfileActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(EditUserProfileActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(EditUserProfileActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(EditUserProfileActivity.this, ProfileActivity.class);
                             i.putExtra("userInfoResponse", userInfo);
                             i.putExtra("from", false);

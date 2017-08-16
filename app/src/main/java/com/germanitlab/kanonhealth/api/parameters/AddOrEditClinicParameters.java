@@ -25,7 +25,10 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_COUNTRY="county";
     public static final String PARAMETER_PHONE= "phone";
     public static final String PARAMETER_FAX= "fax";
-    public static final String PARAMETER_SUPPORTED_LANG= "supported_lang";
+    public static final String PARAMETER_SUPPORTED_LANG= "lang_sub";
+    public static final String PARAMETER_OPEN_TYPE= "open_type";
+    public static final String PARAMETER_DOCTORS= "member_at";
+
 
 
 // user id in case of add or clinic id in case of edit
@@ -63,9 +66,14 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(PARAMETER_PHONE)
     private String phone;
 
-//    @SerializedName(PARAMETER_SUPPORTED_LANG)
-//    private String supportedLangs;
+    @SerializedName(PARAMETER_SUPPORTED_LANG)
+    private String supportedLangs;
 
+    @SerializedName(PARAMETER_OPEN_TYPE)
+    private String OpenType;
+
+    @SerializedName(PARAMETER_DOCTORS)
+    private String memberDoctors;
 
 
     public String getName() {
@@ -140,11 +148,27 @@ public class AddOrEditClinicParameters extends ParentParameters{
         this.phone = phone;
     }
 //
-//    public String getSupportedLangs() {
-//        return supportedLangs;
-//    }
-//
-//    public void setSupportedLangs(String supportedLangs) {
-//        this.supportedLangs = supportedLangs;
-//    }
+    public String getSupportedLangs() {
+        return supportedLangs;
+    }
+
+    public void setSupportedLangs(String supportedLangs) {
+        this.supportedLangs = supportedLangs;
+    }
+
+    public String getOpenType() {
+        return OpenType;
+    }
+
+    public void setOpenType(String openType) {
+        OpenType = openType;
+    }
+
+    public String getMemberDoctors() {
+        return memberDoctors;
+    }
+
+    public void setMemberDoctors(String memberDoctors) {
+        this.memberDoctors = memberDoctors;
+    }
 }

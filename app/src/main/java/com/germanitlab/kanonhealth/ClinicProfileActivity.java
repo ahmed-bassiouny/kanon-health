@@ -96,6 +96,8 @@ public class ClinicProfileActivity extends AppCompatActivity {
     TextView textViewRating;
     @BindView(R.id.img_map)
     ImageView imageViewMap;
+    @BindView(R.id.tv_no_time)
+    TextView tvNoTime;
     //---------------------
     UserInfo clinic;
     PickerDialog pickerDialog;
@@ -249,7 +251,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
         etStreetName.setText(clinic.getStreetName());
         etHouseNumber.setText(clinic.getHouseNumber());
         etZipCode.setText(clinic.getZipCode());
-        etProvince.setText(clinic.getProvince());
+        etProvince.setText(clinic.getProvidence());
         textViewPhone.setText(clinic.getPhone());
         ratingBar.setRating(clinic.getRateNum());
 
@@ -274,13 +276,13 @@ public class ClinicProfileActivity extends AppCompatActivity {
             recyclerVie.setNestedScrollingEnabled(false);
             recyclerVie.setAdapter(doctorListAdapter);
         }
-
-        if (clinic.getLocationLat() > 0.0 && clinic.getLocationLong() > 0.0) {
-            String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(clinic.getLocationLat()) + "," + String.valueOf(clinic.getLocationLong()) + "&zoom=15&size=200x200&sensor=false";
-            ImageHelper.setImage(imageViewLocation, URL, -1);
-        }
+//
+//        if (clinic.getLocationLat() > 0.0 && clinic.getLocationLong() > 0.0) {
+//            String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(clinic.getLocationLat()) + "," + String.valueOf(clinic.getLocationLong()) + "&zoom=15&size=200x200&sensor=false";
+//            ImageHelper.setImage(imageViewLocation, URL, -1);
+//        }
         // TimeTable
-        getTimeTableData(clinic.getTimeTable());
+        getTimaTableData();
     }
 
 
@@ -351,14 +353,27 @@ public class ClinicProfileActivity extends AppCompatActivity {
         nestedScrollView.fullScroll(View.FOCUS_UP);
     }
 
-    private void getTimeTableData(ArrayList<WorkingHours> list) {
-        if (clinic != null) {
-            if (list != null) {
-                if (list.size() > 0) {
-                    tableLayoutTime.removeAllViews();
-                    com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                    timeTable.creatTimeTable(list.get(0), this, tableLayoutTime);
-                }
+    private void getTimaTableData() {
+        tableLayoutTime.removeAllViews();
+        tvNoTime.setVisibility(View.VISIBLE);
+        if (clinic.getOpenType() == 3) {
+            tvNoTime.setText(R.string.permenant_closed);
+        }
+        else if(clinic.getOpenType() == 1) {
+            tvNoTime.setText(R.string.always_open);
+        }
+        else if(clinic.getOpenType()==2) {
+            tvNoTime.setText(R.string.no_hours_available);
+        }else {
+
+            if (clinic.getTimeTable() != null && clinic.getTimeTable().size() > 0) {
+                tvNoTime.setVisibility(View.GONE);
+                tableLayoutTime.removeAllViews();
+                com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
+                timeTable.creatTimeTable(clinic.getTimeTable().get(0), this, tableLayoutTime);
+            } else {
+                tvNoTime.setVisibility(View.VISIBLE);
+                tvNoTime.setText(R.string.no_time_has_set);
             }
         }
     }

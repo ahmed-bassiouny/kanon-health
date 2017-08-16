@@ -292,7 +292,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                         @Override
                         public void run() {
                          hideProgressBar();
-                            circleImageViewAvatar.setImageResource(R.drawable.placeholder);
+                           if(avatar!=null)
+                               circleImageViewAvatar.setImageResource(R.drawable.placeholder);
                             Toast.makeText(DoctorProfileActivity.this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -388,7 +389,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                         break;*/
 
                     case Constants.HOURS_CODE:
-                        ArrayList<WorkingHours> n=    (ArrayList<WorkingHours>) data.getSerializableExtra("list");
                         userInfo.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
                         userInfo.setOpenType(data.getIntExtra("type", 0));
                         getTimaTableData();
@@ -514,7 +514,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             tvNoTime.setText(R.string.no_time_has_set);
         }
     }
-
 
 
     @OnClick(R.id.image_star)

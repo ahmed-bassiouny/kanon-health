@@ -22,6 +22,7 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends ParentActivity {
 
     @BindView(R.id.tv_profile_edit)
     TextView tvEdit;
@@ -93,17 +94,18 @@ public class ProfileActivity extends AppCompatActivity {
         try {
 
 
-            Intent intent = getIntent();
-            Boolean from = intent.getBooleanExtra("from", false);
-            if (!from) {
-
-                userInfoResponse = (UserInfo) intent.getSerializableExtra("userInfoResponse");
-                PrefHelper.put(ProfileActivity.this,PrefHelper.KEY_USER_KEY,new Gson().toJson(userInfoResponse));
-                bindData();
-                progressBar.setVisibility(View.GONE);
-                linearProfileContent.setVisibility(View.VISIBLE);
-
-            } else {
+//            Intent intent = getIntent();
+//            Boolean from = intent.getBooleanExtra("from", false);
+//            if (!from) {
+//
+//                userInfoResponse = (UserInfo) intent.getSerializableExtra("userInfoResponse");
+//                PrefHelper.put(ProfileActivity.this,PrefHelper.KEY_USER_KEY,new Gson().toJson(userInfoResponse));
+//                bindData();
+//                progressBar.setVisibility(View.GONE);
+//                linearProfileContent.setVisibility(View.VISIBLE);
+//
+//            } else {
+             this.showProgressBar();
                 tvEdit.setVisibility(View.GONE);
                 if (Helper.isNetworkAvailable(getApplicationContext())) {
                     new Thread(new Runnable() {
@@ -139,6 +141,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     progressBar.setVisibility(View.GONE);
+                                    ProfileActivity.this.hideProgressBar();
                                 }
                             });
                         }
@@ -147,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 }
 
-            }
+           // }
         } catch (
                 Exception e)
 
@@ -178,6 +181,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 
     private void initTB() {
 
