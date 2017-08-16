@@ -239,6 +239,7 @@ public class ChatHelper {
                     public void run() {
                         if (result != null) {
                             //success
+
                             documents.set(index, result);
                             documentChatAdapter.setList(documents);
                             documentChatAdapter.notifyDataSetChanged();

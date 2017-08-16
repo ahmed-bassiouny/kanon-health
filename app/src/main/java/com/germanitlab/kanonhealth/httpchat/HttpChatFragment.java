@@ -210,7 +210,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Comment.class);
-                intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
+                if(userInfo.getUserType()==UserInfo.DOCTOR) {
+                    intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
+                }
+                else{
+                    intent.putExtra("doc_id", String.valueOf(userInfo.getId()));
+                }
                 intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
                 startActivity(intent);
                 getActivity().finish();
@@ -994,7 +999,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                         public void onClick(DialogInterface dialogInterface, int i) {
 
                                                             Intent intent = new Intent(getActivity(), Comment.class);
-                                                            intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
+                                                            if(userInfo.getUserType()==UserInfo.DOCTOR) {
+                                                                intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
+                                                            }
+                                                            else{
+                                                                intent.putExtra("doc_id", String.valueOf(userInfo.getId()));
+                                                            }
                                                             intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
                                                             startActivity(intent);
                                                             getActivity().finish();

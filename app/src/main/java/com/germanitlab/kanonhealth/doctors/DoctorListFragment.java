@@ -205,6 +205,8 @@ public class DoctorListFragment extends Fragment {
                 @Override
                 public void run() {
                     ArrayList<ChatModel> chatModel= ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
+                    if(chatModel==null)
+                        return;
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -218,6 +220,8 @@ public class DoctorListFragment extends Fragment {
                 @Override
                 public void run() {
                     ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
+                    if(chatModel==null)
+                        return;
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -232,6 +236,8 @@ public class DoctorListFragment extends Fragment {
                 @Override
                 public void run() {
                     ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
+                    if(chatModel==null)
+                        return;
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
@@ -245,6 +251,8 @@ public class DoctorListFragment extends Fragment {
                 @Override
                 public void run() {
                     ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
+                    if(chatModel==null)
+                        return;
                     for(UserInfo userInfo:chatModel){
                         chatModelRepositry.createOrUpdate(userInfo);
                     }
