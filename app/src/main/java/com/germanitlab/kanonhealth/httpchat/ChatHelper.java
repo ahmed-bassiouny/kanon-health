@@ -1,17 +1,13 @@
 package com.germanitlab.kanonhealth.httpchat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Document;
@@ -19,8 +15,6 @@ import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
-import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
-import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -35,9 +29,7 @@ import java.util.Calendar;
 public class ChatHelper {
 
 
-
-
-    protected void takeAndSelectImage(int type, ParentFragment parentFragment,FragmentActivity fragmentActivity) {
+    protected void takeAndSelectImage(int type, ParentFragment parentFragment, FragmentActivity fragmentActivity) {
         // type = PickerBuilder.SELECT_FROM_GALLERY or PickerBuilder.SELECT_FROM_CAMERA
         if (Build.VERSION.SDK_INT >= 23) {
             if (fragmentActivity.checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -49,7 +41,8 @@ public class ChatHelper {
         //attachment.setVisibility(View.INVISIBLE);
         //showAttachmentDialog = false;
     }
-    protected int creatDummyMessage(int userID,ArrayList<Message> messages,ChatAdapter chatAdapter,RecyclerView recyclerView) {
+
+    protected int creatDummyMessage(int userID, ArrayList<Message> messages, ChatAdapter chatAdapter, RecyclerView recyclerView) {
         Message message = new Message();
         message.setDateTime(getDateTimeNow());
         message.setType(Message.MESSAGE_TYPE_UNDEFINED);
@@ -61,8 +54,9 @@ public class ChatHelper {
         recyclerView.scrollToPosition(index);
         return index;
     }
-    protected int creatDummyDocument(DocumentChatAdapter documentChatAdapter,ArrayList<Document> documents,RecyclerView recyclerView) {
-        Document document=new Document();
+
+    protected int creatDummyDocument(DocumentChatAdapter documentChatAdapter, ArrayList<Document> documents, RecyclerView recyclerView) {
+        Document document = new Document();
         document.setDateTime(getDateTimeNow());
         document.setType(Message.MESSAGE_TYPE_UNDEFINED);
         documents.add(document);
@@ -72,6 +66,7 @@ public class ChatHelper {
         recyclerView.scrollToPosition(index);
         return index;
     }
+
     private String getDateTimeNow() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar cal = Calendar.getInstance();
@@ -81,7 +76,7 @@ public class ChatHelper {
     // send Location Message
     protected void sendLocationMessage(double longitude, double latitude, int userID, int doctorID, final FragmentActivity fragmentActivity, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
         //create dummy message
-        final int index = creatDummyMessage(userID,messages,chatAdapter,recyclerView);
+        final int index = creatDummyMessage(userID, messages, chatAdapter, recyclerView);
         final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
@@ -92,16 +87,16 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
+                final Message result = ApiHelper.sendMessage(message, null, fragmentActivity);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(result!=null){
+                        if (result != null) {
                             // success
-                            creatRealMessage(result, index,messages,chatAdapter,recyclerView);
-                        }else{
+                            creatRealMessage(result, index, messages, chatAdapter, recyclerView);
+                        } else {
                             // failed
-                            removeDummyMessage(index,messages,recyclerView,chatAdapter);
+                            removeDummyMessage(index, messages, recyclerView, chatAdapter);
                         }
                     }
                 });
@@ -111,9 +106,9 @@ public class ChatHelper {
     }
 
     // send Location Document
-    protected void sendLocationDocument(double longitude, double latitude, final DocumentChatAdapter documentChatAdapter, final FragmentActivity fragmentActivity, final int userID, final ArrayList<Document>documents, final RecyclerView recyclerView) {
+    protected void sendLocationDocument(double longitude, double latitude, final DocumentChatAdapter documentChatAdapter, final FragmentActivity fragmentActivity, final int userID, final ArrayList<Document> documents, final RecyclerView recyclerView) {
         //create dummy message
-        final int index = creatDummyDocument(documentChatAdapter,documents,recyclerView);
+        final int index = creatDummyDocument(documentChatAdapter, documents, recyclerView);
         final Document document = new Document();
         document.setDateTime(getDateTimeNow());
         document.setDocument("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
@@ -128,29 +123,32 @@ public class ChatHelper {
                     public void run() {
                         if (result != null) {
                             // success
-                            creatRealDocument(result, index,documentChatAdapter,documents,recyclerView);
+                            creatRealDocument(result, index, documentChatAdapter, documents, recyclerView);
                         } else {
                             // failed
-                            removeDummyDocument(index,documentChatAdapter,documents,recyclerView);
+                            removeDummyDocument(index, documentChatAdapter, documents, recyclerView);
                         }
                     }
                 });
             }
         }).start();
     }
-    private void removeDummyMessage(int index,ArrayList<Message>messages, RecyclerView recyclerView,ChatAdapter chatAdapter) {
+
+    private void removeDummyMessage(int index, ArrayList<Message> messages, RecyclerView recyclerView, ChatAdapter chatAdapter) {
         messages.remove(index);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(messages.size() - 1);
     }
-    private void removeDummyDocument(int index,DocumentChatAdapter documentChatAdapter ,ArrayList<Document>documents , final RecyclerView recyclerView) {
+
+    private void removeDummyDocument(int index, DocumentChatAdapter documentChatAdapter, ArrayList<Document> documents, final RecyclerView recyclerView) {
         documents.remove(index);
         documentChatAdapter.setList(documents);
         documentChatAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(documents.size() - 1);
     }
-    protected void creatRealMessage(Message message, int index, final ArrayList<Message> messages, final ChatAdapter chatAdapter,  final RecyclerView recyclerView) {
+
+    protected void creatRealMessage(Message message, int index, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
         try {
             if (index >= 0)
                 messages.remove(index);
@@ -164,7 +162,8 @@ public class ChatHelper {
             e.printStackTrace();
         }
     }
-    private void creatRealDocument(Document document, int index,DocumentChatAdapter documentChatAdapter, ArrayList<Document> documents, final RecyclerView recyclerView ) {
+
+    private void creatRealDocument(Document document, int index, DocumentChatAdapter documentChatAdapter, ArrayList<Document> documents, final RecyclerView recyclerView) {
         try {
             if (index >= 0)
                 documents.remove(index);
@@ -178,7 +177,8 @@ public class ChatHelper {
             e.printStackTrace();
         }
     }
-    protected void sendTextMessage(String textMsg, final ArrayList<Message> messages, int userID, int doctorID, final ChatAdapter chatAdapter, final FragmentActivity fragmentActivity, final RecyclerView recyclerView){
+
+    protected void sendTextMessage(String textMsg, final ArrayList<Message> messages, int userID, int doctorID, final ChatAdapter chatAdapter, final FragmentActivity fragmentActivity, final RecyclerView recyclerView) {
         final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
@@ -194,34 +194,32 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Message result=ApiHelper.sendMessage(message,null,fragmentActivity);
+                final Message result = ApiHelper.sendMessage(message, null, fragmentActivity);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(result!=null){
+                        if (result != null) {
                             //success
-                            fragmentActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Message temp = messages.get(index);
-                                    temp.setStatus(1);
-                                    messages.set(index, temp);
-                                    chatAdapter.setList(messages);
-                                    chatAdapter.notifyDataSetChanged();
-                                    recyclerView.scrollToPosition(messages.size() - 1);
-                                }
-                            });
+
+                            Message temp = messages.get(index);
+                            temp.setStatus(1);
+                            messages.set(index, temp);
+                            chatAdapter.setList(messages);
+                            chatAdapter.notifyDataSetChanged();
+                            recyclerView.scrollToPosition(messages.size() - 1);
+
                             //messageRepositry.createOrUpate(result);
-                        }else {
+                        } else {
                             // failed
-                            removeDummyMessage(index,messages,recyclerView,chatAdapter);
+                            removeDummyMessage(index, messages, recyclerView, chatAdapter);
                         }
                     }
                 });
             }
         }).start();
     }
-    protected void sendTextDocument(String textMsg, final DocumentChatAdapter documentChatAdapter, final ArrayList<Document> documents, final RecyclerView recyclerView, final int userID, final FragmentActivity fragmentActivity){
+
+    protected void sendTextDocument(String textMsg, final DocumentChatAdapter documentChatAdapter, final ArrayList<Document> documents, final RecyclerView recyclerView, final int userID, final FragmentActivity fragmentActivity) {
         final Document document = new Document();
         document.setDocument(textMsg);
         document.setType(Message.MESSAGE_TYPE_TEXT);
@@ -235,19 +233,29 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Document result=ApiHelper.postAddDocument(userID,document,null,fragmentActivity);
-                if(result!=null){
-                    //success
-                }else {
-                    // failed
-                    removeDummyDocument(index,documentChatAdapter,documents,recyclerView);
-                }
+                final Document result = ApiHelper.postAddDocument(userID, document, null, fragmentActivity);
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result != null) {
+                            //success
+                            documents.set(index, result);
+                            documentChatAdapter.setList(documents);
+                            documentChatAdapter.notifyDataSetChanged();
+                            recyclerView.scrollToPosition(documents.size() - 1);
+                        } else {
+                            // failed
+                            removeDummyDocument(index, documentChatAdapter, documents, recyclerView);
+                        }
+                    }
+                });
             }
         }).start();
     }
-    protected void sendMediaMessage(final File file, String type, String textMsg, final FragmentActivity fragmentActivity, int userID, int doctorID, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView){
-        final int index = creatDummyMessage(userID,messages,chatAdapter,recyclerView);
-        final Message message=new Message();
+
+    protected void sendMediaMessage(final File file, String type, String textMsg, final FragmentActivity fragmentActivity, int userID, int doctorID, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
+        final int index = creatDummyMessage(userID, messages, chatAdapter, recyclerView);
+        final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
         message.setMessage(textMsg);
@@ -255,18 +263,18 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Message result=ApiHelper.sendMessage(message,file,fragmentActivity);
+                final Message result = ApiHelper.sendMessage(message, file, fragmentActivity);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        removeDummyMessage(index,messages,recyclerView,chatAdapter);
-                        if(result !=null){
+                        removeDummyMessage(index, messages, recyclerView, chatAdapter);
+                        if (result != null) {
                             //success
                             messages.add(result);
                             chatAdapter.setList(messages);
                             chatAdapter.notifyDataSetChanged();
                             recyclerView.scrollToPosition(index);
-                        }else{
+                        } else {
                             // failed
                         }
                     }
@@ -274,29 +282,30 @@ public class ChatHelper {
             }
         }).start();
     }
-    protected void sendMediaDocument(final File file, String type, String textMsg, final DocumentChatAdapter documentChatAdapter, final ArrayList<Document> documents, final RecyclerView recyclerView, final FragmentActivity fragmentActivity, final int userID){
-        final int index = creatDummyDocument(documentChatAdapter,documents,recyclerView);
-        final Document document=new Document();
+
+    protected void sendMediaDocument(final File file, String type, String textMsg, final DocumentChatAdapter documentChatAdapter, final ArrayList<Document> documents, final RecyclerView recyclerView, final FragmentActivity fragmentActivity, final int userID) {
+        final int index = creatDummyDocument(documentChatAdapter, documents, recyclerView);
+        final Document document = new Document();
         document.setDocument(textMsg);
         document.setType(type);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Document result=ApiHelper.postAddDocument(userID,document,file,fragmentActivity);
+                final Document result = ApiHelper.postAddDocument(userID, document, file, fragmentActivity);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(result !=null){
+                        if (result != null) {
                             //success
                             documents.add(result);
                             documentChatAdapter.setList(documents);
                             documentChatAdapter.notifyDataSetChanged();
                             recyclerView.scrollToPosition(index);
-                        }else{
+                        } else {
                             // failed
                             Toast.makeText(fragmentActivity, R.string.msg_not_send, Toast.LENGTH_SHORT).show();
                         }
-                        removeDummyDocument(index,documentChatAdapter,documents,recyclerView);
+                        removeDummyDocument(index, documentChatAdapter, documents, recyclerView);
                     }
                 });
             }
