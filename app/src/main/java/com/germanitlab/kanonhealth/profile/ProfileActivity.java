@@ -218,7 +218,7 @@ public class ProfileActivity extends ParentActivity {
         tvName.setText(userInfoResponse.getFullName());
         tvPhone.setText(userInfoResponse.getCountry_code() + userInfoResponse.getPhone());
 
-        tvBirthDate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfoResponse.getBirthday())));
+        tvBirthDate.setText(userInfoResponse.getBirthday());
 
 
         tvStreet.setText(userInfoResponse.getStreetName());

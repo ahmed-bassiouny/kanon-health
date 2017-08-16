@@ -286,60 +286,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
         } else {
             Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
         }
-
-//        util.showProgressDialog();
-//            final User user = new User();
-//            user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-//            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-//            user.setFirst_name(firstName);
-//            user.setLast_name(lastName);
-//            user.setSubTitle(et_title.getText().toString());
-//            user.setBirthDate(birthdate);
-//            user.setGender(gender);
-//            user.setGender_other(gender_other);
-//            if (uploadImageResponse != null) {
-//                user.setAvatar(uploadImageResponse.getFile_url());
-//            }
-//
-//            new HttpCall(this, new ApiResponse() {
-//                @Override
-//                public void onSuccess(Object response) {
-//                    Log.e("Update user response :", user != null ? response.toString() : "no response found");
-//
-//
-//                    mPrefManager.put(mPrefManager.USER_KEY, response.toString());
-//                    Gson gson = new Gson();
-//                    UserInfoResponse userInfoResponse = gson.fromJson(response.toString(), UserInfoResponse.class);
-//                    Log.e("my qr link ", userInfoResponse.getUser().getQr_url());
-//                    mPrefManager.put(mPrefManager.IS_DOCTOR, userInfoResponse.getUser().getIsDoc() == 1);
-//                    mPrefManager.put(mPrefManager.PROFILE_QR, userInfoResponse.getUser().getQr_url());
-//                    loadData();
-//
-//                }
-//
-//                @Override
-//                public void onFailed(String error) {
-//                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_saving_data), Toast.LENGTH_SHORT).show();
-//                    util.dismissProgressDialog();
-//
-//                }
-//            }).editProfile(user);
-//        } else {
-//            Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
-//        }
-
     }
-
-    private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            arg2 = arg2 + 1;
-
-            birthdate = arg1 + "-" + arg2 + "-" + arg3;
-            Date parseDate = DateHelper.FromDisplayDateStringToDisplay(birthdate);
-            textBirthday.setText(DateHelper.FromDisplayDateToBirthDateString(parseDate));
-        }
-    };
 
 
     @Override
