@@ -632,12 +632,15 @@ public class ApiHelper {
         }
     }
 
-    public static int openSession(Context context, String userID, String doctorID) {
+    public static int openSession(Context context, String userID, String doctorID,HashMap<String,String> questionsAnswers) {
         int result = -1;
         try {
             OpenSessionParameters openSessionParameters = new OpenSessionParameters();
             openSessionParameters.setUserID(userID);
             openSessionParameters.setDoctorID(doctorID);
+            if(questionsAnswers!=null) {
+                openSessionParameters.setQuestionsAnswers(questionsAnswers);
+            }
             String jsonString = post(API_REQUESTS_OPEN, openSessionParameters.toJson());
             Gson gson = new Gson();
             OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);

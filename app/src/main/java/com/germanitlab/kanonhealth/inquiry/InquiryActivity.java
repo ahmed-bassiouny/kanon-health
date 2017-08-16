@@ -11,9 +11,11 @@ import android.widget.FrameLayout;
 
 
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,10 +25,11 @@ import butterknife.ButterKnife;
  * Created by Mo on 3/6/17.
  */
 
-public class InquiryActivity extends AppCompatActivity implements OnChoiceSelectedListener {
+public class InquiryActivity extends ParentActivity implements OnChoiceSelectedListener {
 
 
-    public static ArrayList<HashMap<String, String>> inquiryResult;
+    //public static ArrayList<HashMap<String, String>> inquiryResult;
+    public static HashMap<String, String> inquiryResult;
     public static ArrayList<String> finishedFirstLevelOptions;
     public static ArrayList<String> finishedSecondLevelOptions;
 
@@ -45,7 +48,7 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
         Intent intent = getIntent();
         jsonData = intent.getStringExtra("doctor_data");
         if (savedInstanceState == null) {
-            inquiryResult = new ArrayList<>();
+            inquiryResult = new LinkedHashMap<>();
             finishedFirstLevelOptions = new ArrayList<>();
             finishedSecondLevelOptions = new ArrayList<>();
 
@@ -55,7 +58,7 @@ public class InquiryActivity extends AppCompatActivity implements OnChoiceSelect
         } else {
             finishedFirstLevelOptions = savedInstanceState.getStringArrayList("finished_first_level");
             finishedSecondLevelOptions = savedInstanceState.getStringArrayList("finished_second_level");
-            inquiryResult = (ArrayList<HashMap<String, String>>) savedInstanceState.getSerializable("inquiry_result");
+            inquiryResult = (HashMap<String, String>) savedInstanceState.getSerializable("inquiry_result");
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.inquiry_container, getInquiryMainFragment("comingFromSaveState"))
                         .addToBackStack(null).commit();
