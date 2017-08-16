@@ -521,6 +521,8 @@
     <string name="loading">Loading...</string>
     <string name="phone">Phone</string>
     <string name="session_already_open">Session already open</string>
+    <string name="cant_start_session">Sorry  Session Still Closed</string>
+    <string name="cant_close_session">Sorry Session Still open</string>
 
 
 </resources>

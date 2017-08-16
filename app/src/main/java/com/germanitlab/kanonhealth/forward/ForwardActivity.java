@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -70,7 +71,7 @@ public class ForwardActivity extends ParentActivity {
             @Override
             public void run() {
 
-                listDoctors = ApiHelper.getChatDoctor(ForwardActivity.this, PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, ""));
+                listDoctors = ApiHelper.getChatDoctor(ForwardActivity.this, String.valueOf(PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, 0)));
                 ForwardActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -139,22 +140,21 @@ public class ForwardActivity extends ParentActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
+                final boolean result=ApiHelper.sendForward(ForwardActivity.this,PrefHelper.get(ForwardActivity.this,PrefHelper.KEY_USER_ID,0), ListtoString(doctorsForward),ListtoString(messagesForward));
+                ForwardActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result){
+                            Toast.makeText(ForwardActivity.this, R.string.message_sent, Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else{
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.message_not_send), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }).start();
-        final boolean result=ApiHelper.sendForward(ForwardActivity.this,PrefHelper.get(ForwardActivity.this,PrefHelper.KEY_USER_ID,0), ListtoString(doctorsForward),ListtoString(messagesForward));
-        ForwardActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(result){
-                    Toast.makeText(ForwardActivity.this, R.string.message_sent, Toast.LENGTH_SHORT).show();
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
 
-                }
-            }
-        });
     }
 
     private void addListener(RecyclerView recyclerView) {

@@ -71,6 +71,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
 import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
@@ -263,7 +264,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 initData();
                 showAttachmentDialog();
                 checkMode();
-            }else {
+            } else {
                 Toast.makeText(getContext(), R.string.error_connection, Toast.LENGTH_SHORT).show();
 
             }
@@ -357,7 +358,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         }
                     }).start();
                     // request seen all msg
-                    if(messages.size()>0)
+                    if (messages.size() > 0)
                         messageSeen(messages.get(messages.size() - 1).getMessageID().toString());
 
                 } else {
@@ -517,7 +518,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @OnClick(R.id.img_send_txt)
     public void img_send_txt() {
 
-        if(etMessage.getText().toString().trim().isEmpty())
+        if (etMessage.getText().toString().trim().isEmpty())
             return;
         // declare object and set attribute
         if (userID == doctorID) {
@@ -936,38 +937,38 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     adb_end.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            getActivity().runOnUiThread(new Runnable() {
+                            new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     // i need request ID
-                                    boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID());
-                                    if (result) {
-                                        // success
-                                        // we must handle this
-
-                                        Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                        /*doctor.setIsOpen(0);
-                                        userRepository.update(doctor);
-                                        checkSessionOpen(iamDoctor);
-                                        getActivity().invalidateOptionsMenu();
-                                        if (doctor.isClinic == 1) {
-                                            Intent intent = new Intent(getActivity(), InquiryActivity.class);
-                                            UserInfoResponse userInfoResponse = new UserInfoResponse();
-                                            userInfoResponse.setUser(doctor);
-                                            Gson gson = new Gson();
-                                            intent.putExtra("doctor_data", gson.toJson(userInfoResponse));
-                                            startActivity(intent);
-                                        } else if (doctor.getIsDoc() == 1) {
-                                            openPayment();
-                                        } else {
-                                            Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-
-                                        }*/
-                                    } else {
-                                        // failed
-                                    }
+                                    final boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID());
+                                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (result) {
+                                                // success
+                                                Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                                userInfo.setIsSessionOpen(0);
+                                                //userRepository.update(doctor);
+                                                checkSessionOpen(iamDoctor);
+                                                getActivity().invalidateOptionsMenu();
+                                                if (userInfo.getUserType() == UserInfo.CLINIC) {
+                                                    Intent intent = new Intent(getActivity(), InquiryActivity.class);
+                                                    Gson gson = new Gson();
+                                                    intent.putExtra("doctor_data", gson.toJson(userInfo));
+                                                    startActivity(intent);
+                                                } else if (userInfo.getUserType() == UserInfo.CLINIC) {
+                                                    openPayment();
+                                                } else {
+                                                    Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.cant_start_session), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            }).start();
                         }
 
                     });
@@ -992,52 +993,56 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                     adb_end.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            getActivity().runOnUiThread(new Runnable() {
+                            new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     // i need request ID
-                                    boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID());
-                                    if (result) {
-                                        // success
-                                        // we must handle this
-                                           /* Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
-                                            doctor.setIsOpen(0);
-                                            userRepository.update(doctor);
-                                            checkSessionOpen(iamDoctor);
-                                            canRate.setVisibility(View.GONE);
-                                            getActivity().invalidateOptionsMenu();
-                                            if (doctor.isClinic == 1 || doctor.getIsDoc() == 1) {
-                                                AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                                                adb.setTitle(R.string.rate_conversation);
-                                                adb.setCancelable(false);
-                                                adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    final boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID());
+                                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (result) {
+                                                // success
+                                                // we must handle this
+                                                Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
+                                                userInfo.setIsSessionOpen(0);
+                                                checkSessionOpen(iamDoctor);
+                                                canRate.setVisibility(View.GONE);
+                                                getActivity().invalidateOptionsMenu();
+                                                if (userInfo.getUserType() == UserInfo.DOCTOR || userInfo.getUserType() == UserInfo.CLINIC) {
+                                                    AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                                                    adb.setTitle(R.string.rate_conversation);
+                                                    adb.setCancelable(false);
+                                                    adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                                                        Intent intent = new Intent(getActivity(), Comment.class);
-                                                        intent.putExtra("doc_id", String.valueOf(doctor.get_Id()));
-                                                        intent.putExtra("request_id", String.valueOf(doctor.getRequest_id()));
-                                                        startActivity(intent);
-                                                        getActivity().finish();
-                                                    }
-                                                });
-                                                adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                                        if (iamDoctor == false && iamClinic == false) {
-                                                            canRate.setVisibility(View.VISIBLE);
+                                                            Intent intent = new Intent(getActivity(), Comment.class);
+                                                            intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
+                                                            intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
+                                                            startActivity(intent);
+                                                            getActivity().finish();
                                                         }
-                                                    }
-                                                });
-                                                adb.show();
-                                            }
-                                       */
+                                                    });
+                                                    adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            if (iamDoctor == false && iamClinic == false) {
+                                                                canRate.setVisibility(View.VISIBLE);
+                                                            }
+                                                        }
+                                                    });
+                                                    adb.show();
+                                                }
 
-                                    } else {
-                                        // failed
-                                    }
+                                            } else {
+                                                // failed
+                                                Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.cant_close_session), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            }).start();
 
 
                         }
@@ -1122,7 +1127,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.seenMessage(getContext(), userID,String.valueOf(doctorID), msgID);
+                ApiHelper.seenMessage(getContext(), userID, String.valueOf(doctorID), msgID);
             }
         }).start();
 
@@ -1133,7 +1138,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.deliveredMessgae(getContext(), userID,String.valueOf(doctorID), msgID);
+                ApiHelper.deliveredMessgae(getContext(), userID, String.valueOf(doctorID), msgID);
             }
         }).start();
     }
