@@ -51,6 +51,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_TIME_TABLE= "working_hours";
     public static final String KEY_ISOPEN="is_open";
     public static final String KEY_OPEN_TYPE = "open_type";
+    public static final String KEY_REQUEST_ID="request_id";
 
     // endregion
 
@@ -139,6 +140,9 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_ISOPEN)
     @DatabaseField
     private int isSessionOpen;
+    @SerializedName(KEY_REQUEST_ID)
+    @DatabaseField
+    private int requestID;
 
 
     private LinkedHashMap<String, String> questionsAnswers;
@@ -148,8 +152,6 @@ public class UserInfo extends ParentModel {
     private Integer openType;
     @DatabaseField
     private Integer isMyDoc;
-    @DatabaseField
-    private int requestID;
     @DatabaseField
     private int haveRate;
     // endregion

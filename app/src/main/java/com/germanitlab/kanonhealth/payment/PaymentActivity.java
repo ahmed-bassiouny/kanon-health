@@ -21,6 +21,7 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.models.Payment;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PaymentActivity extends AppCompatActivity {
+public class PaymentActivity extends ParentActivity {
 
     @BindView(R.id.iv_doctor)
     CircleImageView ivDoctor;
@@ -168,7 +169,6 @@ public class PaymentActivity extends AppCompatActivity {
 
     @OnClick(R.id.next)
     public void nextClicked() {
-        try {
             if (rgPayment.getCheckedRadioButtonId() == -1) {
                 if (!rbVoucher.isChecked()) {
                     Toast.makeText(this, R.string.please_choose_one_of_these_methods, Toast.LENGTH_SHORT).show();
@@ -182,36 +182,33 @@ public class PaymentActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)));
+                    showProgressBar();
+                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)));
                     Log.i("requestID:" , requestId+"");
-                    if (requestId != -1) {
-                        doctor.setIsSessionOpen(1);
-                        doctor.setRequestID(requestId);
-                        Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
-                        intent.putExtra("doctorID", doctor.getUserID());
-                        intent.putExtra("userInfo",doctor);
-                        // -------------- this need handle
-                        //doctor.setIsOpen(1);
-                        //doctor.setRequest_id(requestId);
-                        //new UserRepository(PaymentActivity.this).update(doctor);
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        PaymentActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    PaymentActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (requestId != -1) {
+                                doctor.setIsSessionOpen(1);
+                                doctor.setRequestID(requestId);
+                                Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
+                                intent.putExtra("doctorID", doctor.getUserID());
+                                intent.putExtra("userInfo",doctor);
+                                // -------------- this need handle
+                                //doctor.setIsOpen(1);
+                                //doctor.setRequest_id(requestId);
+                                //new UserRepository(PaymentActivity.this).update(doctor);
+                                startActivity(intent);
+                                hideProgressBar();
+                                finish();
+                            }else{
+                                hideProgressBar();
                                 Toast.makeText(PaymentActivity.this, R.string.session_already_open, Toast.LENGTH_SHORT).show();
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }).start();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
-        }
-
     }
-
 
 }

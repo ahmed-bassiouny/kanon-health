@@ -529,51 +529,27 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         etMessage.setText("");
         etMessage.setHint(R.string.write_a_message);
 
-            /*if (iamDoctor && doctorID != userID && doctor.getIsDoc() == 0 && doctor.isClinic == 0 && doctor.getIsOpen() == 0) {
-                new HttpCall(getActivity(), new ApiResponse() {
+            /*if (iamDoctor && doctorID != userID && userInfo.getUserType()==UserInfo.PATIENT && userInfo.getIsSessionOpen() == 0) {
+                new Thread(new Runnable() {
                     @Override
-                    public void onSuccess(Object response) {
-                        imgbtn_chat_attach.setEnabled(true);
-                        mHoldingButtonLayout.setButtonEnabled(true);
-                        // img_requestpermission.setEnabled(true);
-                        doctor.setIsOpen(1);
-                        userRepository.update(doctor);
-                        checkSessionOpen(iamDoctor);
-
-
-                        new HttpCall(getContext(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                Message temp = messages.get(index);
-                                temp.setIs_send(true);
-                                messages.set(index, temp);
-                                chatAdapter.setList(messages);
-                                chatAdapter.notifyDataSetChanged();
-                                recyclerView.scrollToPosition(messages.size() - 1);
-                                messageRepositry.create((Message) response);
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                                removeDummyMessage(index);
-                            }
-                        }).sendMessage(message);
-
-
+                    public void run() {
+                        int requestId = ApiHelper.openSession(getActivity(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_IS_DOCTOR,false)));
+                        Log.i("requestID:" , requestId+"");
+                        if (requestId != -1) {
+                            imgbtn_chat_attach.setEnabled(true);
+                            mHoldingButtonLayout.setButtonEnabled(true);
+                            // img_requestpermission.setEnabled(true);
+                            userInfo.setIsSessionOpen(1);
+                            checkSessionOpen(iamDoctor);
+                            chatHelper.sendTextMessage(etMessage.getText().toString(), messages, userID, doctorID, chatAdapter, getActivity(), recyclerView);
+                        }else{
+                            imgbtn_chat_attach.setEnabled(false);
+                            mHoldingButtonLayout.setButtonEnabled(false);
+                            Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
+                        }
                     }
-
-                    @Override
-                    public void onFailed(String error) {
-                        imgbtn_chat_attach.setEnabled(false);
-                        mHoldingButtonLayout.setButtonEnabled(false);
-                        //  img_requestpermission.setEnabled(false);
-                        Toast.makeText(getContext(), R.string.message_not_send, Toast.LENGTH_SHORT).show();
-                        removeDummyMessage(index);
-                    }
-                }).sendSessionRequest(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD),
-                        String.valueOf(doctor.getId()), "2");
-            } else {*/
+                }).start();
+            } */
 
         //request
     }
