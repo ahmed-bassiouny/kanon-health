@@ -108,7 +108,7 @@ public class ApiHelper {
     private static final String API_USERS_EDIT = "users/edit";
     private static final String API_USERS_REGISTER = "users/register";
     private static final String API_RATE_REVIEW = "users/rate_reviews";
-    private static final String API_FAVOURITE="favourite";
+    private static final String API_FAVOURITE = "favourite";
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
@@ -135,7 +135,7 @@ public class ApiHelper {
                 .build();
         Log.i(TAG, request.toString());
         Response response = client.newCall(request).execute();
-        return response.body().string();
+        return ApiUtils.removeNulls(response.body().string());
     }
 
     private static String postWithoutServerPath(String url, String parameters) throws IOException {
@@ -147,7 +147,7 @@ public class ApiHelper {
                 .build();
         Log.i(TAG, request.toString());
         Response response = client.newCall(request).execute();
-        return response.body().string();
+        return ApiUtils.removeNulls(response.body().string());
     }
 
 
@@ -169,8 +169,7 @@ public class ApiHelper {
                 .post(requestBody.build())
                 .build();
         Response response = client.newCall(request).execute();
-        return response.body().string();
-
+        return ApiUtils.removeNulls(response.body().string());
     }
 
     //endregion
@@ -280,7 +279,7 @@ public class ApiHelper {
             EditClinicParameters.setProvince(province);
             EditClinicParameters.setCountry(country);
             EditClinicParameters.setPhone(phone);
-             //EditClinicParameters.setSupportedLangs(supportedLangs);
+            //EditClinicParameters.setSupportedLangs(supportedLangs);
 
             String jsonString = "";
             if (file == null) {
@@ -292,7 +291,7 @@ public class ApiHelper {
             Gson gson = new Gson();
             EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);
 
-            if(editClinicResponse.getStatus()) {
+            if (editClinicResponse.getStatus()) {
                 result = editClinicResponse.getData();
             }
 
@@ -387,7 +386,7 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<UserInfo> postGetDoctorList(Context context,String userId) {
+    public static ArrayList<UserInfo> postGetDoctorList(Context context, String userId) {
         ArrayList<UserInfo> result = new ArrayList<>();
         try {
 
@@ -401,7 +400,7 @@ public class ApiHelper {
             }
 
 
-            Log.i("UserInformation:" , result.get(1).getIsMyDoc()+"");
+            Log.i("UserInformation:", result.get(1).getIsMyDoc() + "");
         } catch (Exception e) {
             Helper.handleError(TAG, "postGetDoctorList", e, -1, context);
         } finally {
@@ -419,7 +418,7 @@ public class ApiHelper {
             String jsonString = "";
 
             jsonString = post(API_DOCTORS_CHANGE_STATUS, changeStatusParameters.toJson());
-            Log.i("jsson:" , jsonString);
+            Log.i("jsson:", jsonString);
 
             Gson gson = new Gson();
             ChangeStatusResponse changeStatusResponse = gson.fromJson(jsonString, ChangeStatusResponse.class);
@@ -510,7 +509,7 @@ public class ApiHelper {
         try {
             UserAddParameter userAddParamater = new UserAddParameter();
             userAddParamater.setUserID(userID);
-            Log.i("UserIdValue:" , userID+"");
+            Log.i("UserIdValue:", userID + "");
             userAddParamater.setPassword(password);
             userAddParamater.setTitle(title);
             userAddParamater.setFirstName(firstName);
@@ -675,7 +674,7 @@ public class ApiHelper {
             String jsonString = post(API_MESSAGES_FORWARD, messageForwardParameter.toJson());
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
-            result=parentResponse.getStatus();
+            result = parentResponse.getStatus();
         } catch (Exception e) {
             Helper.handleError(TAG, "sendForward", e, -1, context);
         } finally {
@@ -683,7 +682,7 @@ public class ApiHelper {
         }
     }
 
-    private static boolean MessageOperation(Context context, int user_id, String msg_id,String toId, int operationType) {
+    private static boolean MessageOperation(Context context, int user_id, String msg_id, String toId, int operationType) {
         boolean result = false;
         try {
             MessageOperationParameter messageOperationParameter = new MessageOperationParameter();
@@ -714,16 +713,16 @@ public class ApiHelper {
         }
     }
 
-    public static boolean deleteMessgae(Context context, int user_id,String toId, String msg_id) {
-        return MessageOperation(context, user_id, msg_id,toId, MessageOperationParameter.DELETE);
+    public static boolean deleteMessgae(Context context, int user_id, String toId, String msg_id) {
+        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.DELETE);
     }
 
-    public static boolean seenMessage(Context context, int user_id,String toId, String msg_id) {
-        return MessageOperation(context, user_id, msg_id,toId, MessageOperationParameter.SEEN);
+    public static boolean seenMessage(Context context, int user_id, String toId, String msg_id) {
+        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.SEEN);
     }
 
-    public static boolean deliveredMessgae(Context context, int user_id,String toId, String msg_id) {
-        return MessageOperation(context, user_id, msg_id,toId, MessageOperationParameter.DELIVER);
+    public static boolean deliveredMessgae(Context context, int user_id, String toId, String msg_id) {
+        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.DELIVER);
     }
 
     private static ArrayList<ChatModel> getChatMessages(Context context, String userID, int chatType) {
@@ -808,7 +807,6 @@ public class ApiHelper {
             return result;
         }
     }
-    
 
 
     public static Review getReview(String userId, Context context) {
@@ -849,21 +847,21 @@ public class ApiHelper {
         }
     }
 
-    public static boolean setFavouriteOperation(String fromID,String toID,int toType,boolean type){
-        boolean result=false;
+    public static boolean setFavouriteOperation(String fromID, String toID, int toType, boolean type) {
+        boolean result = false;
         try {
-            FavouriteParameters favouriteParameters=new FavouriteParameters();
+            FavouriteParameters favouriteParameters = new FavouriteParameters();
             favouriteParameters.setUserId(fromID);
             favouriteParameters.setToId(toID);
             favouriteParameters.setToType(toType);
             favouriteParameters.setType(type);
             String jsonString = post(API_FAVOURITE, favouriteParameters.toJson());
             Gson gson = new Gson();
-            ParentResponse parentResponse=gson.fromJson(jsonString, ParentResponse.class);
-            result=parentResponse.getStatus();
-        }catch (Exception e){
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            result = parentResponse.getStatus();
+        } catch (Exception e) {
             Helper.handleError(TAG, "setFavouriteOperation", e, -1, null);
-        }finally {
+        } finally {
             return result;
         }
     }
