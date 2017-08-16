@@ -36,9 +36,11 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
+import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.germanitlab.kanonhealth.models.Table;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
@@ -134,8 +136,8 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_contact)
     public void contactClick(View v) {
-        Intent intent = new Intent(this, HttpChatActivity.class);
-        intent.putExtra("doctorID", clinic.getId());
+        Intent intent = new Intent(this, InquiryActivity.class);
+        intent.putExtra("doctor_data", new Gson().toJson(clinic));
         startActivity(intent);
     }
 

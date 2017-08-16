@@ -570,6 +570,8 @@ public class UserInfo extends ParentModel {
     }
 
     public Double getLocationLat() {
+        if(locationLat==null)
+            locationLat=0.0;
         return locationLat;
     }
 
@@ -578,6 +580,8 @@ public class UserInfo extends ParentModel {
     }
 
     public Double getLocationLong() {
+        if(locationLong==null)
+            locationLong=0.0;
         return locationLong;
     }
 
