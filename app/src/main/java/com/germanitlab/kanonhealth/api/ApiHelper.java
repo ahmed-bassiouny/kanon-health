@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.ClinicEdit;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Message;
@@ -214,8 +215,8 @@ public class ApiHelper {
         }
     }
 
-    public static UserInfo postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
-        UserInfo result = null;
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
+        ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
             addClinicParameters.setUserId(userId);
@@ -268,8 +269,8 @@ public class ApiHelper {
         }
     }
 
-    public static Integer postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
-        Integer result = -1;
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
+        ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
             EditClinicParameters.setUserId(clinicId);

@@ -58,8 +58,8 @@ public class Comment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
-        userRepository = new UserRepository();
-        doctor = new UserInfo();
+       // userRepository = new UserRepository();
+       // doctor = new UserInfo();
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
