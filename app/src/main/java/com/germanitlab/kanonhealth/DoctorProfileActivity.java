@@ -31,7 +31,6 @@ import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
@@ -678,7 +677,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     private void setClinics()
     {
-        ArrayList<Clinic> allClinics= new ArrayList<>();
+        ArrayList<UserInfo> allClinics= new ArrayList<>();
         allClinics.addAll(userInfo.getClinics());
         allClinics.addAll(userInfo.getMyClinics());
         if (allClinics.size()> 0) {

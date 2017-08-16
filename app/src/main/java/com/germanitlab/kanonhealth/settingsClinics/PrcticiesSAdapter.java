@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.models.ChooseModel;
 
 import java.util.List;
@@ -25,11 +25,11 @@ public class PrcticiesSAdapter extends RecyclerView.Adapter<PrcticiesSAdapter.My
 
 {
     private Context mContext;
-    private List<Clinic> clinicsList;
+    private List<UserInfo> clinicsList;
 
 //    LinkedHashMap<String , String> questionAnswer ;
 
-    public PrcticiesSAdapter(Context mContext, List<Clinic> clinicsList) {
+    public PrcticiesSAdapter(Context mContext, List<UserInfo> clinicsList) {
 //        this.questionAnswer = questionAnswer ;
         this.mContext = mContext;
         this.clinicsList = clinicsList;

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.germanitlab.kanonhealth.api.models.ChatModel;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Message;
@@ -199,8 +198,8 @@ public class ApiHelper {
         }
     }
 
-    public static ArrayList<Clinic> postGetClinicList(Context context) {
-        ArrayList<Clinic> result = new ArrayList<>();
+    public static ArrayList<UserInfo> postGetClinicList(Context context) {
+        ArrayList<UserInfo> result = new ArrayList<>();
         try {
 
             String jsonString = post(API_CLINICS_LIST, EMPTY_JSON);
@@ -216,8 +215,8 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, File file, Context context) {
-        Clinic result = null;
+    public static UserInfo postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, File file, Context context) {
+        UserInfo result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
             addClinicParameters.setUserId(userId);
@@ -249,8 +248,8 @@ public class ApiHelper {
         }
     }
 
-    public static Clinic postGetClinic(Integer clinicId, Context context) {
-        Clinic result = null;
+    public static UserInfo postGetClinic(Integer clinicId, Context context) {
+        UserInfo result = null;
         try {
             GetClinicParameters getClinicParameters = new GetClinicParameters();
             getClinicParameters.setClinicId(clinicId);

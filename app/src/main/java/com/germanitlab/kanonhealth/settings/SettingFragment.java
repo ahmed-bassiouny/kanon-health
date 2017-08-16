@@ -34,7 +34,6 @@ import com.germanitlab.kanonhealth.PasscodeActivty;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.TimeTable;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -112,7 +111,7 @@ public class SettingFragment extends Fragment {
 //            UserInfo userInfo= new Gson().fromJson(mPrefManager.getData(PrefManager.USER_KEY), UserInfo.class);
 //            List<ChooseModel> clinicsList = userInfo.get
 
-        ArrayList<Clinic> allClinics= new ArrayList<>();
+        ArrayList<UserInfo> allClinics= new ArrayList<>();
         allClinics.addAll(user.getClinics());
         allClinics.addAll(user.getMyClinics());
         if (allClinics.size()> 0) {

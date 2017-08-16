@@ -1,6 +1,6 @@
 package com.germanitlab.kanonhealth.api.responses;
 
-import com.germanitlab.kanonhealth.api.models.Clinic;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ public class AddClinicResponse extends ParentResponse {
 
     @SerializedName(KEY_DATA)
     private
-    Clinic data;
+    UserInfo data;
 
-    public Clinic getData() {
+    public UserInfo getData() {
         return data;
     }
 
-    public void setData(Clinic data) {
+    public void setData(UserInfo data) {
         this.data = data;
     }
 }

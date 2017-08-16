@@ -26,10 +26,10 @@ import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.adapters.SpecilaitiesAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
@@ -95,7 +95,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
     @BindView(R.id.img_map)
     ImageView imageViewMap;
     //---------------------
-    Clinic clinic;
+    UserInfo clinic;
     PickerDialog pickerDialog;
     int PLACE_PICKER_REQUEST = 7;
     DoctorListAdapter doctorListAdapter;
@@ -108,8 +108,8 @@ public class ClinicProfileActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initToolbar();
         try {
-            clinic = new Clinic();
-            clinic = (Clinic) getIntent().getSerializableExtra("clinic_data");
+            clinic = new UserInfo();
+            clinic = (UserInfo) getIntent().getSerializableExtra("clinic_data");
             pickerDialog = new PickerDialog(true);
 
             bindData();
@@ -192,37 +192,36 @@ public class ClinicProfileActivity extends AppCompatActivity {
     }*/
 
 
-
     private void bindData() {
 
 
         if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(),R.drawable.placeholder);
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
         }
 
-            tvToolbarName.setText(clinic.getName());
-            checkDoctor();
-            tvContact.setText(R.string.contact_by_chat);
-            if (clinic.getAvailable() == 1)
-                tvOnline.setText(R.string.status_online);
-            else
-                tvOnline.setText(R.string.status_offline);
+        tvToolbarName.setText(clinic.getName());
+        checkDoctor();
+        tvContact.setText(R.string.contact_by_chat);
+        if (clinic.getAvailable() == 1)
+            tvOnline.setText(R.string.status_online);
+        else
+            tvOnline.setText(R.string.status_offline);
 
         textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(clinic.getRateNum()) + " (" + String.valueOf(clinic.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
 
         // set specialities
-        if (clinic.getSpeciality() != null) {
-        tvSpecilities.setText("");
-        flSpeciliaty.removeAllViews();
-        int size = 0;
-        for (Speciality speciality : clinic.getSpeciality()) {
-            flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
-            tvSpecilities.append(speciality.getTitle());
-            size++;
-            if (size <  clinic.getSpeciality().size()) {
-                tvSpecilities.append(", ");
+        if (clinic.getSpecialities() != null) {
+            tvSpecilities.setText("");
+            flSpeciliaty.removeAllViews();
+            int size = 0;
+            for (Speciality speciality : clinic.getSpecialities()) {
+                flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+                tvSpecilities.append(speciality.getTitle());
+                size++;
+                if (size < clinic.getSpecialities().size()) {
+                    tvSpecilities.append(", ");
+                }
             }
-        }
 
 
         }
@@ -264,17 +263,17 @@ public class ClinicProfileActivity extends AppCompatActivity {
         }
 
         // member at need handle
-        if (clinic.getDoctors().size() > 0) {
+        if (clinic.getClinics().size() > 0) {
             RecyclerView recyclerVie;
-            doctorListAdapter=   new DoctorListAdapter(clinic.getDoctors(), this);
+            doctorListAdapter = new DoctorListAdapter(clinic.getClinics(), this);
             recyclerVie = (RecyclerView) findViewById(R.id.member_recycleview);
             recyclerVie.setHasFixedSize(true);
-            recyclerVie.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+            recyclerVie.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             recyclerVie.setNestedScrollingEnabled(false);
             recyclerVie.setAdapter(doctorListAdapter);
         }
 
-        if(clinic.getLocationLat()>0.0 &&clinic.getLocationLong()>0.0){
+        if (clinic.getLocationLat() > 0.0 && clinic.getLocationLong() > 0.0) {
             String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(clinic.getLocationLat()) + "," + String.valueOf(clinic.getLocationLong()) + "&zoom=15&size=200x200&sensor=false";
             ImageHelper.setImage(imageViewLocation, URL, -1);
         }
@@ -286,10 +285,11 @@ public class ClinicProfileActivity extends AppCompatActivity {
     @OnClick(R.id.image_star)
     public void image_star() {
         Intent intent = new Intent(this, RateActivity.class);
-        intent.putExtra("clinic_info",  clinic);
+        intent.putExtra("clinic_info", clinic);
         intent.putExtra("type", "clinic");
         startActivity(intent);
     }
+
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
         /*if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
@@ -343,16 +343,16 @@ public class ClinicProfileActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
     }
+
     private void getTimeTableData(ArrayList<WorkingHours> list) {
         if (clinic != null) {
             if (list != null) {
-                if (list.size()> 0) {
+                if (list.size() > 0) {
                     tableLayoutTime.removeAllViews();
                     com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
                     timeTable.creatTimeTable(list.get(0), this, tableLayoutTime);

@@ -42,7 +42,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_ACTIVATED = "activated";
     public static final String KEY_SPECIALITIES = "specialitys";
     public static final String Clinics = "member_at";
-    public  static final String  KEY_MY_CLINICS="my_clinic";
+    public static final String KEY_MY_CLINICS = "my_clinic";
     public static final String KEY_STREET_NAME = "street_name";
     public static final String KEY_HOUSE_NUMBER = "house_number";
     public static final String KEY_PROVIDENCE = "providence";
@@ -52,6 +52,14 @@ public class UserInfo extends ParentModel {
     public static final String KEY_ISOPEN="is_open";
     public static final String KEY_OPEN_TYPE = "open_type";
     public static final String KEY_REQUEST_ID="request_id";
+
+    public static final String KEY_ID = "clinic_id";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_ADDRESS = "address";
+    public static final String KEY_CITY = "city";
+    public static final String KEY_PROVINCE = "province";
+    public static final String KEY_COUNTRY = "county";
+    public static final String KEY_FAX = "fax";
 
     // endregion
 
@@ -74,13 +82,13 @@ public class UserInfo extends ParentModel {
     private Integer userType;
     @SerializedName(KEY_FIRSTNAME)
     @DatabaseField
-    private String  firstName="";
+    private String firstName = "";
     @SerializedName(KEY_LASTNAME)
     @DatabaseField
-    private String  lastName="";
+    private String lastName = "";
     @SerializedName(KEY_TITLE)
     @DatabaseField
-    private String  title="";
+    private String title = "";
     @SerializedName(KEY_PASSWORD)
     @DatabaseField
     private String password;
@@ -132,9 +140,9 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_SPECIALITIES)
     private ArrayList<Speciality> specialities;
     @SerializedName(Clinics)
-    private ArrayList<Clinic> clinics;
+    private ArrayList<UserInfo> clinics;
     @SerializedName(KEY_MY_CLINICS)
-    private ArrayList<Clinic> myClinics;
+    private ArrayList<UserInfo> myClinics;
     @SerializedName(KEY_TIME_TABLE)
     private ArrayList<WorkingHours> timeTable;
     @SerializedName(KEY_ISOPEN)
@@ -154,6 +162,30 @@ public class UserInfo extends ParentModel {
     private Integer isMyDoc;
     @DatabaseField
     private int haveRate;
+
+
+    // extra for clinic
+    @SerializedName(KEY_ID)
+    private Integer id;
+    @SerializedName(KEY_NAME)
+    private String name;
+    @SerializedName(KEY_ADDRESS)
+    private String address;
+    @SerializedName(KEY_CITY)
+    private String city;
+    @SerializedName(KEY_PROVINCE)
+    private String province;
+    @SerializedName(KEY_COUNTRY)
+    private String country;
+    @SerializedName(KEY_FAX)
+    private String fax;
+
+
+    // i need key name from backend
+    private Double locationLat;
+    private Double locationLong;
+
+
     // endregion
 
 
@@ -257,8 +289,8 @@ public class UserInfo extends ParentModel {
     }
 
     public Integer getAvailable() {
-        if(isAvailable==null)
-            isAvailable=0;
+        if (isAvailable == null)
+            isAvailable = 0;
         return isAvailable;
     }
 
@@ -303,14 +335,14 @@ public class UserInfo extends ParentModel {
         this.documents = documents;
     }
 
-    public ArrayList<Clinic> getClinics() {
-        if(clinics==null) {
+    public ArrayList<UserInfo> getClinics() {
+        if (clinics == null) {
             clinics = new ArrayList<>();
         }
         return clinics;
     }
 
-    public void setClinics(ArrayList<Clinic> clinics) {
+    public void setClinics(ArrayList<UserInfo> clinics) {
         this.clinics = clinics;
     }
 
@@ -347,9 +379,8 @@ public class UserInfo extends ParentModel {
     }
 
     public ArrayList<Speciality> getSpecialities() {
-        if(specialities==null)
-        {
-            specialities= new ArrayList<>();
+        if (specialities == null) {
+            specialities = new ArrayList<>();
         }
         return specialities;
     }
@@ -424,9 +455,8 @@ public class UserInfo extends ParentModel {
     }
 
     public ArrayList<WorkingHours> getTimeTable() {
-        if(timeTable==null)
-        {
-            timeTable= new ArrayList<>();
+        if (timeTable == null) {
+            timeTable = new ArrayList<>();
         }
         return timeTable;
     }
@@ -437,9 +467,8 @@ public class UserInfo extends ParentModel {
 
 
     public Integer getIsMyDoc() {
-        if(isMyDoc==null)
-        {
-            isMyDoc=0;
+        if (isMyDoc == null) {
+            isMyDoc = 0;
         }
         return isMyDoc;
     }
@@ -448,15 +477,14 @@ public class UserInfo extends ParentModel {
         this.isMyDoc = isMyDoc;
     }
 
-    public ArrayList<Clinic> getMyClinics() {
-        if(myClinics==null)
-        {
-            myClinics= new ArrayList<>();
+    public ArrayList<UserInfo> getMyClinics() {
+        if (myClinics == null) {
+            myClinics = new ArrayList<>();
         }
         return myClinics;
     }
 
-    public void setMyClinics(ArrayList<Clinic> myClinics) {
+    public void setMyClinics(ArrayList<UserInfo> myClinics) {
         this.myClinics = myClinics;
     }
 
@@ -483,6 +511,78 @@ public class UserInfo extends ParentModel {
 
     public void setIsSessionOpen(int isSessionOpen) {
         this.isSessionOpen = isSessionOpen;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public Double getLocationLat() {
+        return locationLat;
+    }
+
+    public void setLocationLat(Double locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public Double getLocationLong() {
+        return locationLong;
+    }
+
+    public void setLocationLong(Double locationLong) {
+        this.locationLong = locationLong;
     }
     //endregion
 }

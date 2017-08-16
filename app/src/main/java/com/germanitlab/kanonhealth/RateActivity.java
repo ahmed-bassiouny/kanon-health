@@ -85,7 +85,7 @@ public class RateActivity extends ParentActivity{
     int height, width;
 
     UserInfo doctor;
-    Clinic clinic;
+    UserInfo clinic;
     boolean isClinic;
     Review review;
 
@@ -99,7 +99,7 @@ public class RateActivity extends ParentActivity{
             doctor = (UserInfo) getIntent().getSerializableExtra("doctor_info");
         }else
         {
-            clinic=(Clinic)getIntent().getSerializableExtra("clinic_info");
+            clinic=(UserInfo)getIntent().getSerializableExtra("clinic_info");
         }
 
         ivBack.setOnClickListener(new View.OnClickListener() {

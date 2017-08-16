@@ -12,34 +12,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.ClinicProfileActivity;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Speciality;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
 import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.nex3z.flowlayout.FlowLayout;
+
 import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.ItemView> {
     private MessageRepositry mMessageRepositry;
-    private List<Clinic> clinicContactList;
+    private List<UserInfo> clinicContactList;
     Activity activity;
     int userID;
 
-    public ClinicListAdapter(List<Clinic> clinicContactList, Activity activity) {
+    public ClinicListAdapter(List<UserInfo> clinicContactList, Activity activity) {
         try {
             this.clinicContactList = clinicContactList;
             this.activity = activity;
             //mMessageRepositry = new MessageRepositry(activity.getApplicationContext());
-            userID = PrefHelper.get(activity,PrefHelper.KEY_USER_ID,-1);
+            userID = PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -75,10 +78,10 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
                 /* data base
                 // tab poition is for tabs from 1 to 4
          */
-            final Clinic clinic = clinicContactList.get(position);
+            final UserInfo clinic = clinicContactList.get(position);
 
             if (holder.tvDoctorName != null) {
-                if (!TextUtils.isEmpty(clinic .getName()))
+                if (!TextUtils.isEmpty(clinic.getName()))
                     holder.tvDoctorName.setText(clinic.getName());
             }
             //----------------------------------------------------------------------------------set Specialist -------------------------//
@@ -88,17 +91,18 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
                 holder.tvSpecialist.setLines(1);
                 holder.tvSpecialist.setMaxLines(1);
                 holder.tvSpecialist.setSingleLine(true);
-                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);;
-            int size = 0;
-            for (Speciality speciality : clinic.getSpeciality()) {
-                holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircle(speciality.getImage(), activity));
-                holder.tvSpecialist.append(speciality.getTitle());
+                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
+                ;
+                int size = 0;
+                for (Speciality speciality : clinic.getSpecialities()) {
+                    holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircle(speciality.getImage(), activity));
+                    holder.tvSpecialist.append(speciality.getTitle());
 
-                if (size <  clinic.getSpeciality().size()) {
-                    holder.tvSpecialist.append(", ");
-                    size++;
+                    if (size < clinic.getSpecialities().size()) {
+                        holder.tvSpecialist.append(", ");
+                        size++;
+                    }
                 }
-            }
 
 
 //            if (holder.tvSpecialist != null) {
@@ -145,7 +149,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
 
 
             if (clinic.getAvailable() != null) {
-                if (clinic.getAvailable()==0) {
+                if (clinic.getAvailable() == 0) {
                     final int newColor = activity.getResources().getColor(R.color.medium_grey);
                     holder.imgStatus.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
                 } else {

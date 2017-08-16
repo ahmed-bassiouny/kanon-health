@@ -29,7 +29,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
@@ -125,7 +124,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     private static final int CROP_PIC = 55;
     int PLACE_PICKER_REQUEST = 22;
     String practics_id = "";
-    Clinic clinic;
+    UserInfo clinic;
     String specialityIds="";
     String langIds="";
     String doctorIds="";
@@ -143,7 +142,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         } catch (Exception e) {
         }
 
-        clinic = new Clinic();
+        clinic = new UserInfo();
         pickerDialog = new PickerDialog(true);
         util = Util.getInstance(this);
         handleImoAction();
@@ -316,7 +315,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-            Clinic clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), file, getApplicationContext());
+                    UserInfo clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etTelephone.getText().toString(), file, getApplicationContext());
 
             if (clinic != null) {
                 runOnUiThread(new Runnable() {
@@ -393,7 +392,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         try {
             Bundle bundle = new Bundle();
             bundle.putInt("Constants", Constants.SPECIALITIES);
-            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getSpeciality());
+            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getSpecialities());
             showDialogFragment(bundle);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -475,7 +474,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         try {
             Bundle bundle = new Bundle();
             bundle.putInt("Constants", Constants.DoctorAll);
-            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getDoctors());
+            bundle.putSerializable(Constants.CHOSED_LIST, clinic.getClinics());
             showDialogFragment(bundle);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -796,12 +795,12 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         specialityIds="";
         flSpecilities.removeAllViews();
                     int size = 0;
-                    for (Speciality speciality : clinic.getSpeciality()) {
+                    for (Speciality speciality : clinic.getSpecialities()) {
                         flSpecilities.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
                         tvSpecilities.append(speciality.getTitle());
                         specialityIds= specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
                         size++;
-                        if (size <  clinic.getSpeciality().size()) {
+                        if (size <  clinic.getSpecialities().size()) {
                             tvSpecilities.append(", ");
                             specialityIds = specialityIds.concat(",");
                         }
@@ -838,11 +837,11 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         doctorIds="";
         flInvite.removeAllViews();
         int size = 0;
-        for (UserInfo doctor : clinic.getDoctors()) {
+        for (UserInfo doctor : clinic.getClinics()) {
             flInvite.addView(ImageHelper.setImageCircle(doctor.getAvatar(), this));
             doctorIds= doctorIds.concat(String.valueOf(doctor.getUserID()));
             size++;
-            if (size <  clinic.getDoctors().size()) {
+            if (size <  clinic.getClinics().size()) {
                 doctorIds= doctorIds.concat(",");
             }
         }
@@ -860,7 +859,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 
     @Override
     public void returnChoseSpecialityList(ArrayList<Speciality> specialitiesArrayList) {
-     clinic.setSpeciality(specialitiesArrayList);
+     clinic.setSpecialities(specialitiesArrayList);
         setSpecialities();
     }
 
@@ -873,7 +872,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 
     @Override
     public void returnChoseDoctorList(ArrayList<UserInfo> doctorArrayList) {
-        clinic.setDoctors(doctorArrayList);
+        clinic.setClinics(doctorArrayList);
         setMemberDoctors();
 
     }

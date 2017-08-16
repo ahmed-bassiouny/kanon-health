@@ -31,7 +31,6 @@ import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
 import com.germanitlab.kanonhealth.adapters.DoctorListAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
-import com.germanitlab.kanonhealth.api.models.Clinic;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
@@ -62,7 +61,7 @@ public class DoctorListFragment extends Fragment {
     private TextView filter_to_list;
 */
     ArrayList<UserInfo> doctorList;
-    ArrayList<Clinic> clinics;
+    ArrayList<UserInfo> clinics;
 
     private Button btnLeftList, btnRightList;
     int speciality_id;
@@ -500,7 +499,7 @@ public class DoctorListFragment extends Fragment {
         }
     }
 
-    private void setClinicsAdapter(List<Clinic> clinicList) {
+    private void setClinicsAdapter(List<UserInfo> clinicList) {
         if (clinicList != null) {
             final ClinicListAdapter clinicListAdapter = new ClinicListAdapter(clinicList, getActivity());
             getActivity().runOnUiThread(new Runnable() {
@@ -573,7 +572,7 @@ public class DoctorListFragment extends Fragment {
                 }else
                 {
                     if (charSequence.toString().trim().length() > 0) {
-                        List<Clinic> fileClinicResponses = new ArrayList<>();
+                        List<UserInfo> fileClinicResponses = new ArrayList<>();
                         for (int j = 0; j < clinics.size(); j++) {
 
                             String name = clinics.get(j).getName();
@@ -637,7 +636,7 @@ public class DoctorListFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
-                setClinicsAdapter(new ArrayList<Clinic>())  ;
+                setClinicsAdapter(new ArrayList<UserInfo>())  ;
                     loadData();
 
 
