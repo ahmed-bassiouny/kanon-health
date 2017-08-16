@@ -93,8 +93,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     EditText etZip;
     @BindView(R.id.et_edit_proviz)
     EditText etProvinz;
-    @BindView(R.id.et_edit_country)
-    EditText etCountry;
     @BindView(R.id.img_edit_avatar)
     ImageView imgAvatar;
     @BindView(R.id.recycler_view)
@@ -177,13 +175,6 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         etZip.setText(userInfo.getZipCode());
         etProvinz.setText(userInfo.getProvidence());
         questionAnswer = userInfo.getQuestionsAnswers();
-        etCountry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                submit();
-                return true;
-            }
-        });
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
