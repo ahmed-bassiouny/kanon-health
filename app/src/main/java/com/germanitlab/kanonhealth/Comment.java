@@ -18,10 +18,13 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
 import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
+import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +53,8 @@ public class Comment extends AppCompatActivity {
     String doc_id = "";
     String req_id = "";
     UserRepository userRepository;
-    UserInfo doctor;
+
+    UserInfo userInfo;
 
 
     @Override
@@ -60,6 +64,7 @@ public class Comment extends AppCompatActivity {
         ButterKnife.bind(this);
        // userRepository = new UserRepository();
        // doctor = new UserInfo();
+        userInfo= (UserInfo) getIntent().getSerializableExtra("user_info") ;
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,15 +73,31 @@ public class Comment extends AppCompatActivity {
         });
 
         try {
-            doc_id = getIntent().getStringExtra("doc_id");
-            req_id = getIntent().getStringExtra("request_id");
-            doctor.setUserID(Integer.valueOf(doc_id));
-            //doctor = userRepository.get(doctor);
-            txt_doctor_name.setText(doctor.getFullName());
-            if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(img_chat_user_avatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
-            }
+            doc_id = String.valueOf(userInfo.getUserID());
+            req_id = String.valueOf(userInfo.getRequestID());
+            if (Helper.isNetworkAvailable(getApplicationContext())) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                 UserInfo   temp= ApiHelper.getUserInfo(Comment.this, doc_id);
+                        if (temp != null) {
+                            userInfo=temp;
+                            Comment.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txt_doctor_name.setText(userInfo.getFullName());
+                                    if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
+                                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar());
+                                    }
+                                }
+                            });
 
+                        }
+
+                    }
+                }).start();
+                //doctor = userRepository.get(doctor);
+            }
         } catch (Exception e) {
             doc_id = "";
             req_id = "";
@@ -103,28 +124,28 @@ public class Comment extends AppCompatActivity {
         try {
             if (validationInput()) {
 
-                (new Thread(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, String.valueOf(PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,-1)), doctor.getUserID().toString(), req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
+                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, String.valueOf(PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,-1)), doc_id, req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()));
                         if (result != null) {
                             if (result.getData()) {
-                                Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
+                           //     Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
                                 //doctor.setHave_rate(1);
                                 //userRepository.update(doctor);
                                 Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
-                                intent.putExtra("doctorID", Integer.valueOf(doc_id));
-                                intent.putExtra("userInfo",doctor);
+                                intent.putExtra("doctorID", userInfo.getUserID());
+                                intent.putExtra("userInfo",userInfo);
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Toast.makeText(Comment.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(Comment.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(Comment.this, R.string.error_message, Toast.LENGTH_SHORT).show();
                         }
                     }
-                })).run();
+                }).start();
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -139,8 +160,8 @@ public class Comment extends AppCompatActivity {
         // doctor.setHave_rate(1);
         //userRepository.update(doctor);
         Intent intent = new Intent(this, HttpChatActivity.class);
-        intent.putExtra("doctorID", Integer.valueOf(doc_id));
-        intent.putExtra("userInfo",doctor);
+        intent.putExtra("doctorID",userInfo.getUserID());
+        intent.putExtra("userInfo",userInfo);
         startActivity(intent);
         finish();
 

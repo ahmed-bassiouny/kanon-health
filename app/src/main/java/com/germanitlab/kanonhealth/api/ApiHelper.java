@@ -804,7 +804,7 @@ public class ApiHelper {
             rateDoctorParameter.setRequestId(requestId);
             rateDoctorParameter.setComment(comment);
             rateDoctorParameter.setRate(rate);
-            String jsonString = post(API_USERS_ME, rateDoctorParameter.toJson());
+            String jsonString = post(API_DOCTORS_RATE , rateDoctorParameter.toJson());
             Gson gson = new Gson();
             RateDoctorResponse rateDoctorResponse = gson.fromJson(jsonString, RateDoctorResponse.class);
             if (rateDoctorResponse.getStatus()) {
