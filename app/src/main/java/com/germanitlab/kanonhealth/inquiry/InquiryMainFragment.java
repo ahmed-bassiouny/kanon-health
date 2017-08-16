@@ -13,9 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -115,9 +123,9 @@ public class InquiryMainFragment extends Fragment {
 //            mFirstLevelName = bundle.getString(getResourceString(R.string.first_level));
 //
 //            if (!mFirstLevelName.equals("firstTime")) {
-                disableFinishedButtons(InquiryActivity.finishedFirstLevelOptions);
-           // }
-      //  }
+        disableFinishedButtons(InquiryActivity.finishedFirstLevelOptions);
+        // }
+        //  }
     }
 
     @OnClick({R.id.button_medizinische, R.id.button_Ich, R.id.button_beratung, R.id.button_untersuchung, R.id.button_submit})
@@ -153,51 +161,36 @@ public class InquiryMainFragment extends Fragment {
                 mCallback.OnChoiceSelected(getResourceString(R.string.question_4), secondLevelFragment);
                 break;
             case R.id.button_submit:
-                /*try {
-                    if (InquiryActivity.inquiryResult.size() > 0) {
-                        final Gson gson = new Gson();
-                        doctor = gson.fromJson(jsonString, UserInfoResponse.class);
-                        Log.d("doctor Data from QR", jsonString);
-                        util.showProgressDialog();
-                        new HttpCall(getActivity(), new ApiResponse() {
-                            @Override
-                            public void onSuccess(Object response) {
-                                try {
-                                    UserInfoResponse userInfoResponse;
-                                    userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
-                                    userInfoResponse.getUser().setIsOpen(1);
-                                    ///////
-                                    Intent intent = new Intent(getActivity(), HttpChatActivity.class);
-                                    intent.putExtra("doctorID", userInfoResponse.getUser().get_Id());
-                                    startActivity(intent);
-                                    ///////
-                                    util.dismissProgressDialog();
-                                    getActivity().finish();
-                                } catch (Exception e) {
-                                    Crashlytics.logException(e);
-                                    Toast.makeText(getContext(), getResources().getText(R.string.error_loading_data), Toast.LENGTH_SHORT).show();
+                if (InquiryActivity.inquiryResult.size() > 0) {
+                    final Gson gson = new Gson();
+                    doctor = gson.fromJson(jsonString, UserInfo.class);
+                    ((ParentActivity) getActivity()).showProgressBar();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final int requestId = ApiHelper.openSession(getContext(), String.valueOf(PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, 0)), String.valueOf(doctor.getUserID()), InquiryActivity.inquiryResult);
+                            InquiryMainFragment.this.getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((ParentActivity) getActivity()).hideProgressBar();
+                                    if (requestId != -1) {
+                                        doctor.setIsSessionOpen(1);
+                                        doctor.setRequestID(requestId);
+                                        Intent intent = new Intent(getActivity(), HttpChatActivity.class);
+                                        intent.putExtra("doctorID", doctor.getUserID());
+                                        intent.putExtra("userInfo", doctor);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(getActivity(), R.string.cant_start_session, Toast.LENGTH_LONG).show();
+                                    }
                                 }
-
-                            }
-
-                            @Override
-                            public void onFailed(String error) {
-                                util.dismissProgressDialog();
-                                Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                            }
-                        }).sendPopUpResult(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)), prefManager.getData(PrefManager.USER_PASSWORD),
-                                String.valueOf(doctor.getUser().get_Id()),
-                                InquiryActivity.inquiryResult);
-
-                        break;
-                    } else {
-                        Toast.makeText(getActivity(), R.string.please_choose_an_option_cancel_via_back, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Toast.makeText(getContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-
-                }*/
+                            });
+                        }
+                    }).start();
+                } else {
+                    Toast.makeText(getActivity(), R.string.please_choose_an_option_cancel_via_back, Toast.LENGTH_LONG).show();
+                }
+                break;
         }
     }
 

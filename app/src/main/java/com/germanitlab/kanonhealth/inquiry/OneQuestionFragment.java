@@ -98,18 +98,18 @@ public class OneQuestionFragment extends Fragment {
         String text = answer.getText().toString();
         if (!text.equals("")) {
 
-            HashMap<String, String> oneQuestionMap = new HashMap<>();
-            oneQuestionMap.put(getResources().getString(R.string.first_level), mFirstLevelName);
+            //HashMap<String, String> oneQuestionMap = new HashMap<>();
+            //InquiryActivity.inquiryResult.put(getResources().getString(R.string.first_level), mFirstLevelName);
 
             if (mFirstLevelName.equals(getResources().getString(R.string.question_3)) || mFirstLevelName.equals(getResources().getString(R.string.question_4))) {
 
                 if (mFirstLevelName.equals(getResources().getString(R.string.question_3))) {
-                    oneQuestionMap.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_31));
-                    oneQuestionMap.put(getResources().getString(R.string.question_31), text);
+                    //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_31));
+                    InquiryActivity.inquiryResult.put(question.getText().toString(), text);
 
                 } else if (mFirstLevelName.equals(getResources().getString(R.string.question_4))) {
-                    oneQuestionMap.put(getResources().getString(R.string.question_41), text);
-                    oneQuestionMap.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_41));
+                    InquiryActivity.inquiryResult.put(question.getText().toString(), text);
+                    //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_41));
                 }
                 InquiryActivity.finishedFirstLevelOptions.add(mFirstLevelName);
 
@@ -119,28 +119,27 @@ public class OneQuestionFragment extends Fragment {
                         mSecondLevelName.equals(getResourceString(R.string.question_13))) {
 
                     if (mSecondLevelName.equals(getResourceString(R.string.question_11))) {
-                        oneQuestionMap.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_11));
-                        oneQuestionMap.put(getResourceString(R.string.question_11), text);
+                        //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_11));
+                        InquiryActivity.inquiryResult.put(question.getText().toString(), text);
                         InquiryActivity.finishedSecondLevelOptions.add(getResourceString(R.string.question_11));
 
                     } else if (mSecondLevelName.equals(getResourceString(R.string.question_12))) {
-                        oneQuestionMap.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_12));
-                        oneQuestionMap.put(getResourceString(R.string.question_12), text);
+                        //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_12));
+                        InquiryActivity.inquiryResult.put(question.getText().toString(), text);
                         InquiryActivity.finishedSecondLevelOptions.add(getResourceString(R.string.question_12));
 
                     } else if (mSecondLevelName.equals(getResourceString(R.string.question_13))) {
-                        oneQuestionMap.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_13));
-                        oneQuestionMap.put(getResourceString(R.string.question_13), text);
+                        //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_13));
+                        InquiryActivity.inquiryResult.put(question.getText().toString(), text);
                         InquiryActivity.finishedSecondLevelOptions.add(getResourceString(R.string.question_13));
                     }
                 } else if (!questionVisibility) {
-                    oneQuestionMap.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_14));
-                    oneQuestionMap.put(getResourceString(R.string.question_14), text);
+                    //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), getResourceString(R.string.question_14));
+                    InquiryActivity.inquiryResult.put(question.getText().toString(), text);
                     InquiryActivity.finishedSecondLevelOptions.add(getResourceString(R.string.question_14));
                 } else {
-                    oneQuestionMap.put(getResourceString(R.string.second_Level),
-                            getResourceString(R.string.question_21));
-                    oneQuestionMap.put(getResourceString(R.string.question_212), text);
+                    //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level),getResourceString(R.string.question_21));
+                    InquiryActivity.inquiryResult.put(question.getText().toString(), text);
 
                     InquiryActivity.finishedSecondLevelOptions.add(getResourceString(R.string.question_21));
                 }
@@ -150,7 +149,7 @@ public class OneQuestionFragment extends Fragment {
             //Check finished levels
             checkFinishedLevels();
 
-            InquiryActivity.inquiryResult.add(oneQuestionMap);
+            //InquiryActivity.inquiryResult.add(oneQuestionMap);
             View view = getActivity().getCurrentFocus();
             if (view != null) {
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

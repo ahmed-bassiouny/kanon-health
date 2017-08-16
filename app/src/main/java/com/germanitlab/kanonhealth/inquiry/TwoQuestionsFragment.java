@@ -129,12 +129,10 @@ public class TwoQuestionsFragment extends Fragment {
 
             //Creating the hashMap Object for the end result of this choice
             HashMap<String, String> mTwoQuestionMap = new HashMap<>();
-            mTwoQuestionMap.put(getResourceString(R.string.first_level), mFirstLevelName);
-            mTwoQuestionMap.put(getResourceString(R.string.second_Level), mSecondLevelName);
-            mTwoQuestionMap.put(firstQuestionKey, firstAnswer);
-            mTwoQuestionMap.put(secondQuestionKey, secondAnswer);
-
-            InquiryActivity.inquiryResult.add(mTwoQuestionMap);
+            //InquiryActivity.inquiryResult.put(getResourceString(R.string.first_level), mFirstLevelName);
+            //InquiryActivity.inquiryResult.put(getResourceString(R.string.second_Level), mSecondLevelName);
+            InquiryActivity.inquiryResult.put(textFirstQuestion.getText().toString(), firstAnswer);
+            InquiryActivity.inquiryResult.put(textSecondQuestion.getText().toString(), secondAnswer);
 
           //  mCallback.OnChoiceSelected(mFirstLevelName, null);
            getFragmentManager().popBackStack();

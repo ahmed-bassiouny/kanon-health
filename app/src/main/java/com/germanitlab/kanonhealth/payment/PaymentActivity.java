@@ -183,7 +183,7 @@ public class PaymentActivity extends ParentActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)));
+                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)),null);
                     Log.i("requestID:" , requestId+"");
                     PaymentActivity.this.runOnUiThread(new Runnable() {
                         @Override
