@@ -182,6 +182,7 @@ public class DoctorListFragment extends Fragment {
         }
         if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
             loadFirstTime();
+
         }
 
         else{
@@ -422,6 +423,7 @@ public class DoctorListFragment extends Fragment {
             @Override
             public void run() {
              doctorList= ApiHelper.postGetDoctorList(getContext(),user.getUserID().toString());
+                setDoctorAdapter(doctorList);
                 for(UserInfo userInfo:doctorList){
                     chatModelRepositry.createOrUpdate(userInfo);
                 }
@@ -449,6 +451,8 @@ public class DoctorListFragment extends Fragment {
             @Override
             public void run() {
                 clinics= ApiHelper.postGetClinicList(getContext());
+                setClinicsAdapter(clinics);
+
 
             }
         }).start();
