@@ -283,6 +283,7 @@ public class ClinicProfileActivity extends AppCompatActivity {
 //        }
         // TimeTable
         getTimaTableData();
+
     }
 
 
