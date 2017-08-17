@@ -34,6 +34,8 @@ import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.doctors.DoctorListFragment;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.ParentActivity;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
@@ -52,7 +54,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ClinicProfileActivity extends AppCompatActivity {
+public class ClinicProfileActivity extends ParentActivity {
 
     @BindView(R.id.toolbar_name)
     TextView tvToolbarName;
@@ -306,46 +308,36 @@ public class ClinicProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
-        /*if (user != null && !TextUtils.isEmpty(user.getIs_my_doctor()))
-            if (user.getIs_my_doctor().equals("0")) {
-                new HttpCall(this, new #ApiResponse() {
+        showProgressBar();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final boolean result ;
+                if(clinic.getIsMyDoc()==1){
+                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(ClinicProfileActivity.this,PrefHelper.KEY_USER_ID,-1)),clinic.getUserID().toString(),clinic.getUserType(),false);
+                    if(result)
+                        clinic.setIsMyDoc(0);
+                }else{
+                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(ClinicProfileActivity.this,PrefHelper.KEY_USER_ID,-1)),clinic.getUserID().toString(),clinic.getUserType(),true);
+                    if(result)
+                        clinic.setIsMyDoc(1);
+                }
+                ClinicProfileActivity.this.runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(Object response) {
-                        if (response != null && user != null) {
-                            user.setIs_my_doctor("1");
+                    public void run() {
+                        if(result) {
                             checkDoctor();
                         }
+                        hideProgressBar();
                     }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                        Log.i("Doctor Profile  ", " Activity " + error);
-                    }
-                }).addToMyDoctor(user.get_Id() + "");
-            } else {
-                new HttpCall(this, new ApiResponse() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        if (response != null && user != null) {
-                            user.setIs_my_doctor("0");
-                            checkDoctor();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
-                        Log.i("Doctor Profile  ", " Activity " + error);
-                    }
-                }).removeFromMyDoctor(user.get_Id() + "");
+                });
             }
-*/
+        }).start();
     }
 
     private void checkDoctor() {
         if (clinic.getIsMyDoc() == 0)
-            edAddToFavourite.setText(getString(R.string.add_to_my_doctors));
+            edAddToFavourite.setText(getString(R.string.add_to_my_clinics));
         else
             edAddToFavourite.setText(getString(R.string.remove_from));
     }
