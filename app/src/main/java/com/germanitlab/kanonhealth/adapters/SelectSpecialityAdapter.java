@@ -55,6 +55,9 @@ public class SelectSpecialityAdapter extends RecyclerView.Adapter<com.germanitla
                       mySpecialList.remove(index);
                       mySpecialList.add(allSpecialList.get(position));
                       holder.rbtn.setChecked(true);
+                  }else
+                  {
+                      holder.rbtn.setChecked(false);
                   }
                             holder.tv_title.setText(model.getTitle());
                             ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_URL + "/" + model.getImage(), -1);

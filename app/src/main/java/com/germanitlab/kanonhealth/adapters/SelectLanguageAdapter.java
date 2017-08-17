@@ -61,7 +61,11 @@ public class SelectLanguageAdapter extends RecyclerView.Adapter<SelectLanguageAd
                     myLanguages.remove(index);
                     myLanguages.add(allLanguages.get(position));
                     holder.rbtn.setChecked(true);
+                }else
+                {
+                    holder.rbtn.setChecked(false);
                 }
+
                 holder.tv_title.setText(model.getLanguageTitle());
                 holder.img_icon.setVisibility(View.GONE);
             }
