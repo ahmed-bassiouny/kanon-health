@@ -523,6 +523,7 @@
     <string name="session_already_open">Session already open</string>
     <string name="cant_start_session">Sorry  Session Still Closed</string>
     <string name="cant_close_session">Sorry Session Still open</string>
+    <string name="add_to_my_clinics">Add to my clinics</string>
 
 
 </resources>

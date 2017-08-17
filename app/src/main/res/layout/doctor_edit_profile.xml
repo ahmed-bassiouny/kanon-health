@@ -333,31 +333,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_account_balance_black_24dp" />
-
-                    <EditText
-                        android:id="@+id/et_edit_country"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:maxLines="1"
-                        android:inputType="textPersonName"
-                        android:imeOptions="actionSend"
-                        android:hint="@string/country"
-                        android:textCursorDrawable="@color/blue"
-                        android:textSize="16dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:src="@drawable/ic_phone_iphone_black_24dp" />
 
                     <EditText

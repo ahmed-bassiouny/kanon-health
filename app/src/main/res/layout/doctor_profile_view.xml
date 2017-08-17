@@ -178,7 +178,6 @@
                 android:layout_below="@+id/view_below_ratingbar"
                 android:layout_toEndOf="@+id/specilities_text"
                 android:layout_margin="5dp"
-                android:background="@android:color/white"
                 app:layout_horizontalSpacing="50dp"
                 f:layout_newLine="true"></com.nex3z.flowlayout.FlowLayout>
 
