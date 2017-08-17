@@ -24,6 +24,7 @@ public  abstract class UserParameter extends ParentParameters {
     public static final String KEY_HOUSE_NUMBER = "house_number";
     public static final String KEY_PROVIDENCE = "providence";
     public static final String KEY_ZIP_CODE = "zip_code";
+    public static final String KEY_OPEN_TYPE = "open_type";
 
 
     @SerializedName(PARAMETER_USER_ID)
@@ -47,6 +48,9 @@ public  abstract class UserParameter extends ParentParameters {
     private String providence;
     @SerializedName(KEY_ZIP_CODE)
     private String zipCode;
+
+    @SerializedName(KEY_OPEN_TYPE)
+    private String openType;
 
 
     public Integer getUserID() {
@@ -140,5 +144,13 @@ public  abstract class UserParameter extends ParentParameters {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public String getOpenType() {
+        return openType;
+    }
+
+    public void setOpenType(String openType) {
+        this.openType = openType;
     }
 }

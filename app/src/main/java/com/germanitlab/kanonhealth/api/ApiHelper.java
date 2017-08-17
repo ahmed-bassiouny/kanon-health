@@ -20,6 +20,7 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.parameters.ClinicWorkingHoursParameters;
 import com.germanitlab.kanonhealth.api.parameters.CloseSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.ChangeStatusParameters;
+import com.germanitlab.kanonhealth.api.parameters.DoctorWorkingHoursParameters;
 import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditDoctorParameter;
@@ -561,6 +562,7 @@ public class ApiHelper {
             editDoctorParamater.setProvidence(userInfo.getProvidence());
             editDoctorParamater.setStreetName(userInfo.getStreetName());
             editDoctorParamater.setZipCode(userInfo.getZipCode());
+            editDoctorParamater.setOpenType(String.valueOf(userInfo.getOpenType()));
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
@@ -892,6 +894,7 @@ public class ApiHelper {
             clinicWorkingHoursParameters.setThursday((new Gson()).toJson(workingHours.getThursday()));
             clinicWorkingHoursParameters.setFriday((new Gson()).toJson(workingHours.getFriday()));
             String jsonString = post(API_CLINIC_WORKING_HOURS, clinicWorkingHoursParameters.toJson());
+            System.out.println( clinicWorkingHoursParameters.toJson());
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
             result = parentResponse.getStatus();
@@ -901,6 +904,32 @@ public class ApiHelper {
             return result;
         }
     }
+
+    public static boolean DoctorWorkingHours(WorkingHours workingHours,String openType,String doctorId) {
+        boolean result = false;
+        try {
+            DoctorWorkingHoursParameters doctorWorkingHoursParameters = new DoctorWorkingHoursParameters();
+            doctorWorkingHoursParameters.setUserId(doctorId);
+            doctorWorkingHoursParameters.setOpenType(openType);
+            doctorWorkingHoursParameters.setSaturday((new Gson()).toJson(workingHours.getSaturday()));
+            doctorWorkingHoursParameters.setSunday((new Gson()).toJson(workingHours.getSunday()));
+            doctorWorkingHoursParameters.setMonday((new Gson()).toJson(workingHours.getMonday()));
+            doctorWorkingHoursParameters.setTuesday((new Gson()).toJson(workingHours.getTuesday()));
+            doctorWorkingHoursParameters.setWednesday((new Gson()).toJson(workingHours.getWednesday()));
+            doctorWorkingHoursParameters.setThursday((new Gson()).toJson(workingHours.getThursday()));
+            doctorWorkingHoursParameters.setFriday((new Gson()).toJson(workingHours.getFriday()));
+            String jsonString = post(API_DOCTOR_WORKING_HOURS,  doctorWorkingHoursParameters.toJson());
+            System.out.println(  doctorWorkingHoursParameters.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            result = parentResponse.getStatus();
+        } catch (Exception e) {
+            Helper.handleError(TAG, "DoctorWorkingHours", e, -1, null);
+        } finally {
+            return result;
+        }
+    }
+
 
 
     //endregion
