@@ -280,11 +280,7 @@ public class ClinicProfileActivity extends ParentActivity {
             recyclerVie.setNestedScrollingEnabled(false);
             recyclerVie.setAdapter(doctorListAdapter);
         }
-//
-//        if (clinic.getLocationLat() > 0.0 && clinic.getLocationLong() > 0.0) {
-//            String URL = "http://maps.google.com/maps/api/staticmap?center=" + String.valueOf(clinic.getLocationLat()) + "," + String.valueOf(clinic.getLocationLong()) + "&zoom=15&size=200x200&sensor=false";
-//            ImageHelper.setImage(imageViewLocation, URL, -1);
-//        }
+
         // TimeTable
         getTimaTableData();
         if(clinic.getLocationLat()>0 && clinic.getLocationLong()>0){
