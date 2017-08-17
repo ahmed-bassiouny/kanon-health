@@ -98,6 +98,8 @@ public class ClinicProfileActivity extends AppCompatActivity {
     ImageView imageViewMap;
     @BindView(R.id.tv_no_time)
     TextView tvNoTime;
+    @BindView(R.id.view_below_province)
+    View view_below_province;
     //---------------------
     UserInfo clinic;
     PickerDialog pickerDialog;
@@ -283,6 +285,13 @@ public class ClinicProfileActivity extends AppCompatActivity {
 //        }
         // TimeTable
         getTimaTableData();
+        if(clinic.getLocationLat()>0 && clinic.getLocationLong()>0){
+            String URL = "http://maps.google.com/maps/api/staticmap?center=" + clinic.getLocationLat() + "," + clinic.getLocationLong()+ "&zoom=15&size=200x200&sensor=false";
+            ImageHelper.setImage(imageViewMap, URL, -1);
+        }else{
+            imageViewMap.setVisibility(View.GONE);
+            view_below_province.setVisibility(View.GONE);
+        }
 
     }
 
