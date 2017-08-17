@@ -31,6 +31,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -183,8 +184,8 @@ public class PaymentActivity extends ParentActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_IS_DOCTOR,false)),null);
-                    Log.i("requestID:" , requestId+"");
+                    HashMap<String,String> questionsAnswers = new HashMap<>();
+                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()),questionsAnswers);
                     PaymentActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

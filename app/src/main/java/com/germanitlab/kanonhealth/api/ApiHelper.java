@@ -639,9 +639,8 @@ public class ApiHelper {
             OpenSessionParameters openSessionParameters = new OpenSessionParameters();
             openSessionParameters.setUserID(userID);
             openSessionParameters.setDoctorID(doctorID);
-            if(questionsAnswers!=null) {
-                openSessionParameters.setQuestionsAnswers(questionsAnswers);
-            }
+            openSessionParameters.setQuestionsAnswers(questionsAnswers);
+
             String jsonString = post(API_REQUESTS_OPEN, openSessionParameters.toJson());
             Gson gson = new Gson();
             OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);
