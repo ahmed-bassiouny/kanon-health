@@ -447,7 +447,7 @@
                 android:layout_margin="5dp"
                 android:layout_below="@+id/view_below_language"
                 android:layout_alignParentEnd="true"
-                android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+                android:background="@android:color/white"/>
 
             <ImageView
                 android:id="@+id/edit_member_list"
@@ -520,6 +520,33 @@
                 android:id="@+id/table_layout_time"
                 android:orientation="vertical"
                 android:layout_below="@+id/tv_no_time"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/table_layout_time"
+                android:id="@+id/ll_contianer"
+                android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray_black" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/size_5dp"
+                android:text="@string/documents"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/document_recycleview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_alignParentEnd="true" />
+            </LinearLayout>
 
         </android.support.percent.PercentRelativeLayout>
     </android.support.v4.widget.NestedScrollView>

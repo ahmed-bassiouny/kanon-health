@@ -36,6 +36,7 @@ import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.httpchat.DocumentChatAdapter;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
@@ -102,6 +103,8 @@ public class ClinicProfileActivity extends ParentActivity {
     TextView tvNoTime;
     @BindView(R.id.view_below_province)
     View view_below_province;
+    @BindView(R.id.document_recycleview)
+    RecyclerView document_recycleview;
     //---------------------
     UserInfo clinic;
     PickerDialog pickerDialog;
@@ -290,7 +293,16 @@ public class ClinicProfileActivity extends ParentActivity {
             imageViewMap.setVisibility(View.GONE);
             view_below_province.setVisibility(View.GONE);
         }
+        setDocuments();
+    }
 
+    private void setDocuments() {
+        if (clinic.getDocuments() != null) {
+            DocumentChatAdapter doctorDocumentAdapter = new DocumentChatAdapter(clinic.getDocuments(), this,false);
+            document_recycleview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            document_recycleview.setAdapter(doctorDocumentAdapter);
+            document_recycleview.setBackgroundResource(R.color.chatbackground_gray);
+        }
     }
 
 

@@ -488,7 +488,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (getActivity() == null)
             return;
         if (userID == doctorID) {
-            documentChatAdapter = new DocumentChatAdapter(documents, getActivity());
+            documentChatAdapter = new DocumentChatAdapter(documents, getActivity(),true);
             recyclerView.setAdapter(documentChatAdapter);
             recyclerView.scrollToPosition(documents.size() - 1);
         } else {

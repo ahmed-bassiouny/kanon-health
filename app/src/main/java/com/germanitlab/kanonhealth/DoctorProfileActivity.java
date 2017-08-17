@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.httpchat.DocumentChatAdapter;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -111,6 +113,10 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     CircleImageView editImage;
     @BindView(R.id.tv_no_time)
     TextView tvNoTime;
+    @BindView(R.id.document_recycleview)
+    RecyclerView document_recycleview;
+    @BindView(R.id.ll_contianer)
+    LinearLayout linearLayoutContianer;
 
 
     UserInfo userInfo;
@@ -408,6 +414,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             edAddToFavourite.setText(userInfo.getFirstName());
             tvContact.setText(userInfo.getLastName());
             tvOnline.setText(userInfo.getTitle());
+            linearLayoutContianer.setVisibility(View.GONE);
 
         } else {
             tvToolbarName.setText(userInfo.getFullName());
@@ -417,6 +424,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 tvOnline.setText(R.string.status_online);
             else
                 tvOnline.setText(R.string.status_offline);
+            linearLayoutContianer.setVisibility(View.VISIBLE);
+            setDocuments();
         }
 
         textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(userInfo.getRateNum()) + " (" + String.valueOf(userInfo.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
@@ -460,6 +469,15 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
         // TimeTable
         getTimaTableData();
+    }
+
+    private void setDocuments() {
+        if (userInfo.getDocuments() != null) {
+            DocumentChatAdapter doctorDocumentAdapter = new DocumentChatAdapter(userInfo.getDocuments(), this,false);
+            document_recycleview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            document_recycleview.setAdapter(doctorDocumentAdapter);
+            document_recycleview.setBackgroundResource(R.color.chatbackground_gray);
+        }
     }
 
 
