@@ -364,15 +364,31 @@ public class SettingFragment extends Fragment {
                 if(result!=-1)
                 {
                     if (isAvailable==1) {
-                        txt_status.setText(R.string.you_are_now_online);
-                        btn_change_status.setText(R.string.go_offline);
-                        user.setAvailable(1);
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txt_status.setText(R.string.you_are_now_online);
+                                btn_change_status.setText(R.string.go_offline);
+                                user.setAvailable(1);
+
+                            }
+                        });
+
 
 
                     } else {
-                        txt_status.setText(R.string.you_are_now_offline);
-                        btn_change_status.setText(R.string.go_online);
-                        user.setAvailable(0);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txt_status.setText(R.string.you_are_now_offline);
+                                btn_change_status.setText(R.string.go_online);
+                                user.setAvailable(0);
+
+                            }
+                        });
+
+
                     }
                     Gson gson=new Gson();
                     PrefHelper.put(getActivity(),PrefHelper.KEY_USER_KEY,gson.toJson(user));

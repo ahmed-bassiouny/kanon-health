@@ -15,6 +15,8 @@ public class LanguageResponse extends ParentResponse {
     private ArrayList<Language> data;
 
     public ArrayList<Language> getData() {
+        if(data==null)
+            data=new ArrayList<>();
         return data;
     }
     public void setData(ArrayList<Language> data) {

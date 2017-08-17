@@ -13,9 +13,11 @@ import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.Register;
 import com.germanitlab.kanonhealth.api.models.Review;
 import com.germanitlab.kanonhealth.api.models.Speciality;
+import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.api.parameters.AddClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.AddDocumentParameters;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.parameters.ClinicWorkingHoursParameters;
 import com.germanitlab.kanonhealth.api.parameters.CloseSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.ChangeStatusParameters;
 import com.germanitlab.kanonhealth.api.parameters.DocumentPrivacyParameters;
@@ -113,6 +115,7 @@ public class ApiHelper {
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
+    private static final String API_CLINIC_WORKING_HOURS = "users/clinic_working_hours";
     private static final String API_NETWORK_LOCATION = "http://ip-api.com/json";
 
     //endregion
@@ -428,7 +431,7 @@ public class ApiHelper {
 
             Gson gson = new Gson();
             ChangeStatusResponse changeStatusResponse = gson.fromJson(jsonString, ChangeStatusResponse.class);
-            Toast.makeText(context, changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
             if (changeStatusResponse.getStatus()) {
                 result = 1;
             }
@@ -874,5 +877,32 @@ public class ApiHelper {
             return result;
         }
     }
+
+
+    public static boolean ClinicWorkingHours(WorkingHours workingHours,String openType,String clinicId) {
+        boolean result = false;
+        try {
+            ClinicWorkingHoursParameters clinicWorkingHoursParameters = new ClinicWorkingHoursParameters();
+            clinicWorkingHoursParameters.setUserId(clinicId);
+            clinicWorkingHoursParameters.setOpenType(openType);
+            clinicWorkingHoursParameters.setSaturday((new Gson()).toJson(workingHours.getSaturday()));
+            clinicWorkingHoursParameters.setSunday((new Gson()).toJson(workingHours.getSunday()));
+            clinicWorkingHoursParameters.setMonday((new Gson()).toJson(workingHours.getMonday()));
+            clinicWorkingHoursParameters.setTuesday((new Gson()).toJson(workingHours.getTuesday()));
+            clinicWorkingHoursParameters.setWednesday((new Gson()).toJson(workingHours.getWednesday()));
+            clinicWorkingHoursParameters.setThursday((new Gson()).toJson(workingHours.getThursday()));
+            clinicWorkingHoursParameters.setFriday((new Gson()).toJson(workingHours.getFriday()));
+            String jsonString = post(API_CLINIC_WORKING_HOURS, clinicWorkingHoursParameters.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
+            result = parentResponse.getStatus();
+        } catch (Exception e) {
+            Helper.handleError(TAG, "ClinicWorkingHours", e, -1, null);
+        } finally {
+            return result;
+        }
+    }
+
+
     //endregion
 }

@@ -32,6 +32,7 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ClinicEdit;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
+import com.germanitlab.kanonhealth.api.models.Times;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.models.WorkingHours;
 import com.germanitlab.kanonhealth.callback.Message;
@@ -144,6 +145,18 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         }
 
         clinic = new UserInfo();
+        clinic.setOpenType(0);
+        WorkingHours workingHours= new WorkingHours();
+        workingHours.setSunday(new ArrayList<Times>());
+        workingHours.setMonday(new ArrayList<Times>());
+        workingHours.setTuesday(new ArrayList<Times>());
+        workingHours.setWednesday(new ArrayList<Times>());
+        workingHours.setFriday(new ArrayList<Times>());
+        workingHours.setSaturday(new ArrayList<Times>());
+        ArrayList <WorkingHours> workingHoursArrayList= new ArrayList<>();
+        workingHoursArrayList.add(workingHours);
+        clinic.setTimeTable(workingHoursArrayList);
+
         pickerDialog = new PickerDialog(true);
         util = Util.getInstance(this);
         handleImoAction();
@@ -192,6 +205,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                             setSpecialities();
                             setLanguages();
                             setMemberDoctors();
+                            getTimaTableData();
 
                         }
                     });
@@ -202,7 +216,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                    Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
                         }
                     });
                     finish();
@@ -211,42 +225,6 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             }
         }).start();
 
-
-//
-//        new HttpCall(this, new ApiResponse() {
-//            @Override
-//            public void onSuccess(Object response) {
-//                try {
-//                    UserInfoResponse userInfoResponse = (UserInfoResponse) response;
-//                    user = userInfoResponse.getUser();
-//                    if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
-//                        ImageHelper.setImage(civImageAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getAvatar());
-//                    }
-//                    etName.setText(user.getFullName());
-//                    etLocation.setText(user.getAddress());
-//                    etHouseNumber.setText(user.getInfo().getHouseNumber());
-//                    etZipCode.setText(user.getInfo().getZip_code());
-//                    etProvince.setText(user.getInfo().getProvinz());
-//                    etCountry.setText(user.getInfo().getCountry());
-//                    etTelephone.setText(user.getPhone());
-//                    if (user.getLocation_img() != null && !user.getLocation_img().isEmpty()) {
-//                        ImageHelper.setImage(location_img, Constants.CHAT_SERVER_URL_IMAGE + "/" + user.getLocation_img());
-//                        location_img.setVisibility(View.VISIBLE);
-//                    }
-//                    progressDialog.dismiss();
-//                } catch (Exception e) {
-//                    onFailed(e.getLocalizedMessage());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailed(String error) {
-//                Crashlytics.log(error);
-//                Toast.makeText(AddPractics.this, R.string.error_message, Toast.LENGTH_SHORT).show();
-//                progressDialog.dismiss();
-//                finish();
-//            }
-//        }).getDoctorId(prefManager.getData(PrefManager.USER_ID), prefManager.getData(PrefManager.USER_PASSWORD), practics_id);
     }
 
     private void initTB() {
@@ -300,14 +278,31 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds,String.valueOf(user.getOpenType()),langIds, file, getApplicationContext());
-                    AddPractics.this.hideProgressBar();
+                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext());
+
                     if (result != null) {
+                        if(clinic.getOpenType()!=0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AddPractics.this.hideProgressBar();
+                                    Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
+                                    finish();
+
+                                }
+                            });
+                        }else
+                        {
+                            sendWorkingHours();
+                        }
+
+                    }else
+                    {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
-                                finish();
+                                Toast.makeText(AddPractics.this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                                AddPractics.this.hideProgressBar();
 
                             }
                         });
@@ -321,77 +316,73 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit clinic = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds,String.valueOf(user.getOpenType()),langIds, file, getApplicationContext());
-                    AddPractics.this.hideProgressBar();
-            if (clinic!=null ) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                });
+                    ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, getApplicationContext());
+                    if (result != null) {
+                        if(clinic.getOpenType()!=0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AddPractics.this.hideProgressBar();
+                                    Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
+                                    finish();
 
-            }
+                                }
+                            });
+                        }else
+                        {
+                            sendWorkingHours();
+                        }
+
+                    }else
+                    {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AddPractics.this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+                                AddPractics.this.hideProgressBar();
+
+                            }
+                        });
+
+                    }
                 }
 
-        }).start();
+            }).start();
         }
-
-//
-//
-//            user.setFirst_name(etName.getText().toString());
-//            user.setAddress(etLocation.getText().toString());
-//            info.setHouseNumber(etHouseNumber.getText().toString());
-//            info.setZip_code(etZipCode.getText().toString());
-//            info.setProvinz(etProvince.getText().toString());
-//            info.setCountry(etCountry.getText().toString());
-//            info.setStreetname(etStreetName.getText().toString());
-//            info.setCity(etCity.getText().toString());
-//            user.setInfo(info);
-//            user.setPhone(etTelephone.getText().toString());
-//            user.setPassword(prefManager.getData(PrefManager.USER_PASSWORD));
-//            if (practics_id == null) {
-//                user.setUserID_request(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-//                user.setId(Integer.parseInt(prefManager.getData(PrefManager.USER_ID)));
-//                new HttpCall(this, new ApiResponse() {
-//                    @Override
-//                    public void onSuccess(Object response) {
-//                        Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
-//                        finish();
-//                    }
-//
-//                    @Override
-//                    public void onFailed(String error) {
-//                        Log.e("Add Practics Add", error);
-//                        Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
-//                    }
-//                }).addClinic(user);
-//            } else {
-//                user.setUserID_request(Integer.valueOf(practics_id));
-//                user.setId(Integer.valueOf(practics_id));
-//                new HttpCall(this, new ApiResponse() {
-//                    @Override
-//                    public void onSuccess(Object response) {
-//                        Toast.makeText(AddPractics.this, R.string.edit_practics, Toast.LENGTH_LONG).show();
-//                        finish();
-//                    }
-//
-//                    @Override
-//                    public void onFailed(String error) {
-//                        Log.e("Add Practics Edit", error);
-//                        Toast.makeText(AddPractics.this, error, Toast.LENGTH_LONG).show();
-//                    }
-//                }).editClinic(user);
-//            }
-//        } catch (Exception e) {
-//            Crashlytics.logException(e);
-//            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
-//            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-//        }
-
-
     }
+
+private void sendWorkingHours()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Boolean result = ApiHelper.ClinicWorkingHours(clinic.getTimeTable().get(0), String.valueOf(clinic.getOpenType()),practics_id);
+                AddPractics.this.hideProgressBar();
+                if (result) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
+
+                }else
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(AddPractics.this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
+                }
+            }
+
+        }).start();
+    }
+
 
     @OnClick(R.id.edit_speciality_list)
     public void editSpecialityList(View view) {
@@ -528,8 +519,8 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     public void editTimeTable(View view) {
         try {
             Intent intent = new Intent(this, TimeTable.class);
-            intent.putExtra(Constants.DATA, user.getTimeTable());
-            intent.putExtra("type", user.getOpenType());
+            intent.putExtra(Constants.DATA, clinic.getTimeTable());
+            intent.putExtra("type", clinic.getOpenType());
             startActivityForResult(intent, Constants.HOURS_CODE);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -557,12 +548,12 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                 switch (requestCode) {
                     //=================================================================================================>//
                     case Constants.HOURS_CODE:
-                        user.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
-                        user.setOpenType(data.getIntExtra("type", 0));
+                        clinic.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
+                        clinic.setOpenType(data.getIntExtra("type", 0));
                         getTimaTableData();
                         break;
                     case Constants.HOURS_TYPE_CODE:
-                        user.setOpenType(data.getIntExtra("type", 0));
+                        clinic.setOpenType(data.getIntExtra("type", 0));
                         break;
                 }
 //            } else if (requestCode == PLACE_PICKER_REQUEST) {
@@ -585,21 +576,21 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     private void getTimaTableData() {
         tablelayout.removeAllViews();
         llNo.setVisibility(View.VISIBLE);
-        if (user.getOpenType() == 3) {
+        if (clinic.getOpenType() == 3) {
             tvNoTime.setText(R.string.permenant_closed);
         }
-        else if(user.getOpenType() == 1) {
+        else if(clinic.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
         }
-        else if(user.getOpenType()==2) {
+        else if(clinic.getOpenType()==2) {
             tvNoTime.setText(R.string.no_hours_available);
         }else {
 
-            if (user.getTimeTable() != null && user.getTimeTable().size() > 0) {
+            if (clinic.getTimeTable() != null && clinic.getTimeTable().size() > 0) {
                 llNo.setVisibility(View.GONE);
                 tablelayout.removeAllViews();
                 com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                timeTable.creatTimeTable(user.getTimeTable().get(0), this, tablelayout);
+                timeTable.creatTimeTable(clinic.getTimeTable().get(0), this, tablelayout);
             } else
                 llNo.setVisibility(View.VISIBLE);
                 tvNoTime.setText(R.string.no_time_has_set);
@@ -621,7 +612,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     @Override
     public void deleteMyImage() {
         try {
-            user.setAvatar("");
+            clinic.setAvatar("");
             file=null;
             ImageHelper.setImage(civImageAvatar, "", R.drawable.placeholder);
             PrefHelper.put(getBaseContext() , PrefHelper.KEY_PROFILE_IMAGE , "");
