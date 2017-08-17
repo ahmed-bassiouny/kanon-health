@@ -70,11 +70,13 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     private InternetFilesOperations internetFilesOperations;
     private final int FORWARDMSG = 5;
     ImageView forward;
+    boolean myDocument;
 
-    public DocumentChatAdapter(List<Document> documents, final Activity activity) {
+    public DocumentChatAdapter(List<Document> documents, final Activity activity,boolean myDocument) {
         this.activity = activity;
         userID = PrefHelper.get(activity, PrefHelper.KEY_USER_ID,-1);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
+        this.myDocument=myDocument;
         setList(documents);
         forward = (ImageView) activity.findViewById(R.id.imgbtn_forward);
 
@@ -918,17 +920,27 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     }
 
     private void showLayout_Privacy(Document message, final int position, final ImageView imagePrivacy, final FrameLayout messageContainer, final ImageView status, final TextView txtPrivacy, TextView date, ProgressBar progressBar, final RelativeLayout relative_main) {
-
-        setImagePrivacy(message.getPrivacy(), imagePrivacy, txtPrivacy);
-        changePrivacy(imagePrivacy, position, txtPrivacy, progressBar);
-        imagePrivacy.setVisibility(View.VISIBLE);
-        txtPrivacy.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-        params.setMarginStart(200);
-        messageContainer.setLayoutParams(params);
-        messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
+        if(myDocument) {
+            setImagePrivacy(message.getPrivacy(), imagePrivacy, txtPrivacy);
+            changePrivacy(imagePrivacy, position, txtPrivacy, progressBar);
+            imagePrivacy.setVisibility(View.VISIBLE);
+            txtPrivacy.setVisibility(View.VISIBLE);
+
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+            params.setMarginStart(200);
+            messageContainer.setLayoutParams(params);
+            messageContainer.setBackgroundResource(R.drawable.bubble_in_doc);
+        }else {
+            imagePrivacy.setVisibility(View.GONE);
+            txtPrivacy.setVisibility(View.GONE);
+
+            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
+            params.setMarginEnd(200);
+            messageContainer.setLayoutParams(params);
+            messageContainer.setBackgroundResource(R.drawable.bubble_out_doc);
+        }
         status.setVisibility(View.GONE);
         try {
             String[] split = message.getDateTime().split(" ")[1].split(":");

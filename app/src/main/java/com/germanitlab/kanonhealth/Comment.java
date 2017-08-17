@@ -1,7 +1,6 @@
 package com.germanitlab.kanonhealth;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,20 +11,15 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.responses.RateDoctorResponse;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
-import com.germanitlab.kanonhealth.profile.ProfileActivity;
-import com.google.gson.Gson;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,7 +27,6 @@ import butterknife.OnClick;
 public class Comment extends AppCompatActivity {
 
     // doctor info
-
     @BindView(R.id.txt_doctor_name)
     TextView txt_doctor_name;
 
@@ -87,7 +80,7 @@ public class Comment extends AppCompatActivity {
                                 public void run() {
                                     txt_doctor_name.setText(userInfo.getFullName());
                                     if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
-                                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar());
+                                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.placeholder);
                                     }
                                 }
                             });
@@ -134,6 +127,7 @@ public class Comment extends AppCompatActivity {
                                 //doctor.setHave_rate(1);
                                 //userRepository.update(doctor);
                                 Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
+                                userInfo.setHaveRate(1);
                                 intent.putExtra("doctorID", userInfo.getUserID());
                                 intent.putExtra("userInfo",userInfo);
                                 startActivity(intent);

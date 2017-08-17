@@ -2,6 +2,7 @@ package com.germanitlab.kanonhealth.api.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +37,8 @@ public class WorkingHours  implements Serializable {
 
 
     public List<Times> getSaturday() {
+        if(saturday==null)
+            saturday=new ArrayList<>();
         return saturday;
     }
 
@@ -44,6 +47,8 @@ public class WorkingHours  implements Serializable {
     }
 
     public List<Times> getSunday() {
+        if(sunday==null)
+            sunday= new ArrayList<>();
         return sunday;
     }
 
@@ -52,6 +57,8 @@ public class WorkingHours  implements Serializable {
     }
 
     public List<Times> getMonday() {
+        if(monday==null)
+            monday= new ArrayList<>();
         return monday;
     }
 
@@ -60,6 +67,8 @@ public class WorkingHours  implements Serializable {
     }
 
     public List<Times> getTuesday() {
+        if(tuesday==null)
+            tuesday= new ArrayList<>();
         return tuesday;
     }
 
@@ -68,6 +77,8 @@ public class WorkingHours  implements Serializable {
     }
 
     public List<Times> getWednesday() {
+        if(wednesday==null)
+            wednesday= new ArrayList<>();
         return wednesday;
     }
 
@@ -76,6 +87,8 @@ public class WorkingHours  implements Serializable {
     }
 
     public List<Times> getThursday() {
+        if(thursday==null)
+            thursday= new ArrayList<>();
         return thursday;
     }
 
@@ -84,6 +97,8 @@ public class WorkingHours  implements Serializable {
     }
 
     public List<Times> getFriday() {
+        if(friday==null)
+            friday= new ArrayList<>();
         return friday;
     }
 

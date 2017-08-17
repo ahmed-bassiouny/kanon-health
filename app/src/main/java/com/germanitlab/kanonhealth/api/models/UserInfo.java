@@ -300,6 +300,8 @@ public class UserInfo extends ParentModel {
 
 
     public ArrayList<Language> getSupportedLangs() {
+        if(supportedLangs==null)
+            supportedLangs=new ArrayList<>();
         return supportedLangs;
     }
 

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.httpchat.DocumentChatAdapter;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
@@ -111,6 +113,10 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     CircleImageView editImage;
     @BindView(R.id.tv_no_time)
     TextView tvNoTime;
+    @BindView(R.id.document_recycleview)
+    RecyclerView document_recycleview;
+    @BindView(R.id.ll_contianer)
+    LinearLayout linearLayoutContianer;
 
 
     UserInfo userInfo;
@@ -271,16 +277,20 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar);
                 if (result) {
                     // success
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideProgressBar();
-                            Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
-                            menu.findItem(R.id.mi_edit).setVisible(true);
-                            menu.findItem(R.id.mi_save).setVisible(false);
+                    if(userInfo.getOpenType()!=0) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideProgressBar();
+                                Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
+                                menu.findItem(R.id.mi_edit).setVisible(true);
+                                menu.findItem(R.id.mi_save).setVisible(false);
 
-                        }
-                    });
+                            }
+                        });
+                    }else {
+                        sendWorkingHours();
+                    }
 
 
                     // get url and save it in sharePref
@@ -303,6 +313,39 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             }
         }).start();
 
+    }
+
+    private void sendWorkingHours()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Boolean result = ApiHelper.DoctorWorkingHours(userInfo.getTimeTable().get(0), String.valueOf(userInfo.getOpenType()), String.valueOf(userInfo.getUserID()));
+                DoctorProfileActivity.this.hideProgressBar();
+                if (result) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
+                            menu.findItem(R.id.mi_edit).setVisible(true);
+                            menu.findItem(R.id.mi_save).setVisible(false);
+                        }
+                    });
+
+                }else
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DoctorProfileActivity.this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
+                }
+            }
+
+        }).start();
     }
 
     private void setVisiblitiy() {
@@ -330,51 +373,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
-
-    /*private void setAdapters() {
-        RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        if (user.getSpecialities() != null)
-            setImage(user.getSpecialities(), flSpeciliaty, 1);
-        if (user.getClinics() != null)
-            if (user.getClinics().size() > 0) {
-                set(adapter, user.getClinics(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-            }
-        if (user.getDocuments() != null) {
-            if (!is_me) { // handle the document if the profile is not my profile
-                doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
-                recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-                recyclerViewDocument.setAdapter(doctorDocumentAdapter);
-                recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
-            } else {
-                viewDocumentLine.setVisibility(View.GONE);
-            }
-        }
-    }*/
-
-    /*private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
-        flowLayout.removeAllViews();
-        txtLanguageNames.setText("");
-        int size = 0;
-        for (ChooseModel chooseModel : supported_lang) {
-            if (i == 0) {
-                String country_code = chooseModel.getCountry_code();
-                if (!TextUtils.isEmpty(country_code)) {
-                    txtLanguageNames.append(chooseModel.getLang_title());
-                    if (supported_lang.size() > size + 1) {
-                        txtLanguageNames.append(" , ");
-                        size++;
-                    }
-                    Country country = Country.getCountryByISO(country_code);
-                    if (country != null) {
-                        flowLayout.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
-                    }
-                }
-            } else if (i == 1) {
-                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon(), this));
-            }
-        }
-    }*/
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -408,6 +406,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             edAddToFavourite.setText(userInfo.getFirstName());
             tvContact.setText(userInfo.getLastName());
             tvOnline.setText(userInfo.getTitle());
+            linearLayoutContianer.setVisibility(View.GONE);
 
         } else {
             tvToolbarName.setText(userInfo.getFullName());
@@ -417,6 +416,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 tvOnline.setText(R.string.status_online);
             else
                 tvOnline.setText(R.string.status_offline);
+            linearLayoutContianer.setVisibility(View.VISIBLE);
+            setDocuments();
         }
 
         textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(userInfo.getRateNum()) + " (" + String.valueOf(userInfo.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
@@ -460,6 +461,15 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
         // TimeTable
         getTimaTableData();
+    }
+
+    private void setDocuments() {
+        if (userInfo.getDocuments() != null) {
+            DocumentChatAdapter doctorDocumentAdapter = new DocumentChatAdapter(userInfo.getDocuments(), this,false);
+            document_recycleview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            document_recycleview.setAdapter(doctorDocumentAdapter);
+            document_recycleview.setBackgroundResource(R.color.chatbackground_gray);
+        }
     }
 
 

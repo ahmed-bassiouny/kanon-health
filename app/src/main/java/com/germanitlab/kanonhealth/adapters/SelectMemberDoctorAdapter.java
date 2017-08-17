@@ -54,9 +54,13 @@ public class SelectMemberDoctorAdapter extends RecyclerView.Adapter<SelectMember
                     myDoctors.remove(index);
                     myDoctors.add(allDoctors.get(position));
                     holder.rbtn.setChecked(true);
+                }else
+                {
+                    holder.rbtn.setChecked(false);
                 }
 
-                        holder.tv_title.setText(model.getFullName());
+
+                holder.tv_title.setText(model.getFullName());
                         if (holder.img_icon != null) {
                             if (model.getAvatar()!= null && !TextUtils.isEmpty(model.getAvatar())) {
                                 ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_URL + "/" + model.getAvatar(),R.drawable.placeholder);
