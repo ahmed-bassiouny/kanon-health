@@ -47,15 +47,17 @@ import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorProfileActivity extends ParentActivity implements DialogPickerCallBacks,Message {
+public class DoctorProfileActivity extends ParentActivity implements DialogPickerCallBacks, Message {
 
     @BindView(R.id.toolbar_name)
     TextView tvToolbarName;
@@ -111,8 +113,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     TextView tvNoTime;
 
 
-
-
     UserInfo userInfo;
     File avatar = null;
     SpecilaitiesAdapter adapter;
@@ -121,8 +121,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     PickerDialog pickerDialog;
     int PLACE_PICKER_REQUEST = 7;
     private Menu menu;
-    String specialityIds="";
-    String langIds="";
+    String specialityIds = "";
+    String langIds = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +135,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             pickerDialog = new PickerDialog(true);
             userInfo = new UserInfo();
             userInfo = (UserInfo) getIntent().getSerializableExtra("doctor_data");
-            is_me = userInfo.getUserID() == PrefHelper.get(this,PrefHelper.KEY_USER_ID,-1);
+            is_me = userInfo.getUserID() == PrefHelper.get(this, PrefHelper.KEY_USER_ID, -1);
             bindData();
             setVisiblitiy();
 
@@ -152,17 +152,17 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (menu != null) {
-                getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
-                menu.findItem(R.id.mi_save).setVisible(false);
+            getMenuInflater().inflate(R.menu.menu_doctor_profile, menu);
+            menu.findItem(R.id.mi_save).setVisible(false);
+            menu.findItem(R.id.mi_edit).setVisible(true);
+            menu.findItem(R.id.mi_save).setVisible(false);
+            if (is_me) {
                 menu.findItem(R.id.mi_edit).setVisible(true);
-                menu.findItem(R.id.mi_save).setVisible(false);
-                if (is_me) {
-                    menu.findItem(R.id.mi_edit).setVisible(true);
 
-                } else {
-                    menu.findItem(R.id.mi_edit).setVisible(false);
-                }
-                this.menu = menu;
+            } else {
+                menu.findItem(R.id.mi_edit).setVisible(false);
+            }
+            this.menu = menu;
         }
         return true;
     }
@@ -184,8 +184,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 changeGravity(edAddToFavourite, true);
                 changeGravity(tvContact, true);
                 tvOnline.setFocusableInTouchMode(true);
-               edAddToFavourite.setFocusableInTouchMode(true);
-               tvContact.setFocusableInTouchMode(true);
+                edAddToFavourite.setFocusableInTouchMode(true);
+                tvContact.setFocusableInTouchMode(true);
                 ivLanguagesList.setVisibility(View.VISIBLE);
                 ivSpecialityList.setVisibility(View.VISIBLE);
                 etStreetName.setEnabled(true);
@@ -238,7 +238,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         if (is_me)
             return;
         Intent intent = new Intent(this, HttpChatActivity.class);
-        intent.putExtra("userInfo",userInfo);
+        intent.putExtra("userInfo", userInfo);
         intent.putExtra("doctorID", userInfo.getUserID());
         startActivity(intent);
     }
@@ -262,8 +262,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     private void sendDataToserver() {
 
-    showProgressBar();
-       // pickerDialog.dismiss();
+        showProgressBar();
+        // pickerDialog.dismiss();
 //        ImageHelper.setImage(circleImageViewAvatar, avatar.getAbsolutePath());
         new Thread(new Runnable() {
             @Override
@@ -274,7 +274,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                          hideProgressBar();
+                            hideProgressBar();
                             Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
                             menu.findItem(R.id.mi_edit).setVisible(true);
                             menu.findItem(R.id.mi_save).setVisible(false);
@@ -291,13 +291,12 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                         hideProgressBar();
-                           if(avatar!=null)
-                               circleImageViewAvatar.setImageResource(R.drawable.placeholder);
+                            hideProgressBar();
+                            if (avatar != null)
+                                circleImageViewAvatar.setImageResource(R.drawable.placeholder);
                             Toast.makeText(DoctorProfileActivity.this, R.string.error_saving_data, Toast.LENGTH_SHORT).show();
                         }
                     });
-
 
 
                 }
@@ -312,10 +311,10 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 //            edAddToFavourite.setFocusableInTouchMode(true);
 //            tvContact.setFocusableInTouchMode(true);
 //        } else {
-            tvOnline.setFocusable(false);
-            edAddToFavourite.setFocusable(false);
-            tvContact.setFocusable(false);
-       // }
+        tvOnline.setFocusable(false);
+        edAddToFavourite.setFocusable(false);
+        tvContact.setFocusable(false);
+        // }
     }
 
     @OnClick(R.id.edit_time_table)
@@ -377,33 +376,32 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     }*/
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode == RESULT_OK) {
-                switch (requestCode) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
 
                     /*case CROP_PIC :
                         afterCropFinish();
                         break;*/
 
-                    case Constants.HOURS_CODE:
-                        userInfo.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
-                        userInfo.setOpenType(data.getIntExtra("type", 0));
-                        getTimaTableData();
-                        break;
-                    case Constants.HOURS_TYPE_CODE:
-                        userInfo.setOpenType(data.getIntExtra("type", 0));
-                        break;
-                }
+                case Constants.HOURS_CODE:
+                    userInfo.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
+                    userInfo.setOpenType(data.getIntExtra("type", 0));
+                    getTimaTableData();
+                    break;
+                case Constants.HOURS_TYPE_CODE:
+                    userInfo.setOpenType(data.getIntExtra("type", 0));
+                    break;
+            }
         }
     }
 
     private void bindData() {
 
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.placeholder);
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
         }
         if (is_me) {
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
@@ -424,7 +422,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(userInfo.getRateNum()) + " (" + String.valueOf(userInfo.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
 
         //setRate
-        Float rate=userInfo.getRateNum();
+        Float rate = userInfo.getRateNum();
         ratingBar.setRating(rate);
 
 
@@ -458,8 +456,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         textViewPhone.setText(userInfo.getPhone());
 
 
-
-
         // member at need handle
 
         // TimeTable
@@ -479,7 +475,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public void edit_languages_list() {
         Bundle bundle = new Bundle();
         bundle.putInt("Constants", Constants.LANGUAUGE);
-        bundle.putSerializable(Constants.CHOSED_LIST,userInfo.getSupportedLangs());
+        bundle.putSerializable(Constants.CHOSED_LIST, userInfo.getSupportedLangs());
         showDialogFragment(bundle);
     }
 
@@ -487,7 +483,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public void edit_member_list() {
         Bundle bundle = new Bundle();
         bundle.putInt("Constants", Constants.DoctorAll);
-        bundle.putSerializable(Constants.CHOSED_LIST,userInfo.getClinics());
+        bundle.putSerializable(Constants.CHOSED_LIST, userInfo.getClinics());
         showDialogFragment(bundle);
     }
 
@@ -496,13 +492,11 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         tvNoTime.setVisibility(View.VISIBLE);
         if (userInfo.getOpenType() == 3) {
             tvNoTime.setText(R.string.permenant_closed);
-        }
-        else if(userInfo.getOpenType() == 1) {
+        } else if (userInfo.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
-        }
-        else if(userInfo.getOpenType()==2) {
+        } else if (userInfo.getOpenType() == 2) {
             tvNoTime.setText(R.string.no_hours_available);
-        }else {
+        } else {
 
             if (userInfo.getTimeTable() != null && userInfo.getTimeTable().size() > 0) {
                 tvNoTime.setVisibility(View.GONE);
@@ -519,38 +513,38 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     @OnClick(R.id.image_star)
     public void image_star() {
         Intent intent = new Intent(this, RateActivity.class);
-        intent.putExtra("doctor_info",   userInfo);
+        intent.putExtra("doctor_info", userInfo);
         intent.putExtra("type", "doctor");
         startActivity(intent);
     }
 
     @OnClick(R.id.ed_add_to_favourite)
     public void addToMyDoctor() {
-        if(is_me)
+        if (is_me)
             return;
-       showProgressBar();
+        showProgressBar();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final boolean result ;
-                if(userInfo.getIsMyDoc()==1){
-                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(DoctorProfileActivity.this,PrefHelper.KEY_USER_ID,-1)),userInfo.getUserID().toString(),userInfo.getUserType(),false);
-                    if(result)
+                final boolean result;
+                if (userInfo.getIsMyDoc() == 1) {
+                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1)), userInfo.getUserID().toString(), userInfo.getUserType(), false);
+                    if (result)
                         userInfo.setIsMyDoc(0);
-                }else{
-                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(DoctorProfileActivity.this,PrefHelper.KEY_USER_ID,-1)),userInfo.getUserID().toString(),userInfo.getUserType(),true);
-                    if(result)
+                } else {
+                    result = ApiHelper.setFavouriteOperation(String.valueOf(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1)), userInfo.getUserID().toString(), userInfo.getUserType(), true);
+                    if (result)
                         userInfo.setIsMyDoc(1);
                 }
-                    DoctorProfileActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(result) {
-                                checkDoctor();
-                            }
-                           hideProgressBar();
+                DoctorProfileActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result) {
+                            checkDoctor();
                         }
-                    });
+                        hideProgressBar();
+                    }
+                });
             }
         }).start();
     }
@@ -632,20 +626,19 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 break;
         }
     }*/
-    private void setSpecialities()
-    {
+    private void setSpecialities() {
         if (userInfo.getSpecialities() != null) {
 
             tvSpecilities.setText("");
-            specialityIds="";
+            specialityIds = "";
             flSpeciliaty.removeAllViews();
             int size = 0;
             for (Speciality speciality : userInfo.getSpecialities()) {
                 flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
                 tvSpecilities.append(speciality.getTitle());
-                specialityIds= specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
+                specialityIds = specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
                 size++;
-                if (size <  userInfo.getSpecialities().size()) {
+                if (size < userInfo.getSpecialities().size()) {
                     tvSpecilities.append(", ");
                     specialityIds = specialityIds.concat(",");
                 }
@@ -653,38 +646,38 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         }
 
     }
-    private void setLanguages()
-    {
-        langIds="";
-        flLanguages.removeAllViews();
-        int size = 0;
-        for (Language  language : userInfo.getSupportedLangs()) {
-            if (!TextUtils.isEmpty(language.getLanguageCountryCode())) {
-                Country country = Country.getCountryByISO(language.getLanguageCountryCode());
-                if (country != null) {
-                    flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
-                }
-                langIds = langIds.concat(String.valueOf(language.getLanguageID()));
-                if (userInfo.getSupportedLangs().size() > size + 1) {
-                    langIds = langIds.concat(",");
-                    size++;
+
+    private void setLanguages() {
+        if (userInfo.getSupportedLangs() != null) {
+            langIds = "";
+            flLanguages.removeAllViews();
+            int size = 0;
+            for (Language language : userInfo.getSupportedLangs()) {
+                if (!TextUtils.isEmpty(language.getLanguageCountryCode())) {
+                    Country country = Country.getCountryByISO(language.getLanguageCountryCode());
+                    if (country != null) {
+                        flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
+                    }
+                    langIds = langIds.concat(String.valueOf(language.getLanguageID()));
+                    if (userInfo.getSupportedLangs().size() > size + 1) {
+                        langIds = langIds.concat(",");
+                        size++;
+                    }
                 }
             }
         }
-
     }
 
-    private void setClinics()
-    {
-        ArrayList<UserInfo> allClinics= new ArrayList<>();
+    private void setClinics() {
+        ArrayList<UserInfo> allClinics = new ArrayList<>();
         allClinics.addAll(userInfo.getClinics());
         allClinics.addAll(userInfo.getMyClinics());
-        if (allClinics.size()> 0) {
+        if (allClinics.size() > 0) {
             RecyclerView recyclerVie;
             clinicListAdapter = new ClinicListAdapter(allClinics, this);
             recyclerVie = (RecyclerView) findViewById(R.id.member_recycleview);
             recyclerVie.setHasFixedSize(true);
-            recyclerVie.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+            recyclerVie.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             recyclerVie.setNestedScrollingEnabled(false);
             recyclerVie.setAdapter(clinicListAdapter);
         }
@@ -704,9 +697,9 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     @Override
     public void deleteMyImage() {
         userInfo.setAvatar("");
-        avatar=null;
+        avatar = null;
         ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
-        PrefHelper.put(getApplicationContext(),PrefHelper.KEY_PROFILE_IMAGE,"");
+        PrefHelper.put(getApplicationContext(), PrefHelper.KEY_PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }
 

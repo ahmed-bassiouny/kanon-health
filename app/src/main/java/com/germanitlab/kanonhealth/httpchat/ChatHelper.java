@@ -44,7 +44,7 @@ public class ChatHelper {
 
     protected int creatDummyMessage(int userID, ArrayList<Message> messages, ChatAdapter chatAdapter, RecyclerView recyclerView) {
         Message message = new Message();
-        message.setDateTime(getDateTimeNow());
+        message.setDateTime("");
         message.setType(Message.MESSAGE_TYPE_UNDEFINED);
         message.setFromID(userID);
         messages.add(message);
@@ -57,7 +57,7 @@ public class ChatHelper {
 
     protected int creatDummyDocument(DocumentChatAdapter documentChatAdapter, ArrayList<Document> documents, RecyclerView recyclerView) {
         Document document = new Document();
-        document.setDateTime(getDateTimeNow());
+        document.setDateTime("");
         document.setType(Message.MESSAGE_TYPE_UNDEFINED);
         documents.add(document);
         documentChatAdapter.setList(documents);
@@ -67,11 +67,11 @@ public class ChatHelper {
         return index;
     }
 
-    private String getDateTimeNow() {
+    /*private String getDateTimeNow() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar cal = Calendar.getInstance();
         return dateFormat.format(cal.getTime()).toString();
-    }
+    }*/
 
     // send Location Message
     protected void sendLocationMessage(double longitude, double latitude, int userID, int doctorID, final FragmentActivity fragmentActivity, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
@@ -80,7 +80,7 @@ public class ChatHelper {
         final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
-        message.setDateTime(getDateTimeNow());
+        message.setDateTime("");
         message.setMessage("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
         message.setType(Message.MESSAGE_TYPE_LOCATION);
 
@@ -110,7 +110,7 @@ public class ChatHelper {
         //create dummy message
         final int index = creatDummyDocument(documentChatAdapter, documents, recyclerView);
         final Document document = new Document();
-        document.setDateTime(getDateTimeNow());
+        document.setDateTime("");
         document.setDocument("{\"long\":" + longitude + ",\"lat\":" + latitude + "}");
         document.setType(Message.MESSAGE_TYPE_LOCATION);
 
@@ -185,7 +185,7 @@ public class ChatHelper {
         message.setMessage(textMsg);
         message.setType(Message.MESSAGE_TYPE_TEXT);
         message.setStatus(0);
-        message.setDateTime(getDateTimeNow());
+        message.setDateTime("");
         messages.add(message);
         chatAdapter.setList(messages);
         chatAdapter.notifyDataSetChanged();
@@ -200,10 +200,9 @@ public class ChatHelper {
                     public void run() {
                         if (result != null) {
                             //success
-
-                            Message temp = messages.get(index);
-                            temp.setStatus(1);
-                            messages.set(index, temp);
+//                            Message temp = messages.get(index);
+//                            temp.setStatus(1);
+                            messages.set(index, result);
                             chatAdapter.setList(messages);
                             chatAdapter.notifyDataSetChanged();
                             recyclerView.scrollToPosition(messages.size() - 1);
@@ -224,7 +223,7 @@ public class ChatHelper {
         document.setDocument(textMsg);
         document.setType(Message.MESSAGE_TYPE_TEXT);
         document.setPrivacy(0);
-        document.setDateTime(getDateTimeNow());
+        document.setDateTime("");
         documents.add(document);
         documentChatAdapter.setList(documents);
         documentChatAdapter.notifyDataSetChanged();
