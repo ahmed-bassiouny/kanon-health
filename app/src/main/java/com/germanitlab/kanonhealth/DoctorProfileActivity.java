@@ -277,7 +277,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar);
                 if (result) {
                     // success
-                    if(userInfo.getOpenType()!=0) {
+                    if(userInfo.getOpenType()!=0|| userInfo.getTimeTable().size()==0) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -321,6 +321,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             @Override
             public void run() {
                 Boolean result = ApiHelper.DoctorWorkingHours(userInfo.getTimeTable().get(0), String.valueOf(userInfo.getOpenType()), String.valueOf(userInfo.getUserID()));
+
                 DoctorProfileActivity.this.hideProgressBar();
                 if (result) {
                     runOnUiThread(new Runnable() {
