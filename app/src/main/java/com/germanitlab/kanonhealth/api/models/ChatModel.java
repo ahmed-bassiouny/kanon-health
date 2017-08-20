@@ -1,11 +1,14 @@
 package com.germanitlab.kanonhealth.api.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by bassiouny on 02/08/17.
  */
 
+@DatabaseTable()
 public class ChatModel extends UserInfo {
 
     public static final String KEY_ROOM_ID="room_id";
@@ -15,14 +18,19 @@ public class ChatModel extends UserInfo {
     public static final String KEY_TIME="time";
 
     @SerializedName(KEY_ROOM_ID)
+    @DatabaseField
     private Integer roomID;
     @SerializedName(KEY_MESSAGE)
+    @DatabaseField
     private String message;
     @SerializedName(KEY_MESSAGE_TYPE)
+    @DatabaseField
     private String type;
     @SerializedName(KEY_IS_FORWARD)
+    @DatabaseField
     private String isForward;
     @SerializedName(KEY_TIME)
+    @DatabaseField
     private String time;
 
 

@@ -34,11 +34,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<UserInfo, Integer> doctorsDao = null;
     private Dao<ChatModel, Integer> chatModel = null;
     private Dao<Table, Integer> tablesDao = null;
-    private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDao = null;
-    private Dao<Document, Integer> documentsDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> httpMessagesDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> httpdocumentsDao = null;
     private RuntimeExceptionDao<UserInfo, Integer> doctorsRuntimeDao = null;
+    private RuntimeExceptionDao<ChatModel, Integer> chatModelsRuntimeDao = null;
     private RuntimeExceptionDao<Message, Integer> messagesRuntimeDao = null;
     private RuntimeExceptionDao<Document, Integer> documentsRuntimeDao = null;
 
@@ -52,6 +51,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, UserInfo.class);
+            TableUtils.createTable(connectionSource, ChatModel.class);
             TableUtils.createTable(connectionSource, Message.class);
             TableUtils.createTable(connectionSource, Document.class);
         } catch (Exception e) {
@@ -63,9 +63,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
         // here we try inserting data in the on-create as a test
-        RuntimeExceptionDao<UserInfo, Integer> dao = getUsersDataDao();
-        RuntimeExceptionDao<Message, Integer> messagesDataDao = getMessagesDataDao();
-        RuntimeExceptionDao<Document, Integer> daos = getDocumentDataDao();
+//        RuntimeExceptionDao<UserInfo, Integer> dao = getUsersDataDao();
+//        RuntimeExceptionDao<Message, Integer> messagesDataDao = getMessagesDataDao();
+//        RuntimeExceptionDao<Document, Integer> daos = getDocumentDataDao();
         // create some entries in the onCreate
         Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate");
     }
@@ -75,6 +75,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, UserInfo.class, true);
+            TableUtils.dropTable(connectionSource, ChatModel.class, true);
             TableUtils.dropTable(connectionSource, Message.class, true);
             TableUtils.dropTable(connectionSource, Document.class, true);
             // after we drop the old databases, we create the new ones
@@ -94,26 +95,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return doctorsDao;
     }
-    public Dao<ChatModel, Integer> getChatModelsDao() throws SQLException {
+    public Dao<ChatModel, Integer> getChatModeDao() throws SQLException {
         if (chatModel == null) {
             chatModel = getDao(ChatModel.class);
         }
         return chatModel;
     }
 
-    public Dao<Table, Integer> getTablesDao() throws SQLException {
-        if (tablesDao == null) {
-            tablesDao = getDao(Table.class);
-        }
-        return tablesDao;
-    }
 
-    public Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> getMessagesDao() throws SQLException {
-        if (messagesDao == null) {
-            messagesDao = getDao(com.germanitlab.kanonhealth.api.models.Message.class);
-        }
-        return messagesDao;
-    }
     public Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> getHttpMessagesDao() throws SQLException {
         if (httpMessagesDao == null) {
             httpMessagesDao = getDao(com.germanitlab.kanonhealth.api.models.Message.class);
@@ -136,6 +125,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             doctorsRuntimeDao = getRuntimeExceptionDao(UserInfo.class);
         }
         return doctorsRuntimeDao;
+    }
+    public RuntimeExceptionDao<ChatModel, Integer> getChatModelDataDao() {
+        if (chatModelsRuntimeDao== null) {
+            chatModelsRuntimeDao = getRuntimeExceptionDao(ChatModel.class);
+        }
+        return chatModelsRuntimeDao;
     }
 
     public RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> getMessagesDataDao() {

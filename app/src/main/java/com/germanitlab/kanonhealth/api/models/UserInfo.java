@@ -600,5 +600,13 @@ public class UserInfo extends ParentModel {
     public void setLocationLong(Double locationLong) {
         this.locationLong = locationLong;
     }
+
+    public int getIdLocalDatabase() {
+        return idLocalDatabase;
+    }
+
+    public void setIdLocalDatabase(int idLocalDatabase) {
+        this.idLocalDatabase = idLocalDatabase;
+    }
     //endregion
 }

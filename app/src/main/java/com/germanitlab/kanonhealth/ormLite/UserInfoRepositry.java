@@ -35,8 +35,12 @@ public class UserInfoRepositry {
     public void createDoctor(UserInfo userInfo) {
         try {
             List<UserInfo> accountList =  doctorsDao.queryBuilder().where().eq("userID", userInfo.getUserID()).query();
-            if(accountList.size()==0)
-                 doctorsDao.create(userInfo);
+            if(accountList.size()==0) {
+                doctorsDao.create(userInfo);
+            }else {
+                userInfo.setIdLocalDatabase(accountList.get(0).getIdLocalDatabase());
+                doctorsDao.update(userInfo);
+            }
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
@@ -44,8 +48,12 @@ public class UserInfoRepositry {
     public void createClinic(UserInfo userInfo) {
         try {
             List<UserInfo> accountList =  doctorsDao.queryBuilder().where().eq("id", userInfo.getId()).query();
-            if(accountList.size()==0)
+            if(accountList.size()==0){
                 doctorsDao.create(userInfo);
+            }else {
+                userInfo.setIdLocalDatabase(accountList.get(0).getIdLocalDatabase());
+                doctorsDao.update(userInfo);
+            }
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
