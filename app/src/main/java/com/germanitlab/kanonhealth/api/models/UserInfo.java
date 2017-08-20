@@ -526,6 +526,8 @@ public class UserInfo extends ParentModel {
     }
 
     public Integer getId() {
+        if(id==null)
+            id=0;
         return id;
     }
 

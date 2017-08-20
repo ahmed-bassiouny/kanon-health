@@ -70,15 +70,12 @@ public class UserInfoRepositry {
         }
         return null;
     }
-    public List<UserInfo> selectDoctorsOrClinic(boolean selectDoctor) {
+    private List<UserInfo> getlist(int type) {
         List<UserInfo> userInfoArrayList = null;
         try {
             QueryBuilder<UserInfo, Integer> queryBuilder = doctorsDao.queryBuilder();
             // prepare our sql statement
-            if(selectDoctor)
-                queryBuilder.where().eq("userType",UserInfo.DOCTOR);
-            else
-                queryBuilder.where().eq("userType",UserInfo.CLINIC);
+            queryBuilder.where().eq("userType",type);
             PreparedQuery<UserInfo> preparedQuery =queryBuilder.orderBy("idLocalDatabase", true).prepare();
             userInfoArrayList = doctorsDao.query(preparedQuery);
         } catch (Exception e) {
@@ -89,6 +86,12 @@ public class UserInfoRepositry {
         finally {
             return userInfoArrayList;
         }
+    }
+    public List<UserInfo> getDoctors() {
+        return getlist(UserInfo.DOCTOR);
+    }
+    public List<UserInfo> getClinics() {
+        return getlist(UserInfo.CLINIC);
     }
 
 }

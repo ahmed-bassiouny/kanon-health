@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.ClinicListAdapter;
@@ -36,6 +37,7 @@ import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.intro.StartQrScan;
+import com.germanitlab.kanonhealth.ormLite.ChatModelRepository;
 import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
@@ -76,8 +78,9 @@ public class DoctorListFragment extends Fragment {
     public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = true, is_chat_data_right = true;
     LinearLayoutManager llm;
     public UserInfoRepositry userInfoRepositry;
+    ChatModelRepository chatModelRepository;
 
-    private  static boolean leftTabVisible=true;
+    private static boolean leftTabVisible = true;
 
     public DoctorListFragment() {
     }
@@ -104,21 +107,22 @@ public class DoctorListFragment extends Fragment {
             setHasOptionsMenu(true);
 
             try {
-                user= PrefHelper.get(getActivity(),PrefHelper.KEY_USER_KEY,UserInfo.class);
-                int id = PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1);
+                user = PrefHelper.get(getActivity(), PrefHelper.KEY_USER_KEY, UserInfo.class);
+                int id = PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1);
             } catch (Exception e) {
             }
             initView();
-           // is_doc = prefManager.get(PrefManager.IS_DOCTOR);
+            // is_doc = prefManager.get(PrefManager.IS_DOCTOR);
             gson = new Gson();
             btnLeftList.setText(R.string.doctors);
             btnRightList.setText(R.string.practices);
-          //  type = User.DOCTOR_TYPE;
+            //  type = User.DOCTOR_TYPE;
             doctorList = new ArrayList<>();
-            clinics= new ArrayList<>();
+            clinics = new ArrayList<>();
 
             //mDoctorRepository = new UserRepository(getActivity());
-            userInfoRepositry=new UserInfoRepositry(getActivity());
+            userInfoRepositry = new UserInfoRepositry(getActivity());
+            chatModelRepository=new ChatModelRepository(getContext());
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -128,10 +132,10 @@ public class DoctorListFragment extends Fragment {
     }
 
     private void loadFirstTime() {
-        ((ParentActivity)getActivity()).showProgressBar();
-                setDoctorList();
-                setClinicList();
-                getChatData();
+        ((ParentActivity) getActivity()).showProgressBar();
+        setDoctorList();
+        setClinicList();
+        getChatData();
     }
 
 
@@ -167,21 +171,20 @@ public class DoctorListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(leftTabVisible) {
+        if (leftTabVisible) {
             btnLeftList.setBackgroundResource(R.color.blue);
             btnLeftList.setTextColor(getResources().getColor(R.color.white));
             btnRightList.setBackgroundResource(R.color.gray);
             btnRightList.setTextColor(getResources().getColor(R.color.black));
-        }else
-        {
+        } else {
             btnRightList.setBackgroundResource(R.color.blue);
             btnRightList.setTextColor(getResources().getColor(R.color.white));
             btnLeftList.setBackgroundResource(R.color.gray);
             btnLeftList.setTextColor(getResources().getColor(R.color.black));
         }
-        if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
+        if (!PrefHelper.get(getActivity(), PrefHelper.KEY_IS_OLD, false)) {
             loadFirstTime();
-        } else{
+        } else {
             loadData();
         }
     }
@@ -200,16 +203,19 @@ public class DoctorListFragment extends Fragment {
     }
 
     public void getChatData() {
-        if(user.getUserType()==user.PATIENT) {
+        if (user.getUserType() == user.PATIENT) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel= ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
-                    if(chatModel==null)
-                        return;
-//                    for(UserInfo userInfo:chatModel){
-//                        chatModelRepositry.createOrUpdate(userInfo);
-//                    }
+                    if (Helper.isNetworkAvailable(getContext())) {
+                        ArrayList<ChatModel> chatModel = ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null)
+                            return;
+                        for(ChatModel item:chatModel) {
+                            item.setUserType(UserInfo.DOCTOR);
+                            chatModelRepository.createDoctorOrUser(item);
+                        }
+                    }
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -219,28 +225,41 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
-                    if(chatModel==null)
-                        return;
-//                    for(UserInfo userInfo:chatModel){
-//                        chatModelRepositry.createOrUpdate(userInfo);
-//                    }
+                    if (Helper.isNetworkAvailable(getContext())) {
+                        ArrayList<ChatModel> chatModel = ApiHelper.getChatUser(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null)
+                            return;
+                        for(ChatModel item:chatModel) {
+                            item.setUserType(UserInfo.PATIENT);
+                            chatModelRepository.createDoctorOrUser(item);
+                        }
+                    }
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
                 }
             }).start();
-        }else
-        {
+        } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
-                    if(chatModel==null)
-                        return;
-//                    for(UserInfo userInfo:chatModel){
-//                        chatModelRepositry.createOrUpdate(userInfo);
-//                    }
+                    if(Helper.isNetworkAvailable(getContext())) {
+                        ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null)
+                            return;
+                        for(ChatModel item:chatModel) {
+                            if(item.getId()>0) {
+                                item.setUserType(UserInfo.CLINIC);
+                                chatModelRepository.createClinic(item);
+                            }
+                            else if (item.getUserID()>0) {
+                                item.setUserType(UserInfo.DOCTOR);
+                                chatModelRepository.createDoctorOrUser(item);
+                            }
+                            else
+                                return;
+                        }
+                    }
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -250,12 +269,15 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
-                    if(chatModel==null)
-                        return;
-//                    for(UserInfo userInfo:chatModel){
-//                        chatModelRepositry.createOrUpdate(userInfo);
-//                    }
+                    if(Helper.isNetworkAvailable(getContext())) {
+                        ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null)
+                            return;
+                        for(ChatModel item:chatModel) {
+                            item.setUserType(UserInfo.CLINIC);
+                            chatModelRepository.createClinic(item);
+                        }
+                    }
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
@@ -263,8 +285,6 @@ public class DoctorListFragment extends Fragment {
             }).start();
 
         }
-
-
 
 
 //
@@ -407,29 +427,26 @@ public class DoctorListFragment extends Fragment {
     }
 
 
-
-
-    private void setDoctorList ()
-    {
+    private void setDoctorList() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(Helper.isNetworkAvailable(getContext())) {
+                if (Helper.isNetworkAvailable(getContext())) {
                     doctorList = ApiHelper.postGetDoctorList(getContext(), user.getUserID().toString());
                     for (UserInfo userInfo : doctorList) {
                         userInfoRepositry.createDoctor(userInfo);
                     }
-                }else {
-                    doctorList= (ArrayList<UserInfo>) userInfoRepositry.selectDoctorsOrClinic(true);
+                } else {
+                    doctorList = (ArrayList<UserInfo>) userInfoRepositry.getDoctors();
                 }
-                if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
+                if (!PrefHelper.get(getActivity(), PrefHelper.KEY_IS_OLD, false)) {
                     is_doctor_data = true;
-                    if(leftTabVisible) {
+                    if (leftTabVisible) {
                         setDoctorAdapter(doctorList);
                     }
                     isAllDataLoaded();
                 } else {
-                    if(leftTabVisible) {
+                    if (leftTabVisible) {
                         setDoctorAdapter(doctorList);
                     }
                 }
@@ -438,29 +455,28 @@ public class DoctorListFragment extends Fragment {
         }).start();
     }
 
-    private void setClinicList()
-    {
+    private void setClinicList() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(Helper.isNetworkAvailable(getContext())) {
+                if (Helper.isNetworkAvailable(getContext())) {
                     clinics = ApiHelper.postGetClinicList(getContext());
                     for (UserInfo userInfo : clinics) {
                         userInfo.setUserType(3);
                         userInfoRepositry.createClinic(userInfo);
                     }
 
-                }else {
-                    clinics=(ArrayList<UserInfo>) userInfoRepositry.selectDoctorsOrClinic(false);
+                } else {
+                    clinics = (ArrayList<UserInfo>) userInfoRepositry.getClinics();
                 }
-                if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
+                if (!PrefHelper.get(getActivity(), PrefHelper.KEY_IS_OLD, false)) {
                     is_clinic_data = true;
-                    if(!leftTabVisible) {
+                    if (!leftTabVisible) {
                         setClinicsAdapter(clinics);
                     }
                     isAllDataLoaded();
                 } else {
-                    if(!leftTabVisible) {
+                    if (!leftTabVisible) {
                         setClinicsAdapter(clinics);
                     }
                     // CheckTabToScrollTo();
@@ -539,14 +555,12 @@ public class DoctorListFragment extends Fragment {
     private void loadData() {
 //        doctorList = mDoctorRepository.getAll(type);
 //        setAdapter(doctorList);
-  //      CheckTabToScrollTo();
-         if(leftTabVisible)
-         {
-          setDoctorList();
-         }else
-         {
-             setClinicList();
-         }
+        //      CheckTabToScrollTo();
+        if (leftTabVisible) {
+            setDoctorList();
+        } else {
+            setClinicList();
+        }
     }
 
     private void initView() {
@@ -563,7 +577,7 @@ public class DoctorListFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(leftTabVisible) {
+                if (leftTabVisible) {
                     if (doctorList != null) {
 
                         if (charSequence.toString().trim().length() > 0) {
@@ -580,8 +594,7 @@ public class DoctorListFragment extends Fragment {
                             setDoctorAdapter(fileDoctorResponses);
                         } else setDoctorAdapter(doctorList);
                     }
-                }else
-                {
+                } else {
                     if (charSequence.toString().trim().length() > 0) {
                         List<UserInfo> fileClinicResponses = new ArrayList<>();
                         for (int j = 0; j < clinics.size(); j++) {
@@ -594,7 +607,7 @@ public class DoctorListFragment extends Fragment {
                             }
                         }
                         setClinicsAdapter(fileClinicResponses);
-                    } else  setClinicsAdapter(clinics);
+                    } else setClinicsAdapter(clinics);
                 }
 
             }
@@ -642,13 +655,13 @@ public class DoctorListFragment extends Fragment {
         btnRightList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                leftTabVisible=false;
+                leftTabVisible = false;
                 btnRightList.setBackgroundResource(R.color.blue);
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
-                setClinicsAdapter(new ArrayList<UserInfo>())  ;
-                    loadData();
+                setClinicsAdapter(new ArrayList<UserInfo>());
+                loadData();
 
 
             }
@@ -656,23 +669,22 @@ public class DoctorListFragment extends Fragment {
         btnLeftList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                leftTabVisible=true;
+                leftTabVisible = true;
                 btnRightList.setBackgroundResource(R.color.gray);
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
                 setDoctorAdapter(new ArrayList<UserInfo>());
-                    loadData();
+                loadData();
             }
         });
     }
 
 
-
-    private void isAllDataLoaded(){
+    private void isAllDataLoaded() {
         if (is_chat_data_left && is_chat_data_right && is_clinic_data && is_doctor_data) {
-            ((ParentActivity)getActivity()).hideProgressBar();
-            PrefHelper.put(getActivity(),PrefHelper.KEY_IS_OLD,true);
+            ((ParentActivity) getActivity()).hideProgressBar();
+            PrefHelper.put(getActivity(), PrefHelper.KEY_IS_OLD, true);
         }
 
     }

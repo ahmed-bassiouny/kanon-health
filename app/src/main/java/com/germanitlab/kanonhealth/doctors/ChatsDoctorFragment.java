@@ -168,10 +168,14 @@ public class ChatsDoctorFragment extends Fragment {
                     public void run() {
                         if(Helper.isNetworkAvailable(getContext())) {
                             chatModel = ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                            if (chatModel==null || chatModel.size()==0)
+                                return;
                             for(ChatModel item:chatModel) {
                                 item.setUserType(UserInfo.DOCTOR);
                                 chatModelRepository.createDoctorOrUser(item);
                             }
+                        }else {
+                            chatModel = (ArrayList<ChatModel>) chatModelRepository.getDoctors();
                         }
                         setChatListAdapter(chatModel);
                     }
@@ -183,10 +187,14 @@ public class ChatsDoctorFragment extends Fragment {
                     public void run() {
                         if(Helper.isNetworkAvailable(getContext())) {
                             chatModel = ApiHelper.getChatUser(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                            if (chatModel==null || chatModel.size()==0)
+                                return;
                             for(ChatModel item:chatModel) {
                                 item.setUserType(UserInfo.PATIENT);
                                 chatModelRepository.createDoctorOrUser(item);
                             }
+                        }else {
+                            chatModel= (ArrayList<ChatModel>) chatModelRepository.getUsers();
                         }
                         setChatListAdapter(chatModel);
                     }
@@ -199,10 +207,14 @@ public class ChatsDoctorFragment extends Fragment {
                     public void run() {
                         if(Helper.isNetworkAvailable(getContext())) {
                             chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                            if (chatModel==null || chatModel.size()==0)
+                                return;
                             for(ChatModel item:chatModel) {
                                 item.setUserType(UserInfo.CLINIC);
                                 chatModelRepository.createClinic(item);
                             }
+                        }else {
+                            chatModel= (ArrayList<ChatModel>) chatModelRepository.getClinics();
                         }
                         setChatListAdapter(chatModel);
                     }
@@ -214,8 +226,22 @@ public class ChatsDoctorFragment extends Fragment {
                     public void run() {
                         if(Helper.isNetworkAvailable(getContext())) {
                             chatModel = ApiHelper.getChatAnother(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
-                            for(ChatModel item:chatModel)
-                                chatModelRepository.createAnother(item);
+                            if (chatModel==null || chatModel.size()==0)
+                                return;
+                            for(ChatModel item:chatModel) {
+                                if(item.getId()>0) {
+                                    item.setUserType(UserInfo.CLINIC);
+                                    chatModelRepository.createClinic(item);
+                                }
+                                else if (item.getUserID()>0) {
+                                    item.setUserType(UserInfo.DOCTOR);
+                                    chatModelRepository.createDoctorOrUser(item);
+                                }
+                                else
+                                    return;
+                            }
+                        }else {
+                            chatModel= (ArrayList<ChatModel>) chatModelRepository.getAnother();
                         }
                         setChatListAdapter(chatModel);
                     }
@@ -223,7 +249,6 @@ public class ChatsDoctorFragment extends Fragment {
             }
         }
     }
-//    }
 
     public boolean checkPermissionForCamera() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
