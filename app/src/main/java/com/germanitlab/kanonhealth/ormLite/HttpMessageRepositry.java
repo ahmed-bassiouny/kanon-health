@@ -12,6 +12,7 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,14 +22,13 @@ import java.util.List;
 public class HttpMessageRepositry {
     private DatabaseHelper db;
     Dao<Message, Integer> messagesDao;
-    private Context context;
-
     public HttpMessageRepositry(Context context) {
         DatabaseManager databaseManager = new DatabaseManager();
-        this.context = context;
         db = databaseManager.getHelper(context);
+        db.setWriteAheadLoggingEnabled(false);
         try {
             messagesDao = db.getHttpMessagesDao();
+            messagesDao.setObjectCache(false);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("Error In Constructor","HttpMessageRepositry: ", e);
@@ -42,20 +42,21 @@ public class HttpMessageRepositry {
             Log.e("createOrUpate: ", "HttpMessageRepositry",e);
         }
     }
-    public List<Message> getAllMessageChat(int userID, int doctorID) {
-        // get chat from me and another user
+    public List<Message> getAllMessageChat(int doctorID) {
+        List<Message> messages=null;
         try {
             QueryBuilder<Message, Integer> queryBuilder = messagesDao.queryBuilder();
-                queryBuilder.where().eq(Message.KEY_TOID, doctorID).or().eq(Message.KEY_FROMID, doctorID);
+            queryBuilder.where().eq("toID", doctorID).or().eq("fromID", doctorID);
             // prepare our sql statement
-            PreparedQuery<Message> preparedQuery = queryBuilder.orderBy(Message.KEY_ID, true).prepare();
+            PreparedQuery<Message> preparedQuery = queryBuilder.orderBy("messageID", true).prepare();
             // query for all accounts that have "qwerty" as a password
-            List<Message> messageList = messagesDao.query(preparedQuery);
-            return messageList;
+            messages = messagesDao.query(preparedQuery);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e("getAllMessageChat: ", "HttpMessageRepositry",e);
+            messages=new ArrayList<>();
+        }finally {
+            return messages;
         }
-        return null;
     }
 }

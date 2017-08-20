@@ -75,7 +75,7 @@ public class DoctorListFragment extends Fragment {
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public Boolean is_doctor_data = false, is_clinic_data = false, is_chat_data_left = true, is_chat_data_right = true;
     LinearLayoutManager llm;
-    public UserInfoRepositry chatModelRepositry;
+    public UserInfoRepositry userInfoRepositry;
 
     private  static boolean leftTabVisible=true;
 
@@ -118,7 +118,7 @@ public class DoctorListFragment extends Fragment {
             clinics= new ArrayList<>();
 
             //mDoctorRepository = new UserRepository(getActivity());
-            chatModelRepositry=new UserInfoRepositry(getActivity());
+            userInfoRepositry=new UserInfoRepositry(getActivity());
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -207,9 +207,9 @@ public class DoctorListFragment extends Fragment {
                     ArrayList<ChatModel> chatModel= ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     if(chatModel==null)
                         return;
-                    for(UserInfo userInfo:chatModel){
-                        chatModelRepositry.createOrUpdate(userInfo);
-                    }
+//                    for(UserInfo userInfo:chatModel){
+//                        chatModelRepositry.createOrUpdate(userInfo);
+//                    }
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -222,9 +222,9 @@ public class DoctorListFragment extends Fragment {
                     ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     if(chatModel==null)
                         return;
-                    for(UserInfo userInfo:chatModel){
-                        chatModelRepositry.createOrUpdate(userInfo);
-                    }
+//                    for(UserInfo userInfo:chatModel){
+//                        chatModelRepositry.createOrUpdate(userInfo);
+//                    }
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
@@ -238,9 +238,9 @@ public class DoctorListFragment extends Fragment {
                     ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(),String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     if(chatModel==null)
                         return;
-                    for(UserInfo userInfo:chatModel){
-                        chatModelRepositry.createOrUpdate(userInfo);
-                    }
+//                    for(UserInfo userInfo:chatModel){
+//                        chatModelRepositry.createOrUpdate(userInfo);
+//                    }
                     is_chat_data_left = true;
                     isAllDataLoaded();
 
@@ -253,9 +253,9 @@ public class DoctorListFragment extends Fragment {
                     ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_ID,-1)));
                     if(chatModel==null)
                         return;
-                    for(UserInfo userInfo:chatModel){
-                        chatModelRepositry.createOrUpdate(userInfo);
-                    }
+//                    for(UserInfo userInfo:chatModel){
+//                        chatModelRepositry.createOrUpdate(userInfo);
+//                    }
                     is_chat_data_right = true;
                     isAllDataLoaded();
 
@@ -414,9 +414,13 @@ public class DoctorListFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                doctorList= ApiHelper.postGetDoctorList(getContext(),user.getUserID().toString());
-                for(UserInfo userInfo:doctorList){
-                    chatModelRepositry.createOrUpdate(userInfo);
+                if(Helper.isNetworkAvailable(getContext())) {
+                    doctorList = ApiHelper.postGetDoctorList(getContext(), user.getUserID().toString());
+                    for (UserInfo userInfo : doctorList) {
+                        userInfoRepositry.createDoctor(userInfo);
+                    }
+                }else {
+                    doctorList= (ArrayList<UserInfo>) userInfoRepositry.selectDoctorsOrClinic(true);
                 }
                 if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
                     is_doctor_data = true;
@@ -428,7 +432,6 @@ public class DoctorListFragment extends Fragment {
                     if(leftTabVisible) {
                         setDoctorAdapter(doctorList);
                     }
-                    //  CheckTabToScrollTo();
                 }
 
             }
@@ -440,7 +443,16 @@ public class DoctorListFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                clinics= ApiHelper.postGetClinicList(getContext());
+                if(Helper.isNetworkAvailable(getContext())) {
+                    clinics = ApiHelper.postGetClinicList(getContext());
+                    for (UserInfo userInfo : clinics) {
+                        userInfo.setUserType(3);
+                        userInfoRepositry.createClinic(userInfo);
+                    }
+
+                }else {
+                    clinics=(ArrayList<UserInfo>) userInfoRepositry.selectDoctorsOrClinic(false);
+                }
                 if (!PrefHelper.get(getActivity(),PrefHelper.KEY_IS_OLD,false)) {
                     is_clinic_data = true;
                     if(!leftTabVisible) {
@@ -528,7 +540,6 @@ public class DoctorListFragment extends Fragment {
 //        doctorList = mDoctorRepository.getAll(type);
 //        setAdapter(doctorList);
   //      CheckTabToScrollTo();
-        if (Helper.isNetworkAvailable(getContext())) {
          if(leftTabVisible)
          {
           setDoctorList();
@@ -536,7 +547,6 @@ public class DoctorListFragment extends Fragment {
          {
              setClinicList();
          }
-        }
     }
 
     private void initView() {

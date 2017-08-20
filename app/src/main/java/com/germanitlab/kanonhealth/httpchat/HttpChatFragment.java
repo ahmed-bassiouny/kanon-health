@@ -262,17 +262,10 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         super.onActivityCreated(savedInstanceState);
 
         try {
-            if (Helper.isNetworkAvailable(getContext())) {
                 initObjects();
                 initData();
                 showAttachmentDialog();
                 checkMode();
-            } else {
-                Toast.makeText(getContext(), R.string.error_connection, Toast.LENGTH_SHORT).show();
-
-            }
-
-
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT).show();
             getActivity().finish();
@@ -286,7 +279,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-        chatHelper = new ChatHelper();
+        chatHelper = new ChatHelper(getContext());
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
@@ -353,7 +346,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         public void run() {
                             for (Message message : messages) {
                                 // update satabase
-                                //messageRepositry.createOrUpate(message);
+                                messageRepositry.createOrUpate(message);
                             }
                         }
                     }).start();
@@ -397,7 +390,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         public void run() {
                             for (Document document : documents) {
                                 // update satabase
-                                //documentRepositry.createOrUpate(document);
+                                documentRepositry.createOrUpate(document);
                             }
                         }
                     }).start();
@@ -420,7 +413,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             @Override
             public void run() {
 
-                messages = (ArrayList) messageRepositry.getAllMessageChat(userID, doctorID);
+                messages = (ArrayList) messageRepositry.getAllMessageChat(doctorID);
                 isStoragePermissionGranted();
                 pbar_loading.setVisibility(View.GONE);
             }
@@ -777,7 +770,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             if (notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFromID() == doctorID) {
+                    messageRepositry.createOrUpate(message);
                     chatHelper.creatRealMessage(message, 0, messages, chatAdapter, recyclerView);
+
                     messageSeen(message.getMessageID().toString());
                     // seen request for specific msg
                 } else {
@@ -792,7 +787,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if ((message.getFromID() == userID || message.getFromID() == doctorID) && (message.getToID() == userID || message.getToID() == doctorID)) {
                     userInfo.setIsSessionOpen(0);
-                    chatModelRepositry.createOrUpdate(userInfo);
+                    //chatModelRepositry.createOrUpdate(userInfo);
                     checkSessionOpen(userMe.getUserType()==UserInfo.DOCTOR);
                     getActivity().invalidateOptionsMenu();
 
@@ -1080,6 +1075,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             button2.setEnabled(true);
             button2.setText(R.string.start_new_request);
             etMessage.setHint(R.string.write_message);
+            start_record.setEnabled(true);
             if (userInfo != null)
                 checkSessionOpen(userMe.getUserType()==UserInfo.DOCTOR);
         } else {
@@ -1095,6 +1091,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             button2.setEnabled(false);
             button2.setText(R.string.offline_mode_canot_contact_with_doctor);
             etMessage.setHint(R.string.offline_mode_canot_contact_with_doctor);
+            start_record.setEnabled(false);
         }
     }
 
@@ -1125,6 +1122,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         super.onResume();
         if (chatAdapter != null)
             chatAdapter.clearSelected();
+        UserInfoRepositry userInfoRepositry = new UserInfoRepositry(getContext());
+        userInfoRepositry.getDoctor(doctorID);
     }
 
     @OnClick(R.id.img_back)

@@ -70,8 +70,11 @@ public class UserInfo extends ParentModel {
     // endregion
 
     // region Attributes
+
+    @DatabaseField(generatedId = true)
+    private int idLocalDatabase; // it's for local database not use in anything
     @SerializedName(KEY_USERID)
-    @DatabaseField(id = true)
+    @DatabaseField()
     private Integer userID;
     @SerializedName(KEY_DOCTOR_ID)
     @DatabaseField
@@ -166,18 +169,25 @@ public class UserInfo extends ParentModel {
 
     // extra for clinic
     @SerializedName(KEY_ID)
+    @DatabaseField()
     private Integer id;
     @SerializedName(KEY_NAME)
+    @DatabaseField()
     private String name;
     @SerializedName(KEY_ADDRESS)
+    @DatabaseField()
     private String address;
     @SerializedName(KEY_CITY)
+    @DatabaseField()
     private String city;
     @SerializedName(KEY_PROVINCE)
+    @DatabaseField()
     private String province;
     @SerializedName(KEY_COUNTRY)
+    @DatabaseField()
     private String country;
     @SerializedName(KEY_FAX)
+    @DatabaseField()
     private String fax;
 
 

@@ -1,6 +1,7 @@
 package com.germanitlab.kanonhealth.httpchat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,8 @@ import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ParentFragment;
+import com.germanitlab.kanonhealth.ormLite.HttpDocumentRepositry;
+import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -28,6 +31,13 @@ import java.util.Calendar;
 
 public class ChatHelper {
 
+    HttpDocumentRepositry httpDocumentRepositry;
+    HttpMessageRepositry httpMessageRepositry;
+
+    public ChatHelper(Context context){
+        httpDocumentRepositry=new HttpDocumentRepositry(context);
+        httpMessageRepositry=new HttpMessageRepositry(context);
+    }
 
     protected void takeAndSelectImage(int type, ParentFragment parentFragment, FragmentActivity fragmentActivity) {
         // type = PickerBuilder.SELECT_FROM_GALLERY or PickerBuilder.SELECT_FROM_CAMERA
@@ -88,6 +98,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 final Message result = ApiHelper.sendMessage(message, null, fragmentActivity);
+                httpMessageRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -118,6 +129,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 final Document result = ApiHelper.postAddDocument(userID, document, null, fragmentActivity);
+                httpDocumentRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -195,6 +207,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 final Message result = ApiHelper.sendMessage(message, null, fragmentActivity);
+                httpMessageRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -233,6 +246,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 final Document result = ApiHelper.postAddDocument(userID, document, null, fragmentActivity);
+                httpDocumentRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -264,6 +278,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 final Message result = ApiHelper.sendMessage(message, file, fragmentActivity);
+                httpMessageRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -292,6 +307,7 @@ public class ChatHelper {
             @Override
             public void run() {
                 final Document result = ApiHelper.postAddDocument(userID, document, file, fragmentActivity);
+                httpDocumentRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

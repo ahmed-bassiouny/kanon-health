@@ -9,9 +9,9 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
 import com.germanitlab.kanonhealth.api.models.Document;
+import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.models.Table;
-import com.germanitlab.kanonhealth.models.messages.Message;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -39,8 +39,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> httpMessagesDao = null;
     private Dao<com.germanitlab.kanonhealth.api.models.Document, Integer> httpdocumentsDao = null;
     private RuntimeExceptionDao<UserInfo, Integer> doctorsRuntimeDao = null;
-    private RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesRuntimeDao = null;
-    private RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> documentsRuntimeDao = null;
+    private RuntimeExceptionDao<Message, Integer> messagesRuntimeDao = null;
+    private RuntimeExceptionDao<Document, Integer> documentsRuntimeDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,6 +53,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, UserInfo.class);
             TableUtils.createTable(connectionSource, Message.class);
+            TableUtils.createTable(connectionSource, Document.class);
         } catch (Exception e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             Crashlytics.logException(e);
@@ -63,8 +64,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         // here we try inserting data in the on-create as a test
         RuntimeExceptionDao<UserInfo, Integer> dao = getUsersDataDao();
-        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Message, Integer> messagesDataDao = getMessagesDataDao();
-        RuntimeExceptionDao<com.germanitlab.kanonhealth.api.models.Document, Integer> daos = getDocumentDataDao();
+        RuntimeExceptionDao<Message, Integer> messagesDataDao = getMessagesDataDao();
+        RuntimeExceptionDao<Document, Integer> daos = getDocumentDataDao();
         // create some entries in the onCreate
         Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate");
     }
@@ -75,6 +76,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, UserInfo.class, true);
             TableUtils.dropTable(connectionSource, Message.class, true);
+            TableUtils.dropTable(connectionSource, Document.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource);
         } catch (Exception e) {
@@ -113,8 +115,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return messagesDao;
     }
     public Dao<com.germanitlab.kanonhealth.api.models.Message, Integer> getHttpMessagesDao() throws SQLException {
-        if (messagesDao == null) {
-            messagesDao = getDao(com.germanitlab.kanonhealth.api.models.Message.class);
+        if (httpMessagesDao == null) {
+            httpMessagesDao = getDao(com.germanitlab.kanonhealth.api.models.Message.class);
         }
         return httpMessagesDao;
     }

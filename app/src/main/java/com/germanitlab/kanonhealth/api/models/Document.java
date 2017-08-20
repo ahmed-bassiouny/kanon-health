@@ -19,7 +19,7 @@ public class Document extends ParentModel{
 
 
     @SerializedName(KEY_DOCUMENT_ID)
-    @DatabaseField
+    @DatabaseField(id = true)
     private Integer documentId;
 
     @SerializedName(KEY_TYPE)
