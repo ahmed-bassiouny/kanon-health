@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class CloseSessionParameters extends ParentParameters {
 
-    public static final String PARAMETER_REQUEST_ID = "id_request";
+    public static final String PARAMETER_REQUEST_ID = "request_id";
 
     public int getRequestID() {
         return requestID;

@@ -19,7 +19,7 @@ public class OpenSessionParameters extends ParentParameters {
     @SerializedName(PARAMETER_DOCTOR_ID)
     private String doctorID;
     @SerializedName(PARAMETER_QUESTIONS_ANSWERS)
-    private HashMap<String,String> questionsAnswers;
+    private String questionsAnswers;
 
     public String getUserID() {
         return userID;
@@ -37,11 +37,11 @@ public class OpenSessionParameters extends ParentParameters {
         this.doctorID = doctorID;
     }
 
-    public HashMap<String, String> getQuestionsAnswers() {
+    public String getQuestionsAnswers() {
         return questionsAnswers;
     }
 
     public void setQuestionsAnswers(HashMap<String, String> questionsAnswers) {
-        this.questionsAnswers = questionsAnswers;
+        this.questionsAnswers = String.valueOf(questionsAnswers);
     }
 }
