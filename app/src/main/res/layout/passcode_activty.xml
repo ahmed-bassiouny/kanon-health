@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,237 +9,366 @@
     <TextView
         android:id="@+id/pass_text"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:padding="20dp"
         android:text="@string/enter_your_passcode"
         android:textAlignment="center"
         android:textColor="@color/dark_gray"
-        android:textSize="25dp"
-        app:layout_widthPercent="100%" />
+        android:textSize="25sp"
+        android:layout_width="0dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp" />
 
 
-    <android.support.percent.PercentRelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/indicator"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pass_text"
-        app:layout_marginBottomPercent="5%">
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_five"
+        app:layout_constraintTop_toBottomOf="@+id/pass_text"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_two">
 
         <Button
             android:id="@+id/ind_one"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
             android:focusable="false"
-            app:layout_aspectRatio="100%"
-            app:layout_marginBottomPercent="1%"
-            app:layout_marginEndPercent="4%"
-            app:layout_marginStartPercent="25%"
-            app:layout_widthPercent="5%"
-
-
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/ind_two"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintHorizontal_bias="0.95" />
 
         <Button
             android:id="@+id/ind_two"
-            android:layout_toEndOf="@+id/ind_one"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
             android:focusable="false"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="4%"
-            app:layout_widthPercent="5%" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintLeft_toRightOf="@+id/ind_one"
+            app:layout_constraintRight_toLeftOf="@+id/ind_three"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
 
         <Button
             android:id="@+id/ind_three"
-            android:layout_toEndOf="@+id/ind_two"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
             android:focusable="false"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="4%"
-            app:layout_widthPercent="5%" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintLeft_toRightOf="@+id/ind_two"
+            app:layout_constraintRight_toLeftOf="@+id/ind_four"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
 
         <Button
             android:id="@+id/ind_four"
-            android:layout_toEndOf="@+id/ind_three"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
             android:focusable="false"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="4%"
-            app:layout_widthPercent="5%" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintLeft_toRightOf="@+id/ind_three"
+            app:layout_constraintRight_toLeftOf="@+id/ind_five"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
 
         <Button
             android:id="@+id/ind_five"
-            android:layout_toEndOf="@+id/ind_four"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
             android:focusable="false"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="4%"
-            app:layout_widthPercent="5%" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toRightOf="@+id/ind_four"
+            app:layout_constraintRight_toLeftOf="@+id/ind_six"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
 
         <Button
             android:id="@+id/ind_six"
-            android:layout_toEndOf="@+id/ind_five"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/indicator_unpressed_shape"
             android:clickable="false"
             android:focusable="false"
-            app:layout_aspectRatio="100%"
-            app:layout_marginEndPercent="4%"
-            app:layout_widthPercent="5%" />
-    </android.support.percent.PercentRelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintLeft_toRightOf="@+id/ind_five"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" />
+    </android.support.constraint.ConstraintLayout>
 
 
     <Button
         android:id="@+id/one"
-        android:layout_below="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:clickable="true"
         android:text="1"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginBottomPercent="5%"
-        app:layout_marginEndPercent="10%"
-        app:layout_marginStartPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/indicator"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_two"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_one" />
 
     <Button
         android:id="@+id/two"
-        android:layout_below="@+id/indicator"
-        android:layout_toEndOf="@+id/one"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="2"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/indicator"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_four"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_three" />
 
     <Button
         android:id="@+id/three"
-        android:layout_below="@+id/indicator"
-        android:layout_toEndOf="@+id/two"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="3"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
-
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_six"
+        app:layout_constraintTop_toBottomOf="@+id/indicator"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_five"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/four"
-        android:layout_below="@+id/one"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
+        android:clickable="true"
         android:text="4"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginBottomPercent="5%"
-        app:layout_marginEndPercent="10%"
-        app:layout_marginStartPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/one"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_two"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_one"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/five"
-        android:layout_below="@+id/one"
-        android:layout_toEndOf="@+id/four"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="5"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/two"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_four"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_three"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/six"
-        android:layout_below="@+id/one"
-        android:layout_toEndOf="@+id/five"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="6"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
-
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_six"
+        app:layout_constraintTop_toBottomOf="@+id/three"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_five"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/seven"
-        android:layout_below="@+id/four"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
+        android:clickable="true"
         android:text="7"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginBottomPercent="5%"
-        app:layout_marginEndPercent="10%"
-        app:layout_marginStartPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/four"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_two"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_one"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/eight"
-        android:layout_below="@+id/four"
-        android:layout_toEndOf="@+id/seven"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="8"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/five"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_four"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_three"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/nine"
-        android:layout_below="@+id/four"
-        android:layout_toEndOf="@+id/eight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="9"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_six"
+        app:layout_constraintTop_toBottomOf="@+id/six"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_five"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/empty"
-        android:layout_below="@+id/seven"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
         android:background="@drawable/button_bg_round"
+        android:clickable="true"
+        android:text=""
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        android:visibility="invisible"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_marginStartPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/seven"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_two"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_one"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/zero"
-        android:layout_below="@+id/seven"
-        android:layout_toEndOf="@+id/empty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/button_bg_round"
         android:text="0"
         android:textColor="@color/tab_text_selector"
         android:textSize="35sp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintTop_toBottomOf="@+id/eight"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_four"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_three"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/delete"
-        android:layout_below="@+id/seven"
-        android:layout_toEndOf="@+id/zero"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#0000"
         android:text="@string/delete"
         android:textColor="@color/dark_gray"
         android:textSize="13dp"
-        app:layout_aspectRatio="100%"
-        app:layout_marginEndPercent="10%"
-        app:layout_widthPercent="20%" />
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintRight_toLeftOf="@+id/guideline_six"
+        app:layout_constraintTop_toBottomOf="@+id/nine"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_five"
+        android:layout_marginTop="20dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_one"
+        app:layout_constraintGuide_percent="0.1"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_two"
+        app:layout_constraintGuide_percent="0.3"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_three"
+        app:layout_constraintGuide_percent="0.4"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_four"
+        app:layout_constraintGuide_percent="0.6"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_five"
+        app:layout_constraintGuide_percent="0.7"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_six"
+        app:layout_constraintGuide_percent="0.9"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
 
 
-</android.support.percent.PercentRelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
