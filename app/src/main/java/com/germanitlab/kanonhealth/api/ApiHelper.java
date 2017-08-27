@@ -549,7 +549,7 @@ public class ApiHelper {
     }
 
     // edit doctor return true if doctor edited
-    public static boolean editDoctor(Context context, UserInfo userInfo, File avatar) {
+    public static boolean editDoctor(Context context, UserInfo userInfo, File avatar,String langIds,String specialityIds) {
         boolean result = false;
         try {
             EditDoctorParameter editDoctorParamater = new EditDoctorParameter();
@@ -566,6 +566,12 @@ public class ApiHelper {
             editDoctorParamater.setStreetName(userInfo.getStreetName());
             editDoctorParamater.setZipCode(userInfo.getZipCode());
             editDoctorParamater.setOpenType(String.valueOf(userInfo.getOpenType()));
+            editDoctorParamater.setCountryCode(userInfo.getCountry_code());
+            editDoctorParamater.setPhone(userInfo.getPhone());
+            editDoctorParamater.setSpeciality(specialityIds);
+            editDoctorParamater.setLangSub(langIds);
+
+            System.out.println(editDoctorParamater.toHashMap());
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);

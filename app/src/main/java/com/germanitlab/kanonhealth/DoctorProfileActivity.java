@@ -129,6 +129,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     private Menu menu;
     String specialityIds = "";
     String langIds = "";
+    boolean imageFlag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +143,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             userInfo = new UserInfo();
             userInfo = (UserInfo) getIntent().getSerializableExtra("doctor_data");
             is_me = userInfo.getUserID() == PrefHelper.get(this, PrefHelper.KEY_USER_ID, -1);
+            imageFlag=false;
             bindData();
             setVisiblitiy();
 
@@ -221,6 +223,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 editImage.setVisibility(View.GONE);
                 ivTimeTable.setVisibility(View.GONE);
                 handleNewData();
+                imageFlag=true;
                 bindData();
                 break;
         }
@@ -274,7 +277,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar);
+                boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar,langIds, specialityIds);
                 if (result) {
                     // success
                     if(userInfo.getOpenType()!=0|| userInfo.getTimeTable().size()==0) {
@@ -399,7 +402,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     private void bindData() {
 
-        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
+        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()&&imageFlag==false) {
             ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
         }
         if (is_me) {
