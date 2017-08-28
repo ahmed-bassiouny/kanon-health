@@ -249,13 +249,14 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final boolean result = ApiHelper.getIsOpen(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1),userInfo.getUserID());
+                 //*********** it's comment becuase i am waiting karim finish task
+                //final boolean result = ApiHelper.getIsOpen(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1),userInfo.getUserID());
                 DoctorProfileActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (result){
+                        //if (result){
                             userInfo.setIsSessionOpen(1);
-                        }
+                        //}
                         Intent intent = new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
                         intent.putExtra("userInfo", userInfo);
                         intent.putExtra("doctorID", userInfo.getUserID());
