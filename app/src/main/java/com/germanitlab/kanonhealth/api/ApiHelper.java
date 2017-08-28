@@ -28,6 +28,7 @@ import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.FavouriteParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
+import com.germanitlab.kanonhealth.api.parameters.IsOpenParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
@@ -115,6 +116,7 @@ public class ApiHelper {
     private static final String API_FAVOURITE = "favourite";
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
+    private static final String API_IS_OPEN = "flag/is_open";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
     private static final String API_CLINIC_WORKING_HOURS = "users/clinic_working_hours";
     private static final String API_NETWORK_LOCATION = "http://ip-api.com/json";
@@ -939,6 +941,24 @@ public class ApiHelper {
             return result;
         }
     }
+
+    public static boolean getIsOpen(int userId,int docId){
+        boolean result = false;
+        try {
+            IsOpenParameters openParameters = new IsOpenParameters();
+            openParameters.setUserId(userId);
+            openParameters.setDocId(docId);
+            String jsonString=post(API_IS_OPEN,openParameters.toJson());
+            Gson gson = new Gson();
+            ParentResponse parentResponse = gson.fromJson(jsonString,ParentResponse.class);
+            return parentResponse.getStatus();
+        }catch (Exception e){
+            Helper.handleError(TAG, "getIsOpen", e, -1, null);
+        }finally {
+            return result;
+        }
+    }
+
 
 
 

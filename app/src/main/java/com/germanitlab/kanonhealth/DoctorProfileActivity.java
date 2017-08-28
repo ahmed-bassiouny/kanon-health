@@ -246,10 +246,24 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public void contactClick(View v) {
         if (is_me)
             return;
-        Intent intent = new Intent(this, HttpChatActivity.class);
-        intent.putExtra("userInfo", userInfo);
-        intent.putExtra("doctorID", userInfo.getUserID());
-        startActivity(intent);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final boolean result = ApiHelper.getIsOpen(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1),userInfo.getUserID());
+                DoctorProfileActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result){
+                            userInfo.setIsSessionOpen(1);
+                        }
+                        Intent intent = new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
+                        intent.putExtra("userInfo", userInfo);
+                        intent.putExtra("doctorID", userInfo.getUserID());
+                        startActivity(intent);
+                    }
+                });
+            }
+        }).start();
     }
 
 
