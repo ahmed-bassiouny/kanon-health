@@ -44,7 +44,6 @@ import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -54,9 +53,8 @@ import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -191,7 +189,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                         @Override
                         public void run() {
                             if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
+                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + clinic.getAvatar());
                             }
                             etName.setText(clinic.getName());
                             etPhone.setText(clinic.getPhone());

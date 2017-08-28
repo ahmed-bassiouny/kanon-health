@@ -3,25 +3,17 @@ package com.germanitlab.kanonhealth.profile;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -38,23 +30,18 @@ import com.germanitlab.kanonhealth.adapters.EditQuestionAdapter;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Constants;
-import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
-import com.germanitlab.kanonhealth.initialProfile.ExifUtils;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.models.user.Info;
 
 import java.io.File;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Set;
@@ -154,7 +141,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     private void bindData() {
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.profile_place_holder);
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfo.getAvatar(),R.drawable.profile_place_holder);
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -336,7 +323,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     @Override
     public void deleteMyImage() {
             userInfo.setAvatar("");
-            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL+ "/" + "", R.drawable.profile_place_holder);
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + "", R.drawable.profile_place_holder);
             avatar=null;
             pickerDialog.dismiss();
     }

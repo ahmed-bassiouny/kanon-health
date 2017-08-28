@@ -10,7 +10,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.callback.UploadListener;
 
@@ -18,8 +18,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -52,47 +50,6 @@ public class InternetFilesOperations {
     private InternetFilesOperations(Context context) {
         this.context = context;
 
-    }
-
-    public void uploadFile(final String filePath, final UploadListener uploadListener) {
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                if (filePath != null) {
-                    File file = new File(filePath);
-                    Log.d("EDIT USER PROFILE", "UPLOAD: file length = " + file.length());
-                    Log.d("EDIT USER PROFILE", "UPLOAD: file exist = " + file.exists());
-                    mpEntity.addPart("file", new FileBody(file, "application/octet"));
-                }
-
-                try {
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost(Constants.CHAT_SERVER_URL + "/upload");
-                    httppost.setEntity(mpEntity);
-
-                    HttpResponse response = httpclient.execute(httppost);
-                    HttpEntity entity = response.getEntity();
-//                    httpclient.getConnectionManager().shutdown();
-                    // print responce
-                    final String responseStr = EntityUtils.toString(entity);
-                    uploadListener.onUploadFinish(responseStr);
-                    Log.e("log_tag ******", "good connection");
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                }
-
-
-            }
-        });
-        t.start();
-    }
-
-    public void uploadFileWithProgress(ProgressBar progressBar, String url, String filePath, UploadListener uploadListener) {
-
-        new UploadFileToServer(progressBar, url, filePath, uploadListener).execute();
     }
 
     private class UploadFileToServer extends AsyncTask<Void, Integer, String> {
@@ -350,7 +307,7 @@ public class InternetFilesOperations {
             int count;
             URL url;
             try {
-                url = new URL(Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);
+                url = new URL(ApiHelper.SERVER_IMAGE_UPLOADS + downloadUrl);
                 if (Helper.isNetworkAvailable(context)) {
                     if (file != null && file.exists()) {
                         URLConnection conection = url.openConnection();
@@ -389,7 +346,7 @@ public class InternetFilesOperations {
                 }
 
             } catch (Exception e) {
-                Crashlytics.setString("request file url", Constants.CHAT_SERVER_URL_IMAGE + "/" + downloadUrl);
+                Crashlytics.setString("request file url", ApiHelper.SERVER_IMAGE_UPLOADS + downloadUrl);
                 Crashlytics.logException(e);
             }
 

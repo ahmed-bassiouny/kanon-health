@@ -403,7 +403,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     private void bindData() {
 
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()&&imageFlag==false) {
-            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfo.getAvatar(), R.drawable.placeholder);
         }
         if (is_me) {
             tvToolbarName.setText(getResources().getString(R.string.my_profile));
@@ -712,7 +712,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     public void deleteMyImage() {
         userInfo.setAvatar("");
         avatar = null;
-        ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+        ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfo.getAvatar(), R.drawable.placeholder);
         PrefHelper.put(getApplicationContext(), PrefHelper.KEY_PROFILE_IMAGE, "");
         pickerDialog.dismiss();
     }

@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.ClinicProfileActivity;
-import com.germanitlab.kanonhealth.DoctorProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Speciality;
@@ -23,7 +22,6 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
-import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.nex3z.flowlayout.FlowLayout;
 
 import java.util.List;
@@ -141,7 +139,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
             //--------------------------------------------------------------------------------------------------//
 
             if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + clinic.getAvatar(), R.drawable.placeholder);
             }
 
             holder.imgAvatar.setBorderWidth(0);

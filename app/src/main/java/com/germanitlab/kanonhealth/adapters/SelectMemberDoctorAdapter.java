@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
-import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class SelectMemberDoctorAdapter extends RecyclerView.Adapter<SelectMember
                 holder.tv_title.setText(model.getFullName());
                         if (holder.img_icon != null) {
                             if (model.getAvatar()!= null && !TextUtils.isEmpty(model.getAvatar())) {
-                                ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_URL + "/" + model.getAvatar(),R.drawable.placeholder);
+                                ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + model.getAvatar(),R.drawable.placeholder);
                             } else {
                                 holder.img_icon.setImageResource(R.drawable.placeholder);
                             }

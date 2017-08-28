@@ -124,9 +124,10 @@ public class ApiHelper {
     //region Configuration
 
 //    public static final String SERVER_API_URL = "http://api.gagabay.com/V1/";
-//    public static final String SERVER_IMAGE_URL = "http://api.gagabay.com/";
+//    public static final String SERVER_IMAGE_UPLOADS = "http://api.gagabay.com/";
 
     public static final String SERVER_API_URL = "http://consoler-it.com/kanon/V1/";
+    public static final String SERVER_IMAGE_UPLOADS = "http://consoler-it.com/kanon/public/uploads/";
     public static final String SERVER_IMAGE_URL = "http://consoler-it.com/kanon/";
 
     private static final String TAG = "ApiHelper";

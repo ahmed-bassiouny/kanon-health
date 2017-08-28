@@ -80,7 +80,7 @@ public class Comment extends AppCompatActivity {
                                 public void run() {
                                     txt_doctor_name.setText(userInfo.getFullName());
                                     if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
-                                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.placeholder);
+                                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfo.getAvatar(),R.drawable.placeholder);
                                     }
                                 }
                             });

@@ -44,7 +44,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.MyViewHolder> 
             holder.txt_comment.setText(comment.getComment());
             holder.rb_person_rate.setRating(Float.valueOf(comment.getRate()));
             if (comment.getAvatar() != null && comment.getAvatar() != "") {
-                ImageHelper.setImage(holder.img_person_image, ApiHelper.SERVER_IMAGE_URL + "/" + comment.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.img_person_image, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + comment.getAvatar(), R.drawable.placeholder);
             }else
             {
                 ImageHelper.setImage(holder.img_person_image, "", R.drawable.placeholder);

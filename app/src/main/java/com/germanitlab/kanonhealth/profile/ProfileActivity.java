@@ -3,7 +3,6 @@ package com.germanitlab.kanonhealth.profile;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +18,6 @@ import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
@@ -206,7 +204,7 @@ public class ProfileActivity extends ParentActivity {
     private void bindData() {
 
         if (userInfoResponse.getAvatar() != null && !userInfoResponse.getAvatar().isEmpty()) {
-            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfoResponse.getAvatar());
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfoResponse.getAvatar());
         }
 
         if (userInfoResponse.getUserType() == UserInfo.DOCTOR)

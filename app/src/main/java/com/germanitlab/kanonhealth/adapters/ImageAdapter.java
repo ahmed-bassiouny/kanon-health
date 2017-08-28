@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
-import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 
 /**
@@ -39,7 +39,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         try {
             if (images[position] != null) {
-                ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL + "/" + images[position], R.drawable.profile_place_holder);
+                ImageHelper.setImage(holder.image, ApiHelper.SERVER_IMAGE_UPLOADS + images[position], R.drawable.profile_place_holder);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
