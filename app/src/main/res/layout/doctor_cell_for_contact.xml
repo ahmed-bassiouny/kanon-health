@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/myrow"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="80dp"
     android:background="@color/white"
     android:orientation="horizontal">
 
@@ -42,7 +42,7 @@
         android:textColor="@color/title_gray"
         android:textSize="@dimen/size_15sp"
         android:textStyle="bold"
-        app:layout_heightPercent="30%"
+        app:layout_heightPercent="25%"
         app:layout_marginEndPercent="3%"
         app:layout_marginTopPercent="3%"
         app:layout_widthPercent="50%"
@@ -59,7 +59,7 @@
         android:textAlignment="textStart"
         android:textColor="@color/text_msg_input"
         android:textSize="@dimen/size_15sp"
-        app:layout_heightPercent="30%"
+        app:layout_heightPercent="25%"
         app:layout_marginEndPercent="6%"
         app:layout_marginTopPercent="3%" />
 
@@ -72,10 +72,10 @@
         android:layout_below="@id/tv_specialities"
         android:layout_toEndOf="@id/img_avatar_cell"
         android:orientation="horizontal"
-        app:layout_heightPercent="30%"
-        app:layout_marginBottomPercent="4%"
+        app:layout_heightPercent="40%"
+        app:layout_marginBottomPercent="3%"
         app:layout_marginEndPercent="3%"
-        app:layout_marginTopPercent="3%"
+        app:layout_marginTopPercent="4%"
         f:layout_newLine="true">
 
 
