@@ -76,7 +76,6 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 // tab poition is for tabs from 1 to 4
          */
             final UserInfo doctor = doctorContactsList.get(position);
-
             if (holder.tvDoctorName != null) {
                 if (!TextUtils.isEmpty(doctor.getFullName()))
                     holder.tvDoctorName.setText(doctor.getFullName());
@@ -104,7 +103,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             //--------------------------------------------------------------------------------------------------//
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + doctor.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + doctor.getAvatar(), R.drawable.placeholder);
             }
 
                 holder.imgAvatar.setBorderWidth(0);

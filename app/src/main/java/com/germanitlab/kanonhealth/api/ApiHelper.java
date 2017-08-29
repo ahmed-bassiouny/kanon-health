@@ -47,6 +47,7 @@ import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetDoctorListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetDocumentListResponse;
+import com.germanitlab.kanonhealth.api.responses.IsOpenResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
@@ -955,8 +956,8 @@ public class ApiHelper {
             openParameters.setDocId(docId);
             String jsonString=post(API_IS_OPEN,openParameters.toJson());
             Gson gson = new Gson();
-            ParentResponse parentResponse = gson.fromJson(jsonString,ParentResponse.class);
-            return parentResponse.getStatus();
+            IsOpenResponse isOpenResponse = gson.fromJson(jsonString,IsOpenResponse.class);
+            return isOpenResponse.getStatus() ==1;
         }catch (Exception e){
             Helper.handleError(TAG, "getIsOpen", e, -1, null);
         }finally {
