@@ -66,6 +66,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -137,35 +138,39 @@ public class ApiHelper {
     private static final String EMPTY_JSON = "{}";
 
 
+    private static OkHttpClient getClient(){
+        // set time out connection 20SEC
+        return new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .build();
+    }
     private static String post(String url, String parameters) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+
         RequestBody body = RequestBody.create(JSON, parameters);
         Request request = new Request.Builder()
                 .url(SERVER_API_URL + url)
                 .post(body)
                 .build();
         Log.i(TAG, request.toString());
-        Response response = client.newCall(request).execute();
+        Response response = getClient().newCall(request).execute();
         return ApiUtils.removeNulls(response.body().string());
     }
 
     private static String postWithoutServerPath(String url, String parameters) throws IOException {
-        OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, parameters);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
         Log.i(TAG, request.toString());
-        Response response = client.newCall(request).execute();
+        Response response = getClient().newCall(request).execute();
         return ApiUtils.removeNulls(response.body().string());
     }
 
 
     private static String postWithFile(String url, HashMap<String, Object> parameters, File file, String fileParameterName) throws IOException {
-        String result = "";
-        OkHttpClient client = new OkHttpClient();
-
         MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(MimeUtils.getType(file.getName())), file));
@@ -179,7 +184,7 @@ public class ApiHelper {
                 .url(SERVER_API_URL + url)
                 .post(requestBody.build())
                 .build();
-        Response response = client.newCall(request).execute();
+        Response response = getClient().newCall(request).execute();
         return ApiUtils.removeNulls(response.body().string());
     }
 

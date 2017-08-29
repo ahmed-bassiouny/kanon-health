@@ -255,7 +255,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                     @Override
                     public void run() {
                         //if (result){
-                            userInfo.setIsSessionOpen(1);
+                            //userInfo.setIsSessionOpen(1);
                         //}
                         Intent intent = new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
                         intent.putExtra("userInfo", userInfo);
