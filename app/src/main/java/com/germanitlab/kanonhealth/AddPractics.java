@@ -189,7 +189,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                         @Override
                         public void run() {
                             if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + clinic.getAvatar());
+                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
                             }
                             etName.setText(clinic.getName());
                             etPhone.setText(clinic.getPhone());

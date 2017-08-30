@@ -141,7 +141,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     private void bindData() {
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfo.getAvatar(),R.drawable.profile_place_holder);
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.profile_place_holder);
 
         etLastName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -323,7 +323,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     @Override
     public void deleteMyImage() {
             userInfo.setAvatar("");
-            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + "", R.drawable.profile_place_holder);
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + "", R.drawable.profile_place_holder);
             avatar=null;
             pickerDialog.dismiss();
     }

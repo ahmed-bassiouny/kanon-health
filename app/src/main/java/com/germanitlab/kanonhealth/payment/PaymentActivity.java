@@ -122,7 +122,7 @@ public class PaymentActivity extends ParentActivity {
             if (doctorObj != null) {
                 tvDoctorName.setText(doctorObj.getFullName());
 
-                ImageHelper.setImage(ivDoctor, ApiHelper.SERVER_IMAGE_UPLOADS + doctorObj.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(ivDoctor, ApiHelper.SERVER_IMAGE_URL + doctorObj.getAvatar(), R.drawable.placeholder);
 
                 if (doctorObj.getRateNum() != null) {
                     ratingBar.setRating(Float.parseFloat(String.valueOf(doctorObj.getRateNum())));

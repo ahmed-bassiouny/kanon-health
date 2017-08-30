@@ -288,7 +288,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
             setTime(message.getSent_at(),imageViewHolder.date);
 
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            ImageHelper.setImage(imageViewHolder.image_message, ApiHelper.SERVER_IMAGE_UPLOADS + message.getMsg(), imageViewHolder.progress_view_download);
+            ImageHelper.setImage(imageViewHolder.image_message, ApiHelper.SERVER_IMAGE_URL + message.getMsg(), imageViewHolder.progress_view_download);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -299,7 +299,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                     dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
                     ImageView img = (ImageView) dialog.findViewById(R.id.img);
                     ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
-                    ImageHelper.setImage(img, ApiHelper.SERVER_IMAGE_UPLOADS + message.getMsg(), pbar);
+                    ImageHelper.setImage(img, ApiHelper.SERVER_IMAGE_URL + message.getMsg(), pbar);
                     dialog.show();
                 }
             });
@@ -603,7 +603,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                     if (file.exists())
                         Util.getInstance(activity).showVideo(Uri.fromFile(file));
                     else {
-                        String url = ApiHelper.SERVER_IMAGE_UPLOADS + path;
+                        String url = ApiHelper.SERVER_IMAGE_URL + path;
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         intent.setDataAndType(Uri.parse(url), "video/*");
                         activity.startActivity(intent);

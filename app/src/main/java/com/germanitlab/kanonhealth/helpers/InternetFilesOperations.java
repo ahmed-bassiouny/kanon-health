@@ -307,7 +307,7 @@ public class InternetFilesOperations {
             int count;
             URL url;
             try {
-                url = new URL(ApiHelper.SERVER_IMAGE_UPLOADS + downloadUrl);
+                url = new URL(ApiHelper.SERVER_IMAGE_URL + downloadUrl);
                 if (Helper.isNetworkAvailable(context)) {
                     if (file != null && file.exists()) {
                         URLConnection conection = url.openConnection();
@@ -346,7 +346,7 @@ public class InternetFilesOperations {
                 }
 
             } catch (Exception e) {
-                Crashlytics.setString("request file url", ApiHelper.SERVER_IMAGE_UPLOADS + downloadUrl);
+                Crashlytics.setString("request file url", ApiHelper.SERVER_IMAGE_URL + downloadUrl);
                 Crashlytics.logException(e);
             }
 

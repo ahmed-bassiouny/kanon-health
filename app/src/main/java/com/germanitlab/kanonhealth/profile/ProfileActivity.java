@@ -204,7 +204,7 @@ public class ProfileActivity extends ParentActivity {
     private void bindData() {
 
         if (userInfoResponse.getAvatar() != null && !userInfoResponse.getAvatar().isEmpty()) {
-            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfoResponse.getAvatar());
+            ImageHelper.setImage(imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfoResponse.getAvatar());
         }
 
         if (userInfoResponse.getUserType() == UserInfo.DOCTOR)

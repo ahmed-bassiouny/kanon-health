@@ -105,7 +105,7 @@ public class Helper {
         CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
         if (userInfo.getAvatar() != null && userInfo.getAvatar() != "") {
-            ImageHelper.setImage(circleImageView, ApiHelper.SERVER_IMAGE_UPLOADS + userInfo.getAvatar(), -1);
+            ImageHelper.setImage(circleImageView, ApiHelper.SERVER_IMAGE_URL + userInfo.getAvatar(), -1);
         }
         name.setText(userInfo.getFirstName()+userInfo.getLastName());
 

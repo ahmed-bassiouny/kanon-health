@@ -103,7 +103,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             //--------------------------------------------------------------------------------------------------//
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + doctor.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + doctor.getAvatar(), R.drawable.placeholder);
             }
 
                 holder.imgAvatar.setBorderWidth(0);

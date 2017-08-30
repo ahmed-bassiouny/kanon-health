@@ -191,7 +191,7 @@ public class ClinicProfileActivity extends ParentActivity {
 
 
         if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + clinic.getAvatar(), R.drawable.placeholder);
+            ImageHelper.setImage(circleImageViewAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
         }
 
         tvToolbarName.setText(clinic.getName());

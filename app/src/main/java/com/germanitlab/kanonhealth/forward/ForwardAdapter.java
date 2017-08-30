@@ -66,7 +66,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + doctor.getAvatar());
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + doctor.getAvatar());
             }
         }catch(Exception e){
                 Crashlytics.logException(e);

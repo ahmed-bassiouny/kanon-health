@@ -139,7 +139,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
             //--------------------------------------------------------------------------------------------------//
 
             if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + clinic.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
             }
 
             holder.imgAvatar.setBorderWidth(0);

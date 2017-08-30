@@ -182,13 +182,13 @@ public class RateActivity extends ParentActivity{
 
                                 txt_doctor_name.setText(clinic.getName());
                                 if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                                    ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + clinic.getAvatar(), R.drawable.placeholder);
+                                    ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
                                 }
                             }else {
 
                                 txt_doctor_name.setText(doctor.getFullName());
                                 if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                                    ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + doctor.getAvatar(), R.drawable.placeholder);
+                                    ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + doctor.getAvatar(), R.drawable.placeholder);
                                 }
                             }
 
