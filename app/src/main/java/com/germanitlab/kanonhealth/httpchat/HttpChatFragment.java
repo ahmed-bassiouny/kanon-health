@@ -319,7 +319,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
         //-------- get user from intent instead of database
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_UPLOADS + "/" + userInfo.getAvatar(),R.drawable.placeholder);
+            ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_UPLOADS  + userInfo.getAvatar(),R.drawable.placeholder);
         if (userInfo.getFirstName() != null && userInfo.getLastName() != null) {
             tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
         }
