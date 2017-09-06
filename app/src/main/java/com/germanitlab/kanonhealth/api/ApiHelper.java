@@ -420,8 +420,6 @@ public class ApiHelper {
                 result = getDoctorListResponse.getData();
             }
 
-
-            Log.i("UserInformation:", result.get(1).getIsMyDoc() + "");
         } catch (Exception e) {
             Helper.handleError(TAG, "postGetDoctorList", e, -1, context);
         } finally {
