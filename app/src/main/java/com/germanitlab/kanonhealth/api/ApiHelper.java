@@ -665,7 +665,7 @@ public class ApiHelper {
             Gson gson = new Gson();
             OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);
             if (parentResponse.getStatus()) {
-                result = Integer.parseInt(parentResponse.getData().get(OpenSessionResponse.KEY_REQUEST_ID));
+                result = parentResponse.getData().getRequestId();
             }
         } catch (Exception e) {
             Helper.handleError(TAG, "openSession", e, -1, context);
@@ -954,7 +954,7 @@ public class ApiHelper {
             String jsonString=post(API_IS_OPEN,openParameters.toJson());
             Gson gson = new Gson();
             IsOpenResponse isOpenResponse = gson.fromJson(jsonString,IsOpenResponse.class);
-            return isOpenResponse.getStatus() ==1;
+            result = isOpenResponse.getStatus() ==1;
         }catch (Exception e){
             Helper.handleError(TAG, "getIsOpen", e, -1, null);
         }finally {

@@ -10,18 +10,15 @@ import java.util.HashMap;
 
 public class OpenSessionResponse extends ParentResponse {
 
-    public static final String KEY_REQUEST_ID = "request_id";
-
     @SerializedName(KEY_DATA)
-    private
-    HashMap<String, String> data;
+    private IsOpenResponse data;
 
 
-    public HashMap<String, String> getData() {
+    public IsOpenResponse getData() {
         return data;
     }
 
-    public void setData(HashMap<String, String> data) {
+    public void setData(IsOpenResponse data) {
         this.data = data;
     }
 }
