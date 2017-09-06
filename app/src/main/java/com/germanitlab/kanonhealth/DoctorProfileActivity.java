@@ -519,11 +519,11 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     private void getTimaTableData() {
         tableLayoutTime.removeAllViews();
         tvNoTime.setVisibility(View.VISIBLE);
-        if (userInfo.getOpenType() == 3) {
+        if (userInfo.getOpenType() == 2) {
             tvNoTime.setText(R.string.permenant_closed);
         } else if (userInfo.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
-        } else if (userInfo.getOpenType() == 2) {
+        } else if (userInfo.getOpenType() == 4) {
             tvNoTime.setText(R.string.no_hours_available);
         } else {
 

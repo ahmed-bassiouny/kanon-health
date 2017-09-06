@@ -39,7 +39,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ClinicProfileActivity extends ParentActivity {
+public class
+ClinicProfileActivity extends ParentActivity {
 
     @BindView(R.id.toolbar_name)
     TextView tvToolbarName;
@@ -350,13 +351,13 @@ public class ClinicProfileActivity extends ParentActivity {
     private void getTimaTableData() {
         tableLayoutTime.removeAllViews();
         tvNoTime.setVisibility(View.VISIBLE);
-        if (clinic.getOpenType() == 3) {
+        if (clinic.getOpenType() == 2) {
             tvNoTime.setText(R.string.permenant_closed);
         }
         else if(clinic.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
         }
-        else if(clinic.getOpenType()==2) {
+        else if(clinic.getOpenType()==4) {
             tvNoTime.setText(R.string.no_hours_available);
         }else {
 
