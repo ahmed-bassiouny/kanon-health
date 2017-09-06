@@ -105,51 +105,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             } else {
                 holder.tvLastMsg.setText("");
             }
-
-
-//            if (holder.tvSpecialist != null) {
-//                holder.tvSpecialist.setText("");
-//                int size = 0;
-//                for (ChooseModel chooseModel : doctor.getSpecialities()) {
-//                    if (TextUtils.isEmpty(holder.tvSpecialist.getText())) {
-//                        holder.tvSpecialist.append(chooseModel.getSpeciality_title());
-//                    } else {
-//                        holder.tvSpecialist.append(", " + chooseModel.getSpeciality_title());
-//                    }
-////                    // ellipsize text
-////                    ViewTreeObserver vto = holder.tvSpecialist.getViewTreeObserver();
-////                    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-////
-////                        @Override
-////                        public void onGlobalLayout() {
-////                            ViewTreeObserver obs = holder.tvSpecialist.getViewTreeObserver();
-////                            obs.removeGlobalOnLayoutListener(this);
-////                            if (holder.tvSpecialist.getLineCount() > 1) {
-////                                int lineEndIndex = holder.tvSpecialist.getLayout().getLineEnd(0);
-////                                String text = holder.tvSpecialist.getText().subSequence(0, lineEndIndex - 3 ) + "...";
-////                                holder.tvSpecialist.setText(text);
-////                            }
-////                        }
-////                    });
-//
-//                    size++;
-//
-//                    SquareImageView image = new SquareImageView(activity);
-////                image.setBackgroundResource(R.drawable.doctor_icon);
-////                        int width = holder.linearLayoutSpecialist.getHeight();
-////                        int height = holder.linearLayoutSpecialist.getHeight();
-//                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                    parms.setMargins(5, 0, 5, 0);
-//                    image.setLayoutParams(parms);
-//                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                    holder.linearLayoutSpecialist.addView(image);
-//                }
-//                holder.tvSpecialist.setLines(1);
-//                holder.tvSpecialist.setMaxLines(1);
-//                holder.tvSpecialist.setSingleLine(true);
-//                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
-//            }
             if (chatModel.getAvatar() != null && !chatModel.getAvatar().isEmpty()) {
                 ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + chatModel.getAvatar(), R.drawable.placeholder);
             }
