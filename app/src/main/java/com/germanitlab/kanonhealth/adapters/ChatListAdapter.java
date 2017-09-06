@@ -106,7 +106,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                 holder.tvLastMsg.setText("");
             }
             if (chatModel.getAvatar() != null && !chatModel.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + chatModel.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL+ chatModel.getAvatar(), R.drawable.placeholder);
             }
 
             if (chatModel.getIsSessionOpen() != 1) {
