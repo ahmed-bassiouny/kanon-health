@@ -867,7 +867,14 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        boolean result = ApiHelper.postDocumentPrivacy(documents.get(pos).getDocumentId(), documents.get(pos).getPrivacy() + 1, activity);
+                                        int newPrivacy;
+                                        if(documents.get(pos).getPrivacy()==0)
+                                            newPrivacy=1;
+                                        else if(documents.get(pos).getPrivacy()==1)
+                                            newPrivacy=2;
+                                        else
+                                            newPrivacy=0;
+                                        boolean result = ApiHelper.postDocumentPrivacy(documents.get(pos).getDocumentId(), newPrivacy, activity);
                                         if (result) {
                                             if (documents.get(pos).getPrivacy() == 0)
                                                 documents.get(pos).setPrivacy(1);
