@@ -130,8 +130,8 @@ public class ApiHelper {
 //    public static final String SERVER_API_URL = "http://api.gagabay.com/V1/";
 //    public static final String SERVER_IMAGE_UPLOADS = "http://api.gagabay.com/";
 
-    public static final String SERVER_API_URL = "http://consoler-it.com/kanon/V1/";
-    public static final String SERVER_IMAGE_URL = "http://consoler-it.com/kanon/public/uploads/";
+    public static final String SERVER_API_URL = "10.30.1.30/kanon/V1/";
+    public static final String SERVER_IMAGE_URL = "10.30.1.30/kanon/public/uploads/";
 
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
