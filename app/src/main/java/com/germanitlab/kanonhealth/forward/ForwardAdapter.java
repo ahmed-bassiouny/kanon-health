@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.nex3z.flowlayout.FlowLayout;
 
@@ -66,7 +66,7 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, Constants.CHAT_SERVER_URL_IMAGE + "/" + doctor.getAvatar());
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + doctor.getAvatar());
             }
         }catch(Exception e){
                 Crashlytics.logException(e);

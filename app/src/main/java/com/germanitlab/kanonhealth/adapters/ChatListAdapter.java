@@ -1,31 +1,34 @@
 
 package com.germanitlab.kanonhealth.adapters;
 
-        import android.app.Activity;
-        import android.content.Intent;
-        import android.graphics.Color;
-        import android.support.percent.PercentRelativeLayout;
-        import android.support.v7.widget.RecyclerView;
-        import android.text.TextUtils;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import com.crashlytics.android.Crashlytics;
-        import com.germanitlab.kanonhealth.R;
-        import com.germanitlab.kanonhealth.api.ApiHelper;
-        import com.germanitlab.kanonhealth.api.models.ChatModel;
-        import com.germanitlab.kanonhealth.api.models.UserInfo;
-        import com.germanitlab.kanonhealth.helpers.Constants;
-        import com.germanitlab.kanonhealth.helpers.ImageHelper;
-        import com.germanitlab.kanonhealth.helpers.PrefHelper;
-        import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-        import com.google.gson.Gson;
-        import com.nex3z.flowlayout.FlowLayout;
-        import java.util.List;
-        import de.hdodenhof.circleimageview.CircleImageView;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.percent.PercentRelativeLayout;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.helpers.Constants;
+import com.germanitlab.kanonhealth.helpers.ImageHelper;
+import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
+import com.google.gson.Gson;
+import com.nex3z.flowlayout.FlowLayout;
+
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemView> {
 
@@ -38,7 +41,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             this.chatList = chatList;
             this.activity = activity;
             try {
-                user = new Gson().fromJson(PrefHelper.get(activity,PrefHelper.KEY_USER_KEY,""), UserInfo.class);
+                user = new Gson().fromJson(PrefHelper.get(activity, PrefHelper.KEY_USER_KEY, ""), UserInfo.class);
             } catch (Exception e) {
             }
 
@@ -63,7 +66,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
     @Override
     public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_chat, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_chat, parent, false);
 
         return new ItemView(view);
     }
@@ -105,53 +108,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             } else {
                 holder.tvLastMsg.setText("");
             }
-
-
-//            if (holder.tvSpecialist != null) {
-//                holder.tvSpecialist.setText("");
-//                int size = 0;
-//                for (ChooseModel chooseModel : doctor.getSpecialities()) {
-//                    if (TextUtils.isEmpty(holder.tvSpecialist.getText())) {
-//                        holder.tvSpecialist.append(chooseModel.getSpeciality_title());
-//                    } else {
-//                        holder.tvSpecialist.append(", " + chooseModel.getSpeciality_title());
-//                    }
-////                    // ellipsize text
-////                    ViewTreeObserver vto = holder.tvSpecialist.getViewTreeObserver();
-////                    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-////
-////                        @Override
-////                        public void onGlobalLayout() {
-////                            ViewTreeObserver obs = holder.tvSpecialist.getViewTreeObserver();
-////                            obs.removeGlobalOnLayoutListener(this);
-////                            if (holder.tvSpecialist.getLineCount() > 1) {
-////                                int lineEndIndex = holder.tvSpecialist.getLayout().getLineEnd(0);
-////                                String text = holder.tvSpecialist.getText().subSequence(0, lineEndIndex - 3 ) + "...";
-////                                holder.tvSpecialist.setText(text);
-////                            }
-////                        }
-////                    });
-//
-//                    size++;
-//
-//                    SquareImageView image = new SquareImageView(activity);
-////                image.setBackgroundResource(R.drawable.doctor_icon);
-////                        int width = holder.linearLayoutSpecialist.getHeight();
-////                        int height = holder.linearLayoutSpecialist.getHeight();
-//                    ImageHelper.setImage(image, Constants.CHAT_SERVER_URL_IMAGE + "/" + chooseModel.getSpeciality_icon());
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                    parms.setMargins(5, 0, 5, 0);
-//                    image.setLayoutParams(parms);
-//                    image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                    holder.linearLayoutSpecialist.addView(image);
-//                }
-//                holder.tvSpecialist.setLines(1);
-//                holder.tvSpecialist.setMaxLines(1);
-//                holder.tvSpecialist.setSingleLine(true);
-//                holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);
-//            }
             if (chatModel.getAvatar() != null && !chatModel.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + chatModel.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + chatModel.getAvatar(), R.drawable.placeholder);
             }
 
             if (chatModel.getIsSessionOpen() != 1) {
@@ -207,14 +165,28 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
         }
     }
 
-    private void gotoChat(ChatModel doctor) {
-        Intent intent = new Intent(activity, HttpChatActivity.class);
-        intent.putExtra("userInfo",doctor);
-        intent.putExtra("doctorID", doctor.getUserID());
-        activity.startActivity(intent);
+    private void gotoChat(final ChatModel doctor) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //*********** it's comment becuase i am waiting karim finish task
+                final boolean result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID());
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result) {
+                            doctor.setIsSessionOpen(1);
+                        }
+                        Intent intent = new Intent(activity, HttpChatActivity.class);
+                        intent.putExtra("userInfo", doctor);
+                        intent.putExtra("doctorID", doctor.getUserID());
+                        activity.startActivity(intent);
+                    }
+                });
+            }
+        }).start();
+
     }
-
-
 
 
 }

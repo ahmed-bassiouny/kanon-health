@@ -37,8 +37,8 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(PARAMETER_NAME)
     private String name;
 
-//    @SerializedName(PARAMETER_AVATAR)
-//    private String avatar;
+    @SerializedName(PARAMETER_AVATAR)
+    private String avatar;
 
 
     @SerializedName(PARAMETER_SPECIALITY)
@@ -114,6 +114,15 @@ public class AddOrEditClinicParameters extends ParentParameters{
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getCity() {

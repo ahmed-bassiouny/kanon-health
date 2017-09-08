@@ -2,9 +2,7 @@ package com.germanitlab.kanonhealth.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -19,16 +17,11 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
-import com.germanitlab.kanonhealth.models.Payment;
-import com.germanitlab.kanonhealth.ormLite.UserRepository;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,7 +122,7 @@ public class PaymentActivity extends ParentActivity {
             if (doctorObj != null) {
                 tvDoctorName.setText(doctorObj.getFullName());
 
-                ImageHelper.setImage(ivDoctor, Constants.CHAT_SERVER_URL + "/" + doctorObj.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(ivDoctor, ApiHelper.SERVER_IMAGE_URL + doctorObj.getAvatar(), R.drawable.placeholder);
 
                 if (doctorObj.getRateNum() != null) {
                     ratingBar.setRating(Float.parseFloat(String.valueOf(doctorObj.getRateNum())));

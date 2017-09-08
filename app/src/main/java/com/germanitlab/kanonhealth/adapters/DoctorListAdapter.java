@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
@@ -20,11 +18,9 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.ormLite.MessageRepositry;
-import com.germanitlab.kanonhealth.widget.SquareImageView;
 import com.nex3z.flowlayout.FlowLayout;
 
 
@@ -80,7 +76,6 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 // tab poition is for tabs from 1 to 4
          */
             final UserInfo doctor = doctorContactsList.get(position);
-
             if (holder.tvDoctorName != null) {
                 if (!TextUtils.isEmpty(doctor.getFullName()))
                     holder.tvDoctorName.setText(doctor.getFullName());
@@ -108,7 +103,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
             //--------------------------------------------------------------------------------------------------//
 
             if (doctor.getAvatar() != null && !doctor.getAvatar().isEmpty()) {
-                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL+ "/" + doctor.getAvatar(), R.drawable.placeholder);
+                ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + doctor.getAvatar(), R.drawable.placeholder);
             }
 
                 holder.imgAvatar.setBorderWidth(0);

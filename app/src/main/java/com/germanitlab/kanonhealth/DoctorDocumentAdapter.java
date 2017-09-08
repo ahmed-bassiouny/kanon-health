@@ -2,18 +2,13 @@ package com.germanitlab.kanonhealth;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,16 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -45,7 +38,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -296,7 +288,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
             setTime(message.getSent_at(),imageViewHolder.date);
 
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), imageViewHolder.progress_view_download);
+            ImageHelper.setImage(imageViewHolder.image_message, ApiHelper.SERVER_IMAGE_URL + message.getMsg(), imageViewHolder.progress_view_download);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -307,7 +299,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                     dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
                     ImageView img = (ImageView) dialog.findViewById(R.id.img);
                     ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
-                    ImageHelper.setImage(img, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMsg(), pbar);
+                    ImageHelper.setImage(img, ApiHelper.SERVER_IMAGE_URL + message.getMsg(), pbar);
                     dialog.show();
                 }
             });
@@ -611,7 +603,7 @@ public class DoctorDocumentAdapter extends  RecyclerView.Adapter<DoctorDocumentA
                     if (file.exists())
                         Util.getInstance(activity).showVideo(Uri.fromFile(file));
                     else {
-                        String url = Constants.CHAT_SERVER_URL + "/" + path;
+                        String url = ApiHelper.SERVER_IMAGE_URL + path;
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         intent.setDataAndType(Uri.parse(url), "video/*");
                         activity.startActivity(intent);

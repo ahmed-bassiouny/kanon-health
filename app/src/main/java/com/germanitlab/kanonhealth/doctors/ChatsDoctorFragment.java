@@ -172,7 +172,8 @@ public class ChatsDoctorFragment extends Fragment {
                                 return;
                             for(ChatModel item:chatModel) {
                                 item.setUserType(UserInfo.DOCTOR);
-                                chatModelRepository.createDoctorOrUser(item);
+                                if(item !=null)
+                                    chatModelRepository.createDoctorOrUser(item);
                             }
                         }else {
                             chatModel = (ArrayList<ChatModel>) chatModelRepository.getDoctors();
@@ -191,7 +192,8 @@ public class ChatsDoctorFragment extends Fragment {
                                 return;
                             for(ChatModel item:chatModel) {
                                 item.setUserType(UserInfo.PATIENT);
-                                chatModelRepository.createDoctorOrUser(item);
+                                if(item !=null)
+                                    chatModelRepository.createDoctorOrUser(item);
                             }
                         }else {
                             chatModel= (ArrayList<ChatModel>) chatModelRepository.getUsers();
@@ -211,7 +213,8 @@ public class ChatsDoctorFragment extends Fragment {
                                 return;
                             for(ChatModel item:chatModel) {
                                 item.setUserType(UserInfo.CLINIC);
-                                chatModelRepository.createClinic(item);
+                                if(item !=null)
+                                    chatModelRepository.createClinic(item);
                             }
                         }else {
                             chatModel= (ArrayList<ChatModel>) chatModelRepository.getClinics();
@@ -231,11 +234,13 @@ public class ChatsDoctorFragment extends Fragment {
                             for(ChatModel item:chatModel) {
                                 if(item.getId()>0) {
                                     item.setUserType(UserInfo.CLINIC);
-                                    chatModelRepository.createClinic(item);
+                                    if(item !=null)
+                                        chatModelRepository.createClinic(item);
                                 }
                                 else if (item.getUserID()>0) {
                                     item.setUserType(UserInfo.DOCTOR);
-                                    chatModelRepository.createDoctorOrUser(item);
+                                    if(item !=null)
+                                        chatModelRepository.createDoctorOrUser(item);
                                 }
                                 else
                                     return;

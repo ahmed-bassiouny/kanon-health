@@ -35,7 +35,6 @@ import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
@@ -356,7 +355,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
             imageViewHolder.play_video.setVisibility(View.GONE);
             imageViewHolder.image_message.setImageBitmap(null);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMedia(), imageViewHolder.progress_view_download);
+            ImageHelper.setImage(imageViewHolder.image_message, ApiHelper.SERVER_IMAGE_URL + message.getMedia(), imageViewHolder.progress_view_download);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -367,7 +366,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                     dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
                     ImageView img = (ImageView) dialog.findViewById(R.id.img);
                     ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
-                    ImageHelper.setImage(img, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMedia(), pbar);
+                    ImageHelper.setImage(img, ApiHelper.SERVER_IMAGE_URL + message.getMedia(), pbar);
                     dialog.show();
                 }
             });
@@ -868,7 +867,14 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        boolean result = ApiHelper.postDocumentPrivacy(documents.get(pos).getDocumentId(), documents.get(pos).getPrivacy() + 1, activity);
+                                        int newPrivacy;
+                                        if(documents.get(pos).getPrivacy()==0)
+                                            newPrivacy=1;
+                                        else if(documents.get(pos).getPrivacy()==1)
+                                            newPrivacy=2;
+                                        else
+                                            newPrivacy=0;
+                                        boolean result = ApiHelper.postDocumentPrivacy(documents.get(pos).getDocumentId(), newPrivacy, activity);
                                         if (result) {
                                             if (documents.get(pos).getPrivacy() == 0)
                                                 documents.get(pos).setPrivacy(1);
@@ -1002,7 +1008,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                     if (file.exists())
                         Util.getInstance(activity).showVideo(Uri.fromFile(file));
                     else {
-                        String url = Constants.CHAT_SERVER_URL + "/" + path;
+                        String url = ApiHelper.SERVER_IMAGE_URL + path;
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         intent.setDataAndType(Uri.parse(url), "video/*");
                         activity.startActivity(intent);

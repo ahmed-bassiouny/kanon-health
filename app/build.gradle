@@ -24,7 +24,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
-        versionName '1.2.16'
+        versionName '1.2.21' // last version 1.2.16 but in fabric 1.2.19 , version 1.2.20 test with milad
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true //important
     }
@@ -61,7 +61,6 @@ dependencies {
     //// heart image view
     compile 'com.android.support:percent:25.3.1'
     compile 'com.brucetoo.pickview:library:1.2.3'
-
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.kenglxn.QRGen:android:2.3.0'
     compile 'com.brucetoo.pickview:library:1.2.3'

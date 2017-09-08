@@ -2,13 +2,11 @@ package com.germanitlab.kanonhealth.httpchat;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -30,10 +27,10 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.MapsActivity;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
-import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.InternetFilesOperations;
 import com.germanitlab.kanonhealth.helpers.MediaUtilities;
@@ -351,7 +348,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
             imageViewHolder.play_video.setVisibility(View.GONE);
             imageViewHolder.image_message.setImageBitmap(null);
             imageViewHolder.progress_view_download.setVisibility(View.VISIBLE);
-            ImageHelper.setImage(imageViewHolder.image_message, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMedia(), imageViewHolder.progress_view_download);
+            ImageHelper.setImage(imageViewHolder.image_message, ApiHelper.SERVER_IMAGE_URL + message.getMedia(), imageViewHolder.progress_view_download);
             imageViewHolder.image_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -362,7 +359,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     dialog.setContentView(activity.getLayoutInflater().inflate(R.layout.show_image, null));
                     ImageView img = (ImageView) dialog.findViewById(R.id.img);
                     ProgressBar pbar = (ProgressBar) dialog.findViewById(R.id.pbar);
-                    ImageHelper.setImage(img, Constants.CHAT_SERVER_URL_IMAGE + "/" + message.getMedia(), pbar);
+                    ImageHelper.setImage(img, ApiHelper.SERVER_IMAGE_URL + message.getMedia(), pbar);
                     dialog.show();
                 }
             });
@@ -914,7 +911,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     if (file.exists())
                         Util.getInstance(activity).showVideo(Uri.fromFile(file));
                     else {
-                        String url = Constants.CHAT_SERVER_URL + "/" + path;
+                        String url = ApiHelper.SERVER_IMAGE_URL + path;
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         intent.setDataAndType(Uri.parse(url), "video/*");
                         activity.startActivity(intent);

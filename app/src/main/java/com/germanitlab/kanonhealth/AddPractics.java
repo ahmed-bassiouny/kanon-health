@@ -44,7 +44,6 @@ import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
-import com.germanitlab.kanonhealth.models.ChooseModel;
 import com.germanitlab.kanonhealth.models.user.Info;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -54,9 +53,8 @@ import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -145,7 +143,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         }
 
         clinic = new UserInfo();
-        clinic.setOpenType(0);
+        clinic.setOpenType(3);
         WorkingHours workingHours= new WorkingHours();
         workingHours.setSunday(new ArrayList<Times>());
         workingHours.setMonday(new ArrayList<Times>());
@@ -278,10 +276,10 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext());
+                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext(),clinic.getAvatar());
 
                     if (result != null) {
-                        if(clinic.getOpenType()!=0) {
+                        if(clinic.getOpenType()!=3) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -318,7 +316,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                 public void run() {
                     ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, getApplicationContext());
                     if (result != null) {
-                        if(clinic.getOpenType()!=0) {
+                        if(clinic.getOpenType()!=3) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -521,6 +519,7 @@ private void sendWorkingHours()
             Intent intent = new Intent(this, TimeTable.class);
             intent.putExtra(Constants.DATA, clinic.getTimeTable());
             intent.putExtra("type", clinic.getOpenType());
+            intent.putExtra("from","clinic");
             startActivityForResult(intent, Constants.HOURS_CODE);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -549,11 +548,11 @@ private void sendWorkingHours()
                     //=================================================================================================>//
                     case Constants.HOURS_CODE:
                         clinic.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
-                        clinic.setOpenType(data.getIntExtra("type", 0));
+                        clinic.setOpenType(data.getIntExtra("type", 4));
                         getTimaTableData();
                         break;
                     case Constants.HOURS_TYPE_CODE:
-                        clinic.setOpenType(data.getIntExtra("type", 0));
+                        clinic.setOpenType(data.getIntExtra("type", 4));
                         break;
                 }
 //            } else if (requestCode == PLACE_PICKER_REQUEST) {
@@ -576,15 +575,13 @@ private void sendWorkingHours()
     private void getTimaTableData() {
         tablelayout.removeAllViews();
         llNo.setVisibility(View.VISIBLE);
-        if (clinic.getOpenType() == 3) {
+        if (clinic.getOpenType() == 2) {
             tvNoTime.setText(R.string.permenant_closed);
         }
         else if(clinic.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
         }
-        else if(clinic.getOpenType()==2) {
-            tvNoTime.setText(R.string.no_hours_available);
-        }else {
+       else if(clinic.getOpenType()==3){
 
             if (clinic.getTimeTable() != null && clinic.getTimeTable().size() > 0) {
                 llNo.setVisibility(View.GONE);
@@ -594,6 +591,8 @@ private void sendWorkingHours()
             } else
                 llNo.setVisibility(View.VISIBLE);
                 tvNoTime.setText(R.string.no_time_has_set);
+        } else  {
+            tvNoTime.setText(R.string.no_hours_available);
         }
     }
 

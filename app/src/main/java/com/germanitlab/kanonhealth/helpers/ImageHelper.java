@@ -5,10 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -193,7 +190,7 @@ public class ImageHelper {
         if (TextUtils.isEmpty(speciality_icon)) {
             circularImageView.setImageResource(R.drawable.placeholder);
         } else {
-            setImage(circularImageView, ApiHelper.SERVER_IMAGE_URL + "/" + speciality_icon, -1);
+            setImage(circularImageView, ApiHelper.SERVER_IMAGE_URL + speciality_icon, -1);
         }
         circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30), helper.dpToPx(30)));
         circularImageView.setPadding(7, 4, 7, 4);

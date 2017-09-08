@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 public class Constants {
 
-    public static final String CHAT_SERVER_URL = "http://api.gagabay.com";
-    public static final String CHAT_SERVER_URL_IMAGE = "http://api.gagabay.com";
+    //public static final String CHAT_SERVER_URL = "http://api.gagabay.com";
+    //public static final String CHAT_SERVER_URL_IMAGE = "http://api.gagabay.com";
     public static final String UPLOAD_URL = "https://chat.gagabay.com/upload";
 
 

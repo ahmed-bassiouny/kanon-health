@@ -107,6 +107,7 @@ public class TimeTable extends AppCompatActivity {
     public static Activity TimetableInstance;
     Helper helper ;
    int  buttonCount=0;
+    String from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,8 @@ public class TimeTable extends AppCompatActivity {
             instance = new OpeningHoursActivity();
             map = new HashMap<>();
             list = (ArrayList<WorkingHours>) getIntent().getSerializableExtra(Constants.DATA);
-            type = getIntent().getIntExtra("type", 0);
+            type = getIntent().getIntExtra("type", 4);
+            from=getIntent().getStringExtra("from");
             handleData(list);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -460,9 +462,15 @@ public class TimeTable extends AppCompatActivity {
     //    @OnClick(R.id.save)
     public void save() {
         try {
-            Intent intent = new Intent(this,AddPractics.class);
+            Intent intent;
+            if(from.equals("profile")) {
+                intent = new Intent(this, DoctorProfileActivity.class);
+            }else
+            {
+                intent = new Intent(this, AddPractics.class);
+            }
             intent.putExtra("type", type);
-            if(type==0) {
+            if(type==3) {
                 int key = MON_KEY;
                 while (key < 8) {
                     if (map.containsKey(key)) {
@@ -546,8 +554,8 @@ public class TimeTable extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if ( resultCode == RESULT_OK) {
-         //       list = (ArrayList<WorkingHours> ) data.getSerializableExtra(Constants.DATA);
-                type = data.getIntExtra("type", 0);
+                list = (ArrayList<WorkingHours> ) data.getSerializableExtra(Constants.DATA);
+                type = data.getIntExtra("type", 4);
                 handleData(list);
             }
         } catch (Exception e) {
@@ -559,7 +567,7 @@ public class TimeTable extends AppCompatActivity {
     }
 
     public void handleData(ArrayList<WorkingHours> list) {
-        if(type==0) {
+        if(type==3) {
             tvSchedule.setText(R.string.use_timetable);
             tableLayout.setVisibility(View.VISIBLE);
             if (list != null && list.size() > 0) {
@@ -598,11 +606,11 @@ public class TimeTable extends AppCompatActivity {
             tableLayout.setVisibility(View.GONE);
         }else if(type==2)
         {
-            tvSchedule.setText(R.string.no_hours_available);
-            tableLayout.setVisibility(View.GONE);
-        }else if(type==3)
-        {
             tvSchedule.setText(R.string.permenant_closed);
+            tableLayout.setVisibility(View.GONE);
+        } else
+        {
+            tvSchedule.setText(R.string.no_hours_available);
             tableLayout.setVisibility(View.GONE);
         }
     }

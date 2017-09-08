@@ -274,6 +274,7 @@
 
     <!--untersuchung-->
     <string name="laboratory_investigation">Laboratory investigation.</string>
+    <string name="laboratory_examination">Laboratory Examination.</string>
     <string name="heart_listen">Heart listen.</string>
 
 

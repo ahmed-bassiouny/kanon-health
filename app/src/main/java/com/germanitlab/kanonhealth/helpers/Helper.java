@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -27,18 +26,16 @@ import android.widget.Toast;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.crashlytics.android.Crashlytics;
-import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.google.gson.Gson;
 
 import net.glxn.qrgen.android.QRCode;
 
-import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -108,7 +105,7 @@ public class Helper {
         CircleImageView circleImageView = (CircleImageView) dialog.findViewById(R.id.image_profile);
 
         if (userInfo.getAvatar() != null && userInfo.getAvatar() != "") {
-            ImageHelper.setImage(circleImageView, Constants.CHAT_SERVER_URL + "/" + userInfo.getAvatar(), -1);
+            ImageHelper.setImage(circleImageView, ApiHelper.SERVER_IMAGE_URL + userInfo.getAvatar(), -1);
         }
         name.setText(userInfo.getFirstName()+userInfo.getLastName());
 

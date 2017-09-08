@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
+import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.models.ChooseModel;
@@ -61,7 +62,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
         try {
             switch (type) {
                 case Constants.SPECIALITIES:
-                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getSpeciality_icon());
+                    ImageHelper.setImage(holder.image, ApiHelper.SERVER_IMAGE_URL + list.get(position).getSpeciality_icon());
                     holder.title.setVisibility(View.GONE);
                     break;
                 case Constants.LANGUAUGE:
@@ -78,7 +79,7 @@ public class SpecilaitiesAdapter extends RecyclerView.Adapter<SpecilaitiesAdapte
                 case Constants.MEMBERAT:
                 case Constants.DoctorAll:
                     holder.title.setText(list.get(position).getFirst_nameMember());
-                    ImageHelper.setImage(holder.image, Constants.CHAT_SERVER_URL_IMAGE + "/" + list.get(position).getAvatarMember());
+                    ImageHelper.setImage(holder.image, ApiHelper.SERVER_IMAGE_URL + list.get(position).getAvatarMember());
                     holder.title.setVisibility(View.VISIBLE);
                     break;
             }

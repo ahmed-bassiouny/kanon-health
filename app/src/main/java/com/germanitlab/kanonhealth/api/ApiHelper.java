@@ -28,6 +28,7 @@ import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.FavouriteParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
+import com.germanitlab.kanonhealth.api.parameters.IsOpenParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
@@ -46,6 +47,7 @@ import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetDoctorListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetDocumentListResponse;
+import com.germanitlab.kanonhealth.api.responses.IsOpenResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
 import com.germanitlab.kanonhealth.api.responses.MessagesResponse;
@@ -65,6 +67,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -115,6 +118,7 @@ public class ApiHelper {
     private static final String API_FAVOURITE = "favourite";
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
+    private static final String API_IS_OPEN = "flag/is_open";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
     private static final String API_CLINIC_WORKING_HOURS = "users/clinic_working_hours";
     private static final String API_NETWORK_LOCATION = "http://ip-api.com/json";
@@ -124,45 +128,48 @@ public class ApiHelper {
     //region Configuration
 
 //    public static final String SERVER_API_URL = "http://api.gagabay.com/V1/";
-//    public static final String SERVER_IMAGE_URL = "http://api.gagabay.com/";
+//    public static final String SERVER_IMAGE_UPLOADS = "http://api.gagabay.com/";
 
-    public static final String SERVER_API_URL = "http://consoler-it.com/kanon/V1/";
-    public static final String SERVER_IMAGE_URL = "http://consoler-it.com/kanon/";
-
+    public static final String SERVER_API_URL = "http://cleverclan.com/kanon/V1/";
+    public static final String SERVER_IMAGE_URL = "http://cleverclan.com/kanon/public/uploads/";
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String EMPTY_JSON = "{}";
 
 
+    private static OkHttpClient getClient(){
+        // set time out connection 20SEC
+        return new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .build();
+    }
     private static String post(String url, String parameters) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+
         RequestBody body = RequestBody.create(JSON, parameters);
         Request request = new Request.Builder()
                 .url(SERVER_API_URL + url)
                 .post(body)
                 .build();
         Log.i(TAG, request.toString());
-        Response response = client.newCall(request).execute();
+        Response response = getClient().newCall(request).execute();
         return ApiUtils.removeNulls(response.body().string());
     }
 
     private static String postWithoutServerPath(String url, String parameters) throws IOException {
-        OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, parameters);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
         Log.i(TAG, request.toString());
-        Response response = client.newCall(request).execute();
+        Response response = getClient().newCall(request).execute();
         return ApiUtils.removeNulls(response.body().string());
     }
 
 
     private static String postWithFile(String url, HashMap<String, Object> parameters, File file, String fileParameterName) throws IOException {
-        String result = "";
-        OkHttpClient client = new OkHttpClient();
-
         MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart(fileParameterName, file.getName(), RequestBody.create(MediaType.parse(MimeUtils.getType(file.getName())), file));
@@ -176,7 +183,7 @@ public class ApiHelper {
                 .url(SERVER_API_URL + url)
                 .post(requestBody.build())
                 .build();
-        Response response = client.newCall(request).execute();
+        Response response = getClient().newCall(request).execute();
         return ApiUtils.removeNulls(response.body().string());
     }
 
@@ -276,7 +283,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context ,String avatar) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -296,6 +303,7 @@ public class ApiHelper {
 
             String jsonString = "";
             if (file == null) {
+                EditClinicParameters.setAvatar(avatar);
                 jsonString = post(API_CLINICS_EDIT, EditClinicParameters.toJson());
             } else {
                 jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toHashMap(), file, EditClinicParameters.PARAMETER_AVATAR);
@@ -412,8 +420,6 @@ public class ApiHelper {
                 result = getDoctorListResponse.getData();
             }
 
-
-            Log.i("UserInformation:", result.get(1).getIsMyDoc() + "");
         } catch (Exception e) {
             Helper.handleError(TAG, "postGetDoctorList", e, -1, context);
         } finally {
@@ -574,6 +580,7 @@ public class ApiHelper {
             System.out.println(editDoctorParamater.toHashMap());
             String jsonString;
             if (avatar != null) {
+                editDoctorParamater.setAvatar(userInfo.getAvatar());
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
             } else {
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
@@ -613,6 +620,7 @@ public class ApiHelper {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
 
             } else {
+                editDoctorParamater.setAvatar(userInfo.getAvatar());
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
                 System.out.println(editDoctorParamater.toJson());
             }
@@ -659,7 +667,7 @@ public class ApiHelper {
             Gson gson = new Gson();
             OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);
             if (parentResponse.getStatus()) {
-                result = Integer.parseInt(parentResponse.getData().get(OpenSessionResponse.KEY_REQUEST_ID));
+                result = parentResponse.getData().getRequestId();
             }
         } catch (Exception e) {
             Helper.handleError(TAG, "openSession", e, -1, context);
@@ -938,6 +946,24 @@ public class ApiHelper {
             return result;
         }
     }
+
+    public static boolean getIsOpen(int userId,int docId){
+        boolean result = false;
+        try {
+            IsOpenParameters openParameters = new IsOpenParameters();
+            openParameters.setUserId(userId);
+            openParameters.setDocId(docId);
+            String jsonString=post(API_IS_OPEN,openParameters.toJson());
+            Gson gson = new Gson();
+            IsOpenResponse isOpenResponse = gson.fromJson(jsonString,IsOpenResponse.class);
+            result = isOpenResponse.getStatus() ==1;
+        }catch (Exception e){
+            Helper.handleError(TAG, "getIsOpen", e, -1, null);
+        }finally {
+            return result;
+        }
+    }
+
 
 
 
