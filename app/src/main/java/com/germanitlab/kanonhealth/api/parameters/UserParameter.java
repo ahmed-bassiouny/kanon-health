@@ -51,6 +51,8 @@ public  abstract class UserParameter extends ParentParameters {
 
     @SerializedName(KEY_OPEN_TYPE)
     private String openType;
+    @SerializedName(PARAMETER_AVATAR)
+    private String avatar;
 
 
     public Integer getUserID() {
@@ -152,5 +154,13 @@ public  abstract class UserParameter extends ParentParameters {
 
     public void setOpenType(String openType) {
         this.openType = openType;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

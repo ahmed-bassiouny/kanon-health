@@ -130,9 +130,8 @@ public class ApiHelper {
 //    public static final String SERVER_API_URL = "http://api.gagabay.com/V1/";
 //    public static final String SERVER_IMAGE_UPLOADS = "http://api.gagabay.com/";
 
-    public static final String SERVER_API_URL = "http://10.30.1.30/kanon/V1/";
-    public static final String SERVER_IMAGE_URL = "http://10.30.1.30/kanon/public/uploads/";
-
+    public static final String SERVER_API_URL = "http://cleverclan.com/kanon/V1/";
+    public static final String SERVER_IMAGE_URL = "http://cleverclan.com/kanon/public/uploads/";
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String EMPTY_JSON = "{}";
@@ -284,7 +283,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context ,String avatar) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -304,6 +303,7 @@ public class ApiHelper {
 
             String jsonString = "";
             if (file == null) {
+                EditClinicParameters.setAvatar(avatar);
                 jsonString = post(API_CLINICS_EDIT, EditClinicParameters.toJson());
             } else {
                 jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toHashMap(), file, EditClinicParameters.PARAMETER_AVATAR);
@@ -580,6 +580,7 @@ public class ApiHelper {
             System.out.println(editDoctorParamater.toHashMap());
             String jsonString;
             if (avatar != null) {
+                editDoctorParamater.setAvatar(userInfo.getAvatar());
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
             } else {
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
@@ -619,6 +620,7 @@ public class ApiHelper {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);
 
             } else {
+                editDoctorParamater.setAvatar(userInfo.getAvatar());
                 jsonString = post(API_USERS_EDIT, editDoctorParamater.toJson());
                 System.out.println(editDoctorParamater.toJson());
             }

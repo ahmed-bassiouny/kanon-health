@@ -269,6 +269,8 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         userInfo.setZipCode(etZip.getText().toString());
         userInfo.setHouseNumber(etHousePhone.getText().toString());
         userInfo.setProvidence(etProvinz.getText().toString());
+        if(avatar ==null)
+            userInfo.setAvatar(userInfo.getAvatar());
         //userInfo.setCountry(etCountry.getText().toString());
         ArrayList<String> answers = iterateOverRecyclerView();
         Set<String> questions = questionAnswer.keySet();

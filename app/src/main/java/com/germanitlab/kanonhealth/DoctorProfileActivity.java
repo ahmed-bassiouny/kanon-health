@@ -280,6 +280,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         userInfo.setHouseNumber(etHouseNumber.getText().toString());
         userInfo.setZipCode(etZipCode.getText().toString());
         userInfo.setProvidence(etProvince.getText().toString());
+        if(avatar == null)
+        userInfo.setAvatar(userInfo.getAvatar());
 
         sendDataToserver();
     }
