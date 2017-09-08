@@ -48,7 +48,7 @@ public class OpeningHoursActivity extends AppCompatActivity {
         try {
             ButterKnife.bind(this);
             list = (List<Table>) getIntent().getSerializableExtra(Constants.DATA);
-            type = getIntent().getIntExtra("type", 0);
+            type = getIntent().getIntExtra("type", 4);
             instance = new TimeTable();
             initTB();
             addSelected(type);
@@ -68,7 +68,7 @@ public class OpeningHoursActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 if (first.isChecked()) {
 //                if (TimeTable.active) {
-                    intent.putExtra("type", 0);
+                    intent.putExtra("type", 3);
                     //  setResult(RESULT_OK, intent);
                     // finish();
                     //  }
@@ -83,9 +83,9 @@ public class OpeningHoursActivity extends AppCompatActivity {
                     if (second.isChecked())
                         intent.putExtra("type", 1);
                     else if (third.isChecked())
-                        intent.putExtra("type", 2);
+                        intent.putExtra("type", 4);
                     else if (fourth.isChecked())
-                        intent.putExtra("type", 3);
+                        intent.putExtra("type", 2);
                     // intent.putExtra(Constants.DATA, (Serializable) list);
 
                     // if (TimeTable.active)
@@ -101,14 +101,15 @@ public class OpeningHoursActivity extends AppCompatActivity {
     }
 
     private void addSelected(int type) {
-        if (type == 0)
+        if (type == 3)
             first.setChecked(true);
         else if (type == 1)
             second.setChecked(true);
         else if (type == 2)
-            third.setChecked(true);
-        else if (type == 3)
             fourth.setChecked(true);
+        else
+            third.setChecked(true);
+
     }
 
 

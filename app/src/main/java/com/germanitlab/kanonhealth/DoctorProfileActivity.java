@@ -297,7 +297,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar,langIds, specialityIds);
                 if (result) {
                     // success
-                    if(userInfo.getOpenType()!=0|| userInfo.getTimeTable().size()==0) {
+                    if(userInfo.getOpenType()!=3|| userInfo.getTimeTable().size()==0) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -387,6 +387,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             Intent intent = new Intent(this, TimeTable.class);
             intent.putExtra(Constants.DATA, userInfo.getTimeTable());
             intent.putExtra("type", userInfo.getOpenType());
+            intent.putExtra("from", "profile");
             startActivityForResult(intent, Constants.HOURS_CODE);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -407,11 +408,11 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
                 case Constants.HOURS_CODE:
                     userInfo.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
-                    userInfo.setOpenType(data.getIntExtra("type", 0));
+                    userInfo.setOpenType(data.getIntExtra("type", 3));
                     getTimaTableData();
                     break;
                 case Constants.HOURS_TYPE_CODE:
-                    userInfo.setOpenType(data.getIntExtra("type", 0));
+                    userInfo.setOpenType(data.getIntExtra("type", 3));
                     break;
             }
         }
@@ -525,9 +526,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             tvNoTime.setText(R.string.permenant_closed);
         } else if (userInfo.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
-        } else if (userInfo.getOpenType() == 4) {
-            tvNoTime.setText(R.string.no_hours_available);
-        } else {
+        } else if(userInfo.getOpenType() == 3){
 
             if (userInfo.getTimeTable() != null && userInfo.getTimeTable().size() > 0) {
                 tvNoTime.setVisibility(View.GONE);
@@ -537,6 +536,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             } else
                 tvNoTime.setVisibility(View.VISIBLE);
             tvNoTime.setText(R.string.no_time_has_set);
+        } else {
+            tvNoTime.setText(R.string.no_hours_available);
         }
     }
 
