@@ -571,7 +571,6 @@ public class ApiHelper {
             editDoctorParamater.setProvidence(userInfo.getProvidence());
             editDoctorParamater.setStreetName(userInfo.getStreetName());
             editDoctorParamater.setZipCode(userInfo.getZipCode());
-            editDoctorParamater.setOpenType(String.valueOf(userInfo.getOpenType()));
             editDoctorParamater.setCountryCode(userInfo.getCountry_code());
             editDoctorParamater.setPhone(userInfo.getPhone());
             editDoctorParamater.setSpeciality(specialityIds);

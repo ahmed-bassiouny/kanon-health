@@ -189,7 +189,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                         @Override
                         public void run() {
                             if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar());
+                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(),R.drawable.placeholder);
                             }
                             etName.setText(clinic.getName());
                             etPhone.setText(clinic.getPhone());
@@ -519,7 +519,6 @@ private void sendWorkingHours()
             Intent intent = new Intent(this, TimeTable.class);
             intent.putExtra(Constants.DATA, clinic.getTimeTable());
             intent.putExtra("type", clinic.getOpenType());
-            intent.putExtra("from","clinic");
             startActivityForResult(intent, Constants.HOURS_CODE);
         } catch (Exception e) {
             Crashlytics.logException(e);

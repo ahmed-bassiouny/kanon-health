@@ -462,13 +462,8 @@ public class TimeTable extends AppCompatActivity {
     //    @OnClick(R.id.save)
     public void save() {
         try {
-            Intent intent;
-            if(from.equals("profile")) {
-                intent = new Intent(this, DoctorProfileActivity.class);
-            }else
-            {
-                intent = new Intent(this, AddPractics.class);
-            }
+            Intent  intent = new Intent(this, AddPractics.class);
+
             intent.putExtra("type", type);
             if(type==3) {
                 int key = MON_KEY;

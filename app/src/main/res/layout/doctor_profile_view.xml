@@ -460,70 +460,11 @@
                 android:layout_margin="5dp"
                 android:textColor="@android:color/background_dark"
                 android:visibility="gone" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="2dp"
-                android:layout_below="@+id/member_recycleview"
-                android:id="@+id/view_below_member_recycleview"
-                android:layout_marginTop="5dp"
-                android:background="@color/gray_black" />
 
-
-            <TextView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:layout_below="@+id/view_below_member_recycleview"
-                android:text="@string/working_hours"
-                android:layout_margin="5dp"
-                android:id="@+id/tv_working_hours"
-                android:textColor="@android:color/background_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-            <ImageView
-                android:id="@+id/edit_time_table"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="center|end"
-                android:layout_margin="5dp"
-                android:layout_marginStart="8dp"
-                android:layout_below="@+id/view_below_member_recycleview"
-                android:gravity="bottom"
-                android:src="@drawable/edit"
-                android:textColor="@android:color/background_dark"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tv_no_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:layout_below="@+id/tv_working_hours"
-                android:padding="@dimen/size_5dp"
-                android:text="@string/no_time_has_set"
-                android:textColor="@color/red"
-                android:textCursorDrawable="@color/black"
-                android:textStyle="bold" />
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:id="@+id/table_layout_time"
-                android:orientation="vertical"
-                android:layout_below="@+id/tv_no_time"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/table_layout_time"
+                android:layout_below="@+id/member_recycleview"
                 android:id="@+id/ll_contianer"
                 android:orientation="vertical">
             <View

@@ -99,20 +99,16 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     FlowLayout flLanguages;
     @BindView(R.id.edit_languages_list)
     ImageView ivLanguagesList;
-    @BindView(R.id.edit_time_table)
-    ImageView ivTimeTable;
+
     @BindView(R.id.edit_member_list)
     ImageView ivMemberList;
-    @BindView(R.id.table_layout_time)
-    TableLayout tableLayoutTime;
+
     @BindView(R.id.nsv_soctor_profile_scroll)
     NestedScrollView nestedScrollView;
     @BindView(R.id.tv_rating)
     TextView textViewRating;
     @BindView(R.id.edit_image)
     CircleImageView editImage;
-    @BindView(R.id.tv_no_time)
-    TextView tvNoTime;
     @BindView(R.id.document_recycleview)
     RecyclerView document_recycleview;
     @BindView(R.id.ll_contianer)
@@ -202,7 +198,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 etProvince.setEnabled(true);
                 textViewPhone.setEnabled(true);
                 editImage.setVisibility(View.VISIBLE);
-                ivTimeTable.setVisibility(View.VISIBLE);
 //                ivMemberList.setVisibility(View.VISIBLE);
                 break;
             case R.id.mi_save:
@@ -221,7 +216,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 edAddToFavourite.setFocusable(false);
                 tvContact.setFocusable(false);
                 editImage.setVisibility(View.GONE);
-                ivTimeTable.setVisibility(View.GONE);
                 handleNewData();
                 imageFlag=true;
                 bindData();
@@ -297,7 +291,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar,langIds, specialityIds);
                 if (result) {
                     // success
-                    if(userInfo.getOpenType()!=3|| userInfo.getTimeTable().size()==0) {
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -308,10 +302,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
                             }
                         });
-                    }else {
-                        sendWorkingHours();
-                    }
-
 
                     // get url and save it in sharePref
                     //user.setAvatar(uploadImageResponse.getFile_url());
@@ -335,39 +325,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     }
 
-    private void sendWorkingHours()
-    {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Boolean result = ApiHelper.DoctorWorkingHours(userInfo.getTimeTable().get(0), String.valueOf(userInfo.getOpenType()), String.valueOf(userInfo.getUserID()));
-
-                DoctorProfileActivity.this.hideProgressBar();
-                if (result) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(DoctorProfileActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
-                            menu.findItem(R.id.mi_edit).setVisible(true);
-                            menu.findItem(R.id.mi_save).setVisible(false);
-                        }
-                    });
-
-                }else
-                {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(DoctorProfileActivity.this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
-
-                        }
-                    });
-
-                }
-            }
-
-        }).start();
-    }
 
     private void setVisiblitiy() {
 //        if (is_me) {
@@ -381,20 +338,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         // }
     }
 
-    @OnClick(R.id.edit_time_table)
-    public void editTimeTable(View view) {
-        try {
-            Intent intent = new Intent(this, TimeTable.class);
-            intent.putExtra(Constants.DATA, userInfo.getTimeTable());
-            intent.putExtra("type", userInfo.getOpenType());
-            intent.putExtra("from", "profile");
-            startActivityForResult(intent, Constants.HOURS_CODE);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e("Add Practics Tag", "Add Practics about Exception ", e);
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -406,11 +350,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                         afterCropFinish();
                         break;*/
 
-                case Constants.HOURS_CODE:
-                    userInfo.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
-                    userInfo.setOpenType(data.getIntExtra("type", 3));
-                    getTimaTableData();
-                    break;
                 case Constants.HOURS_TYPE_CODE:
                     userInfo.setOpenType(data.getIntExtra("type", 3));
                     break;
@@ -482,7 +421,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         // member at need handle
 
         // TimeTable
-        getTimaTableData();
     }
 
     private void setDocuments() {
@@ -517,28 +455,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         bundle.putInt("Constants", Constants.DoctorAll);
         bundle.putSerializable(Constants.CHOSED_LIST, userInfo.getClinics());
         showDialogFragment(bundle);
-    }
-
-    private void getTimaTableData() {
-        tableLayoutTime.removeAllViews();
-        tvNoTime.setVisibility(View.VISIBLE);
-        if (userInfo.getOpenType() == 2) {
-            tvNoTime.setText(R.string.permenant_closed);
-        } else if (userInfo.getOpenType() == 1) {
-            tvNoTime.setText(R.string.always_open);
-        } else if(userInfo.getOpenType() == 3){
-
-            if (userInfo.getTimeTable() != null && userInfo.getTimeTable().size() > 0) {
-                tvNoTime.setVisibility(View.GONE);
-                tableLayoutTime.removeAllViews();
-                com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                timeTable.creatTimeTable(userInfo.getTimeTable().get(0), this, tableLayoutTime);
-            } else
-                tvNoTime.setVisibility(View.VISIBLE);
-            tvNoTime.setText(R.string.no_time_has_set);
-        } else {
-            tvNoTime.setText(R.string.no_hours_available);
-        }
     }
 
 
