@@ -52,6 +52,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AddPractics extends ParentActivity implements Message , DialogPickerCallBacks {
+public class AddPractics extends ParentActivity implements Message, DialogPickerCallBacks {
 
     //Edit text
     @BindView(R.id.ed_phone)
@@ -125,9 +126,9 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
     int PLACE_PICKER_REQUEST = 22;
     String practics_id = "";
     UserInfo clinic;
-    String specialityIds="";
-    String langIds="";
-    String doctorIds="";
+    String specialityIds = "";
+    String langIds = "";
+    String doctorIds = "";
     File file;
 
     @Override
@@ -138,20 +139,20 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         initTB();
 
         try {
-            user = new Gson().fromJson(PrefHelper.get(getBaseContext() , PrefHelper.KEY_USER_KEY , ""), UserInfo.class);
+            user = new Gson().fromJson(PrefHelper.get(getBaseContext(), PrefHelper.KEY_USER_KEY, ""), UserInfo.class);
         } catch (Exception e) {
         }
 
         clinic = new UserInfo();
         clinic.setOpenType(3);
-        WorkingHours workingHours= new WorkingHours();
+        WorkingHours workingHours = new WorkingHours();
         workingHours.setSunday(new ArrayList<Times>());
         workingHours.setMonday(new ArrayList<Times>());
         workingHours.setTuesday(new ArrayList<Times>());
         workingHours.setWednesday(new ArrayList<Times>());
         workingHours.setFriday(new ArrayList<Times>());
         workingHours.setSaturday(new ArrayList<Times>());
-        ArrayList <WorkingHours> workingHoursArrayList= new ArrayList<>();
+        ArrayList<WorkingHours> workingHoursArrayList = new ArrayList<>();
         workingHoursArrayList.add(workingHours);
         clinic.setTimeTable(workingHoursArrayList);
 
@@ -189,7 +190,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                         @Override
                         public void run() {
                             if (clinic.getAvatar() != null && !clinic.getAvatar().isEmpty()) {
-                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(),R.drawable.placeholder);
+                                ImageHelper.setImage(civImageAvatar, ApiHelper.SERVER_IMAGE_URL + "/" + clinic.getAvatar(), R.drawable.placeholder);
                             }
                             etName.setText(clinic.getName());
                             etPhone.setText(clinic.getPhone());
@@ -276,10 +277,10 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext(),clinic.getAvatar());
+                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext(), clinic.getAvatar(),clinic.getTimeTable());
 
                     if (result != null) {
-                        if(clinic.getOpenType()!=3) {
+                        if (clinic.getOpenType() != 3) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -289,13 +290,11 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 
                                 }
                             });
-                        }else
-                        {
+                        } else {
                             sendWorkingHours();
                         }
 
-                    }else
-                    {
+                    } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -316,7 +315,7 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
                 public void run() {
                     ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, getApplicationContext());
                     if (result != null) {
-                        if(clinic.getOpenType()!=3) {
+                        if (clinic.getOpenType() != 3) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -326,13 +325,11 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
 
                                 }
                             });
-                        }else
-                        {
+                        } else {
                             sendWorkingHours();
                         }
 
-                    }else
-                    {
+                    } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -349,12 +346,22 @@ public class AddPractics extends ParentActivity implements Message , DialogPicke
         }
     }
 
-private void sendWorkingHours()
-    {
+    private void sendWorkingHours() {
+        if (clinic.getTimeTable().size() == 0) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AddPractics.this.hideProgressBar();
+                    Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            });
+            return;
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Boolean result = ApiHelper.ClinicWorkingHours(clinic.getTimeTable().get(0), String.valueOf(clinic.getOpenType()),practics_id);
+                Boolean result = ApiHelper.ClinicWorkingHours(clinic.getTimeTable().get(0), String.valueOf(clinic.getOpenType()), practics_id);
                 AddPractics.this.hideProgressBar();
                 if (result) {
                     runOnUiThread(new Runnable() {
@@ -365,8 +372,7 @@ private void sendWorkingHours()
                         }
                     });
 
-                }else
-                {
+                } else {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -512,8 +518,8 @@ private void sendWorkingHours()
     }
     ////----------------------------------------------------------------------------working hours----------------------------------------------///
 
- //======================================================================>//
-   @OnClick(R.id.edit_time_table)
+    //======================================================================>//
+    @OnClick(R.id.edit_time_table)
     public void editTimeTable(View view) {
         try {
             Intent intent = new Intent(this, TimeTable.class);
@@ -537,8 +543,6 @@ private void sendWorkingHours()
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
@@ -559,7 +563,7 @@ private void sendWorkingHours()
 //                    Place place = PlacePicker.getPlace(this, data);
 //                    user.setLocation_lat(place.getLatLng().latitude);
 //                    user.setLocation_long(place.getLatLng().longitude);
-               }
+            }
 
 
         } catch (Exception e) {
@@ -570,17 +574,15 @@ private void sendWorkingHours()
 
     }
 
-//====================================================================================================================>//
+    //====================================================================================================================>//
     private void getTimaTableData() {
         tablelayout.removeAllViews();
         llNo.setVisibility(View.VISIBLE);
         if (clinic.getOpenType() == 2) {
             tvNoTime.setText(R.string.permenant_closed);
-        }
-        else if(clinic.getOpenType() == 1) {
+        } else if (clinic.getOpenType() == 1) {
             tvNoTime.setText(R.string.always_open);
-        }
-       else if(clinic.getOpenType()==3){
+        } else if (clinic.getOpenType() == 3) {
 
             if (clinic.getTimeTable() != null && clinic.getTimeTable().size() > 0) {
                 llNo.setVisibility(View.GONE);
@@ -589,8 +591,8 @@ private void sendWorkingHours()
                 timeTable.creatTimeTable(clinic.getTimeTable().get(0), this, tablelayout);
             } else
                 llNo.setVisibility(View.VISIBLE);
-                tvNoTime.setText(R.string.no_time_has_set);
-        } else  {
+            tvNoTime.setText(R.string.no_time_has_set);
+        } else {
             tvNoTime.setText(R.string.no_hours_available);
         }
     }
@@ -611,9 +613,9 @@ private void sendWorkingHours()
     public void deleteMyImage() {
         try {
             clinic.setAvatar("");
-            file=null;
+            file = null;
             ImageHelper.setImage(civImageAvatar, "", R.drawable.placeholder);
-            PrefHelper.put(getBaseContext() , PrefHelper.KEY_PROFILE_IMAGE , "");
+            PrefHelper.put(getBaseContext(), PrefHelper.KEY_PROFILE_IMAGE, "");
             pickerDialog.dismiss();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -662,34 +664,30 @@ private void sendWorkingHours()
 //    }
 
 
-
-
-    private void setSpecialities()
-    {
+    private void setSpecialities() {
         tvSpecilities.setText("");
-        specialityIds="";
+        specialityIds = "";
         flSpecilities.removeAllViews();
-                    int size = 0;
-                    for (Speciality speciality : clinic.getSpecialities()) {
-                        flSpecilities.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
-                        tvSpecilities.append(speciality.getTitle());
-                        specialityIds= specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
-                        size++;
-                        if (size <  clinic.getSpecialities().size()) {
-                            tvSpecilities.append(", ");
-                            specialityIds = specialityIds.concat(",");
-                        }
-                    }
+        int size = 0;
+        for (Speciality speciality : clinic.getSpecialities()) {
+            flSpecilities.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+            tvSpecilities.append(speciality.getTitle());
+            specialityIds = specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
+            size++;
+            if (size < clinic.getSpecialities().size()) {
+                tvSpecilities.append(", ");
+                specialityIds = specialityIds.concat(",");
+            }
+        }
 
     }
 
-    private void setLanguages()
-    {
+    private void setLanguages() {
         tvLanguages.setText("");
-        langIds="";
+        langIds = "";
         flLanguages.removeAllViews();
         int size = 0;
-        for (Language  language : clinic.getSupportedLangs()) {
+        for (Language language : clinic.getSupportedLangs()) {
             if (!TextUtils.isEmpty(language.getLanguageCountryCode())) {
                 Country country = Country.getCountryByISO(language.getLanguageCountryCode());
                 if (country != null) {
@@ -707,17 +705,16 @@ private void sendWorkingHours()
 
     }
 
-    private void setMemberDoctors()
-    {
-        doctorIds="";
+    private void setMemberDoctors() {
+        doctorIds = "";
         flInvite.removeAllViews();
         int size = 0;
         for (UserInfo doctor : clinic.getClinics()) {
             flInvite.addView(ImageHelper.setImageCircle(doctor.getAvatar(), this));
-            doctorIds= doctorIds.concat(String.valueOf(doctor.getUserID()));
+            doctorIds = doctorIds.concat(String.valueOf(doctor.getUserID()));
             size++;
-            if (size <  clinic.getClinics().size()) {
-                doctorIds= doctorIds.concat(",");
+            if (size < clinic.getClinics().size()) {
+                doctorIds = doctorIds.concat(",");
             }
         }
 
@@ -726,7 +723,7 @@ private void sendWorkingHours()
     @Override
     public void ImagePickerCallBack(Uri uri) {
 
-        file= new File(ImageFilePath.getPath(this, uri));
+        file = new File(ImageFilePath.getPath(this, uri));
         ImageHelper.setImage(civImageAvatar, uri);
         pickerDialog.dismiss();
     }
@@ -734,7 +731,7 @@ private void sendWorkingHours()
 
     @Override
     public void returnChoseSpecialityList(ArrayList<Speciality> specialitiesArrayList) {
-     clinic.setSpecialities(specialitiesArrayList);
+        clinic.setSpecialities(specialitiesArrayList);
         setSpecialities();
     }
 

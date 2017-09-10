@@ -1,10 +1,14 @@
 package com.germanitlab.kanonhealth.api.parameters;
 
 import com.germanitlab.kanonhealth.api.models.SupportedLang;
+import com.germanitlab.kanonhealth.api.models.WorkingHours;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by norhan on 8/1/17.
@@ -13,7 +17,7 @@ import java.util.HashMap;
 public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_NAME="name";
     public static final String PARAMETER_AVATAR ="avatar";
-    public static final String PARAMETER_SPECIALITY="speciality";
+    public static final String PARAMETER_SPECIALITY="specialities";
     public static final String PARAMETER_RATE_NUM="rate_num";
     public static final String  PARAMETER_RATE_PERCENTAGE="rate_percentage";
     public static final String  PARAMETER_ADDRESS="address";
@@ -27,6 +31,7 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_FAX= "fax";
     public static final String PARAMETER_SUPPORTED_LANG= "lang_sub";
     public static final String PARAMETER_OPEN_TYPE= "open_type";
+    public static final String KEY_TIME_TABLE= "working_hours";
     public static final String PARAMETER_DOCTORS= "member_at";
 
 
@@ -74,6 +79,9 @@ public class AddOrEditClinicParameters extends ParentParameters{
 
     @SerializedName(PARAMETER_DOCTORS)
     private String memberDoctors;
+
+    @SerializedName(KEY_TIME_TABLE)
+    private String timeTable;
 
 
     public String getName() {
@@ -179,5 +187,18 @@ public class AddOrEditClinicParameters extends ParentParameters{
 
     public void setMemberDoctors(String memberDoctors) {
         this.memberDoctors = memberDoctors;
+    }
+
+    public ArrayList<WorkingHours> getTimeTable() {
+        Gson gson = new Gson();
+        ArrayList<WorkingHours> workingHourses = gson.fromJson(timeTable, new TypeToken<List<WorkingHours>>(){}.getType());
+        if (workingHourses == null) {
+            workingHourses = new ArrayList<>();
+        }
+        return workingHourses;
+    }
+
+    public void setTimeTable(ArrayList<WorkingHours> timeTable) {
+        this.timeTable = new Gson().toJson(timeTable);
     }
 }

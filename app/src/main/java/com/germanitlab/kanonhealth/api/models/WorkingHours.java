@@ -11,13 +11,13 @@ import java.util.List;
 
 public class WorkingHours  implements Serializable {
 
-    public static final String KEY_SATURDAY = "Sat";
-    public static final String KEY_SUNDAY = "Sun";
-    public static final String KEY_MONDAY = "Mon";
-    public static final String KEY_TUESDAY = "Tue";
-    public static final String KEY_WEDNESDAY = "Wed";
-    public static final String KEY_THURSDAY = "Thu";
-    public static final String KEY_FRIDAY = "Fri";
+    public static final String KEY_SATURDAY = "SAT";
+    public static final String KEY_SUNDAY = "SUN";
+    public static final String KEY_MONDAY = "MON";
+    public static final String KEY_TUESDAY = "TUE";
+    public static final String KEY_WEDNESDAY = "WED";
+    public static final String KEY_THURSDAY = "THU";
+    public static final String KEY_FRIDAY = "FRI";
 
 
     @SerializedName(KEY_SATURDAY)

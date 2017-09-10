@@ -4,7 +4,9 @@ import android.text.TextUtils;
 
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.germanitlab.kanonhealth.models.Table;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by bassiouny on 02/08/17.
@@ -147,7 +150,7 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_MY_CLINICS)
     private ArrayList<UserInfo> myClinics;
     @SerializedName(KEY_TIME_TABLE)
-    private ArrayList<WorkingHours> timeTable;
+    private String timeTable;
     @SerializedName(KEY_ISOPEN)
     @DatabaseField
     private int isSessionOpen;
@@ -467,14 +470,16 @@ public class UserInfo extends ParentModel {
     }
 
     public ArrayList<WorkingHours> getTimeTable() {
-        if (timeTable == null) {
-            timeTable = new ArrayList<>();
+        Gson gson = new Gson();
+        ArrayList<WorkingHours> workingHourses = gson.fromJson(timeTable, new TypeToken<List<WorkingHours>>(){}.getType());
+        if (workingHourses == null) {
+            workingHourses = new ArrayList<>();
         }
-        return timeTable;
+        return workingHourses;
     }
 
     public void setTimeTable(ArrayList<WorkingHours> timeTable) {
-        this.timeTable = timeTable;
+        this.timeTable = new Gson().toJson(timeTable);
     }
 
 

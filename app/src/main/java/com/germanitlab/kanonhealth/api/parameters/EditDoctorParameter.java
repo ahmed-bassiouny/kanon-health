@@ -10,8 +10,8 @@ public class EditDoctorParameter extends UserAddParameter {
     public static final String PARAMETER_EMAIL = "email";
     public static final String PARAMETER_COUNTRY_CODE = "country_code";
     public static final String PARAMETER_PHONE = "phone";
-    public static final String KEY_SPECIALITY = "speciality";
-    public static final String KEY_LANG_SUB = "lang_sub";
+    public static final String KEY_SPECIALITY = "specialities";
+    public static final String KEY_LANG_SUB = "languages";
     @SerializedName(KEY_SPECIALITY)
     private String speciality;
 

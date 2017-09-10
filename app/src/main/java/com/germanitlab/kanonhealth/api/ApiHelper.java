@@ -283,7 +283,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context ,String avatar) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context ,String avatar,ArrayList<WorkingHours> timeTable) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -300,6 +300,7 @@ public class ApiHelper {
             EditClinicParameters.setMemberDoctors(memberDoctors);
             EditClinicParameters.setOpenType(openType);
             EditClinicParameters.setSupportedLangs(languages);
+            EditClinicParameters.setTimeTable(timeTable);
 
             String jsonString = "";
             if (file == null) {
@@ -643,8 +644,7 @@ public class ApiHelper {
             userInfoParameter.setUserID(userID);
             String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             Gson gson = new Gson();
-            UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
-            if (userInfoResponse.getStatus()) {
+            UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);if (userInfoResponse.getStatus()) {
                 userInfo = userInfoResponse.getData();
             }
         } catch (Exception e) {
