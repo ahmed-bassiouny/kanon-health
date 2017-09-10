@@ -770,7 +770,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFromID() == doctorID) {
                     messageRepositry.createOrUpate(message);
-                    chatHelper.creatRealMessage(message, 0, messages, chatAdapter, recyclerView);
+                    chatHelper.creatRealMessage(message, -1, messages, chatAdapter, recyclerView);
 
                     messageSeen(message.getMessageID().toString());
                     // seen request for specific msg
