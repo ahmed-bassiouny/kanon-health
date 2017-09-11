@@ -60,7 +60,7 @@ public class SelectSpecialityAdapter extends RecyclerView.Adapter<com.germanitla
                       holder.rbtn.setChecked(false);
                   }
                             holder.tv_title.setText(model.getTitle());
-                            ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_URL + model.getImage(), -1);
+                            ImageHelper.setImage(holder.img_icon, ApiHelper.SERVER_IMAGE_SPECIAL_URL+ model.getImage(), -1);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);

@@ -33,7 +33,6 @@ public class SelectLanguageAdapter extends RecyclerView.Adapter<SelectLanguageAd
 
     public ArrayList<Language> allLanguages;
     public ArrayList<Language> myLanguages;
-    int type =0;
     Context context;
 
 
@@ -46,7 +45,6 @@ public class SelectLanguageAdapter extends RecyclerView.Adapter<SelectLanguageAd
     @Override
     public SelectLanguageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_select_row, parent, false);
-
         return new SelectLanguageAdapter.MyViewHolder(itemView);
     }
 
@@ -84,13 +82,6 @@ public class SelectLanguageAdapter extends RecyclerView.Adapter<SelectLanguageAd
             }
         }
         return -1;
-    }
-
-    private void setDataChecked(CheckBox dbtn, boolean show) {
-        if (show)
-            dbtn.setChecked(true);
-        else
-            dbtn.setChecked(false);
     }
 
     @Override
