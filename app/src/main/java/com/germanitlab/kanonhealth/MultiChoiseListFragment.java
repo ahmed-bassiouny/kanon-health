@@ -27,7 +27,6 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
-import com.germanitlab.kanonhealth.helpers.RecyclerItemClickListener;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 
@@ -72,14 +71,12 @@ public class MultiChoiseListFragment extends DialogFragment {
             Bundle bundle = this.getArguments();
             if (bundle != null) {
                 type = bundle.getInt("Constants");
-                if(type==Constants.SPECIALITIES) {
-                    mySpecialList  = (ArrayList<Speciality>) bundle.getSerializable(Constants.CHOSED_LIST);
-                }else if(type==Constants.LANGUAUGE)
-                {
-                    myLanguageList=(ArrayList<Language>) bundle.getSerializable(Constants.CHOSED_LIST);
-                }else if (type==Constants.DoctorAll)
-                {
-                    myDoctorList=(ArrayList<UserInfo>) bundle.getSerializable(Constants.CHOSED_LIST);
+                if (type == Constants.SPECIALITIES) {
+                    mySpecialList = (ArrayList<Speciality>) bundle.getSerializable(Constants.CHOSED_LIST);
+                } else if (type == Constants.LANGUAUGE) {
+                    myLanguageList = (ArrayList<Language>) bundle.getSerializable(Constants.CHOSED_LIST);
+                } else if (type == Constants.DoctorAll) {
+                    myDoctorList = (ArrayList<UserInfo>) bundle.getSerializable(Constants.CHOSED_LIST);
                 }
             }
             getData();
@@ -87,13 +84,11 @@ public class MultiChoiseListFragment extends DialogFragment {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(type==Constants.SPECIALITIES) {
-                       message.returnChoseSpecialityList(selectSpecialityAdapter.mySpecialList);
-                    }else if(type==Constants.LANGUAUGE)
-                    {
-                    message.returnChoseLanguageList(selectLanguageAdapter.myLanguages);
-                    }else if (type==Constants.DoctorAll)
-                    {
+                    if (type == Constants.SPECIALITIES) {
+                        message.returnChoseSpecialityList(selectSpecialityAdapter.mySpecialList);
+                    } else if (type == Constants.LANGUAUGE) {
+                        message.returnChoseLanguageList(selectLanguageAdapter.myLanguages);
+                    } else if (type == Constants.DoctorAll) {
                         message.returnChoseDoctorList(selectMemberDoctorAdapter.myDoctors);
                     }
                     getDialog().dismiss();
@@ -122,8 +117,8 @@ public class MultiChoiseListFragment extends DialogFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                         allSpecialList= ApiHelper.getSpecialities(getActivity().getApplicationContext());
-                         selectSpecialityAdapter = new SelectSpecialityAdapter(getContext(),allSpecialList,mySpecialList);
+                        allSpecialList = ApiHelper.getSpecialities(getActivity().getApplicationContext());
+                        selectSpecialityAdapter = new SelectSpecialityAdapter(getContext(), allSpecialList, mySpecialList);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -140,8 +135,8 @@ public class MultiChoiseListFragment extends DialogFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        allLanguageList= ApiHelper.getLanguage(getActivity().getApplicationContext());
-                        selectLanguageAdapter= new SelectLanguageAdapter(getContext(),allLanguageList,myLanguageList);
+                        allLanguageList = ApiHelper.getLanguage(getActivity().getApplicationContext());
+                        selectLanguageAdapter = new SelectLanguageAdapter(getContext(), allLanguageList, myLanguageList);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -156,8 +151,8 @@ public class MultiChoiseListFragment extends DialogFragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        allDoctorList= ApiHelper.postGetDoctorList(getActivity().getApplicationContext(), String.valueOf(PrefHelper.get(getContext() , PrefHelper.KEY_USER_ID , -1)));
-                        selectMemberDoctorAdapter= new SelectMemberDoctorAdapter(getContext(),allDoctorList,myDoctorList);
+                        allDoctorList = ApiHelper.postGetDoctorList(getActivity().getApplicationContext(), String.valueOf(PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, -1)));
+                        selectMemberDoctorAdapter = new SelectMemberDoctorAdapter(getContext(), allDoctorList, myDoctorList);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -172,103 +167,12 @@ public class MultiChoiseListFragment extends DialogFragment {
     }
 
 
+    private void initRecyclerView(RecyclerView.Adapter adapter) {
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
-private void initRecyclerView(RecyclerView.Adapter adapter)
-{
-    recyclerView.setAdapter(adapter);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setItemAnimator(new DefaultItemAnimator());
-    recyclerView.setVisibility(View.VISIBLE);
-    progressBar.setVisibility(View.GONE);
-    recyclerView.addOnItemTouchListener(
-        new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                // TODO Handle item click
-                CheckBox rbtn = (CheckBox) view.findViewById(R.id.rbtn);
-                switch (type) {
-                    case Constants.SPECIALITIES:
-
-                        if (!rbtn.isChecked()) {
-                            selectSpecialityAdapter.mySpecialList.add(selectSpecialityAdapter.allSpecialList.get(position));
-                        } else {
-                            selectSpecialityAdapter.mySpecialList.remove(selectSpecialityAdapter.allSpecialList.get(position));
-                        }
-
-                        break;
-                    case Constants.LANGUAUGE:
-                        if (!rbtn.isChecked()) {
-                            selectLanguageAdapter.myLanguages.add(selectLanguageAdapter.allLanguages.get(position));
-                        } else {
-                            selectLanguageAdapter.myLanguages.remove(selectLanguageAdapter.allLanguages.get(position));
-                        }
-
-
-                        break;
-                    case Constants.DoctorAll:
-                        if (!rbtn.isChecked()) {
-                            selectMemberDoctorAdapter.myDoctors.add(selectMemberDoctorAdapter.allDoctors.get(position));
-                        } else {
-                            selectMemberDoctorAdapter.myDoctors.remove(selectMemberDoctorAdapter.allDoctors.get(position));
-                        }
-                        break;
-                }
-            }
-
-            })
-                    );
-        }
-
-
-//    @Override
-//    public void onFailed(String error) {
-//        progressBar.setVisibility(View.GONE);
-//        error_message.setVisibility(View.VISIBLE);
-//        ll_view.setVisibility(View.GONE);
-//
-//    }
-
-//    private void initDataSpecialist(Object response) {
-//        allspecialist = (ArrayList<ChooseModel>) response;
-//        // iteration on data to compare and fill data
-//        if (allspecialist.size() > 0) {
-//            for (ChooseModel choseditem : chosedspecialist) {
-//                for (ChooseModel item : allspecialist) {
-//                    if (item.getSpeciality_id() == choseditem.getSpeciality_id()) {
-//                        int index = allspecialist.indexOf(item);
-//                        item.setIsMyChoise(true);
-//                        allspecialist.set(index, item);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private void initDataLanguauge(Object response) {
-//        allspecialist = (ArrayList<ChooseModel>) response;
-//        // iteration on data to compare and fill data
-//        for (ChooseModel choseditem : chosedspecialist) {
-//            for (ChooseModel item : allspecialist) {
-//                if (item.getLang_id() == choseditem.getLang_id()) {
-//                    int index = allspecialist.indexOf(item);
-//                    item.setIsMyChoise(true);
-//                    allspecialist.set(index, item);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void initDataMemberAt(Object response) {
-//        allspecialist = (ArrayList<ChooseModel>) response;
-//        // iteration on data to compare and fill data
-//        for (ChooseModel choseditem : chosedspecialist) {
-//            for (ChooseModel item : allspecialist) {
-//                if (item.getIdMember() == choseditem.getIdMember()) {
-//                    int index = allspecialist.indexOf(item);
-//                    item.setIsMyChoise(true);
-//                    allspecialist.set(index, item);
-//                }
-//            }
-//        }
-   // }
+    }
 }

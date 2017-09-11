@@ -103,6 +103,22 @@ public class SelectLanguageAdapter extends RecyclerView.Adapter<SelectLanguageAd
             status = (CircleImageView) view.findViewById(R.id.status);
             relativeLayout = (RelativeLayout) view.findViewById(R.id.multi_choise_layout);
             rbtn = (CheckBox) view.findViewById(R.id.rbtn);
+
+            rbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("Test","Name clicked : "+getAdapterPosition());
+
+                    if(rbtn.isChecked())
+                    {
+                       myLanguages.add(allLanguages.get(getAdapterPosition()));
+                    }else
+                    {
+                       myLanguages.remove(allLanguages.get(getAdapterPosition()));
+                    }
+
+                }
+            });
         }
     }
 }
