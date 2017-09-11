@@ -280,7 +280,6 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                     ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext(), clinic.getAvatar(),clinic.getTimeTable());
 
                     if (result != null) {
-                        if (clinic.getOpenType() != 3) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -290,9 +289,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
 
                                 }
                             });
-                        } else {
-                            sendWorkingHours();
-                        }
+
 
                     } else {
                         runOnUiThread(new Runnable() {
@@ -313,9 +310,8 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, getApplicationContext());
+                    ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, clinic.getTimeTable(),getApplicationContext());
                     if (result != null) {
-                        if (clinic.getOpenType() != 3) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -325,9 +321,6 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
 
                                 }
                             });
-                        } else {
-                            sendWorkingHours();
-                        }
 
                     } else {
                         runOnUiThread(new Runnable() {
