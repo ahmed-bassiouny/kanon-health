@@ -140,7 +140,7 @@ public class ForwardActivity extends ParentActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final boolean result=ApiHelper.sendForward(ForwardActivity.this,PrefHelper.get(ForwardActivity.this,PrefHelper.KEY_USER_ID,0), ListtoString(doctorsForward),ListtoString(messagesForward));
+                final boolean result=ApiHelper.sendForward(ForwardActivity.this,PrefHelper.get(ForwardActivity.this,PrefHelper.KEY_USER_ID,0), ListtoString(doctorsForward),ListtoString(messagesForward),UserInfo.DOCTOR);
                 ForwardActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

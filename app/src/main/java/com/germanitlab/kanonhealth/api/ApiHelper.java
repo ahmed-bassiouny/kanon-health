@@ -96,19 +96,46 @@ public class ApiHelper {
     private static final String API_DOCUMENTS_LIST = "document/list";
     private static final String API_DOCUMENT_PRIVACY = "document/privacy";
     private static final String API_LANGUAGES_LIST = "langs/list";
-    private static final String API_MESSAGES_SEND = "messages/send";
-    private static final String API_MESSAGES_FORWARD = "messages/forward";
-    private static final String API_MESSAGES_DELETE = "messages/delete";
-    private static final String API_MESSAGES_DELIVER = "messages/deliver";
-    private static final String API_MESSAGES_SEEN = "messages/seen";
-    private static final String API_MESSAGES_LIST = "messages/messages";
+    /***************  Message with Doctor or user   ******************/
+    //region
+    private static final String API_MESSAGES_SEND_DOC = "messages/send";
+    private static final String API_MESSAGES_FORWARD_DOC = "messages/forward";
+    private static final String API_MESSAGES_DELETE_DOC = "messages/delete";
+    private static final String API_MESSAGES_DELIVER_DOC = "messages/deliver";
+    private static final String API_MESSAGES_SEEN_DOC = "messages/seen";
+    private static final String API_MESSAGES_LIST_DOC = "messages/messages";
+    //endregion
+    /***************  End Message with Doctor or user   ******************/
+    /***************  Message with Clinic   ******************/
+    // region
+    private static final String API_MESSAGES_SEND_CLINIC = "messages-clinic/send";
+    private static final String API_MESSAGES_FORWARD_CLINIC = "messages-clinic/forward";
+    private static final String API_MESSAGES_DELETE_CLINIC = "messages-clinic/delete";
+    private static final String API_MESSAGES_DELIVER_CLINIC = "messages-clinic/deliver";
+    private static final String API_MESSAGES_SEEN_CLINIC = "messages-clinic/seen";
+    private static final String API_MESSAGES_LIST_CLINIC = "messages-clinic/messages";
+    // endregion
+    /***************  end Message with Clinic   ******************/
     private static final String API_MESSAGES_CHAT_ANOTHER = "messages/chat/another";
     private static final String API_MESSAGES_CHAT_CLINIC = "messages/chat/clinic";
     private static final String API_MESSAGES_CHAT_DOCTOR = "messages/chat/doctor";
     private static final String API_MESSAGES_CHAT_USER = "messages/chat/users";
-    private static final String API_REQUESTS_OPEN = "requests/open";
-    private static final String API_REQUESTS_CLOSE = "requests/close";
-    private static final String API_REQUESTS_LIST = "requests/list";
+
+    /***************  Request with Doctor   ******************/
+    // region
+    private static final String API_REQUESTS_OPEN_DOC = "requests/open";
+    private static final String API_REQUESTS_CLOSE_DOC = "requests/close";
+    // endregion
+    /***************  end Request with Doctor******************/
+
+    /***************  Request with Clinic   ******************/
+    // region
+    private static final String API_REQUESTS_OPEN_CLINIC = "requests-clinic/open";
+    private static final String API_REQUESTS_CLOSE_CLINIC = "requests-clinic/close";
+    // endregion
+    /***************  end Request with Doctor******************/
+
+
     private static final String API_SPECIALITIES_LIST = "speciality/list";
     private static final String API_USERS_ME = "users/me";
     private static final String API_USERS_ADD = "users/add";
@@ -118,7 +145,8 @@ public class ApiHelper {
     private static final String API_FAVOURITE = "favourite";
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
-    private static final String API_IS_OPEN = "flag/is_open";
+    private static final String API_IS_OPEN_DOC = "flag/is_open";
+    private static final String API_IS_OPEN_CLINIC = "flag/is_open_clinics";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
     private static final String API_CLINIC_WORKING_HOURS = "users/clinic_working_hours";
     private static final String API_NETWORK_LOCATION = "http://ip-api.com/json";
@@ -138,7 +166,7 @@ public class ApiHelper {
     private static final String EMPTY_JSON = "{}";
 
 
-    private static OkHttpClient getClient(){
+    private static OkHttpClient getClient() {
         // set time out connection 20SEC
         return new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
@@ -146,6 +174,7 @@ public class ApiHelper {
                 .readTimeout(20, TimeUnit.SECONDS)
                 .build();
     }
+
     private static String post(String url, String parameters) throws IOException {
 
         RequestBody body = RequestBody.create(JSON, parameters);
@@ -233,7 +262,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context) {
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context) {
         ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -287,7 +316,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone,String memberDoctors,String openType,String languages, File file, Context context ,String avatar,ArrayList<WorkingHours> timeTable) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, ArrayList<WorkingHours> timeTable) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -329,14 +358,19 @@ public class ApiHelper {
     }
 
     // get all message in chat
-    public static ArrayList<Message> getMessages(int UserID, int toID, Context context) {
+    public static ArrayList<Message> getMessages(int UserID, int toID, Context context,int userType) {
         ArrayList<Message> result = null;
         try {
             MessagesParameter messagesParamater = new MessagesParameter();
             messagesParamater.setUserID(UserID);
             messagesParamater.setToID(toID);
+            String jsonString;
+            if(userType==UserInfo.CLINIC){
+                jsonString = post(API_MESSAGES_LIST_CLINIC, messagesParamater.toJson());
+            }else {
+                jsonString = post(API_MESSAGES_LIST_DOC, messagesParamater.toJson());
+            }
 
-            String jsonString = post(API_MESSAGES_LIST, messagesParamater.toJson());
             Gson gson = new Gson();
             MessagesResponse messageResponse = gson.fromJson(jsonString, MessagesResponse.class);
             if (messageResponse.getStatus()) {
@@ -351,7 +385,7 @@ public class ApiHelper {
     }
 
     // send message in chat
-    public static Message sendMessage(Message msg, File media, Context context) {
+    public static Message sendMessage(Message msg, File media, Context context, int userType) {
         Message message = null;
         try {
             MessageSendParameters messageSendParamaters = new MessageSendParameters();
@@ -361,11 +395,20 @@ public class ApiHelper {
             messageSendParamaters.setTypeMessage(msg.getType());
             messageSendParamaters.setIsForward(0);
             String jsonString = "";
-            if (media != null) {
-                jsonString = postWithFile(API_MESSAGES_SEND, messageSendParamaters.toHashMap(), media, MessageSendParameters.PARAMATER_MEDIA);
+            if (userType == UserInfo.CLINIC) {
+                if (media != null) {
+                    jsonString = postWithFile(API_MESSAGES_SEND_CLINIC, messageSendParamaters.toHashMap(), media, MessageSendParameters.PARAMATER_MEDIA);
+                } else {
+                    jsonString = post(API_MESSAGES_SEND_CLINIC, messageSendParamaters.toJson());
+                }
             } else {
-                jsonString = post(API_MESSAGES_SEND, messageSendParamaters.toJson());
+                if (media != null) {
+                    jsonString = postWithFile(API_MESSAGES_SEND_DOC, messageSendParamaters.toHashMap(), media, MessageSendParameters.PARAMATER_MEDIA);
+                } else {
+                    jsonString = post(API_MESSAGES_SEND_DOC, messageSendParamaters.toJson());
+                }
             }
+
             Gson gson = new Gson();
             MessageSendResponse messageSendResponse = gson.fromJson(jsonString, MessageSendResponse.class);
             if (messageSendResponse.getStatus()) {
@@ -448,7 +491,7 @@ public class ApiHelper {
 
             Gson gson = new Gson();
             ChangeStatusResponse changeStatusResponse = gson.fromJson(jsonString, ChangeStatusResponse.class);
-           // Toast.makeText(context, changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
+            // Toast.makeText(context, changeStatusResponse.getMsg(), Toast.LENGTH_LONG).show();
             if (changeStatusResponse.getStatus()) {
                 result = 1;
             }
@@ -562,7 +605,7 @@ public class ApiHelper {
     }
 
     // edit doctor return true if doctor edited
-    public static boolean editDoctor(Context context, UserInfo userInfo, File avatar,String langIds,String specialityIds) {
+    public static boolean editDoctor(Context context, UserInfo userInfo, File avatar, String langIds, String specialityIds) {
         boolean result = false;
         try {
             EditDoctorParameter editDoctorParamater = new EditDoctorParameter();
@@ -650,7 +693,8 @@ public class ApiHelper {
             userInfoParameter.setUserID(userID);
             String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             Gson gson = new Gson();
-            UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);if (userInfoResponse.getStatus()) {
+            UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
+            if (userInfoResponse.getStatus()) {
                 userInfo = userInfoResponse.getData();
             }
         } catch (Exception e) {
@@ -660,15 +704,20 @@ public class ApiHelper {
         }
     }
 
-    public static int openSession(Context context, String userID, String doctorID,HashMap<String,String> questionsAnswers) {
+    public static int openSession(Context context, String userID, String doctorID, HashMap<String, String> questionsAnswers,int userType) {
         int result = -1;
         try {
             OpenSessionParameters openSessionParameters = new OpenSessionParameters();
             openSessionParameters.setUserID(userID);
-            openSessionParameters.setDoctorID(doctorID);
             openSessionParameters.setQuestionsAnswers(questionsAnswers);
-
-            String jsonString = post(API_REQUESTS_OPEN, openSessionParameters.toJson());
+            String jsonString;
+            if(userType==UserInfo.CLINIC){
+                openSessionParameters.setClinicID(doctorID);
+                jsonString = post(API_REQUESTS_OPEN_CLINIC, openSessionParameters.toJson());
+            }else {
+                openSessionParameters.setDoctorID(doctorID);
+                jsonString = post(API_REQUESTS_OPEN_DOC, openSessionParameters.toJson());
+            }
             Gson gson = new Gson();
             OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);
             if (parentResponse.getStatus()) {
@@ -681,12 +730,18 @@ public class ApiHelper {
         }
     }
 
-    public static boolean closeSession(Context context, int requestID) {
+    public static boolean closeSession(Context context, int requestID,int userType) {
         boolean result = false;
         try {
             CloseSessionParameters closeSessionParameters = new CloseSessionParameters();
             closeSessionParameters.setRequestID(requestID);
-            String jsonString = post(API_REQUESTS_CLOSE, closeSessionParameters.toJson());
+            String jsonString;
+            if(userType==UserInfo.CLINIC){
+                jsonString = post(API_REQUESTS_CLOSE_CLINIC, closeSessionParameters.toJson());
+            }else{
+                jsonString = post(API_REQUESTS_CLOSE_DOC, closeSessionParameters.toJson());
+            }
+
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
             if (parentResponse.getStatus()) {
@@ -699,14 +754,19 @@ public class ApiHelper {
         }
     }
 
-    public static boolean sendForward(Context context, int userID, String doctorID, String messageID) {
+    public static boolean sendForward(Context context, int userID, String doctorID, String messageID, int userType) {
         boolean result = false;
         try {
             MessageOperationParameter messageForwardParameter = new MessageOperationParameter();
             messageForwardParameter.setUserID(userID);
             messageForwardParameter.setToID(doctorID);
             messageForwardParameter.setMessagesID(messageID);
-            String jsonString = post(API_MESSAGES_FORWARD, messageForwardParameter.toJson());
+            String jsonString;
+            if (userType == UserInfo.CLINIC) {
+                jsonString = post(API_MESSAGES_FORWARD_CLINIC, messageForwardParameter.toJson());
+            } else {
+                jsonString = post(API_MESSAGES_FORWARD_DOC, messageForwardParameter.toJson());
+            }
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
             result = parentResponse.getStatus();
@@ -717,7 +777,7 @@ public class ApiHelper {
         }
     }
 
-    private static boolean MessageOperation(Context context, int user_id, String msg_id, String toId, int operationType) {
+    private static boolean MessageOperation(Context context, int user_id, String msg_id, String toId, int operationType, int userType) {
         boolean result = false;
         try {
             MessageOperationParameter messageOperationParameter = new MessageOperationParameter();
@@ -725,14 +785,26 @@ public class ApiHelper {
             messageOperationParameter.setMessagesID(msg_id);
             messageOperationParameter.setToID(toId);
             String url;
-            if (operationType == MessageOperationParameter.SEEN) {
-                url = API_MESSAGES_SEEN;
-            } else if (operationType == MessageOperationParameter.DELIVER) {
-                url = API_MESSAGES_DELIVER;
-            } else if (operationType == MessageOperationParameter.DELETE) {
-                url = API_MESSAGES_DELETE;
+            if (userType == UserInfo.CLINIC) {
+                if (operationType == MessageOperationParameter.SEEN) {
+                    url = API_MESSAGES_SEEN_CLINIC;
+                } else if (operationType == MessageOperationParameter.DELIVER) {
+                    url = API_MESSAGES_DELIVER_CLINIC;
+                } else if (operationType == MessageOperationParameter.DELETE) {
+                    url = API_MESSAGES_DELETE_CLINIC;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                if (operationType == MessageOperationParameter.SEEN) {
+                    url = API_MESSAGES_SEEN_DOC;
+                } else if (operationType == MessageOperationParameter.DELIVER) {
+                    url = API_MESSAGES_DELIVER_DOC;
+                } else if (operationType == MessageOperationParameter.DELETE) {
+                    url = API_MESSAGES_DELETE_DOC;
+                } else {
+                    return false;
+                }
             }
             String jsonString = post(url, messageOperationParameter.toJson());
             Gson gson = new Gson();
@@ -748,16 +820,16 @@ public class ApiHelper {
         }
     }
 
-    public static boolean deleteMessgae(Context context, int user_id, String toId, String msg_id) {
-        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.DELETE);
+    public static boolean deleteMessgae(Context context, int user_id, String toId, String msg_id, int userType) {
+        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.DELETE, userType);
     }
 
-    public static boolean seenMessage(Context context, int user_id, String toId, String msg_id) {
-        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.SEEN);
+    public static boolean seenMessage(Context context, int user_id, String toId, String msg_id, int userType) {
+        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.SEEN, userType);
     }
 
-    public static boolean deliveredMessgae(Context context, int user_id, String toId, String msg_id) {
-        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.DELIVER);
+    public static boolean deliveredMessgae(Context context, int user_id, String toId, String msg_id, int userType) {
+        return MessageOperation(context, user_id, msg_id, toId, MessageOperationParameter.DELIVER, userType);
     }
 
     private static ArrayList<ChatModel> getChatMessages(Context context, String userID, int chatType) {
@@ -830,7 +902,7 @@ public class ApiHelper {
             rateDoctorParameter.setRequestId(requestId);
             rateDoctorParameter.setComment(comment);
             rateDoctorParameter.setRate(rate);
-            String jsonString = post(API_DOCTORS_RATE , rateDoctorParameter.toJson());
+            String jsonString = post(API_DOCTORS_RATE, rateDoctorParameter.toJson());
             Gson gson = new Gson();
             RateDoctorResponse rateDoctorResponse = gson.fromJson(jsonString, RateDoctorResponse.class);
             if (rateDoctorResponse.getStatus()) {
@@ -902,7 +974,7 @@ public class ApiHelper {
     }
 
 
-    public static boolean ClinicWorkingHours(WorkingHours workingHours,String openType,String clinicId) {
+    public static boolean ClinicWorkingHours(WorkingHours workingHours, String openType, String clinicId) {
         boolean result = false;
         try {
             ClinicWorkingHoursParameters clinicWorkingHoursParameters = new ClinicWorkingHoursParameters();
@@ -916,7 +988,7 @@ public class ApiHelper {
             clinicWorkingHoursParameters.setThursday((new Gson()).toJson(workingHours.getThursday()));
             clinicWorkingHoursParameters.setFriday((new Gson()).toJson(workingHours.getFriday()));
             String jsonString = post(API_CLINIC_WORKING_HOURS, clinicWorkingHoursParameters.toJson());
-            System.out.println( clinicWorkingHoursParameters.toJson());
+            System.out.println(clinicWorkingHoursParameters.toJson());
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
             result = parentResponse.getStatus();
@@ -927,7 +999,7 @@ public class ApiHelper {
         }
     }
 
-    public static boolean DoctorWorkingHours(WorkingHours workingHours,String openType,String doctorId) {
+    public static boolean DoctorWorkingHours(WorkingHours workingHours, String openType, String doctorId) {
         boolean result = false;
         try {
             DoctorWorkingHoursParameters doctorWorkingHoursParameters = new DoctorWorkingHoursParameters();
@@ -940,8 +1012,8 @@ public class ApiHelper {
             doctorWorkingHoursParameters.setWednesday((new Gson()).toJson(workingHours.getWednesday()));
             doctorWorkingHoursParameters.setThursday((new Gson()).toJson(workingHours.getThursday()));
             doctorWorkingHoursParameters.setFriday((new Gson()).toJson(workingHours.getFriday()));
-            String jsonString = post(API_DOCTOR_WORKING_HOURS,  doctorWorkingHoursParameters.toJson());
-            System.out.println(  doctorWorkingHoursParameters.toJson());
+            String jsonString = post(API_DOCTOR_WORKING_HOURS, doctorWorkingHoursParameters.toJson());
+            System.out.println(doctorWorkingHoursParameters.toJson());
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
             result = parentResponse.getStatus();
@@ -952,24 +1024,29 @@ public class ApiHelper {
         }
     }
 
-    public static boolean getIsOpen(int userId,int docId){
-        boolean result = false;
+    public static int getIsOpen(int userId, int docId,int userType) {
+        int result = -1;
         try {
             IsOpenParameters openParameters = new IsOpenParameters();
             openParameters.setUserId(userId);
-            openParameters.setDocId(docId);
-            String jsonString=post(API_IS_OPEN,openParameters.toJson());
+            String jsonString;
+            if(userType==UserInfo.CLINIC){
+                openParameters.setClinicId(docId);
+                jsonString = post(API_IS_OPEN_CLINIC, openParameters.toJson());
+            }else {
+                openParameters.setDocId(docId);
+                jsonString = post(API_IS_OPEN_DOC, openParameters.toJson());
+            }
+
             Gson gson = new Gson();
-            IsOpenResponse isOpenResponse = gson.fromJson(jsonString,IsOpenResponse.class);
-            result = isOpenResponse.getStatus() ==1;
-        }catch (Exception e){
+            IsOpenResponse isOpenResponse = gson.fromJson(jsonString, IsOpenResponse.class);
+            result = isOpenResponse.getRequestId();
+        } catch (Exception e) {
             Helper.handleError(TAG, "getIsOpen", e, -1, null);
-        }finally {
+        } finally {
             return result;
         }
     }
-
-
 
 
     //endregion

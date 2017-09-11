@@ -170,12 +170,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             @Override
             public void run() {
                 //*********** it's comment becuase i am waiting karim finish task
-                final boolean result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID());
+                final int result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(),doctor.getUserType());
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (result) {
+                        if (result>0) {
                             doctor.setIsSessionOpen(1);
+                            doctor.setRequestID(result);
                         }
                         Intent intent = new Intent(activity, HttpChatActivity.class);
                         intent.putExtra("userInfo", doctor);
