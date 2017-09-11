@@ -452,7 +452,6 @@ public class ApiHelper {
             if (changeStatusResponse.getStatus()) {
                 result = 1;
             }
-
         } catch (Exception e) {
             Helper.handleError(TAG, "postChangeStatus", e, -1, context);
         } finally {
