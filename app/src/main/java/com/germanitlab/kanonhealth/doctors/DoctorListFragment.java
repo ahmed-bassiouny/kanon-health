@@ -433,11 +433,22 @@ public class DoctorListFragment extends Fragment {
             public void run() {
                 if (Helper.isNetworkAvailable(getContext())) {
                     doctorList = ApiHelper.postGetDoctorList(getContext(), user.getUserID().toString());
+                    for (int i=0 ;  i<doctorList.size() ; i++){
+                        if (doctorList.get(i).getUserID()==1){
+                            doctorList.remove(i);
+                        }
+                    }
+
                     for (UserInfo userInfo : doctorList) {
-                        userInfoRepositry.createDoctor(userInfo);
+                                userInfoRepositry.createDoctor(userInfo);
                     }
                 } else {
                     doctorList = (ArrayList<UserInfo>) userInfoRepositry.getDoctors();
+                    for (int i=0 ;  i<doctorList.size() ; i++){
+                        if (doctorList.get(i).getUserID()==1){
+                            doctorList.remove(i);
+                        }
+                    }
                 }
                 if (!PrefHelper.get(getActivity(), PrefHelper.KEY_IS_OLD, false)) {
                     is_doctor_data = true;

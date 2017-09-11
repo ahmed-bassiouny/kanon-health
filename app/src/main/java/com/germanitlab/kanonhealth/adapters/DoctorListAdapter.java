@@ -90,7 +90,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.It
                 holder.tvSpecialist.setEllipsize(TextUtils.TruncateAt.END);;
                 int size = 0;
                 for (Speciality speciality : doctor.getSpecialities()) {
-                    holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircle(speciality.getImage(), activity));
+                    holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), activity));
                     holder.tvSpecialist.append(speciality.getTitle());
 
                     if (size < doctor.getSpecialities().size()) {

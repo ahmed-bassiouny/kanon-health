@@ -132,6 +132,7 @@ public class ApiHelper {
 
     public static final String SERVER_API_URL = "http://cleverclan.com/kanon/V1/";
     public static final String SERVER_IMAGE_URL = "http://cleverclan.com/kanon/public/uploads/";
+    public static final String SERVER_IMAGE_SPECIAL_URL = "http://cleverclan.com/kanon/";
     private static final String TAG = "ApiHelper";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String EMPTY_JSON = "{}";

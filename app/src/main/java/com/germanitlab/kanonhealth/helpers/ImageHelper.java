@@ -197,6 +197,20 @@ public class ImageHelper {
         return circularImageView;
     }
 
+
+    public static View setImageCircleSpecial(String speciality_icon, Activity activity) {
+        Helper helper = new Helper(activity);
+        CircleImageView circularImageView = new CircleImageView(activity);
+        if (TextUtils.isEmpty(speciality_icon)) {
+            circularImageView.setImageResource(R.drawable.placeholder);
+        } else {
+            setImage(circularImageView, ApiHelper.SERVER_IMAGE_SPECIAL_URL + speciality_icon, -1);
+        }
+        circularImageView.setLayoutParams(new FlowLayout.LayoutParams(helper.dpToPx(30), helper.dpToPx(30)));
+        circularImageView.setPadding(7, 4, 7, 4);
+        return circularImageView;
+    }
+
     public static View setImageHeart(int src, Context context) {
         View view;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
