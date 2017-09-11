@@ -16,6 +16,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Message;
+import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
@@ -201,7 +202,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.deliveredMessgae(FirebaseMessagingService.this, userID, String.valueOf(doctorID), messageId);
+                ApiHelper.deliveredMessgae(FirebaseMessagingService.this, userID, String.valueOf(doctorID), messageId, UserInfo.DOCTOR);
             }
         }).start();
     }

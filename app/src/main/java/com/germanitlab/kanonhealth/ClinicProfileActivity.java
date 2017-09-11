@@ -26,6 +26,7 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.httpchat.DocumentChatAdapter;
+import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.inquiry.InquiryActivity;
 import com.google.gson.Gson;
@@ -130,9 +131,30 @@ ClinicProfileActivity extends ParentActivity {
 
     @OnClick(R.id.tv_contact)
     public void contactClick(View v) {
-        Intent intent = new Intent(this, InquiryActivity.class);
-        intent.putExtra("doctor_data", new Gson().toJson(clinic));
-        startActivity(intent);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //*********** it's comment becuase i am waiting karim finish task
+                final int result = ApiHelper.getIsOpen(PrefHelper.get(ClinicProfileActivity.this, PrefHelper.KEY_USER_ID, -1),clinic.getId(),clinic.getUserType());
+                ClinicProfileActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result>0){
+                            clinic.setIsSessionOpen(1);
+                            clinic.setRequestID(result);
+                            Intent intent = new Intent(ClinicProfileActivity.this, HttpChatActivity.class);
+                            intent.putExtra("userInfo", clinic);
+                            intent.putExtra("doctorID", clinic.getId());
+                            startActivity(intent);
+                        }else {
+                            Intent intent = new Intent(ClinicProfileActivity.this, InquiryActivity.class);
+                            intent.putExtra("doctor_data", new Gson().toJson(clinic));
+                            startActivity(intent);
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     private void setVisiblitiy() {

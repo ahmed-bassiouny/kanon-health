@@ -168,7 +168,7 @@ public class InquiryMainFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final int requestId = ApiHelper.openSession(getContext(), String.valueOf(PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, 0)), String.valueOf(doctor.getUserID()), InquiryActivity.inquiryResult);
+                            final int requestId = ApiHelper.openSession(getContext(), String.valueOf(PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, 0)), String.valueOf(doctor.getId()), InquiryActivity.inquiryResult,UserInfo.CLINIC);
                             InquiryMainFragment.this.getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

@@ -84,7 +84,7 @@ public class ChatHelper {
     }*/
 
     // send Location Message
-    protected void sendLocationMessage(double longitude, double latitude, int userID, int doctorID, final FragmentActivity fragmentActivity, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
+    protected void sendLocationMessage(double longitude, double latitude, int userID, int doctorID, final FragmentActivity fragmentActivity, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView, final int userType) {
         //create dummy message
         final int index = creatDummyMessage(userID, messages, chatAdapter, recyclerView);
         final Message message = new Message();
@@ -97,7 +97,7 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Message result = ApiHelper.sendMessage(message, null, fragmentActivity);
+                final Message result = ApiHelper.sendMessage(message, null, fragmentActivity,userType);
                 httpMessageRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -190,7 +190,7 @@ public class ChatHelper {
         }
     }
 
-    protected void sendTextMessage(String textMsg, final ArrayList<Message> messages, int userID, int doctorID, final ChatAdapter chatAdapter, final FragmentActivity fragmentActivity, final RecyclerView recyclerView) {
+    protected void sendTextMessage(String textMsg, final ArrayList<Message> messages, int userID, int doctorID, final ChatAdapter chatAdapter, final FragmentActivity fragmentActivity, final RecyclerView recyclerView, final int userType) {
         final Message message = new Message();
         message.setFromID(userID);
         message.setToID(doctorID);
@@ -206,7 +206,7 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Message result = ApiHelper.sendMessage(message, null, fragmentActivity);
+                final Message result = ApiHelper.sendMessage(message, null, fragmentActivity,userType);
                 httpMessageRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -267,7 +267,7 @@ public class ChatHelper {
         }).start();
     }
 
-    protected void sendMediaMessage(final File file, String type, String textMsg, final FragmentActivity fragmentActivity, int userID, int doctorID, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView) {
+    protected void sendMediaMessage(final File file, String type, String textMsg, final FragmentActivity fragmentActivity, int userID, int doctorID, final ArrayList<Message> messages, final ChatAdapter chatAdapter, final RecyclerView recyclerView, final int userType) {
         final int index = creatDummyMessage(userID, messages, chatAdapter, recyclerView);
         final Message message = new Message();
         message.setFromID(userID);
@@ -277,7 +277,7 @@ public class ChatHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Message result = ApiHelper.sendMessage(message, file, fragmentActivity);
+                final Message result = ApiHelper.sendMessage(message, file, fragmentActivity,userType);
                 httpMessageRepositry.createOrUpate(result);
                 fragmentActivity.runOnUiThread(new Runnable() {
                     @Override

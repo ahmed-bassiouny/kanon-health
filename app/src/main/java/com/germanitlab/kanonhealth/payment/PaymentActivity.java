@@ -174,7 +174,7 @@ public class PaymentActivity extends ParentActivity {
                 @Override
                 public void run() {
                     HashMap<String,String> questionsAnswers = new HashMap<>();
-                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()),questionsAnswers);
+                    final int requestId = ApiHelper.openSession(PaymentActivity.this, String.valueOf(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_ID,-1)), String.valueOf(doctor.getUserID()),questionsAnswers,doctor.getUserType());
                     PaymentActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
