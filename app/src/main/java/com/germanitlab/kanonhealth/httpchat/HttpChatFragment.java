@@ -194,7 +194,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         try {
             userMe = new Gson().fromJson(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_KEY,""), UserInfo.class);
         } catch (Exception e) {

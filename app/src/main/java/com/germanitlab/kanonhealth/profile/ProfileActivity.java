@@ -216,8 +216,11 @@ public class ProfileActivity extends ParentActivity {
         tvName.setText(userInfoResponse.getFullName());
         tvPhone.setText(userInfoResponse.getCountry_code() + userInfoResponse.getPhone());
 
-        tvBirthDate.setText(userInfoResponse.getBirthday());
-
+        String birthday=userInfoResponse.getBirthday();
+        if(birthday.contains("0002"))
+            tvBirthDate.setText("");
+        else
+            tvBirthDate.setText(userInfoResponse.getBirthday());
 
         tvStreet.setText(userInfoResponse.getStreetName());
         tvHouseNumber.setText(userInfoResponse.getHouseNumber());
