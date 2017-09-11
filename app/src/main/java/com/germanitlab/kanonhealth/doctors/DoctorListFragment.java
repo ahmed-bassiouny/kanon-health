@@ -436,6 +436,7 @@ public class DoctorListFragment extends Fragment {
                     for (int i=0 ;  i<doctorList.size() ; i++){
                         if (doctorList.get(i).getUserID()==1){
                             doctorList.remove(i);
+
                         }
                     }
 
