@@ -54,6 +54,7 @@ public class ImageHelper {
 
                     .resetViewBeforeLoading(true)
                     .cacheInMemory(false)
+                    .considerExifParams(true)
                     .cacheOnDisk(true)
                     .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2);
             if (placeHolder != -1) {
