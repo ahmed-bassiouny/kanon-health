@@ -109,7 +109,7 @@ public class Helper {
         }
         name.setText(userInfo.getFullName());
 
-        birthdate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfo.getBirthday())));
+        birthdate.setText(userInfo.getBirthday());
         dialog.show();
     }
 

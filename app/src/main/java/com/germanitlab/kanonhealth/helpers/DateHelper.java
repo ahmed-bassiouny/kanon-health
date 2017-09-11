@@ -30,7 +30,7 @@ public class DateHelper {
     public static String FromServerDatetimeToDisplayString(Date serverDate) {
         String result = serverDate.toString();
         try {
-            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATETIME_FORMATE);
+            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATETIME_FORMATE,Locale.US);
             result = displayDateFormat.format(serverDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -43,7 +43,7 @@ public class DateHelper {
     public static String FromDisplayDatetimeToServerString(Date displayDate) {
         String result = displayDate.toString();
         try {
-            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATETIME_FORMATE);
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATETIME_FORMATE,Locale.US);
             result = serverDateFormat.format(displayDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -56,7 +56,7 @@ public class DateHelper {
     public static Date FromServerDatetimeStringToServer(String serverDate) {
         Date result = new Date();
         try {
-            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATETIME_FORMATE);
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATETIME_FORMATE,Locale.US);
             result = serverDateFormat.parse(serverDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -69,7 +69,7 @@ public class DateHelper {
     public static Date FromDisplayDatetimeStringToDisplay(String displayDate) {
         Date result = new Date();
         try {
-            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATETIME_FORMATE);
+            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATETIME_FORMATE,Locale.US);
             result = displayDateFormat.parse(displayDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -94,7 +94,7 @@ public class DateHelper {
     public static String FromServerDateToDisplayString(Date serverDate) {
         String result = serverDate.toString();
         try {
-            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMATE);
+            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMATE,Locale.US);
             result = displayDateFormat.format(serverDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -107,7 +107,7 @@ public class DateHelper {
     public static String FromDisplayDateToServerString(Date displayDate) {
         String result = displayDate.toString();
         try {
-            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATE_FORMATE);
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATE_FORMATE,Locale.US);
             result = serverDateFormat.format(displayDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -120,7 +120,7 @@ public class DateHelper {
     public static Date FromServerDateStringToServer(String serverDate) {
         Date result = new Date();
         try {
-            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATE_FORMATE);
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATE_FORMATE,Locale.US);
             result = serverDateFormat.parse(serverDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -133,7 +133,7 @@ public class DateHelper {
     public static Date FromDisplayDateStringToDisplay(String displayDate) {
         Date result = new Date();
         try {
-            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMATE);
+            SimpleDateFormat displayDateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMATE,Locale.US);
             result = displayDateFormat.parse(displayDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -158,7 +158,7 @@ public class DateHelper {
     public static String FromDisplayDateToBirthDateString(Date displayDate) {
         String result = displayDate.toString();
         try {
-            SimpleDateFormat displayDateFormat = new SimpleDateFormat(BIRTHDATE_FORMATE);
+            SimpleDateFormat displayDateFormat = new SimpleDateFormat(BIRTHDATE_FORMATE,Locale.US);
             result = displayDateFormat.format(displayDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -171,7 +171,7 @@ public class DateHelper {
     public static Date FromBirthDateStringToDisplay(String displayDate) {
         Date result = new Date();
         try {
-            SimpleDateFormat displayDateFormat = new SimpleDateFormat(BIRTHDATE_FORMATE);
+            SimpleDateFormat displayDateFormat = new SimpleDateFormat(BIRTHDATE_FORMATE,Locale.US);
             result = displayDateFormat.parse(displayDate);
         } catch (Exception e) {
             Crashlytics.logException(e);
