@@ -582,7 +582,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             flSpeciliaty.removeAllViews();
             int size = 0;
             for (Speciality speciality : userInfo.getSpecialities()) {
-                flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+                flSpeciliaty.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), this));
                 tvSpecilities.append(speciality.getTitle());
                 specialityIds = specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
                 size++;
