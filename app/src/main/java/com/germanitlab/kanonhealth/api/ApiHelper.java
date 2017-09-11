@@ -262,7 +262,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context) {
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,ArrayList<WorkingHours> timeTable, Context context) {
         ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -279,6 +279,7 @@ public class ApiHelper {
             addClinicParameters.setMemberDoctors(memberDoctors);
             addClinicParameters.setOpenType(openType);
             addClinicParameters.setSupportedLangs(languages);
+            addClinicParameters.setTimeTable(timeTable);
             String jsonString = "";
             if (file == null) {
                 jsonString = post(API_CLINICS_ADD, addClinicParameters.toJson());
@@ -342,6 +343,8 @@ public class ApiHelper {
             } else {
                 jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toHashMap(), file, EditClinicParameters.PARAMETER_AVATAR);
             }
+            System.out.println("edit clinic");
+            System.out.println( EditClinicParameters.toJson());
             System.out.println(jsonString);
             Gson gson = new Gson();
             EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);

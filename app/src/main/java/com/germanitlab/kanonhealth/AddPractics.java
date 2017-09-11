@@ -339,48 +339,6 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
         }
     }
 
-    private void sendWorkingHours() {
-        if (clinic.getTimeTable().size() == 0) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AddPractics.this.hideProgressBar();
-                    Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
-                    finish();
-                }
-            });
-            return;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Boolean result = ApiHelper.ClinicWorkingHours(clinic.getTimeTable().get(0), String.valueOf(clinic.getOpenType()), practics_id);
-                AddPractics.this.hideProgressBar();
-                if (result) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(AddPractics.this, R.string.save_practics, Toast.LENGTH_LONG).show();
-                            finish();
-                        }
-                    });
-
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(AddPractics.this, R.string.something_went_wrong, Toast.LENGTH_LONG).show();
-
-                        }
-                    });
-
-                }
-            }
-
-        }).start();
-    }
-
-
     @OnClick(R.id.edit_speciality_list)
     public void editSpecialityList(View view) {
         try {
