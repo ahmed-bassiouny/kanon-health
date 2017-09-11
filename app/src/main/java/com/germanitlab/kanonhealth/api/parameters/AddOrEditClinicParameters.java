@@ -29,7 +29,7 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_COUNTRY="county";
     public static final String PARAMETER_PHONE= "phone";
     public static final String PARAMETER_FAX= "fax";
-    public static final String PARAMETER_SUPPORTED_LANG= "lang_sub";
+    public static final String PARAMETER_SUPPORTED_LANG= "languages";
     public static final String PARAMETER_OPEN_TYPE= "open_type";
     public static final String KEY_TIME_TABLE= "working_hours";
     public static final String PARAMETER_DOCTORS= "member_at";
