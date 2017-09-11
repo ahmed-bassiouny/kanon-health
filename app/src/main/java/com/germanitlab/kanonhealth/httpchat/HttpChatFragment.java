@@ -224,7 +224,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             public void onGlobalLayout() {
                 Rect r = new Rect();
                 view.getWindowVisibleDisplayFrame(r);
-                if (view.getRootView().getHeight() - (r.bottom - r.top) > 150) { // if more than 100 pixels, its probably a keyboard...
+                if (view.getRootView().getHeight() - (r.bottom - r.top) > 100) { // if more than 100 pixels, its probably a keyboard...
                     img_send_txt.setVisibility(View.VISIBLE);
                       mHoldingButtonLayout.removeListener(fragment);
 

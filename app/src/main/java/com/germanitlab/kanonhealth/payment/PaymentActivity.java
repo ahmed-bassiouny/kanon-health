@@ -49,9 +49,6 @@ public class PaymentActivity extends ParentActivity {
     @BindView(R.id.rb_free)
     RadioButton rbFree;
 
-    @BindView(R.id.rb_euro)
-    RadioButton rbEuro;
-
     @BindView(R.id.text_voucher)
     EditText etVoucher;
 
@@ -75,7 +72,6 @@ public class PaymentActivity extends ParentActivity {
             radioButtons = new ArrayList<RadioButton>();
             radioButtons.add((RadioButton) findViewById(R.id.rb_paypal));
             radioButtons.add((RadioButton) findViewById(R.id.rb_voucher));
-            radioButtons.add((RadioButton) findViewById(R.id.rb_euro));
             radioButtons.add((RadioButton) findViewById(R.id.rb_free));
             handleRadioButtons();
             doctor = new Gson().fromJson(PrefHelper.get(PaymentActivity.this,PrefHelper.KEY_USER_INTENT, ""), UserInfo.class);

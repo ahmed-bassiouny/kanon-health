@@ -107,7 +107,7 @@ public class Helper {
         if (userInfo.getAvatar() != null && userInfo.getAvatar() != "") {
             ImageHelper.setImage(circleImageView, ApiHelper.SERVER_IMAGE_URL + userInfo.getAvatar(), -1);
         }
-        name.setText(userInfo.getFirstName()+userInfo.getLastName());
+        name.setText(userInfo.getFullName());
 
         birthdate.setText(DateHelper.FromDisplayDateToBirthDateString(DateHelper.FromServerDateStringToServer(userInfo.getBirthday())));
         dialog.show();

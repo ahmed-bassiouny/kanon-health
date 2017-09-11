@@ -98,9 +98,11 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_PASSWORD)
     @DatabaseField
     private String password;
+
     @SerializedName(KEY_COUNTRY_CODE)
     @DatabaseField
     private String country_code;
+
     @SerializedName(KEY_PHONE)
     @DatabaseField
     private String phone;
