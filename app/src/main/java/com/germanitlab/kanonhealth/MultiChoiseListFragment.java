@@ -27,6 +27,7 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.helpers.RecyclerItemClickListener;
 import com.germanitlab.kanonhealth.interfaces.MyClickListener;
 import com.germanitlab.kanonhealth.interfaces.RecyclerTouchListener;
 
@@ -179,58 +180,45 @@ private void initRecyclerView(RecyclerView.Adapter adapter)
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setVisibility(View.VISIBLE);
     progressBar.setVisibility(View.GONE);
-    recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new MyClickListener() {
-        @Override
-        public void onClick(View view, int position) {
-            CheckBox rbtn = (CheckBox) view.findViewById(R.id.rbtn);
-            switch (type) {
-                case Constants.SPECIALITIES:
+    recyclerView.addOnItemTouchListener(
+        new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // TODO Handle item click
+                CheckBox rbtn = (CheckBox) view.findViewById(R.id.rbtn);
+                switch (type) {
+                    case Constants.SPECIALITIES:
 
-                    if(!rbtn.isChecked())
-                    {
-                        selectSpecialityAdapter.mySpecialList.add(selectSpecialityAdapter.allSpecialList.get(position));
-                    }else
-                    {
-                        selectSpecialityAdapter.mySpecialList.remove(selectSpecialityAdapter.allSpecialList.get(position));
-                    }
+                        if (!rbtn.isChecked()) {
+                            selectSpecialityAdapter.mySpecialList.add(selectSpecialityAdapter.allSpecialList.get(position));
+                        } else {
+                            selectSpecialityAdapter.mySpecialList.remove(selectSpecialityAdapter.allSpecialList.get(position));
+                        }
 
-                    break;
-                case Constants.LANGUAUGE:
-                    if(!rbtn.isChecked())
-                    {
-                        selectLanguageAdapter.myLanguages.add(selectLanguageAdapter.allLanguages.get(position));
-                    }else
-                    {
-                        selectLanguageAdapter.myLanguages.remove(selectLanguageAdapter.allLanguages.get(position));
-                    }
+                        break;
+                    case Constants.LANGUAUGE:
+                        if (!rbtn.isChecked()) {
+                            selectLanguageAdapter.myLanguages.add(selectLanguageAdapter.allLanguages.get(position));
+                        } else {
+                            selectLanguageAdapter.myLanguages.remove(selectLanguageAdapter.allLanguages.get(position));
+                        }
 
 
-                    break;
-                case Constants.DoctorAll:
-                    if(!rbtn.isChecked())
-                    {
-                        selectMemberDoctorAdapter.myDoctors.add(selectMemberDoctorAdapter.allDoctors.get(position));
-                    }else
-                    {
-                        selectMemberDoctorAdapter.myDoctors.remove(selectMemberDoctorAdapter.allDoctors.get(position));
-                    }
-
-
-                    break;
+                        break;
+                    case Constants.DoctorAll:
+                        if (!rbtn.isChecked()) {
+                            selectMemberDoctorAdapter.myDoctors.add(selectMemberDoctorAdapter.allDoctors.get(position));
+                        } else {
+                            selectMemberDoctorAdapter.myDoctors.remove(selectMemberDoctorAdapter.allDoctors.get(position));
+                        }
+                        break;
+                }
             }
+
+            })
+                    );
         }
 
-        @Override
-        public void onClick(Object object) {
-
-        }
-
-        @Override
-        public void onLongClick(View view, int position) {
-
-        }
-    }));
-}
 
 //    @Override
 //    public void onFailed(String error) {

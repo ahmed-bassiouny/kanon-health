@@ -663,7 +663,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
         flSpecilities.removeAllViews();
         int size = 0;
         for (Speciality speciality : clinic.getSpecialities()) {
-            flSpecilities.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+            flSpecilities.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), this));
             tvSpecilities.append(speciality.getTitle());
             specialityIds = specialityIds.concat(String.valueOf(speciality.getSpecialityID()));
             size++;
