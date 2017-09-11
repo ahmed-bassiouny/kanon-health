@@ -155,7 +155,8 @@ public class ApiHelper {
                 .build();
         Log.i(TAG, request.toString());
         Response response = getClient().newCall(request).execute();
-        return ApiUtils.removeNulls(response.body().string());
+        return response.body().string();
+                //ApiUtils.removeNulls(response.body().string());
     }
 
     private static String postWithoutServerPath(String url, String parameters) throws IOException {
@@ -166,7 +167,8 @@ public class ApiHelper {
                 .build();
         Log.i(TAG, request.toString());
         Response response = getClient().newCall(request).execute();
-        return ApiUtils.removeNulls(response.body().string());
+        return response.body().string();
+                //ApiUtils.removeNulls(response.body().string());
     }
 
 
@@ -185,7 +187,8 @@ public class ApiHelper {
                 .post(requestBody.build())
                 .build();
         Response response = getClient().newCall(request).execute();
-        return ApiUtils.removeNulls(response.body().string());
+        return response.body().string();
+                //ApiUtils.removeNulls(response.body().string());
     }
 
     //endregion
@@ -418,6 +421,8 @@ public class ApiHelper {
             String jsonString = post(API_DOCTORS_LIST, userInfoParameter.toJson());
             Gson gson = new Gson();
             GetDoctorListResponse getDoctorListResponse = gson.fromJson(jsonString, GetDoctorListResponse.class);
+            System.out.println("liiiist");
+            System.out.println(jsonString);
             if (getDoctorListResponse.getStatus()) {
                 result = getDoctorListResponse.getData();
             }

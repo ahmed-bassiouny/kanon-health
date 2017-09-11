@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,10 +100,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     FlowLayout flLanguages;
     @BindView(R.id.edit_languages_list)
     ImageView ivLanguagesList;
-
     @BindView(R.id.edit_member_list)
     ImageView ivMemberList;
-
     @BindView(R.id.nsv_soctor_profile_scroll)
     NestedScrollView nestedScrollView;
     @BindView(R.id.tv_rating)
@@ -113,15 +112,15 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     RecyclerView document_recycleview;
     @BindView(R.id.ll_contianer)
     LinearLayout linearLayoutContianer;
+    @BindView(R.id.rl_address_and_phone)
+    RelativeLayout addressAndPhone;
 
 
     UserInfo userInfo;
     File avatar = null;
-    SpecilaitiesAdapter adapter;
     ClinicListAdapter clinicListAdapter;
     Boolean is_me = false;
     PickerDialog pickerDialog;
-    int PLACE_PICKER_REQUEST = 7;
     private Menu menu;
     String specialityIds = "";
     String langIds = "";
@@ -368,9 +367,11 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             tvContact.setText(userInfo.getLastName());
             tvOnline.setText(userInfo.getTitle());
             linearLayoutContianer.setVisibility(View.GONE);
+            addressAndPhone.setVisibility(View.VISIBLE);
 
         } else {
             tvToolbarName.setText(userInfo.getFullName());
+            addressAndPhone.setVisibility(View.GONE);
             checkDoctor();
             tvContact.setText(R.string.contact_by_chat);
             if (userInfo.getAvailable() == 1)
@@ -395,9 +396,16 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         // end specialities
         // set country
         String countryDail = userInfo.getCountry_code();
+        if(!countryDail.contains("+"))
+        {
+            String plus="+";
+             countryDail=plus+countryDail;
+            System.out.println(countryDail);
+        }
         if (!TextUtils.isEmpty(countryDail)) {
             Country country = null;
             for (Country c : Country.getAllCountries()) {
+                System.out.println(c.getDialCode());
                 if (c.getDialCode().equals(countryDail)) {
                     country = c;
                 }
@@ -416,8 +424,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         etZipCode.setText(userInfo.getZipCode());
         etProvince.setText(userInfo.getProvidence());
         textViewPhone.setText(userInfo.getPhone());
-
-
         // member at need handle
 
         // TimeTable
@@ -531,49 +537,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         ActivityCompat.requestPermissions(this, permission, requestCode);
     }
 
-    /*@Override
-    public void Response(ArrayList<ChooseModel> specialitiesArrayList, int type) {
-        ArrayList<ChooseModel> templist = new ArrayList<>();
-        RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        switch (type) {
-            case Constants.SPECIALITIES:
-                user.getSpecialities().clear();
-                for (ChooseModel item : specialitiesArrayList) {
-                    if (item.getIsMyChoise())
-                        templist.add(item);
-                }
-                user.setSpecialities(templist);
-                setImage(user.getSpecialities(), flSpeciliaty, 1);
-                tvSpecilities.setText("");
-                int size = 0;
-                for (ChooseModel speciality : user.getSpecialities()) {
-                    tvSpecilities.append(speciality.getSpeciality_title());
-                    if (size < user.getSpecialities().size())
-                        tvSpecilities.append(", ");
-                }
-                break;
-            case Constants.LANGUAUGE:
-                user.getSupported_lang().clear();
-                for (ChooseModel item : specialitiesArrayList) {
-                    if (item.getIsMyChoise())
-                        templist.add(item);
-                }
-                user.setSupported_lang(templist);
-                setImage(user.getSupported_lang(), flLanguages, 0);
-                break;
-            case Constants.DoctorAll:
-                user.getMembers_at().clear();
-                for (ChooseModel item : specialitiesArrayList) {
-                    if (item.getIsMyChoise())
-                        templist.add(item);
-                }
-                user.setMembers_at(templist);
-                if (userInfo.getMembers_at().size() > 0) {
-                    set(adapter, userInfo.getMembers_at(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-                }
-                break;
-        }
-    }*/
     private void setSpecialities() {
         if (userInfo.getSpecialities() != null) {
 
