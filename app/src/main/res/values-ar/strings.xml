@@ -447,7 +447,7 @@
     <string name="save_success">تم الحفظ بنجاح.</string>
     <string name="edit_practics">تعديل العيادة.</string>
     <string name="cant_play_video">ناسف مشكلة اثناء الفيديو.</string>
-    <string name="cant_find_location">ناسف لن نتمكن للوصول للموقع.</string>
+    <string name="cant_find_location">عذرا، لا يمكن العثور على الموقع. الرجاء فتح الموقع</string>
     <string name="cant_upload">ناسف لم يتم الرفع للبيانات.</string>
     <string name="send_fail">مشكلة في الوصول للسيرفري.</string>
     <string name="generate_qrcode">ناسف لا يمكن توليد رمز الكود الرقمي.</string>

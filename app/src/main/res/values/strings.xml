@@ -442,7 +442,7 @@
     <string name="save_success">Save success.</string>
     <string name="edit_practics">Edit_practics.</string>
     <string name="cant_play_video">Sorry , error with video.</string>
-    <string name="cant_find_location">Sorry , Can\'t Find Location.</string>
+    <string name="cant_find_location">Sorry , Can\'t Find Location. Please Open Location</string>
     <string name="cant_upload">Sorry , Media not upload.</string>
     <string name="send_fail">Error while connecting to server.</string>
     <string name="generate_qrcode">Sorry Can\'t Generate QrCode.</string>
