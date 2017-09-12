@@ -368,14 +368,17 @@ public class ApiHelper {
             messagesParamater.setUserID(UserID);
             messagesParamater.setToID(toID);
             String jsonString;
+            System.out.println(messagesParamater.toJson());
             if(userType==UserInfo.CLINIC){
                 jsonString = post(API_MESSAGES_LIST_CLINIC, messagesParamater.toJson());
+                System.out.println(messagesParamater.toJson());
             }else {
                 jsonString = post(API_MESSAGES_LIST_DOC, messagesParamater.toJson());
             }
-
+            System.out.println("jjjj+"+ jsonString );
             Gson gson = new Gson();
             MessagesResponse messageResponse = gson.fromJson(jsonString, MessagesResponse.class);
+
             if (messageResponse.getStatus()) {
                 result = new ArrayList<>();
                 result = messageResponse.getData();

@@ -18,6 +18,7 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
+import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -35,11 +36,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
     private List<ChatModel> chatList;
     Activity activity;
     UserInfo user;
+    int type;
 
-    public ChatListAdapter(List<ChatModel> chatList, Activity activity) {
+    public ChatListAdapter(List<ChatModel> chatList, Activity activity, int type) {
         try {
             this.chatList = chatList;
             this.activity = activity;
+            this.type = type;
             try {
                 user = new Gson().fromJson(PrefHelper.get(activity, PrefHelper.KEY_USER_KEY, ""), UserInfo.class);
             } catch (Exception e) {
@@ -66,7 +69,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
     @Override
     public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_chat, parent, false);
+        if(type==1)
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_list_cell_for_three_rows, parent, false);
+        }else
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_chat, parent, false);
+        }
+
 
         return new ItemView(view);
     }
@@ -121,8 +131,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             } else {
                 holder.imgAvatar.setBorderColor(Color.GREEN);
             }
-
-
+              if(type!=1) {
+    if (chatModel.getSpecialities() != null) {
+        holder.tvSpecialist.setText("");
+        holder.linearLayoutSpecialist.removeAllViews();
+        int size = 0;
+        for (Speciality speciality : chatModel.getSpecialities()) {
+            holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), activity));
+            holder.tvSpecialist.append(speciality.getTitle());
+            size++;
+            if (size < chatModel.getSpecialities().size()) {
+                holder.tvSpecialist.append(", ");
+                                    }
+                            }
+                     }
+              }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -162,6 +185,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             imgStatus = (CircleImageView) itemView.findViewById(R.id.status);
             linearLayoutSpecialist = (FlowLayout) itemView.findViewById(R.id.ll_dynamic_specialist);
             prlMyRow = (PercentRelativeLayout) itemView.findViewById(R.id.myrow);
+
         }
     }
 
@@ -181,6 +205,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                         Intent intent = new Intent(activity, HttpChatActivity.class);
                         intent.putExtra("userInfo", doctor);
                         intent.putExtra("doctorID", doctor.getUserID());
+                        intent.putExtra("type",doctor.getUserType());
                         activity.startActivity(intent);
                     }
                 });

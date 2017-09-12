@@ -18,9 +18,6 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_NAME="name";
     public static final String PARAMETER_AVATAR ="avatar";
     public static final String PARAMETER_SPECIALITY="specialities";
-    public static final String PARAMETER_RATE_NUM="rate_num";
-    public static final String  PARAMETER_RATE_PERCENTAGE="rate_percentage";
-    public static final String  PARAMETER_ADDRESS="address";
     public static final String  PARAMETER_STREET_NAME="street_name";
     public static final String  PARAMETER_HOUSE_NUMBER="house_number";
     public static final String  PARAMETER_ZIP_CODE= "zip_code";
@@ -28,7 +25,6 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_PROVINCE=  "providence";
     public static final String PARAMETER_COUNTRY="county";
     public static final String PARAMETER_PHONE= "phone";
-    public static final String PARAMETER_FAX= "fax";
     public static final String PARAMETER_SUPPORTED_LANG= "languages";
     public static final String PARAMETER_OPEN_TYPE= "open_type";
     public static final String KEY_TIME_TABLE= "working_hours";

@@ -145,6 +145,7 @@ ClinicProfileActivity extends ParentActivity {
                             Intent intent = new Intent(ClinicProfileActivity.this, HttpChatActivity.class);
                             intent.putExtra("userInfo", clinic);
                             intent.putExtra("doctorID", clinic.getId());
+                            intent.putExtra("type",clinic.getUserType());
                             startActivity(intent);
                         }else {
                             Intent intent = new Intent(ClinicProfileActivity.this, InquiryActivity.class);
@@ -164,50 +165,6 @@ ClinicProfileActivity extends ParentActivity {
     }
 
 
-
-    /*private void setAdapters() {
-        RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-        if (user.getSpecialities() != null)
-            setImage(user.getSpecialities(), flSpeciliaty, 1);
-        if (user.getClinics() != null)
-            if (user.getClinics().size() > 0) {
-                set(adapter, user.getClinics(), recyclerView, R.id.member_recycleview, LinearLayoutManager.VERTICAL, Constants.MEMBERAT);
-            }
-        if (user.getDocuments() != null) {
-            if (!is_me) { // handle the document if the profile is not my profile
-                doctorDocumentAdapter = new DoctorDocumentAdapter(user.getDocuments(), this);
-                recyclerViewDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-                recyclerViewDocument.setAdapter(doctorDocumentAdapter);
-                recyclerViewDocument.setBackgroundResource(R.color.chatbackground_gray);
-            } else {
-                viewDocumentLine.setVisibility(View.GONE);
-            }
-        }
-    }*/
-
-    /*private void setImage(List<ChooseModel> supported_lang, FlowLayout flowLayout, int i) {
-        flowLayout.removeAllViews();
-        txtLanguageNames.setText("");
-        int size = 0;
-        for (ChooseModel chooseModel : supported_lang) {
-            if (i == 0) {
-                String country_code = chooseModel.getCountry_code();
-                if (!TextUtils.isEmpty(country_code)) {
-                    txtLanguageNames.append(chooseModel.getLang_title());
-                    if (supported_lang.size() > size + 1) {
-                        txtLanguageNames.append(" , ");
-                        size++;
-                    }
-                    Country country = Country.getCountryByISO(country_code);
-                    if (country != null) {
-                        flowLayout.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
-                    }
-                }
-            } else if (i == 1) {
-                flowLayout.addView(ImageHelper.setImageCircle(chooseModel.getSpeciality_icon(), this));
-            }
-        }
-    }*/
 
 
     private void bindData() {

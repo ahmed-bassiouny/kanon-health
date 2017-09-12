@@ -397,12 +397,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         // end specialities
         // set country
         String countryDail = userInfo.getCountry_code();
-        if(!countryDail.contains("+"))
-        {
-            String plus="+";
-             countryDail=plus+countryDail;
-            System.out.println(countryDail);
-        }
+
         if (!TextUtils.isEmpty(countryDail)) {
             Country country = null;
             for (Country c : Country.getAllCountries()) {

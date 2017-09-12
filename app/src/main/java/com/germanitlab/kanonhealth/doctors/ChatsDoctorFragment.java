@@ -24,7 +24,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.ChatListAdapter;
@@ -55,6 +54,7 @@ public class ChatsDoctorFragment extends Fragment {
     private View view;
     private RecyclerView recyclerView;
     private EditText edtFilter;
+    private int type=0;
     //    private ImageButton imgScan;
 
     /*
@@ -163,6 +163,7 @@ public class ChatsDoctorFragment extends Fragment {
     public void getChatData() {
         if (leftTabVisible) {
             if (user.getUserType() == user.PATIENT) {
+                type=0;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -178,11 +179,12 @@ public class ChatsDoctorFragment extends Fragment {
                         }else {
                             chatModel = (ArrayList<ChatModel>) chatModelRepository.getDoctors();
                         }
-                        setChatListAdapter(chatModel);
+                        setChatListAdapter(chatModel,type);
                     }
                 }).start();
 
             } else {
+                type=1;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -198,7 +200,7 @@ public class ChatsDoctorFragment extends Fragment {
                         }else {
                             chatModel= (ArrayList<ChatModel>) chatModelRepository.getUsers();
                         }
-                        setChatListAdapter(chatModel);
+                        setChatListAdapter(chatModel,type);
                     }
                 }).start();
             }
@@ -219,7 +221,7 @@ public class ChatsDoctorFragment extends Fragment {
                         }else {
                             chatModel= (ArrayList<ChatModel>) chatModelRepository.getClinics();
                         }
-                        setChatListAdapter(chatModel);
+                        setChatListAdapter(chatModel,0);
                     }
                 }).start();
             } else {
@@ -248,7 +250,7 @@ public class ChatsDoctorFragment extends Fragment {
                         }else {
                             chatModel= (ArrayList<ChatModel>) chatModelRepository.getAnother();
                         }
-                        setChatListAdapter(chatModel);
+                        setChatListAdapter(chatModel,0);
                     }
                 }).start();
             }
@@ -349,9 +351,9 @@ public class ChatsDoctorFragment extends Fragment {
 //    }
 
 
-    private void setChatListAdapter(List<ChatModel> chatModels) {
+    private void setChatListAdapter(List<ChatModel> chatModels,int type) {
         if (chatModels != null) {
-            final ChatListAdapter chatListAdapter = new ChatListAdapter(chatModels, getActivity());
+            final ChatListAdapter chatListAdapter = new ChatListAdapter(chatModels, getActivity(),type);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -373,7 +375,6 @@ public class ChatsDoctorFragment extends Fragment {
 //    }
 
     private void initView() {
-
         btnLeftList = (Button) view.findViewById(R.id.doctor_list);
         btnRightList = (Button) view.findViewById(R.id.praxis_list);
         edtFilter = (EditText) view.findViewById(R.id.img_filter);
@@ -419,8 +420,20 @@ public class ChatsDoctorFragment extends Fragment {
                                 fileDoctorResponses.add(chatModel.get(j));
                             }
                         }
-                        setChatListAdapter(fileDoctorResponses);
-                    } else setChatListAdapter(chatModel);
+                        if(leftTabVisible) {
+                            setChatListAdapter(fileDoctorResponses, type);
+                        }else
+                        {
+                            setChatListAdapter(fileDoctorResponses, 0);
+                        }
+                    } else
+                    {
+                        if(leftTabVisible) {
+                            setChatListAdapter(chatModel, type);
+                        }else {
+                            setChatListAdapter(chatModel, 0);
+                        }
+                    }
                 }
             }
 
@@ -438,7 +451,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
-                setChatListAdapter(new ArrayList<ChatModel>());
+                setChatListAdapter(new ArrayList<ChatModel>(),0);
                 getChatData();
 
             }
@@ -450,8 +463,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setBackgroundResource(R.color.gray);
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
-                btnLeftList.setTextColor(getResources().getColor(R.color.white));
-                setChatListAdapter(new ArrayList<ChatModel>());
+                setChatListAdapter(new ArrayList<ChatModel>(),0);
                 getChatData();
             }
         });

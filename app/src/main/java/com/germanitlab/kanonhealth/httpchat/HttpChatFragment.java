@@ -57,6 +57,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.dewarder.holdinglibrary.HoldingButtonLayout;
 import com.dewarder.holdinglibrary.HoldingButtonLayoutListener;
+import com.germanitlab.kanonhealth.ClinicProfileActivity;
 import com.germanitlab.kanonhealth.Comment;
 import com.germanitlab.kanonhealth.Crop.PickerBuilder;
 import com.germanitlab.kanonhealth.DoctorProfileActivity;
@@ -184,7 +185,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     ArrayList<Document> documents;
     HttpDocumentRepositry documentRepositry;
     UserInfo userMe;
-
+    int userType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -224,7 +225,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             public void onGlobalLayout() {
                 Rect r = new Rect();
                 view.getWindowVisibleDisplayFrame(r);
-                if (view.getRootView().getHeight() - (r.bottom - r.top) > 100) { // if more than 100 pixels, its probably a keyboard...
+                if (view.getRootView().getHeight() - (r.bottom - r.top) > 200) { // if more than 100 pixels, its probably a keyboard...
                     img_send_txt.setVisibility(View.VISIBLE);
                       mHoldingButtonLayout.removeListener(fragment);
 
@@ -286,11 +287,14 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private void initData() {
         userID = PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, -1);
         userPassword = PrefHelper.get(getContext(), PrefHelper.KEY_USER_PASSWORD, "");
-
         doctorID = getArguments().getInt("doctorID");
+        userType=getArguments().getInt("type");
+
         userInfo = new UserInfo();
-        if (userID != doctorID && doctorID != CustomerSupportActivity.supportID)
-            userInfo = (UserInfo) getArguments().getSerializable("userInfo");
+        if (userID != doctorID  ) {
+            if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC))
+                userInfo = (UserInfo) getArguments().getSerializable("userInfo");
+        }
         userInfo.setHaveRate(0);
         if (userID == doctorID) {
             documents = new ArrayList<>();
@@ -305,7 +309,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setLastName(getResources().getString(R.string.documents));
             userInfo.setFirstName(" ");
             toolbar.setVisibility(View.GONE);
-        } else if (doctorID == CustomerSupportActivity.supportID) {
+        } else if (doctorID == CustomerSupportActivity.supportID&&userType!=UserInfo.CLINIC) {
             userInfo.setUserID(doctorID);
             userInfo.setLastName(getResources().getString(R.string.support));
             userInfo.setFirstName(" ");
@@ -1138,12 +1142,16 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     @OnClick({R.id.img_chat_user_avatar, R.id.tv_chat_user_name})
     public void openProfile() {
-        if (userInfo != null && (userInfo.getUserType() != UserInfo.PATIENT)) {
+        if (userInfo != null && (userInfo.getUserType() == UserInfo.DOCTOR)) {
             Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", userInfo);
             getActivity().startActivity(intent);
-        } else {
+        } else if(userInfo != null && (userInfo.getUserType() == UserInfo.CLINIC)) {
             // this object is user and should open ProfileActivity
+            Intent intent = new Intent(getActivity(), ClinicProfileActivity.class);
+            intent.putExtra("clinic_data", userInfo);
+            getActivity().startActivity(intent);
+
         }
     }
 

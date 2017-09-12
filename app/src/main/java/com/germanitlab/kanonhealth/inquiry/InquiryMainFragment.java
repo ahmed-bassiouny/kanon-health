@@ -179,6 +179,7 @@ public class InquiryMainFragment extends Fragment {
                                         Intent intent = new Intent(getActivity(), HttpChatActivity.class);
                                         intent.putExtra("doctorID", doctor.getUserID());
                                         intent.putExtra("userInfo", doctor);
+                                        intent.putExtra("type",doctor.getUserType());
                                         startActivity(intent);
                                     } else {
                                         Toast.makeText(getActivity(), R.string.cant_start_session, Toast.LENGTH_LONG).show();
