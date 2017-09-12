@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/type1" android:title="@string/o_negative"/>
+    <item android:id="@+id/type2" android:title="@string/o_positive"/>
+    <item android:id="@+id/type3" android:title="@string/a_negative"/>
+    <item android:id="@+id/type4" android:title="@string/a_positive"/>
+    <item android:id="@+id/type5" android:title="@string/b_negative"/>
+    <item android:id="@+id/type6" android:title="@string/b_positivie"/>
+    <item android:id="@+id/type7" android:title="@string/ab_negative"/>
+    <item android:id="@+id/type8" android:title="@string/ab_positive"/>
+
+</menu>

@@ -527,6 +527,21 @@
     <string name="add_to_my_clinics">Add to my clinics</string>
     <string name="blood_type">Blood Type</string>
     <string name="weight">Weight</string>
+    <string name="select_blood_type">Select Blood Type</string>
+    <string name="unit">Select Unit</string>
+    <string name="height">Height</string>
+    <string name="o_negative">O-</string>
+    <string name="o_positive">O+</string>
+    <string name="a_negative">A-</string>
+    <string name="a_positive">A+</string>
+    <string name="b_negative">B-</string>
+    <string name="b_positivie">B+</string>
+    <string name="ab_negative">AB-</string>
+    <string name="ab_positive">AB+</string>
+    <string name="inch">inch</string>
+    <string name="cm">cm</string>
+    <string name="kilo">kilo</string>
+    <string name="bound">bound</string>
 
 
 </resources>

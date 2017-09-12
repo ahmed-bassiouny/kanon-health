@@ -396,6 +396,112 @@
 
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_blood" />
+
+                     <TextView
+                    android:id="@+id/blood_type_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:layout_marginStart="8dp"
+                         android:hint="@string/select_blood_type"
+                    android:textCursorDrawable="@color/blue"
+                    android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_weight" />
+
+
+
+                    <EditText
+                        android:id="@+id/weight_value_et"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/weight"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/weight_unit_et"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/unit"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_height" />
+
+
+                    <EditText
+                        android:id="@+id/height_value_et"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/height"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/height_unit_et"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:editable="false"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/unit"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">

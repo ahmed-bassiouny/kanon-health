@@ -15,11 +15,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,8 @@ import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.Util;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
@@ -84,10 +88,25 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     ImageView imgAvatar;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.blood_type_et)
+    TextView select_blood_type;
+    @BindView(R.id.weight_unit_et)
+    TextView mWeightUnitEt;
+    @BindView(R.id.height_unit_et)
+    TextView mHeightUnitEt;
+    @BindView(R.id.weight_value_et)
+     EditText mWeightValueEt;
+    @BindView(R.id.height_value_et)
+    EditText mHegithValueEt;
+
+
+
     UserInfo userInfo;
     PickerDialog pickerDialog;
     Util util;
     Helper helper;
+
+
 
 
     LinkedHashMap<String, String> questionAnswer;
@@ -151,6 +170,7 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             }
         });
 
+
         etFirstName.setText(userInfo.getFirstName());
         etLastName.setText(userInfo.getLastName());
         etTitle.setText(userInfo.getTitle());
@@ -201,6 +221,60 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
             helper = new Helper(this);
         helper.showDatePicker(etBirthday);
 
+    }
+
+    @OnClick(R.id.blood_type_et)
+    public void showBloodType(View v){
+        PopupMenu popup = new PopupMenu(EditUserProfileActivity.this, v);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.blood_type_menu, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+               select_blood_type.setText(item.getTitle());
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    @OnClick(R.id.weight_unit_et)
+    public void showWeight(View v){
+        PopupMenu popup = new PopupMenu(EditUserProfileActivity.this, v);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.unit_weight, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+               mWeightUnitEt.setText(item.getTitle());
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    @OnClick(R.id.height_unit_et)
+    public void showHeight(View v){
+        PopupMenu popup = new PopupMenu(EditUserProfileActivity.this, v);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.unit_height, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+               mHeightUnitEt.setText(item.getTitle());
+                return true;
+            }
+        });
+
+        popup.show();
     }
 
     @OnClick(R.id.img_edit)
@@ -259,7 +333,15 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
 
     }
 
+
+
     private void setUserObject() {
+        userInfo.setHeight_unit(mHeightUnitEt.getText().toString());
+        userInfo.setWeight_unit(mWeightUnitEt.getText().toString());
+        userInfo.setHeight_value(Double.valueOf(mHegithValueEt.getText().toString()));
+        userInfo.setWeight_value(Double.valueOf(mWeightValueEt.getText().toString()));
+        userInfo.setBlood_type(select_blood_type.getText().toString());
+
         userInfo.setFirstName(etFirstName.getText().toString());
         userInfo.setLastName(etLastName.getText().toString());
         userInfo.setTitle(etTitle.getText().toString());
