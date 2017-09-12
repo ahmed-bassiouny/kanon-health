@@ -24,6 +24,9 @@ import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
+
+import org.w3c.dom.Text;
+
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -67,6 +70,23 @@ public class ProfileActivity extends ParentActivity {
 //    ImageView qr;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
+
+
+    @BindView(R.id.type_blood)
+    TextView mBloodTypeTv;
+
+    @BindView(R.id.height_value)
+    TextView mHeightValueTv;
+
+    @BindView(R.id.height_unit)
+    TextView mHeightUnitTv;
+
+    @BindView(R.id.weight_value)
+    TextView mWeightValueTv;
+
+    @BindView(R.id.weight_unit)
+    TextView mWeightUnitTv;
+
 
 
     private UserInfo userInfoResponse = new UserInfo();
@@ -215,6 +235,11 @@ public class ProfileActivity extends ParentActivity {
 
         tvName.setText(userInfoResponse.getFullName());
         tvPhone.setText(userInfoResponse.getCountry_code() + userInfoResponse.getPhone());
+        mWeightUnitTv.setText(userInfoResponse.getWeight_unit());
+        mWeightValueTv.setText(userInfoResponse.getWeight_value()+"");
+        mHeightUnitTv.setText(userInfoResponse.getHeight_unit());
+        mHeightValueTv.setText(userInfoResponse.getHeight_value()+"");
+        mBloodTypeTv.setText(userInfoResponse.getBlood_type());
 
         String birthday=userInfoResponse.getBirthday();
         if(birthday.contains("0002"))

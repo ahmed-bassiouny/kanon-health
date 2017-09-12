@@ -64,6 +64,13 @@ public class UserInfo extends ParentModel {
     public static final String KEY_COUNTRY = "county";
     public static final String KEY_FAX = "fax";
 
+    public static final String KEY_WEIGHT_VALUE ="weight";
+    public static final String KEY_WEIGHT_UNIT = "weight_unit";
+    public static final String  KEY_HEIGHT_VALUE = "height";
+    public static final String KEY_HEIGHT_UNIT = "height_unit";
+    public static final String KEY_BLOOD_TYPE="blood_type";
+
+
     // endregion
 
     // region constraints
@@ -172,6 +179,24 @@ public class UserInfo extends ParentModel {
     private int haveRate;
 
 
+    //for user profile
+    @SerializedName(KEY_WEIGHT_VALUE)
+    @DatabaseField()
+    private Double weight_value;
+    @SerializedName(KEY_WEIGHT_UNIT)
+    @DatabaseField()
+    private String weight_unit;
+    @SerializedName(KEY_HEIGHT_VALUE)
+    @DatabaseField()
+    private Double height_value;
+    @SerializedName(KEY_HEIGHT_UNIT)
+    @DatabaseField()
+    private String  height_unit;
+    @SerializedName(KEY_BLOOD_TYPE)
+    @DatabaseField()
+    private String blood_type;
+
+
     // extra for clinic
     @SerializedName(KEY_ID)
     @DatabaseField()
@@ -209,6 +234,47 @@ public class UserInfo extends ParentModel {
         if (userID == null)
             userID = 0;
         return userID;
+    }
+
+
+    public Double getHeight_value() {
+        return height_value;
+    }
+
+    public Double getWeight_value() {
+        return weight_value;
+    }
+
+    public String getHeight_unit() {
+        return height_unit;
+    }
+
+    public String getWeight_unit() {
+        return weight_unit;
+    }
+
+    public String getBlood_type() {
+        return blood_type;
+    }
+
+    public void setWeight_unit(String weight_unit) {
+        this.weight_unit = weight_unit;
+    }
+
+    public void setWeight_value(Double weight_value) {
+        this.weight_value = weight_value;
+    }
+
+    public void setHeight_value(Double height_value) {
+        this.height_value = height_value;
+    }
+
+    public void setHeight_unit(String height_unit) {
+        this.height_unit = height_unit;
+    }
+
+    public void setBlood_type(String blood_type) {
+        this.blood_type = blood_type;
     }
 
     public void setUserID(Integer userID) {
