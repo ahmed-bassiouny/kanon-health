@@ -220,28 +220,28 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 getActivity().finish();
             }
         });
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                view.getWindowVisibleDisplayFrame(r);
-                if (view.getRootView().getHeight() - (r.bottom - r.top) > 200) { // if more than 100 pixels, its probably a keyboard...
-                    img_send_txt.setVisibility(View.VISIBLE);
-                      mHoldingButtonLayout.removeListener(fragment);
-
-                } else {
-                    if (etMessage.getText().toString().trim().length() > 0) {
-                        img_send_txt.setVisibility(View.VISIBLE);
-                        mHoldingButtonLayout.removeListener(fragment);
-
-                    } else {
-                        img_send_txt.setVisibility(View.GONE);
-                        mHoldingButtonLayout.addListener(fragment);
-                    }
-
-                }
-            }
-        });
+//        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                Rect r = new Rect();
+//                view.getWindowVisibleDisplayFrame(r);
+//                if (view.getRootView().getHeight() - (r.bottom - r.top) > 200) { // if more than 100 pixels, its probably a keyboard...
+//                    img_send_txt.setVisibility(View.VISIBLE);
+//                      mHoldingButtonLayout.removeListener(fragment);
+//
+//                } else {
+//                    if (etMessage.getText().toString().trim().length() > 0) {
+//                        img_send_txt.setVisibility(View.VISIBLE);
+//                        mHoldingButtonLayout.removeListener(fragment);
+//
+//                    } else {
+//                        img_send_txt.setVisibility(View.GONE);
+//                        mHoldingButtonLayout.addListener(fragment);
+//                    }
+//
+//                }
+//            }
+//        });
         return view;
     }
 
