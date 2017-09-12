@@ -91,7 +91,7 @@ public class TimeTable extends AppCompatActivity {
     @BindView(R.id.table_layout)
     LinearLayout tableLayout;
 
-    ArrayList<WorkingHours> list;
+   WorkingHours list;
     public int type;
     public static Boolean active;
     WorkingHours table;
@@ -124,7 +124,7 @@ public class TimeTable extends AppCompatActivity {
             ButterKnife.bind(this);
             instance = new OpeningHoursActivity();
             map = new HashMap<>();
-            list = (ArrayList<WorkingHours>) getIntent().getSerializableExtra(Constants.DATA);
+            list = (WorkingHours) getIntent().getSerializableExtra(Constants.DATA);
             type = getIntent().getIntExtra("type", 4);
             from=getIntent().getStringExtra("from");
             handleData(list);
@@ -474,11 +474,13 @@ public class TimeTable extends AppCompatActivity {
                     }
                     key++;
                 }
-                ArrayList<WorkingHours> WorkingList = new ArrayList<>();
                 if (buttonCount != 0) {
-                    WorkingList.add(table);
+                    intent.putExtra("list", table);
+                }else
+                {
+                    intent.putExtra("list", new WorkingHours());
                 }
-                intent.putExtra("list", WorkingList);
+
                 try {
                     if (OpeningHoursActivity.active)
                         instance.finish();
@@ -549,7 +551,7 @@ public class TimeTable extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if ( resultCode == RESULT_OK) {
-                list = (ArrayList<WorkingHours> ) data.getSerializableExtra(Constants.DATA);
+                list = (WorkingHours) data.getSerializableExtra(Constants.DATA);
                 type = data.getIntExtra("type", 4);
                 handleData(list);
             }
@@ -561,37 +563,37 @@ public class TimeTable extends AppCompatActivity {
 
     }
 
-    public void handleData(ArrayList<WorkingHours> list) {
+    public void handleData(WorkingHours list) {
         if(type==3) {
             tvSchedule.setText(R.string.use_timetable);
             tableLayout.setVisibility(View.VISIBLE);
-            if (list != null && list.size() > 0) {
-                if (list.get(0).getMonday() != null && list.get(0).getMonday().size() > 0)
-                    for (Times times : list.get(0).getMonday()) {
+            if (list != null ) {
+                if (list.getMonday() != null && list.getMonday().size() > 0)
+                    for (Times times : list.getMonday()) {
                         addNewItem(monday_layout, MON_KEY, monadaySwitch, times.getFrom(), times.getTo(), monday_from_to);
                     }
-                if (list.get(0).getTuesday() != null && list.get(0).getTuesday().size() > 0)
-                    for (Times times : list.get(0).getTuesday()) {
+                if (list.getTuesday() != null && list.getTuesday().size() > 0)
+                    for (Times times : list.getTuesday()) {
                         addNewItem(tuesday_layout, TUES_KEY, tuesdaySwitch, times.getFrom(), times.getTo(), tuesday_from_to);
                     }
-                if (list.get(0).getWednesday() != null && list.get(0).getWednesday().size() > 0)
-                    for (Times times : list.get(0).getWednesday()) {
+                if (list.getWednesday() != null && list.getWednesday().size() > 0)
+                    for (Times times : list.getWednesday()) {
                         addNewItem(wendesday_layout, WEDN_KEY, wednesdaySwitch, times.getFrom(), times.getTo(), wendesday_layout);
                     }
-                if (list.get(0).getThursday() != null && list.get(0).getThursday().size() > 0)
-                    for (Times times : list.get(0).getThursday()) {
+                if (list.getThursday() != null && list.getThursday().size() > 0)
+                    for (Times times : list.getThursday()) {
                         addNewItem(thurday_layout, THURS_KEY, thursdaySwitch, times.getFrom(), times.getTo(), thurday_from_to);
                     }
-                if (list.get(0).getFriday() != null && list.get(0).getFriday().size() > 0)
-                    for (Times times : list.get(0).getFriday()) {
+                if (list.getFriday() != null && list.getFriday().size() > 0)
+                    for (Times times : list.getFriday()) {
                         addNewItem(friday_layout, FRI_KEY, fridaySwitch, times.getFrom(), times.getTo(), friday_from_to);
                     }
-                if (list.get(0).getSaturday() != null && list.get(0).getSaturday().size() > 0)
-                    for (Times times : list.get(0).getSaturday()) {
+                if (list.getSaturday() != null && list.getSaturday().size() > 0)
+                    for (Times times : list.getSaturday()) {
                         addNewItem(saturday_layout, SAT_KEY, saturdaySwitch, times.getFrom(), times.getTo(), saturday_from_to);
                     }
-                if (list.get(0).getSunday() != null && list.get(0).getSunday().size() > 0)
-                    for (Times times : list.get(0).getSunday()) {
+                if (list.getSunday() != null && list.getSunday().size() > 0)
+                    for (Times times : list.getSunday()) {
                         addNewItem(sunday_layout, SUN_KEY, sundaySwitch, times.getFrom(), times.getTo(), sunday_from_to);
                     }
             }

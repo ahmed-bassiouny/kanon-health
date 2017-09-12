@@ -311,9 +311,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:background="@drawable/borderedittext"
-                                android:digits="0123456789"
                                 android:imeOptions="actionNext"
-                                android:inputType="number"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_zip_code"
                                 android:padding="5dp" />
@@ -491,6 +489,7 @@
                             android:id="@+id/edit_languages_list"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
+                            android:layout_margin="@dimen/size_5dp"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:layout_alignTop="@id/fl_language"

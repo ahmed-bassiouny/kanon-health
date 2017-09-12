@@ -397,7 +397,7 @@
             <com.nex3z.flowlayout.FlowLayout xmlns:f="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/fl_language"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/size_5dp"
                 android:layout_toEndOf="@+id/language_text"
@@ -407,14 +407,21 @@
                 app:layout_horizontalSpacing="50dp"
                 app:layout_verticalSpacing="50dp"
                 f:layout_newLine="true"/>
-
-
-
+            <TextView
+                android:id="@+id/tv_languages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/background_dark"
+                android:textStyle="bold"
+                android:textDirection="locale"
+                android:layout_margin="5dp"
+                android:layout_below="@+id/fl_language"
+                android:textSize="16dp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="2dp"
-                android:layout_below="@+id/fl_language"
+                android:layout_below="@+id/tv_languages"
                 android:id="@+id/view_below_language"
                 android:layout_marginTop="5dp"
                 android:background="@color/gray_black" />

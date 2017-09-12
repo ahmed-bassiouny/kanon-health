@@ -542,16 +542,16 @@ public class UserInfo extends ParentModel {
         this.openType = openType;
     }
 
-    public ArrayList<WorkingHours> getTimeTable() {
+    public WorkingHours getTimeTable() {
         Gson gson = new Gson();
-        ArrayList<WorkingHours> workingHourses = gson.fromJson(timeTable, new TypeToken<List<WorkingHours>>(){}.getType());
-        if (workingHourses == null) {
-            workingHourses = new ArrayList<>();
+        WorkingHours workingHour = gson.fromJson(timeTable, new TypeToken<WorkingHours>(){}.getType());
+        if (workingHour== null) {
+            workingHour = new WorkingHours();
         }
-        return workingHourses;
+        return workingHour;
     }
 
-    public void setTimeTable(ArrayList<WorkingHours> timeTable) {
+    public void setTimeTable(WorkingHours timeTable) {
         this.timeTable = new Gson().toJson(timeTable);
     }
 

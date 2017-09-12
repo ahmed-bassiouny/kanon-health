@@ -937,7 +937,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                     Gson gson = new Gson();
                                                     intent.putExtra("doctor_data", gson.toJson(userInfo));
                                                     startActivity(intent);
-                                                } else if (userInfo.getUserType() == UserInfo.CLINIC) {
+                                                    getActivity().finish();
+                                                } else if (userInfo.getUserType() == UserInfo.DOCTOR) {
                                                     openPayment();
                                                 } else {
                                                     Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -1010,6 +1011,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                         public void onClick(DialogInterface dialogInterface, int i) {
                                                             if (userMe.getUserType()==UserInfo.PATIENT) {
                                                                 canRate.setVisibility(View.VISIBLE);
+                                                            }
+                                                            if(userInfo.getUserType()==UserInfo.CLINIC){
+                                                                getActivity().finish();
                                                             }
                                                         }
                                                     });

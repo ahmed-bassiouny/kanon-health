@@ -262,7 +262,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,ArrayList<WorkingHours> timeTable, Context context) {
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,WorkingHours timeTable, Context context) {
         ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -317,7 +317,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, ArrayList<WorkingHours> timeTable) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, WorkingHours timeTable) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -1030,8 +1030,10 @@ public class ApiHelper {
         }
     }
 
-    public static int getIsOpen(int userId, int docId,int userType) {
-        int result = -1;
+    public static IsOpenResponse getIsOpen(int userId, int docId,int userType) {
+        // this method must return status number 0 or 1 and return request id
+       // so return IsOpenResponse
+        IsOpenResponse isOpenResponse = new IsOpenResponse();
         try {
             IsOpenParameters openParameters = new IsOpenParameters();
             openParameters.setUserId(userId);
@@ -1045,12 +1047,12 @@ public class ApiHelper {
             }
 
             Gson gson = new Gson();
-            IsOpenResponse isOpenResponse = gson.fromJson(jsonString, IsOpenResponse.class);
-            result = isOpenResponse.getRequestId();
+            isOpenResponse = gson.fromJson(jsonString, IsOpenResponse.class);
+
         } catch (Exception e) {
             Helper.handleError(TAG, "getIsOpen", e, -1, null);
         } finally {
-            return result;
+            return isOpenResponse;
         }
     }
 
