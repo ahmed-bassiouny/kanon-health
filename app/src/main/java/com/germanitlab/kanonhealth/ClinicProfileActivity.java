@@ -22,6 +22,7 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.responses.IsOpenResponse;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
@@ -135,19 +136,21 @@ ClinicProfileActivity extends ParentActivity {
             @Override
             public void run() {
                 //*********** it's comment becuase i am waiting karim finish task
-                final int result = ApiHelper.getIsOpen(PrefHelper.get(ClinicProfileActivity.this, PrefHelper.KEY_USER_ID, -1),clinic.getId(),clinic.getUserType());
+                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(ClinicProfileActivity.this, PrefHelper.KEY_USER_ID, -1),clinic.getId(),clinic.getUserType());
+
                 ClinicProfileActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (result>0){
+                        if (result.getStatus()==1){
                             clinic.setIsSessionOpen(1);
-                            clinic.setRequestID(result);
+                            clinic.setRequestID(result.getRequestId());
                             Intent intent = new Intent(ClinicProfileActivity.this, HttpChatActivity.class);
                             intent.putExtra("userInfo", clinic);
                             intent.putExtra("doctorID", clinic.getId());
                             intent.putExtra("type",clinic.getUserType());
                             startActivity(intent);
                         }else {
+                            clinic.setIsSessionOpen(0);
                             Intent intent = new Intent(ClinicProfileActivity.this, InquiryActivity.class);
                             intent.putExtra("doctor_data", new Gson().toJson(clinic));
                             startActivity(intent);

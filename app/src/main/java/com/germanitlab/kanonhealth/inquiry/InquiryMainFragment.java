@@ -181,6 +181,7 @@ public class InquiryMainFragment extends Fragment {
                                         intent.putExtra("userInfo", doctor);
                                         intent.putExtra("type",doctor.getUserType());
                                         startActivity(intent);
+                                        getActivity().finish();
                                     } else {
                                         Toast.makeText(getActivity(), R.string.cant_start_session, Toast.LENGTH_LONG).show();
                                     }
