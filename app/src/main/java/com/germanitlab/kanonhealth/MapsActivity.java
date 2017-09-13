@@ -23,8 +23,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps2);
         try {
-            longi = getIntent().getDoubleExtra("long", 0);
-            lat = getIntent().getDoubleExtra("lat", 0);
+            longi = Double.parseDouble(getIntent().getStringExtra("long"));
+            lat = Double.parseDouble(getIntent().getStringExtra("lat"));
             // Obtain the SupportMapFragment and get notified when the map is ready to be used.
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
@@ -32,7 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
-            Log.i("Maps Activity ", "" + e);
+            finish();
         }
 
     }
@@ -56,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng sydney = new LatLng(lat, longi);
             mMap.addMarker(new MarkerOptions().position(sydney).title(getString(R.string.location)));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng latLng = new LatLng(lat, longi);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

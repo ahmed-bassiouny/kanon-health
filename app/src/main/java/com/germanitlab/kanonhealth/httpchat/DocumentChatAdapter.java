@@ -646,7 +646,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                 @Override
                 public void onClick(View v) {
                     try {
-                        JSONObject jsonObject = new JSONObject(locationMessage.getMedia());
+                        JSONObject jsonObject = new JSONObject(locationMessage.getDocument());
                         Intent intent = new Intent(activity, MapsActivity.class);
                         intent.putExtra("lat", jsonObject.getString("lat"));
                         intent.putExtra("long", jsonObject.getString("long"));
