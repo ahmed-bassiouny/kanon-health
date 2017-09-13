@@ -363,6 +363,96 @@
                         android:textSize="@dimen/size_15sp"
                         android:textStyle="bold" />
 
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
+                        android:paddingEnd="@dimen/size_5dp"
+                        android:paddingTop="@dimen/size_5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="7"
+                            android:text="@string/blood_type"
+                            android:textColor="@android:color/background_dark"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/type_blood"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            />
+
+                    </TableRow>
+
+
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
+                        android:paddingEnd="@dimen/size_5dp"
+                        android:paddingTop="@dimen/size_5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="7"
+                            android:text="@string/weight"
+                            android:textColor="@android:color/background_dark"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/height_value"
+                            />
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/height_unit"
+                            />
+
+                    </TableRow>
+
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
+                        android:paddingEnd="@dimen/size_5dp"
+                        android:paddingTop="@dimen/size_5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="7"
+                            android:text="@string/weight"
+                            android:textColor="@android:color/background_dark"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/weight_value"
+                            />
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/weight_unit"
+                            />
+
+                    </TableRow>
+
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
