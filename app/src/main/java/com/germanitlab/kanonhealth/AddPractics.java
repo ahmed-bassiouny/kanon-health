@@ -144,7 +144,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
         }
 
         clinic = new UserInfo();
-        clinic.setOpenType(3);
+        clinic.setOpenType(4);
         WorkingHours workingHours = new WorkingHours();
         workingHours.setSunday(new ArrayList<Times>());
         workingHours.setMonday(new ArrayList<Times>());

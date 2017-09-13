@@ -491,6 +491,7 @@
                             android:id="@+id/edit_languages_list"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
+                            android:layout_margin="@dimen/size_5dp"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:layout_alignTop="@id/fl_language"
