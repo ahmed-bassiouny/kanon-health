@@ -37,6 +37,7 @@ import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.models.WorkingHours;
+import com.germanitlab.kanonhealth.api.responses.IsOpenResponse;
 import com.germanitlab.kanonhealth.callback.Message;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
@@ -247,13 +248,16 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             @Override
             public void run() {
                  //*********** it's comment becuase i am waiting karim finish task
-                final int result = ApiHelper.getIsOpen(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1),userInfo.getUserID(),userInfo.getUserType());
+                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(DoctorProfileActivity.this, PrefHelper.KEY_USER_ID, -1),userInfo.getUserID(),userInfo.getUserType());
+
                 DoctorProfileActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (result>0){
+                        if (result.getStatus()==1){
                             userInfo.setIsSessionOpen(1);
-                            userInfo.setRequestID(result);
+                            userInfo.setRequestID(result.getRequestId());
+                        }else {
+                            userInfo.setIsSessionOpen(0);
                         }
                         Intent intent = new Intent(DoctorProfileActivity.this, HttpChatActivity.class);
                         intent.putExtra("userInfo", userInfo);

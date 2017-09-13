@@ -1030,8 +1030,10 @@ public class ApiHelper {
         }
     }
 
-    public static int getIsOpen(int userId, int docId,int userType) {
-        int result = -1;
+    public static IsOpenResponse getIsOpen(int userId, int docId,int userType) {
+        // this method must return status number 0 or 1 and return request id
+       // so return IsOpenResponse
+        IsOpenResponse isOpenResponse = new IsOpenResponse();
         try {
             IsOpenParameters openParameters = new IsOpenParameters();
             openParameters.setUserId(userId);
@@ -1045,12 +1047,12 @@ public class ApiHelper {
             }
 
             Gson gson = new Gson();
-            IsOpenResponse isOpenResponse = gson.fromJson(jsonString, IsOpenResponse.class);
-            result = isOpenResponse.getRequestId();
+            isOpenResponse = gson.fromJson(jsonString, IsOpenResponse.class);
+
         } catch (Exception e) {
             Helper.handleError(TAG, "getIsOpen", e, -1, null);
         } finally {
-            return result;
+            return isOpenResponse;
         }
     }
 
