@@ -194,7 +194,7 @@ public class AddOrEditClinicParameters extends ParentParameters{
         return workingHourses;
     }
 
-    public void setTimeTable(ArrayList<WorkingHours> timeTable) {
+    public void setTimeTable(WorkingHours timeTable) {
         this.timeTable = new Gson().toJson(timeTable);
     }
 }

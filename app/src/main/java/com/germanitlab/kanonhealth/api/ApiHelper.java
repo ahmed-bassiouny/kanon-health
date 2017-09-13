@@ -262,7 +262,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,ArrayList<WorkingHours> timeTable, Context context) {
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,WorkingHours timeTable, Context context) {
         ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -317,7 +317,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, ArrayList<WorkingHours> timeTable) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, WorkingHours timeTable) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();

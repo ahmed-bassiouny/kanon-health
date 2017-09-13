@@ -82,6 +82,10 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     ImageView ivSpecialityList;
     @BindView(R.id.tv_specilities)
     TextView tvSpecilities;
+
+    @BindView(R.id.tv_languages)
+    TextView tvLanguages;
+
     @BindView(R.id.img_location)
     ImageView imageViewLocation;
     @BindView(R.id.tv_location_value)
@@ -558,16 +562,19 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         if (userInfo.getSupportedLangs() != null) {
             langIds = "";
             flLanguages.removeAllViews();
+            tvLanguages.setText("");
             int size = 0;
             for (Language language : userInfo.getSupportedLangs()) {
                 if (!TextUtils.isEmpty(language.getLanguageCountryCode())) {
                     Country country = Country.getCountryByISO(language.getLanguageCountryCode());
                     if (country != null) {
                         flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
+                        tvLanguages.append(language.getLanguageTitle());
                     }
                     langIds = langIds.concat(String.valueOf(language.getLanguageID()));
                     if (userInfo.getSupportedLangs().size() > size + 1) {
                         langIds = langIds.concat(",");
+                        tvLanguages.append(", ");
                         size++;
                     }
                 }

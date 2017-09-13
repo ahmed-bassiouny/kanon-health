@@ -152,9 +152,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
         workingHours.setWednesday(new ArrayList<Times>());
         workingHours.setFriday(new ArrayList<Times>());
         workingHours.setSaturday(new ArrayList<Times>());
-        ArrayList<WorkingHours> workingHoursArrayList = new ArrayList<>();
-        workingHoursArrayList.add(workingHours);
-        clinic.setTimeTable(workingHoursArrayList);
+        clinic.setTimeTable(workingHours);
 
         pickerDialog = new PickerDialog(true);
         util = Util.getInstance(this);
@@ -501,7 +499,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                 switch (requestCode) {
                     //=================================================================================================>//
                     case Constants.HOURS_CODE:
-                        clinic.setTimeTable((ArrayList<WorkingHours>) data.getSerializableExtra("list"));
+                        clinic.setTimeTable((WorkingHours) data.getSerializableExtra("list"));
                         clinic.setOpenType(data.getIntExtra("type", 4));
                         getTimaTableData();
                         break;
@@ -535,11 +533,11 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
             tvNoTime.setText(R.string.always_open);
         } else if (clinic.getOpenType() == 3) {
 
-            if (clinic.getTimeTable() != null && clinic.getTimeTable().size() > 0) {
+            if (clinic.getTimeTable() != null ) {
                 llNo.setVisibility(View.GONE);
                 tablelayout.removeAllViews();
                 com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                timeTable.creatTimeTable(clinic.getTimeTable().get(0), this, tablelayout);
+                timeTable.creatTimeTable(clinic.getTimeTable(), this, tablelayout);
             } else
                 llNo.setVisibility(View.VISIBLE);
             tvNoTime.setText(R.string.no_time_has_set);

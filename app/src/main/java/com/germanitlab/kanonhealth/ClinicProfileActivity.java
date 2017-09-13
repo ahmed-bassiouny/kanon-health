@@ -61,6 +61,10 @@ ClinicProfileActivity extends ParentActivity {
     FlowLayout flSpeciliaty;
     @BindView(R.id.tv_specilities)
     TextView tvSpecilities;
+
+    @BindView(R.id.tv_languages)
+    TextView tvLanguages;
+
     @BindView(R.id.img_location)
     ImageView imageViewLocation;
     @BindView(R.id.tv_location_value)
@@ -108,7 +112,6 @@ ClinicProfileActivity extends ParentActivity {
             clinic = new UserInfo();
             clinic = (UserInfo) getIntent().getSerializableExtra("clinic_data");
             pickerDialog = new PickerDialog(true);
-
             bindData();
             setVisiblitiy();
 
@@ -190,7 +193,7 @@ ClinicProfileActivity extends ParentActivity {
             flSpeciliaty.removeAllViews();
             int size = 0;
             for (Speciality speciality : clinic.getSpecialities()) {
-                flSpeciliaty.addView(ImageHelper.setImageCircle(speciality.getImage(), this));
+                flSpeciliaty.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), this));
                 tvSpecilities.append(speciality.getTitle());
                 size++;
                 if (size < clinic.getSpecialities().size()) {
@@ -228,11 +231,18 @@ ClinicProfileActivity extends ParentActivity {
 
 
         if (clinic.getSupportedLangs() != null) {
+            tvLanguages.setText("");
+            int size = 0;
             for (Language supportedLang : clinic.getSupportedLangs()) {
                 String country_code = supportedLang.getLanguageCountryCode();
                 Country country = Country.getCountryByISO(country_code);
                 if (country != null) {
                     flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
+                    tvLanguages.append(supportedLang.getLanguageTitle());
+                    if (clinic.getSupportedLangs().size() > size + 1) {
+                        tvLanguages.append(", ");
+                        size++;
+                    }
                 }
             }
         }
@@ -340,11 +350,11 @@ ClinicProfileActivity extends ParentActivity {
             tvNoTime.setText(R.string.no_hours_available);
         }else {
 
-            if (clinic.getTimeTable() != null && clinic.getTimeTable().size() > 0) {
+            if (clinic.getTimeTable() != null ) {
                 tvNoTime.setVisibility(View.GONE);
                 tableLayoutTime.removeAllViews();
                 com.germanitlab.kanonhealth.helpers.TimeTable timeTable = new com.germanitlab.kanonhealth.helpers.TimeTable();
-                timeTable.creatTimeTable(clinic.getTimeTable().get(0), this, tableLayoutTime);
+                timeTable.creatTimeTable(clinic.getTimeTable(), this, tableLayoutTime);
             } else {
                 tvNoTime.setVisibility(View.VISIBLE);
                 tvNoTime.setText(R.string.no_time_has_set);
