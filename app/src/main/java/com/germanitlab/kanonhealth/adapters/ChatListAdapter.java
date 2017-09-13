@@ -70,11 +70,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
     @Override
     public ItemView onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if(type==1)
-        {
+        if (type == 1) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_list_cell_for_three_rows, parent, false);
-        }else
-        {
+        } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_cell_for_chat, parent, false);
         }
 
@@ -132,21 +130,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             } else {
                 holder.imgAvatar.setBorderColor(Color.GREEN);
             }
-              if(type!=1) {
-    if (chatModel.getSpecialities() != null) {
-        holder.tvSpecialist.setText("");
-        holder.linearLayoutSpecialist.removeAllViews();
-        int size = 0;
-        for (Speciality speciality : chatModel.getSpecialities()) {
-            holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), activity));
-            holder.tvSpecialist.append(speciality.getTitle());
-            size++;
-            if (size < chatModel.getSpecialities().size()) {
-                holder.tvSpecialist.append(", ");
-                                    }
-                            }
-                     }
-              }
+            if (type != 1) {
+                if (chatModel.getSpecialities() != null && chatModel.getSpecialities().size()>0) {
+                    holder.tvSpecialist.setText("");
+                    holder.linearLayoutSpecialist.removeAllViews();
+                    int size = 0;
+                    for (Speciality speciality : chatModel.getSpecialities()) {
+                        holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), activity));
+                        holder.tvSpecialist.append(speciality.getTitle());
+                        size++;
+                        if (size < chatModel.getSpecialities().size()) {
+                            holder.tvSpecialist.append(", ");
+                        }
+                    }
+                }
+            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -195,21 +193,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             @Override
             public void run() {
                 //*********** it's comment becuase i am waiting karim finish task
-                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(),doctor.getUserType());
+                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
 
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (result.getStatus()==1) {
+                        if (result.getStatus() == 1) {
                             doctor.setIsSessionOpen(1);
                             doctor.setRequestID(result.getRequestId());
-                        }else {
+                        } else {
                             doctor.setIsSessionOpen(0);
                         }
                         Intent intent = new Intent(activity, HttpChatActivity.class);
                         intent.putExtra("userInfo", doctor);
                         intent.putExtra("doctorID", doctor.getUserID());
-                        intent.putExtra("type",doctor.getUserType());
+                        intent.putExtra("type", doctor.getUserType());
                         activity.startActivity(intent);
                     }
                 });

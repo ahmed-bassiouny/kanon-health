@@ -267,7 +267,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
 
     public void save() {
         // try {
-        if (!isvalid(etName) || !isvalid(etPhone) || !isvalid(etHouseNumber) || !isvalid(etZipCode) || !isvalid(etProvince) || !isvalid(etCountry))
+        if (!isvalid(etName) || !isvalid(etPhone))
             return;
 
         if (practics_id != null) {
