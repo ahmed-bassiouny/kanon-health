@@ -41,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scan"
+        android:visibility="gone"
         android:text="@string/scan_qr_code" />
 
     <Button
