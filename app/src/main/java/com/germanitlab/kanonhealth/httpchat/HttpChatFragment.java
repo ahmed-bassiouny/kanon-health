@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -68,6 +69,7 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.responses.HaveRateResponse;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -80,6 +82,7 @@ import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
+import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -188,6 +191,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     HttpDocumentRepositry documentRepositry;
     UserInfo userMe;
     int userType;
+    HaveRateResponse haveRateResponse;
     Location myLocation = null;
 
 
@@ -295,11 +299,22 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userType = getArguments().getInt("type");
 
         userInfo = new UserInfo();
-        if (userID != doctorID) {
-            if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC))
+        if (userID != doctorID  ) {
+            if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC)) {
                 userInfo = (UserInfo) getArguments().getSerializable("userInfo");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(userType==UserInfo.CLINIC) {
+                            haveRateResponse = ApiHelper.getHaveRate(userID,userInfo.getId(),UserInfo.CLINIC);
+                        }else
+                        {
+                            haveRateResponse = ApiHelper.getHaveRate(userID,userInfo.getUserID(),UserInfo.DOCTOR);
+                        }
+                    }
+                }).start();
+            }
         }
-        userInfo.setHaveRate(0);
         if (userID == doctorID) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());
@@ -321,22 +336,23 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
         }
-        // get data of doctor i talk with him from database
-        //userInfo = chatModelRepositry.getDoctor(userID);
-        //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
-        //-------- get user from intent instead of database
-        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
-        if (userInfo.getUserType() == UserInfo.CLINIC) {
-            if (userInfo.getName() != null) {
-                tv_chat_user_name.setText(userInfo.getName());
-            }
-        } else {
-            if (userInfo.getFullName() != null && userInfo.getLastName() != null) {
-                tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
+            // get data of doctor i talk with him from database
+            //userInfo = chatModelRepositry.getDoctor(userID);
+            //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
+            //-------- get user from intent instead of database
+            if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
+                ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+            if (userInfo.getUserType() == UserInfo.CLINIC) {
+                if (userInfo.getName() != null) {
+                    tv_chat_user_name.setText(userInfo.getName());
+                }
+            } else {
+                if (userInfo.getFullName() != null && userInfo.getLastName() != null) {
+                    tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
+                }
             }
         }
-    }
+
 
     private void loadChatOnline() {
         // request to get all messages
@@ -902,19 +918,22 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 // img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
             }
-        } else if (userInfo.getUserType() == UserInfo.CLINIC) {
-            // client chat with clinics
-            mHoldingButtonLayout.setVisibility(View.VISIBLE);
-            open_chat_session.setVisibility(View.GONE);
+//        } else if (userInfo.getUserType() == UserInfo.CLINIC) {
+//            // client chat with clinics
+//            mHoldingButtonLayout.setVisibility(View.VISIBLE);
+//            open_chat_session.setVisibility(View.GONE);
+
         } else if (userInfo.getIsSessionOpen() == 0) {
             // client chat with doctor and session closed
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
             if (userMe.getUserType() == UserInfo.PATIENT) {
-                if (userInfo.getHaveRate() != 1) {
-                    canRate.setVisibility(View.VISIBLE);
-                } else {
-                    canRate.setVisibility(View.GONE);
+                if (haveRateResponse != null) {
+                    if (haveRateResponse.getStatus() == 0 && haveRateResponse.getRequestId() != -1) {
+                        canRate.setVisibility(View.VISIBLE);
+                    } else {
+                        canRate.setVisibility(View.GONE);
+                    }
                 }
             }
         } else {
@@ -927,7 +946,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if (doctorID == 1 || userInfo.getIsSessionOpen() == 0) {
+        if ((doctorID == 1&&userInfo.getUserType()!=UserInfo.CLINIC) || userInfo.getIsSessionOpen() == 0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
@@ -1029,35 +1048,33 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                 canRate.setVisibility(View.GONE);
                                                 getActivity().invalidateOptionsMenu();
                                                 if (userInfo.getUserType() == UserInfo.DOCTOR || userInfo.getUserType() == UserInfo.CLINIC) {
-                                                    AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                                                    adb.setTitle(R.string.rate_conversation);
-                                                    adb.setCancelable(false);
-                                                    adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                    if (userMe.getUserType() == UserInfo.PATIENT) {
+                                                        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                                                        adb.setTitle(R.string.rate_conversation);
+                                                        adb.setCancelable(false);
+                                                        adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                                                            Intent intent = new Intent(getActivity(), Comment.class);
+                                                                Intent intent = new Intent(getActivity(), Comment.class);
 //                                                            intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
 //                                                            intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
-                                                            intent.putExtra("user_info", userInfo);
-                                                            startActivity(intent);
-                                                            getActivity().finish();
-                                                        }
-                                                    });
-                                                    adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                                            if (userMe.getUserType() == UserInfo.PATIENT) {
-                                                                canRate.setVisibility(View.VISIBLE);
-                                                            }
-                                                            if (userInfo.getUserType() == UserInfo.CLINIC) {
+                                                                intent.putExtra("user_info", userInfo);
+                                                                startActivity(intent);
                                                                 getActivity().finish();
                                                             }
-                                                        }
-                                                    });
-                                                    adb.show();
-                                                }
+                                                        });
+                                                        adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
 
+                                                                canRate.setVisibility(View.VISIBLE);
+
+                                                            }
+                                                        });
+                                                        adb.show();
+                                                    }
+                                                }
                                             } else {
                                                 // failed
                                                 Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.cant_close_session), Toast.LENGTH_SHORT).show();
@@ -1092,8 +1109,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     public void openPayment() {
         try {
             if (userInfo.getUserType() == UserInfo.CLINIC) {
-                Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-                intent.putExtra("doctor_data", userInfo);
+                Intent intent = new Intent(getActivity(), InquiryActivity.class);
+                Gson gson = new Gson();
+                intent.putExtra("doctor_data", gson.toJson(userInfo));
                 startActivity(intent);
                 getActivity().finish();
             } else {

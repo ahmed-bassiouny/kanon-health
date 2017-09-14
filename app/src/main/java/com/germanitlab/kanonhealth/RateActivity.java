@@ -114,7 +114,6 @@ public class RateActivity extends ParentActivity{
             if ( (isClinic&&clinic==null)||(!isClinic&&doctor==null)) {
                 finish();
             }
-
            showProgressBar();
             loadData();
         } catch (Exception e) {

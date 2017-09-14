@@ -184,6 +184,7 @@ public class PaymentActivity extends ParentActivity {
                                 Intent intent = new Intent(PaymentActivity.this, HttpChatActivity.class);
                                 intent.putExtra("doctorID", doctor.getUserID());
                                 intent.putExtra("userInfo",doctor);
+                                intent.putExtra("type",doctor.getUserType());
                                 // -------------- this need handle
                                 //doctor.setIsOpen(1);
                                 //doctor.setRequest_id(requestId);

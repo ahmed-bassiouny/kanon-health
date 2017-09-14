@@ -28,6 +28,7 @@ import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.FavouriteParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
+import com.germanitlab.kanonhealth.api.parameters.HaveRateParameters;
 import com.germanitlab.kanonhealth.api.parameters.IsOpenParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
@@ -47,6 +48,7 @@ import com.germanitlab.kanonhealth.api.responses.GetClinicListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetClinicResponse;
 import com.germanitlab.kanonhealth.api.responses.GetDoctorListResponse;
 import com.germanitlab.kanonhealth.api.responses.GetDocumentListResponse;
+import com.germanitlab.kanonhealth.api.responses.HaveRateResponse;
 import com.germanitlab.kanonhealth.api.responses.IsOpenResponse;
 import com.germanitlab.kanonhealth.api.responses.LanguageResponse;
 import com.germanitlab.kanonhealth.api.responses.MessageSendResponse;
@@ -146,6 +148,8 @@ public class ApiHelper {
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
     private static final String API_IS_OPEN_DOC = "flag/is_open";
+    private static final String API_FLAG_HAVE_RATE= "flag/have_rate";
+    private static final String API_FLAG_HAVE_RATE_CLINIC= "flag/have_rate_clinics";
     private static final String API_IS_OPEN_CLINIC = "flag/is_open_clinics";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
     private static final String API_CLINIC_WORKING_HOURS = "users/clinic_working_hours";
@@ -824,7 +828,6 @@ public class ApiHelper {
             if (parentResponse.getStatus()) {
                 result = true;
             }
-
         } catch (Exception e) {
             Helper.handleError(TAG, "MessageOperation", e, -1, context);
         } finally {
@@ -890,7 +893,7 @@ public class ApiHelper {
         return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
     }
 
-    // Add or Update Push Notification Token
+    // Add or Update Push MyNotification Token
     public static void addToken(Context context, String userId, String token) {
         try {
             TokenAddParameter parameter = new TokenAddParameter();
@@ -1061,7 +1064,31 @@ public class ApiHelper {
             return isOpenResponse;
         }
     }
+    public static HaveRateResponse getHaveRate(int userId, int id, int userType) {
+        // this method must return status number 0 or 1 and return request id
+        // so return IsOpenResponse
+        HaveRateResponse haveRateResponse = null;
+        try {
+            HaveRateParameters haveRateParameters = new  HaveRateParameters();
+            haveRateParameters.setUserId(userId);
+            String jsonString;
+            if(userType==UserInfo.CLINIC){
+                haveRateParameters.setClinicId(id);
+                jsonString = post(API_FLAG_HAVE_RATE_CLINIC, haveRateParameters.toJson());
+            }else {
+                haveRateParameters.setDocId(id);
+                jsonString = post(API_FLAG_HAVE_RATE,  haveRateParameters.toJson());
+            }
+            System.out.println(jsonString);
+            Gson gson = new Gson();
+            haveRateResponse = gson.fromJson(jsonString, HaveRateResponse.class);
 
+        } catch (Exception e) {
+            Helper.handleError(TAG, "getHaveRate", e, -1, null);
+        } finally {
+            return haveRateResponse;
+        }
+    }
 
     //endregion
 }

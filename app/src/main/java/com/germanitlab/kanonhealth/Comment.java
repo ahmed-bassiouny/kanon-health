@@ -58,6 +58,10 @@ public class Comment extends AppCompatActivity {
        // userRepository = new UserRepository();
        // doctor = new UserInfo();
         userInfo= (UserInfo) getIntent().getSerializableExtra("user_info") ;
+        if(userInfo==null)
+        {
+            finish();
+        }
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,31 +70,46 @@ public class Comment extends AppCompatActivity {
         });
 
         try {
-            doc_id = String.valueOf(userInfo.getUserID());
-            req_id = String.valueOf(userInfo.getRequestID());
-            if (Helper.isNetworkAvailable(getApplicationContext())) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                 UserInfo   temp= ApiHelper.getUserInfo(Comment.this, doc_id);
-                        if (temp != null) {
-                            userInfo=temp;
-                            Comment.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    txt_doctor_name.setText(userInfo.getFullName());
-                                    if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
-                                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.placeholder);
-                                    }
-                                }
-                            });
 
-                        }
+//            if (Helper.isNetworkAvailable(getApplicationContext())) {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        if(userInfo.getUserType()==UserInfo.DOCTOR) {
+                            doc_id = String.valueOf(userInfo.getUserID());
+                            req_id = String.valueOf(userInfo.getRequestID());
+                          //  UserInfo temp = ApiHelper.getUserInfo(Comment.this, doc_id);
+                           // if (temp != null) {
+                               // userInfo = temp;
 
-                    }
-                }).start();
-                //doctor = userRepository.get(doctor);
+//                            }
+                       }else {
+                            doc_id = String.valueOf(userInfo.getId());
+                            req_id = String.valueOf(userInfo.getRequestID());
+
+                           // UserInfo temp = ApiHelper.postGetClinic(userInfo.getId(), Comment.this);
+                           // if (temp != null) {
+                               // userInfo = temp;
+                            }
+//            Comment.this.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+            if(userInfo.getUserType()==UserInfo.DOCTOR) {
+                txt_doctor_name.setText(userInfo.getFullName());
+            }else
+            {
+                txt_doctor_name.setText(userInfo.getName());
             }
+                    if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty()) {
+                        ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+                    }
+//                }
+//            });
+                    //    }
+//
+//                    }
+//                }).start();
+                //doctor = userRepository.get(doctor);
         } catch (Exception e) {
             doc_id = "";
             req_id = "";
@@ -126,12 +145,18 @@ public class Comment extends AppCompatActivity {
                            //     Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
                                 //doctor.setHave_rate(1);
                                 //userRepository.update(doctor);
-                                Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
-                                userInfo.setHaveRate(1);
-                                intent.putExtra("doctorID", userInfo.getUserID());
-                                intent.putExtra("userInfo",userInfo);
-                                startActivity(intent);
-                                finish();
+                                    Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
+                                if(userInfo.getUserType()==UserInfo.DOCTOR) {
+                                    intent.putExtra("doctorID", userInfo.getUserID());
+                                }else
+                                {
+                                    intent.putExtra("doctorID", userInfo.getId());
+                                }
+                                    intent.putExtra("userInfo", userInfo);
+                                     intent.putExtra("type",userInfo.getUserType());
+                                    startActivity(intent);
+                                    finish();
+
                             } else {
                                // Toast.makeText(Comment.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
@@ -154,8 +179,14 @@ public class Comment extends AppCompatActivity {
         // doctor.setHave_rate(1);
         //userRepository.update(doctor);
         Intent intent = new Intent(this, HttpChatActivity.class);
-        intent.putExtra("doctorID",userInfo.getUserID());
+        if(userInfo.getUserType()==UserInfo.DOCTOR) {
+            intent.putExtra("doctorID", userInfo.getUserID());
+        }else
+        {
+            intent.putExtra("doctorID", userInfo.getId());
+        }
         intent.putExtra("userInfo",userInfo);
+        intent.putExtra("type",userInfo.getUserType());
         startActivity(intent);
         finish();
 
