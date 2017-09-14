@@ -67,6 +67,7 @@ import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
+import com.germanitlab.kanonhealth.api.responses.HaveRateResponse;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -79,6 +80,7 @@ import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
+import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -186,6 +188,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     HttpDocumentRepositry documentRepositry;
     UserInfo userMe;
     int userType;
+    HaveRateResponse haveRateResponse;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -292,10 +295,21 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
         userInfo = new UserInfo();
         if (userID != doctorID  ) {
-            if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC))
+            if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC)) {
                 userInfo = (UserInfo) getArguments().getSerializable("userInfo");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(userType==UserInfo.CLINIC) {
+                            haveRateResponse = ApiHelper.getHaveRate(userID,userInfo.getId(),UserInfo.CLINIC);
+                        }else
+                        {
+                            haveRateResponse = ApiHelper.getHaveRate(userID,userInfo.getUserID(),UserInfo.DOCTOR);
+                        }
+                    }
+                }).start();
+            }
         }
-        userInfo.setHaveRate(0);
         if (userID == doctorID) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());
@@ -868,12 +882,13 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             // client chat with clinics
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
+
         } else if (userInfo.getIsSessionOpen() == 0) {
             // client chat with doctor and session closed
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
-            if (userMe.getUserType()==UserInfo.PATIENT) {
-                if (userInfo.getHaveRate() != 1) {
+            if(haveRateResponse!=null) {
+                if (haveRateResponse.getStatus() == 0 && haveRateResponse.getRequestId() != -1) {
                     canRate.setVisibility(View.VISIBLE);
                 } else {
                     canRate.setVisibility(View.GONE);
@@ -1009,12 +1024,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                     adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                                            if (userMe.getUserType()==UserInfo.PATIENT) {
                                                                 canRate.setVisibility(View.VISIBLE);
-                                                            }
-                                                            if(userInfo.getUserType()==UserInfo.CLINIC){
-                                                                getActivity().finish();
-                                                            }
                                                         }
                                                     });
                                                     adb.show();

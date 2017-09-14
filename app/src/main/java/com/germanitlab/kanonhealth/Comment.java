@@ -126,12 +126,12 @@ public class Comment extends AppCompatActivity {
                            //     Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
                                 //doctor.setHave_rate(1);
                                 //userRepository.update(doctor);
-                                Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
-                                userInfo.setHaveRate(1);
-                                intent.putExtra("doctorID", userInfo.getUserID());
-                                intent.putExtra("userInfo",userInfo);
-                                startActivity(intent);
-                                finish();
+                                    Intent intent = new Intent(getApplicationContext(), HttpChatActivity.class);
+                                    intent.putExtra("doctorID", userInfo.getUserID());
+                                    intent.putExtra("userInfo", userInfo);
+                                    startActivity(intent);
+                                    finish();
+
                             } else {
                                // Toast.makeText(Comment.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
