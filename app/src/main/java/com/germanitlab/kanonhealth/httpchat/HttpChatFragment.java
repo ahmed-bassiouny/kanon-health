@@ -335,7 +335,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setIsSessionOpen(1);
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
-        }else {
+        }
             // get data of doctor i talk with him from database
             //userInfo = chatModelRepositry.getDoctor(userID);
             //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
@@ -352,7 +352,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 }
             }
         }
-    }
+
 
     private void loadChatOnline() {
         // request to get all messages
