@@ -53,6 +53,8 @@ import com.germanitlab.kanonhealth.profile.ImageFilePath;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -120,6 +122,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     LinearLayout linearLayoutContianer;
     @BindView(R.id.rl_address_and_phone)
     RelativeLayout addressAndPhone;
+    @BindView(R.id.tv_phone_name)
+    TextView phone;
 
 
     UserInfo userInfo;
@@ -381,10 +385,15 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             tvOnline.setText(userInfo.getTitle());
             linearLayoutContianer.setVisibility(View.GONE);
             addressAndPhone.setVisibility(View.VISIBLE);
+            phone.setVisibility(View.VISIBLE);
+            textViewPhone.setVisibility(View.VISIBLE);
+
 
         } else {
             tvToolbarName.setText(userInfo.getFullName());
             addressAndPhone.setVisibility(View.GONE);
+            textViewPhone.setVisibility(View.GONE);
+            phone.setVisibility(View.GONE);
             checkDoctor();
             tvContact.setText(R.string.contact_by_chat);
             if (userInfo.getAvailable() == 1)
