@@ -17,12 +17,14 @@ public class HttpChatActivity extends AppCompatActivity {
     UserInfo userInfo;
     String userType;
     boolean handleBackButton=false;
-
+    int type=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_chat);
         doctorID = getIntent().getIntExtra("doctorID", 0);
+        type=getIntent().getIntExtra("type",0);
+
 
         userInfo = new UserInfo();
         userInfo = (UserInfo) getIntent().getSerializableExtra("userInfo");
@@ -35,7 +37,7 @@ public class HttpChatActivity extends AppCompatActivity {
             else
                 getUserInfo();
         } else {
-            if (doctorID == 0) {
+            if (doctorID == 0 || type==0) {
                 finish();
             }
             showFragment();
@@ -85,6 +87,7 @@ public class HttpChatActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putInt("doctorID", doctorID);
         bundle.putSerializable("userInfo", userInfo);
+        bundle.putInt("type",type);
         fr = new HttpChatFragment();
         fr.setArguments(bundle);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
