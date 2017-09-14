@@ -162,6 +162,7 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
                 public void onClick(View view) {
                     /****** jira task number 208 **************************/
                     Intent intent = new Intent(activity, ClinicProfileActivity.class);
+                    clinic.setUserType(UserInfo.CLINIC);
                     intent.putExtra("clinic_data", clinic);
                     intent.putExtra("tab", "");
                     activity.startActivity(intent);
