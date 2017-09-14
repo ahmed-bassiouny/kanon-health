@@ -154,8 +154,14 @@ ClinicProfileActivity extends ParentActivity {
                             startActivity(intent);
                         }else {
                             clinic.setIsSessionOpen(0);
-                            Intent intent = new Intent(ClinicProfileActivity.this, InquiryActivity.class);
-                            intent.putExtra("doctor_data", new Gson().toJson(clinic));
+//                            Intent intent = new Intent(ClinicProfileActivity.this, InquiryActivity.class);
+//                            intent.putExtra("doctor_data", new Gson().toJson(clinic));
+//                            startActivity(intent);
+                            clinic.setRequestID(result.getRequestId());
+                            Intent intent = new Intent(ClinicProfileActivity.this, HttpChatActivity.class);
+                            intent.putExtra("userInfo", clinic);
+                            intent.putExtra("doctorID", clinic.getId());
+                            intent.putExtra("type",clinic.getUserType());
                             startActivity(intent);
                         }
                     }

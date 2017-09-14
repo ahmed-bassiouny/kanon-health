@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/main">
 
 
     <android.support.v7.widget.Toolbar
@@ -42,7 +43,8 @@
         android:layout_height="match_parent">
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avatar"
                 android:layout_width="100dp"
@@ -451,7 +453,6 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/gray_black" />
 
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/member_recycleview"
                 android:layout_width="match_parent"
@@ -459,6 +460,7 @@
                 android:layout_margin="5dp"
                 android:layout_below="@+id/view_below_language"
                 android:layout_alignParentEnd="true"
+                android:focusable="false"
                 android:background="@android:color/white"/>
 
             <ImageView

@@ -916,20 +916,22 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 // img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
             }
-        } else if (userInfo.getUserType() == UserInfo.CLINIC) {
-            // client chat with clinics
-            mHoldingButtonLayout.setVisibility(View.VISIBLE);
-            open_chat_session.setVisibility(View.GONE);
+//        } else if (userInfo.getUserType() == UserInfo.CLINIC) {
+//            // client chat with clinics
+//            mHoldingButtonLayout.setVisibility(View.VISIBLE);
+//            open_chat_session.setVisibility(View.GONE);
 
         } else if (userInfo.getIsSessionOpen() == 0) {
             // client chat with doctor and session closed
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
-            if(haveRateResponse!=null) {
-                if (haveRateResponse.getStatus() == 0 && haveRateResponse.getRequestId() != -1) {
-                    canRate.setVisibility(View.VISIBLE);
-                } else {
-                    canRate.setVisibility(View.GONE);
+            if (userMe.getUserType() == UserInfo.PATIENT) {
+                if (haveRateResponse != null) {
+                    if (haveRateResponse.getStatus() == 0 && haveRateResponse.getRequestId() != -1) {
+                        canRate.setVisibility(View.VISIBLE);
+                    } else {
+                        canRate.setVisibility(View.GONE);
+                    }
                 }
             }
         } else {
@@ -942,7 +944,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if (doctorID == 1 || userInfo.getIsSessionOpen() == 0) {
+        if ((doctorID == 1&&userInfo.getUserType()!=UserInfo.CLINIC) || userInfo.getIsSessionOpen() == 0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
@@ -1044,35 +1046,33 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                 canRate.setVisibility(View.GONE);
                                                 getActivity().invalidateOptionsMenu();
                                                 if (userInfo.getUserType() == UserInfo.DOCTOR || userInfo.getUserType() == UserInfo.CLINIC) {
-                                                    AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                                                    adb.setTitle(R.string.rate_conversation);
-                                                    adb.setCancelable(false);
-                                                    adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                    if (userMe.getUserType() == UserInfo.PATIENT) {
+                                                        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                                                        adb.setTitle(R.string.rate_conversation);
+                                                        adb.setCancelable(false);
+                                                        adb.setPositiveButton(R.string.rate, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                                                            Intent intent = new Intent(getActivity(), Comment.class);
+                                                                Intent intent = new Intent(getActivity(), Comment.class);
 //                                                            intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
 //                                                            intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
-                                                            intent.putExtra("user_info", userInfo);
-                                                            startActivity(intent);
-                                                            getActivity().finish();
-                                                        }
-                                                    });
-                                                    adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                                            if (userMe.getUserType() == UserInfo.PATIENT) {
-                                                                canRate.setVisibility(View.VISIBLE);
-                                                            }
-                                                            if (userInfo.getUserType() == UserInfo.CLINIC) {
+                                                                intent.putExtra("user_info", userInfo);
+                                                                startActivity(intent);
                                                                 getActivity().finish();
                                                             }
-                                                        }
-                                                    });
-                                                    adb.show();
-                                                }
+                                                        });
+                                                        adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
 
+                                                                canRate.setVisibility(View.VISIBLE);
+
+                                                            }
+                                                        });
+                                                        adb.show();
+                                                    }
+                                                }
                                             } else {
                                                 // failed
                                                 Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.cant_close_session), Toast.LENGTH_SHORT).show();
@@ -1107,8 +1107,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     public void openPayment() {
         try {
             if (userInfo.getUserType() == UserInfo.CLINIC) {
-                Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
-                intent.putExtra("doctor_data", userInfo);
+                Intent intent = new Intent(getActivity(), InquiryActivity.class);
+                Gson gson = new Gson();
+                intent.putExtra("doctor_data", gson.toJson(userInfo));
                 startActivity(intent);
                 getActivity().finish();
             } else {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -138,6 +139,8 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         ButterKnife.bind(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initToolbar();
+        LinearLayout v = (LinearLayout) findViewById(R.id.main);
+        v.requestFocus();
         try {
             pickerDialog = new PickerDialog(true);
             userInfo = new UserInfo();
