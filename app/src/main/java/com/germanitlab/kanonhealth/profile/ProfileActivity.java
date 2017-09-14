@@ -106,6 +106,7 @@ public class ProfileActivity extends ParentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
+        setContentView(R.layout.fragment_profile);
         ButterKnife.bind(this);
         initTB();
 

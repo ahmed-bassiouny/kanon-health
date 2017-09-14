@@ -214,12 +214,36 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/phone"
+                android:layout_below="@+id/view_below_specilities"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_phone_name"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_below_specilities"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/tv_phone_name"
+                android:layout_marginTop="10dp"
+                android:id="@+id/tv_phone_value"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/location"
                 android:textColor="@color/black"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/view_below_specilities"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/tv_phone_value"
                 android:id="@+id/tv_location_name"
                 android:textStyle="bold" />
             <de.hdodenhof.circleimageview.CircleImageView
@@ -227,17 +251,17 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="15dp"
-                android:layout_below="@+id/view_below_specilities"
+                android:layout_below="@+id/tv_phone_value"
                 android:layout_toEndOf="@+id/tv_location_name" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="15dp"
                 android:layout_toEndOf="@+id/img_location"
-                android:layout_below="@+id/view_below_specilities"
+                android:layout_below="@+id/tv_phone_value"
                 android:id="@+id/tv_location_value"
                 android:textStyle="bold" />
 <RelativeLayout
@@ -261,9 +285,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
+                android:background="@null"
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLines="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:textSize="16sp"
                 android:layout_toEndOf="@+id/tv_street_name"
                 android:textColor="@color/black" />
@@ -284,9 +312,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
+                android:background="@null"
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLines="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_below="@+id/ed_street_name"
                 android:nextFocusForward="@+id/ed_zip_code"
                 android:textColor="@color/black"
@@ -316,6 +348,10 @@
                 android:inputType="number"
                 android:layout_toEndOf="@+id/tv_zip_code"
                 android:maxLines="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@null"
                 android:layout_below="@+id/ed_house_number"
                 android:nextFocusForward="@+id/ed_city"
                 android:textColor="@color/black"
@@ -340,45 +376,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:imeOptions="actionNext"
                 android:layout_below="@+id/ed_zip_code"
                 android:inputType="textPersonName"
                 android:maxLines="1"
+                android:layout_marginTop="10dp"
+                android:background="@null"
                 android:layout_toEndOf="@+id/tv_province"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="2dp"
-                android:layout_below="@+id/ed_province"
-                android:id="@+id/view_below_province"
-                android:layout_marginTop="5dp"
-                android:background="@color/gray_black" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/phone"
-                android:layout_below="@+id/view_below_province"
-                android:textColor="@color/black"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/tv_phone_name"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view_below_province"
-                android:textColor="@color/black"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/tv_phone_name"
-                android:layout_marginTop="10dp"
-                android:id="@+id/tv_phone_value"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+
 </RelativeLayout>
             <View
                 android:layout_width="match_parent"
