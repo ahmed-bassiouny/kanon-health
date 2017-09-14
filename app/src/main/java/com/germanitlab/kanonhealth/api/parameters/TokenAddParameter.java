@@ -10,12 +10,15 @@ public class TokenAddParameter extends ParentParameters {
 
     public static final String PARAMETER_USER_ID = "user_id";
     public static final String PARAMETER_TOKEN = "token";
+    public static final String PARAMETER_TYPE = "type";
 
     @SerializedName(PARAMETER_USER_ID)
     private String userId;
 
     @SerializedName(PARAMETER_TOKEN)
     private String token;
+    @SerializedName(PARAMETER_TYPE)
+    private String type="android";
 
 
     public String getUserId() {

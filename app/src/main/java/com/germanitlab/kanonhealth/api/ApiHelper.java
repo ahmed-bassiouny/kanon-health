@@ -824,7 +824,6 @@ public class ApiHelper {
             if (parentResponse.getStatus()) {
                 result = true;
             }
-
         } catch (Exception e) {
             Helper.handleError(TAG, "MessageOperation", e, -1, context);
         } finally {
@@ -890,7 +889,7 @@ public class ApiHelper {
         return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
     }
 
-    // Add or Update Push Notification Token
+    // Add or Update Push MyNotification Token
     public static void addToken(Context context, String userId, String token) {
         try {
             TokenAddParameter parameter = new TokenAddParameter();

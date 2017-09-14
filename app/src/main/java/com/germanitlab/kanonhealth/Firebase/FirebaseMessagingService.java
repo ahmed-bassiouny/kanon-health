@@ -10,9 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Message;
@@ -20,9 +18,7 @@ import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.parameters.MessageOperationParameter;
 import com.germanitlab.kanonhealth.helpers.Constants;
 import com.germanitlab.kanonhealth.httpchat.HttpChatFragment;
-import com.germanitlab.kanonhealth.httpchat.MessageRequest;
-import com.germanitlab.kanonhealth.httpchat.MessageRequestSeen;
-import com.germanitlab.kanonhealth.httpchat.Notification;
+import com.germanitlab.kanonhealth.httpchat.MyNotification;
 import com.google.firebase.messaging.RemoteMessage;
 
 /**
@@ -31,7 +27,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 // Edit by ahmed bassiouny on 24/05/2017
 
-public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
+    public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     int id = 0;
     private LocalBroadcastManager broadcaster;
@@ -48,32 +44,33 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         // notificationType ==  1 for new messagee , 2 for deliver message , 3 for seen message
-            //2 for login , ,, for close session *** i will handle it with karim
+        //2 for login , ,, for close session *** i will handle it with karim
         try {
             int notificationType = Integer.parseInt(remoteMessage.getData().get(Constants.notificationType));
+            String userType = remoteMessage.getData().get("user_type");
             switch (notificationType) {
                 case 1:
                     if (HttpChatFragment.chatRunning)
                         getMessage(remoteMessage, notificationType);
                     else //notify
                         if (remoteMessage.getData().get(Message.KEY_FROMID) != null && remoteMessage.getData().get(Message.KEY_TOID) != null) {
-                            String msgType=remoteMessage.getData().get(Message.KEY_TYPE);
-                            if(msgType.equals(Message.MESSAGE_TYPE_TEXT)){
-                                Notification.showNotification(this, "doctor name", remoteMessage.getData().get(Message.KEY_MESSAGE), remoteMessage.getData().get(Message.KEY_FROMID), false);
-                            }else{
-                                Notification.showNotification(this, "doctor name", msgType, remoteMessage.getData().get(Message.KEY_FROMID), false);
+                            String msgType = remoteMessage.getData().get(Message.KEY_TYPE);
+                            if (msgType.equals(Message.MESSAGE_TYPE_TEXT)) {
+                                MyNotification.showNotification(this, remoteMessage.getData().get("user_name"), remoteMessage.getData().get(Message.KEY_MESSAGE), Integer.parseInt(remoteMessage.getData().get(Message.KEY_FROMID)),userType );
+                            } else {
+                                MyNotification.showNotification(this, remoteMessage.getData().get("user_name"), msgType, Integer.parseInt(remoteMessage.getData().get(Message.KEY_FROMID)),userType );
                             }
-                            messagesDeliver(Integer.parseInt(remoteMessage.getData().get(Message.KEY_TOID)),remoteMessage.getData().get(Message.KEY_FROMID), remoteMessage.getData().get(Message.KEY_ID));
+                            messagesDeliver(Integer.parseInt(remoteMessage.getData().get(Message.KEY_TOID)), remoteMessage.getData().get(Message.KEY_FROMID), remoteMessage.getData().get(Message.KEY_ID));
                         }
 //                        } else if (remoteMessage.getData().get("msg") != null) {
 //                            messagesDeliver(remoteMessage.getData().get("from_id"), remoteMessage.getData().get("to_id"));
-//                            Notification.showNotification(this, "title", remoteMessage.getData().get("msg"), "", false);
+//                            MyNotification.showNotification(this, "title", remoteMessage.getData().get("msg"), "", false);
 //
 //                        }
                     break;
                 /*case 2:
                     if (remoteMessage.getData().get("body") != null && remoteMessage.getData().get("title") != null)
-                        Notification.showNotification(this, remoteMessage.getData().get("body"), remoteMessage.getData().get("title"), "", false);
+                        MyNotification.showNotification(this, remoteMessage.getData().get("body"), remoteMessage.getData().get("title"), "", false);
                     break;*/
                 case 2:
                 case 3:
@@ -140,9 +137,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         message.setStatus(0);
         message.setForward(0);
         message.setMessageID(Integer.valueOf(remoteMessage.getData().get(Message.KEY_ID)));
-        if(message.getType().equals(Message.MESSAGE_TYPE_TEXT)||message.getType().equals(Message.MESSAGE_TYPE_LOCATION)) {
+        if (message.getType().equals(Message.MESSAGE_TYPE_TEXT) || message.getType().equals(Message.MESSAGE_TYPE_LOCATION)) {
             message.setMessage(remoteMessage.getData().get(Message.KEY_MESSAGE));
-        }else{
+        } else {
             message.setMedia(remoteMessage.getData().get(Message.KEY_MEDIA));
         }
         message.setDateTime(remoteMessage.getData().get(Message.KEY_CREATED_AT));
@@ -156,7 +153,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     private void getMessageDeliveredSeen(RemoteMessage remoteMessage, int notificationtype) {
         Intent intent = new Intent("MyData");
         intent.putExtra(Constants.notificationType, notificationtype);
-        intent.putExtra("extra",remoteMessage.getData().get(MessageOperationParameter.PARAMATER_TO_ID));
+        intent.putExtra("extra", remoteMessage.getData().get(MessageOperationParameter.PARAMATER_TO_ID));
         broadcaster.sendBroadcast(intent);
     }
 
@@ -197,7 +194,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     }
 
-    private void messagesDeliver(final int userID,final String doctorID,final String messageId) {
+    private void messagesDeliver(final int userID, final String doctorID, final String messageId) {
         // i sent request to make my msg seen
         new Thread(new Runnable() {
             @Override

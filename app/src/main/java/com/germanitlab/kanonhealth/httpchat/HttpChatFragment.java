@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -187,7 +188,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     ArrayList<Document> documents;
     HttpDocumentRepositry documentRepositry;
     UserInfo userMe;
-    int userType;
     Location myLocation = null;
 
 
@@ -292,11 +292,10 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userID = PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, -1);
         userPassword = PrefHelper.get(getContext(), PrefHelper.KEY_USER_PASSWORD, "");
         doctorID = getArguments().getInt("doctorID");
-        userType = getArguments().getInt("type");
 
         userInfo = new UserInfo();
         if (userID != doctorID) {
-            if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC))
+            if (!(doctorID == CustomerSupportActivity.supportID ))
                 userInfo = (UserInfo) getArguments().getSerializable("userInfo");
         }
         userInfo.setHaveRate(0);
@@ -313,27 +312,28 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setLastName(getResources().getString(R.string.documents));
             userInfo.setFirstName(" ");
             toolbar.setVisibility(View.GONE);
-        } else if (doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC) {
+        } else if (doctorID == CustomerSupportActivity.supportID ) {
             userInfo.setUserID(doctorID);
             userInfo.setLastName(getResources().getString(R.string.support));
             userInfo.setFirstName(" ");
             userInfo.setIsSessionOpen(1);
             img_chat_user_avatar.setVisibility(View.INVISIBLE);
             tv_chat_user_name.setEnabled(false);
-        }
-        // get data of doctor i talk with him from database
-        //userInfo = chatModelRepositry.getDoctor(userID);
-        //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
-        //-------- get user from intent instead of database
-        if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
-        if (userInfo.getUserType() == UserInfo.CLINIC) {
-            if (userInfo.getName() != null) {
-                tv_chat_user_name.setText(userInfo.getName());
-            }
-        } else {
-            if (userInfo.getFullName() != null && userInfo.getLastName() != null) {
-                tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
+        }else {
+            // get data of doctor i talk with him from database
+            //userInfo = chatModelRepositry.getDoctor(userID);
+            //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
+            //-------- get user from intent instead of database
+            if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
+                ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+            if (userInfo.getUserType() == UserInfo.CLINIC) {
+                if (userInfo.getName() != null) {
+                    tv_chat_user_name.setText(userInfo.getName());
+                }
+            } else {
+                if (userInfo.getFullName() != null && userInfo.getLastName() != null) {
+                    tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
+                }
             }
         }
     }
