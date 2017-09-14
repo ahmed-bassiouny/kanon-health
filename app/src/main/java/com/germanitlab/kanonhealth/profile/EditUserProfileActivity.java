@@ -182,6 +182,16 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         etZip.setText(userInfo.getZipCode());
         etProvinz.setText(userInfo.getProvidence());
         questionAnswer = userInfo.getQuestionsAnswers();
+        select_blood_type.setText(userInfo.getBlood_type());
+        mWeightUnitEt.setText(userInfo.getWeight_unit());
+        if (userInfo.getWeight_value()!=0.0)
+        mWeightValueEt.setText(userInfo.getWeight_value()+"");
+        mHeightUnitEt.setText(userInfo.getHeight_unit());
+        if (userInfo.getHeight_value()!=0.0)
+            mHegithValueEt.setText(userInfo.getHeight_value()+"");
+
+
+
     }
 
     private void askForPermission(String[] permission, Integer requestCode) {
