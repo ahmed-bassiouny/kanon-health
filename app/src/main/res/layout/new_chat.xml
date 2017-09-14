@@ -148,9 +148,11 @@
                 android:layout_marginStart="@dimen/activity_main_input_margin_left"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:inputType="textFilter|textMultiLine"
                 android:background="@null"
                 android:hint="@string/hint_type_your_msg"
                 android:paddingBottom="10dp"
+                android:privateImeOptions="nm"
                 android:textSize="@dimen/activity_main_input_text_size" />
 
             <ImageView

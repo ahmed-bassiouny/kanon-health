@@ -24,6 +24,11 @@ public  abstract class UserParameter extends ParentParameters {
     public static final String KEY_HOUSE_NUMBER = "house_number";
     public static final String KEY_PROVIDENCE = "providence";
     public static final String KEY_ZIP_CODE = "zip_code";
+    public static final String KEY_WEIGHT_UNIT = "weight_unit";
+    public static final String KEY_WEIGHT_VALUE = "weight";
+    public static final String KEY_HEIGHT_UNIT = "height_unit";
+    public static final String KEY_HEIGHT_VALUE = "height";
+    public static final String KEY_BLOOD = "blood_type";
 
 
     @SerializedName(PARAMETER_USER_ID)
@@ -31,6 +36,18 @@ public  abstract class UserParameter extends ParentParameters {
     // title user like mrs , mr , doc etc
     @SerializedName(PARAMETER_TITLE)
     private String title;
+    @SerializedName(KEY_WEIGHT_UNIT)
+    private String weight_unit;
+    @SerializedName(KEY_WEIGHT_VALUE)
+    private Double weight_value;
+    @SerializedName(KEY_HEIGHT_UNIT)
+    private String height_unit;
+    @SerializedName(KEY_HEIGHT_VALUE)
+    private Double height_value;
+    @SerializedName(KEY_BLOOD)
+    private String blood;
+
+
     @SerializedName(PARAMETER_FIRST_NAME)
     private String firstName;
     @SerializedName(PARAMETER_lAST_NAME)
@@ -57,6 +74,46 @@ public  abstract class UserParameter extends ParentParameters {
             userID = 0;
         }
         return userID;
+    }
+
+    public String getWeight_unit() {
+        return weight_unit;
+    }
+
+    public void setWeight_unit(String weight_unit) {
+        this.weight_unit = weight_unit;
+    }
+
+    public Double getWeight_value() {
+        return weight_value;
+    }
+
+    public void setWeight_value(Double weight_value) {
+        this.weight_value = weight_value;
+    }
+
+    public String getBlood() {
+        return blood;
+    }
+
+    public void setBlood(String blood) {
+        this.blood = blood;
+    }
+
+    public Double getHeight_value() {
+        return height_value;
+    }
+
+    public void setHeight_value(Double height_value) {
+        this.height_value = height_value;
+    }
+
+    public String getHeight_unit() {
+        return height_unit;
+    }
+
+    public void setHeight_unit(String height_unit) {
+        this.height_unit = height_unit;
     }
 
     public void setUserID(Integer userID) {

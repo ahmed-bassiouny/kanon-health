@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -97,7 +98,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class HttpChatFragment extends ParentFragment implements Serializable, HoldingButtonLayoutListener {
+import static android.content.Context.LOCATION_SERVICE;
+
+public class HttpChatFragment extends ParentFragment implements Serializable, HoldingButtonLayoutListener, LocationListener {
 
     @BindView(R.id.rv_chat_messages)
     RecyclerView recyclerView;
@@ -156,7 +159,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     static HttpChatFragment httpChatFragment;
 
     public static boolean chatRunning = false;
-    LocationManager mLocationManager;
 
     private static final DateFormat mFormatter = new SimpleDateFormat("mm:ss:SS");
     private static final float SLIDE_TO_CANCEL_ALPHA_MULTIPLIER = 2.5f;
@@ -189,6 +191,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     UserInfo userMe;
     int userType;
     HaveRateResponse haveRateResponse;
+    Location myLocation = null;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -200,7 +204,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         try {
-            userMe = new Gson().fromJson(PrefHelper.get(getActivity(),PrefHelper.KEY_USER_KEY,""), UserInfo.class);
+            userMe = new Gson().fromJson(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_KEY, ""), UserInfo.class);
         } catch (Exception e) {
         }
 
@@ -218,7 +222,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 Intent intent = new Intent(getActivity(), Comment.class);
 //                intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
 //                intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
-                intent.putExtra("user_info",userInfo);
+                intent.putExtra("user_info", userInfo);
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -265,10 +269,10 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         super.onActivityCreated(savedInstanceState);
 
         try {
-                initObjects();
-                initData();
-                showAttachmentDialog();
-                checkMode();
+            initObjects();
+            initData();
+            showAttachmentDialog();
+            checkMode();
         } catch (Exception e) {
             Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT).show();
             getActivity().finish();
@@ -291,7 +295,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userID = PrefHelper.get(getContext(), PrefHelper.KEY_USER_ID, -1);
         userPassword = PrefHelper.get(getContext(), PrefHelper.KEY_USER_PASSWORD, "");
         doctorID = getArguments().getInt("doctorID");
-        userType=getArguments().getInt("type");
+        userType = getArguments().getInt("type");
 
         userInfo = new UserInfo();
         if (userID != doctorID  ) {
@@ -323,7 +327,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             userInfo.setLastName(getResources().getString(R.string.documents));
             userInfo.setFirstName(" ");
             toolbar.setVisibility(View.GONE);
-        } else if (doctorID == CustomerSupportActivity.supportID&&userType!=UserInfo.CLINIC) {
+        } else if (doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC) {
             userInfo.setUserID(doctorID);
             userInfo.setLastName(getResources().getString(R.string.support));
             userInfo.setFirstName(" ");
@@ -336,12 +340,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         //----------------- main scenario get user info from database but now i get info from backend (Ahmed 14 - 8 -2017 , 1:30 pm)
         //-------- get user from intent instead of database
         if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
-            ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(),R.drawable.placeholder);
-        if(userInfo.getUserType()==UserInfo.CLINIC){
+            ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
+        if (userInfo.getUserType() == UserInfo.CLINIC) {
             if (userInfo.getName() != null) {
                 tv_chat_user_name.setText(userInfo.getName());
             }
-        }else {
+        } else {
             if (userInfo.getFullName() != null && userInfo.getLastName() != null) {
                 tv_chat_user_name.setText(userInfo.getLastName() + " " + userInfo.getFirstName());
             }
@@ -353,7 +357,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                messages = ApiHelper.getMessages(userID, doctorID, getContext(),userInfo.getUserType());
+                messages = ApiHelper.getMessages(userID, doctorID, getContext(), userInfo.getUserType());
                 if (messages != null) {
                     if (getActivity() != null)
                         // if arraylist have message set data in adapter and save in database and request message seen
@@ -504,7 +508,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (getActivity() == null)
             return;
         if (userID == doctorID) {
-            documentChatAdapter = new DocumentChatAdapter(documents, getActivity(),true);
+            documentChatAdapter = new DocumentChatAdapter(documents, getActivity(), true);
             recyclerView.setAdapter(documentChatAdapter);
             recyclerView.scrollToPosition(documents.size() - 1);
         } else {
@@ -540,7 +544,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (userID == doctorID) {
             chatHelper.sendTextDocument(etMessage.getText().toString(), documentChatAdapter, documents, recyclerView, userID, getActivity());
         } else {
-            chatHelper.sendTextMessage(etMessage.getText().toString(), messages, userID, doctorID, chatAdapter, getActivity(), recyclerView,userInfo.getUserType());
+            chatHelper.sendTextMessage(etMessage.getText().toString(), messages, userID, doctorID, chatAdapter, getActivity(), recyclerView, userInfo.getUserType());
         }
         etMessage.setText("");
         etMessage.setHint(R.string.write_a_message);
@@ -611,7 +615,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         if (userID == doctorID) {
                             chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
                         } else {
-                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView,userInfo.getUserType());
+                            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView, userInfo.getUserType());
                         }
                     } catch (Exception e) {
                         Crashlytics.logException(e);
@@ -704,18 +708,18 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     }
 
     public void getMyLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+       /* if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             askForLocationPermission();
             return;
-        }
-        Location location = getLastKnownLocation();
+        }*/
+        Location location = getLocation();
         if (location != null) {
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
             if (userID == doctorID) {
                 chatHelper.sendLocationDocument(longitude, latitude, documentChatAdapter, getActivity(), userID, documents, recyclerView);
             } else {
-                chatHelper.sendLocationMessage(longitude, latitude, userID, doctorID, getActivity(), messages, chatAdapter, recyclerView,userInfo.getUserType());
+                chatHelper.sendLocationMessage(longitude, latitude, userID, doctorID, getActivity(), messages, chatAdapter, recyclerView, userInfo.getUserType());
             }
         } else {
             Toast.makeText(getActivity(), R.string.cant_find_location, Toast.LENGTH_SHORT).show();
@@ -723,8 +727,9 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     }
 
-    private Location getLastKnownLocation() {
-        mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+    /*private Location getLastKnownLocation() {
+
+        LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
         for (String provider : providers) {
@@ -742,6 +747,39 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             }
         }
         return bestLocation;
+    }*/
+    public Location getLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            askForLocationPermission();
+        } else {
+            try {
+                LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+
+                boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+                if (isNetworkEnabled) {
+                    if (myLocation != null) {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+                        return myLocation;
+                    } else if (locationManager != null) {
+                        myLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        return myLocation;
+                    }
+                } else if (isGPSEnabled) {
+                    if (myLocation == null) {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                        return myLocation;
+                    } else if (locationManager != null && myLocation != null) {
+                        myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        return myLocation;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return myLocation;
     }
 
     private void askForLocationPermission() {
@@ -811,7 +849,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 if ((message.getFromID() == userID || message.getFromID() == doctorID) && (message.getToID() == userID || message.getToID() == doctorID)) {
                     userInfo.setIsSessionOpen(0);
                     //chatModelRepositry.createOrUpdate(userInfo);
-                    checkSessionOpen(userMe.getUserType()==UserInfo.DOCTOR);
+                    checkSessionOpen(userMe.getUserType() == UserInfo.DOCTOR);
                     getActivity().invalidateOptionsMenu();
 
                 }
@@ -936,7 +974,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                 @Override
                                 public void run() {
                                     // i need request ID
-                                    final boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID(),userInfo.getUserType());
+                                    final boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID(), userInfo.getUserType());
                                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -945,7 +983,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                 Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                                 userInfo.setIsSessionOpen(0);
                                                 //userRepository.update(doctor);
-                                                checkSessionOpen(userMe.getUserType()==UserInfo.DOCTOR);
+                                                checkSessionOpen(userMe.getUserType() == UserInfo.DOCTOR);
                                                 getActivity().invalidateOptionsMenu();
                                                 if (userInfo.getUserType() == UserInfo.CLINIC) {
                                                     Intent intent = new Intent(getActivity(), InquiryActivity.class);
@@ -993,7 +1031,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                 @Override
                                 public void run() {
                                     // i need request ID
-                                    final boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID(),userInfo.getUserType());
+                                    final boolean result = ApiHelper.closeSession(getContext(), userInfo.getRequestID(), userInfo.getUserType());
                                     HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -1002,7 +1040,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                 // we must handle this
                                                 Toast.makeText(getActivity(), R.string.session_ended, Toast.LENGTH_SHORT).show();
                                                 userInfo.setIsSessionOpen(0);
-                                                checkSessionOpen(userMe.getUserType()==UserInfo.DOCTOR);
+                                                checkSessionOpen(userMe.getUserType() == UserInfo.DOCTOR);
                                                 canRate.setVisibility(View.GONE);
                                                 getActivity().invalidateOptionsMenu();
                                                 if (userInfo.getUserType() == UserInfo.DOCTOR || userInfo.getUserType() == UserInfo.CLINIC) {
@@ -1016,7 +1054,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                             Intent intent = new Intent(getActivity(), Comment.class);
 //                                                            intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
 //                                                            intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
-                                                            intent.putExtra("user_info",userInfo);
+                                                            intent.putExtra("user_info", userInfo);
                                                             startActivity(intent);
                                                             getActivity().finish();
                                                         }
@@ -1024,7 +1062,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                     adb.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                                            if (userMe.getUserType() == UserInfo.PATIENT) {
                                                                 canRate.setVisibility(View.VISIBLE);
+                                                            }
+                                                            if (userInfo.getUserType() == UserInfo.CLINIC) {
+                                                                getActivity().finish();
+                                                            }
                                                         }
                                                     });
                                                     adb.show();
@@ -1100,7 +1143,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             etMessage.setHint(R.string.write_message);
             start_record.setEnabled(true);
             if (userInfo != null)
-                checkSessionOpen(userMe.getUserType()==UserInfo.DOCTOR);
+                checkSessionOpen(userMe.getUserType() == UserInfo.DOCTOR);
         } else {
             if (userID == doctorID) {
                 loadDocumentOffline();
@@ -1124,7 +1167,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.seenMessage(getContext(), userID, String.valueOf(doctorID), msgID,userInfo.getUserType());
+                ApiHelper.seenMessage(getContext(), userID, String.valueOf(doctorID), msgID, userInfo.getUserType());
             }
         }).start();
 
@@ -1135,7 +1178,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ApiHelper.deliveredMessgae(getContext(), userID, String.valueOf(doctorID), msgID,userInfo.getUserType());
+                ApiHelper.deliveredMessgae(getContext(), userID, String.valueOf(doctorID), msgID, userInfo.getUserType());
             }
         }).start();
     }
@@ -1160,7 +1203,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             Intent intent = new Intent(getActivity(), DoctorProfileActivity.class);
             intent.putExtra("doctor_data", userInfo);
             getActivity().startActivity(intent);
-        } else if(userInfo != null && (userInfo.getUserType() == UserInfo.CLINIC)) {
+        } else if (userInfo != null && (userInfo.getUserType() == UserInfo.CLINIC)) {
             // this object is user and should open ProfileActivity
             Intent intent = new Intent(getActivity(), ClinicProfileActivity.class);
             intent.putExtra("clinic_data", userInfo);
@@ -1284,7 +1327,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                 if (userID == doctorID) {
                                     chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
                                 } else {
-                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView,userInfo.getUserType());
+                                    chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView, userInfo.getUserType());
                                 }
 
                             } else {
@@ -1446,7 +1489,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (userID == doctorID) {
             chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
         } else {
-            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView,userInfo.getUserType());
+            chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView, userInfo.getUserType());
         }
     }
 
@@ -1457,5 +1500,25 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
             }
         });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        myLocation = location;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

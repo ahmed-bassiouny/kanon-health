@@ -311,9 +311,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:background="@drawable/borderedittext"
-                                android:digits="0123456789"
                                 android:imeOptions="actionNext"
-                                android:inputType="number"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_zip_code"
                                 android:padding="5dp" />

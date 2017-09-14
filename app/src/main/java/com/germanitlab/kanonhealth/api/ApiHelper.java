@@ -674,6 +674,12 @@ public class ApiHelper {
             editDoctorParamater.setStreetName(userInfo.getStreetName());
             editDoctorParamater.setHouseNumber(userInfo.getHouseNumber());
             editDoctorParamater.setZipCode(userInfo.getZipCode());
+            editDoctorParamater.setWeight_value(userInfo.getWeight_value());
+            editDoctorParamater.setWeight_unit(userInfo.getWeight_unit());
+            editDoctorParamater.setHeight_value(userInfo.getHeight_value());
+            editDoctorParamater.setHeight_unit(userInfo.getHeight_unit());
+            editDoctorParamater.setBlood(userInfo.getBlood_type());
+
             String jsonString;
             if (avatar != null) {
                 jsonString = postWithFile(API_USERS_EDIT, editDoctorParamater.toHashMap(), avatar, UserAddParameter.PARAMETER_AVATAR);

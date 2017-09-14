@@ -467,7 +467,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="upload_failed">Upload fehlgeschlagen</string>
     <string name="save_success">Erfolgreich gespeichert</string>
     <string name="edit_practics">Praxis editieren</string>
-    <string name="cant_find_location">Sorry , Can\'t Find Location</string>
+    <string name="cant_find_location">Entschuldigung, Kann ich den Ort nicht finden. Bitte Ort öffnen</string>
     <string name="send_fail">Error while connecting to server</string>
     <string name="generate_qrcode">Sorry Can\'t Generate QrCode</string>
     <string name="msg_not_send">Sorry Message not Send</string>
@@ -525,7 +525,7 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="upload_success">Upload erfolgreich</string>
     <string name="image_not_save_error_while_uploading">Bild nicht gespeichert, Fehler beim laden.</string>
     <string name="upload_image_failed">Bild-upload abgebrochen</string>
-    <string name="slide_to_cancle">Gleiten zum abbrechen</string>
+    <string name="slide_to_cancle">Schuif om te annuleren</string>
     <string name="cant_play_video">Sorry, Fehler mit Video.</string>
     <string name="cant_upload">Entschuldigung, Medien nicht hochladen.</string>
     <string name="second_Level">Zweites Level.</string>

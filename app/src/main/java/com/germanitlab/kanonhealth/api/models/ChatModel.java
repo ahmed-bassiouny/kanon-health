@@ -15,7 +15,7 @@ public class ChatModel extends UserInfo {
     public static final String KEY_MESSAGE="massage";
     public static final String KEY_MESSAGE_TYPE="type";
     public static final String KEY_IS_FORWARD="is_forward";
-    public static final String KEY_TIME="created_at";
+    public static final String KEY_TIME="time";
 
     @SerializedName(KEY_ROOM_ID)
     @DatabaseField

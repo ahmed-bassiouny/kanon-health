@@ -151,7 +151,14 @@
                         android:text=""
                         android:textColor="@android:color/background_dark" />
 
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/size_5dp"
+                        android:textSize="18sp"
+                        android:text="@string/nine_euro"
+                        android:layout_gravity="right"
+                        android:textColor="@android:color/background_dark" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -241,16 +248,6 @@
 
                     </LinearLayout>
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/size_5dp"
-                    android:textSize="18sp"
-                    android:text="@string/nine_euro"
-                    android:layout_gravity="right"
-                    android:textColor="@android:color/background_dark" />
-
 
 
             </LinearLayout>
