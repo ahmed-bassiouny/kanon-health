@@ -45,7 +45,8 @@ public class OpenSessionParameters extends ParentParameters {
     }
 
     public void setQuestionsAnswers(HashMap<String, String> questionsAnswers) {
-        this.questionsAnswers = String.valueOf(questionsAnswers);
+        String temp = String.valueOf(questionsAnswers);
+        this.questionsAnswers =temp.replace("=",":");
     }
 
     public String getClinicID() {

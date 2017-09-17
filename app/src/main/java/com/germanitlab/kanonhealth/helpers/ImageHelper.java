@@ -56,6 +56,7 @@ public class ImageHelper {
                     .cacheInMemory(false)
                     .considerExifParams(true)
                     .cacheOnDisk(true)
+                    .considerExifParams(true)
                     .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2);
             if (placeHolder != -1) {
                 options.showImageOnLoading(placeHolder); // resource or drawable
