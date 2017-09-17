@@ -132,10 +132,10 @@ public class RateActivity extends ParentActivity{
             public void run() {
                        if(isClinic)
                        {
-                          review = ApiHelper.getReview(String.valueOf(clinic.getId()), RateActivity.this);
+                          review = ApiHelper.getReview(String.valueOf(clinic.getId()), RateActivity.this,UserInfo.CLINIC);
                            Log.i("ReviewId", clinic.getId()+"");
                        }else {
-                            review = ApiHelper.getReview(String.valueOf(doctor.getUserID()), RateActivity.this);
+                            review = ApiHelper.getReview(String.valueOf(doctor.getUserID()), RateActivity.this,UserInfo.DOCTOR);
                        }
                 if(review!=null){
                     RateActivity.this.runOnUiThread(new Runnable() {

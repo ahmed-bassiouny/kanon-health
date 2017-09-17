@@ -50,6 +50,8 @@ import com.germanitlab.kanonhealth.httpchat.HttpChatActivity;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
+import com.germanitlab.kanonhealth.profile.ProfileActivity;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.nex3z.flowlayout.FlowLayout;
 
@@ -404,7 +406,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             setDocuments();
         }
 
-        textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(userInfo.getRateNum()) + " (" + String.valueOf(userInfo.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
+        textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(userInfo.getRateNum()) + " (" + String.valueOf(userInfo.getRateCount()) + " " + getResources().getString(R.string.reviews) + ")");
 
         //setRate
         Float rate = userInfo.getRateNum();
@@ -663,6 +665,31 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     protected void onResume() {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
+        if (Helper.isNetworkAvailable(getApplicationContext())) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UserInfo temp = ApiHelper.getUserInfo(DoctorProfileActivity.this, String.valueOf(userInfo.getUserID()));
+                    if (temp != null) {
+                        userInfo=temp;
+                        DoctorProfileActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                bindData();
+                                setVisiblitiy();
+                            }
+                        });
+
+                    }
+
+
+                }
+            }).start();
+        } else {
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
 

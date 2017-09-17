@@ -176,6 +176,7 @@ public class InquiryMainFragment extends Fragment {
                                     if (requestId != -1) {
                                         doctor.setIsSessionOpen(1);
                                         doctor.setRequestID(requestId);
+                                        doctor.setUserType(UserInfo.CLINIC);
                                         Intent intent = new Intent(getActivity(), HttpChatActivity.class);
                                         intent.putExtra("doctorID", doctor.getUserID());
                                         intent.putExtra("userInfo", doctor);

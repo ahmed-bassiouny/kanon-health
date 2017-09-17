@@ -35,6 +35,7 @@ import com.germanitlab.kanonhealth.api.parameters.MessageSendParameters;
 import com.germanitlab.kanonhealth.api.parameters.MessagesParameter;
 import com.germanitlab.kanonhealth.api.parameters.OpenSessionParameters;
 import com.germanitlab.kanonhealth.api.parameters.RateDoctorParameter;
+import com.germanitlab.kanonhealth.api.parameters.RateReviewsParameter;
 import com.germanitlab.kanonhealth.api.parameters.RegisterParameters;
 import com.germanitlab.kanonhealth.api.parameters.TokenAddParameter;
 import com.germanitlab.kanonhealth.api.parameters.UserAddParameter;
@@ -94,6 +95,7 @@ public class ApiHelper {
     private static final String API_DOCTORS_ANOTHER = "doctors/another";
     private static final String API_DOCTORS_CHANGE_STATUS = "doctors/change_status";
     private static final String API_DOCTORS_RATE = "doctors/rate";
+    private static final String API_CLINICS_RATE = "clinics/rate";
     private static final String API_DOCUMENTS_ADD = "document/add";
     private static final String API_DOCUMENTS_LIST = "document/list";
     private static final String API_DOCUMENT_PRIVACY = "document/privacy";
@@ -908,16 +910,25 @@ public class ApiHelper {
         }
     }
 
-    public static RateDoctorResponse rateDoctor(Context context, String userId, String doctorId, String requestId, String comment, String rate) {
+    public static RateDoctorResponse rateDoctor(Context context, String userId, String id, String requestId, String comment, String rate,int type) {
         RateDoctorResponse result = null;
         try {
             RateDoctorParameter rateDoctorParameter = new RateDoctorParameter();
             rateDoctorParameter.setUserId(userId);
-            rateDoctorParameter.setDoctorId(doctorId);
             rateDoctorParameter.setRequestId(requestId);
             rateDoctorParameter.setComment(comment);
             rateDoctorParameter.setRate(rate);
-            String jsonString = post(API_DOCTORS_RATE, rateDoctorParameter.toJson());
+            String jsonString="";
+            if(type==UserInfo.DOCTOR) {
+                rateDoctorParameter.setDoctorId(id);
+                jsonString = post(API_DOCTORS_RATE, rateDoctorParameter.toJson());
+            }else
+            {
+                rateDoctorParameter.setClinicId(id);
+                jsonString = post(API_CLINICS_RATE, rateDoctorParameter.toJson());
+            }
+
+
             Gson gson = new Gson();
             RateDoctorResponse rateDoctorResponse = gson.fromJson(jsonString, RateDoctorResponse.class);
             if (rateDoctorResponse.getStatus()) {
@@ -931,13 +942,20 @@ public class ApiHelper {
     }
 
 
-    public static Review getReview(String userId, Context context) {
+    public static Review getReview(String id, Context context, int type) {
         Review review = null;
         try {
-            UserInfoParameter userInfoParameter = new UserInfoParameter();
-            userInfoParameter.setUserID(userId);
-            String jsonString = post(API_RATE_REVIEW, userInfoParameter.toJson());
-            System.out.println(userInfoParameter.toJson());
+            RateReviewsParameter rateReviewsParameter= new RateReviewsParameter();
+            if(type==UserInfo.DOCTOR)
+            {
+             rateReviewsParameter.setDoctorID(id);
+            }else
+            {
+                rateReviewsParameter.setClinicID(id);
+            }
+
+            String jsonString = post(API_RATE_REVIEW, rateReviewsParameter.toJson());
+            System.out.println( rateReviewsParameter.toJson());
             Gson gson = new Gson();
             ReviewResponse reviewResponse = gson.fromJson(jsonString, ReviewResponse.class);
             if (reviewResponse.getStatus()) {

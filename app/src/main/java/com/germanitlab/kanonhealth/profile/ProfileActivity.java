@@ -170,8 +170,7 @@ public class ProfileActivity extends ParentActivity {
                 }
 
            // }
-        } catch (
-                Exception e)
+        } catch (Exception e)
 
         {
             Crashlytics.logException(e);

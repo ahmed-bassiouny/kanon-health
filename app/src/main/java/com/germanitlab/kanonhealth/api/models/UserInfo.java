@@ -39,6 +39,7 @@ public class UserInfo extends ParentModel {
     public static final String KEY_DOCUMENTS = "documents";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_RATE_NUM = "rate_num";
+    public static final String KEY_RATE_COUNT = "rate_count";
     public static final String KEY_RATE_PERCENTAGE = "rate_percentage";
     public static final String KEY_SUPPORTED_LANG = "supported_lang";
     public static final String KEY_IS_AVAILABLE = "is_available";
@@ -133,6 +134,11 @@ public class UserInfo extends ParentModel {
     @SerializedName(KEY_RATE_NUM)
     @DatabaseField
     private Float rateNum;
+
+    @SerializedName(KEY_RATE_COUNT)
+    @DatabaseField
+    private Float rateCount;
+
     @SerializedName(KEY_RATE_PERCENTAGE)
     private HashMap<String, Integer> ratePercentage;
     @SerializedName(KEY_STREET_NAME)
@@ -283,7 +289,7 @@ public class UserInfo extends ParentModel {
 
     public Integer getUserType() {
         if (userType == null)
-            userType = PATIENT;
+            userType = CLINIC;
         return userType;
     }
 
@@ -448,6 +454,14 @@ public class UserInfo extends ParentModel {
 
     public void setRateNum(Float rateNum) {
         this.rateNum = rateNum;
+    }
+
+    public Float getRateCount() {
+        return rateCount;
+    }
+
+    public void setRateCount(Float rateCount) {
+        this.rateCount = rateCount;
     }
 
     public HashMap<String, Integer> getRatePercentage() {

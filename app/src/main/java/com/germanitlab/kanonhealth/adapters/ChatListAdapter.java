@@ -193,24 +193,47 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             @Override
             public void run() {
                 //*********** it's comment becuase i am waiting karim finish task
-                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
+                 if(doctor.getUserType()!=UserInfo.CLINIC)
+                {
+                    final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
 
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (result.getStatus() == 1) {
-                            doctor.setIsSessionOpen(1);
-                            doctor.setRequestID(result.getRequestId());
-                        } else {
-                            doctor.setIsSessionOpen(0);
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (result.getStatus() == 1) {
+                                doctor.setIsSessionOpen(1);
+                                doctor.setRequestID(result.getRequestId());
+                            } else {
+                                doctor.setIsSessionOpen(0);
+                            }
+                            Intent intent = new Intent(activity, HttpChatActivity.class);
+                            intent.putExtra("userInfo", doctor);
+                            intent.putExtra("doctorID", doctor.getUserID());
+                            intent.putExtra("type", doctor.getUserType());
+                            activity.startActivity(intent);
                         }
-                        Intent intent = new Intent(activity, HttpChatActivity.class);
-                        intent.putExtra("userInfo", doctor);
-                        intent.putExtra("doctorID", doctor.getUserID());
-                        intent.putExtra("type", doctor.getUserType());
-                        activity.startActivity(intent);
-                    }
-                });
+                    });
+                }else
+                {
+                    final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getId(), UserInfo.CLINIC);
+
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (result.getStatus() == 1) {
+                                doctor.setIsSessionOpen(1);
+                                doctor.setRequestID(result.getRequestId());
+                            } else {
+                                doctor.setIsSessionOpen(0);
+                            }
+                            Intent intent = new Intent(activity, HttpChatActivity.class);
+                            intent.putExtra("userInfo", doctor);
+                            intent.putExtra("doctorID", doctor.getId());
+                            intent.putExtra("type", UserInfo.CLINIC);
+                            activity.startActivity(intent);
+                        }
+                    });
+                }
             }
         }).start();
 

@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class RateDoctorParameter extends ParentParameters {
     public static final String PARAMETER_USER_ID = "user_id";
     public static final String PARAMETER_DOCTOR_ID = "doctor_id";
+    public static final String PARAMETER_CLINIC_ID = "clinic_id";
     public static final String PARAMETER_REQUEST_ID = "req_id";
     public static final String PARAMETER_COMMENT = "comment";
     public static final String PARAMETER_RATE = "rate";
@@ -18,6 +19,10 @@ public class RateDoctorParameter extends ParentParameters {
 
     @SerializedName(PARAMETER_DOCTOR_ID)
     private String doctorId;
+
+    @SerializedName(PARAMETER_CLINIC_ID)
+    private String clinicId;
+
 
     @SerializedName(PARAMETER_REQUEST_ID)
     private String requestId;
@@ -45,6 +50,14 @@ public class RateDoctorParameter extends ParentParameters {
         this.doctorId = doctorId;
     }
 
+    public String getClinicId() {
+        return clinicId;
+    }
+
+    public void setClinicId(String clinicId) {
+        this.clinicId = clinicId;
+    }
+
     public String getRequestId() {
         return requestId;
     }
@@ -68,4 +81,5 @@ public class RateDoctorParameter extends ParentParameters {
     public void setRate(String rate) {
         this.rate = rate;
     }
+
 }

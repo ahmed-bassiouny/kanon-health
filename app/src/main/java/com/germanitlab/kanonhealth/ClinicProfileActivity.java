@@ -23,6 +23,7 @@ import com.germanitlab.kanonhealth.api.models.Language;
 import com.germanitlab.kanonhealth.api.models.Speciality;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.api.responses.IsOpenResponse;
+import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
@@ -147,6 +148,7 @@ ClinicProfileActivity extends ParentActivity {
                         if (result.getStatus()==1){
                             clinic.setIsSessionOpen(1);
                             clinic.setRequestID(result.getRequestId());
+                            clinic.setUserType(UserInfo.CLINIC);
                             Intent intent = new Intent(ClinicProfileActivity.this, HttpChatActivity.class);
                             intent.putExtra("userInfo", clinic);
                             intent.putExtra("doctorID", clinic.getId());
@@ -158,6 +160,7 @@ ClinicProfileActivity extends ParentActivity {
 //                            intent.putExtra("doctor_data", new Gson().toJson(clinic));
 //                            startActivity(intent);
                             clinic.setRequestID(result.getRequestId());
+                            clinic.setUserType(UserInfo.CLINIC);
                             Intent intent = new Intent(ClinicProfileActivity.this, HttpChatActivity.class);
                             intent.putExtra("userInfo", clinic);
                             intent.putExtra("doctorID", clinic.getId());
@@ -194,7 +197,7 @@ ClinicProfileActivity extends ParentActivity {
         else
             tvOnline.setText(R.string.status_offline);
 
-        textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(clinic.getRateNum()) + " (" + String.valueOf(clinic.getRateNum()) + " " + getResources().getString(R.string.reviews) + ")");
+        textViewRating.setText(getResources().getString(R.string.rating) + "  " + String.valueOf(clinic.getRateNum()) + " (" + String.valueOf(clinic.getRateCount()) + " " + getResources().getString(R.string.reviews) + ")");
 
         // set specialities
         if (clinic.getSpecialities() != null) {
@@ -344,6 +347,27 @@ ClinicProfileActivity extends ParentActivity {
     protected void onResume() {
         super.onResume();
         nestedScrollView.fullScroll(View.FOCUS_UP);
+        if (Helper.isNetworkAvailable(getApplicationContext())) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UserInfo temp = ApiHelper.postGetClinic( clinic.getId(),ClinicProfileActivity.this);
+                    if (temp != null) {
+                        clinic=temp;
+                        ClinicProfileActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                clinic.setUserType(UserInfo.CLINIC);
+                                bindData();
+                                setVisiblitiy();
+                            }
+                        });
+                    }
+                }
+            }).start();
+        } else {
+            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getTimaTableData() {
