@@ -711,6 +711,7 @@ public class ApiHelper {
             userInfoParameter.setUserID(userID);
             String jsonString = post(API_USERS_ME, userInfoParameter.toJson());
             Gson gson = new Gson();
+            System.out.println(jsonString);
             UserInfoResponse userInfoResponse = gson.fromJson(jsonString, UserInfoResponse.class);
             if (userInfoResponse.getStatus()) {
                 userInfo = userInfoResponse.getData();
@@ -736,6 +737,8 @@ public class ApiHelper {
                 openSessionParameters.setDoctorID(doctorID);
                 jsonString = post(API_REQUESTS_OPEN_DOC, openSessionParameters.toJson());
             }
+            System.out.println(openSessionParameters.toJson());
+            System.out.println(jsonString);
             Gson gson = new Gson();
             OpenSessionResponse parentResponse = gson.fromJson(jsonString, OpenSessionResponse.class);
             if (parentResponse.getStatus()) {
@@ -928,7 +931,7 @@ public class ApiHelper {
                 jsonString = post(API_CLINICS_RATE, rateDoctorParameter.toJson());
             }
 
-
+            System.out.println( rateDoctorParameter.toJson());
             Gson gson = new Gson();
             RateDoctorResponse rateDoctorResponse = gson.fromJson(jsonString, RateDoctorResponse.class);
             if (rateDoctorResponse.getStatus()) {
@@ -1097,6 +1100,8 @@ public class ApiHelper {
                 haveRateParameters.setDocId(id);
                 jsonString = post(API_FLAG_HAVE_RATE,  haveRateParameters.toJson());
             }
+            System.out.println("nour");
+            System.out.println(haveRateParameters.toJson());
             System.out.println(jsonString);
             Gson gson = new Gson();
             haveRateResponse = gson.fromJson(jsonString, HaveRateResponse.class);

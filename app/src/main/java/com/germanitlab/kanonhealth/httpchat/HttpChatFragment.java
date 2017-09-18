@@ -224,6 +224,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 //                intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
 //                intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
                 intent.putExtra("user_info", userInfo);
+                intent.putExtra("request_id",haveRateResponse.getRequestId());
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -302,6 +303,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (userID != doctorID ||(userID == doctorID&& userType == UserInfo.CLINIC)) {
             if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC)) {
                 userInfo = (UserInfo) getArguments().getSerializable("userInfo");
+                if (userMe.getUserType() == UserInfo.PATIENT) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -311,9 +313,31 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         {
                             haveRateResponse = ApiHelper.getHaveRate(userID,userInfo.getUserID(),UserInfo.DOCTOR);
                         }
+                            if (haveRateResponse != null) {
+                                if (haveRateResponse.getStatus() == 0 && haveRateResponse.getRequestId() != -1) {
+                                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            canRate.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+
+                                } else {
+                                    HttpChatFragment.this.getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            canRate.setVisibility(View.GONE);
+                                        }
+                                    });
+
+                                }
+                            }
+
                     }
                 }).start();
             }
+        }
         }
         if (userID == doctorID && userType!=UserInfo.CLINIC) {
             documents = new ArrayList<>();
@@ -927,15 +951,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             // client chat with doctor and session closed
             mHoldingButtonLayout.setVisibility(View.INVISIBLE);
             open_chat_session.setVisibility(View.VISIBLE);
-            if (userMe.getUserType() == UserInfo.PATIENT) {
-                if (haveRateResponse != null) {
-                    if (haveRateResponse.getStatus() == 0 && haveRateResponse.getRequestId() != -1) {
-                        canRate.setVisibility(View.VISIBLE);
-                    } else {
-                        canRate.setVisibility(View.GONE);
-                    }
-                }
-            }
+
+
         } else {
             // client chat with doctor and session opened
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
