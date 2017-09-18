@@ -44,7 +44,7 @@ public class Comment extends AppCompatActivity {
     ImageView img_back;
 
     String doc_id = "";
-    String req_id = "";
+    int request_id;
     UserRepository userRepository;
 
     UserInfo userInfo;
@@ -58,6 +58,7 @@ public class Comment extends AppCompatActivity {
        // userRepository = new UserRepository();
        // doctor = new UserInfo();
         userInfo= (UserInfo) getIntent().getSerializableExtra("user_info") ;
+        request_id=  getIntent().getIntExtra("request_id",0) ;
         if(userInfo==null)
         {
             finish();
@@ -77,7 +78,6 @@ public class Comment extends AppCompatActivity {
 //                    public void run() {
                         if(userInfo.getUserType()==UserInfo.DOCTOR) {
                             doc_id = String.valueOf(userInfo.getUserID());
-                            req_id = String.valueOf(userInfo.getRequestID());
                           //  UserInfo temp = ApiHelper.getUserInfo(Comment.this, doc_id);
                            // if (temp != null) {
                                // userInfo = temp;
@@ -85,7 +85,6 @@ public class Comment extends AppCompatActivity {
 //                            }
                        }else {
                             doc_id = String.valueOf(userInfo.getId());
-                            req_id = String.valueOf(userInfo.getRequestID());
 
                            // UserInfo temp = ApiHelper.postGetClinic(userInfo.getId(), Comment.this);
                            // if (temp != null) {
@@ -112,7 +111,6 @@ public class Comment extends AppCompatActivity {
                 //doctor = userRepository.get(doctor);
         } catch (Exception e) {
             doc_id = "";
-            req_id = "";
         }
         edt_comment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -139,7 +137,7 @@ public class Comment extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, String.valueOf(PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,-1)), doc_id, req_id, edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()),userInfo.getUserType());
+                        RateDoctorResponse result = ApiHelper.rateDoctor(Comment.this, String.valueOf(PrefHelper.get(Comment.this,PrefHelper.KEY_USER_ID,-1)), doc_id, String.valueOf(request_id), edt_comment.getText().toString(), String.valueOf(rb_doctor_rate.getRating()),userInfo.getUserType());
                         if (result != null) {
                             if (result.getData()) {
                            //     Toast.makeText(Comment.this, R.string.thanks_for_comment, Toast.LENGTH_SHORT).show();
