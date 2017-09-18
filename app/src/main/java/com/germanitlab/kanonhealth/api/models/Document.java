@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.api.models;
 
+import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -78,7 +79,7 @@ public class Document extends ParentModel{
     }
 
     public String getDateTime() {
-        return dateTime;
+        return DateHelper.fromUtcToLocal(dateTime);
     }
 
     public void setDateTime(String dateTime) {
