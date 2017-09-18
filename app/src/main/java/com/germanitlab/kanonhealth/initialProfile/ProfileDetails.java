@@ -72,7 +72,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
     EditText et_title;
     PickerDialog pickerDialog;
     String birthdate = "";
-    String gender_other = "Male";
+    String gender_other = "male";
     int gender = 1;
     Util util;
     Helper helper;
@@ -108,12 +108,12 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                 switch (i) {
                     case R.id.rbmale:
-                        gender_other = "Male";
+                        gender_other = "male";
                         gender = 1;
                         edGender.setVisibility(View.GONE);
                         break;
                     case R.id.rbfemal:
-                        gender_other = "Femal";
+                        gender_other = "female";
                         gender = 2;
                         edGender.setVisibility(View.GONE);
                         break;
@@ -253,7 +253,9 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
         final String firstName = editFirstName.getText().toString();
         final String lastName = editLastName.getText().toString();
         final String birthDate = textBirthday.getText().toString();
-        gender_other = edGender.getText().toString();
+        if(gender==3) {
+            gender_other = edGender.getText().toString();
+        }
         final String title = et_title.getText().toString();
         if (gender == 3 && gender_other.trim().isEmpty()) {
             Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
@@ -264,7 +266,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    boolean result = ApiHelper.addUser(getApplicationContext(), PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_ID, -1), PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_PASSWORD, ""), title, firstName, lastName, birthDate, String.valueOf(gender), file);
+                    boolean result = ApiHelper.addUser(getApplicationContext(), PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_ID, -1), PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_PASSWORD, ""), title, firstName, lastName, birthDate, gender_other, file);
                     if (result) {
                         UserInfo user = ApiHelper.getUserInfo(getApplicationContext(), String.valueOf(PrefHelper.get(ProfileDetails.this, PrefHelper.KEY_USER_ID, -1)));
                         if (user != null) {

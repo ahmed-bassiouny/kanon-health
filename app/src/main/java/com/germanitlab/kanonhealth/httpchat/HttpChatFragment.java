@@ -299,7 +299,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         userType = getArguments().getInt("type");
 
         userInfo = new UserInfo();
-        if (userID != doctorID  ) {
+        if (userID != doctorID ||(userID == doctorID&& userType == UserInfo.CLINIC)) {
             if (!(doctorID == CustomerSupportActivity.supportID && userType != UserInfo.CLINIC)) {
                 userInfo = (UserInfo) getArguments().getSerializable("userInfo");
                 new Thread(new Runnable() {
@@ -315,7 +315,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 }).start();
             }
         }
-        if (userID == doctorID) {
+        if (userID == doctorID && userType!=UserInfo.CLINIC) {
             documents = new ArrayList<>();
             documentRepositry = new HttpDocumentRepositry(getActivity());
         } else {
@@ -324,7 +324,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         }
         chatModelRepositry = new UserInfoRepositry(getActivity());
 
-        if (userID == doctorID) {
+        if (userID == doctorID && userType!=UserInfo.CLINIC) {
             userInfo.setLastName(getResources().getString(R.string.documents));
             userInfo.setFirstName(" ");
             toolbar.setVisibility(View.GONE);
@@ -342,7 +342,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             //-------- get user from intent instead of database
             if (userInfo.getAvatar() != null && !userInfo.getAvatar().isEmpty())
                 ImageHelper.setImage(img_chat_user_avatar, ApiHelper.SERVER_IMAGE_URL + "/" + userInfo.getAvatar(), R.drawable.placeholder);
-            if (userInfo.getUserType() == UserInfo.CLINIC) {
+            if (userType == UserInfo.CLINIC) {
                 if (userInfo.getName() != null) {
                     tv_chat_user_name.setText(userInfo.getName());
                 }
@@ -509,7 +509,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     private void setData() {
         if (getActivity() == null)
             return;
-        if (userID == doctorID) {
+        if (userID == doctorID && userType!=UserInfo.CLINIC ) {
             documentChatAdapter = new DocumentChatAdapter(documents, getActivity(), true);
             recyclerView.setAdapter(documentChatAdapter);
             recyclerView.scrollToPosition(documents.size() - 1);
@@ -543,7 +543,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (etMessage.getText().toString().trim().isEmpty())
             return;
         // declare object and set attribute
-        if (userID == doctorID) {
+        if (userID == doctorID && userType!=UserInfo.CLINIC) {
             chatHelper.sendTextDocument(etMessage.getText().toString(), documentChatAdapter, documents, recyclerView, userID, getActivity());
         } else {
             chatHelper.sendTextMessage(etMessage.getText().toString(), messages, userID, doctorID, chatAdapter, getActivity(), recyclerView, userInfo.getUserType());
@@ -614,7 +614,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                             Toast.makeText(getActivity(), R.string.this_file_is_not_supported, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (userID == doctorID) {
+                        if (userID == doctorID && userType!=UserInfo.CLINIC) {
                             chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
                         } else {
                             chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), data.getData())), type, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView, userInfo.getUserType());
@@ -718,7 +718,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         if (location != null) {
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
-            if (userID == doctorID) {
+            if (userID == doctorID && userType!=UserInfo.CLINIC) {
                 chatHelper.sendLocationDocument(longitude, latitude, documentChatAdapter, getActivity(), userID, documents, recyclerView);
             } else {
                 chatHelper.sendLocationMessage(longitude, latitude, userID, doctorID, getActivity(), messages, chatAdapter, recyclerView, userInfo.getUserType());
@@ -1132,7 +1132,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     private void checkMode() {
         if (Helper.isNetworkAvailable(getContext())) {
-            if (userID == doctorID) {
+            if (userID == doctorID && userType!=UserInfo.CLINIC) {
                 loadDocumentOnline();
             } else {
                 loadChatOnline();
@@ -1148,7 +1148,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             if (userInfo != null)
                 checkSessionOpen(userMe.getUserType() == UserInfo.DOCTOR);
         } else {
-            if (userID == doctorID) {
+            if (userID == doctorID&& userType!=UserInfo.CLINIC) {
                 loadDocumentOffline();
             } else {
                 loadChatOffline();
@@ -1327,7 +1327,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                 stopRecording(true);
 //            Toast.makeText(getActivity(), "Recording submitted! Time " + getFormattedTime(), Toast.LENGTH_SHORT).show();
 
-                                if (userID == doctorID) {
+                                if (userID == doctorID && userType!=UserInfo.CLINIC) {
                                     chatHelper.sendMediaDocument(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
                                 } else {
                                     chatHelper.sendMediaMessage(mOutputFile, Message.MESSAGE_TYPE_AUDIO, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView, userInfo.getUserType());
@@ -1489,7 +1489,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void ImagePickerCallBack(Uri uri) {
 
-        if (userID == doctorID) {
+        if (userID == doctorID && userType!=UserInfo.CLINIC) {
             chatHelper.sendMediaDocument(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", documentChatAdapter, documents, recyclerView, getActivity(), userID);
         } else {
             chatHelper.sendMediaMessage(new File(ImageFilePath.getPath(getActivity(), uri)), Message.MESSAGE_TYPE_IMAGE, "", getActivity(), userID, doctorID, messages, chatAdapter, recyclerView, userInfo.getUserType());
