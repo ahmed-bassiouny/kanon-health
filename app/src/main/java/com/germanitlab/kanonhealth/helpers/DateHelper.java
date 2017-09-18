@@ -17,7 +17,7 @@ public class DateHelper {
 
     //    public static final String SERVER_DATETIME_FORMATE = "2017-07-24 10:24:58";
     public static final String SERVER_DATETIME_FORMATE = "yyyy-MM-dd HH:mm:ss";
-    public static final String DISPLAY_DATETIME_FORMATE = "yyyy-MM-dd KK:mm:ss a";
+    public static final String DISPLAY_DATETIME_FORMATE = "yyyy-MM-dd HH:mm:ss";
     public static final String SERVER_DATE_FORMATE = "yyyy-MM-dd";
     public static final String DISPLAY_DATE_FORMATE = "yyyy-MM-dd";
     public static final String BIRTHDATE_FORMATE = "dd.MMM.yyyy";
