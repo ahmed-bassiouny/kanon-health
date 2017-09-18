@@ -4,6 +4,11 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by bassiouny on 01/08/17.
  */
@@ -134,7 +139,18 @@ public class Message extends ParentModel {
     }
 
     public String getDateTime() {
-        return dateTime;
+        String formattedDate;
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            df.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = df.parse(dateTime);
+            df.setTimeZone(TimeZone.getDefault());
+            formattedDate = df.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            formattedDate=dateTime;
+        }
+        return formattedDate;
     }
 
     public void setDateTime(String dateTime) {
