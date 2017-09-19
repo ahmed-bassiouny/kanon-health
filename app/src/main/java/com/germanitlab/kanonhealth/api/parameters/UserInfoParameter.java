@@ -13,6 +13,7 @@ public class UserInfoParameter extends ParentParameters {
     public static final int CHATCLINIC=2;
     public static final int CHATUSER=3;
     public static final int CHATANOTHER=4;
+    public static final int CHATALL=5;
 
 
     @SerializedName(PARAMETER_USERID)

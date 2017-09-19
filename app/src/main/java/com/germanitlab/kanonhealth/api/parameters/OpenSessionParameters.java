@@ -1,5 +1,6 @@
 package com.germanitlab.kanonhealth.api.parameters;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -45,8 +46,10 @@ public class OpenSessionParameters extends ParentParameters {
     }
 
     public void setQuestionsAnswers(HashMap<String, String> questionsAnswers) {
-        String temp = String.valueOf(questionsAnswers);
-        this.questionsAnswers =temp.replace("=",":");
+        Gson g = new Gson();
+        String temp = g.toJson(questionsAnswers);
+        this.questionsAnswers =temp.replace("=",",");
+        System.out.println("thiss"+this.questionsAnswers);
     }
 
     public String getClinicID() {

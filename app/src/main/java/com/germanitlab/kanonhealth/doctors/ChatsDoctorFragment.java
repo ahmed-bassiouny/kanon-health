@@ -463,6 +463,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setBackgroundResource(R.color.gray);
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
+                btnLeftList.setTextColor(getResources().getColor(R.color.white));
                 setChatListAdapter(new ArrayList<ChatModel>(),0);
                 getChatData();
             }

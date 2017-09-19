@@ -71,7 +71,7 @@ public class ForwardActivity extends ParentActivity {
             @Override
             public void run() {
 
-                listDoctors = ApiHelper.getChatDoctor(ForwardActivity.this, String.valueOf(PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, 0)));
+                listDoctors = ApiHelper.getChatAll(ForwardActivity.this, String.valueOf(PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, 0)));
                 ForwardActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

@@ -112,7 +112,7 @@ public class SettingFragment extends Fragment {
 //            List<ChooseModel> clinicsList = userInfo.get
 
         ArrayList<UserInfo> allClinics= new ArrayList<>();
-        allClinics.addAll(user.getClinics());
+       // allClinics.addAll(user.getClinics());
         allClinics.addAll(user.getMyClinics());
         if (allClinics.size()> 0) {
                 vLineUnderClinics.setVisibility(View.VISIBLE);

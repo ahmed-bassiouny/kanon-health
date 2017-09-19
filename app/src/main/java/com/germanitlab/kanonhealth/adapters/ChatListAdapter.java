@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.ClinicProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
@@ -88,8 +89,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             final ChatModel chatModel = chatList.get(position);
 
             if (holder.tvDoctorName != null) {
-                if (!TextUtils.isEmpty(chatModel.getFullName()))
+                if ( !TextUtils.isEmpty(chatModel.getFullName())) {
                     holder.tvDoctorName.setText(chatModel.getFullName());
+                } else if (!TextUtils.isEmpty(chatModel.getName())) {
+                    holder.tvDoctorName.setText(chatModel.getName());
+                }
             }
 
             if (holder.tvLastMsg != null) {
@@ -121,15 +125,50 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                 ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + chatModel.getAvatar(), R.drawable.placeholder);
             }
 
-            if (chatModel.getIsSessionOpen() != 1) {
-                holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
-            } else if (chatModel.getUserType() == user.DOCTOR) {
-                holder.imgAvatar.setBorderColor(Color.BLUE);
-            } else if (chatModel.getUserType() == user.CLINIC) {
-                holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
-            } else {
-                holder.imgAvatar.setBorderColor(Color.GREEN);
-            }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(chatModel.getUserType()!=UserInfo.CLINIC)
+                            {
+                                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), chatModel.getUserID(), chatModel.getUserType());
+                                if (result.getStatus() == 1) {
+                                    chatModel.setIsSessionOpen(1);
+                                    chatModel.setRequestID(result.getRequestId());
+                                } else {
+                                    chatModel.setIsSessionOpen(0);
+                                }
+
+                            }else
+                            {
+                                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), chatModel.getId(), UserInfo.CLINIC);
+                                if (result.getStatus() == 1) {
+                                    chatModel.setIsSessionOpen(1);
+                                    chatModel.setRequestID(result.getRequestId());
+                                } else {
+                                    chatModel.setIsSessionOpen(0);
+                                }
+
+                            }
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (chatModel.getIsSessionOpen() != 1) {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#818181"));
+                                    } else if (chatModel.getUserType() == user.DOCTOR) {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#03a9f4"));
+                                    } else if (chatModel.getUserType() == user.CLINIC) {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#FF00ff"));
+                                    } else {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#00ff00"));
+                                    }
+
+                                }
+                            });
+                        }
+                    }).start();
+
+
             if (type != 1) {
                 if (chatModel.getSpecialities() != null && chatModel.getSpecialities().size()>0) {
                     holder.tvSpecialist.setText("");
@@ -195,44 +234,49 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                 //*********** it's comment becuase i am waiting karim finish task
                  if(doctor.getUserType()!=UserInfo.CLINIC)
                 {
-                    final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
+                    final UserInfo temp= ApiHelper.getUserInfo(activity,String.valueOf(doctor.getUserID()));
+                    if(temp!=null) {
+                        final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
 
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (result.getStatus() == 1) {
-                                doctor.setIsSessionOpen(1);
-                                doctor.setRequestID(result.getRequestId());
-                            } else {
-                                doctor.setIsSessionOpen(0);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (result.getStatus() == 1) {
+                                    temp.setIsSessionOpen(1);
+                                    temp.setRequestID(result.getRequestId());
+                                } else {
+                                    temp.setIsSessionOpen(0);
+                                }
+                                Intent intent = new Intent(activity, HttpChatActivity.class);
+                                intent.putExtra("userInfo", temp);
+                                intent.putExtra("doctorID", temp.getUserID());
+                                intent.putExtra("type", temp.getUserType());
+                                activity.startActivity(intent);
                             }
-                            Intent intent = new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("userInfo", doctor);
-                            intent.putExtra("doctorID", doctor.getUserID());
-                            intent.putExtra("type", doctor.getUserType());
-                            activity.startActivity(intent);
-                        }
-                    });
+                        });
+                    }
                 }else
                 {
-                    final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getId(), UserInfo.CLINIC);
-
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (result.getStatus() == 1) {
-                                doctor.setIsSessionOpen(1);
-                                doctor.setRequestID(result.getRequestId());
-                            } else {
-                                doctor.setIsSessionOpen(0);
+                    final UserInfo temp = ApiHelper.postGetClinic( doctor.getId(),activity);
+                    if(temp!=null) {
+                        final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getId(), UserInfo.CLINIC);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (result.getStatus() == 1) {
+                                    temp.setIsSessionOpen(1);
+                                    temp.setRequestID(result.getRequestId());
+                                } else {
+                                    temp.setIsSessionOpen(0);
+                                }
+                                Intent intent = new Intent(activity, HttpChatActivity.class);
+                                intent.putExtra("userInfo", temp);
+                                intent.putExtra("doctorID", temp.getId());
+                                intent.putExtra("type", UserInfo.CLINIC);
+                                activity.startActivity(intent);
                             }
-                            Intent intent = new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("userInfo", doctor);
-                            intent.putExtra("doctorID", doctor.getId());
-                            intent.putExtra("type", UserInfo.CLINIC);
-                            activity.startActivity(intent);
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }).start();

@@ -575,7 +575,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         etMessage.setText("");
         etMessage.setHint(R.string.write_a_message);
 
-            /*if (iamDoctor && doctorID != userID && userInfo.getUserType()==UserInfo.PATIENT && userInfo.getIsSessionOpen() == 0) {
+        /*    if (userMe.getUserType()==UserInfo.DOCTOR  && userInfo.getUserType()==UserInfo.PATIENT && userInfo.getIsSessionOpen() == 0) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -595,8 +595,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         }
                     }
                 }).start();
-            } */
-
+            }
+*/
         //request
     }
 
@@ -832,7 +832,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onStart() {
         super.onStart();
-        if (userID != doctorID) {
+        if (userID != doctorID|| (userID == doctorID&& userType == UserInfo.CLINIC)) {
             chatRunning = true;
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
                     new IntentFilter("MyData"));
@@ -843,7 +843,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onStop() {
         super.onStop();
-        if (userID != doctorID) {
+        if (userID != doctorID || (userID == doctorID&& userType == UserInfo.CLINIC)) {
             chatRunning = false;
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
         }
@@ -857,7 +857,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             if (notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFromID() == doctorID) {
-                    messageRepositry.createOrUpate(message);
+                    //messageRepositry.createOrUpate(message);
                     chatHelper.creatRealMessage(message, -1, messages, chatAdapter, recyclerView);
 
                     messageSeen(message.getMessageID().toString());
@@ -928,7 +928,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     private void checkSessionOpen(final boolean iamDoctor) {
 
-        if (doctorID == userID) {
+        if (doctorID == userID && userInfo.getUserType()!= UserInfo.CLINIC) {
             // i talk with my self in document
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
@@ -1438,7 +1438,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-
             mRecorder.setAudioEncodingBitRate(16);
             mRecorder.setAudioSamplingRate(44100);
             mOutputFile = getOutputFile();

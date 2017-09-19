@@ -348,8 +348,12 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     private void setUserObject() {
         userInfo.setHeight_unit(mHeightUnitEt.getText().toString());
         userInfo.setWeight_unit(mWeightUnitEt.getText().toString());
-        userInfo.setHeight_value(Double.valueOf(mHegithValueEt.getText().toString()));
-        userInfo.setWeight_value(Double.valueOf(mWeightValueEt.getText().toString()));
+        if(!mHegithValueEt.getText().toString().equals("")) {
+            userInfo.setHeight_value(Double.valueOf(mHegithValueEt.getText().toString()));
+        }
+        if(!mWeightValueEt.getText().toString().equals("")) {
+            userInfo.setWeight_value(Double.valueOf(mWeightValueEt.getText().toString()));
+        }
         userInfo.setBlood_type(select_blood_type.getText().toString());
 
         userInfo.setFirstName(etFirstName.getText().toString());
