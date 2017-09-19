@@ -261,7 +261,7 @@ public class ProfileDetails extends ParentActivity implements DialogPickerCallBa
             Toast.makeText(this, getResources().getString(R.string.please_fill_data), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!firstName.trim().equals("") && !lastName.trim().equals("") && !birthDate.trim().equals("") && !title.trim().equals("")) {
+        if (!firstName.trim().equals("") && !lastName.trim().equals("") && !birthDate.trim().equals("")) {
           showProgressBar();
             new Thread(new Runnable() {
                 @Override

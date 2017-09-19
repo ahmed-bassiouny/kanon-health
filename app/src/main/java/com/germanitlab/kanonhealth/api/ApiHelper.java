@@ -420,7 +420,8 @@ public class ApiHelper {
                     jsonString = post(API_MESSAGES_SEND_DOC, messageSendParamaters.toJson());
                 }
             }
-
+            System.out.println(messageSendParamaters.toJson());
+            System.out.println(jsonString);
             Gson gson = new Gson();
             MessageSendResponse messageSendResponse = gson.fromJson(jsonString, MessageSendResponse.class);
             if (messageSendResponse.getStatus()) {

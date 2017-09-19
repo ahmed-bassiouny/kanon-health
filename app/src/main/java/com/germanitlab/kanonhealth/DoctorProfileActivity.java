@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
@@ -137,6 +138,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     String specialityIds = "";
     String langIds = "";
     boolean imageFlag=false;
+    LinearLayout v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +147,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         ButterKnife.bind(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initToolbar();
-        LinearLayout v = (LinearLayout) findViewById(R.id.main);
+        v = (LinearLayout) findViewById(R.id.main);
         v.requestFocus();
         try {
             pickerDialog = new PickerDialog(true);
@@ -194,6 +196,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             case R.id.mi_edit:
                 menu.findItem(R.id.mi_save).setVisible(true);
                 menu.findItem(R.id.mi_edit).setVisible(false);
+                v.clearFocus();
                 tvOnline.setText(userInfo.getTitle());
                 edAddToFavourite.setText(userInfo.getFirstName());
                 tvContact.setText(userInfo.getLastName());
@@ -206,9 +209,13 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 ivLanguagesList.setVisibility(View.VISIBLE);
                 ivSpecialityList.setVisibility(View.VISIBLE);
                 etStreetName.setEnabled(true);
+               etStreetName.setBackgroundResource(R.drawable.borderedittext);
                 etHouseNumber.setEnabled(true);
+                etHouseNumber.setBackgroundResource(R.drawable.borderedittext);
                 etZipCode.setEnabled(true);
+                etZipCode.setBackgroundResource(R.drawable.borderedittext);
                 etProvince.setEnabled(true);
+                etProvince.setBackgroundResource(R.drawable.borderedittext);
                 textViewPhone.setEnabled(true);
                 editImage.setVisibility(View.VISIBLE);
 //                ivMemberList.setVisibility(View.VISIBLE);
@@ -221,9 +228,13 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 ivSpecialityList.setVisibility(View.GONE);
 //                ivMemberList.setVisibility(View.GONE);
                 etStreetName.setEnabled(false);
+                etStreetName.setBackground(null);
                 etHouseNumber.setEnabled(false);
+                etHouseNumber.setBackground(null);
                 etZipCode.setEnabled(false);
+                etZipCode.setBackground(null);
                 etProvince.setEnabled(false);
+                etProvince.setBackground(null);
                 textViewPhone.setEnabled(false);
                 tvOnline.setFocusable(false);
                 edAddToFavourite.setFocusable(false);

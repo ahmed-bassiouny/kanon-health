@@ -832,7 +832,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onStart() {
         super.onStart();
-        if (userID != doctorID) {
+        if (userID != doctorID|| (userID == doctorID&& userType == UserInfo.CLINIC)) {
             chatRunning = true;
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mMessageReceiver),
                     new IntentFilter("MyData"));
@@ -843,7 +843,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onStop() {
         super.onStop();
-        if (userID != doctorID) {
+        if (userID != doctorID || (userID == doctorID&& userType == UserInfo.CLINIC)) {
             chatRunning = false;
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
         }
@@ -1438,7 +1438,6 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-
             mRecorder.setAudioEncodingBitRate(16);
             mRecorder.setAudioSamplingRate(44100);
             mOutputFile = getOutputFile();
