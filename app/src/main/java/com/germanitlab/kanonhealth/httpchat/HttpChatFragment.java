@@ -575,7 +575,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
         etMessage.setText("");
         etMessage.setHint(R.string.write_a_message);
 
-            /*if (iamDoctor && doctorID != userID && userInfo.getUserType()==UserInfo.PATIENT && userInfo.getIsSessionOpen() == 0) {
+        /*    if (userMe.getUserType()==UserInfo.DOCTOR  && userInfo.getUserType()==UserInfo.PATIENT && userInfo.getIsSessionOpen() == 0) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -595,8 +595,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                         }
                     }
                 }).start();
-            } */
-
+            }
+*/
         //request
     }
 
@@ -857,7 +857,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             if (notificationType == 1) {
                 Message message = (Message) intent.getSerializableExtra("extra");
                 if (message.getFromID() == doctorID) {
-                    messageRepositry.createOrUpate(message);
+                    //messageRepositry.createOrUpate(message);
                     chatHelper.creatRealMessage(message, -1, messages, chatAdapter, recyclerView);
 
                     messageSeen(message.getMessageID().toString());

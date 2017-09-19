@@ -121,15 +121,50 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                 ImageHelper.setImage(holder.imgAvatar, ApiHelper.SERVER_IMAGE_URL + chatModel.getAvatar(), R.drawable.placeholder);
             }
 
-            if (chatModel.getIsSessionOpen() != 1) {
-                holder.imgAvatar.setBorderColor(Color.parseColor("#cfcdcd"));
-            } else if (chatModel.getUserType() == user.DOCTOR) {
-                holder.imgAvatar.setBorderColor(Color.BLUE);
-            } else if (chatModel.getUserType() == user.CLINIC) {
-                holder.imgAvatar.setBorderColor(Color.parseColor("#FFC0CB"));
-            } else {
-                holder.imgAvatar.setBorderColor(Color.GREEN);
-            }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(chatModel.getUserType()!=UserInfo.CLINIC)
+                            {
+                                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), chatModel.getUserID(), chatModel.getUserType());
+                                if (result.getStatus() == 1) {
+                                    chatModel.setIsSessionOpen(1);
+                                    chatModel.setRequestID(result.getRequestId());
+                                } else {
+                                    chatModel.setIsSessionOpen(0);
+                                }
+
+                            }else
+                            {
+                                final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), chatModel.getId(), UserInfo.CLINIC);
+                                if (result.getStatus() == 1) {
+                                    chatModel.setIsSessionOpen(1);
+                                    chatModel.setRequestID(result.getRequestId());
+                                } else {
+                                    chatModel.setIsSessionOpen(0);
+                                }
+
+                            }
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (chatModel.getIsSessionOpen() != 1) {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#818181"));
+                                    } else if (chatModel.getUserType() == user.DOCTOR) {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#03a9f4"));
+                                    } else if (chatModel.getUserType() == user.CLINIC) {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#FF00ff"));
+                                    } else {
+                                        holder.imgAvatar.setBorderColor(Color.parseColor("#00ff00"));
+                                    }
+
+                                }
+                            });
+                        }
+                    }).start();
+
+
             if (type != 1) {
                 if (chatModel.getSpecialities() != null && chatModel.getSpecialities().size()>0) {
                     holder.tvSpecialist.setText("");
