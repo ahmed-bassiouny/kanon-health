@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -182,6 +183,20 @@ public class DateHelper {
     }
 
 
+    public static String fromUtcToLocal(String utc){
+        String formattedDate;
+        try {
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat(SERVER_DATETIME_FORMATE);
+            serverDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = serverDateFormat.parse(utc);
+            serverDateFormat.setTimeZone(TimeZone.getDefault());
+            formattedDate = serverDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            formattedDate=utc;
+        }
+        return formattedDate;
+    }
     //endregion
 
 }
