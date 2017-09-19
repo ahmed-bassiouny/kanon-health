@@ -542,6 +542,7 @@
     <string name="cm">cm</string>
     <string name="kilo">kilo</string>
     <string name="bound">bound</string>
+    <string name="no_location">No Location</string>
 
 
 </resources>

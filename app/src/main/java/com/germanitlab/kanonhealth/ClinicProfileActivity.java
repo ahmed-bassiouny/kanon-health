@@ -97,8 +97,8 @@ ClinicProfileActivity extends ParentActivity {
     View view_below_province;
     @BindView(R.id.document_recycleview)
     RecyclerView document_recycleview;
-    @BindView(R.id.tv_location_name)
-    TextView location;
+//    @BindView(R.id.location_no)
+//    TextView location;
     //---------------------
     UserInfo clinic;
     PickerDialog pickerDialog;
@@ -228,7 +228,7 @@ ClinicProfileActivity extends ParentActivity {
                 }
             }
             if (country != null) {
-                imageViewLocation.setImageBitmap(ImageHelper.TrimBitmap(country.getFlag(), ClinicProfileActivity.this));
+                imageViewLocation.setImageResource(country.getFlag());
                 Locale l = new Locale("", country.getCode());
                 if (l != null) {
                     tvLocation.setText(l.getDisplayCountry(Locale.getDefault()));
@@ -277,10 +277,19 @@ ClinicProfileActivity extends ParentActivity {
         if(!clinic.getLocationLat().equals("") && !clinic.getLocationLong().equals("")){
             String URL = "http://maps.google.com/maps/api/staticmap?center=" + clinic.getLocationLat() + "," + clinic.getLocationLong()+ "&zoom=15&size=200x200&sensor=false";
             ImageHelper.setImage(imageViewMap, URL, -1);
+            imageViewMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ClinicProfileActivity.this , MapsActivity.class);
+                    intent.putExtra("lat",clinic.getLocationLat());
+                    intent.putExtra("long",clinic.getLocationLong());
+                    startActivity(intent);
+                }
+            });
         }else{
             imageViewMap.setVisibility(View.GONE);
             view_below_province.setVisibility(View.GONE);
-            location.setVisibility(View.GONE);
+//            location.setVisibility(View.GONE);
         }
         setDocuments();
     }
