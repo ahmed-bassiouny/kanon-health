@@ -70,6 +70,8 @@ public class UserInfo extends ParentModel {
     public static final String  KEY_HEIGHT_VALUE = "height";
     public static final String KEY_HEIGHT_UNIT = "height_unit";
     public static final String KEY_BLOOD_TYPE="blood_type";
+    public static final String KEY_LAT = "latitude";
+    public static final String KEY_LONG = "longitude";
 
 
     // endregion
@@ -228,8 +230,13 @@ public class UserInfo extends ParentModel {
 
 
     // i need key name from backend
-    private Double locationLat;
-    private Double locationLong;
+    @SerializedName(KEY_LAT)
+    @DatabaseField()
+    private String locationLat;
+
+    @SerializedName(KEY_LONG)
+    @DatabaseField()
+    private String locationLong;
 
 
     // endregion
@@ -675,23 +682,23 @@ public class UserInfo extends ParentModel {
         this.fax = fax;
     }
 
-    public Double getLocationLat() {
+    public String getLocationLat() {
         if(locationLat==null)
-            locationLat=0.0;
+            locationLat="";
         return locationLat;
     }
 
-    public void setLocationLat(Double locationLat) {
+    public void setLocationLat(String  locationLat) {
         this.locationLat = locationLat;
     }
 
-    public Double getLocationLong() {
+    public String getLocationLong() {
         if(locationLong==null)
-            locationLong=0.0;
+            locationLong="";
         return locationLong;
     }
 
-    public void setLocationLong(Double locationLong) {
+    public void setLocationLong(String locationLong) {
         this.locationLong = locationLong;
     }
 
