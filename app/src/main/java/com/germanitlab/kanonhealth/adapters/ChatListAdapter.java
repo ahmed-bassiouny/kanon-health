@@ -88,8 +88,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             final ChatModel chatModel = chatList.get(position);
 
             if (holder.tvDoctorName != null) {
-                if (!TextUtils.isEmpty(chatModel.getFullName()))
+                if ( !TextUtils.isEmpty(chatModel.getFullName())) {
                     holder.tvDoctorName.setText(chatModel.getFullName());
+                } else if (!TextUtils.isEmpty(chatModel.getName())) {
+                    holder.tvDoctorName.setText(chatModel.getName());
+                }
             }
 
             if (holder.tvLastMsg != null) {
