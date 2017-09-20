@@ -385,6 +385,13 @@
                 android:layout_below="@+id/view_below_province"
                 android:id="@+id/img_map"/>
 
+            <!--<TextView-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_below="@+id/view_below_province"-->
+                <!--android:id="@+id/location_no"-->
+                <!--android:visibility="gone"-->
+                <!--android:text="@string/no_location"/>-->
 
             <View
                 android:layout_width="match_parent"
