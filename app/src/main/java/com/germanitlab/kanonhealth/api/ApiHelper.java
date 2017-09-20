@@ -124,6 +124,7 @@ public class ApiHelper {
     private static final String API_MESSAGES_CHAT_CLINIC = "messages/chat/clinic";
     private static final String API_MESSAGES_CHAT_DOCTOR = "messages/chat/doctor";
     private static final String API_MESSAGES_CHAT_USER = "messages/chat/users";
+    private static final String API_MESSAGES_CHAT_ALL = "messages/chat/all";
 
     /***************  Request with Doctor   ******************/
     // region
@@ -867,6 +868,8 @@ public class ApiHelper {
                 url = API_MESSAGES_CHAT_DOCTOR;
             } else if (chatType == UserInfoParameter.CHATANOTHER) {
                 url = API_MESSAGES_CHAT_ANOTHER;
+            } else if (chatType ==UserInfoParameter.CHATALL){
+                url=API_MESSAGES_CHAT_ALL;
             } else {
                 return messageArrayList;
             }
@@ -897,6 +900,9 @@ public class ApiHelper {
 
     public static ArrayList<ChatModel> getChatAnother(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
+    }
+    public static ArrayList<ChatModel> getChatAll(Context context, String userID) {
+        return getChatMessages(context, userID, UserInfoParameter.CHATALL);
     }
 
     // Add or Update Push MyNotification Token

@@ -61,7 +61,11 @@ public class ForwardAdapter extends RecyclerView.Adapter<ForwardAdapter.ItemView
 
             final UserInfo doctor = doctorContactsList.get(position);
 
-            holder.tvDoctorName.setText(doctor.getFullName());
+            if(doctor.getUserType()==UserInfo.CLINIC){
+                holder.tvDoctorName.setText(doctor.getName());
+            }else {
+                holder.tvDoctorName.setText(doctor.getFullName());
+            }
             holder.tvSpecialist.setVisibility(View.GONE);
 
 
