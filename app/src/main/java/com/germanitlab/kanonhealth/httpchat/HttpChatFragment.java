@@ -928,7 +928,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     private void checkSessionOpen(final boolean iamDoctor) {
 
-        if (doctorID == userID && userInfo.getUserType()!= UserInfo.CLINIC) {
+        if (doctorID == userID && userType!= UserInfo.CLINIC) {
             // i talk with my self in document
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
@@ -963,7 +963,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-        if ((doctorID == 1&&userInfo.getUserType()!=UserInfo.CLINIC) || userInfo.getIsSessionOpen() == 0) {
+        if ((doctorID == 1&&userType!=UserInfo.CLINIC) || userInfo.getIsSessionOpen() == 0) {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
         } else {
