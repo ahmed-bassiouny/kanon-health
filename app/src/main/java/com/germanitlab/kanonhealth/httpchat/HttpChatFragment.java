@@ -1206,10 +1206,19 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
     @Override
     public void onResume() {
         super.onResume();
-        if (chatAdapter != null)
-            chatAdapter.clearSelected();
         UserInfoRepositry userInfoRepositry = new UserInfoRepositry(getContext());
         userInfoRepositry.getDoctor(doctorID);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            setData();
+        }else {
+            if(documentChatAdapter!=null)
+                documentChatAdapter.clearSelected();
+        }
     }
 
     @OnClick(R.id.img_back)

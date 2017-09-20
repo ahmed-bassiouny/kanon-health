@@ -1028,15 +1028,7 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
     }
 
     public void clearSelected() {
-        if (selectedPositions == null || selectedPositions.size() == 0 || list == null || list.size() == 0)
-            return;
-        for (Integer position : selectedPositions) {
-            documents.get(position);
-            notifyItemChanged(position);
-        }
-        list.clear();
-        selectedPositions.clear();
-        changeToolbar(false);
+        forward.setVisibility(View.INVISIBLE);
     }
 
     private void onclick(Document textMessage, View selected_item, int position) {
