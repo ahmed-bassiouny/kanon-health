@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.AddPractics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.intro.SignupActivity;
@@ -26,6 +27,7 @@ import java.util.List;
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHolder> {
     List<Country> countryList;
     Activity activity;
+    int from;
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,9 +53,10 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
 
     }
 
-    public CountryAdapter(List<Country> countryList, Activity activity) {
+    public CountryAdapter(List<Country> countryList, Activity activity, int from) {
         this.countryList = countryList;
         this.activity = activity;
+        this.from=from;
     }
 
     @Override
@@ -73,11 +76,20 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(view.getContext(), SignupActivity.class);
-                    intent.putExtra("country", country.getText().toString());
-                    intent.putExtra("codeC", code.getText().toString());
-                    activity.setResult(Activity.RESULT_OK,intent);
-                    activity.finish();
+                    if(from==1) {
+                        Intent intent = new Intent(view.getContext(), SignupActivity.class);
+                        intent.putExtra("country", country.getText().toString());
+                        intent.putExtra("codeC", code.getText().toString());
+                        activity.setResult(Activity.RESULT_OK, intent);
+                        activity.finish();
+                    }else
+                    {
+                        Intent intent = new Intent(view.getContext(), AddPractics.class);
+                        intent.putExtra("country", country.getText().toString());
+                        intent.putExtra("codeC", code.getText().toString());
+                        activity.setResult(Activity.RESULT_OK, intent);
+                        activity.finish();
+                    }
                 }
             });
         }

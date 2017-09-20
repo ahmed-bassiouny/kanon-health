@@ -1,7 +1,9 @@
 package com.germanitlab.kanonhealth;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,6 +45,7 @@ import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
 import com.germanitlab.kanonhealth.helpers.Util;
+import com.germanitlab.kanonhealth.initialProfile.CountryActivty;
 import com.germanitlab.kanonhealth.initialProfile.DialogPickerCallBacks;
 import com.germanitlab.kanonhealth.initialProfile.PickerDialog;
 import com.germanitlab.kanonhealth.models.user.Info;
@@ -55,6 +59,7 @@ import com.nex3z.flowlayout.FlowLayout;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +82,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
     @BindView(R.id.ed_province)
     EditText etProvince;
     @BindView(R.id.ed_country)
-    EditText etCountry;
+    TextView etCountry;
     @BindView(R.id.ed_name)
     EditText etName;
     @BindView(R.id.fl_language)
@@ -94,6 +99,9 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
     CircleImageView civEditImage;
     @BindView(R.id.edit_time_table)
     ImageView ivEditTimeTable;
+
+    @BindView(R.id.img_location)
+    CircleImageView imgLocation;
 
     // Time table
     @BindView(R.id.no_time)
@@ -130,6 +138,8 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
     String langIds = "";
     String doctorIds = "";
     File file;
+    final int REQUEST_CODE = 10;
+    String code="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +152,13 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
             user = new Gson().fromJson(PrefHelper.get(getBaseContext(), PrefHelper.KEY_USER_KEY, ""), UserInfo.class);
         } catch (Exception e) {
         }
-
+        etCountry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), CountryActivty.class);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
         clinic = new UserInfo();
         clinic.setOpenType(4);
         WorkingHours workingHours = new WorkingHours();
@@ -172,6 +188,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
         }
     }
 
+
     private void bindData() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(R.string.waiting_text);
@@ -197,7 +214,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                             etZipCode.setText(clinic.getZipCode());
                             etProvince.setText(clinic.getProvidence());
                             etCity.setText(clinic.getCity());
-                            etCountry.setText(clinic.getCountry());
+                             setCountryImage(clinic.getCountry(),1);
                             etTelephone.setText(clinic.getPhone());
                             setSpecialities();
                             setLanguages();
@@ -275,7 +292,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext(), clinic.getAvatar(),clinic.getTimeTable());
+                    ClinicEdit result = ApiHelper.postEditClinic(Integer.valueOf(practics_id), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), code, etPhone.getText().toString(), doctorIds, String.valueOf(clinic.getOpenType()), langIds, file, getApplicationContext(), clinic.getAvatar(),clinic.getTimeTable());
 
                     if (result != null) {
                             runOnUiThread(new Runnable() {
@@ -308,7 +325,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(), etCountry.getText().toString(), etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, clinic.getTimeTable(),getApplicationContext());
+                    ClinicEdit result = ApiHelper.postAddClinic(user.getUserID(), etName.getText().toString(), specialityIds, etStreetName.getText().toString(), etHouseNumber.getText().toString(), etZipCode.getText().toString(), etCity.getText().toString(), etProvince.getText().toString(),code, etPhone.getText().toString(), doctorIds, String.valueOf(AddPractics.this.clinic.getOpenType()), langIds, file, clinic.getTimeTable(),getApplicationContext());
                     if (result != null) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -506,6 +523,13 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                     case Constants.HOURS_TYPE_CODE:
                         clinic.setOpenType(data.getIntExtra("type", 4));
                         break;
+
+                    case REQUEST_CODE:
+                        code = data.getStringExtra("codeC");
+                        etCountry.setText(data.getStringExtra("country"));
+                        setCountryImage(code,0);
+                        break;
+
                 }
 //            } else if (requestCode == PLACE_PICKER_REQUEST) {
 //                if (resultCode == RESULT_OK) {
@@ -652,6 +676,21 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
             }
         }
 
+    }
+    private void setCountryImage( String countryDail, int type)
+    {
+        if (!TextUtils.isEmpty(countryDail)) {
+            Country country = null;
+            for (Country c : Country.getAllCountries()) {
+                if (c.getDialCode().equals(countryDail)) {
+                    country = c;
+                }
+            }
+            if (country != null&& type==1) {
+                imgLocation.setImageBitmap(ImageHelper.TrimBitmap(country.getFlag(),AddPractics.this));
+                etCountry.setText(country.getName());
+            }
+        }
     }
 
     private void setMemberDoctors() {

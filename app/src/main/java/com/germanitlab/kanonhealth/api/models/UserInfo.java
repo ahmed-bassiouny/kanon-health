@@ -667,6 +667,12 @@ public class UserInfo extends ParentModel {
     }
 
     public String getCountry() {
+
+        if(!country.contains("+"))
+        {
+            String plus="+";
+            country=plus+country;
+        }
         return country;
     }
 

@@ -17,8 +17,8 @@ public class DatabaseManager {
         if (databaseHelper == null) {
             databaseHelper =
                     OpenHelperManager.getHelper(context, DatabaseHelper.class);
+            databaseHelper.setWriteAheadLoggingEnabled(true);
         }
-        databaseHelper.setWriteAheadLoggingEnabled(true);
         return databaseHelper;
     }
 

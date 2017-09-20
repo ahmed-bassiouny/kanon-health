@@ -39,10 +39,9 @@ public class CountryActivty extends AppCompatActivity {
             search_bar = (EditText) findViewById(R.id.search_bar);
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
             noCountryData=(TextView) findViewById(R.id.no_country_data) ;
-
             sortList();
-            mAdapter = new CountryAdapter(Country.getAllCountries(), this);
-
+            getIntent().getIntExtra("from",0);
+            mAdapter = new CountryAdapter(Country.getAllCountries(), this,getIntent().getIntExtra("from",0));
             noCountryData.setVisibility(View.GONE);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
@@ -93,10 +92,10 @@ public class CountryActivty extends AppCompatActivity {
 
                     if(s.toString().equals(""))
                     {
-                        mAdapter = new CountryAdapter(Country.getAllCountries(), CountryActivty.this);
+                        mAdapter = new CountryAdapter(Country.getAllCountries(), CountryActivty.this,getIntent().getIntExtra("from",0));
                         noCountryData.setVisibility(View.GONE);
                     }else {
-                        mAdapter = new CountryAdapter(search, CountryActivty.this);
+                        mAdapter = new CountryAdapter(search, CountryActivty.this,getIntent().getIntExtra("from",0));
                     }
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();

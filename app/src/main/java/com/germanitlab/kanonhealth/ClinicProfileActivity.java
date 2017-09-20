@@ -280,7 +280,7 @@ ClinicProfileActivity extends ParentActivity {
         }else{
             imageViewMap.setVisibility(View.GONE);
             view_below_province.setVisibility(View.GONE);
-            location.setVisibility(View.GONE);
+            //location.setVisibility(View.GONE);
         }
         setDocuments();
     }

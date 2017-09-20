@@ -208,6 +208,7 @@ public class SignupActivity extends ParentActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), CountryActivty.class);
+                intent.putExtra("from",1);
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });

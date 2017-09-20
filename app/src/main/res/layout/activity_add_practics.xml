@@ -288,10 +288,11 @@
                                 android:layout_marginStart="5dp"
                                 android:background="@drawable/borderedittext"
                                 android:imeOptions="actionNext"
-                                android:inputType="textPersonName"
+                                android:inputType="phone"
                                 android:maxLines="1"
                                 android:nextFocusForward="@+id/ed_house_number"
                                 android:padding="5dp" />
+
                         </TableRow>
 
                         <TableRow
@@ -400,8 +401,13 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/country"
                                 android:textColor="@color/black" />
-
-                            <EditText
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/img_location"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginStart="@dimen/size_10dp"
+                                />
+                            <TextView
                                 android:id="@+id/ed_country"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -410,8 +416,12 @@
                                 android:imeOptions="actionNext"
                                 android:inputType="textPersonName"
                                 android:maxLines="1"
+                                android:hint="select country"
+                                android:gravity="center"
+                                android:spinnerMode="dropdown"
                                 android:nextFocusForward="@+id/et_telephone"
                                 android:padding="5dp" />
+
                         </TableRow>
                     </LinearLayout>
 
