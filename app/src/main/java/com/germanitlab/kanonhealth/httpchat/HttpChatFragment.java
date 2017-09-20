@@ -928,7 +928,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
 
     private void checkSessionOpen(final boolean iamDoctor) {
 
-        if (doctorID == userID) {
+        if (doctorID == userID && userInfo.getUserType()!= UserInfo.CLINIC) {
             // i talk with my self in document
             mHoldingButtonLayout.setVisibility(View.VISIBLE);
             open_chat_session.setVisibility(View.GONE);
