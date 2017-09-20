@@ -215,6 +215,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                             etProvince.setText(clinic.getProvidence());
                             etCity.setText(clinic.getCity());
                              setCountryImage(clinic.getCountry(),1);
+                            code=clinic.getCountry();
                             etTelephone.setText(clinic.getPhone());
                             setSpecialities();
                             setLanguages();
@@ -686,9 +687,11 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                     country = c;
                 }
             }
-            if (country != null&& type==1) {
+            if (country != null) {
                 imgLocation.setImageBitmap(ImageHelper.TrimBitmap(country.getFlag(),AddPractics.this));
-                etCountry.setText(country.getName());
+                if(type==1) {
+                    etCountry.setText(country.getName());
+                }
             }
         }
     }
