@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.germanitlab.kanonhealth.ClinicProfileActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.ChatModel;
@@ -233,44 +234,49 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
                 //*********** it's comment becuase i am waiting karim finish task
                  if(doctor.getUserType()!=UserInfo.CLINIC)
                 {
-                    final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
+                    final UserInfo temp= ApiHelper.getUserInfo(activity,String.valueOf(doctor.getUserID()));
+                    if(temp!=null) {
+                        final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getUserID(), doctor.getUserType());
 
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (result.getStatus() == 1) {
-                                doctor.setIsSessionOpen(1);
-                                doctor.setRequestID(result.getRequestId());
-                            } else {
-                                doctor.setIsSessionOpen(0);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (result.getStatus() == 1) {
+                                    temp.setIsSessionOpen(1);
+                                    temp.setRequestID(result.getRequestId());
+                                } else {
+                                    temp.setIsSessionOpen(0);
+                                }
+                                Intent intent = new Intent(activity, HttpChatActivity.class);
+                                intent.putExtra("userInfo", temp);
+                                intent.putExtra("doctorID", temp.getUserID());
+                                intent.putExtra("type", temp.getUserType());
+                                activity.startActivity(intent);
                             }
-                            Intent intent = new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("userInfo", doctor);
-                            intent.putExtra("doctorID", doctor.getUserID());
-                            intent.putExtra("type", doctor.getUserType());
-                            activity.startActivity(intent);
-                        }
-                    });
+                        });
+                    }
                 }else
                 {
-                    final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getId(), UserInfo.CLINIC);
-
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (result.getStatus() == 1) {
-                                doctor.setIsSessionOpen(1);
-                                doctor.setRequestID(result.getRequestId());
-                            } else {
-                                doctor.setIsSessionOpen(0);
+                    final UserInfo temp = ApiHelper.postGetClinic( doctor.getId(),activity);
+                    if(temp!=null) {
+                        final IsOpenResponse result = ApiHelper.getIsOpen(PrefHelper.get(activity, PrefHelper.KEY_USER_ID, -1), doctor.getId(), UserInfo.CLINIC);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (result.getStatus() == 1) {
+                                    temp.setIsSessionOpen(1);
+                                    temp.setRequestID(result.getRequestId());
+                                } else {
+                                    temp.setIsSessionOpen(0);
+                                }
+                                Intent intent = new Intent(activity, HttpChatActivity.class);
+                                intent.putExtra("userInfo", temp);
+                                intent.putExtra("doctorID", temp.getId());
+                                intent.putExtra("type", UserInfo.CLINIC);
+                                activity.startActivity(intent);
                             }
-                            Intent intent = new Intent(activity, HttpChatActivity.class);
-                            intent.putExtra("userInfo", doctor);
-                            intent.putExtra("doctorID", doctor.getId());
-                            intent.putExtra("type", UserInfo.CLINIC);
-                            activity.startActivity(intent);
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }).start();
