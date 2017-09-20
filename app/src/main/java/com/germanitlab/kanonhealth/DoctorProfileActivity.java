@@ -615,7 +615,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     private void setClinics() {
         ArrayList<UserInfo> allClinics = new ArrayList<>();
         allClinics.addAll(userInfo.getClinics());
-        allClinics.addAll(userInfo.getMyClinics());
+       // allClinics.addAll(userInfo.getMyClinics());
         if (allClinics.size() > 0) {
             RecyclerView recyclerVie;
             clinicListAdapter = new ClinicListAdapter(allClinics, this);
