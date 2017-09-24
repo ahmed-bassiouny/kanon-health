@@ -640,7 +640,6 @@ public class ApiHelper {
             editDoctorParamater.setStreetName(userInfo.getStreetName());
             editDoctorParamater.setZipCode(userInfo.getZipCode());
             editDoctorParamater.setCountryCode(userInfo.getCountry_code());
-            editDoctorParamater.setPhone(userInfo.getPhone());
             editDoctorParamater.setSpeciality(specialityIds);
             editDoctorParamater.setLangSub(langIds);
 
@@ -675,7 +674,6 @@ public class ApiHelper {
             editDoctorParamater.setLastName(userInfo.getLastName());
             editDoctorParamater.setTitle(userInfo.getTitle());
             editDoctorParamater.setCountryCode(userInfo.getCountry_code());
-            editDoctorParamater.setPhone(userInfo.getPhone());
             editDoctorParamater.setGender(userInfo.getGender());
             editDoctorParamater.setBirthday(userInfo.getBirthday());
             editDoctorParamater.setProvidence(userInfo.getProvidence());

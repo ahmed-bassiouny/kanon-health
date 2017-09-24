@@ -9,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
 public class EditDoctorParameter extends UserAddParameter {
     public static final String PARAMETER_EMAIL = "email";
     public static final String PARAMETER_COUNTRY_CODE = "country_code";
-    public static final String PARAMETER_PHONE = "phone";
     public static final String KEY_SPECIALITY = "specialities";
     public static final String KEY_LANG_SUB = "languages";
     @SerializedName(KEY_SPECIALITY)
@@ -31,8 +30,6 @@ public class EditDoctorParameter extends UserAddParameter {
     }
     @SerializedName(PARAMETER_COUNTRY_CODE)
     private String countryCode;
-    @SerializedName(PARAMETER_PHONE)
-    private String phone;
 
     public String getCountryCode() {
         return countryCode;
@@ -42,13 +39,6 @@ public class EditDoctorParameter extends UserAddParameter {
         this.countryCode = countryCode;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getSpeciality() {
         return speciality;
