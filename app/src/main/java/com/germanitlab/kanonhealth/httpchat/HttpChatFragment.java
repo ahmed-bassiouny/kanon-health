@@ -81,6 +81,7 @@ import com.germanitlab.kanonhealth.ormLite.HttpMessageRepositry;
 import com.germanitlab.kanonhealth.ormLite.UserInfoRepositry;
 import com.germanitlab.kanonhealth.payment.PaymentActivity;
 import com.germanitlab.kanonhealth.profile.ImageFilePath;
+import com.germanitlab.kanonhealth.profile.ProfileActivity;
 import com.germanitlab.kanonhealth.settings.CustomerSupportActivity;
 import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
@@ -1238,6 +1239,12 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             intent.putExtra("clinic_data", userInfo);
             getActivity().startActivity(intent);
 
+        }else if (userInfo != null && (userInfo.getUserType() == UserInfo.PATIENT))
+        {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            intent.putExtra("user_data", userInfo);
+            intent.putExtra("fromChat",true);
+            getActivity().startActivity(intent);
         }
     }
 

@@ -17,16 +17,19 @@ import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.DoctorDocumentAdapter;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
+import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.UserInfo;
 import com.germanitlab.kanonhealth.helpers.Helper;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
 import com.germanitlab.kanonhealth.helpers.ParentActivity;
 import com.germanitlab.kanonhealth.helpers.PrefHelper;
+import com.germanitlab.kanonhealth.httpchat.DocumentChatAdapter;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -87,31 +90,46 @@ public class ProfileActivity extends ParentActivity {
     @BindView(R.id.weight_unit)
     TextView mWeightUnitTv;
 
+    @BindView(R.id.tv_my_profile)
+    TextView myProfile;
+
+    @BindView(R.id.document)
+    LinearLayout document;
+
 
 
     private UserInfo userInfoResponse = new UserInfo();
 
-    private QuestionAdapter mAdapter;
-    private DoctorDocumentAdapter mAdapter2;
+   // private QuestionAdapter mAdapter;
+    private DocumentChatAdapter mAdapter;
     LinkedHashMap<String, String> questionAnswer;
 
 //    public static int indexFromIntent=0;
 
-    //    ArrayList<Document> images;
+        ArrayList<Document> images;
     Dialog dialog;
     boolean is_doctor;
-
+    UserInfo client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
-        setContentView(R.layout.fragment_profile);
         ButterKnife.bind(this);
         initTB();
 
-        try {
 
+        try {
+             final Boolean fromChat= getIntent().getBooleanExtra("fromChat",false);
+            if(fromChat)
+            {
+               myProfile.setVisibility(View.GONE);
+                tvEdit.setVisibility(View.GONE);
+                client=  (UserInfo) getIntent().getSerializableExtra("user_data");
+            }else
+            {
+                document.setVisibility(View.GONE);
+            }
 
 //            Intent intent = getIntent();
 //            Boolean from = intent.getBooleanExtra("from", false);
@@ -130,7 +148,13 @@ public class ProfileActivity extends ParentActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserInfo userInfo = ApiHelper.getUserInfo(ProfileActivity.this, String.valueOf(PrefHelper.get(ProfileActivity.this,PrefHelper.KEY_USER_ID,-1)));
+                            UserInfo userInfo;
+                            if(!fromChat)
+                            {
+                                userInfo = ApiHelper.getUserInfo(ProfileActivity.this, String.valueOf(PrefHelper.get(ProfileActivity.this,PrefHelper.KEY_USER_ID,-1)));
+                            }else {
+                                userInfo=client;
+                            }
                             if (userInfo != null) {
                                     Gson gson = new Gson();
                                 PrefHelper.put(ProfileActivity.this,PrefHelper.KEY_USER_KEY,gson.toJson(userInfo));
@@ -141,7 +165,9 @@ public class ProfileActivity extends ParentActivity {
                                             bindData();
                                             linearProfileContent.setVisibility(View.VISIBLE);
                                             tvLoadingError.setVisibility(View.GONE);
-                                            tvEdit.setVisibility(View.VISIBLE);
+                                            if(!fromChat) {
+                                                tvEdit.setVisibility(View.VISIBLE);
+                                            }
                                         }
                                     });
 
@@ -206,15 +232,10 @@ public class ProfileActivity extends ParentActivity {
     }
 
     private void initTB() {
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         assert getSupportActionBar() != null;
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
@@ -269,8 +290,8 @@ public class ProfileActivity extends ParentActivity {
 
 
         if (!is_doctor) {
-            questionAnswer = userInfoResponse.getQuestionsAnswers();
-//            images = userInfoResponse.getDocuments();
+           // questionAnswer = userInfoResponse.getQuestionsAnswers();
+            images = userInfoResponse.getDocuments();
             createAdapter();
         }
 
@@ -278,11 +299,10 @@ public class ProfileActivity extends ParentActivity {
 
 
     public void createAdapter() {
-        mAdapter = new QuestionAdapter(questionAnswer, getApplicationContext());
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new DocumentChatAdapter(images, this,false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
-        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setBackgroundResource(R.color.chatbackground_gray);
     }
 
     @OnClick(R.id.tv_profile_edit)
