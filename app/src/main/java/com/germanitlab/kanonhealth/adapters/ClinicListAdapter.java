@@ -95,10 +95,10 @@ public class ClinicListAdapter extends RecyclerView.Adapter<ClinicListAdapter.It
                 for (Speciality speciality : clinic.getSpecialities()) {
                     holder.linearLayoutSpecialist.addView(ImageHelper.setImageCircleSpecial(speciality.getImage(), activity));
                     holder.tvSpecialist.append(speciality.getTitle());
-
+                    size++;
                     if (size < clinic.getSpecialities().size()) {
                         holder.tvSpecialist.append(", ");
-                        size++;
+
                     }
                 }
 

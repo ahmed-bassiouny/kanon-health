@@ -246,17 +246,18 @@ ClinicProfileActivity extends ParentActivity {
 
         if (clinic.getSupportedLangs() != null) {
             tvLanguages.setText("");
+            flLanguages.removeAllViews();
             int size = 0;
             for (Language supportedLang : clinic.getSupportedLangs()) {
                 String country_code = supportedLang.getLanguageCountryCode();
                 Country country = Country.getCountryByISO(country_code);
                 if (country != null) {
                     flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
-                    tvLanguages.append(supportedLang.getLanguageTitle());
-                    if (clinic.getSupportedLangs().size() > size + 1) {
-                        tvLanguages.append(", ");
-                        size++;
-                    }
+                }
+                tvLanguages.append(supportedLang.getLanguageTitle());
+                if (clinic.getSupportedLangs().size() > size + 1) {
+                    tvLanguages.append(", ");
+                    size++;
                 }
             }
         }

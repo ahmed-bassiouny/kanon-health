@@ -242,7 +242,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
                 editImage.setVisibility(View.GONE);
                 handleNewData();
                 imageFlag=true;
-                bindData();
+               // bindData();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -317,6 +317,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         new Thread(new Runnable() {
             @Override
             public void run() {
+                System.out.println("llllkk"+langIds);
                 boolean result = ApiHelper.editDoctor(DoctorProfileActivity.this, userInfo, avatar,langIds, specialityIds);
                 if (result) {
                     // success
@@ -435,7 +436,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
         if (!TextUtils.isEmpty(countryDail)) {
             Country country = null;
             for (Country c : Country.getAllCountries()) {
-                System.out.println(c.getDialCode());
                 if (c.getDialCode().equals(countryDail)) {
                     country = c;
                 }
@@ -569,7 +569,6 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
 
     private void setSpecialities() {
         if (userInfo.getSpecialities() != null) {
-
             tvSpecilities.setText("");
             specialityIds = "";
             flSpeciliaty.removeAllViews();
@@ -596,19 +595,24 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
             int size = 0;
             for (Language language : userInfo.getSupportedLangs()) {
                 if (!TextUtils.isEmpty(language.getLanguageCountryCode())) {
+                    System.out.println("countrycode" + language.getLanguageCountryCode());
                     Country country = Country.getCountryByISO(language.getLanguageCountryCode());
+                    System.out.println(country);
                     if (country != null) {
                         flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
-                        tvLanguages.append(language.getLanguageTitle());
                     }
+                }
+                    tvLanguages.append(language.getLanguageTitle());
                     langIds = langIds.concat(String.valueOf(language.getLanguageID()));
+                System.out.println("langid"+language.getLanguageID());
                     if (userInfo.getSupportedLangs().size() > size + 1) {
                         langIds = langIds.concat(",");
                         tvLanguages.append(", ");
                         size++;
                     }
-                }
             }
+
+            System.out.println("alll"+langIds);
         }
     }
 
@@ -720,6 +724,7 @@ public class DoctorProfileActivity extends ParentActivity implements DialogPicke
     @Override
     public void returnChoseLanguageList(ArrayList<Language> languageArrayList) {
         userInfo.setSupportedLangs(languageArrayList);
+        System.out.println("kk "+languageArrayList.size());
         setLanguages();
 
     }

@@ -667,6 +667,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                 if (country != null) {
                     flLanguages.addView(ImageHelper.setImageHeart(country.getFlag(), getApplicationContext()));
                 }
+            }
                 tvLanguages.append(language.getLanguageTitle());
                 langIds = langIds.concat(String.valueOf(language.getLanguageID()));
                 if (clinic.getSupportedLangs().size() > size + 1) {
@@ -674,7 +675,7 @@ public class AddPractics extends ParentActivity implements Message, DialogPicker
                     langIds = langIds.concat(",");
                     size++;
                 }
-            }
+
         }
 
     }
