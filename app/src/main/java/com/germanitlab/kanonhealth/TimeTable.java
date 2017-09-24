@@ -622,12 +622,31 @@ public class TimeTable extends AppCompatActivity {
         mTimePicker = new TimePickerDialog(wrapper, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                if (minute < 10)
-                    txt.setText(hourOfDay + ":0" + minute);
+                if (minute < 10) {
+                    if (hourOfDay < 12 && hourOfDay >= 0) {
+                        txt.setText(hourOfDay +":0" + minute+ " AM");
+                    } else {
+                        hourOfDay -= 12;
+                        if (hourOfDay == 0) {
+                            hourOfDay = 12;
+                        }
+                        txt.setText(hourOfDay +":0" + minute+ " PM");
+                    }
+                }
                 else
-                    txt.setText(hourOfDay + ":" + minute);
+                    {
+                        if (hourOfDay < 12 && hourOfDay >= 0) {
+                            txt.setText(hourOfDay +":" + minute+ " AM");
+                        } else {
+                            hourOfDay -= 12;
+                            if (hourOfDay == 0) {
+                                hourOfDay = 12;
+                            }
+                            txt.setText(hourOfDay +":" + minute+ " PM");
+                        }
+                    }
             }
-        }, hour, minute, true);//Yes 24 hour time
+        }, hour, minute, false);//Yes 24 hour time
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
     }
