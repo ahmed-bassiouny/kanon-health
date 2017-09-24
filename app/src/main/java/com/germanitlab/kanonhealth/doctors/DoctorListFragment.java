@@ -122,7 +122,7 @@ public class DoctorListFragment extends Fragment {
 
             //mDoctorRepository = new UserRepository(getActivity());
             userInfoRepositry = new UserInfoRepositry(getActivity());
-            chatModelRepository=new ChatModelRepository(getContext());
+            chatModelRepository = new ChatModelRepository(getContext());
 
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -211,7 +211,7 @@ public class DoctorListFragment extends Fragment {
                         ArrayList<ChatModel> chatModel = ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
                         if (chatModel == null)
                             return;
-                        for(ChatModel item:chatModel) {
+                        for (ChatModel item : chatModel) {
                             item.setUserType(UserInfo.DOCTOR);
                             chatModelRepository.createDoctorOrUser(item);
                         }
@@ -229,7 +229,7 @@ public class DoctorListFragment extends Fragment {
                         ArrayList<ChatModel> chatModel = ApiHelper.getChatUser(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
                         if (chatModel == null)
                             return;
-                        for(ChatModel item:chatModel) {
+                        for (ChatModel item : chatModel) {
                             item.setUserType(UserInfo.PATIENT);
                             chatModelRepository.createDoctorOrUser(item);
                         }
@@ -243,20 +243,18 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(Helper.isNetworkAvailable(getContext())) {
+                    if (Helper.isNetworkAvailable(getContext())) {
                         ArrayList<ChatModel> chatModel = ApiHelper.getChatAnother(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
                         if (chatModel == null)
                             return;
-                        for(ChatModel item:chatModel) {
-                            if(item.getId()>0) {
+                        for (ChatModel item : chatModel) {
+                            if (item.getId() > 0) {
                                 item.setUserType(UserInfo.CLINIC);
                                 chatModelRepository.createClinic(item);
-                            }
-                            else if (item.getUserID()>0) {
+                            } else if (item.getUserID() > 0) {
                                 item.setUserType(UserInfo.DOCTOR);
                                 chatModelRepository.createDoctorOrUser(item);
-                            }
-                            else
+                            } else
                                 return;
                         }
                     }
@@ -269,11 +267,11 @@ public class DoctorListFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(Helper.isNetworkAvailable(getContext())) {
+                    if (Helper.isNetworkAvailable(getContext())) {
                         ArrayList<ChatModel> chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
                         if (chatModel == null)
                             return;
-                        for(ChatModel item:chatModel) {
+                        for (ChatModel item : chatModel) {
                             item.setUserType(UserInfo.CLINIC);
                             chatModelRepository.createClinic(item);
                         }
@@ -433,20 +431,20 @@ public class DoctorListFragment extends Fragment {
             public void run() {
                 if (Helper.isNetworkAvailable(getContext())) {
                     doctorList = ApiHelper.postGetDoctorList(getContext(), user.getUserID().toString());
-                    for (int i=0 ;  i<doctorList.size() ; i++){
-                        if (doctorList.get(i).getUserID()==1){
+                    for (int i = 0; i < doctorList.size(); i++) {
+                        if (doctorList.get(i).getUserID() == 1) {
                             doctorList.remove(i);
 
                         }
                     }
 
                     for (UserInfo userInfo : doctorList) {
-                                userInfoRepositry.createDoctor(userInfo);
+                        userInfoRepositry.createDoctor(userInfo);
                     }
                 } else {
                     doctorList = (ArrayList<UserInfo>) userInfoRepositry.getDoctors();
-                    for (int i=0 ;  i<doctorList.size() ; i++){
-                        if (doctorList.get(i).getUserID()==1){
+                    for (int i = 0; i < doctorList.size(); i++) {
+                        if (doctorList.get(i).getUserID() == 1) {
                             doctorList.remove(i);
                         }
                     }
@@ -527,16 +525,27 @@ public class DoctorListFragment extends Fragment {
 //    }
 
 
-    private void setDoctorAdapter(List<UserInfo> doctorList) {
+    private void setDoctorAdapter(final List<UserInfo> doctorList) {
         if (doctorList != null) {
             final DoctorListAdapter doctorListAdapter = new DoctorListAdapter(doctorList, getActivity());
-            getActivity().runOnUiThread(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.setAdapter(doctorListAdapter);
+                    for (UserInfo item : doctorList) {
+                        if (item.getUserID() == 1) {
+                            doctorList.remove(item);
+                            break;
+                        }
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.setAdapter(doctorListAdapter);
 
+                        }
+                    });
                 }
-            });
+            }).run();
         }
     }
 
