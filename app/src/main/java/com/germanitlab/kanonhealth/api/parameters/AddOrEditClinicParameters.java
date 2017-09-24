@@ -29,6 +29,8 @@ public class AddOrEditClinicParameters extends ParentParameters{
     public static final String PARAMETER_OPEN_TYPE= "open_type";
     public static final String KEY_TIME_TABLE= "working_hours";
     public static final String PARAMETER_DOCTORS= "member_at";
+    public static final String PARAMETER_LAT = "latitude";
+    public static final String PARAMETER_LONG = "longitude";
 
 
 
@@ -79,6 +81,11 @@ public class AddOrEditClinicParameters extends ParentParameters{
     @SerializedName(KEY_TIME_TABLE)
     private String timeTable;
 
+    @SerializedName(PARAMETER_LAT)
+    private String locationLat;
+
+    @SerializedName(PARAMETER_LONG)
+    private String locationLong;
 
     public String getName() {
         return name;
@@ -196,5 +203,21 @@ public class AddOrEditClinicParameters extends ParentParameters{
 
     public void setTimeTable(WorkingHours timeTable) {
         this.timeTable = new Gson().toJson(timeTable);
+    }
+
+    public String getLocationLat() {
+        return locationLat;
+    }
+
+    public void setLocationLat(String locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public String getLocationLong() {
+        return locationLong;
+    }
+
+    public void setLocationLong(String locationLong) {
+        this.locationLong = locationLong;
     }
 }

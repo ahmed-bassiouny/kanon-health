@@ -269,7 +269,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,WorkingHours timeTable, Context context) {
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,WorkingHours timeTable, Context context,String locationLat,String locationLong) {
         ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -287,6 +287,8 @@ public class ApiHelper {
             addClinicParameters.setOpenType(openType);
             addClinicParameters.setSupportedLangs(languages);
             addClinicParameters.setTimeTable(timeTable);
+            addClinicParameters.setLocationLat(locationLat);
+            addClinicParameters.setLocationLong(locationLong);
             String jsonString = "";
             if (file == null) {
                 jsonString = post(API_CLINICS_ADD, addClinicParameters.toJson());
@@ -324,7 +326,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, WorkingHours timeTable) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, WorkingHours timeTable,String locationLat,String locationLong) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -342,6 +344,8 @@ public class ApiHelper {
             EditClinicParameters.setOpenType(openType);
             EditClinicParameters.setSupportedLangs(languages);
             EditClinicParameters.setTimeTable(timeTable);
+            EditClinicParameters.setLocationLong(locationLong);
+            EditClinicParameters.setLocationLat(locationLat);
 
             String jsonString = "";
             if (file == null) {
