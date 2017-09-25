@@ -1077,6 +1077,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                                                                 Intent intent = new Intent(getActivity(), Comment.class);
 //                                                            intent.putExtra("doc_id", String.valueOf(userInfo.getUserID()));
 //                                                            intent.putExtra("request_id", String.valueOf(userInfo.getRequestID()));
+                                                                intent.putExtra("request_id",haveRateResponse.getRequestId());
                                                                 intent.putExtra("user_info", userInfo);
                                                                 startActivity(intent);
                                                                 getActivity().finish();
