@@ -522,5 +522,9 @@
     <string name="hint_type_your_msg">اكتب رسالتك</string>
     <string name="loading">جار التحميل...</string>
 
+    <string name="height">الطول</string>
+    <string name="weight">الوزن</string>
+    <string name="blood_type">فصيلة الدم</string>
+
 
 </resources>
