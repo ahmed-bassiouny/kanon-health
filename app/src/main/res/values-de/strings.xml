@@ -546,5 +546,9 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="Heart_listen">Herz abhorchen</string>
     <string name="laboratory_examination">Laboruntersuchung (Blut, Urin etc.)</string>
     <string name="loading">Loading...</string>
+    <string name="height">Höhe</string>
+    <string name="weight">Gewicht</string>
+    <string name="blood_type">Blutgruppe</string>
+
 
 </resources>
