@@ -26,6 +26,7 @@ import com.germanitlab.kanonhealth.api.parameters.EditClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.EditDoctorParameter;
 import com.germanitlab.kanonhealth.api.parameters.EditPatientParameter;
 import com.germanitlab.kanonhealth.api.parameters.FavouriteParameters;
+import com.germanitlab.kanonhealth.api.parameters.ForwardParameter;
 import com.germanitlab.kanonhealth.api.parameters.GetClinicParameters;
 import com.germanitlab.kanonhealth.api.parameters.GetDocumentListParameters;
 import com.germanitlab.kanonhealth.api.parameters.HaveRateParameters;
@@ -151,8 +152,8 @@ public class ApiHelper {
     private static final String API_TOKEN_REGISTER = "token/add";
     private static final String API_UPLOAD = "upload";
     private static final String API_IS_OPEN_DOC = "flag/is_open";
-    private static final String API_FLAG_HAVE_RATE= "flag/have_rate";
-    private static final String API_FLAG_HAVE_RATE_CLINIC= "flag/have_rate_clinics";
+    private static final String API_FLAG_HAVE_RATE = "flag/have_rate";
+    private static final String API_FLAG_HAVE_RATE_CLINIC = "flag/have_rate_clinics";
     private static final String API_IS_OPEN_CLINIC = "flag/is_open_clinics";
     private static final String API_DOCTOR_WORKING_HOURS = "users/doctor_working_hours";
     private static final String API_CLINIC_WORKING_HOURS = "users/clinic_working_hours";
@@ -192,7 +193,7 @@ public class ApiHelper {
         Log.i(TAG, request.toString());
         Response response = getClient().newCall(request).execute();
         return response.body().string();
-                //ApiUtils.removeNulls(response.body().string());
+        //ApiUtils.removeNulls(response.body().string());
     }
 
     private static String postWithoutServerPath(String url, String parameters) throws IOException {
@@ -204,7 +205,7 @@ public class ApiHelper {
         Log.i(TAG, request.toString());
         Response response = getClient().newCall(request).execute();
         return response.body().string();
-                //ApiUtils.removeNulls(response.body().string());
+        //ApiUtils.removeNulls(response.body().string());
     }
 
 
@@ -224,7 +225,7 @@ public class ApiHelper {
                 .build();
         Response response = getClient().newCall(request).execute();
         return response.body().string();
-                //ApiUtils.removeNulls(response.body().string());
+        //ApiUtils.removeNulls(response.body().string());
     }
 
     //endregion
@@ -269,7 +270,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file,WorkingHours timeTable, Context context,String locationLat,String locationLong) {
+    public static ClinicEdit postAddClinic(Integer userId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, WorkingHours timeTable, Context context, String locationLat, String locationLong) {
         ClinicEdit result = null;
         try {
             AddClinicParameters addClinicParameters = new AddClinicParameters();
@@ -326,7 +327,7 @@ public class ApiHelper {
         }
     }
 
-    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, WorkingHours timeTable,String locationLat,String locationLong) {
+    public static ClinicEdit postEditClinic(Integer clinicId, String name, String speciality, String streetName, String houseNumber, String zipCode, String city, String province, String country, String phone, String memberDoctors, String openType, String languages, File file, Context context, String avatar, WorkingHours timeTable, String locationLat, String locationLong) {
         ClinicEdit result = null;
         try {
             EditClinicParameters EditClinicParameters = new EditClinicParameters();
@@ -355,7 +356,7 @@ public class ApiHelper {
                 jsonString = postWithFile(API_CLINICS_EDIT, EditClinicParameters.toHashMap(), file, EditClinicParameters.PARAMETER_AVATAR);
             }
             System.out.println("edit clinic");
-            System.out.println( EditClinicParameters.toJson());
+            System.out.println(EditClinicParameters.toJson());
             System.out.println(jsonString);
             Gson gson = new Gson();
             EditClinicResponse editClinicResponse = gson.fromJson(jsonString, EditClinicResponse.class);
@@ -372,7 +373,7 @@ public class ApiHelper {
     }
 
     // get all message in chat
-    public static ArrayList<Message> getMessages(int UserID, int toID, Context context,int userType) {
+    public static ArrayList<Message> getMessages(int UserID, int toID, Context context, int userType) {
         ArrayList<Message> result = null;
         try {
             MessagesParameter messagesParamater = new MessagesParameter();
@@ -380,13 +381,13 @@ public class ApiHelper {
             messagesParamater.setToID(toID);
             String jsonString;
             System.out.println(messagesParamater.toJson());
-            if(userType==UserInfo.CLINIC){
+            if (userType == UserInfo.CLINIC) {
                 jsonString = post(API_MESSAGES_LIST_CLINIC, messagesParamater.toJson());
                 System.out.println(messagesParamater.toJson());
-            }else {
+            } else {
                 jsonString = post(API_MESSAGES_LIST_DOC, messagesParamater.toJson());
             }
-            System.out.println("jjjj+"+ jsonString );
+            System.out.println("jjjj+" + jsonString);
             Gson gson = new Gson();
             MessagesResponse messageResponse = gson.fromJson(jsonString, MessagesResponse.class);
 
@@ -727,17 +728,17 @@ public class ApiHelper {
         }
     }
 
-    public static int openSession(Context context, String userID, String doctorID, HashMap<String, String> questionsAnswers,int userType) {
+    public static int openSession(Context context, String userID, String doctorID, HashMap<String, String> questionsAnswers, int userType) {
         int result = -1;
         try {
             OpenSessionParameters openSessionParameters = new OpenSessionParameters();
             openSessionParameters.setUserID(userID);
             openSessionParameters.setQuestionsAnswers(questionsAnswers);
             String jsonString;
-            if(userType==UserInfo.CLINIC){
+            if (userType == UserInfo.CLINIC) {
                 openSessionParameters.setClinicID(doctorID);
                 jsonString = post(API_REQUESTS_OPEN_CLINIC, openSessionParameters.toJson());
-            }else {
+            } else {
                 openSessionParameters.setDoctorID(doctorID);
                 jsonString = post(API_REQUESTS_OPEN_DOC, openSessionParameters.toJson());
             }
@@ -755,15 +756,15 @@ public class ApiHelper {
         }
     }
 
-    public static boolean closeSession(Context context, int requestID,int userType) {
+    public static boolean closeSession(Context context, int requestID, int userType) {
         boolean result = false;
         try {
             CloseSessionParameters closeSessionParameters = new CloseSessionParameters();
             closeSessionParameters.setRequestID(requestID);
             String jsonString;
-            if(userType==UserInfo.CLINIC){
+            if (userType == UserInfo.CLINIC) {
                 jsonString = post(API_REQUESTS_CLOSE_CLINIC, closeSessionParameters.toJson());
-            }else{
+            } else {
                 jsonString = post(API_REQUESTS_CLOSE_DOC, closeSessionParameters.toJson());
             }
 
@@ -779,19 +780,17 @@ public class ApiHelper {
         }
     }
 
-    public static boolean sendForward(Context context, int userID, String doctorID, String messageID, int userType) {
+    public static boolean sendForward(Context context, int userID, HashMap<String, Integer> doctorID, HashMap<String, Integer> messageID) {
         boolean result = false;
         try {
-            MessageOperationParameter messageForwardParameter = new MessageOperationParameter();
-            messageForwardParameter.setUserID(userID);
-            messageForwardParameter.setToID(doctorID);
-            messageForwardParameter.setMessagesID(messageID);
+            ForwardParameter forwardParameter = new ForwardParameter();
+            forwardParameter.setUserID(userID);
+            forwardParameter.setMessagesID(messageID);
+            forwardParameter.setToID(doctorID);
+
             String jsonString;
-            if (userType == UserInfo.CLINIC) {
-                jsonString = post(API_MESSAGES_FORWARD_CLINIC, messageForwardParameter.toJson());
-            } else {
-                jsonString = post(API_MESSAGES_FORWARD_DOC, messageForwardParameter.toJson());
-            }
+            jsonString = post(API_MESSAGES_FORWARD_DOC, forwardParameter.toJson());
+
             Gson gson = new Gson();
             ParentResponse parentResponse = gson.fromJson(jsonString, ParentResponse.class);
             result = parentResponse.getStatus();
@@ -870,8 +869,8 @@ public class ApiHelper {
                 url = API_MESSAGES_CHAT_DOCTOR;
             } else if (chatType == UserInfoParameter.CHATANOTHER) {
                 url = API_MESSAGES_CHAT_ANOTHER;
-            } else if (chatType ==UserInfoParameter.CHATALL){
-                url=API_MESSAGES_CHAT_ALL;
+            } else if (chatType == UserInfoParameter.CHATALL) {
+                url = API_MESSAGES_CHAT_ALL;
             } else {
                 return messageArrayList;
             }
@@ -903,6 +902,7 @@ public class ApiHelper {
     public static ArrayList<ChatModel> getChatAnother(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATANOTHER);
     }
+
     public static ArrayList<ChatModel> getChatAll(Context context, String userID) {
         return getChatMessages(context, userID, UserInfoParameter.CHATALL);
     }
@@ -922,7 +922,7 @@ public class ApiHelper {
         }
     }
 
-    public static RateDoctorResponse rateDoctor(Context context, String userId, String id, String requestId, String comment, String rate,int type) {
+    public static RateDoctorResponse rateDoctor(Context context, String userId, String id, String requestId, String comment, String rate, int type) {
         RateDoctorResponse result = null;
         try {
             RateDoctorParameter rateDoctorParameter = new RateDoctorParameter();
@@ -930,17 +930,16 @@ public class ApiHelper {
             rateDoctorParameter.setRequestId(requestId);
             rateDoctorParameter.setComment(comment);
             rateDoctorParameter.setRate(rate);
-            String jsonString="";
-            if(type==UserInfo.DOCTOR) {
+            String jsonString = "";
+            if (type == UserInfo.DOCTOR) {
                 rateDoctorParameter.setDoctorId(id);
                 jsonString = post(API_DOCTORS_RATE, rateDoctorParameter.toJson());
-            }else
-            {
+            } else {
                 rateDoctorParameter.setClinicId(id);
                 jsonString = post(API_CLINICS_RATE, rateDoctorParameter.toJson());
             }
 
-            System.out.println( rateDoctorParameter.toJson());
+            System.out.println(rateDoctorParameter.toJson());
             Gson gson = new Gson();
             RateDoctorResponse rateDoctorResponse = gson.fromJson(jsonString, RateDoctorResponse.class);
             if (rateDoctorResponse.getStatus()) {
@@ -957,17 +956,15 @@ public class ApiHelper {
     public static Review getReview(String id, Context context, int type) {
         Review review = null;
         try {
-            RateReviewsParameter rateReviewsParameter= new RateReviewsParameter();
-            if(type==UserInfo.DOCTOR)
-            {
-             rateReviewsParameter.setDoctorID(id);
-            }else
-            {
+            RateReviewsParameter rateReviewsParameter = new RateReviewsParameter();
+            if (type == UserInfo.DOCTOR) {
+                rateReviewsParameter.setDoctorID(id);
+            } else {
                 rateReviewsParameter.setClinicID(id);
             }
 
             String jsonString = post(API_RATE_REVIEW, rateReviewsParameter.toJson());
-            System.out.println( rateReviewsParameter.toJson());
+            System.out.println(rateReviewsParameter.toJson());
             Gson gson = new Gson();
             ReviewResponse reviewResponse = gson.fromJson(jsonString, ReviewResponse.class);
             if (reviewResponse.getStatus()) {
@@ -1069,18 +1066,18 @@ public class ApiHelper {
         }
     }
 
-    public static IsOpenResponse getIsOpen(int userId, int docId,int userType) {
+    public static IsOpenResponse getIsOpen(int userId, int docId, int userType) {
         // this method must return status number 0 or 1 and return request id
-       // so return IsOpenResponse
+        // so return IsOpenResponse
         IsOpenResponse isOpenResponse = new IsOpenResponse();
         try {
             IsOpenParameters openParameters = new IsOpenParameters();
             openParameters.setUserId(userId);
             String jsonString;
-            if(userType==UserInfo.CLINIC){
+            if (userType == UserInfo.CLINIC) {
                 openParameters.setClinicId(docId);
                 jsonString = post(API_IS_OPEN_CLINIC, openParameters.toJson());
-            }else {
+            } else {
                 openParameters.setDocId(docId);
                 jsonString = post(API_IS_OPEN_DOC, openParameters.toJson());
             }
@@ -1094,20 +1091,21 @@ public class ApiHelper {
             return isOpenResponse;
         }
     }
+
     public static HaveRateResponse getHaveRate(int userId, int id, int userType) {
         // this method must return status number 0 or 1 and return request id
         // so return IsOpenResponse
         HaveRateResponse haveRateResponse = null;
         try {
-            HaveRateParameters haveRateParameters = new  HaveRateParameters();
+            HaveRateParameters haveRateParameters = new HaveRateParameters();
             haveRateParameters.setUserId(userId);
             String jsonString;
-            if(userType==UserInfo.CLINIC){
+            if (userType == UserInfo.CLINIC) {
                 haveRateParameters.setClinicId(id);
                 jsonString = post(API_FLAG_HAVE_RATE_CLINIC, haveRateParameters.toJson());
-            }else {
+            } else {
                 haveRateParameters.setDocId(id);
-                jsonString = post(API_FLAG_HAVE_RATE,  haveRateParameters.toJson());
+                jsonString = post(API_FLAG_HAVE_RATE, haveRateParameters.toJson());
             }
             System.out.println("nour");
             System.out.println(haveRateParameters.toJson());

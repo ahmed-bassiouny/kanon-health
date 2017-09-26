@@ -30,6 +30,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,7 +43,9 @@ public class ForwardActivity extends ParentActivity {
     private List<ChatModel> chooseList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ForwardAdapter mAdapter;
-    ArrayList<Integer> doctorsForward, messagesForward;
+    HashMap<String, Integer> messagesForward;
+    ArrayList<Integer> doctorsForward;
+    ArrayList<Integer> doctorsForwardType;
     @BindView(R.id.btn_forward_document)
     Button foward_document;
     Boolean search;
@@ -56,7 +59,8 @@ public class ForwardActivity extends ParentActivity {
         setContentView(R.layout.activity_forward);
         util = Util.getInstance(this);
         doctorsForward = new ArrayList<>();
-        messagesForward = new ArrayList<>();
+        doctorsForwardType = new ArrayList<>();
+        messagesForward = new HashMap<String, Integer>();
         ButterKnife.bind(this);
         search = false;
         chat_doctor_id = getIntent().getIntExtra("chat_doctor_id", 0);
@@ -64,7 +68,7 @@ public class ForwardActivity extends ParentActivity {
             finish();
             Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
         }
-        messagesForward = getIntent().getIntegerArrayListExtra("list");
+        messagesForward = (HashMap<String, Integer>) getIntent().getSerializableExtra("list");
         listDoctors = new ArrayList<>();
         showProgressBar();
         new Thread(new Runnable() {
@@ -95,6 +99,7 @@ public class ForwardActivity extends ParentActivity {
             }
         }).start();
     }
+
     @OnTextChanged(value = R.id.edt_doctor_list_filter, callback = OnTextChanged.Callback.TEXT_CHANGED)
     void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         try {
@@ -122,6 +127,7 @@ public class ForwardActivity extends ParentActivity {
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
         }
     }
+
     @OnClick(R.id.imgbtn_forward)
     public void forwardTo(View view) {
         try {
@@ -137,17 +143,25 @@ public class ForwardActivity extends ParentActivity {
     }
 
     private void sendForward() {
+        if (doctorsForward.size() != doctorsForwardType.size()) {
+            Toast.makeText(ForwardActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+            return;
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final boolean result=ApiHelper.sendForward(ForwardActivity.this,PrefHelper.get(ForwardActivity.this,PrefHelper.KEY_USER_ID,0), ListtoString(doctorsForward),ListtoString(messagesForward),UserInfo.DOCTOR);
+                HashMap<String, Integer> doctorWithType = new HashMap<String, Integer>();
+                for(int index = 0 ; index < doctorsForward.size(); index++){
+                    doctorWithType.put(doctorsForward.get(index).toString(),doctorsForwardType.get(index));
+                }
+                final boolean result = ApiHelper.sendForward(ForwardActivity.this, PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, 0), doctorWithType, messagesForward);
                 ForwardActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(result){
+                        if (result) {
                             Toast.makeText(ForwardActivity.this, R.string.message_sent, Toast.LENGTH_SHORT).show();
                             finish();
-                        }else{
+                        } else {
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.message_not_send), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -161,7 +175,10 @@ public class ForwardActivity extends ParentActivity {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, recyclerView, new MyClickListener() {
             @Override
             public void onClick(View view, int position) {
-                addToList(view, position);
+                if(listDoctors.get(position).getUserType()==UserInfo.CLINIC)
+                    addToListClinic(view, position);
+                else
+                    addToListDoctor(view, position);
             }
 
             @Override
@@ -176,26 +193,32 @@ public class ForwardActivity extends ParentActivity {
         }));
     }
 
-    private void addToList(View view, int position) {
+    private void addToListDoctor(View view, int position) {
         try {
             PercentRelativeLayout percentRelativeLayout = (PercentRelativeLayout) view.findViewById(R.id.myrow);
             if (chooseList.size() == 0) {
                 if (!doctorsForward.contains(listDoctors.get(position).getUserID())) {
                     doctorsForward.add(listDoctors.get(position).getUserID());
+                    doctorsForwardType.add(listDoctors.get(position).getUserType());
                     percentRelativeLayout.setBackgroundResource(R.color.gray_black);
                     //listDoctors.get(position).setChosen(true);
                 } else {
-                    doctorsForward.remove(doctorsForward.indexOf(listDoctors.get(position).getUserID()));
+                    int index = doctorsForward.indexOf(listDoctors.get(position).getUserID());
+                    doctorsForward.remove(index);
+                    doctorsForwardType.remove(index);
                     percentRelativeLayout.setBackgroundResource(0);
                     //listDoctors.get(position).setChosen(false);
                 }
             } else {
                 if (!doctorsForward.contains(chooseList.get(position).getUserID())) {
                     doctorsForward.add(chooseList.get(position).getUserID());
+                    doctorsForwardType.add(chooseList.get(position).getUserType());
                     percentRelativeLayout.setBackgroundResource(R.color.gray_black);
                     //chooseList.get(position).setChosen(true);
                 } else {
-                    doctorsForward.remove(doctorsForward.indexOf(chooseList.get(position).getUserID()));
+                    int index = doctorsForward.indexOf(chooseList.get(position).getUserID());
+                    doctorsForward.remove(index);
+                    doctorsForwardType.remove(index);
                     percentRelativeLayout.setBackgroundResource(0);
                     //chooseList.get(position).setChosen(false);
                 }
@@ -207,6 +230,42 @@ public class ForwardActivity extends ParentActivity {
 
     }
 
+    private void addToListClinic(View view, int position) {
+        try {
+            PercentRelativeLayout percentRelativeLayout = (PercentRelativeLayout) view.findViewById(R.id.myrow);
+            if (chooseList.size() == 0) {
+                if (!doctorsForward.contains(listDoctors.get(position).getId())) {
+                    doctorsForward.add(listDoctors.get(position).getId());
+                    doctorsForwardType.add(listDoctors.get(position).getUserType());
+                    percentRelativeLayout.setBackgroundResource(R.color.gray_black);
+                    //listDoctors.get(position).setChosen(true);
+                } else {
+                    int index = doctorsForward.indexOf(listDoctors.get(position).getId());
+                    doctorsForward.remove(index);
+                    doctorsForwardType.remove(index);
+                    percentRelativeLayout.setBackgroundResource(0);
+                    //listDoctors.get(position).setChosen(false);
+                }
+            } else {
+                if (!doctorsForward.contains(chooseList.get(position).getId())) {
+                    doctorsForward.add(chooseList.get(position).getId());
+                    doctorsForwardType.add(chooseList.get(position).getUserType());
+                    percentRelativeLayout.setBackgroundResource(R.color.gray_black);
+                    //chooseList.get(position).setChosen(true);
+                } else {
+                    int index = doctorsForward.indexOf(chooseList.get(position).getId());
+                    doctorsForward.remove(index);
+                    doctorsForwardType.remove(index);
+                    percentRelativeLayout.setBackgroundResource(0);
+                    //chooseList.get(position).setChosen(false);
+                }
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();
+        }
+
+    }
     private void setAdapter(List<ChatModel> DoctorList) {
         try {
             if (DoctorList != null) {
@@ -225,9 +284,9 @@ public class ForwardActivity extends ParentActivity {
     @OnClick(R.id.btn_forward_document)
     public void toDocument(View view) {
         try {
-            doctorsForward.clear();
-            doctorsForward.add(Integer.parseInt(PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, "")));
-            sendForward();
+            //doctorsForward.clear();
+            //doctorsForward.add(Integer.parseInt(PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, "")));
+            //sendForward();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

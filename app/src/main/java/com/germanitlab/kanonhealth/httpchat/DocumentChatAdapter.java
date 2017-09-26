@@ -33,6 +33,7 @@ import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Document;
 import com.germanitlab.kanonhealth.api.models.Message;
+import com.germanitlab.kanonhealth.api.parameters.ForwardParameter;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -48,6 +49,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -86,8 +88,12 @@ public class DocumentChatAdapter extends RecyclerView.Adapter<DocumentChatAdapte
                     if (list.size() == 0)
                         Toast.makeText(activity, R.string.please_select_messages, Toast.LENGTH_LONG).show();
                     else {
+                        HashMap<String,Integer> listOfSelectedDocument = new HashMap<String, Integer>();
+                        for(int item:list){
+                            listOfSelectedDocument.put(String.valueOf(item), ForwardParameter.DOCUMENT);
+                        }
                         Intent intent = new Intent(activity, ForwardActivity.class);
-                        intent.putExtra("list", (ArrayList<Integer>) list);
+                        intent.putExtra("list",listOfSelectedDocument);
                         intent.putExtra("chat_doctor_id", userID);
                         activity.startActivityForResult(intent, FORWARDMSG);
                     }

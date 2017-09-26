@@ -29,6 +29,7 @@ import com.germanitlab.kanonhealth.MapsActivity;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.api.ApiHelper;
 import com.germanitlab.kanonhealth.api.models.Message;
+import com.germanitlab.kanonhealth.api.parameters.ForwardParameter;
 import com.germanitlab.kanonhealth.callback.DownloadListener;
 import com.germanitlab.kanonhealth.forward.ForwardActivity;
 import com.germanitlab.kanonhealth.helpers.ImageHelper;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     private final int FORWARDMSG = 5;
     ImageView forward;
 
-    public ChatAdapter(List<Message> messages, final Activity activity) {
+    public ChatAdapter(List<Message> messages, final Activity activity, final int UserType) {
         this.activity = activity;
         userID = PrefHelper.get(activity,PrefHelper.KEY_USER_ID,-1);
         internetFilesOperations = InternetFilesOperations.getInstance(activity.getApplicationContext());
@@ -79,8 +81,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
                     if (list.size() == 0)
                         Toast.makeText(activity, R.string.please_select_messages, Toast.LENGTH_LONG).show();
                     else {
-                        Intent intent = new Intent(activity, ForwardActivity.class);
+                        /*Intent intent = new Intent(activity, ForwardActivity.class);
                         intent.putExtra("list", (ArrayList<Integer>) list);
+                        intent.putExtra("chat_doctor_id", userID);
+                        activity.startActivityForResult(intent, FORWARDMSG);*/
+                        HashMap<String,Integer> listOfSelectedDocument = new HashMap<String, Integer>();
+                        for(int item:list){
+                            listOfSelectedDocument.put(String.valueOf(item), UserType);
+                        }
+                        Intent intent = new Intent(activity, ForwardActivity.class);
+                        intent.putExtra("list",listOfSelectedDocument);
                         intent.putExtra("chat_doctor_id", userID);
                         activity.startActivityForResult(intent, FORWARDMSG);
                     }

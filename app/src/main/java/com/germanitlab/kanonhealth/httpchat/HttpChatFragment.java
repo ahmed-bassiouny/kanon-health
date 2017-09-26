@@ -539,7 +539,7 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
             recyclerView.setAdapter(documentChatAdapter);
             recyclerView.scrollToPosition(documents.size() - 1);
         } else {
-            chatAdapter = new ChatAdapter(messages, getActivity());
+            chatAdapter = new ChatAdapter(messages, getActivity(),userInfo.getUserType());
             recyclerView.setAdapter(chatAdapter);
             recyclerView.scrollToPosition(messages.size() - 1);
         }
