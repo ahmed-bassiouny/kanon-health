@@ -526,6 +526,31 @@ Canutoa.</string>
 
     <string name="weight">وزن</string>
     <string name="blood_type">گروه خونی</string>
+    <string name="action_enter_number_phone">شماره تلفن را وارد کنید </string>
+    <string name="error_please_enter_number">شماره تلفن را با حداقل 8 رقم و حداکثر 15 رقم وارد کنید</string>
+    <string name="privacy_not_change">با عرض پوزش حریم خصوصی تغییر نمی کند</string>
+    <string name="phone">تلفن</string>
+    <string name="session_already_open">جلسه در حال حاضر باز است</string>
+    <string name="cant_start_session">متأسفم، جلسه هنوز بسته است</string>
+    <string name="cant_close_session">متأسفم هنوز هنوز باز است</string>
+    <string name="add_to_my_clinics">به کلینیک های من اضافه کنید</string>
+    <string name="select_blood_type">نوع خون را انتخاب کنید</string>
+    <string name="unit">واحد را انتخاب کنید</string>
+    <string name="o_negative">O-</string>
+    <string name="o_positive">O+</string>
+    <string name="a_negative">A-</string>
+    <string name="a_positive">A+</string>
+    <string name="b_negative">B-</string>
+    <string name="b_positivie">B+</string>
+    <string name="ab_negative">AB-</string>
+    <string name="ab_positive">AB+</string>
+    <string name="inch">inch</string>
+    <string name="cm">cm</string>
+    <string name="kilo">kilo</string>
+    <string name="pound">pound</string>
+    <string name="no_location">بدون مکان</string>
+
+
 
 
 </resources>

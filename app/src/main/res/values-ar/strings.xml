@@ -127,6 +127,7 @@
     <string name="resend">اعد الارسال.</string>
     <string name="if_you_did_not_receive_an_sms_tab_the_resend_button_below">
 	إذا لم تتلقى علامة تبويب الرسائل القصيرة اضغط علي زر إعادة إرسال أدناه.</string>
+    <string name="action_enter_number_phone"> ادخل رقم الهاتف </string>
 
 
     <!--country row.xml-->
@@ -525,6 +526,29 @@
     <string name="height">الطول</string>
     <string name="weight">الوزن</string>
     <string name="blood_type">فصيلة الدم</string>
+    <string name="error_please_enter_number">ادخل رقم الهاتف بحد ادني 8 ارقام و حد اقصي 15 رقم </string>
+    <string name="privacy_not_change">الخصوصيه لم تتغير</string>
+    <string name="phone">تليفون</string>
+    <string name="session_already_open">الجلسه مفتوحه</string>
+    <string name="cant_start_session">للاسف الجلسه مقفوله</string>
+    <string name="cant_close_session">للاسف الجلسه مفتوحه</string>
+    <string name="add_to_my_clinics">اضف الي عياداتي</string>
+    <string name="select_blood_type">اختر نوع الدم</string>
+    <string name="unit">اختر وحده</string>
+    <string name="o_negative">O-</string>
+    <string name="o_positive">O+</string>
+    <string name="a_negative">A-</string>
+    <string name="a_positive">A+</string>
+    <string name="b_negative">B-</string>
+    <string name="b_positivie">B+</string>
+    <string name="ab_negative">AB-</string>
+    <string name="ab_positive">AB+</string>
+    <string name="inch">inch</string>
+    <string name="cm">cm</string>
+    <string name="kilo">kilo</string>
+    <string name="pound">pound</string>
+    <string name="no_location">لا يوجد موقع</string>
+
 
 
 </resources>

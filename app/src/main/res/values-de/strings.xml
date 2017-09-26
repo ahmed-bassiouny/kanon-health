@@ -549,6 +549,28 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="height">Höhe</string>
     <string name="weight">Gewicht</string>
     <string name="blood_type">Blutgruppe</string>
-
+    <string name="action_enter_number_phone">Telefonnummer eingeben </string>
+    <string name="error_please_enter_number">Geben Sie die Telefonnummer mit mindestens 8 Ziffern und maximal 15 Ziffern ein </string>
+    <string name="privacy_not_change">Sorry Datenschutz nicht ändern</string>
+    <string name="phone">Telefon</string>
+    <string name="session_already_open">Sitzung bereits geöffnet</string>
+    <string name="cant_start_session">Sorry Session noch geschlossen</string>
+    <string name="cant_close_session">Sorry Session Noch offen</string>
+    <string name="add_to_my_clinics">Zu meinen Kliniken hinzufügen</string>
+    <string name="select_blood_type">Wählen Sie Blutart</string>
+    <string name="unit">Einheit auswählen</string>
+    <string name="o_negative">O-</string>
+    <string name="o_positive">O+</string>
+    <string name="a_negative">A-</string>
+    <string name="a_positive">A+</string>
+    <string name="b_negative">B-</string>
+    <string name="b_positivie">B+</string>
+    <string name="ab_negative">AB-</string>
+    <string name="ab_positive">AB+</string>
+    <string name="inch">inch</string>
+    <string name="cm">cm</string>
+    <string name="kilo">kilo</string>
+    <string name="pound">pound</string>
+    <string name="no_location">Keine Lage</string>
 
 </resources>
