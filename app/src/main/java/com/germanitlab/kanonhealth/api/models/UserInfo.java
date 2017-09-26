@@ -72,7 +72,31 @@ public class UserInfo extends ParentModel {
     public static final String KEY_BLOOD_TYPE="blood_type";
     public static final String KEY_LAT = "latitude";
     public static final String KEY_LONG = "longitude";
+    public static final String KEY_PROCEDURE_VALUE ="procedure";
+    public static final String KEY_MEDICAL_FINDINGS_VALUE = "medical_finding";
+    public static final String KEY_DRUGS = "drugs";
+    public static final String KEY_ALLERGIES = "allergies";
+    public static final String KEY_DIAGNOSIS = "diagnosis";
+    public static final String KEY_ANAMNESE = "anamnese";
 
+    private String anamnese;
+    @SerializedName(KEY_ANAMNESE)
+    @DatabaseField()
+    private String diagnosis;
+    @SerializedName(KEY_DIAGNOSIS)
+    @DatabaseField()
+    private String allergies;
+    @SerializedName(KEY_ALLERGIES)
+    @DatabaseField()
+    private String druges;
+    @SerializedName(KEY_DRUGS)
+    @DatabaseField()
+    private String medical;
+    @SerializedName(KEY_MEDICAL_FINDINGS_VALUE)
+    @DatabaseField()
+    private String procedure;
+    @SerializedName(KEY_PROCEDURE_VALUE)
+    @DatabaseField()
 
     // endregion
 
@@ -268,6 +292,30 @@ public class UserInfo extends ParentModel {
 
     public String getBlood_type() {
         return blood_type;
+    }
+
+    public static String getKeyProcedureValue() {
+        return KEY_PROCEDURE_VALUE;
+    }
+
+    public static String getKeyMedicalFindingsValue() {
+        return KEY_MEDICAL_FINDINGS_VALUE;
+    }
+
+    public static String getKeyDrugs() {
+        return KEY_DRUGS;
+    }
+
+    public static String getKeyAllergies() {
+        return KEY_ALLERGIES;
+    }
+
+    public static String getKeyDiagnosis() {
+        return KEY_DIAGNOSIS;
+    }
+
+    public static String getKeyAnamnese() {
+        return KEY_ANAMNESE;
     }
 
     public void setWeight_unit(String weight_unit) {

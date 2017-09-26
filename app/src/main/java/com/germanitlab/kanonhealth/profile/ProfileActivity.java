@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -95,6 +96,25 @@ public class ProfileActivity extends ParentActivity {
 
     @BindView(R.id.document)
     LinearLayout document;
+
+    @BindView(R.id.diagnosis_value)
+    EditText diagnosis_value;
+
+    @BindView(R.id.allergies_value)
+    EditText allergies_value;
+
+    @BindView(R.id.drugs_value)
+    EditText drugs_value;
+
+    @BindView(R.id.medical_findings_value)
+    EditText medical_findings_value;
+
+    @BindView(R.id.procedure_value)
+    EditText procedure_value;
+
+    @BindView(R.id.anamnese_value)
+    EditText anamnese_value;
+
 
 
 
@@ -261,6 +281,18 @@ public class ProfileActivity extends ParentActivity {
         mHeightUnitTv.setText(userInfoResponse.getHeight_unit());
         mHeightValueTv.setText(userInfoResponse.getHeight_value()+"");
         mBloodTypeTv.setText(userInfoResponse.getBlood_type());
+
+        procedure_value.setText(userInfoResponse.getKeyProcedureValue());
+        diagnosis_value.setText(userInfoResponse.getKeyDiagnosis());
+        allergies_value.setText(userInfoResponse.getKeyAllergies());
+        drugs_value.setText(userInfoResponse.getKeyDrugs());
+        medical_findings_value.setText(userInfoResponse.getKeyMedicalFindingsValue());
+        anamnese_value.setText(userInfoResponse.getKeyAnamnese());
+
+
+
+
+
 
         String birthday=userInfoResponse.getBirthday();
         if(birthday.contains("0002"))

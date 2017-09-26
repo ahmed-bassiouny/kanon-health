@@ -543,6 +543,12 @@
     <string name="kilo">kilo</string>
     <string name="pound">pound</string>
     <string name="no_location">No Location</string>
+    <string name="anamnese">Anamnese</string>
+    <string name="diagnosis">Diagnosis</string>
+    <string name="allergies">Allergies / intolerances</string>
+    <string name="drugs">Drugs</string>
+    <string name="medical_findings">Medical findings</string>
+    <string name="procedure">Procedure</string>
 
 
 </resources>
