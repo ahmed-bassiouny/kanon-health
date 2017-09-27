@@ -24,6 +24,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.germanitlab.kanonhealth.R;
 import com.germanitlab.kanonhealth.adapters.ChatListAdapter;
@@ -54,7 +55,7 @@ public class ChatsDoctorFragment extends Fragment {
     private View view;
     private RecyclerView recyclerView;
     private EditText edtFilter;
-    private int type=0;
+    private int type = 0;
     //    private ImageButton imgScan;
 
     /*
@@ -71,7 +72,7 @@ public class ChatsDoctorFragment extends Fragment {
     LinearLayoutManager llm;
 
     private static boolean leftTabVisible = true;
-    ChatModelRepository chatModelRepository;
+    //ChatModelRepository chatModelRepository;
 
     public static ChatsDoctorFragment newInstance() {
         if (chatsDoctorFragment == null)
@@ -93,7 +94,6 @@ public class ChatsDoctorFragment extends Fragment {
             initView();
             gson = new Gson();
             chatModel = new ArrayList<>();
-            chatModelRepository=new ChatModelRepository(getContext());
             //mDoctorRepository = new UserRepository(getContext());
 
         } catch (Exception e) {
@@ -163,44 +163,28 @@ public class ChatsDoctorFragment extends Fragment {
     public void getChatData() {
         if (leftTabVisible) {
             if (user.getUserType() == user.PATIENT) {
-                type=0;
+                type = 0;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if(Helper.isNetworkAvailable(getContext())) {
-                            chatModel = ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
-                            if (chatModel==null || chatModel.size()==0)
-                                return;
-                            for(ChatModel item:chatModel) {
-                                item.setUserType(UserInfo.DOCTOR);
-                                if(item !=null)
-                                    chatModelRepository.createDoctorOrUser(item);
-                            }
-                        }else {
-                            chatModel = (ArrayList<ChatModel>) chatModelRepository.getDoctors();
-                        }
-                        setChatListAdapter(chatModel,type);
+
+                        chatModel = ApiHelper.getChatDoctor(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null || chatModel.size() == 0)
+                            return;
+                        setChatListAdapter(chatModel, type);
                     }
                 }).start();
 
             } else {
-                type=1;
+                type = 1;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if(Helper.isNetworkAvailable(getContext())) {
-                            chatModel = ApiHelper.getChatUser(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
-                            if (chatModel==null || chatModel.size()==0)
-                                return;
-                            for(ChatModel item:chatModel) {
-                                item.setUserType(UserInfo.PATIENT);
-                                if(item !=null)
-                                    chatModelRepository.createDoctorOrUser(item);
-                            }
-                        }else {
-                            chatModel= (ArrayList<ChatModel>) chatModelRepository.getUsers();
-                        }
-                        setChatListAdapter(chatModel,type);
+
+                        chatModel = ApiHelper.getChatUser(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null || chatModel.size() == 0)
+                            return;
+                        setChatListAdapter(chatModel, type);
                     }
                 }).start();
             }
@@ -209,19 +193,11 @@ public class ChatsDoctorFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if(Helper.isNetworkAvailable(getContext())) {
-                            chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
-                            if (chatModel==null || chatModel.size()==0)
-                                return;
-                            for(ChatModel item:chatModel) {
-                                item.setUserType(UserInfo.CLINIC);
-                                if(item !=null)
-                                    chatModelRepository.createClinic(item);
-                            }
-                        }else {
-                            chatModel= (ArrayList<ChatModel>) chatModelRepository.getClinics();
-                        }
-                        setChatListAdapter(chatModel,0);
+
+                        chatModel = ApiHelper.getChatClinic(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null || chatModel.size() == 0)
+                            return;
+                        setChatListAdapter(chatModel, 0);
                     }
                 }).start();
             } else {
@@ -229,28 +205,11 @@ public class ChatsDoctorFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if(Helper.isNetworkAvailable(getContext())) {
-                            chatModel = ApiHelper.getChatAnother(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
-                            if (chatModel==null || chatModel.size()==0)
-                                return;
-                            for(ChatModel item:chatModel) {
-                                if(item.getId()>0) {
-                                    item.setUserType(UserInfo.CLINIC);
-                                    if(item !=null)
-                                        chatModelRepository.createClinic(item);
-                                }
-                                else if (item.getUserID()>0) {
-                                    item.setUserType(UserInfo.DOCTOR);
-                                    if(item !=null)
-                                        chatModelRepository.createDoctorOrUser(item);
-                                }
-                                else
-                                    return;
-                            }
-                        }else {
-                            chatModel= (ArrayList<ChatModel>) chatModelRepository.getAnother();
-                        }
-                        setChatListAdapter(chatModel,0);
+
+                        chatModel = ApiHelper.getChatAnother(getContext(), String.valueOf(PrefHelper.get(getActivity(), PrefHelper.KEY_USER_ID, -1)));
+                        if (chatModel == null || chatModel.size() == 0)
+                            return;
+                        setChatListAdapter(chatModel, 0);
                     }
                 }).start();
             }
@@ -351,9 +310,9 @@ public class ChatsDoctorFragment extends Fragment {
 //    }
 
 
-    private void setChatListAdapter(List<ChatModel> chatModels,int type) {
+    private void setChatListAdapter(List<ChatModel> chatModels, int type) {
         if (chatModels != null) {
-            final ChatListAdapter chatListAdapter = new ChatListAdapter(chatModels, getActivity(),type);
+            final ChatListAdapter chatListAdapter = new ChatListAdapter(chatModels, getActivity(), type);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -420,17 +379,15 @@ public class ChatsDoctorFragment extends Fragment {
                                 fileDoctorResponses.add(chatModel.get(j));
                             }
                         }
-                        if(leftTabVisible) {
+                        if (leftTabVisible) {
                             setChatListAdapter(fileDoctorResponses, type);
-                        }else
-                        {
+                        } else {
                             setChatListAdapter(fileDoctorResponses, 0);
                         }
-                    } else
-                    {
-                        if(leftTabVisible) {
+                    } else {
+                        if (leftTabVisible) {
                             setChatListAdapter(chatModel, type);
-                        }else {
+                        } else {
                             setChatListAdapter(chatModel, 0);
                         }
                     }
@@ -451,7 +408,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.white));
                 btnLeftList.setBackgroundResource(R.color.gray);
                 btnLeftList.setTextColor(getResources().getColor(R.color.black));
-                setChatListAdapter(new ArrayList<ChatModel>(),0);
+                setChatListAdapter(new ArrayList<ChatModel>(), 0);
                 getChatData();
 
             }
@@ -464,7 +421,7 @@ public class ChatsDoctorFragment extends Fragment {
                 btnRightList.setTextColor(getResources().getColor(R.color.black));
                 btnLeftList.setBackgroundResource(R.color.blue);
                 btnLeftList.setTextColor(getResources().getColor(R.color.white));
-                setChatListAdapter(new ArrayList<ChatModel>(),0);
+                setChatListAdapter(new ArrayList<ChatModel>(), 0);
                 getChatData();
             }
         });

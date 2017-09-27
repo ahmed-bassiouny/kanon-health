@@ -59,12 +59,12 @@
                 android:layout_height="30dp"
                 android:layout_alignEnd="@+id/img_edit_avatar"
                 android:src="@drawable/camera"
-                android:layout_margin="10dp"
+                android:layout_margin="15dp"
                 android:visibility="gone" />
             <EditText
                 android:id="@+id/tv_online"
                 android:layout_width="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="7dp"
                 android:background="@drawable/custom_textview_with_border_gray_background"
                 android:ellipsize="end"
                 android:layout_toEndOf="@+id/avatar"
@@ -81,7 +81,7 @@
             <EditText
                 android:id="@+id/ed_add_to_favourite"
                 android:layout_width="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="7dp"
                 android:layout_gravity="center"
                 android:background="@drawable/custom_textview_with_border_gray_background"
                 android:clickable="true"
@@ -101,7 +101,7 @@
             <EditText
                 android:id="@+id/tv_contact"
                 android:layout_width="match_parent"
-                android:layout_margin="5dp"
+                android:layout_margin="7dp"
                 android:layout_below="@+id/ed_add_to_favourite"
                 android:background="@drawable/custom_textview_with_border_gray_background"
                 android:clickable="true"

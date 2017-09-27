@@ -19,7 +19,8 @@
         app:layout_marginEndPercent="3%"
         app:layout_marginStartPercent="3%"
         app:layout_marginTopPercent="4%"
-        app:layout_widthPercent="20%" />
+        app:layout_widthPercent="20%"
+        android:padding="@dimen/size_5dp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/status"

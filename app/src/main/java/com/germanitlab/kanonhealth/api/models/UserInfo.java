@@ -79,24 +79,25 @@ public class UserInfo extends ParentModel {
     public static final String KEY_DIAGNOSIS = "diagnosis";
     public static final String KEY_ANAMNESE = "anamnese";
 
-    private String anamnese;
     @SerializedName(KEY_ANAMNESE)
     @DatabaseField()
-    private String diagnosis;
+    private String anamnese;
     @SerializedName(KEY_DIAGNOSIS)
     @DatabaseField()
-    private String allergies;
+    private String diagnosis;
     @SerializedName(KEY_ALLERGIES)
     @DatabaseField()
-    private String druges;
+    private String allergies;
     @SerializedName(KEY_DRUGS)
     @DatabaseField()
-    private String medical;
+    private String druges;
     @SerializedName(KEY_MEDICAL_FINDINGS_VALUE)
     @DatabaseField()
-    private String procedure;
+    private String medical;
     @SerializedName(KEY_PROCEDURE_VALUE)
     @DatabaseField()
+    private String procedure;
+
 
     // endregion
 
@@ -294,28 +295,28 @@ public class UserInfo extends ParentModel {
         return blood_type;
     }
 
-    public static String getKeyProcedureValue() {
-        return KEY_PROCEDURE_VALUE;
+    public String getKeyProcedureValue() {
+        return procedure;
     }
 
-    public static String getKeyMedicalFindingsValue() {
-        return KEY_MEDICAL_FINDINGS_VALUE;
+    public String getKeyMedicalFindingsValue() {
+        return medical;
     }
 
-    public static String getKeyDrugs() {
-        return KEY_DRUGS;
+    public String getKeyDrugs() {
+        return druges;
     }
 
-    public static String getKeyAllergies() {
-        return KEY_ALLERGIES;
+    public String getKeyAllergies() {
+        return allergies;
     }
 
-    public static String getKeyDiagnosis() {
-        return KEY_DIAGNOSIS;
+    public String getKeyDiagnosis() {
+        return diagnosis;
     }
 
-    public static String getKeyAnamnese() {
-        return KEY_ANAMNESE;
+    public String getKeyAnamnese() {
+        return anamnese;
     }
 
     public void setWeight_unit(String weight_unit) {
