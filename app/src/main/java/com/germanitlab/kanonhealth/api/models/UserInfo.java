@@ -264,6 +264,11 @@ public class UserInfo extends ParentModel {
     private String locationLong;
 
 
+
+
+//    @DatabaseField()
+
+
     // endregion
 
 
@@ -765,4 +770,29 @@ public class UserInfo extends ParentModel {
         this.idLocalDatabase = idLocalDatabase;
     }
     //endregion
+
+
+    public void setAnamnese(String anamnese) {
+        this.anamnese = anamnese;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public void setAllergies(String allergies) {
+        this.allergies = allergies;
+    }
+
+    public void setDruges(String druges) {
+        this.druges = druges;
+    }
+
+    public void setMedical(String medical) {
+        this.medical = medical;
+    }
+
+    public void setProcedure(String procedure) {
+        this.procedure = procedure;
+    }
 }

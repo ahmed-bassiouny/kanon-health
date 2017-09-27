@@ -99,6 +99,25 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
     @BindView(R.id.height_value_et)
     EditText mHegithValueEt;
 
+    @BindView(R.id.anamnese)
+     EditText anamnese;
+
+    @BindView(R.id.diagnosis)
+     EditText diagnosis;
+
+    @BindView(R.id.allergies)
+     EditText allergies;
+
+    @BindView(R.id.drugs)
+     EditText drugs;
+
+    @BindView(R.id.medical)
+     EditText medical;
+
+    @BindView(R.id.procedure)
+     EditText procedure;
+
+
 
 
     UserInfo userInfo;
@@ -189,6 +208,25 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         mHeightUnitEt.setText(userInfo.getHeight_unit());
         if (userInfo.getHeight_value()!=0.0)
             mHegithValueEt.setText(userInfo.getHeight_value()+"");
+        if(!userInfo.getKeyAllergies().equals("")){
+            allergies.setText(userInfo.getKeyAllergies());
+        }
+        if(!userInfo.getKeyAnamnese().equals("")){
+            anamnese.setText(userInfo.getKeyAnamnese());
+        }
+        if (!userInfo.getKeyDiagnosis().equals("")){
+            diagnosis.setText(userInfo.getKeyDiagnosis());
+        }
+        if(!userInfo.getKeyDrugs().equals("")){
+            drugs.setText(userInfo.getKeyDrugs());
+        }
+        if(!userInfo.getKeyMedicalFindingsValue().equals("")){
+            medical.setText(userInfo.getKeyMedicalFindingsValue());
+        }
+        if(!userInfo.getKeyProcedureValue().equals("")){
+            procedure.setText(userInfo.getKeyProcedureValue());
+        }
+
 
 
 
@@ -365,6 +403,14 @@ public class EditUserProfileActivity extends ParentActivity implements Serializa
         userInfo.setZipCode(etZip.getText().toString());
         userInfo.setHouseNumber(etHousePhone.getText().toString());
         userInfo.setProvidence(etProvinz.getText().toString());
+        userInfo.setAnamnese(anamnese.getText().toString());
+        userInfo.setAllergies(allergies.getText().toString());
+        userInfo.setDiagnosis(diagnosis.getText().toString());
+        userInfo.setDruges(drugs.getText().toString());
+        userInfo.setProcedure(procedure.getText().toString());
+        userInfo.setMedical(medical.getText().toString());
+
+
         if(avatar ==null)
             userInfo.setAvatar(userInfo.getAvatar());
         //userInfo.setCountry(etCountry.getText().toString());

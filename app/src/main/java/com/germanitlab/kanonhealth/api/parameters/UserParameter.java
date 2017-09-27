@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.germanitlab.kanonhealth.helpers.DateHelper;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
 
 import java.util.Date;
 
@@ -29,6 +30,29 @@ public  abstract class UserParameter extends ParentParameters {
     public static final String KEY_HEIGHT_UNIT = "height_unit";
     public static final String KEY_HEIGHT_VALUE = "height";
     public static final String KEY_BLOOD = "blood_type";
+    public static final String KEY_PROCEDURE ="procedure";
+    public static final String KEY_MEDICAL_FINDINGS_VALUE = "medical_finding";
+    public static final String KEY_DRUGS = "drugs";
+    public static final String KEY_ALLERGIES = "allergies";
+    public static final String KEY_DIAGNOSIS = "diagnosis";
+    public static final String KEY_ANAMNESE = "anamnese";
+    @SerializedName(KEY_ANAMNESE)
+    private String anamnese;
+
+    @SerializedName(KEY_DIAGNOSIS)
+    private String diagnosis;
+
+    @SerializedName(KEY_ALLERGIES)
+    private String allergies;
+
+    @SerializedName(KEY_DRUGS)
+    private String druges;
+
+    @SerializedName(KEY_MEDICAL_FINDINGS_VALUE)
+    private String medical;
+
+    @SerializedName(KEY_PROCEDURE)
+    private String procedure;
 
 
     @SerializedName(PARAMETER_USER_ID)
@@ -46,6 +70,9 @@ public  abstract class UserParameter extends ParentParameters {
     private Double height_value;
     @SerializedName(KEY_BLOOD)
     private String blood;
+
+
+
 
 
     @SerializedName(PARAMETER_FIRST_NAME)
@@ -208,5 +235,53 @@ public  abstract class UserParameter extends ParentParameters {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public static String getKeyProcedureValue() {
+        return KEY_PROCEDURE;
+    }
+
+    public static String getKeyMedicalFindingsValue() {
+        return KEY_MEDICAL_FINDINGS_VALUE;
+    }
+
+    public static String getKeyDrugs() {
+        return KEY_DRUGS;
+    }
+
+    public static String getKeyAllergies() {
+        return KEY_ALLERGIES;
+    }
+
+    public static String getKeyDiagnosis() {
+        return KEY_DIAGNOSIS;
+    }
+
+    public static String getKeyAnamnese() {
+        return KEY_ANAMNESE;
+    }
+
+    public void setAnamnese(String anamnese) {
+        this.anamnese = anamnese;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public void setAllergies(String allergies) {
+        this.allergies = allergies;
+    }
+
+    public void setDruges(String druges) {
+        this.druges = druges;
+    }
+
+    public void setMedical(String medical) {
+        this.medical = medical;
+    }
+
+    public void setProcedure(String procedure) {
+        this.procedure = procedure;
     }
 }

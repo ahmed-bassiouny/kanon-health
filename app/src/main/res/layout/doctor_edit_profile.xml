@@ -396,7 +396,152 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_anamses" />
+
+                    <EditText
+                        android:id="@+id/anamnese"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/enter_anamnese"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_diagnoses" />
+
+                    <EditText
+                        android:id="@+id/diagnosis"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/enter_diagnosis"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_allergy" />
+
+                    <EditText
+                        android:id="@+id/allergies"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/enter_allergies"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_drug" />
+
+                    <EditText
+                        android:id="@+id/drugs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/enter_drugs"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_medical_finding" />
+
+                    <EditText
+                        android:id="@+id/medical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/enter_medical_findings"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/edit_profile_liner_layout_bottom_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_procdeure_icon" />
+
+                    <EditText
+                        android:id="@+id/procedure"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/enter_procedure"
+                        android:textCursorDrawable="@color/blue"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

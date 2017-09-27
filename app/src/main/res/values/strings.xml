@@ -550,5 +550,12 @@
     <string name="medical_findings">Medical findings</string>
     <string name="procedure">Procedure</string>
 
+    <string name="enter_anamnese">Enter Anamnese</string>
+    <string name="enter_diagnosis">Enter Diagnosis</string>
+    <string name="enter_allergies">Enter Allergies / intolerances</string>
+    <string name="enter_drugs">Enter Drugs</string>
+    <string name="enter_medical_findings">Enter Medical findings</string>
+    <string name="enter_procedure">Enter Procedure</string>
+
 
 </resources>

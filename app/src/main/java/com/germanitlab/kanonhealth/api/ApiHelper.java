@@ -686,6 +686,13 @@ public class ApiHelper {
             editDoctorParamater.setHeight_value(userInfo.getHeight_value());
             editDoctorParamater.setHeight_unit(userInfo.getHeight_unit());
             editDoctorParamater.setBlood(userInfo.getBlood_type());
+            editDoctorParamater.setAllergies(userInfo.getKeyAllergies());
+            editDoctorParamater.setAnamnese(userInfo.getKeyAnamnese());
+            editDoctorParamater.setDiagnosis(userInfo.getKeyDiagnosis());
+            editDoctorParamater.setDruges(userInfo.getKeyDrugs());
+            editDoctorParamater.setMedical(userInfo.getKeyMedicalFindingsValue());
+            editDoctorParamater.setProcedure(userInfo.getKeyProcedureValue());
+
 
             String jsonString;
             if (avatar != null) {

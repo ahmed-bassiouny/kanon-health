@@ -98,22 +98,22 @@ public class ProfileActivity extends ParentActivity {
     LinearLayout document;
 
     @BindView(R.id.diagnosis_value)
-    EditText diagnosis_value;
+    TextView diagnosis_value;
 
     @BindView(R.id.allergies_value)
-    EditText allergies_value;
+    TextView allergies_value;
 
     @BindView(R.id.drugs_value)
-    EditText drugs_value;
+    TextView drugs_value;
 
     @BindView(R.id.medical_findings_value)
-    EditText medical_findings_value;
+    TextView medical_findings_value;
 
     @BindView(R.id.procedure_value)
-    EditText procedure_value;
+    TextView procedure_value;
 
     @BindView(R.id.anamnese_value)
-    EditText anamnese_value;
+    TextView anamnese_value;
 
 
 

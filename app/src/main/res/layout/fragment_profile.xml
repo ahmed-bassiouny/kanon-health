@@ -19,13 +19,13 @@
 
 
             <TextView
+                android:id="@+id/tv_my_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/my_profile"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:id="@+id/tv_my_profile"/>
+                android:textStyle="bold" />
 
 
             <TextView
@@ -89,8 +89,7 @@
                     android:id="@+id/linear_profile_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                   >
+                    android:orientation="vertical">
 
 
                     <LinearLayout
@@ -195,8 +194,8 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -220,8 +219,8 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -245,8 +244,8 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -271,8 +270,8 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -288,8 +287,8 @@
                             android:id="@+id/tv_profile_zip_code"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:digits=""
                             android:layout_weight="2"
+                            android:digits=""
                             android:text="" />
 
                     </TableRow>
@@ -297,8 +296,8 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -323,8 +322,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -356,8 +355,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/voluntary_information"
                         android:padding="10dp"
+                        android:text="@string/voluntary_information"
                         android:textColor="@android:color/background_dark"
                         android:textSize="@dimen/size_15sp"
                         android:textStyle="bold" />
@@ -366,8 +365,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -379,20 +378,19 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <TextView
                             android:id="@+id/anamnese_value"
                             android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
+
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -404,12 +402,10 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <TextView
                             android:id="@+id/diagnosis_value"
                             android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
 
@@ -417,8 +413,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -430,13 +426,11 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <TextView
                             android:id="@+id/allergies_value"
                             android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_gravity="center"
                             android:layout_height="wrap_content"
-                            />
+                            android:layout_gravity="center" />
 
                     </TableRow>
 
@@ -444,8 +438,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -457,12 +451,10 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <TextView
                             android:id="@+id/drugs_value"
                             android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
 
@@ -471,8 +463,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -484,20 +476,20 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <TextView
                             android:id="@+id/medical_findings_value"
                             android:layout_width="match_parent"
-                            android:background="@null"
                             android:layout_height="wrap_content"
-                            />
+                            android:background="@null" />
 
                     </TableRow>
+
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -509,20 +501,19 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <TextView
                             android:id="@+id/procedure_value"
                             android:layout_width="match_parent"
-                            android:background="@null"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
+
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -537,21 +528,17 @@
                         <TextView
                             android:id="@+id/type_blood"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
-
-
-
 
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -564,15 +551,14 @@
 
 
                         <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
                             android:id="@+id/height_value"
-                            />
-                        <TextView
                             android:layout_width="100dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
                             android:id="@+id/height_unit"
-                            />
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
 
@@ -581,8 +567,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/size_5dp"
-                        android:paddingStart="@dimen/size_5dp"
                         android:paddingEnd="@dimen/size_5dp"
+                        android:paddingStart="@dimen/size_5dp"
                         android:paddingTop="@dimen/size_5dp">
 
                         <TextView
@@ -595,35 +581,35 @@
 
 
                         <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
                             android:id="@+id/weight_value"
-                            />
-                        <TextView
                             android:layout_width="100dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
                             android:id="@+id/weight_unit"
-                            />
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content" />
 
                     </TableRow>
 
 
-
                     <LinearLayout
+                        android:id="@+id/document"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/size_15dp"
-                        android:layout_marginStart="@dimen/size_5dp"
                         android:layout_marginEnd="@dimen/size_5dp"
+                        android:layout_marginStart="@dimen/size_5dp"
                         android:layout_marginTop="10dp"
-                        android:orientation="vertical"
-                        android:id="@+id/document">
+                        android:orientation="vertical">
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginBottom="2dp"
                             android:layout_marginTop="5dp"
                             android:background="@color/gray_black" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -641,15 +627,15 @@
                     </LinearLayout>
 
                     <!--<LinearLayout-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_margin="@dimen/size_5dp">-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="@dimen/size_5dp">-->
 
-                        <!--<android.support.v7.widget.RecyclerView-->
-                            <!--android:id="@+id/recycler_view2"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:scrollbars="vertical" />-->
+                    <!--<android.support.v7.widget.RecyclerView-->
+                    <!--android:id="@+id/recycler_view2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:scrollbars="vertical" />-->
                     <!--</LinearLayout>-->
 
                 </LinearLayout>
