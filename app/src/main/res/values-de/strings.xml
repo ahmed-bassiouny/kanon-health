@@ -572,5 +572,18 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="kilo">kilo</string>
     <string name="pound">pound</string>
     <string name="no_location">Keine Lage</string>
+    <string name="anamnese">Anamnese</string>
+    <string name="diagnosis">Diagnose</string>
+    <string name="allergies">Allergien / Unverträglichkeiten</string>
+    <string name="drugs">Drogen</string>
+    <string name="medical_findings">Medizinische Befunde</string>
+    <string name="procedure">Verfahren</string>
+
+    <string name="enter_anamnese">Enter Anamnese</string>
+    <string name="enter_diagnosis">Geben Sie die Diagnose ein</string>
+    <string name="enter_allergies">Geben Sie Allergien / Unverträglichkeiten ein</string>
+    <string name="enter_drugs">Drogen nehmen</string>
+    <string name="enter_medical_findings">Geben Sie medizinische Befunde ein</string>
+    <string name="enter_procedure">Geben Sie die Prozedur ein</string>
 
 </resources>

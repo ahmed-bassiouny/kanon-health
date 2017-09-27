@@ -548,6 +548,19 @@
     <string name="kilo">kilo</string>
     <string name="pound">pound</string>
     <string name="no_location">لا يوجد موقع</string>
+    <string name="anamnese">Anamnese</string>
+    <string name="diagnosis">التشخيص</string>
+    <string name="allergies">الحساسية / عدم تحمل</string>
+    <string name="drugs">مواد مخدر</string>
+    <string name="medical_findings">النتائج الطبية</string>
+    <string name="procedure">إجراء</string>
+
+    <string name="enter_anamnese">Enter Anamnese</string>
+    <string name="enter_diagnosis">ادخل التشخيص</string>
+    <string name="enter_allergies">أدخل الحساسية / عدم تحمل</string>
+    <string name="enter_drugs">أدخل الأدوية</string>
+    <string name="enter_medical_findings">أدخل النتائج الطبية</string>
+    <string name="enter_procedure">أدخل الإجراء</string>
 
 
 

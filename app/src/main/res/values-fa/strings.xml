@@ -549,6 +549,19 @@ Canutoa.</string>
     <string name="kilo">kilo</string>
     <string name="pound">pound</string>
     <string name="no_location">بدون مکان</string>
+    <string name="anamnese">Anamnese</string>
+    <string name="diagnosis">تشخیص</string>
+    <string name="allergies">آلرژی / عدم تحمل</string>
+    <string name="drugs">مواد مخدر</string>
+    <string name="medical_findings">یافته های پزشکی</string>
+    <string name="procedure">روش</string>
+
+    <string name="enter_anamnese">Enter Anamnese</string>
+    <string name="enter_diagnosis">تشخیص را وارد کنید</string>
+    <string name="enter_allergies">آلرژی / عدم تحمل را وارد کنید</string>
+    <string name="enter_drugs">مواد مخدر را وارد کنید</string>
+    <string name="enter_medical_findings">یافته های پزشکی را وارد کنید</string>
+    <string name="enter_procedure">مراحل را وارد کنید</string>
 
 
 
