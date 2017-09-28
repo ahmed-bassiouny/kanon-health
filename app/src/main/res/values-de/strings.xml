@@ -585,5 +585,6 @@ Bitte teilen Sie uns Ihr Anliegen durch das wählen der Optionen mit und stellen
     <string name="enter_drugs">Drogen nehmen</string>
     <string name="enter_medical_findings">Geben Sie medizinische Befunde ein</string>
     <string name="enter_procedure">Geben Sie die Prozedur ein</string>
+    <string name="reopen_session">Wiedereröffnung der Sitzung</string>
 
 </resources>

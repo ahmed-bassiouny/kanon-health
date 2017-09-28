@@ -284,9 +284,25 @@ public class ForwardActivity extends ParentActivity {
     @OnClick(R.id.btn_forward_document)
     public void toDocument(View view) {
         try {
-            //doctorsForward.clear();
-            //doctorsForward.add(Integer.parseInt(PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, "")));
-            //sendForward();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<String, Integer> doctorWithType = new HashMap<String, Integer>();
+                        doctorWithType.put(String.valueOf(chat_doctor_id),1);
+                    final boolean result = ApiHelper.sendForward(ForwardActivity.this, PrefHelper.get(ForwardActivity.this, PrefHelper.KEY_USER_ID, 0), doctorWithType, messagesForward);
+                    ForwardActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (result) {
+                                Toast.makeText(ForwardActivity.this, R.string.message_sent, Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getText(R.string.message_not_send), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }).start();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Toast.makeText(this, getResources().getText(R.string.error_message), Toast.LENGTH_SHORT).show();

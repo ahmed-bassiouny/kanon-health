@@ -260,8 +260,8 @@ public class HttpChatFragment extends ParentFragment implements Serializable, Ho
                 reopenSession.setVisibility(View.GONE);
                 mHoldingButtonLayout.setVisibility(View.VISIBLE);
                 open_chat_session.setVisibility(View.GONE);
-                imgbtn_chat_attach.setEnabled(false);
-                mHoldingButtonLayout.setButtonEnabled(false);
+                imgbtn_chat_attach.setEnabled(true);
+                mHoldingButtonLayout.setButtonEnabled(true);
                 // img_requestpermission.setEnabled(false);
                 etMessage.setHint(R.string.write_a_message);
             }

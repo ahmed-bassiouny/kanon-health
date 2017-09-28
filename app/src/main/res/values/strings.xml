@@ -549,6 +549,7 @@
     <string name="drugs">Drugs</string>
     <string name="medical_findings">Medical findings</string>
     <string name="procedure">Procedure</string>
+    <string name="reopen_session">Reopen Session</string>
 
     <string name="enter_anamnese">Enter Anamnese</string>
     <string name="enter_diagnosis">Enter Diagnosis</string>
