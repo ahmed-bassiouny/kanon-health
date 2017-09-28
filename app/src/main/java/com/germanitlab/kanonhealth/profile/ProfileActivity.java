@@ -3,6 +3,7 @@ package com.germanitlab.kanonhealth.profile;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -73,7 +74,7 @@ public class ProfileActivity extends ParentActivity {
     //    @BindView(R.id.img_profile_qr)
 //    ImageView qr;
     @BindView(R.id.scrollView)
-    ScrollView scrollView;
+    NestedScrollView scrollView;
 
 
     @BindView(R.id.type_blood)
